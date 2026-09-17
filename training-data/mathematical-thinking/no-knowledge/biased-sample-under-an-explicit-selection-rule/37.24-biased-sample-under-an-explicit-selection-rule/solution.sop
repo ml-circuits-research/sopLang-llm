@@ -1,0 +1,11 @@
+@slots literal
+{
+  "selectedByBehaviour": true,
+  "mayDiffer": true
+}
+
+@answer jsEval
+const slots = $slots;
+const representative = !(slots.selectedByBehaviour && slots.mayDiffer);
+return representative ? "It is guaranteed to be representative." : "It is not guaranteed to be representative.";
+

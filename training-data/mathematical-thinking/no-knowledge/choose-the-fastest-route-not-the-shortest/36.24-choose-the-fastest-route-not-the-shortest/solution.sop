@@ -1,0 +1,15 @@
+@slots literal
+{
+  "aLength": 12,
+  "aSpeed": 6,
+  "bLength": 15,
+  "bSpeed": 10
+}
+
+@answer jsEval
+const slots = $slots;
+const timeA = slots.aLength / slots.aSpeed;
+const timeB = slots.bLength / slots.bSpeed;
+if (timeA === timeB) { throw new Error("the two routes take the same time"); }
+return "Route " + (timeA < timeB ? "A" : "B") + ".";
+

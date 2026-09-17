@@ -1,0 +1,13 @@
+@slots literal
+{
+  "subject": "X",
+  "property": "blue",
+  "positiveUniversal": true,
+  "negativeUniversal": true
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.positiveUniversal && slots.negativeUniversal) return "No " + slots.subject + " piece can exist.";
+return "A " + slots.subject + " piece can exist.";
+

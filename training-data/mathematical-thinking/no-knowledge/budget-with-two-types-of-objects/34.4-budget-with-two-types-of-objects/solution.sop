@@ -1,0 +1,19 @@
+@slots literal
+{
+  "budget": 20,
+  "notebookCost": 6,
+  "pencilCost": 2
+}
+
+@answer jsEval
+const slots = $slots;
+let best = null;
+for (let notebooks = 1; notebooks * slots.notebookCost <= slots.budget; notebooks += 1) {
+  const pencils = Math.floor((slots.budget - notebooks * slots.notebookCost) / slots.pencilCost);
+  const total = notebooks + pencils;
+  if (best === null || total > best.total) { best = { notebooks, pencils, total }; }
+}
+if (best === null) { throw new Error("the budget cannot buy even one notebook"); }
+const label = (count, noun) => count + " " + (count === 1 ? noun : noun + "s");
+return label(best.notebooks, "notebook") + " and " + label(best.pencils, "pencil") + ": " + best.total + " objects.";
+

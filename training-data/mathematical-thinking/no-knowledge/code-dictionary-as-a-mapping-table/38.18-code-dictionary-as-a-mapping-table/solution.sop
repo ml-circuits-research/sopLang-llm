@@ -1,0 +1,22 @@
+@slots literal
+{
+  "dictionary": {
+    "red": 2,
+    "green": 5,
+    "blue": 7
+  },
+  "names": [
+    "red",
+    "blue",
+    "green"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const numbers = slots.names.map((name) => {
+  if (slots.dictionary[name] === undefined) { throw new Error("the dictionary has no entry for \"" + name + "\""); }
+  return slots.dictionary[name];
+});
+return numbers.join("-") + ".";
+

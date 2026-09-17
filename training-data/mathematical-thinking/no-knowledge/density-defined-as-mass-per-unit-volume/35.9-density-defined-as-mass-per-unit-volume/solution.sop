@@ -1,0 +1,11 @@
+@slots literal
+{
+  "mass": 60,
+  "volume": 20
+}
+
+@answer jsEval
+const slots = $slots;
+const fmt = (v) => String(Number(Number(v).toFixed(6)));
+return fmt(slots.mass / slots.volume) + " g/cm³.";
+

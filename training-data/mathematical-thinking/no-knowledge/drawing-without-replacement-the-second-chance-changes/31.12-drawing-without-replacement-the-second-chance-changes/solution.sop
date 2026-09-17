@@ -1,0 +1,22 @@
+@slots literal
+{
+  "counts": {
+    "red": 2,
+    "blue": 1
+  },
+  "drawnColor": "red",
+  "replacement": false
+}
+
+@answer jsEval
+const slots = $slots;
+const counts = { ...slots.counts };
+if (!slots.replacement) counts[slots.drawnColor] -= 1;
+const favorable = counts.red;
+const total = counts.red + counts.blue;
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+const factor = gcd(favorable, total);
+const n = favorable / factor;
+const d = total / factor;
+return d === 1 ? String(n) : n + "/" + d;
+

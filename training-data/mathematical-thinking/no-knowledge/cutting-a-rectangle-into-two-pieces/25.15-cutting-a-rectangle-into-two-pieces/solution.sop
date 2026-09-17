@@ -1,0 +1,11 @@
+@slots literal
+{
+  "total": 12,
+  "piece": 5
+}
+
+@answer jsEval
+const s = $slots;
+const other = s.total - s.piece;
+return other + " unit squares.";
+

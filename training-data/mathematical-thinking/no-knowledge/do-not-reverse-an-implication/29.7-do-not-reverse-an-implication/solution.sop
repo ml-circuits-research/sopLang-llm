@@ -1,0 +1,13 @@
+@slots literal
+{
+  "antecedent": "VIP badge",
+  "consequent": "enter through door A",
+  "observed": "enter through door A"
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.observed === slots.antecedent) return "Yes.";
+if (slots.observed === slots.consequent) return "No.";
+throw new Error("the observation matches neither side of the implication");
+

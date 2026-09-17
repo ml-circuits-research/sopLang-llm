@@ -1,0 +1,35 @@
+@slots literal
+{
+  "candidates": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "questions": [
+    "Is the number 1?",
+    "Is the number at most 4?"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const parts = slots.questions.map(function (question, index) {
+  const atMost = question.match(/at most (\d+)/);
+  const exact = question.match(/the number (\d+)/);
+  if (atMost === null && exact === null) { throw new Error("unsupported question \"" + question + "\""); }
+  const yes = slots.candidates.filter(function (value) {
+    if (atMost !== null) { return value <= Number(atMost[1]); }
+    return value === Number(exact[1]);
+  });
+  const remaining = Math.max(yes.length, slots.candidates.length - yes.length);
+  return { index: index + 1, question, remaining };
+});
+let best = parts[0];
+for (const part of parts) { if (part.remaining < best.remaining) { best = part; } }
+return "Q" + best.index + ": “" + best.question + "”.";
+

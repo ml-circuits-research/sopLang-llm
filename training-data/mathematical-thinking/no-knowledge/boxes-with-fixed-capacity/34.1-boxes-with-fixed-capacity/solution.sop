@@ -1,0 +1,10 @@
+@slots literal
+{
+  "items": 17,
+  "capacity": 6
+}
+
+@answer jsEval
+const slots = $slots;
+return Math.ceil(slots.items / slots.capacity) + " boxes.";
+

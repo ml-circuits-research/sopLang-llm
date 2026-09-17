@@ -1,0 +1,24 @@
+@slots literal
+{
+  "denominator": 8,
+  "left": {
+    "numerator": 3,
+    "denominator": 8
+  },
+  "right": {
+    "numerator": 5,
+    "denominator": 8
+  }
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.left.denominator !== slots.denominator || slots.right.denominator !== slots.denominator) {
+  throw new Error("the fractions do not share the stated denominator");
+}
+if (slots.left.numerator === slots.right.numerator) {
+  throw new Error("the two fractions are equal, so neither is larger");
+}
+const larger = slots.left.numerator > slots.right.numerator ? slots.left : slots.right;
+return larger.numerator + "/" + larger.denominator + " is larger.";
+

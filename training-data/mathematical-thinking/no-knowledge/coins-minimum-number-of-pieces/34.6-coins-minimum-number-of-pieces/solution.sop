@@ -1,0 +1,27 @@
+@slots literal
+{
+  "coins": [
+    1,
+    3,
+    5
+  ],
+  "target": 8
+}
+
+@answer jsEval
+const slots = $slots;
+const best = [0];
+for (let value = 1; value <= slots.target; value += 1) {
+  best[value] = Math.min(...slots.coins.filter((coin) => coin <= value).map((coin) => best[value - coin] + 1));
+}
+const descending = slots.coins.slice().sort((left, right) => right - left);
+const combo = [];
+let value = slots.target;
+while (value > 0) {
+  const coin = descending.find((candidate) => candidate <= value && best[value - candidate] + 1 === best[value]);
+  if (coin === undefined) { throw new Error(`the amount ${slots.target} cannot be made from the given coins`); }
+  combo.push(coin);
+  value -= coin;
+}
+return combo.length + " coins: " + combo.join("+") + ".";
+

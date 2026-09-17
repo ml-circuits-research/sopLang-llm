@@ -1,0 +1,12 @@
+@slots literal
+{
+  "positions": [
+    4,
+    11
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+return Math.abs(slots.positions[0] - slots.positions[1]) + " units.";
+

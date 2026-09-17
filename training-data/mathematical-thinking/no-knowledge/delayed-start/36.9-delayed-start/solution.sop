@@ -1,0 +1,12 @@
+@slots literal
+{
+  "earlier": 2,
+  "slowSpeed": 3,
+  "fastSpeed": 5
+}
+
+@answer jsEval
+const slots = $slots;
+const headStart = slots.earlier * slots.slowSpeed;
+return headStart + " km head start; A catches B in " + headStart / (slots.fastSpeed - slots.slowSpeed) + " hours.";
+

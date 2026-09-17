@@ -1,0 +1,30 @@
+@slots literal
+{
+  "entries": [
+    [
+      "A",
+      4
+    ],
+    [
+      "B",
+      7
+    ],
+    [
+      "C",
+      9
+    ],
+    [
+      "D",
+      5
+    ]
+  ],
+  "threshold": 6
+}
+
+@answer jsEval
+const slots = $slots;
+const kept = slots.entries.filter((entry) => entry[1] >= slots.threshold).map((entry) => entry[0]);
+const joined = kept.length <= 1 ? kept.join("") : kept.slice(0, -1).join(", ") + " and " + kept[kept.length - 1];
+if (kept.length === 0) { throw new Error("the filter keeps no category"); }
+return joined + ".";
+

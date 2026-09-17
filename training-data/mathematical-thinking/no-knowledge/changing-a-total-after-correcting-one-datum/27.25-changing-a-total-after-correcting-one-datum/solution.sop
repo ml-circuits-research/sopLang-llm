@@ -1,0 +1,11 @@
+@slots literal
+{
+  "stated": 16,
+  "oldValue": 7,
+  "newValue": 9
+}
+
+@answer jsEval
+const slots = $slots;
+return String(slots.stated + (slots.newValue - slots.oldValue)) + ".";
+

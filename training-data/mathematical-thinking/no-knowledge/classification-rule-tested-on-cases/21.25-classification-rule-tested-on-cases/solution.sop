@@ -1,0 +1,18 @@
+@slots literal
+{
+  "threshold": 5,
+  "inputs": [
+    2,
+    4,
+    5,
+    7
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const parts = slots.inputs.map(function (value) {
+  return value + "→" + (value < slots.threshold ? "A" : "B");
+});
+return parts.join(", ") + ".";
+

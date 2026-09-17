@@ -1,0 +1,10 @@
+@slots literal
+{
+  "rate": 4,
+  "hours": 6
+}
+
+@answer jsEval
+const slots = $slots;
+return String(slots.rate * slots.hours) + " units.";
+

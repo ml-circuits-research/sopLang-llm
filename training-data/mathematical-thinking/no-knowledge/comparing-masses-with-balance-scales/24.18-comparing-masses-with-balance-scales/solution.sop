@@ -1,0 +1,27 @@
+@slots literal
+{
+  "comparisons": [
+    [
+      "A",
+      "B"
+    ],
+    [
+      "B",
+      "C"
+    ]
+  ],
+  "names": [
+    "A",
+    "B",
+    "C"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const heavier = new Set(slots.comparisons.map((pair) => pair[0]));
+const lighter = new Set(slots.comparisons.map((pair) => pair[1]));
+const heaviest = slots.names.filter((name) => heavier.has(name) && !lighter.has(name));
+if (heaviest.length !== 1) { throw new Error("the comparisons do not name a single heaviest object"); }
+return String(heaviest[0]) + ".";
+

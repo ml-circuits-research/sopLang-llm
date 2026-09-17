@@ -1,0 +1,25 @@
+@slots literal
+{
+  "plans": [
+    {
+      "name": "A",
+      "cost": 4,
+      "time": 6
+    },
+    {
+      "name": "B",
+      "cost": 6,
+      "time": 3
+    }
+  ],
+  "costWeight": 1,
+  "timeWeight": 1
+}
+
+@answer jsEval
+const slots = $slots;
+const scored = slots.plans.map((plan) => ({ name: plan.name, score: slots.costWeight * plan.cost + slots.timeWeight * plan.time }));
+scored.sort((left, right) => left.score - right.score);
+if (scored.length < 2 || scored[0].score === scored[1].score) { throw new Error("the scores do not single out one plan"); }
+return "Plan " + scored[0].name + ".";
+

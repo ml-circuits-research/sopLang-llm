@@ -1,0 +1,40 @@
+@slots literal
+{
+  "pairs": [
+    [
+      2,
+      8
+    ],
+    [
+      5,
+      11
+    ],
+    [
+      7,
+      13
+    ]
+  ],
+  "rules": [
+    "add 6",
+    "subtract 6",
+    "add 7"
+  ],
+  "input": 7
+}
+
+@answer jsEval
+const slots = $slots;
+const matching = slots.rules.filter((rule) => slots.pairs.every((pair) => {
+  const operation = rule.match(/^(add|subtract)\s+(\d+)$/);
+  if (operation === null) { return false; }
+  const amount = Number(operation[2]);
+  return (operation[1] === "add" ? pair[0] + amount : pair[0] - amount) === pair[1];
+}));
+if (matching.length !== 1) {
+  throw new Error(`${matching.length} candidate rules explain all the examples instead of one`);
+}
+const operation = matching[0].match(/^(add|subtract)\s+(\d+)$/);
+const amount = Number(operation[2]);
+const result = operation[1] === "add" ? slots.input + amount : slots.input - amount;
+return "Rule: " + matching[0] + "; the output for " + slots.input + " is " + result + ".";
+

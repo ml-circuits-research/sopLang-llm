@@ -1,0 +1,38 @@
+@slots literal
+{
+  "entries": [
+    [
+      "Monday",
+      9
+    ],
+    [
+      "Tuesday",
+      13
+    ],
+    [
+      "Wednesday",
+      8
+    ],
+    [
+      "Thursday",
+      11
+    ],
+    [
+      "Friday",
+      11
+    ]
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let total = 0;
+let best = null;
+for (const [day, value] of slots.entries) {
+  total += value;
+  if (best === null || value > best[1]) {
+    best = [day, value];
+  }
+}
+return "Total " + total + "; maximum on " + best[0] + ": " + best[1] + ".";
+

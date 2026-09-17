@@ -1,0 +1,23 @@
+@slots literal
+{
+  "x": 3,
+  "correct": {
+    "op": "multiply",
+    "operand": 2
+  },
+  "wrong": {
+    "op": "add",
+    "operand": 2
+  }
+}
+
+@answer jsEval
+const slots = $slots;
+const apply = (value, step) => {
+  if (step.op === "add") { return value + step.operand; }
+  if (step.op === "subtract") { return value - step.operand; }
+  if (step.op === "multiply") { return value * step.operand; }
+  return value / step.operand;
+};
+return "Correct result " + apply(slots.x, slots.correct) + "; the program produces " + apply(slots.x, slots.wrong) + ".";
+

@@ -1,0 +1,18 @@
+@slots literal
+{
+  "text": "XXXYYZ"
+}
+
+@answer jsEval
+const slots = $slots;
+const text = String(slots.text);
+let encoded = "";
+let index = 0;
+while (index < text.length) {
+  let run = 1;
+  while (index + run < text.length && text[index + run] === text[index]) { run += 1; }
+  encoded += run + text[index];
+  index += run;
+}
+return encoded + ".";
+

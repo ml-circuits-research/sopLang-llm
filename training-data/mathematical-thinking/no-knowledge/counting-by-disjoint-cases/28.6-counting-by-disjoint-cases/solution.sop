@@ -1,0 +1,19 @@
+@slots literal
+{
+  "letters": [
+    "A",
+    "B"
+  ],
+  "digits": [
+    1,
+    2,
+    3
+  ],
+  "single": 1
+}
+
+@answer jsEval
+const slots = $slots;
+const total = slots.letters.length * slots.digits.length + slots.single;
+return String(total) + " codes.";
+

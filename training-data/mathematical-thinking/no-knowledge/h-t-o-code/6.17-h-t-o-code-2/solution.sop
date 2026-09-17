@@ -1,0 +1,11 @@
+@slots literal
+{
+  "hundreds": 2,
+  "tens": 4,
+  "ones": 3
+}
+
+@answer jsEval
+const slots = $slots;
+return String(100 * slots.hundreds + 10 * slots.tens + slots.ones);
+

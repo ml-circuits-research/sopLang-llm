@@ -1,0 +1,15 @@
+@slots literal
+{
+  "total": 32,
+  "numerator": 5,
+  "denominator": 8
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.total % slots.denominator !== 0) {
+  throw new Error("the total does not divide into equal parts");
+}
+const part = slots.total / slots.denominator;
+return String(part * slots.numerator);
+

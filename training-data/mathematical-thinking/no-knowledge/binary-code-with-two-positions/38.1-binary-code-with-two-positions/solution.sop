@@ -1,0 +1,26 @@
+@slots literal
+{
+  "positions": 2,
+  "symbols": [
+    "0",
+    "1"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+if (!Number.isInteger(slots.positions) || slots.positions < 1) { throw new Error("invalid position count"); }
+const symbols = slots.symbols;
+const codes = [];
+const total = Math.pow(symbols.length, slots.positions);
+for (let value = 0; value < total; value += 1) {
+  let rest = value;
+  const digits = [];
+  for (let index = 0; index < slots.positions; index += 1) {
+    digits.unshift(symbols[rest % symbols.length]);
+    rest = Math.floor(rest / symbols.length);
+  }
+  codes.push(digits.join(""));
+}
+return codes.join(", ") + ".";
+

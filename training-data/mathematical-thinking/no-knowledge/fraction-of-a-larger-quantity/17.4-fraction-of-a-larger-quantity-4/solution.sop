@@ -1,0 +1,14 @@
+@slots literal
+{
+  "total": 96,
+  "numerator": 5,
+  "denominator": 8
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.denominator <= 0 || slots.total % slots.denominator !== 0) {
+  throw new Error("the total does not split into whole parts of that denominator");
+}
+return String((slots.total / slots.denominator) * slots.numerator);
+

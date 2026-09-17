@@ -1,0 +1,10 @@
+@slots literal
+{
+  "balls": 2,
+  "boxes": 2
+}
+
+@answer jsEval
+const slots = $slots;
+return String(Math.pow(slots.boxes, slots.balls)) + " distributions.";
+

@@ -1,0 +1,14 @@
+@slots literal
+{
+  "mapping": {
+    "A": 3,
+    "B": 3
+  },
+  "received": 3
+}
+
+@answer jsEval
+const slots = $slots;
+const origins = Object.entries(slots.mapping).filter(([, code]) => code === slots.received);
+return origins.length === 1 ? "Yes." : "No.";
+

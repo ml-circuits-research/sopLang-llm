@@ -1,0 +1,25 @@
+@slots literal
+{
+  "object": [
+    3,
+    5
+  ],
+  "boxA": [
+    4,
+    4
+  ],
+  "boxB": [
+    3,
+    6
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const short = Math.min(slots.object[0], slots.object[1]);
+const long = Math.max(slots.object[0], slots.object[1]);
+const fits = (box) => short <= Math.min(box[0], box[1]) && long <= Math.max(box[0], box[1]);
+const names = [["A", slots.boxA], ["B", slots.boxB]].filter((entry) => fits(entry[1])).map((entry) => entry[0]);
+if (names.length === 1) { return "Box " + names[0] + "."; }
+return names.length === 0 ? "Neither box." : "Boxes " + names.join(" and ") + ".";
+

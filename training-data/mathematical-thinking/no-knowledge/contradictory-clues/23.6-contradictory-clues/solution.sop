@@ -1,0 +1,46 @@
+@slots literal
+{
+  "candidates": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "clues": [
+    {
+      "op": "gt",
+      "value": 4
+    },
+    {
+      "op": "lt",
+      "value": 3
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const matches = (value, predicate) => {
+  if (predicate.op === "and") { return predicate.of.every((part) => matches(value, part)); }
+  if (predicate.op === "eq") { return Number(value) === predicate.value; }
+  if (predicate.op === "gt") { return Number(value) > predicate.value; }
+  if (predicate.op === "lt") { return Number(value) < predicate.value; }
+  if (predicate.op === "ge") { return Number(value) >= predicate.value; }
+  if (predicate.op === "le") { return Number(value) <= predicate.value; }
+  if (predicate.op === "even") { return Number(value) % 2 === 0; }
+  if (predicate.op === "odd") { return Math.abs(Number(value) % 2) === 1; }
+  if (predicate.op === "lacks") { return !String(value).includes(predicate.word); }
+  throw new Error("unsupported predicate " + predicate.op);
+};
+const keep = (candidates, predicate) => candidates.filter((value) => matches(value, predicate));
+const joinList = (items) => {
+  const parts = items.map(String);
+  if (parts.length === 1) { return parts[0]; }
+  if (parts.length === 2) { return parts[0] + " and " + parts[1]; }
+  return parts.slice(0, -1).join(", ") + ", and " + parts[parts.length - 1];
+};
+const remaining = slots.candidates.filter((value) => slots.clues.every((predicate) => matches(value, predicate)));
+if (remaining.length === 0) { return "No such number exists."; }
+return joinList(remaining) + ".";
+

@@ -1,0 +1,9 @@
+@slots literal
+{
+  "sum": 7
+}
+
+@answer jsEval
+const slots = $slots;
+return slots.sum % 2 === 0 ? "Yes." : "No.";
+

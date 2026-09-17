@@ -1,0 +1,28 @@
+@slots literal
+{
+  "positions": [
+    {
+      "minute": 0,
+      "meters": 0
+    },
+    {
+      "minute": 2,
+      "meters": 8
+    },
+    {
+      "minute": 4,
+      "meters": 20
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const speeds = [];
+for (let index = 1; index < slots.positions.length; index += 1) {
+  const previous = slots.positions[index - 1];
+  const current = slots.positions[index];
+  speeds.push((current.meters - previous.meters) / (current.minute - previous.minute));
+}
+return speeds.every((speed) => speed === speeds[0]) ? "Yes." : "No.";
+

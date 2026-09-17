@@ -1,0 +1,19 @@
+@slots literal
+{
+  "threshold": 5,
+  "operator": ">",
+  "predicate": "even",
+  "candidates": [
+    6,
+    7,
+    8
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const predicateHolds = (value) => slots.predicate === "even" ? value % 2 === 0 : value % 2 !== 0;
+const witness = slots.candidates.find((value) => value > slots.threshold && !predicateHolds(value));
+if (witness === undefined) throw new Error("no counterexample found among the candidates");
+return witness + ".";
+

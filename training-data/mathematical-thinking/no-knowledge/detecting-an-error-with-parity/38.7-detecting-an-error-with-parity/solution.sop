@@ -1,0 +1,13 @@
+@slots literal
+{
+  "received": "1011"
+}
+
+@answer jsEval
+const slots = $slots;
+let ones = 0;
+for (const digit of String(slots.received)) {
+  if (digit === "1") ones += 1;
+}
+return ones % 2 === 0 ? "The message is valid." : "The message is invalid / an error is detected.";
+

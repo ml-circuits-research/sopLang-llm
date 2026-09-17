@@ -1,0 +1,15 @@
+@slots literal
+{
+  "total": 11,
+  "capacity": 3
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.capacity <= 0) {
+  throw new Error("the box capacity must be positive");
+}
+const boxes = Math.floor(slots.total / slots.capacity);
+const leftover = slots.total - boxes * slots.capacity;
+return boxes + " complete boxes and " + leftover + " objects left over.";
+

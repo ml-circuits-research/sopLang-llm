@@ -1,0 +1,12 @@
+@slots literal
+{
+  "total": 33,
+  "size": 5
+}
+
+@answer jsEval
+const slots = $slots;
+const packages = Math.floor(slots.total / slots.size);
+const remainder = slots.total - packages * slots.size;
+return packages + " packages and remainder " + remainder + ".";
+

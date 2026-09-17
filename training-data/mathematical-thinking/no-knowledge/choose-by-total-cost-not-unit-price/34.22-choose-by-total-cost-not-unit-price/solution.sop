@@ -1,0 +1,23 @@
+@slots literal
+{
+  "need": 6,
+  "packageA": {
+    "count": 3,
+    "cost": 9
+  },
+  "packageB": {
+    "count": 2,
+    "cost": 7
+  }
+}
+
+@answer jsEval
+const slots = $slots;
+const options = [["A", slots.packageA], ["B", slots.packageB]]
+  .filter((entry) => slots.need % entry[1].count === 0)
+  .map((entry) => ({ name: entry[0], packages: slots.need / entry[1].count, cost: (slots.need / entry[1].count) * entry[1].cost }));
+if (options.length === 0) { throw new Error("neither package type reaches the required count exactly"); }
+let best = options[0];
+for (const option of options) { if (option.cost < best.cost) { best = option; } }
+return "Packages " + best.name + ", " + best.cost + " lei.";
+

@@ -1,0 +1,10 @@
+@slots literal
+{
+  "height": 10,
+  "reported": 8
+}
+
+@answer jsEval
+const slots = $slots;
+return slots.reported === slots.height / 2 ? "Yes." : "No.";
+

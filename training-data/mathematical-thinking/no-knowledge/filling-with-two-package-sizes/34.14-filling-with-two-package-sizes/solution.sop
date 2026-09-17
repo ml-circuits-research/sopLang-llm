@@ -1,0 +1,15 @@
+@slots literal
+{
+  "space": 20,
+  "sizeA": 6,
+  "sizeB": 4
+}
+
+@answer jsEval
+const slots = $slots;
+for (let a = Math.floor(slots.space / slots.sizeA); a >= 0; a -= 1) {
+  const rest = slots.space - a * slots.sizeA;
+  if (rest % slots.sizeB === 0) { return "Yes: " + a + " A and " + (rest / slots.sizeB) + " B."; }
+}
+return "No: the shelf cannot be filled exactly.";
+

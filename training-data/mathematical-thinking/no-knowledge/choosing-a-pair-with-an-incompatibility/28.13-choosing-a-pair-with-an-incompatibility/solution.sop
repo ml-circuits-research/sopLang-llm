@@ -1,0 +1,31 @@
+@slots literal
+{
+  "people": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "size": 2,
+  "first": "A",
+  "second": "B"
+}
+
+@answer jsEval
+const slots = $slots;
+const badKey = [slots.first, slots.second].sort().join("");
+let total = 0;
+const walk = (start, chosen) => {
+  if (chosen.length === slots.size) {
+    if (chosen.slice().sort().join("") !== badKey) {
+      total += 1;
+    }
+    return;
+  }
+  for (let index = start; index < slots.people.length; index += 1) {
+    walk(index + 1, chosen.concat(slots.people[index]));
+  }
+};
+walk(0, []);
+return String(total) + " teams.";
+

@@ -1,0 +1,50 @@
+@slots literal
+{
+  "nodes": [
+    "A",
+    "B",
+    "C"
+  ],
+  "arcs": [
+    [
+      "A",
+      "B"
+    ],
+    [
+      "B",
+      "C"
+    ],
+    [
+      "C",
+      "A"
+    ]
+  ],
+  "from": "B",
+  "to": "A"
+}
+
+@answer jsEval
+const slots = $slots;
+function buildPath(previous, to) {
+  if (!previous.has(to)) return null;
+  const path = [];
+  for (let node = to; node !== null; node = previous.get(node)) path.unshift(node);
+  return path;
+}
+function searchPath(successorsOf, from, to) {
+  const previous = new Map([[from, null]]);
+  const queue = [from];
+  while (queue.length > 0) {
+    const node = queue.shift(); for (const next of successorsOf(node)) if (!previous.has(next)) { previous.set(next, node); queue.push(next); }
+  }
+  return buildPath(previous, to);
+}
+function shortestPathDirected(nodes, arcs, from, to) {
+  const nexts = new Map(nodes.map((node) => [node, []]));
+  for (const [a, b] of arcs) nexts.get(a).push(b);
+  for (const list of nexts.values()) list.sort();
+  return searchPath((node) => nexts.get(node), from, to);
+}
+const path = shortestPathDirected(slots.nodes, slots.arcs, slots.from, slots.to);
+return "Yes, through " + path.slice(1, -1).join("-") + ".";
+

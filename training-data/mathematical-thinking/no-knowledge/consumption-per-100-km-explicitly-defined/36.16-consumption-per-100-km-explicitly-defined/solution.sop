@@ -1,0 +1,11 @@
+@slots literal
+{
+  "liters": 6,
+  "per": 100,
+  "distance": 300
+}
+
+@answer jsEval
+const slots = $slots;
+return (slots.distance / slots.per) * slots.liters + " L.";
+

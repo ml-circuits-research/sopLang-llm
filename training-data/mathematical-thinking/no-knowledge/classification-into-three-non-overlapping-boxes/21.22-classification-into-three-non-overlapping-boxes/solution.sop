@@ -1,0 +1,50 @@
+@slots literal
+{
+  "low": 1,
+  "high": 9,
+  "boxes": [
+    {
+      "name": "A",
+      "lo": 1,
+      "hi": 3
+    },
+    {
+      "name": "B",
+      "lo": 4,
+      "hi": 6
+    },
+    {
+      "name": "C",
+      "lo": 7,
+      "hi": 9
+    }
+  ],
+  "proposed": [
+    {
+      "op": "greater",
+      "value": 3,
+      "box": "B"
+    },
+    {
+      "op": "greater",
+      "value": 6,
+      "box": "C"
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let offending = null;
+for (const rule of slots.proposed) {
+  const intended = slots.boxes.filter(function (box) { return box.name === rule.box; })[0];
+  let overflow = false;
+  for (let value = slots.low; value <= slots.high; value += 1) {
+    const inside = rule.op === "greater" ? value > rule.value : value < rule.value;
+    if (inside && (value < intended.lo || value > intended.hi)) { overflow = true; }
+  }
+  if (overflow) { offending = intended; break; }
+}
+if (offending === null) { throw new Error("no proposed rule overflows its box"); }
+return "The rule for " + offending.name + " must be limited to " + offending.lo + "–" + offending.hi + ".";
+

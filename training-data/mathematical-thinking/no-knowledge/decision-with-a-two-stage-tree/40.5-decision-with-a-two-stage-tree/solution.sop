@@ -1,0 +1,22 @@
+@slots literal
+{
+  "options": [
+    {
+      "name": "A",
+      "payoffs": [
+        4,
+        2
+      ]
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let best = null;
+for (const option of slots.options) {
+  const worst = Math.min.apply(null, option.payoffs);
+  if (best === null || worst > best.worst) { best = { name: option.name, worst: worst }; }
+}
+return best.name + ".";
+

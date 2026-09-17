@@ -1,0 +1,11 @@
+@slots literal
+{
+  "rows": 2,
+  "columns": 3
+}
+
+@answer jsEval
+const s = $slots;
+const cells = s.rows * s.columns;
+return cells + " cells.";
+

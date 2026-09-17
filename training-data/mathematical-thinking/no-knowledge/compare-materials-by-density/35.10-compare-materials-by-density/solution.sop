@@ -1,0 +1,14 @@
+@slots literal
+{
+  "aMass": 40,
+  "aVolume": 20,
+  "bMass": 45,
+  "bVolume": 15
+}
+
+@answer jsEval
+const slots = $slots;
+const a = slots.aMass / slots.aVolume;
+const b = slots.bMass / slots.bVolume;
+return a > b ? "Material A." : "Material B.";
+

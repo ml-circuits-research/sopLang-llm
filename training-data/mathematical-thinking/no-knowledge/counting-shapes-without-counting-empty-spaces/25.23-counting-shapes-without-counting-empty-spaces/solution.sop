@@ -1,0 +1,11 @@
+@slots literal
+{
+  "circles": 3,
+  "squares": 2
+}
+
+@answer jsEval
+const s = $slots;
+const shapes = s.circles + s.squares;
+return shapes + " shapes.";
+

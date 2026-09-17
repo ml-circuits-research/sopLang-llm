@@ -1,0 +1,11 @@
+@slots literal
+{
+  "numerator": 2,
+  "denominator": 3,
+  "factor": 3
+}
+
+@answer jsEval
+const slots = $slots;
+return (slots.numerator * slots.factor) + "/" + (slots.denominator * slots.factor);
+

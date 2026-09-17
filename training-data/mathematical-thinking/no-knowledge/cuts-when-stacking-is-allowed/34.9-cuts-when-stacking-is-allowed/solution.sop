@@ -1,0 +1,11 @@
+@slots literal
+{
+  "sheets": 2,
+  "piecesPerSheet": 2
+}
+
+@answer jsEval
+const slots = $slots;
+const motions = slots.piecesPerSheet - 1;
+return motions + " motion" + (motions === 1 ? "" : "s") + ".";
+

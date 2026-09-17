@@ -1,0 +1,10 @@
+@slots literal
+{
+  "center": 10,
+  "point": 7
+}
+
+@answer jsEval
+const slots = $slots;
+return String(2 * slots.center - slots.point) + ".";
+

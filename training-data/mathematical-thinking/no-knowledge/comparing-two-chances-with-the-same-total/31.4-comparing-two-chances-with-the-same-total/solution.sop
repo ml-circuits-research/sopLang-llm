@@ -1,0 +1,23 @@
+@slots literal
+{
+  "colors": [
+    [
+      "red",
+      3
+    ],
+    [
+      "blue",
+      5
+    ]
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let winner = slots.colors[0];
+for (const entry of slots.colors) {
+  if (entry[1] > winner[1]) winner = entry;
+}
+const name = winner[0];
+return name.charAt(0).toUpperCase() + name.slice(1) + ".";
+

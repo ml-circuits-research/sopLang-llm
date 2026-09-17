@@ -1,0 +1,16 @@
+@slots literal
+{
+  "target": 7,
+  "current": 5,
+  "moves": [
+    1,
+    2
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const delta = slots.target - slots.current;
+if (!slots.moves.includes(delta)) { throw new Error("there is no immediate winning move"); }
+return "Yes: add " + delta + ".";
+

@@ -1,0 +1,16 @@
+@slots literal
+{
+  "start": 12,
+  "step": 2,
+  "target": 17
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.step <= 0) {
+  throw new Error("the move size must be positive");
+}
+const gap = slots.target - slots.start;
+const reachable = gap >= 0 && gap % slots.step === 0;
+return reachable ? "Yes, " + slots.target + " can be reached in " + (gap / slots.step) + " moves." : "No, " + slots.target + " cannot be reached.";
+

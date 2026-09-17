@@ -1,0 +1,13 @@
+@slots literal
+{
+  "operator": "or",
+  "properties": [
+    "red",
+    "round"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+return "It must be neither " + slots.properties.join(" nor ") + ".";
+

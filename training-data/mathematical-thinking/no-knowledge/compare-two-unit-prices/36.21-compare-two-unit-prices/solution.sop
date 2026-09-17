@@ -1,0 +1,15 @@
+@slots literal
+{
+  "aCount": 4,
+  "aPrice": 12,
+  "bCount": 6,
+  "bPrice": 15
+}
+
+@answer jsEval
+const slots = $slots;
+const priceA = slots.aPrice / slots.aCount;
+const priceB = slots.bPrice / slots.bCount;
+if (priceA === priceB) { throw new Error("the two offers have the same unit price"); }
+return "Offer " + (priceA < priceB ? "A" : "B") + ".";
+

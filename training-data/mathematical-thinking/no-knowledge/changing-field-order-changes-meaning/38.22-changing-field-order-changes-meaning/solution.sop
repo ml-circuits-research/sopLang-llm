@@ -1,0 +1,12 @@
+@slots literal
+{
+  "code": "25"
+}
+
+@answer jsEval
+const slots = $slots;
+if (String(slots.code).length !== 2) { throw new Error("the string must have exactly two digits"); }
+const a = slots.code[0];
+const b = slots.code[1];
+return "It can mean (" + a + "," + b + ") or (" + b + "," + a + "), depending on the format.";
+

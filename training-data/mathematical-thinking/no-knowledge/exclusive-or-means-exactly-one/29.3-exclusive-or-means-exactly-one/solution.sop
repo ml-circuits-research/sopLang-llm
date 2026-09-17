@@ -1,0 +1,50 @@
+@slots literal
+{
+  "operator": "xor",
+  "properties": [
+    "red",
+    "round"
+  ],
+  "pieces": [
+    {
+      "name": "A",
+      "properties": [
+        "red",
+        "square"
+      ]
+    },
+    {
+      "name": "B",
+      "properties": [
+        "blue",
+        "round"
+      ]
+    },
+    {
+      "name": "C",
+      "properties": [
+        "red",
+        "round"
+      ]
+    },
+    {
+      "name": "D",
+      "properties": [
+        "blue",
+        "square"
+      ]
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const accepted = [];
+for (const piece of slots.pieces) {
+  const holds = piece.properties.filter((property) => slots.properties.indexOf(property) !== -1).length;
+  if (holds === 1) accepted.push(piece.name);
+}
+if (accepted.length === 1) return accepted[0] + ".";
+if (accepted.length === 2) return accepted[0] + " and " + accepted[1] + ".";
+return accepted.slice(0, -1).join(", ") + ", and " + accepted[accepted.length - 1] + ".";
+

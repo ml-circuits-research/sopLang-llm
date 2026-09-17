@@ -1,0 +1,18 @@
+@slots literal
+{
+  "stock": 20,
+  "replenish": 4,
+  "use": 6,
+  "days": 3
+}
+
+@answer jsEval
+const slots = $slots;
+let stock = slots.stock;
+for (let day = 0; day < slots.days; day += 1) {
+  stock += slots.replenish;
+  if (stock < slots.use) { throw new Error("the plan runs into a temporary shortage"); }
+  stock -= slots.use;
+}
+return stock + " units.";
+

@@ -1,0 +1,14 @@
+@slots literal
+{
+  "budget": 30,
+  "minimumA": 2,
+  "costA": 7,
+  "minimumB": 3,
+  "costB": 4
+}
+
+@answer jsEval
+const slots = $slots;
+const cost = slots.minimumA * slots.costA + slots.minimumB * slots.costB;
+return cost + " lei; " + (slots.budget - cost) + " lei remain.";
+

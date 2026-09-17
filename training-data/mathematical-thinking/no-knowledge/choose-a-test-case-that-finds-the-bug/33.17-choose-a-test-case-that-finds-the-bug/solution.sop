@@ -1,0 +1,29 @@
+@slots literal
+{
+  "correct": {
+    "op": "multiply",
+    "operand": 2
+  },
+  "wrong": {
+    "op": "add",
+    "operand": 2
+  },
+  "candidates": [
+    1,
+    5
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const apply = (value, step) => {
+  if (step.op === "add") { return value + step.operand; }
+  if (step.op === "subtract") { return value - step.operand; }
+  if (step.op === "multiply") { return value * step.operand; }
+  return value / step.operand;
+};
+const revealing = slots.candidates.filter((x) => apply(x, slots.correct) !== apply(x, slots.wrong));
+if (revealing.length === 0) { return "Neither."; }
+const listed = revealing.map((x) => "x=" + x).join(" and ");
+return revealing.length === slots.candidates.length ? "Both: " + listed + "." : listed + ".";
+

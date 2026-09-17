@@ -1,0 +1,30 @@
+@slots literal
+{
+  "start": 24,
+  "target": 36,
+  "candidates": [
+    "add 12",
+    "subtract 12",
+    "add 14"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const successes = [];
+for (const candidate of slots.candidates) {
+  const step = candidate.match(/^(add|subtract) (\d+)$/i);
+  if (step === null) {
+    continue;
+  }
+  const amount = Number(step[2]);
+  const result = step[1].toLowerCase() === "add" ? slots.start + amount : slots.start - amount;
+  if (result === slots.target) {
+    successes.push({ verb: step[1].toLowerCase() === "add" ? "Add" : "Subtract", amount });
+  }
+}
+if (successes.length !== 1) {
+  throw new Error(successes.length + " candidate instructions reach the target");
+}
+return "\u201c" + successes[0].verb + " " + successes[0].amount + ".\u201d";
+

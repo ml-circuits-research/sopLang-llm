@@ -1,0 +1,21 @@
+@slots literal
+{
+  "balls": 2,
+  "boxes": 2
+}
+
+@answer jsEval
+const slots = $slots;
+const choose = (n, k) => {
+  let value = 1;
+  for (let step = 0; step < k; step += 1) {
+    value = value * (n - step) / (step + 1);
+  }
+  return Math.round(value);
+};
+let total = 0;
+for (let empty = 0; empty <= slots.boxes; empty += 1) {
+  total += (empty % 2 === 0 ? 1 : -1) * choose(slots.boxes, empty) * Math.pow(slots.boxes - empty, slots.balls);
+}
+return String(total) + " distributions.";
+

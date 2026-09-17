@@ -1,0 +1,17 @@
+@slots literal
+{
+  "digits": [
+    5,
+    8,
+    9
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let sum = 0;
+for (const digit of slots.digits) {
+  sum += digit;
+}
+return (((sum % 10) + 10) % 10) + ".";
+

@@ -1,0 +1,28 @@
+@slots literal
+{
+  "start": 10,
+  "first": {
+    "op": "add",
+    "amount": 4
+  },
+  "second": {
+    "op": "remove",
+    "amount": 1
+  },
+  "candidates": [
+    12,
+    13,
+    15
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const apply = (value, change) => (change.op === "add" ? value + change.amount : value - change.amount);
+const target = apply(apply(slots.start, slots.first), slots.second);
+const matching = slots.candidates.filter((value) => value === target);
+if (matching.length !== 1) {
+  throw new Error(`${matching.length} candidate results are compatible with both rules instead of one`);
+}
+return String(target);
+

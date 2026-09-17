@@ -1,0 +1,21 @@
+@slots literal
+{
+  "start": {
+    "a": 35,
+    "b": 19
+  },
+  "proposed": {
+    "a": 27,
+    "b": 27
+  }
+}
+
+@answer jsEval
+const slots = $slots;
+const kept = slots.start.a + slots.start.b;
+const offered = slots.proposed.a + slots.proposed.b;
+if (kept === offered) {
+  return "Possible from the standpoint of the total.";
+}
+return "Impossible.";
+

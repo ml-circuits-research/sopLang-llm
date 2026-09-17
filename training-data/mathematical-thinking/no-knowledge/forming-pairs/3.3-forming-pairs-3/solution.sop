@@ -1,0 +1,15 @@
+@slots literal
+{
+  "total": 14,
+  "groupSize": 2
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.groupSize <= 0) {
+  throw new Error("the group size must be positive");
+}
+const groups = Math.floor(slots.total / slots.groupSize);
+const remainder = slots.total - groups * slots.groupSize;
+return groups + " pairs, remainder " + remainder + ".";
+

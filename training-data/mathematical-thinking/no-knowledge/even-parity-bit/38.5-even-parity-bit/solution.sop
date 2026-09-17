@@ -1,0 +1,13 @@
+@slots literal
+{
+  "message": "101"
+}
+
+@answer jsEval
+const slots = $slots;
+let ones = 0;
+for (const digit of String(slots.message)) {
+  if (digit === "1") ones += 1;
+}
+return (ones % 2 === 0 ? 0 : 1) + ".";
+

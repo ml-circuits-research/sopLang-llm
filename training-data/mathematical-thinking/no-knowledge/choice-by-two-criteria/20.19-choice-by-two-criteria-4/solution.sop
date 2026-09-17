@@ -1,0 +1,31 @@
+@slots literal
+{
+  "plans": [
+    {
+      "name": "P1",
+      "time": 15,
+      "cost": 11
+    },
+    {
+      "name": "P2",
+      "time": 14,
+      "cost": 13
+    },
+    {
+      "name": "P3",
+      "time": 16,
+      "cost": 9
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const ranked = [...slots.plans].sort((left, right) => left.time - right.time || left.cost - right.cost);
+const best = ranked[0];
+const runnerUp = ranked[1];
+if (best.time === runnerUp.time && best.cost === runnerUp.cost) {
+  throw new Error("the two criteria do not separate the top two plans");
+}
+return ranked[0].name + ".";
+

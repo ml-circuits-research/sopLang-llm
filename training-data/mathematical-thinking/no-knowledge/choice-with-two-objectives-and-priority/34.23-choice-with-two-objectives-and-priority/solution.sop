@@ -1,0 +1,25 @@
+@slots literal
+{
+  "plans": [
+    {
+      "name": "P1",
+      "cost": 12,
+      "minutes": 8
+    },
+    {
+      "name": "P2",
+      "cost": 10,
+      "minutes": 12
+    }
+  ],
+  "maxMinutes": 10
+}
+
+@answer jsEval
+const slots = $slots;
+const allowed = slots.plans.filter((plan) => plan.minutes <= slots.maxMinutes);
+if (allowed.length === 0) { throw new Error("no plan satisfies the duration rule"); }
+let best = allowed[0];
+for (const plan of allowed) { if (plan.cost < best.cost) { best = plan; } }
+return best.name + ".";
+

@@ -1,0 +1,23 @@
+@slots literal
+{
+  "rules": [
+    [
+      "A",
+      "B"
+    ],
+    [
+      "B",
+      "C"
+    ]
+  ],
+  "start": "A"
+}
+
+@answer jsEval
+const slots = $slots;
+const reached = new Set([slots.start]);
+let changed = true;
+while (changed) { changed = false; for (const [from, to] of slots.rules) { if (reached.has(from) && !reached.has(to)) { reached.add(to); changed = true; } } }
+const chain = [...reached];
+return "The object is " + chain[chain.length - 1] + ".";
+

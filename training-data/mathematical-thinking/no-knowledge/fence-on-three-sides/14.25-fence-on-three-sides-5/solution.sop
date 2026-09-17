@@ -1,0 +1,17 @@
+@slots literal
+{
+  "length": 18,
+  "width": 8,
+  "wallLength": 18
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.wallLength !== slots.length && slots.wallLength !== slots.width) {
+  throw new Error("the wall side is neither the length nor the width of the garden");
+}
+const fence = slots.wallLength === slots.length
+  ? slots.length + 2 * slots.width
+  : slots.width + 2 * slots.length;
+return String(fence) + " m";
+

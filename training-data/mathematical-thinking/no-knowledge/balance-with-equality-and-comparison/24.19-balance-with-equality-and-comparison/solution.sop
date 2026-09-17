@@ -1,0 +1,14 @@
+@slots literal
+{
+  "equalA": "A",
+  "equalB": "B",
+  "heavier": "B",
+  "lighter": "C"
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.heavier !== slots.equalA && slots.heavier !== slots.equalB) { throw new Error("the heavier object is not one of the balanced pair"); }
+const equal = slots.equalA === slots.heavier ? slots.equalB : slots.equalA;
+return equal + " is heavier than " + slots.lighter + ".";
+

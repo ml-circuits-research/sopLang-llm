@@ -1,0 +1,18 @@
+@slots literal
+{
+  "items": [
+    "A",
+    "B",
+    "C"
+  ],
+  "fixed": "A"
+}
+
+@answer jsEval
+const slots = $slots;
+let total = 1;
+for (let step = 2; step <= slots.items.length - 1; step += 1) {
+  total *= step;
+}
+return String(total) + " ways.";
+

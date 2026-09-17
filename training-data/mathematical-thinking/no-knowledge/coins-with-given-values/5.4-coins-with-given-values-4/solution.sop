@@ -1,0 +1,28 @@
+@slots literal
+{
+  "first": 2,
+  "second": 5,
+  "total": 16
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.first <= 0 || slots.second <= 0) {
+  throw new Error("coin values must be positive");
+}
+let best = null;
+for (let countSecond = Math.floor(slots.total / slots.second); countSecond >= 0; countSecond -= 1) {
+  const rest = slots.total - countSecond * slots.second;
+  if (rest % slots.first === 0) {
+    const countFirst = rest / slots.first;
+    if (best === null || countFirst + countSecond < best.countFirst + best.countSecond) {
+      best = { countFirst: countFirst, countSecond: countSecond };
+    }
+  }
+}
+if (best === null) {
+  throw new Error(`no combination of ${slots.first} and ${slots.second} reaches ${slots.total}`);
+}
+const coin = (count, value) => count + " coin" + (count === 1 ? "" : "s") + " worth " + value + " lei";
+return coin(best.countFirst, slots.first) + " and " + coin(best.countSecond, slots.second) + ".";
+

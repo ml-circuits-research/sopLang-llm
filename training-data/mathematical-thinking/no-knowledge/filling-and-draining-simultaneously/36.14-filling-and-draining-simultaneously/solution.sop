@@ -1,0 +1,12 @@
+@slots literal
+{
+  "inflow": 10,
+  "outflow": 3,
+  "initial": 20,
+  "minutes": 6
+}
+
+@answer jsEval
+const slots = $slots;
+return slots.initial + (slots.inflow - slots.outflow) * slots.minutes + " L.";
+

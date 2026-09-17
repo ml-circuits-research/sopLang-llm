@@ -1,0 +1,20 @@
+@slots literal
+{
+  "coins": [
+    4,
+    6
+  ],
+  "first": 10,
+  "second": 11
+}
+
+@answer jsEval
+const slots = $slots;
+const payable = (amount) => {
+  for (let count = 0; count * slots.coins[0] <= amount; count += 1) {
+    if ((amount - count * slots.coins[0]) % slots.coins[1] === 0) { return true; }
+  }
+  return false;
+};
+return slots.first + ": " + (payable(slots.first) ? "yes" : "no") + "; " + slots.second + ": " + (payable(slots.second) ? "yes" : "no") + ".";
+

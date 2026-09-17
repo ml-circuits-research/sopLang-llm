@@ -1,0 +1,14 @@
+@slots literal
+{
+  "cycle": [
+    "triangle",
+    "circle"
+  ],
+  "position": 11
+}
+
+@answer jsEval
+const s = $slots;
+const shape = s.cycle[(s.position - 1) % s.cycle.length];
+return shape.charAt(0).toUpperCase() + shape.slice(1) + ".";
+

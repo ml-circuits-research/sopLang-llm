@@ -1,0 +1,11 @@
+@slots literal
+{
+  "lower": 8,
+  "upper": 9
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.lower >= slots.upper) { throw new Error("the bounds do not describe an interval"); }
+return "The length is between " + slots.lower + " cm and " + slots.upper + " cm.";
+

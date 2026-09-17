@@ -1,0 +1,30 @@
+@slots literal
+{
+  "list": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "target": 8
+}
+
+@answer jsEval
+const slots = $slots;
+const linear = slots.list.indexOf(slots.target) + 1;
+if (linear === 0) { throw new Error("the target does not appear in the list"); }
+let low = 0;
+let high = slots.list.length - 1;
+let halving = 0;
+while (low <= high) {
+  const middle = Math.floor((low + high) / 2);
+  halving += 1;
+  if (slots.list[middle] === slots.target) { break; }
+  if (slots.list[middle] < slots.target) { low = middle + 1; } else { high = middle - 1; }
+}
+return "L: " + linear + "; H: " + halving + ".";
+

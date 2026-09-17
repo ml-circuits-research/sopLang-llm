@@ -1,0 +1,27 @@
+@slots literal
+{
+  "games": [
+    {
+      "name": "A",
+      "payoffs": [
+        0,
+        10
+      ]
+    },
+    {
+      "name": "B",
+      "payoffs": [
+        4,
+        4
+      ]
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const averages = slots.games.map((game) => ({ name: game.name, average: game.payoffs.reduce((sum, value) => sum + value, 0) / game.payoffs.length }));
+averages.sort((left, right) => right.average - left.average);
+if (averages.length < 2 || averages[0].average === averages[1].average) { throw new Error("the average values do not single out one game"); }
+return "Game " + averages[0].name + ".";
+

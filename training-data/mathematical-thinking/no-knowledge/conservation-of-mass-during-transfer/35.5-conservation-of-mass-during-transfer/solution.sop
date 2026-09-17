@@ -1,0 +1,14 @@
+@slots literal
+{
+  "total": 900,
+  "moved": 200
+}
+
+@answer jsEval
+const slots = $slots;
+const first = slots.total / 2;
+const second = slots.total / 2;
+const afterFirst = first - slots.moved;
+const afterSecond = second + slots.moved;
+return "It remains " + String(afterFirst + afterSecond) + " g.";
+

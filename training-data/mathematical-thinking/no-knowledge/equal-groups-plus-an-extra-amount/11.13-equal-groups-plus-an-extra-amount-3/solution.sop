@@ -1,0 +1,12 @@
+@slots literal
+{
+  "boxes": 4,
+  "perBox": 6,
+  "extra": 3
+}
+
+@answer jsEval
+const slots = $slots;
+const total = slots.boxes * slots.perBox + slots.extra;
+return String(total);
+

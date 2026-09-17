@@ -1,0 +1,13 @@
+@slots literal
+{
+  "circle": 4,
+  "square": 6,
+  "both": 2
+}
+
+@answer jsEval
+const slots = $slots;
+const circleOnly = slots.circle - slots.both;
+const squareOnly = slots.square - slots.both;
+return String(circleOnly + squareOnly) + " labels.";
+

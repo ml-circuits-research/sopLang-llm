@@ -1,0 +1,15 @@
+@slots literal
+{
+  "total": 18,
+  "pencil": 12,
+  "ruler": 10,
+  "neither": 6,
+  "both": 7
+}
+
+@answer jsEval
+const slots = $slots;
+const atLeastOne = slots.total - slots.neither;
+const union = slots.pencil + slots.ruler - slots.both;
+return union === atLeastOne ? "Yes." : "No.";
+

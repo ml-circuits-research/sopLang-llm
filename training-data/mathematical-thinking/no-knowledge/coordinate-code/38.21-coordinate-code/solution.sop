@@ -1,0 +1,10 @@
+@slots literal
+{
+  "code": "37"
+}
+
+@answer jsEval
+const slots = $slots;
+if (String(slots.code).length !== 2) { throw new Error("the coordinate code must have exactly two digits"); }
+return "Row " + slots.code[0] + ", column " + slots.code[1] + ".";
+

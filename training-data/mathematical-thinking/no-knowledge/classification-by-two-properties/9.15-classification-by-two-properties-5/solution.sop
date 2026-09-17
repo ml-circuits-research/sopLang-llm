@@ -1,0 +1,27 @@
+@slots literal
+{
+  "cards": [
+    "square-green",
+    "round-red",
+    "square-blue",
+    "round-green",
+    "triangular-red",
+    "square-green",
+    "round-red",
+    "square-blue"
+  ],
+  "shape": "round",
+  "color": "green"
+}
+
+@answer jsEval
+const slots = $slots;
+let count = 0;
+for (const card of slots.cards) {
+  const separator = card.indexOf("-");
+  if (card.slice(0, separator) === slots.shape && card.slice(separator + 1) === slots.color) {
+    count += 1;
+  }
+}
+return String(count);
+

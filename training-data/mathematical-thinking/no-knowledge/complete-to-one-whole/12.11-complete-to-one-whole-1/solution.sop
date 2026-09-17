@@ -1,0 +1,11 @@
+@slots literal
+{
+  "denominator": 8,
+  "colored": 3
+}
+
+@answer jsEval
+const slots = $slots;
+const missing = slots.denominator - slots.colored;
+return missing + "/" + slots.denominator;
+

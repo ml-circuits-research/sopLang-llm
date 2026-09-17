@@ -1,0 +1,18 @@
+@slots literal
+{
+  "lengths": [
+    18,
+    14,
+    16
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let best = 0;
+for (let index = 1; index < slots.lengths.length; index += 1) {
+  if (slots.lengths[index] < slots.lengths[best]) { best = index; }
+}
+const longest = Math.max(...slots.lengths);
+return "Route " + (best + 1) + "; " + (longest - slots.lengths[best]) + " m shorter than the longest.";
+

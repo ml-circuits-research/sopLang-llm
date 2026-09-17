@@ -1,0 +1,24 @@
+@slots literal
+{
+  "durations": [
+    6,
+    4,
+    3,
+    3
+  ],
+  "threshold": 8
+}
+
+@answer jsEval
+const slots = $slots;
+let best = Infinity;
+for (let mask = 0; mask < (1 << slots.durations.length); mask += 1) {
+  let first = 0;
+  let second = 0;
+  for (let index = 0; index < slots.durations.length; index += 1) {
+    if ((mask >> index) & 1) { first += slots.durations[index]; } else { second += slots.durations[index]; }
+  }
+  best = Math.min(best, Math.max(first, second));
+}
+return slots.threshold + (best <= slots.threshold ? " is possible; " : " is impossible; ") + "the minimum time is " + best + " minutes.";
+

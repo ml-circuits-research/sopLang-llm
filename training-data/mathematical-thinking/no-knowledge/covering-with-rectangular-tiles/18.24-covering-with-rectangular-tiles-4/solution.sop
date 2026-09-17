@@ -1,0 +1,17 @@
+@slots literal
+{
+  "surfaceLength": 16,
+  "surfaceWidth": 12,
+  "tileLength": 4,
+  "tileWidth": 3
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.surfaceLength % slots.tileLength !== 0 || slots.surfaceWidth % slots.tileWidth !== 0) {
+  throw new Error("the tiles do not cover the surface exactly");
+}
+const alongLength = slots.surfaceLength / slots.tileLength;
+const alongWidth = slots.surfaceWidth / slots.tileWidth;
+return String(Math.round(alongLength * alongWidth));
+

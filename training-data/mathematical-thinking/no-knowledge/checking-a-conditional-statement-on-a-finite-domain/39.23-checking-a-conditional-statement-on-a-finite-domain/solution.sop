@@ -1,0 +1,14 @@
+@slots literal
+{
+  "lower": 1,
+  "upper": 10,
+  "divisor": 4
+}
+
+@answer jsEval
+const slots = $slots;
+const values = [];
+for (let value = slots.lower; value <= slots.upper; value += 1) { if (value % slots.divisor === 0) { values.push(value); } }
+if (values.length < 2) { return values.length === 0 ? "None." : values[0] + "."; }
+return values.slice(0, -1).join(", ") + " and " + values[values.length - 1] + ".";
+

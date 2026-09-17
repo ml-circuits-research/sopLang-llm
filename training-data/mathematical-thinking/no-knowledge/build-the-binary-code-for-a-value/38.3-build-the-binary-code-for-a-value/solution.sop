@@ -1,0 +1,25 @@
+@slots literal
+{
+  "weights": [
+    4,
+    2,
+    1
+  ],
+  "value": 6
+}
+
+@answer jsEval
+const slots = $slots;
+let remaining = slots.value;
+let code = "";
+for (const weight of slots.weights) {
+  if (remaining >= weight) {
+    code += "1";
+    remaining -= weight;
+  } else {
+    code += "0";
+  }
+}
+if (remaining !== 0) { throw new Error("the value cannot be represented with these weights"); }
+return code + ".";
+

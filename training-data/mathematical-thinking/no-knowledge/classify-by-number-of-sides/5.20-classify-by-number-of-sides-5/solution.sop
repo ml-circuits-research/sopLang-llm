@@ -1,0 +1,18 @@
+@slots literal
+{
+  "required": 4,
+  "candidates": [
+    3,
+    4,
+    5
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const matching = slots.candidates.filter((value) => value === slots.required);
+if (matching.length !== 1) {
+  throw new Error(`${matching.length} candidate shapes satisfy the definition instead of one`);
+}
+return "The shape with " + matching[0] + " sides.";
+

@@ -1,0 +1,16 @@
+@slots literal
+{
+  "sandwiches": 2,
+  "juices": 3
+}
+
+@answer jsEval
+const slots = $slots;
+let count = 0;
+for (let sandwich = 0; sandwich < slots.sandwiches; sandwich += 1) {
+  for (let juice = 0; juice < slots.juices; juice += 1) {
+    count += 1;
+  }
+}
+return String(count);
+

@@ -1,0 +1,11 @@
+@slots literal
+{
+  "code": "5HEL"
+}
+
+@answer jsEval
+const slots = $slots;
+const declared = Number(slots.code[0]);
+const text = String(slots.code).slice(1);
+return text.length === declared ? "The message is complete." : "The message is incomplete or corrupted.";
+

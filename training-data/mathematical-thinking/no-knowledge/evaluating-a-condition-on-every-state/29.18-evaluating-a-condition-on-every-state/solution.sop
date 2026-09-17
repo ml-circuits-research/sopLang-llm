@@ -1,0 +1,25 @@
+@slots literal
+{
+  "count": 2,
+  "options": [
+    "on",
+    "off"
+  ],
+  "onValue": "on",
+  "required": 1
+}
+
+@answer jsEval
+const slots = $slots;
+let states = [[]];
+for (let index = 0; index < slots.count; index += 1) {
+  const next = [];
+  for (const state of states) {
+    for (const option of slots.options) next.push(state.concat([option]));
+  }
+  states = next;
+}
+const matching = states.filter((state) => state.filter((value) => value === slots.onValue).length === slots.required).map((state) => "(" + state.join(",") + ")");
+if (matching.length === 2) return "In states " + matching[0] + " and " + matching[1] + ".";
+return "In states " + matching.slice(0, -1).join(", ") + ", and " + matching[matching.length - 1] + ".";
+

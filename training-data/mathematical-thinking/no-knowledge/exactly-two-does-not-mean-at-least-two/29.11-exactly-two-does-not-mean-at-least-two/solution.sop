@@ -1,0 +1,11 @@
+@slots literal
+{
+  "require": 2,
+  "total": 3,
+  "pressed": 3
+}
+
+@answer jsEval
+const slots = $slots;
+return slots.pressed === slots.require ? "Yes." : "No.";
+

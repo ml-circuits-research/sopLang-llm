@@ -1,0 +1,67 @@
+@slots literal
+{
+  "nodes": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "edges": [
+    [
+      "A",
+      "B"
+    ],
+    [
+      "B",
+      "D"
+    ],
+    [
+      "A",
+      "C"
+    ],
+    [
+      "C",
+      "D"
+    ]
+  ],
+  "costs": {
+    "A-B": 2,
+    "B-D": 5,
+    "A-C": 4,
+    "C-D": 1
+  },
+  "from": "A",
+  "to": "D"
+}
+
+@answer jsEval
+const slots = $slots;
+function edgeKey(a, b) { return a < b ? `${a}-${b}` : `${b}-${a}`; }
+function adjacency(nodes, edges) {
+  const map = new Map(nodes.map((node) => [node, []]));
+  for (const [a, b] of edges) { map.get(a).push(b); map.get(b).push(a); }
+  for (const list of map.values()) list.sort();
+  return map;
+}
+function cheapestPath(nodes, edges, costs, from, to) {
+  const neighbours = adjacency(nodes, edges);
+  let best = null;
+  const path = [from];
+  const used = new Set([from]);
+  const walk = () => {
+    const node = path.at(-1); if (node === to) {
+      let cost = 0; for (let index = 1; index < path.length; index += 1) cost += costs.get(edgeKey(path[index - 1], path[index]));
+      if (best === null || cost < best.cost) best = { path: [...path], cost }; return;
+    }
+    for (const next of neighbours.get(node)) {
+      if (used.has(next)) continue; used.add(next); path.push(next); walk(); path.pop(); used.delete(next);
+    }
+  };
+  walk();
+  return best;
+}
+const costs = new Map(Object.entries(slots.costs));
+const best = cheapestPath(slots.nodes, slots.edges, costs, slots.from, slots.to);
+if (best === null) { throw new Error("the endpoints are not connected"); }
+return best.path.join("-") + ", cost " + best.cost + ".";
+

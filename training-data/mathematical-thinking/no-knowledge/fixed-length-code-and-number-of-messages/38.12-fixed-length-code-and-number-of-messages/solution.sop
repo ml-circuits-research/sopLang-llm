@@ -1,0 +1,9 @@
+@slots literal
+{
+  "positions": 3
+}
+
+@answer jsEval
+const slots = $slots;
+return Math.pow(2, slots.positions) + " messages.";
+

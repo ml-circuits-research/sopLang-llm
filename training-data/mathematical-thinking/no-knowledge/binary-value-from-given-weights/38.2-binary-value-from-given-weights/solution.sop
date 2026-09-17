@@ -1,0 +1,19 @@
+@slots literal
+{
+  "weights": [
+    4,
+    2,
+    1
+  ],
+  "code": "101"
+}
+
+@answer jsEval
+const slots = $slots;
+if (String(slots.code).length !== slots.weights.length) { throw new Error("the bit string does not match the number of weights"); }
+let value = 0;
+for (let index = 0; index < slots.weights.length; index += 1) {
+  value += slots.weights[index] * Number(slots.code[index]);
+}
+return value + ".";
+
