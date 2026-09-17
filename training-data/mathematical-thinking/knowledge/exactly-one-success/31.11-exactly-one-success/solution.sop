@@ -1,0 +1,22 @@
+@facts literal
+{"trials":2,"outcomes":["A","B"]}
+
+@slots literal
+{
+  "success": "A"
+}
+
+@answer jsEval
+const slots = $slots;
+const facts = $facts;
+let space = [""];
+for (let step = 0; step < facts.trials; step += 1) {
+  space = space.flatMap((prefix) => facts.outcomes.map((symbol) => prefix + symbol));
+}
+const favorable = space.filter((outcome) => outcome.split("").filter((letter) => letter === slots.success).length === 1).length;
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+const factor = gcd(favorable, space.length);
+const n = favorable / factor;
+const d = space.length / factor;
+return d === 1 ? String(n) : n + "/" + d;
+

@@ -1,0 +1,13 @@
+@slots literal
+{
+  "shape": "rectangle",
+  "axis": "vertical"
+}
+
+@answer jsEval
+const s = $slots;
+const axesOf = { rectangle: ["vertical", "horizontal"], square: ["vertical", "horizontal"], circle: ["vertical", "horizontal"] };
+const axes = axesOf[s.shape] || [];
+const symmetric = axes.includes(s.axis) && s.shape !== "triangle";
+return symmetric ? "Yes." : "No.";
+

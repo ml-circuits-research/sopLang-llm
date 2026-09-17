@@ -1,0 +1,19 @@
+@slots literal
+{
+  "operator": "or",
+  "properties": [
+    "red",
+    "star"
+  ],
+  "query": "red"
+}
+
+@answer jsEval
+const slots = $slots;
+const sufficient = slots.operator === "or" ? slots.properties.indexOf(slots.query) !== -1 : slots.properties.length === 1;
+const necessary = slots.operator === "and" ? slots.properties.indexOf(slots.query) !== -1 : slots.properties.length === 1;
+if (sufficient && necessary) return "It is necessary and sufficient.";
+if (sufficient) return "It is sufficient, but not necessary.";
+if (necessary) return "Necessary, but not sufficient.";
+return "Neither necessary nor sufficient.";
+

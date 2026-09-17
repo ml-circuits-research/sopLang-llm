@@ -1,0 +1,10 @@
+@slots literal
+{
+  "center": "O",
+  "centerFixed": true
+}
+
+@answer jsEval
+const slots = $slots;
+return slots.centerFixed === true ? "In the same position." : "It moves with the figure.";
+

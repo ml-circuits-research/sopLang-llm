@@ -1,0 +1,10 @@
+@slots literal
+{
+  "count": 5,
+  "cubeLength": 3
+}
+
+@answer jsEval
+const slots = $slots;
+return "At least " + (slots.count * slots.cubeLength) + " cm.";
+

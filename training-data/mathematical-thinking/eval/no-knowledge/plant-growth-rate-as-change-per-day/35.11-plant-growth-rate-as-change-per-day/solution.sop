@@ -1,0 +1,12 @@
+@slots literal
+{
+  "start": 10,
+  "end": 16,
+  "days": 3
+}
+
+@answer jsEval
+const slots = $slots;
+const fmt = (v) => String(Number(Number(v).toFixed(6)));
+return fmt((slots.end - slots.start) / slots.days) + " cm/day.";
+

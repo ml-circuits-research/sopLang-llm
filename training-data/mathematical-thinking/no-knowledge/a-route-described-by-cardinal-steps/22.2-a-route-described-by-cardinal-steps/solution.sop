@@ -1,0 +1,33 @@
+@slots literal
+{
+  "place": "A",
+  "moves": [
+    {
+      "count": 3,
+      "direction": "east"
+    },
+    {
+      "count": 2,
+      "direction": "north"
+    },
+    {
+      "count": 1,
+      "direction": "west"
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let dx = 0; let dy = 0;
+for (const move of slots.moves) {
+  if (move.direction === "east") dx += move.count;
+  else if (move.direction === "west") dx -= move.count;
+  else if (move.direction === "north") dy += move.count;
+  else if (move.direction === "south") dy -= move.count;
+}
+const pieces = [];
+if (dx !== 0) pieces.push(Math.abs(dx) + " squares " + (dx > 0 ? "east" : "west"));
+if (dy !== 0) pieces.push(Math.abs(dy) + " squares " + (dy > 0 ? "north" : "south"));
+return pieces.join(" and ") + " of " + slots.place + ".";
+

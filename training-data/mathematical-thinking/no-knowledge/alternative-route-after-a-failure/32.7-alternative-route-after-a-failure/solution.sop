@@ -1,0 +1,55 @@
+@slots literal
+{
+  "nodes": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "edges": [
+    [
+      "A",
+      "B"
+    ],
+    [
+      "A",
+      "D"
+    ],
+    [
+      "D",
+      "C"
+    ]
+  ],
+  "from": "A",
+  "to": "C"
+}
+
+@answer jsEval
+const slots = $slots;
+function adjacency(nodes, edges) {
+  const map = new Map(nodes.map((node) => [node, []]));
+  for (const [a, b] of edges) { map.get(a).push(b); map.get(b).push(a); }
+  for (const list of map.values()) list.sort();
+  return map;
+}
+function buildPath(previous, to) {
+  if (!previous.has(to)) return null;
+  const path = [];
+  for (let node = to; node !== null; node = previous.get(node)) path.unshift(node);
+  return path;
+}
+function searchPath(successorsOf, from, to) {
+  const previous = new Map([[from, null]]);
+  const queue = [from];
+  while (queue.length > 0) {
+    const node = queue.shift(); for (const next of successorsOf(node)) if (!previous.has(next)) { previous.set(next, node); queue.push(next); }
+  }
+  return buildPath(previous, to);
+}
+function shortestPath(nodes, edges, from, to) {
+  const neighbours = adjacency(nodes, edges);
+  return searchPath((node) => neighbours.get(node), from, to);
+}
+const path = shortestPath(slots.nodes, slots.edges, slots.from, slots.to);
+return path !== null ? "Yes, " + path.join("-") + "." : "No.";
+

@@ -1,0 +1,18 @@
+@facts literal
+{"translationMovesEveryPointEqually":true}
+
+@slots literal
+{
+  "shape": "triangle",
+  "vertices": 3,
+  "distance": 2,
+  "direction": "right"
+}
+
+@answer jsEval
+const slots = $slots;
+if ($facts.translationMovesEveryPointEqually === true) {
+  return "All points must move by the same displacement.";
+}
+return "It is enough to move one vertex.";
+

@@ -1,0 +1,24 @@
+@slots literal
+{
+  "entries": [
+    [
+      "Monday",
+      3
+    ],
+    [
+      "Tuesday",
+      5
+    ],
+    [
+      "Wednesday",
+      4
+    ]
+  ],
+  "unit": "products"
+}
+
+@answer jsEval
+const slots = $slots;
+const total = slots.entries.reduce((sum, entry) => sum + entry[1], 0);
+return String(total) + " " + slots.unit + ".";
+

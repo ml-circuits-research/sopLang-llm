@@ -1,0 +1,20 @@
+@facts literal
+{"cards":[{"color":"red","shape":"circle"},{"color":"red","shape":"square"},{"color":"blue","shape":"circle"},{"color":"blue","shape":"triangle"}]}
+
+@slots literal
+{
+  "condition": "red",
+  "target": "triangle"
+}
+
+@answer jsEval
+const slots = $slots;
+const facts = $facts;
+const remaining = facts.cards.filter((card) => card.color === slots.condition);
+const favorable = remaining.filter((card) => card.shape === slots.target).length;
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+const factor = gcd(favorable, remaining.length);
+const n = favorable / factor;
+const d = remaining.length / factor;
+return d === 1 ? String(n) : n + "/" + d;
+

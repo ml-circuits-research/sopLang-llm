@@ -1,0 +1,25 @@
+@facts literal
+{"medianRule":{"odd":"middle","even":"mean-of-two-central"}}
+
+@slots literal
+{
+  "values": [
+    4,
+    5,
+    6
+  ],
+  "oldMedian": 5,
+  "added": 20
+}
+
+@answer jsEval
+const slots = $slots;
+const rule = $facts.medianRule;
+const ordered = [...slots.values, slots.added].sort((a, b) => a - b);
+if (ordered.length % 2 !== 0) {
+  throw new Error("the median rule for an even list of values is required");
+}
+const middle = ordered.length / 2;
+const median = rule.even === "mean-of-two-central" ? (ordered[middle - 1] + ordered[middle]) / 2 : (() => { throw new Error("unsupported even median rule " + rule.even); })();
+return String(median) + ".";
+

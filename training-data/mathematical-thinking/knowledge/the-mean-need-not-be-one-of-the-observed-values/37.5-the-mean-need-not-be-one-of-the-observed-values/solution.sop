@@ -1,0 +1,20 @@
+@facts literal
+{"meanRule":{"numerator":"sum","denominator":"count"}}
+
+@slots literal
+{
+  "values": [
+    2,
+    3
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const rule = $facts.meanRule;
+const numerator = rule.numerator === "sum" ? slots.values.reduce((sum, value) => sum + value, 0) : (() => { throw new Error("unsupported numerator " + rule.numerator); })();
+const denominator = rule.denominator === "count" ? slots.values.length : (() => { throw new Error("unsupported denominator " + rule.denominator); })();
+const mean = numerator / denominator;
+const observed = slots.values.includes(mean);
+return (observed ? "Yes" : "No") + "; the mean is " + mean + ".";
+

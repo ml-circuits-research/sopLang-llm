@@ -1,0 +1,16 @@
+@slots literal
+{
+  "ruleProperty": "three corners",
+  "ruleConsequence": "green",
+  "observedProperty": "three corners",
+  "observedValue": "red",
+  "deniedValue": "green"
+}
+
+@answer jsEval
+const slots = $slots;
+const contradicts = slots.observedProperty === slots.ruleProperty &&
+  slots.deniedValue === slots.ruleConsequence &&
+  slots.observedValue !== slots.ruleConsequence;
+return contradicts ? "No; the description is incompatible with the rule." : "Yes; the description can be true.";
+

@@ -1,0 +1,18 @@
+@facts literal
+{"rule":"count-symbol","description":"a run of one symbol is written as the number of repetitions followed by the symbol","example":{"AAAABBCC":"4A2B2C"}}
+
+@slots literal
+{
+  "encoded": "2A3B1C"
+}
+
+@answer jsEval
+const slots = $slots;
+const rule = $facts;
+if (rule.rule !== "count-symbol") { throw new Error("the fact wire does not define the count-symbol rule"); }
+let decoded = "";
+for (const match of String(slots.encoded).matchAll(/(\d+)(.)/g)) {
+  decoded += String(match[2]).repeat(Number(match[1]));
+}
+return decoded + ".";
+

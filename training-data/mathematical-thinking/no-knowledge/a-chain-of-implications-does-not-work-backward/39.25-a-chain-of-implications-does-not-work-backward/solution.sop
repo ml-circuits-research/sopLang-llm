@@ -1,0 +1,23 @@
+@slots literal
+{
+  "rules": [
+    [
+      "A",
+      "B"
+    ],
+    [
+      "B",
+      "C"
+    ]
+  ],
+  "known": "C",
+  "target": "A"
+}
+
+@answer jsEval
+const slots = $slots;
+const reached = new Set([slots.known]);
+let changed = true;
+while (changed) { changed = false; for (const [from, to] of slots.rules) { if (reached.has(from) && !reached.has(to)) { reached.add(to); changed = true; } } }
+return reached.has(slots.target) ? "Yes." : "No.";
+

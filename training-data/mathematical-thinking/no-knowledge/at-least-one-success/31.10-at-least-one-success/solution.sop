@@ -1,0 +1,21 @@
+@slots literal
+{
+  "outcomes": [
+    "AA",
+    "AB",
+    "BA",
+    "BB"
+  ],
+  "success": "A"
+}
+
+@answer jsEval
+const slots = $slots;
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+const favorable = slots.outcomes.filter((outcome) => outcome.includes(slots.success)).length;
+const total = slots.outcomes.length;
+const factor = gcd(favorable, total);
+const n = favorable / factor;
+const d = total / factor;
+return d === 1 ? String(n) : n + "/" + d;
+

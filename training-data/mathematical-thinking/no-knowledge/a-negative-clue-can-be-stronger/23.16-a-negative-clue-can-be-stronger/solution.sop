@@ -1,0 +1,55 @@
+@slots literal
+{
+  "candidates": [
+    "red-circle",
+    "red-square",
+    "blue-circle",
+    "green-circle"
+  ],
+  "clues": [
+    {
+      "text": "it is not a circle",
+      "predicate": {
+        "op": "lacks",
+        "word": "circle"
+      }
+    },
+    {
+      "text": "it is not red",
+      "predicate": {
+        "op": "lacks",
+        "word": "red"
+      }
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const matches = (value, predicate) => {
+  if (predicate.op === "and") { return predicate.of.every((part) => matches(value, part)); }
+  if (predicate.op === "eq") { return Number(value) === predicate.value; }
+  if (predicate.op === "gt") { return Number(value) > predicate.value; }
+  if (predicate.op === "lt") { return Number(value) < predicate.value; }
+  if (predicate.op === "ge") { return Number(value) >= predicate.value; }
+  if (predicate.op === "le") { return Number(value) <= predicate.value; }
+  if (predicate.op === "even") { return Number(value) % 2 === 0; }
+  if (predicate.op === "odd") { return Math.abs(Number(value) % 2) === 1; }
+  if (predicate.op === "lacks") { return !String(value).includes(predicate.word); }
+  throw new Error("unsupported predicate " + predicate.op);
+};
+const keep = (candidates, predicate) => candidates.filter((value) => matches(value, predicate));
+const joinList = (items) => {
+  const parts = items.map(String);
+  if (parts.length === 1) { return parts[0]; }
+  if (parts.length === 2) { return parts[0] + " and " + parts[1]; }
+  return parts.slice(0, -1).join(", ") + ", and " + parts[parts.length - 1];
+};
+let best = null;
+for (const clue of slots.clues) {
+  const remaining = keep(slots.candidates, clue.predicate).length;
+  if (best === null || remaining < best.remaining) { best = { text: clue.text, remaining }; }
+}
+const first = best.text.charAt(0).toUpperCase() + best.text.slice(1);
+return "“" + first + "”.";
+

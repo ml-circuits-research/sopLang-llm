@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sopLang-llm Documentation</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+  </script>
+</head>
+<body>
+  <div data-include="partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel">
+      <p class="breadcrumbs"><a href="index.html">Home</a></p>
+      <p class="kicker">Language</p>
+      <h1>SOP Lang</h1>
+      <p class="lede"><a href="wiki.html#definition-sop-lang">SOP Lang</a> is the executable intermediate representation of this project. The student model writes it, and the runtime executes it. The language is intentionally small: its basic unit is a <a href="wiki.html#definition-wire">wire</a>, and extensibility comes from <a href="wiki.html#definition-wire-command">wire commands</a> rather than from a growing surface grammar.</p>
+
+      <h2>Declarations and bodies</h2>
+      <p>A wire declaration begins at the start of a line with <code>@</code>, followed by a wire name and a wire command. Everything until the next valid declaration belongs to the wire's body. A body may contain JavaScript, plain text, JSON, a neural instruction, or command-specific configuration, so the grammar stays uniform while commands stay flexible.</p>
+
+      <pre><code>@selected jsEval
+return $rows.filter(row =&gt; row.enabled === true);
+
+@total jsEval
+return $selected.reduce((sum, row) =&gt; sum + row.amount, 0);
+
+@output jsEval
+return JSON.stringify({
+  count: $selected.length,
+  total: $total
+});</code></pre>
+
+      <p>In this program <code>rows</code> is an <a href="wiki.html#definition-input-wire">input wire</a> supplied by the wrapper. <code>selected</code> depends on <code>rows</code>, <code>total</code> depends on <code>selected</code>, and <code>output</code> depends on both values its code uses. The textual order of declarations is not the execution order. The runtime extracts dependencies, builds a directed graph, validates that the active graph is acyclic, sorts it topologically, and executes each wire only after its value dependencies are valid.</p>
+
+      <h2>Parser boundary rule</h2>
+      <p>A line that begins in column one with a valid <code>@name command</code> starts a new wire. A body that must literally contain such a line escapes it as <code>\@name command</code>, and the runtime removes the escape before the body reaches the command. Wire identifiers use a conservative ASCII grammar in the reference implementation so they can be bound predictably inside JavaScript, while values themselves can contain arbitrary Unicode.</p>
+
+      <h2>Value references and conditionality</h2>
+      <p>The canonical value reference is <code>$name</code>. There is no privileged conditional or looping primitive. A local conditional belongs in JavaScript or in the implementation of a custom wire command, and it selects among values that are already dependencies of the wire. Structural conditionality, which changes which subgraph should exist at all, uses the <a href="wiki.html#definition-metaprogramming">metaprogramming</a> API to create or redefine wires. The runtime then validates the new graph revision and sorts it again.</p>
+
+      <h2>Dependency analysis</h2>
+      <p>Dependency extraction is not a naive regular expression over body text. In <a href="wiki.html#definition-js-eval">jsEval</a>, <code>$rows</code> used as an identifier is a dependency, while the characters <code>"$rows"</code> inside a string literal may be data or code to be emitted later. The JavaScript implementation lexes the body well enough to find value references outside quoted literals and comments, and other wire types define their own analyzer. Every registered command therefore carries both execution semantics and dependency-analysis semantics, and the runtime asks a command which values and structural definitions it reads before scheduling it.</p>
+
+      <h2>Output convention</h2>
+      <p>A circuit's output is a convention rather than special control flow. The runtime returns the value of a configured output wire, commonly named <code>output</code>, and that wire can have any command type. When a caller requires JSON, a final <code>jsEval</code> constructs and serializes the object deterministically. When a caller requires a typed object, the runtime validates the output value against a declared JSON Schema before returning it, so formatting correctness is guaranteed independently of the semantic correctness of upstream analysis.</p>
+
+      <h2>Metaprogramming and templates</h2>
+      <p>A static directed acyclic graph is enough when the complete set of subproblems is known in advance. Real tasks often reveal structure only after data is available: a query returns an unknown number of groups, a legal analysis discovers exceptions that each need separate verification, or a debugging task produces a new hypothesis after a test fails. A <code>jsEval</code> wire can stage changes to the circuit itself through a transactional API.</p>
+
+      <pre><code>circuit.addWire(name, { command, body, metadata });
+circuit.redefineWire(name, { command, body, metadata, expectedDefinitionHash });
+circuit.invalidateWire(name, { reason });
+circuit.invalidateDownstream(name, { reason });
+circuit.instantiateTemplate(templateName, bindings, { prefix });
+circuit.getDefinition(name);
+circuit.listDefinitions({ prefix });
+circuit.commit({ key, result });</code></pre>
+
+      <p>The API does not expose an unrestricted value read. Values enter JavaScript through <code>$wire</code> dependencies so the graph remains a truthful description of causality. All write methods append to a transaction buffer, and <code>circuit.commit</code> asks the runtime to validate and publish the buffered operations at the epoch boundary. Newly created wires are not executed in the stale schedule: the runtime applies the transaction, re-analyzes dependencies, verifies acyclicity, increments the circuit revision, and starts the next <a href="wiki.html#definition-epoch">epoch</a>.</p>
+
+      <p>A <a href="wiki.html#definition-template">template</a> is a reusable SOP Lang fragment with named parameters and hygienic internal wire names. Templates represent patterns such as map-then-reduce, retrieve-then-verify, or recursive divide-and-analyze, and their source is versioned and inspectable. Recursion emerges as a template instantiating another copy of itself for a smaller subproblem, which means every fixed graph revision stays acyclic and resource bounds such as epoch count, created wires, neural calls, JavaScript time, and template depth stay explicit.</p>
+
+      <figure class="diagram">
+        <pre class="mermaid">flowchart TB
+  Source[SOP Lang source] --> Parse[Parse wire declarations and bodies]
+  Parse --> Analyze[Analyze dependencies per command]
+  Analyze --> Graph[Build active dependency graph]
+  Graph --> Check{Cycle found?}
+  Check -->|yes| Fail[Fail before publishing a result]
+  Check -->|no| Sort[Compute deterministic topological order]
+  Sort --> Run[Execute ready wires]
+  Run --> Commit[Commit staged effects at epoch boundary]
+  Commit --> Publish[Publish requested output wire]</pre>
+        <figcaption><em>Circuit validation and execution flow</em></figcaption>
+      </figure>
+
+      <h2>Where the contract lives</h2>
+      <p>The language, scheduling, and transaction semantics are specified in <a href="specsLoader.html?spec=DS002-sop-lang-core.md">DS002-sop-lang-core</a>. The command vocabulary and the <code>.mjs</code> extension contract are specified in <a href="specsLoader.html?spec=DS004-wire-types.md">DS004-wire-types</a>. Container commands and their revision semantics are specified in <a href="specsLoader.html?spec=DS005-containers.md">DS005-containers</a>.</p>
+    </div>
+  </main>
+  <div data-include="partials/footer.html"></div>
+  <script src="partials-loader.js"></script>
+</body>
+</html>

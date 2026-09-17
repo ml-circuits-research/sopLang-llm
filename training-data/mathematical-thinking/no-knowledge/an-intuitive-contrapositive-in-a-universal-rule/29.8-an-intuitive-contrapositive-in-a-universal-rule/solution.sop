@@ -1,0 +1,12 @@
+@slots literal
+{
+  "antecedent": "golden",
+  "consequent": "metallic",
+  "observed": "not metallic"
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.observed === "not " + slots.consequent) return "No, it cannot be " + slots.antecedent + ".";
+return "Yes, it can be " + slots.antecedent + ".";
+

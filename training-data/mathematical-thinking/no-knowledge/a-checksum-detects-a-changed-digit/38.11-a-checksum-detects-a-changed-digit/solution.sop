@@ -1,0 +1,24 @@
+@slots literal
+{
+  "digits": [
+    2,
+    6,
+    5
+  ],
+  "checksum": 3,
+  "from": 6,
+  "to": 7
+}
+
+@answer jsEval
+const slots = $slots;
+const data = slots.digits.slice();
+const index = data.indexOf(slots.from);
+if (index === -1) throw new Error("the changed digit is not part of the data");
+data[index] = slots.to;
+let sum = 0;
+for (const digit of data) {
+  sum += digit;
+}
+return (((sum % 10) + 10) % 10) === slots.checksum ? "Yes." : "No.";
+

@@ -1,0 +1,11 @@
+@slots literal
+{
+  "capacity": 5,
+  "boxes": 12
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.capacity <= 0) { throw new Error("the capacity must be positive"); }
+return String(Math.ceil(slots.boxes / slots.capacity)) + " trips.";
+

@@ -1,0 +1,15 @@
+@slots literal
+{
+  "firstHours": 2,
+  "firstSpeed": 4,
+  "rest": 1,
+  "secondHours": 1,
+  "secondSpeed": 4
+}
+
+@answer jsEval
+const slots = $slots;
+const distance = slots.firstHours * slots.firstSpeed + slots.secondHours * slots.secondSpeed;
+const time = slots.firstHours + slots.rest + slots.secondHours;
+return distance + " km and " + time + " hours.";
+

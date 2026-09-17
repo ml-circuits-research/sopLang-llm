@@ -1,0 +1,15 @@
+@facts literal
+{"centimetersPerMeter": 100}
+
+@slots literal
+{
+  "meters": 2,
+  "centimeters": 35
+}
+
+@answer jsEval
+const slots = $slots;
+const facts = $facts;
+const total = slots.meters * facts.centimetersPerMeter + slots.centimeters;
+return total + " cm";
+

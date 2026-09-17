@@ -1,0 +1,24 @@
+@slots literal
+{
+  "components": [
+    [
+      "A",
+      "B",
+      "C"
+    ],
+    [
+      "D",
+      "E"
+    ]
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+function joinComponents(components) {
+  const words = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five'];
+  return { links: components.length - 1, word: words[components.length - 1], example: [components[0].at(-1), components[1][0]] };
+}
+const joined = joinComponents(slots.components);
+return joined.word + " link" + (joined.links === 1 ? "" : "s") + ", for example " + joined.example.join("-") + ".";
+

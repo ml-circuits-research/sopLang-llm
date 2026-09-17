@@ -1,0 +1,14 @@
+@facts literal
+{"twoReflectionsInTheSameAxisReturnToTheStart":true}
+
+@slots literal
+{
+  "reflections": 2
+}
+
+@answer jsEval
+const slots = $slots;
+const even = slots.reflections % 2 === 0;
+const returns = even && $facts.twoReflectionsInTheSameAxisReturnToTheStart === true;
+return returns ? "It returns to the initial point." : "It ends on the other side of the axis, at the same distance.";
+

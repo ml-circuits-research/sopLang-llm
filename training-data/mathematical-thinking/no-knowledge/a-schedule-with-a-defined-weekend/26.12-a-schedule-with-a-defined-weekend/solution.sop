@@ -1,0 +1,13 @@
+@slots literal
+{
+  "weekend": [
+    "Saturday",
+    "Sunday"
+  ],
+  "day": "Sunday"
+}
+
+@answer jsEval
+const slots = $slots;
+return (slots.weekend.includes(slots.day) ? "No" : "Yes") + ".";
+

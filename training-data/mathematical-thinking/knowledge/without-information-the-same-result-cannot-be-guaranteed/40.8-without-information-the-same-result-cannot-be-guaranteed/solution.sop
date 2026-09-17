@@ -1,0 +1,32 @@
+@facts literal
+{"payoffs":{"A":{"X":10,"Y":0},"B":{"X":0,"Y":10}},"decisionRule":{"worstCase":"min","acrossActions":"max"}}
+
+@slots literal
+{
+  "actions": [
+    "A",
+    "B"
+  ],
+  "states": [
+    "X",
+    "Y"
+  ],
+  "target": 10,
+  "informed": false
+}
+
+@answer jsEval
+const slots = $slots;
+const facts = typeof $facts === "string" ? JSON.parse($facts) : $facts;
+if (slots.informed) { throw new Error("the template requires a choice made before observing the state"); }
+const rule = facts.decisionRule;
+let guarantee = -Infinity;
+for (const action of slots.actions) {
+  let worst = Infinity;
+  for (const state of slots.states) {
+    worst = rule.worstCase === "min" ? Math.min(worst, facts.payoffs[action][state]) : (() => { throw new Error("unsupported worst-case rule " + rule.worstCase); })();
+  }
+  guarantee = rule.acrossActions === "max" ? Math.max(guarantee, worst) : (() => { throw new Error("unsupported action rule " + rule.acrossActions); })();
+}
+return guarantee >= slots.target ? "Yes." : "No.";
+

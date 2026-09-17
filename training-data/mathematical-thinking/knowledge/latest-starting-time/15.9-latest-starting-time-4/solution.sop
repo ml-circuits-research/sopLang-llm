@@ -1,0 +1,19 @@
+@facts literal
+{"minutesPerHour": 60}
+
+@slots literal
+{
+  "hours": 15,
+  "minutes": 0,
+  "duration": 80
+}
+
+@answer jsEval
+const slots = $slots;
+const perHour = $facts.minutesPerHour;
+const start = slots.hours * perHour + slots.minutes - slots.duration;
+if (start < 0) {
+  throw new Error("the activity does not fit inside the day");
+}
+return String(Math.floor(start / perHour)) + ":" + String(start % perHour).padStart(2, "0");
+

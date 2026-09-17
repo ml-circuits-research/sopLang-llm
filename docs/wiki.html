@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sopLang-llm Documentation</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+  </script>
+</head>
+<body>
+  <div data-include="partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel">
+      <p class="breadcrumbs"><a href="index.html">Home</a></p>
+      <p class="kicker">Reference</p>
+      <h1>Wiki</h1>
+      <p class="lede">This page defines the terminology of sopLang-llm. Every project-specific term, acronym, and named component used in the documentation appears here once with a stable anchor, and the pages and specifications link to that anchor where the term appears in body text.</p>
+
+      <dl class="wiki-list">
+        <div class="wiki-entry" id="definition-sop-lang">
+          <dt>SOP Lang</dt>
+          <dd>
+            <p>SOP Lang is the executable intermediate representation that the student model generates and the runtime executes. Its basic unit is a wire: a declaration that begins at the start of a line with <code>@</code>, followed by a wire name and a wire command, with a body that continues until the next valid declaration. A body may contain JavaScript, plain text, JSON, a neural instruction, or command-specific configuration, so the language keeps a small surface grammar while wire commands provide extensibility. SOP Lang programs are evaluated as dependency graphs rather than as scripts: the runtime extracts value dependencies, validates that the active graph is acyclic, and executes wires only after their dependencies have valid values. The canonical value reference is <code>$name</code>. The output of a circuit is the value of a configured output wire, commonly named <code>output</code>. SOP Lang deliberately has no privileged conditional or looping construct; local conditionality belongs in JavaScript or in a wire command, and structural conditionality uses the circuit metaprogramming API. The language contract is recorded in <a href="specsLoader.html?spec=DS002-sop-lang-core.md">DS002-sop-lang-core</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-wire">
+          <dt>Wire</dt>
+          <dd>
+            <p>A wire is one named unit of computation in a SOP Lang circuit. It has a name, a command identity and version, a body, a normalized definition hash, value dependencies, structural dependencies, metadata, and an evaluation state. The state moves through at least <code>pending</code>, <code>ready</code>, <code>running</code>, <code>valid</code>, <code>dirty</code>, <code>failed</code>, and <code>cancelled</code>. A wire's value enters JavaScript only through a declared <code>$name</code> dependency, which keeps the dependency graph a truthful description of causality. Wires are scheduled by the runtime and never directly by the model. Reordering independent wire declarations does not change the result of a pure circuit. The wire model is defined in <a href="specsLoader.html?spec=DS002-sop-lang-core.md">DS002-sop-lang-core</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-wire-command">
+          <dt>Wire command</dt>
+          <dd>
+            <p>A wire command is the executable identity that gives a wire its semantics and its dependency-analysis rules. Each registered command carries both execution semantics and dependency-analysis semantics: the runtime asks the command implementation which wire values and structural definitions it reads before scheduling it. Commands are either part of the reference profile, such as <code>input</code>, <code>literal</code>, <code>jsEval</code>, <code>modelCall</code>, and the container commands, or additional commands installed as ECMAScript modules. A command has one stable executable identity and one model-visible contract. The vocabulary is defined in <a href="specsLoader.html?spec=DS004-wire-types.md">DS004-wire-types</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-wire-type">
+          <dt>Wire type</dt>
+          <dd>
+            <p>A wire type is the installable ECMAScript module form of a wire command. A module exports a <code>wireType</code> object with three layers: a manifest that may be shown to the model, an analyzer and validator used by the compiler, and an executor used by the runtime. The relative module path may determine the command name. The manifest is part of the runtime capability catalog rather than human documentation, so it must state the command name and version, purpose, when to use it and when not to, the accepted body form, how dependencies are referenced, the output contract, the effect class, determinism, and canonical examples. The extension contract is defined in <a href="specsLoader.html?spec=DS004-wire-types.md">DS004-wire-types</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-wire-manifest">
+          <dt>Wire manifest</dt>
+          <dd>
+            <p>A wire manifest is the model-visible description of an installed wire type. The wrapper renders manifests into the control plane of every model call, and the student reads them to decide which command to use. A manifest must be concise, operational, and unambiguous, and it is versioned together with the executable code so that the trace can record the implementation hash. Training deliberately randomizes command names and withholds entire wire types to test whether the student interprets manifests rather than memorizing token sequences. Manifests are specified in <a href="specsLoader.html?spec=DS004-wire-types.md">DS004-wire-types</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-js-eval">
+          <dt>jsEval</dt>
+          <dd>
+            <p><code>jsEval</code> is the standard wire command that executes JavaScript over declared <code>$wire</code> dependencies. It is the universal deterministic escape hatch: sorting, counting, joining, filtering, validating, aggregating, and serializing belong in a short <code>jsEval</code> program whenever the remaining subproblem is mechanical. It is pure unless its code explicitly stages effects. The JavaScript environment exposes graph mutation through the circuit API but never an unrestricted value read, so all values still enter through declared dependencies. A body runs in an isolated guest realm inside a worker thread, receives copies of its dependency values through the <a href="wiki.html#definition-value-profile">value profile</a>, cannot reach the host process or the module system, and is terminated when it exceeds its JavaScript deadline, which turns a nonterminating body into a structured <code>budget_exceeded</code> outcome. The command is summarized in <a href="specsLoader.html?spec=DS004-wire-types.md">DS004-wire-types</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-value-profile">
+          <dt>Value profile</dt>
+          <dd>
+            <p>The value profile is the versioned rule set that governs how a value crosses a boundary between the kernel, a JavaScript guest realm, and the persistent container store. Scalars transfer as themselves; <code>NaN</code>, infinities, negative zero, and big integers transfer through a tag; arrays, plain objects, dates, maps, sets, and regular expressions transfer structurally as fresh copies. Functions, symbols, class instances, promises, and cyclic structures are not transferable and are reported as <code>unsupported_value</code>. Because a transferred value is a copy, a mutation inside a wire never reaches a caller value, a sibling observation, a stored record, or a container revision; persistent change requires a committed patch and a new revision. The profile is implemented in <code>runtime/values.mjs</code> and summarized in <a href="specsLoader.html?spec=DS002-sop-lang-core.md">DS002-sop-lang-core</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-model-call">
+          <dt>modelCall</dt>
+          <dd>
+            <p><code>modelCall</code> is the standard wire command that invokes the configured neural model for a local semantic judgment or generation step. Its effect class is an explicit non-deterministic neural effect that is fully logged, which makes every model invocation a visible cost center that can be ablated. A summary circuit may use model calls for claim extraction or paraphrase while accounting for coverage in JavaScript, and a novelty circuit may reserve neural judgment for candidate comparisons that remain after retrieval and deterministic overlap metrics. The command is summarized in <a href="specsLoader.html?spec=DS004-wire-types.md">DS004-wire-types</a> and the call modes that route it are defined in <a href="specsLoader.html?spec=DS006-context-adapter.md">DS006-context-adapter</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-circuit">
+          <dt>Circuit</dt>
+          <dd>
+            <p>A circuit is the complete SOP Lang program produced for a request: a set of wire definitions with a dependency graph, a revision identifier, and a schedule computed from the requested output wires. The circuit is the object the model compiles and the runtime executes. It can grow between epochs through graph metaprogramming, and each structural change increments the circuit revision. The circuit and its evaluation semantics are defined in <a href="specsLoader.html?spec=DS002-sop-lang-core.md">DS002-sop-lang-core</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-compiled-context">
+          <dt>Compiled context</dt>
+          <dd>
+            <p>Compiled context is the persistent semantic state that the system builds from a long source. Instead of keeping an entire book in one transient prompt, the system plans typed containers, streams the source in chunks, and compiles each chunk into inert SOP Lang contributions and deferred analysis wires. After sealing, the accumulated circuit is executed and the containers become queryable by ordinary code and by later neural calls. Compiled context is not infinite context and does not guarantee perfect memory: extraction can lose information, identity resolution can fail, and a schema can omit a distinction that later matters, which is why raw source chunks are retained outside compiled state. The contract is defined in <a href="specsLoader.html?spec=DS006-context-adapter.md">DS006-context-adapter</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-compiled-plan">
+          <dt>Compiled plan</dt>
+          <dd>
+            <p>A compiled plan is the dataset form of a circuit: the SOP Lang program that a compiling model emits after it has read the statement, so the program already contains the values it was compiled from. Its wires are a <code>slots</code> <code>literal</code> carrying the extracted values, an optional <code>facts</code> <code>literal</code> carrying external knowledge that the computation reads, and an <code>answer</code> <code>jsEval</code> wire performing the deterministic computation. Because the plan carries its own data, a dataset circuit declares no <code>input</code> wire, since nothing injects a binding into it at run time, and no <code>modelCall</code> wire, because the compiler already performed the semantic parse and a runtime call would ask a model to re-parse its own input. The family loader refuses both cases before a manifest is locked, and <code>training-data/verify.mjs</code> re-checks the shipped tree by warning on any forbidden wire and re-executing every circuit without inputs or model bindings. The runtime keeps the <code>input</code> and <code>modelCall</code> commands for interactive circuits, adapter roles, and templates, where a wrapper really does supply a binding or where a judgment is genuinely new. The contract is defined in <a href="specsLoader.html?spec=DS008-training-data.md">DS008-training-data</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-plan-fingerprint">
+          <dt>Plan fingerprint</dt>
+          <dd>
+            <p>A plan fingerprint is the identity of a latent plan: the fact body and the compute body of a family's circuit with the instance values excluded. A compiled plan embeds the values of its instance, so the variants of one template have distinct circuit text, and the fingerprint is the deterministic content they share. The dataset report and the manifest index count distinct plans with the fingerprint, and the evaluation holdout clusters template groups by shared fingerprint with a writer assertion that no holdout plan occurs in a training row, so two templates that compile to the same deterministic plan never straddle the split. The contract is defined in <a href="specsLoader.html?spec=DS008-training-data.md">DS008-training-data</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-container">
+          <dt>Container</dt>
+          <dd>
+            <p>A container is a typed persistent collection declared as a first-class wire value with an explicit schema, identity policy, provenance, and revision semantics. The reference profile supports tables with record schemas and optional primary or candidate keys, sets whose membership follows a stable identity function or canonical hash, and sequences whose order carries meaning. Graph relations are ordinary tables with fields that act as foreign keys rather than a primitive graph type. Downstream wires depend on a specific container revision, so a container update invalidates the views and computations that read the old revision. The contract is defined in <a href="specsLoader.html?spec=DS005-containers.md">DS005-containers</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-container-patch">
+          <dt>Container patch</dt>
+          <dd>
+            <p>A container patch is the staged update that container mutation commands produce. <code>containerAdd</code>, <code>containerUpsert</code>, and <code>containerRemove</code> do not mutate the target container while executing; they return validated patches against the revision visible at the start of the epoch. At the epoch barrier the runtime groups patches by target container, validates conflicts, orders them deterministically, and commits one new revision. A patch records the target container, parent revision, operation, items, source wire, schema version, and ordering metadata. A grouped commit is atomic: each patch is applied to a working copy and the group replaces the live state only when the whole group is accepted, so a rejected patch leaves records, tombstones, history, and revisions unchanged. Patch semantics are defined in <a href="specsLoader.html?spec=DS005-containers.md">DS005-containers</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-container-filter">
+          <dt>containerFilter</dt>
+          <dd>
+            <p><code>containerFilter</code> is the standard wire command that defines a pure derived view of a source container. Its value depends on the source container revision and any additional predicate dependencies, and it preserves provenance by referencing source record identities and the revision it was computed from. When the source container or the predicate changes, the view is invalidated and downstream consumers are invalidated transitively. A filter source may itself be a derived view, so filters compose as ordinary dependency chains: base container, first filter, second filter, and the scalar computed from them are invalidated link by link from the base commit. A predicate runs in the isolated guest realm. Incremental maintenance and content-hash shortcuts are allowed only when they pass equivalence tests against the conservative reference semantics. Its contract is defined in <a href="specsLoader.html?spec=DS005-containers.md">DS005-containers</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-epoch">
+          <dt>Epoch</dt>
+          <dd>
+            <p>An epoch is the evaluation of a stable graph and state snapshot. During an epoch, wires observe immutable dependency values from that snapshot. Pure wires may be executed in parallel once their dependencies are satisfied, and effect-producing wires stage validated effects that commit at the epoch boundary. Container patches are grouped and committed at the barrier, and structural graph transactions are validated and committed there as well. A commit that changes dependencies or state revisions invalidates the affected wires and schedules the next epoch from the new snapshot. The epoch model is defined in <a href="specsLoader.html?spec=DS002-sop-lang-core.md">DS002-sop-lang-core</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-circuit-revision">
+          <dt>Circuit revision</dt>
+          <dd>
+            <p>A circuit revision identifies one immutable version of the graph and its definitions. Structural transactions staged by metaprogramming commit at an epoch boundary, and a successful commit increments the revision. A redefinition of wire <code>x</code> invalidates <code>x</code> and all downstream value consumers. Cached values from a previous revision are reused only when definition hashes, dependency revisions, command implementation versions, and external resource versions remain compatible. Revisions are defined in <a href="specsLoader.html?spec=DS002-sop-lang-core.md">DS002-sop-lang-core</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-definition-hash">
+          <dt>Definition hash</dt>
+          <dd>
+            <p>A definition hash is the normalized fingerprint of a wire definition, derived from its command identity and version and its normalized body. The runtime stores the hash with the wire and records it in the trace. A changed hash makes the wire dirty, which is how the runtime detects that a redefined wire and its downstream consumers must be recomputed. Cache keys and stale-writer protection through <code>expectedDefinitionHash</code> both rely on the definition hash. It is defined in <a href="specsLoader.html?spec=DS002-sop-lang-core.md">DS002-sop-lang-core</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-metaprogramming">
+          <dt>Metaprogramming</dt>
+          <dd>
+            <p>Metaprogramming is the ability of a <code>jsEval</code> wire to stage changes to the circuit itself, such as adding wires, redefining wires, invalidating values, or instantiating a template. Changes are buffered in a transaction and published at the epoch boundary only after the runtime validates names, command availability, schemas, budgets, and the resulting dependency graph. Newly created wires are never executed in the stale schedule. Metaprogramming is the mechanism behind recursive decomposition: a template can instantiate another copy of itself for a smaller subproblem, so recursion becomes a sequence of finite DAG expansions with explicit resource bounds. It is defined in <a href="specsLoader.html?spec=DS002-sop-lang-core.md">DS002-sop-lang-core</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-template">
+          <dt>Template</dt>
+          <dd>
+            <p>A template is a reusable SOP Lang fragment with named parameters and hygienic internal wire names, stored as versioned and inspectable source. Templates represent circuit patterns such as map-then-reduce, retrieve-then-verify, claim-extract-then-coverage-check, or recursive divide-and-analyze. A template is not a hidden reasoning engine: its source is part of the capability catalog and the student knows its contract. Parameter substitution distinguishes value bindings from identifier bindings and prevents accidental capture of internal names, and expanded wires are ordinary SOP Lang wires that appear in the trace. Templates are defined in <a href="specsLoader.html?spec=DS002-sop-lang-core.md">DS002-sop-lang-core</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-trace">
+          <dt>Trace</dt>
+          <dd>
+            <p>A trace is the record of one circuit evaluation. It contains at least the circuit revision, epoch number, wire name, command identity and version, definition hash, dependency identities, execution start and end, output hash, staged effects, transaction details, neural-call metadata where relevant, replay provenance, and any error. A dependency identity names the dependency, its definition hash, and the hash of the value that was observed, so a record identifies the exact graph-and-state snapshot it belongs to, and a rejected wire is recorded with the same identity fields as a successful one. Every structural change advances the circuit revision counter, so same-size revisions stay distinguishable. Traces make the execution transparent without explaining why the model chose the circuit, and they are the evidence base for replay: a recorded neural response can be substituted to verify downstream deterministic computation, while a fresh call is a new observation. Tracing is defined in <a href="specsLoader.html?spec=DS002-sop-lang-core.md">DS002-sop-lang-core</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-effect-class">
+          <dt>Effect class</dt>
+          <dd>
+            <p>An effect class declares what a wire command is allowed to change when it executes. A pure command computes a value and cannot redefine wires or update containers. A container patch command receives the staging API but not arbitrary external write access. A neural command performs a logged non-deterministic invocation. A graph-metaprogramming command may stage structural changes. The runtime grants only the runtime APIs permitted by the effect class, which prevents the scheduler from assuming that two commands are parallel-safe merely because their current data dependencies do not intersect. A command that stages effects only in some evaluations declares them in <code>mayStage</code>, which is how <code>jsEval</code> keeps a pure default while being allowed to expand the circuit or stage a container patch. Staging an effect that the declaration does not cover fails with <code>effect_not_permitted</code>. Effect classes are defined in <a href="specsLoader.html?spec=DS004-wire-types.md">DS004-wire-types</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-capability-catalog">
+          <dt>Capability catalog</dt>
+          <dd>
+            <p>The capability catalog is the rendered set of wire manifests, container schemas, budgets, and output contracts that the wrapper puts into the control plane of a model call. The student reads the catalog to decide which commands and containers are available, which is what allows the same student to use a new symbol tool, a renamed tool, or a specialized domain command without retraining. Adding a wire type to the registry and regenerating the catalog changes what the model can compose for the next request. The catalog's construction is defined in <a href="specsLoader.html?spec=DS006-context-adapter.md">DS006-context-adapter</a> and its entries are defined in <a href="specsLoader.html?spec=DS004-wire-types.md">DS004-wire-types</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-control-plane">
+          <dt>Control plane</dt>
+          <dd>
+            <p>The control plane is the trusted part of a model call that describes the computational environment: the SOP Lang version, the standard wire catalog, manifests for additional installed wire types, container schemas relevant to the current role, runtime budgets, the role-specific output requirement, and the role the model performs. The wrapper builds it from trusted runtime state and delivers it through the system message or the strongest equivalent mechanism of the selected open model. Because the control plane is trusted, source text is never allowed to redefine capabilities. It is defined in <a href="specsLoader.html?spec=DS006-context-adapter.md">DS006-context-adapter</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-data-plane">
+          <dt>Data plane</dt>
+          <dd>
+            <p>The data plane is the part of a model call that carries the problem itself: the user's question, a source chunk, records retrieved from storage, or an intermediate execution result. It is delivered as user content or as clearly delimited structured input, and source documents are explicitly marked as untrusted data so that a passage which looks like an instruction cannot be interpreted as a capability declaration. The separation between the control plane and the data plane protects both measurement validity and prompt-injection safety. It is defined in <a href="specsLoader.html?spec=DS006-context-adapter.md">DS006-context-adapter</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-context-adapter">
+          <dt>Context adapter</dt>
+          <dd>
+            <p>The context adapter is the component that makes compiled context operational. It exposes one high-level entry such as <code>solve(request, capabilities, source?)</code> and internally uses named call modes, constructs the control plane, selects the data projection, invokes the model, validates the returned SOP Lang, and records the relationship between the call and the larger request. It is a state machine in which a source moves from <code>created</code> to <code>planned</code>, through <code>ingesting</code> to <code>sealed</code>, then <code>executing</code>, and finally <code>completed</code>, <code>partial</code>, or <code>failed</code>. Its contract is defined in <a href="specsLoader.html?spec=DS006-context-adapter.md">DS006-context-adapter</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-call-envelope">
+          <dt>CallEnvelope</dt>
+          <dd>
+            <p>A <code>CallEnvelope</code> is the record of one bounded model invocation inside a larger request. It contains the request ID, role, circuit revision, epoch or ingestion revision, model revision, control-plane hash, input projection hash, budgets, sampling parameters, and expected output schema. The matching <code>CallResult</code> stores the raw generated text, parse result, validated SOP Lang, token counts, latency, and any rejection or repair decision. These records are what make recursive model behavior measurable and costable. They are defined in <a href="specsLoader.html?spec=DS006-context-adapter.md">DS006-context-adapter</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-call-mode">
+          <dt>Call mode</dt>
+          <dd>
+            <p>A call mode is one named role the student performs inside a request, each with a narrow output contract. <code>plan</code> designs initial decomposition and container schemas. <code>ingest</code> compiles one source chunk into container contributions and unresolved obligations. <code>compile</code> produces or extends the executable circuit for a subproblem. <code>judge</code> performs a bounded semantic decision when invoked through <code>modelCall</code>. <code>repair</code> receives a parse, runtime, or validation error and proposes a patch. <code>replan</code> receives newly available concrete values and decides whether the graph must expand. <code>synthesize</code> creates wording from already validated semantic results. The set is configurable, and the mode used for each call is recorded in the envelope. Call modes are defined in <a href="specsLoader.html?spec=DS006-context-adapter.md">DS006-context-adapter</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-state-projection">
+          <dt>State projection</dt>
+          <dd>
+            <p>A state projection is the subset of accumulated container state that the adapter shows to the model for one call. Projection is a versioned algorithm rather than an arbitrary slice: for chunk ingestion it may use lexical matches, entity aliases, nearby chronology, unresolved obligations, and schema metadata, and for final analysis it may use container queries generated by an earlier planning call. Too little context causes wrong decomposition, and too much recreates the long-context problem, so the selector's inputs and outputs are logged and it never uses a hidden benchmark answer. Projection is defined in <a href="specsLoader.html?spec=DS006-context-adapter.md">DS006-context-adapter</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-ingestion-patch">
+          <dt>Ingestion patch</dt>
+          <dd>
+            <p>An ingestion patch is the declarative result of compiling one source chunk. It references the parent ingestion revision, source and chunk identifiers, SOP Lang source, container contributions, schema proposals, unresolved obligations, and the hash of any state projection shown to the model. The host validates span ranges, schemas, identifiers, and allowed commands before accepting it, and accepted patches are persisted before acknowledgment so an interrupted run resumes idempotently. Ingestion patches are defined in <a href="specsLoader.html?spec=DS006-context-adapter.md">DS006-context-adapter</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-source-span">
+          <dt>Source span</dt>
+          <dd>
+            <p>A source span is the interval in the canonical source to which a semantic record is traceable. Offsets are defined against a stable encoding and source version, and every record that originates in text should point to one or more spans. Spans keep compiled context investigable: raw chunks are stored independently of compiled containers, so a later analysis can reread the passages behind a contradiction or a suspected extraction error. Spans are defined in <a href="specsLoader.html?spec=DS006-context-adapter.md">DS006-context-adapter</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-seal">
+          <dt>Seal</dt>
+          <dd>
+            <p>Seal is the ingestion barrier that closes the reading phase before global analysis begins. At seal time the adapter verifies that all expected source ranges were processed, accepted patches are persisted, schemas are version-consistent, references resolve or are explicitly marked unresolved, and the compiled dependency graph is valid. Initial container contributions are then evaluated in batched ingestion epochs and the analysis circuit operates over stable container revisions. Sealing is defined in <a href="specsLoader.html?spec=DS006-context-adapter.md">DS006-context-adapter</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-student-model">
+          <dt>Student model</dt>
+          <dd>
+            <p>The student model is the small fine-tuned model that the project deploys. It receives control-plane and data-plane messages, compiles them into SOP Lang circuits or patches, and is trained to delegate deterministic work, use manifest-described capabilities, and stop neural work when a symbolic operation is available. The exact base family and revision are experimental variables recorded per run, and the strategy is defined in <a href="specsLoader.html?spec=DS007-model-strategy.md">DS007-model-strategy</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-teacher-agent">
+          <dt>Teacher agent</dt>
+          <dd>
+            <p>The teacher agent is the coding agent that produces verified teaching trajectories. It inspects a problem, decides whether to decompose it, creates or reuses a problem-family generator, writes SOP Lang, executes the circuit, compares the output with an oracle, diagnoses failures, and revises the solution. Its artifacts enter the training set only after the data pipeline accepts them, and every accepted example carries a provenance chain with the seed, generator configuration, teacher version, candidate circuit, runtime version, trace, oracle result, validators, repair history, and acceptance decision. The teacher role is defined in <a href="specsLoader.html?spec=DS008-training-data.md">DS008-training-data</a> and the evaluation boundary in <a href="specsLoader.html?spec=DS009-fine-tuning-and-evaluation.md">DS009-fine-tuning-and-evaluation</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-data-factory">
+          <dt>Data factory</dt>
+          <dd>
+            <p>The data factory is the software that builds and samples problem families instead of prompting a model for volume. Every family specifies the latent structure of the task, a generator, a natural-language renderer, an oracle, mutation operators, a difficulty vector, and coverage labels. The factory tracks accepted examples per competence cell, failure rate, average circuit size, average neural-call count, and symbolic delegation ratio, and it preserves rejected examples with their rejection reasons. It is defined in <a href="specsLoader.html?spec=DS008-training-data.md">DS008-training-data</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-problem-family">
+          <dt>Problem family</dt>
+          <dd>
+            <p>A problem family is a parameterized source of tasks that share a latent structure and an independent oracle. The natural-language question is rendered from the latent plan, and the oracle executes that plan separately, so the teacher can be given the question without being given the answer. Families are sampled under a curriculum, and mutations such as renamed entities, changed units, decoy tools, moved critical evidence, altered container schemas, and randomized command names test structural generalization rather than linguistic memorization. Families are defined in <a href="specsLoader.html?spec=DS008-training-data.md">DS008-training-data</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-oracle">
+          <dt>Oracle</dt>
+          <dd>
+            <p>An oracle is the independent implementation that computes the correct answer for a generated task. It is hidden from the teacher and from the model, and it produces the comparison target for acceptance: a candidate circuit is accepted only when its executed result matches the oracle within the declared tolerance. For procedural families the oracle executes the latent plan directly, and for document tasks, where no complete oracle exists, acceptance uses evidence checks, human review, and confidence tiers instead. Oracles are defined in <a href="specsLoader.html?spec=DS008-training-data.md">DS008-training-data</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-symbolic-delegation">
+          <dt>Symbolic delegation</dt>
+          <dd>
+            <p>Symbolic delegation is the practice of handling a subproblem with a deterministic mechanism instead of a neural call. The student receives credit when deterministic leaves are handled with <code>jsEval</code> or an installed symbolic wire, and it is penalized when <code>modelCall</code> is used unnecessarily. The measured ratio counts leaf operations in a teacher-generated decomposition and labels them deterministic, external-tool, or semantic-neural. The goal is not to maximize the ratio blindly, because some semantic judgments cannot be reduced to classical algorithms, and the useful question is whether higher appropriate delegation correlates with accuracy, lower variance, and lower neural cost. It is defined in <a href="specsLoader.html?spec=DS009-fine-tuning-and-evaluation.md">DS009-fine-tuning-and-evaluation</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-anti-smoothing">
+          <dt>Anti-smoothing</dt>
+          <dd>
+            <p>Anti-smoothing is the measurable property that a summary preserves structurally important information which a generative system would otherwise flatten. Rare-critical loss, exception loss, qualifier loss, minority-position loss, contradiction smoothing, specificity loss, and uncertainty smoothing are scored separately, and preservation is checked for identity and relation correctness rather than keyword overlap. The compiled-context architecture supports anti-smoothing by fixing a set of semantic obligations before prose is written and auditing coverage afterwards. The property and its metrics are defined in <a href="specsLoader.html?spec=DS009-fine-tuning-and-evaluation.md">DS009-fine-tuning-and-evaluation</a>, and the benchmark use cases in <a href="specsLoader.html?spec=DS008-training-data.md">DS008-training-data</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-novelty-preservation">
+          <dt>Novelty preservation</dt>
+          <dd>
+            <p>Novelty preservation is the weighted fraction of evidence-grounded novelty candidates that a summary represents accurately. It connects novelty analysis with anti-smoothing: a conventional summary may preferentially keep the most familiar claims and drop the unusual ones, and the measured difference between a direct summary and an anti-smoothing summary becomes a concrete experimental quantity. Novelty itself is treated in three senses, within-document novelty, novelty relative to a fixed reference corpus, and literature-grounded scientific novelty, and the metric is defined in <a href="specsLoader.html?spec=DS009-fine-tuning-and-evaluation.md">DS009-fine-tuning-and-evaluation</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-epoch-commit">
+          <dt>Epoch commit</dt>
+          <dd>
+            <p>An epoch commit is the transactional publication of staged effects at an epoch boundary. Compatible container patches are grouped by target container, validated for conflicts, ordered deterministically, and applied as one new container revision, and structural graph transactions are validated and published in the same barrier. The commit increments revisions once per batch, which is why five hundred chunk additions produce one container revision instead of five hundred. Commits are defined in <a href="specsLoader.html?spec=DS002-sop-lang-core.md">DS002-sop-lang-core</a> and <a href="specsLoader.html?spec=DS005-containers.md">DS005-containers</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-acceptance-class">
+          <dt>Acceptance class</dt>
+          <dd>
+            <p>An acceptance class records how a training example was verified. <code>exact_verified</code> means the complete final output is checked by an independent oracle. When the family computation and the circuit computation are two transcriptions of one algorithm over one shared reference parse, the class is used only with its independence limitation stated in the dataset report: the agreement is checked over every variant of a multi-variant template, and for a single-variant template it certifies one instance. <code>execution_verified</code> means the circuit executes and satisfies structural properties while some semantic labels are teacher-generated. <code>evidence_verified</code> means every claim is tied to source spans and a separate verifier confirms support. <code>human_audited</code> means a human reviewer checked a sample or the full item. The classes let later ablations measure the contribution of data quality, and they are defined in <a href="specsLoader.html?spec=DS008-training-data.md">DS008-training-data</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-evidence-registry">
+          <dt>Evidence registry</dt>
+          <dd>
+            <p>The evidence registry is the structured store of hypotheses, benchmark definitions, experiment manifests, metrics, confidence intervals, plots, failure examples, and limitations. Manuscript tables and figures are generated from the registry and from per-item result records, so every quantitative claim references an experiment identifier and every qualitative example references a source item and a trace. Negative results stay in the registry, and a number that cannot be traced to a raw result file does not appear in a report. It is defined in <a href="specsLoader.html?spec=DS009-fine-tuning-and-evaluation.md">DS009-fine-tuning-and-evaluation</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-non-inferiority">
+          <dt>Non-inferiority margin</dt>
+          <dd>
+            <p>The non-inferiority margin is the task-specific difference between teacher success and student-plus-runtime success that the evaluation accepts before final results are viewed. With teacher success <code>p_T</code> and student success <code>p_S</code>, paired evaluation over the same items produces a confidence interval for <code>p_S - p_T</code>. When the lower bound is above the negative margin, the student is non-inferior under that benchmark definition, which does not mean the models are generally equally capable. The procedure is defined in <a href="specsLoader.html?spec=DS009-fine-tuning-and-evaluation.md">DS009-fine-tuning-and-evaluation</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-cost-per-verified-result">
+          <dt>Cost per verified result</dt>
+          <dd>
+            <p>Cost per verified correct result is the aggregate efficiency metric that divides reported resource use by the number of items whose executed output matched the oracle. Raw components are reported alongside it so the weighting is transparent: total generated neural tokens, total prompt tokens, number of neural calls, accelerator time during compilation, CPU time during execution, wall-clock latency, peak memory, energy where measurable, and compiled-state storage. The metric is defined in <a href="specsLoader.html?spec=DS009-fine-tuning-and-evaluation.md">DS009-fine-tuning-and-evaluation</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-seed-environment">
+          <dt>Seed environment</dt>
+          <dd>
+            <p>A seed environment is an authentic source document that the data factory uses to derive tasks, instead of feeding the document into fine-tuning as raw next-token data. The teacher reads the source, constructs candidate semantic inventories, and creates tasks whose answers must be grounded in the source. Document-level splits happen before task generation, and the rights status of each source determines whether derived material may appear in released artifacts. Seed environments are defined in <a href="specsLoader.html?spec=DS008-training-data.md">DS008-training-data</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-budget-exceeded">
+          <dt>budget_exceeded</dt>
+          <dd>
+            <p><code>budget_exceeded</code> is the structured result the runtime returns when a request reaches a declared resource limit such as maximum epochs, created wires, neural calls, JavaScript time, output bytes, or template depth. It reports partial progress and unresolved obligations instead of an invented answer, and every neural call, graph revision, generated token, and unit of wall-clock time is counted against the request budget. The structured-outcome rule is defined in <a href="specsLoader.html?spec=DS002-sop-lang-core.md">DS002-sop-lang-core</a> and the budgeting behavior of the adapter in <a href="specsLoader.html?spec=DS006-context-adapter.md">DS006-context-adapter</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-compile-only-ingestion">
+          <dt>Compile-only ingestion</dt>
+          <dd>
+            <p>Compile-only ingestion is the preferred reading mode for long sources. The model compiles each chunk into inert container contributions and deferred analysis wires, and the wrapper validates syntax, schemas, span boundaries, identifiers, and patch identity without executing the global analysis. Independent additions are then evaluated in batched ingestion epochs after sealing, which maximizes parallelism and keeps reading separate from reasoning. The mode is defined in <a href="specsLoader.html?spec=DS006-context-adapter.md">DS006-context-adapter</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-canonical-view">
+          <dt>Canonical view</dt>
+          <dd>
+            <p>A canonical view is a derived result that presents the current accepted interpretation of records whose authoritative copies remain append-only. When reconciliation concludes that two identifiers refer to the same entity, or when competing assertions describe the same subject differently, the system introduces a derived view rather than rewriting history. The original records and source spans stay in the audit log, which keeps replay and investigation possible. Canonical views are defined in <a href="specsLoader.html?spec=DS005-containers.md">DS005-containers</a>.</p>
+          </dd>
+        </div>
+        <div class="wiki-entry" id="definition-run-status">
+          <dt>Run status</dt>
+          <dd>
+            <p>A run status reports how a circuit evaluation ended. <code>completed</code> means the requested output wires were produced and the result carries their values. <code>partial</code> means a declared budget or an unresolved dependency ended the run, and the result carries the partial outputs, the trace of completed work, and the missing dependency or exceeded limit. <code>failed</code> means a parse, validation, execution, or cycle error prevented any output, and the result carries a stable error code and a trace that records the rejecting wire. A malformed program is normalized into a failed outcome instead of rejecting the call, so a batch worker can reject one candidate and continue. The runtime never turns a partial or failed run into an invented answer. Run status is defined in <a href="specsLoader.html?spec=DS002-sop-lang-core.md">DS002-sop-lang-core</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-replay">
+          <dt>Replay</dt>
+          <dd>
+            <p>Replay is the run mode that substitutes each recorded neural generation from an earlier trace instead of invoking the model again. Exact replay binds the observation to the wire definition hash, the command implementation identity, and the hashes of the dependency values; a mismatch is rejected as <code>replay_mismatch</code> instead of returning a stale answer, and the substitution is recorded with the provenance of the entry it replayed. The downstream deterministic computation then runs over the recorded text, which lets a reviewer verify that a reported answer follows from the generation that was actually recorded. A fresh rerun invokes the model and may produce a different result even with nominally deterministic decoding, so the project does not claim bit-for-bit reproducibility of neural generation. Replay is defined in <a href="specsLoader.html?spec=DS002-sop-lang-core.md">DS002-sop-lang-core</a>.</p>
+          </dd>
+        </div>
+
+        <div class="wiki-entry" id="definition-input-wire">
+          <dt>Input wire</dt>
+          <dd>
+            <p>An input wire is a wire declared with the <code>input</code> command whose value the wrapper binds for one request, such as the current problem, a source chunk, a retrieved record set, or a runtime parameter. Its body is empty and its value is immutable for the request snapshot. A binding whose name has no declared wire becomes an implicit input node, so a circuit can read a wrapper value directly from JavaScript. Input wires keep source text out of program syntax and make the boundary between problem data and executable code explicit. Interactive and adapter circuits receive bindings this way; dataset circuits are <a href="wiki.html#definition-compiled-plan">compiled plans</a> that carry their own values as literals and declare no input wire. Input wires are defined in <a href="specsLoader.html?spec=DS004-wire-types.md">DS004-wire-types</a>.</p>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </main>
+  <div data-include="partials/footer.html"></div>
+  <script src="partials-loader.js"></script>
+</body>
+</html>

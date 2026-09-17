@@ -1,0 +1,14 @@
+@facts literal
+{"associationImpliesCausation":false}
+
+@slots literal
+{
+  "observedAssociation": true,
+  "causalQuestion": true
+}
+
+@answer jsEval
+const slots = $slots;
+const canConclude = slots.causalQuestion && slots.observedAssociation ? $facts.associationImpliesCausation : true;
+return canConclude ? "Yes." : "No.";
+

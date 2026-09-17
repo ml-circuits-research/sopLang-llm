@@ -1,0 +1,17 @@
+@slots literal
+{
+  "low": 1,
+  "high": 12,
+  "lower": 4,
+  "upper": 9
+}
+
+@answer jsEval
+const slots = $slots;
+const elements = [];
+for (let value = slots.low; value <= slots.high; value += 1) {
+  if (value > slots.lower && value <= slots.upper) { elements.push(value); }
+}
+if (elements.length === 0) { throw new Error("the two thresholds select no elements"); }
+return "M={" + elements.join(",") + "}; " + elements.length + " elements.";
+

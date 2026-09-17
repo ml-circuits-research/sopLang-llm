@@ -1,0 +1,16 @@
+@slots literal
+{
+  "tested": [
+    2,
+    4,
+    6
+  ],
+  "property": "even",
+  "domainSize": "unbounded"
+}
+
+@answer jsEval
+const slots = $slots;
+const generalizes = slots.domainSize !== "unbounded" && slots.tested.length >= slots.domainSize;
+return generalizes ? "Yes." : "No.";
+

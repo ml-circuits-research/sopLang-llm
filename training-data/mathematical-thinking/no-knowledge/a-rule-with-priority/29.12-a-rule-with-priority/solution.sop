@@ -1,0 +1,26 @@
+@slots literal
+{
+  "rules": [
+    {
+      "kind": "equals",
+      "value": 0,
+      "label": "stop"
+    },
+    {
+      "kind": "even",
+      "label": "E"
+    }
+  ],
+  "fallback": "O",
+  "value": 0
+}
+
+@answer jsEval
+const slots = $slots;
+let label = slots.fallback;
+for (const rule of slots.rules) {
+  const matches = rule.kind === "equals" ? slots.value === rule.value : slots.value % 2 === 0;
+  if (matches) { label = rule.label; break; }
+}
+return "“" + label + "”.";
+

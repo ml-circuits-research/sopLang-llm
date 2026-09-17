@@ -1,0 +1,17 @@
+@slots literal
+{
+  "start": 0,
+  "list": [
+    2,
+    7,
+    4,
+    9
+  ],
+  "threshold": 5
+}
+
+@answer jsEval
+const slots = $slots;
+const kept = slots.list.filter((value) => value < slots.threshold);
+return (slots.start + kept.reduce((total, value) => total + value, 0)) + ".";
+

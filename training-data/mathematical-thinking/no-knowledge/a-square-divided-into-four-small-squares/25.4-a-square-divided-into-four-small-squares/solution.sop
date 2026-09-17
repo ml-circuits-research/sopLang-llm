@@ -1,0 +1,11 @@
+@slots literal
+{
+  "outerSides": 4,
+  "interiorLines": 2
+}
+
+@answer jsEval
+const s = $slots;
+const segments = s.outerSides + s.interiorLines;
+return segments + " complete segments.";
+

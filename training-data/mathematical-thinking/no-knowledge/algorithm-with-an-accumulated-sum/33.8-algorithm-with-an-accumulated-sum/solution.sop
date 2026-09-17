@@ -1,0 +1,14 @@
+@slots literal
+{
+  "start": 0,
+  "list": [
+    3,
+    1,
+    4
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+return (slots.start + slots.list.reduce((total, value) => total + value, 0)) + ".";
+

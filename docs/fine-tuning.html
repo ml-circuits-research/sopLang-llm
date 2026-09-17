@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sopLang-llm Documentation</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+  </script>
+</head>
+<body>
+  <div data-include="partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel">
+      <p class="breadcrumbs"><a href="index.html">Home</a></p>
+      <p class="kicker">Teaching</p>
+      <h1>Fine-tuning</h1>
+      <p class="lede">The fine-tuning laboratory turns verified teaching data into a <a href="wiki.html#definition-student-model">student</a> that compiles problems into SOP Lang. The first run does not try to prove the research thesis. It answers whether the student can emit valid SOP Lang, respect the control and data separation, delegate deterministic work, and execute correctly on held-out problems.</p>
+
+      <h2>Benchmark the base model first</h2>
+      <p>The experiment begins by benchmarking the untuned base or instruct model and recording direct-answer performance, zero-shot SOP Lang generation if possible, JavaScript competence, tool-manifest following, and CPU inference speed after the intended quantization. Fine-tuning then starts on a narrow curriculum containing syntax, simple decomposition, <code>jsEval</code> delegation, container operations, and one or two tool families, with evaluation on held-out seeds and unseen compositions.</p>
+      <p>A pilot dataset of tens of thousands of verified examples is enough to expose tokenizer issues, malformed chat templates, loss-mask mistakes, catastrophic forgetting, or a student that is simply too small. A code-capable model around half a billion parameters is an attractive lower bound because it can plausibly run at interactive rates on ordinary CPUs after quantization, and the research trains at least two student sizes when resources permit because a scaling curve is more informative than a single checkpoint.</p>
+
+      <h2>Tiny overfit test</h2>
+      <p>A first supervised fine-tuning run is treated like a software integration test with gradients. The safest path begins with a tiny dataset of a few hundred examples selected from several task roles and runs training until the model can nearly memorize the set. If training loss does not fall strongly, the pipeline is broken. If training loss falls but inference still emits direct answers rather than SOP Lang, the chat template and generation prompt are inspected before changing hyperparameters.</p>
+      <p>A unit test tokenizes one example and prints token IDs with the loss mask, so a human can verify exactly which tokens contribute to the objective. The loss is computed on assistant target tokens while system and user tokens provide context, and the exact trainer configuration is recorded. When special control tokens or a custom chat template are used, the same template is applied during inference, because small models can be sensitive to formatting differences.</p>
+
+      <h2>Dataset materialization</h2>
+      <p>The dataset is materialized into immutable JSONL or Parquet files with a manifest containing hashes. Before tokenization the pipeline computes distribution reports: input tokens, target tokens, total sequence length, number of wires, number of <code>$</code> dependencies, number of JavaScript lines, number of container operations, and examples by role. Extremely long outliers are inspected rather than silently truncated, because truncating the end of an SOP Lang target can teach the model to emit syntactically incomplete programs.</p>
+      <p>Tokenization uses the tokenizer distributed with the selected base model revision. The dataset teaches one canonical SOP Lang style rather than many equivalent whitespace patterns, so variability focuses on semantic structure, tool catalogs, schemas, and task language.</p>
+
+      <h2>Training configuration and budget</h2>
+      <p>A practical first full-fine-tuning configuration for a sub-billion model uses BF16 where supported, AdamW or the optimizer recommended for the selected trainer, gradient clipping, a modest learning rate, and enough gradient accumulation for a stable effective batch size. The exact learning rate comes from a small logarithmic sweep rather than being copied from a larger model, and LoRA or QLoRA remain useful for rapid ablations, larger comparison students, or cases where full tuning proves unnecessarily expensive.</p>
+      <p>The repository records model revision, tokenizer revision, dataset hash, sequence length, packing policy, batch size, gradient accumulation, optimizer, learning rate, schedule, warmup, precision, gradient clipping, epochs or token budget, random seeds, checkpoint cadence, and evaluation cadence. The most important training budget is token exposure: reporting "three epochs" is ambiguous when dataset size changes, so the report states total target tokens and total examples with the distribution across task families.</p>
+
+      <h2>Capability preservation</h2>
+      <p>A narrow SOP Lang dataset can overfit the student, which may become excellent at emitting <code>@wire jsEval</code> while getting worse at understanding natural language, writing JavaScript, or following ordinary instructions. The training mixture therefore includes a controlled amount of capability-preservation data, preferably from sources compatible with the base model license. The proportion is an experimental variable, and the goal is to retain the language and code substrate that SOP Lang compilation depends on.</p>
+      <p>Evaluation checkpoints include general JavaScript microtasks, basic instruction-following tests, and SOP Lang tasks. If code ability collapses while SOP Lang syntax improves, the recipe changes: full fine-tuning may need a lower learning rate or more mixed data, and LoRA may preserve base behavior better in some settings. The decision is made from measurements.</p>
+
+      <h2>Checkpoint selection and export</h2>
+      <p>Checkpoint evaluation occurs on a fixed validation set after a defined token interval, and a checkpoint is never selected by training loss alone. The validation harness executes generated SOP Lang and reports parse validity, graph validity, final oracle success, symbolic delegation, and relevant behavioral metrics. A checkpoint with slightly worse token loss may produce substantially better executable programs.</p>
+      <p>The first serious training series varies one major dimension at a time: full fine-tuning against a LoRA baseline, a narrow SOP Lang mixture against one that includes language and code preservation data, datasets with and without explicit decomposition examples, and fixed command names against randomized command names supplied through runtime manifests. Each comparison reuses the same evaluation suite and seeds where possible.</p>
+      <p>After a checkpoint is selected it is exported to the intended CPU runtime, for example GGUF when a compatible runtime is used, and the complete benchmark is rerun on that exact artifact. The laboratory measures generated tokens per second, prompt processing, time to first token, peak resident memory, and whole-task latency, and because the student may be called recursively it also measures the distribution of call counts per task. Accuracy, memory, and throughput always refer to the same exported artifact, and quantization is evaluated rather than assumed.</p>
+
+      <h2>Manifests</h2>
+      <p>Every training run is driven by a machine-readable manifest that identifies the base model and exact revision, tokenizer, dataset snapshot, split manifest, system prompt profile, wire-registry snapshot, sequence length, packing, optimizer, learning-rate schedule, batch parameters, precision, fine-tuning method, random seeds, training-token budget, checkpoint schedule, and hardware and software environment. The run writes immutable logs and checkpoint hashes, and model checkpoints, raw traces, and derived metrics are linked by content hashes so a reviewer does not have to trust a manually assembled spreadsheet.</p>
+
+      <figure class="diagram">
+        <pre class="mermaid">flowchart TB
+  Base[Base model with exact revision] --> BaseBench[Benchmark base behavior]
+  BaseBench --> Overfit[Tiny overfit test validates pipeline]
+  Overfit --> Pilot[Pilot supervised fine-tuning]
+  Pilot --> Validate[Validation harness executes generated SOP Lang]
+  Validate --> Select{Checkpoint meets criteria?}
+  Select -->|no| Adjust[Adjust recipe or data mixture]
+  Adjust --> Pilot
+  Select -->|yes| Export[Export to CPU inference format]
+  Export --> Rerun[Rerun benchmark on exported artifact]
+  Rerun --> Report[Report accuracy memory and latency]</pre>
+        <figcaption><em>Fine-tuning and checkpoint selection</em></figcaption>
+      </figure>
+
+      <h2>Where the contract lives</h2>
+      <p>The laboratory contract, including the overfit test, dataset materialization, training configuration, capability preservation, checkpoint selection, and export measurement, is specified in <a href="specsLoader.html?spec=DS009-fine-tuning-and-evaluation.md">DS009-fine-tuning-and-evaluation</a>. The verified data that feeds training is specified in <a href="specsLoader.html?spec=DS008-training-data.md">DS008-training-data</a>, and the model tiers and deployment targets are specified in <a href="specsLoader.html?spec=DS007-model-strategy.md">DS007-model-strategy</a>.</p>
+    </div>
+  </main>
+  <div data-include="partials/footer.html"></div>
+  <script src="partials-loader.js"></script>
+</body>
+</html>

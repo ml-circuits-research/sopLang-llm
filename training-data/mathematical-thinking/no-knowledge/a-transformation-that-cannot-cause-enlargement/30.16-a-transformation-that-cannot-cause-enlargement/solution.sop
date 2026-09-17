@@ -1,0 +1,12 @@
+@slots literal
+{
+  "first": 4,
+  "second": 8,
+  "preservesLengths": true
+}
+
+@answer jsEval
+const slots = $slots;
+const rigid = slots.preservesLengths === true;
+return rigid && slots.first !== slots.second ? "No." : "Yes.";
+

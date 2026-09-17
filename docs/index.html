@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sopLang-llm Documentation</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+  </script>
+</head>
+<body>
+  <div data-include="partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel">
+      <p class="breadcrumbs"><a href="index.html">Home</a></p>
+      <p class="kicker">Documentation</p>
+      <h1>sopLang-llm</h1>
+      <p class="lede">sopLang-llm fine-tunes a small code-capable language model to compile a problem into an executable <a href="wiki.html#definition-sop-lang">SOP Lang</a> circuit instead of generating the final answer directly. A runtime resolves the circuit's dependencies, runs JavaScript for deterministic work, invokes declared tools or bounded neural judgments where semantics remain necessary, and publishes a result that traces back to the circuit that produced it.</p>
+
+      <h2>How the system fits together</h2>
+      <p>The project separates three responsibilities that most language-model systems collapse into one autoregressive response. The <a href="wiki.html#definition-student-model">student model</a> interprets the task, decomposes it, selects capabilities, and emits a circuit. The runtime schedules and executes that circuit with exact computation, typed state, and explicit <a href="wiki.html#definition-model-call">modelCall</a> nodes. The <a href="wiki.html#definition-data-factory">data factory</a> builds verified teaching material, and the fine-tuning laboratory turns that material into the student.</p>
+
+      <figure class="diagram">
+        <pre class="mermaid">flowchart TB
+  subgraph Compile[Model compiles]
+    Problem[Problem and control plane] --> Student[Student model]
+    Student --> Circuit[SOP Lang circuit]
+  end
+  subgraph Execute[Runtime executes]
+    Circuit --> Scheduler[Dependency graph and schedule]
+    Scheduler --> JsEval[jsEval deterministic work]
+    Scheduler --> Wires[Installed wire types]
+    Scheduler --> ModelCall[modelCall judgments]
+    Scheduler --> Containers[Typed containers]
+  end
+  subgraph Teach[Teaching loop]
+    Books[Seed environments] --> Teacher[Teacher agent]
+    Teacher --> Factory[Generators and oracles]
+    Factory --> Student
+  end
+  JsEval --> Output[Traceable result]
+  Wires --> Output
+  ModelCall --> Output
+  Containers --> Output</pre>
+        <figcaption><em>Compilation, execution, and teaching pipeline</em></figcaption>
+      </figure>
+
+      <p>The model is deliberately relieved of arithmetic, bookkeeping, formatting, filtering, aggregation, and classical algorithmic work. Its learned behavior of interest is <a href="wiki.html#definition-symbolic-delegation">symbolic delegation</a>: recognizing when a subproblem has become mechanical enough that further neural reasoning should stop.</p>
+
+      <h2>Documentation Map</h2>
+      <table class="doc-map">
+        <thead>
+          <tr>
+            <th scope="col">Overview</th>
+            <th scope="col">Language</th>
+            <th scope="col">Execution</th>
+            <th scope="col">Compiled context</th>
+            <th scope="col">Teaching</th>
+            <th scope="col">Reference</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="doc-map__entry">
+                <a href="index.html">Home</a>
+                <p>Explains the system, its parts, and the documentation reading order.</p>
+              </div>
+            </td>
+            <td>
+              <div class="doc-map__entry">
+                <a href="sop-lang.html">SOP Lang</a>
+                <p>Describes the surface language, wire bodies, dependency analysis, and metaprogramming.</p>
+              </div>
+            </td>
+            <td>
+              <div class="doc-map__entry">
+                <a href="runtime.html">Runtime</a>
+                <p>Describes scheduling, epochs, revisions, tracing, and the normative runtime contract.</p>
+              </div>
+            </td>
+            <td>
+              <div class="doc-map__entry">
+                <a href="compiled-context.html">Compiled context</a>
+                <p>Describes planning, chunk ingestion, sealing, and state projection for long sources.</p>
+              </div>
+            </td>
+            <td>
+              <div class="doc-map__entry">
+                <a href="teaching.html">Teaching pipeline</a>
+                <p>Describes the teacher agent, problem families, oracles, seed environments, and data quality gates.</p>
+              </div>
+            </td>
+            <td>
+              <div class="doc-map__entry">
+                <a href="specsLoader.html?spec=matrix.md">Specifications</a>
+                <p>Opens the matrix that links every design specification under <code>docs/specs/</code>.</p>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="doc-map__entry">
+                <a href="wiki.html">Wiki</a>
+                <p>Defines every project-specific term with a stable anchor for linking.</p>
+              </div>
+            </td>
+            <td>
+              <div class="doc-map__entry">
+                <a href="wire-types.html">Wire types</a>
+                <p>Describes the standard command vocabulary and the installable <code>.mjs</code> wire type contract.</p>
+              </div>
+            </td>
+            <td>
+              <div class="doc-map__entry">
+                <a href="containers.html">Containers</a>
+                <p>Describes typed persistent state, patch-based commits, and derived views.</p>
+              </div>
+            </td>
+            <td>
+              <div class="doc-map__entry">
+                <a href="capabilities.html">Capabilities and models</a>
+                <p>Describes the capability catalog, call modes, model tiers, budgets, and deployment targets.</p>
+              </div>
+            </td>
+            <td>
+              <div class="doc-map__entry">
+                <a href="fine-tuning.html">Fine-tuning</a>
+                <p>Describes manifest-driven training, capability preservation, checkpoint selection, and export.</p>
+              </div>
+            </td>
+            <td class="doc-map__empty"></td>
+          </tr>
+          <tr>
+            <td class="doc-map__empty"></td>
+            <td class="doc-map__empty"></td>
+            <td class="doc-map__empty"></td>
+            <td class="doc-map__empty"></td>
+            <td>
+              <div class="doc-map__entry">
+                <a href="evaluation.html">Evaluation</a>
+                <p>Describes baselines, ablations, metrics, non-inferiority testing, and the evidence registry.</p>
+              </div>
+            </td>
+            <td class="doc-map__empty"></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="muted">A new reader can start with Home and Wiki, continue through Language and Execution to understand what the model emits and how it runs, then follow Compiled context and Capabilities and models for long-document behavior, and finish with the Teaching pages that produce and measure the student.</p>
+
+      <h2>Coding style and tests</h2>
+      <p>The canonical source for coding style, source layout, and test organization is <a href="specsLoader.html?spec=DS001-coding-style.md">DS001-coding-style</a>. Executable code is Node.js ECMAScript modules in <code>.mjs</code> files with built-ins only, and tests use <code>node --test</code> with <code>node:assert/strict</code>. The required coverage per contract surface is listed in the specification.</p>
+
+      <h2>Implementation status</h2>
+      <p>The repository currently ships the language runtime under <code>runtime/</code> and the standard vocabulary under <code>wires/standard/</code>, with a test suite that covers the parser, dependency analysis, scheduling, epochs and revisions, containers, metaprogramming, tracing and replay, the registry and profile readers, the schema profile, the isolated JavaScript sandbox, and compiled-context end-to-end scenarios.</p>
+      <p>The executable language implementation is complete for the standard vocabulary and is covered by that exercised behavior. The first stage of the data pipeline also exists: <code>context/sources/docx.mjs</code> extracts a seed book with the versioned canonical profile, <code>teacher/families/</code> holds the problem families of the seed books, and <code>teacher/pilot.mjs</code> compiles and verifies book-derived examples into <code>training-data/</code> under the layout of <a href="specsLoader.html?spec=DS008-training-data.md">DS008-training-data</a>. A dataset circuit is the <a href="wiki.html#definition-compiled-plan">compiled plan</a> of one instance: a <code>slots</code> <code>literal</code> wire carries the values extracted from the statement, an optional <code>facts</code> <code>literal</code> carries external knowledge, and the <code>answer</code> wire performs the deterministic <code>jsEval</code> computation; dataset circuits contain no <code>input</code> wire and no <code>modelCall</code> wire, because the SOP Lang file is itself the compiling model's output. The first book is compiled: 40 chapters, 608 covered templates, 587 distinct plans, 994 accepted examples (934 self-contained, 60 requiring an external fact that their circuit materializes), a one-percent evaluation holdout of 10 examples, six preserved rejections with reasons (five quarantined non-English answer tokens and one template without a family), and per-chapter manifests with content hashes and plan fingerprints. The installable wire loader under <code>wires/custom/</code>, templates under <code>wires/templates/</code>, the remaining context adapter machinery, the learning-based teacher, and the training, benchmark, and evaluation trees under <code>training/</code>, <code>benchmarks/</code>, and <code>evaluation/</code> are planned work described by their specifications. Statements about those surfaces are specifications of intended behavior, not reports of exercised behavior.</p>
+
+      <h2>Design specifications</h2>
+      <p>The design specifications under <a href="specsLoader.html?spec=matrix.md">docs/specs/</a> are the source of truth for documented behavior and structure. When prose elsewhere diverges from a specification, the specification wins. The set begins with the vision, the coding style, and the language contract, then defines the main behaviors, the wire vocabulary, container semantics, the context adapter, the model strategy, the training data suite, and the evaluation methodology.</p>
+
+      <h2>Repository structure</h2>
+      <table>
+        <thead>
+          <tr><th>Path</th><th>Contents</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>runtime/</code></td><td>Parser, dependency analysis, scheduler, epochs, value store, effect staging, tracing, sandbox, and budgets. Specified in <a href="specsLoader.html?spec=DS002-sop-lang-core.md">DS002-sop-lang-core</a>.</td></tr>
+          <tr><td><code>wires/</code></td><td>Standard commands, installable wire types, and SOP Lang templates. Specified in <a href="specsLoader.html?spec=DS004-wire-types.md">DS004-wire-types</a>.</td></tr>
+          <tr><td><code>context/</code></td><td>Canonical source extraction under <code>sources/</code> is implemented. Planning, chunking, the source store, state projection, and ingestion are planned. Specified in <a href="specsLoader.html?spec=DS006-context-adapter.md">DS006-context-adapter</a>.</td></tr>
+          <tr><td><code>teacher/</code></td><td>Problem families, source parsers, the chapter dump, and the pilot runner are implemented. Teaching agents, the repair loop, and generator sampling are planned. Specified in <a href="specsLoader.html?spec=DS008-training-data.md">DS008-training-data</a>.</td></tr>
+          <tr><td><code>training-data/</code></td><td>Per-problem text artifacts, the knowledge and self-contained categories, the evaluation holdout, preserved rejections, and the text manifests and reports. Specified in <a href="specsLoader.html?spec=DS008-training-data.md">DS008-training-data</a>.</td></tr>
+          <tr><td><code>training/</code></td><td>Planned: training configurations, scripts, and checkpoints.</td></tr>
+          <tr><td><code>benchmarks/</code></td><td>Planned: problem families, long-document suites, summarization and novelty benchmarks.</td></tr>
+          <tr><td><code>evaluation/</code></td><td>Planned: runners, metrics, statistics, reports, and the evidence registry.</td></tr>
+          <tr><td><code>vision/</code></td><td>The research handbook and the seed books used as task environments.</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Evidence discipline</h2>
+      <p>Every training and evaluation run is driven by a machine-readable manifest that records model and tokenizer revisions, dataset hashes, split identifiers, random seeds, and runtime configuration. Per-item records are written before aggregate statistics, and reported tables are generated from those records. A result that cannot be traced back to a raw record does not appear in a report, and the <a href="wiki.html#definition-evidence-registry">evidence registry</a> keeps negative results so they influence the interpretation of the work.</p>
+    </div>
+  </main>
+  <div data-include="partials/footer.html"></div>
+  <script src="partials-loader.js"></script>
+</body>
+</html>

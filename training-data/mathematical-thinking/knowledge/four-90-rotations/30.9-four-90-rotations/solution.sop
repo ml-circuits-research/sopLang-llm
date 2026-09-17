@@ -1,0 +1,15 @@
+@facts literal
+{"degreesPerFullTurn":360}
+
+@slots literal
+{
+  "times": 4,
+  "degrees": 90
+}
+
+@answer jsEval
+const slots = $slots;
+const total = slots.times * slots.degrees;
+const remainder = total % $facts.degreesPerFullTurn;
+return remainder === 0 ? "The same orientation as at the start." : "It ends " + remainder + " degrees from the start.";
+

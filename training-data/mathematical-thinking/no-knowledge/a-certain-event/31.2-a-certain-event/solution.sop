@@ -1,0 +1,17 @@
+@slots literal
+{
+  "favorable": 5,
+  "total": 5
+}
+
+@answer jsEval
+const slots = $slots;
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+const favorable = slots.favorable;
+const total = slots.total;
+const factor = gcd(favorable, total);
+const n = favorable / factor;
+const d = total / factor;
+const chance = d === 1 ? String(n) : n + "/" + d;
+return (favorable === total ? "Yes; the probability is " : "No; the probability is ") + chance + ".";
+

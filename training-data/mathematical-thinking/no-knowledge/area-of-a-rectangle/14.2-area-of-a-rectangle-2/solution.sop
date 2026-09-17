@@ -1,0 +1,14 @@
+@slots literal
+{
+  "length": 9,
+  "width": 6
+}
+
+@answer jsEval
+const slots = $slots;
+const area = slots.length * slots.width;
+if (!Number.isInteger(area) || area <= 0) {
+  throw new Error("the side lengths must be positive integers");
+}
+return String(area) + " square units.";
+

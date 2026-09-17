@@ -1,0 +1,31 @@
+@slots literal
+{
+  "codes": {
+    "A": "0",
+    "B": "01",
+    "C": "1"
+  },
+  "target": "01"
+}
+
+@answer jsEval
+const slots = $slots;
+const entries = Object.entries(slots.codes);
+const target = String(slots.target);
+const results = [];
+const walk = (index, path) => {
+  if (index === target.length) {
+    results.push(path.join(""));
+    return;
+  }
+  for (const [symbol, code] of entries) {
+    if (code !== "" && target.startsWith(code, index)) {
+      walk(index + code.length, path.concat(symbol));
+    }
+  }
+};
+walk(0, []);
+if (results.length <= 1) return "No ambiguity: " + (results[0] ?? "") + " is the only reading.";
+const ordered = results.slice().sort((left, right) => left.length - right.length || (left < right ? -1 : 1));
+return "Ambiguity occurs: " + target + " can be " + ordered.join(" or ") + ".";
+

@@ -1,0 +1,18 @@
+@facts literal
+{"weekdays":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]}
+
+@slots literal
+{
+  "monthLength": 30,
+  "startDay": "Tuesday"
+}
+
+@answer jsEval
+const slots = $slots;
+const facts = (typeof $facts === "object" && $facts !== null) ? $facts : JSON.parse(String($facts));
+const days = facts.weekdays;
+const shift = slots.monthLength % days.length;
+const index = days.indexOf(slots.startDay);
+if (index === -1) { throw new Error("unknown weekday \"" + slots.startDay + "\""); }
+return days[(index + shift) % days.length] + ".";
+

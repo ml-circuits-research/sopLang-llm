@@ -1,0 +1,15 @@
+@slots literal
+{
+  "cycle": [
+    "red",
+    "blue",
+    "green"
+  ],
+  "position": 14
+}
+
+@answer jsEval
+const s = $slots;
+const color = s.cycle[(s.position - 1) % s.cycle.length];
+return color.charAt(0).toUpperCase() + color.slice(1) + ".";
+

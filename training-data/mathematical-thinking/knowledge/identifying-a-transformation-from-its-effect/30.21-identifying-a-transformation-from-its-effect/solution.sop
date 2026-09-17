@@ -1,0 +1,18 @@
+@facts literal
+{"verticalReflectionReversesLeftRight":true,"translationPreservesOrientation":true}
+
+@slots literal
+{
+  "before": "right",
+  "after": "left",
+  "verticalChanged": false
+}
+
+@answer jsEval
+const slots = $slots;
+const flipped = slots.before !== slots.after;
+if (flipped && slots.verticalChanged === false && $facts.verticalReflectionReversesLeftRight === true) {
+  return "Vertical reflection.";
+}
+return "Translation.";
+

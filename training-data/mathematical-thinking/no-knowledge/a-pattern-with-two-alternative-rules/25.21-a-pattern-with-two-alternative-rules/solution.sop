@@ -1,0 +1,22 @@
+@slots literal
+{
+  "observed": [
+    2,
+    4,
+    6
+  ],
+  "step": 2,
+  "thenComes": 100
+}
+
+@answer jsEval
+const s = $slots;
+const ruleA = s.observed.concat([s.observed[s.observed.length - 1] + s.step]);
+const ruleB = s.observed.concat([s.thenComes]);
+const matches = (rule) => s.observed.every((value, index) => rule[index] === value);
+if (!matches(ruleA) || !matches(ruleB)) {
+  return "No; one rule contradicts the data.";
+}
+const decided = ruleA.some((value, index) => index >= s.observed.length && value !== ruleB[index]);
+return decided ? "Yes; the data are insufficient to choose." : "No; the rules agree everywhere.";
+

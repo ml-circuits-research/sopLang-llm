@@ -1,0 +1,10 @@
+@slots literal
+{
+  "tokens": 3
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.tokens % 3 !== 0) { throw new Error("the template expects a multiple of three"); }
+return "No; " + slots.tokens + " is a losing position.";
+

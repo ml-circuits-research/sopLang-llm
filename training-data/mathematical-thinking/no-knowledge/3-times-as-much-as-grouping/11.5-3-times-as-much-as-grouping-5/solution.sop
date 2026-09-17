@@ -1,0 +1,13 @@
+@slots literal
+{
+  "from": "Matei",
+  "to": "Radu",
+  "base": 12,
+  "multiplier": 3
+}
+
+@answer jsEval
+const slots = $slots;
+const total = slots.base * slots.multiplier;
+return String(total);
+

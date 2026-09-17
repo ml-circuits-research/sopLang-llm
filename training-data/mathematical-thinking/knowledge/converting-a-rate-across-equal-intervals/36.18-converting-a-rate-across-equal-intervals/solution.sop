@@ -1,0 +1,12 @@
+@facts literal
+{"minutesPerHour": 60}
+
+@slots literal
+{
+  "ratePerMinute": 2
+}
+
+@answer jsEval
+const slots = $slots;
+return slots.ratePerMinute * $facts.minutesPerHour + " pieces/hour.";
+

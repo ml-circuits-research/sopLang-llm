@@ -1,0 +1,15 @@
+@slots literal
+{
+  "limit": 1,
+  "lamps": [
+    "on",
+    "off",
+    "on"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const on = slots.lamps.filter((lamp) => lamp === "on").length;
+return on <= slots.limit ? "Yes." : "No.";
+

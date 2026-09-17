@@ -1,0 +1,33 @@
+@slots literal
+{
+  "domain": {
+    "lo": 1,
+    "hi": 10
+  },
+  "intervals": [
+    {
+      "lo": 1,
+      "hi": 4,
+      "label": "A"
+    },
+    {
+      "lo": 5,
+      "hi": 7,
+      "label": "B"
+    },
+    {
+      "lo": 8,
+      "hi": 10,
+      "label": "C"
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let uncovered = 0;
+for (let value = slots.domain.lo; value <= slots.domain.hi; value += 1) {
+  if (!slots.intervals.some((interval) => value >= interval.lo && value <= interval.hi)) uncovered += 1;
+}
+return uncovered === 0 ? "No." : "Yes.";
+

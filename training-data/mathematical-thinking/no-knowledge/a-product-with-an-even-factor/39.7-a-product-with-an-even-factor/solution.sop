@@ -1,0 +1,10 @@
+@slots literal
+{
+  "even": "a",
+  "other": "b"
+}
+
+@answer jsEval
+const slots = $slots;
+return slots.even + slots.other + " is even.";
+

@@ -1,0 +1,32 @@
+@slots literal
+{
+  "direct": {
+    "nodes": [
+      "A",
+      "D"
+    ],
+    "cost": 10
+  },
+  "route": {
+    "nodes": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "costs": [
+      2,
+      2,
+      2
+    ]
+  }
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.route.costs.length !== slots.route.nodes.length - 1) { throw new Error("the route cost list does not match its links"); }
+let routeCost = 0; for (const value of slots.route.costs) { routeCost += value; }
+let cost = slots.direct.cost; let path = slots.direct.nodes;
+if (routeCost < slots.direct.cost) { cost = routeCost; path = slots.route.nodes; }
+return path.join("-") + ", cost " + cost + ".";
+

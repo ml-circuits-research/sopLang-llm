@@ -1,0 +1,11 @@
+@slots literal
+{
+  "rows": 4,
+  "columns": 6
+}
+
+@answer jsEval
+const slots = $slots;
+const area = slots.rows * slots.columns;
+return area + " unit squares.";
+

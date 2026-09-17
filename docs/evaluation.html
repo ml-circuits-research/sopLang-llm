@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sopLang-llm Documentation</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+  </script>
+</head>
+<body>
+  <div data-include="partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel">
+      <p class="breadcrumbs"><a href="index.html">Home</a></p>
+      <p class="kicker">Teaching</p>
+      <h1>Evaluation</h1>
+      <p class="lede">Evaluation decides whether the system supports or rejects the research thesis. It compares the student against larger direct-answer models and simpler baselines, ablates the parts of the architecture, and reports metrics that separate syntactic validity from semantic correctness. Every reported number traces to a raw per-item record.</p>
+
+      <h2>Baselines and ablations</h2>
+      <p>The main comparison is factorial rather than anecdotal. At minimum it evaluates the student in direct-answer mode, the same student with SOP Lang, a larger teacher in direct-answer mode, and the larger teacher with SOP Lang where feasible. Long-document experiments add a straightforward chunk-and-merge baseline and a retrieval-based baseline, and structured tasks include direct JavaScript or SQL generation where that is a credible alternative.</p>
+      <p>Ablations identify which parts of the system matter. Removing explicit decomposition asks the student to generate the whole circuit in one pass. Disabling <code>jsEval</code> forces neural computation for deterministic operations. Removing compiled containers supplies retrieved raw chunks instead. Replacing task-conditioned schemas with a fixed universal schema tests schema planning. Disabling metaprogramming prevents graph expansion after values are known. Removing <a href="wiki.html#definition-anti-smoothing">anti-smoothing</a> audits tests preservation policy. Hiding custom wire descriptions tests memorized command names.</p>
+      <p>The most important comparison reports total neural tokens, number of calls, runtime cost, and latency together with accuracy, because a recursive small model invoked many times may use more compute than a single large call. Parameter count alone is not an efficiency metric.</p>
+
+      <h2>Generalization tests</h2>
+      <p>Generalization goes beyond held-out wording. Procedural families hold out operator compositions, dependency depths, branching patterns, tool manifests, and schema shapes. A student trained on circuits up to depth eight is tested at depths sixteen, thirty-two, and sixty-four. A student trained on a set of named tools is tested on semantically similar but renamed tools whose definitions are supplied only through manifests. A student trained on sources up to a hundred thousand tokens is tested on much longer sources while local context stays fixed.</p>
+      <p>Long-document evaluation varies the location of critical evidence and the number of irrelevant chunks, because position sensitivity and dilution are different effects. A compiled-context system may be robust to position and still suffer when ingestion produces too many noisy records, so container precision and source-recall metrics accompany final accuracy.</p>
+
+      <h2>Metrics</h2>
+      <p>Final task success is the primary metric when an oracle exists: for a problem set of N items, success is the fraction whose executed final result matches the oracle within the declared tolerance. Circuit parse validity, graph validity, runtime completion, and output-schema validity are reported separately, which prevents a system from looking strong because it produces syntactically beautiful but semantically wrong programs.</p>
+      <table>
+        <thead>
+          <tr><th>Area</th><th>Reported measures</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Task correctness</td><td>Executed-result success against the oracle, with circuit parse validity, graph validity, runtime completion, and output-schema validity separated.</td></tr>
+          <tr><td>Teacher comparison</td><td>Paired difference with a predeclared <a href="wiki.html#definition-non-inferiority">non-inferiority margin</a> and a bootstrap or paired proportion confidence interval.</td></tr>
+          <tr><td>Efficiency</td><td>Generated and prompt tokens, neural call counts, accelerator time during compilation, CPU time during execution, wall-clock latency, peak memory, and compiled-state storage.</td></tr>
+          <tr><td><a href="wiki.html#definition-cost-per-verified-result">Cost per verified result</a></td><td>Aggregate efficiency with the raw components reported alongside it so the weighting is transparent.</td></tr>
+          <tr><td>Controlled summarization</td><td>Weighted content preservation, rare-critical recall, exception recall, qualifier preservation, contradiction preservation, hallucination rate, compression ratio, and readability, reported by category.</td></tr>
+          <tr><td>Novelty</td><td>Candidate recall, prior-art retrieval recall, relationship-classification accuracy, calibration, and evidence completeness, with retrieval and classification separated.</td></tr>
+          <tr><td>Long context</td><td>Ingestion recall, representation precision, final answer accuracy, and performance as a function of source position and document length.</td></tr>
+          <tr><td>Repair</td><td>Recovery after one repair call, epochs needed, new failures introduced by repairs, and recovery from the student's own off-policy states.</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Anti-smoothing and novelty</h2>
+      <p>Anti-smoothing is not a philosophical label. Rare-critical loss, exception loss, qualifier loss, minority-position loss, contradiction smoothing, specificity loss, and uncertainty smoothing are scored separately, and preservation checks require identity and relation correctness rather than keyword overlap, because a summary may mention an exception but attach it to the wrong rule. A simple weighted preservation measure over required items is reported by category instead of collapsed into one score.</p>
+      <p>Novelty distinguishes within-document novelty, novelty relative to a fixed reference corpus, and literature-grounded scientific novelty. Candidate generation, retrieval, filtering, comparison, and reporting are separate wires: numerical similarity, date filters, deduplication, and ranking are symbolic, and neural judgment is reserved for semantic equivalence and contribution classification. <a href="wiki.html#definition-novelty-preservation">Novelty preservation</a> measures which evidence-grounded candidates survive a summary.</p>
+
+      <h2>Summary and novelty acceptance</h2>
+      <p>Controlled summarization reports inventory recall, selection recall, and realization recall as separate quantities, so a report distinguishes loss inside the compiled inventory from loss in the importance policy and from loss in the wording. Preservation is reported per obligation category with identity and relation correctness rather than keyword overlap, because a summary may name an exception while attaching it to the wrong rule. A repair is accepted only when the full obligation set is re-audited after the repair: a repair that adds one obligation while dropping another, or that strengthens a qualifier, fails, and repair cost is reported together with its side effects.</p>
+      <p>Novelty evaluation separates candidate recall, retrieval recall, and relationship classification, because a perfect judge cannot identify prior art that retrieval never surfaces. Every novelty record preserves the queries, the indexes searched, the corpus snapshot, the publication cutoff, the number of candidates examined, the comparison method, and the limitations of the search. A conclusion is constrained to the searched corpus, so a report states that no close match was found in the searched corpus rather than asserting historical novelty, and a failure to retrieve a match is recorded as negative evidence rather than as proof of novelty.</p>
+
+      <h2>Statistical structure</h2>
+      <p>Statistical analysis preserves problem-family structure. When a benchmark contains thousands of easy arithmetic items and only fifty difficult long-document cases, one micro-averaged score hides the research result, so the report uses macro averages by family and difficulty stratum and computes confidence intervals over problem instances or document clusters rather than over individual extracted records that correlate within one book.</p>
+
+      <h2>Evidence registry and falsification criteria</h2>
+      <p>The <a href="wiki.html#definition-evidence-registry">evidence registry</a> holds hypotheses, benchmark definitions, experiment manifests, metrics, confidence intervals, plots, failure examples, and limitations. Manuscript tables and figures are generated from per-item records, every quantitative claim references an experiment identifier, and every qualitative example references a source item and a trace. Negative results remain in the registry and influence the discussion.</p>
+      <p>Predeclared criteria protect the project from narrative drift. The small-model efficiency hypothesis is not supported if the student requires greater total neural compute than the larger baseline for equal accuracy. The compiled-context hypothesis is not supported if ingestion losses make final accuracy worse than a simpler retrieval baseline at similar cost. The unseen-tool hypothesis is not supported if the student fails when command names are randomized despite clear manifests. The anti-smoothing hypothesis is not supported if rare-critical preservation does not improve after controlling for output length and model-call budget.</p>
+      <p>A negative result remains publishable when it identifies a sharp limitation, for example that sub-billion models learn SOP Lang syntax and deterministic delegation but cannot reliably perform task-conditioned decomposition over ambiguous long documents. The purpose of the system is to make those boundaries measurable.</p>
+
+      <figure class="diagram">
+        <pre class="mermaid">flowchart TB
+  Manifest[Experiment manifest] --> Run[Training or evaluation runner]
+  Run --> Items[Per-item JSONL records]
+  Items --> Metrics[Aggregate metrics by family and stratum]
+  Metrics --> Registry[Evidence registry]
+  Registry --> Tables[Generated tables and figures]
+  Registry --> Criteria{Meets predeclared criteria?}
+  Criteria -->|yes| Support[Report supported claim]
+  Criteria -->|no| Report[Report limitation and negative result]</pre>
+        <figcaption><em>Evidence path from manifest to claim</em></figcaption>
+      </figure>
+
+      <h2>Where the contract lives</h2>
+      <p>The metric definitions, non-inferiority procedure, ablation list, generalization suites, manifest contents, and falsification criteria are specified in <a href="specsLoader.html?spec=DS009-fine-tuning-and-evaluation.md">DS009-fine-tuning-and-evaluation</a>. The evaluation method that frames these measurements is recorded in <a href="specsLoader.html?spec=DS000-vision.md">DS000-vision</a>.</p>
+    </div>
+  </main>
+  <div data-include="partials/footer.html"></div>
+  <script src="partials-loader.js"></script>
+</body>
+</html>

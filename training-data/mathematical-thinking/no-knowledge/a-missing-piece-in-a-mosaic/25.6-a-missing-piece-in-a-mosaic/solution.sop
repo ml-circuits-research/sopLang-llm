@@ -1,0 +1,12 @@
+@slots literal
+{
+  "rows": 3,
+  "columns": 4,
+  "placed": 9
+}
+
+@answer jsEval
+const s = $slots;
+const missing = s.rows * s.columns - s.placed;
+return missing + " squares.";
+

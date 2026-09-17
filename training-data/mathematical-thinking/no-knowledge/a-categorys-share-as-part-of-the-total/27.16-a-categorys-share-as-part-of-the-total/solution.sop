@@ -1,0 +1,11 @@
+@slots literal
+{
+  "total": 12,
+  "part": 3
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.part > slots.total) { throw new Error("the part is larger than the total"); }
+return slots.part + "/" + slots.total + ".";
+

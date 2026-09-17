@@ -1,0 +1,14 @@
+@slots literal
+{
+  "start": 1,
+  "limit": 10,
+  "step": -1
+}
+
+@answer jsEval
+const slots = $slots;
+let value = slots.start;
+let steps = 0;
+while (value < slots.limit && steps < 1000) { value = value + slots.step; steps += 1; }
+return value >= slots.limit ? "Yes, at " + value + "." : "No.";
+

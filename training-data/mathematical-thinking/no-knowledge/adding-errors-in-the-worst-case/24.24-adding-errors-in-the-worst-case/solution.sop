@@ -1,0 +1,12 @@
+@slots literal
+{
+  "first": 10,
+  "second": 20,
+  "error": 1
+}
+
+@answer jsEval
+const slots = $slots;
+const total = slots.first + slots.second;
+return "Between " + (total - 2 * slots.error) + " cm and " + (total + 2 * slots.error) + " cm.";
+

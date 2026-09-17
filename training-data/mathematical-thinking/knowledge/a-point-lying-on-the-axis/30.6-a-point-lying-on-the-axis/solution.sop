@@ -1,0 +1,15 @@
+@facts literal
+{"reflectionPreservesDistanceFromAxis":true}
+
+@slots literal
+{
+  "axis": 4,
+  "column": 4
+}
+
+@answer jsEval
+const slots = $slots;
+const distance = slots.axis - slots.column;
+const image = $facts.reflectionPreservesDistanceFromAxis === true ? slots.axis + distance : slots.column;
+return "Column " + image + ".";
+

@@ -1,0 +1,11 @@
+@slots literal
+{
+  "segments": 6,
+  "points": 6
+}
+
+@answer jsEval
+const s = $slots;
+const segments = s.points;
+return segments + " segments.";
+

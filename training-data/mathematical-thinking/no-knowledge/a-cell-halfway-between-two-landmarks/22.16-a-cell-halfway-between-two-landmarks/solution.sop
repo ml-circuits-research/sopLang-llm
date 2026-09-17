@@ -1,0 +1,11 @@
+@slots literal
+{
+  "left": 2,
+  "right": 6
+}
+
+@answer jsEval
+const slots = $slots;
+if ((slots.left + slots.right) % 2 !== 0) { throw new Error("the halfway column is not a whole column"); }
+return "Column " + ((slots.left + slots.right) / 2) + ".";
+

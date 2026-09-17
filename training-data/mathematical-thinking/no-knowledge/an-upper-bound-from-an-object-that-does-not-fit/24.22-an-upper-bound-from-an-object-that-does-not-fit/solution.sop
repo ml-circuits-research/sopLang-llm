@@ -1,0 +1,11 @@
+@slots literal
+{
+  "notFit": 20,
+  "fit": 18
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.fit >= slots.notFit) { throw new Error("the two sticks do not give a consistent pair of bounds"); }
+return slots.fit + " cm ≤ L < " + slots.notFit + " cm.";
+

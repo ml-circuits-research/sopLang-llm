@@ -1,0 +1,14 @@
+@slots literal
+{
+  "cycle": [
+    "A",
+    "B",
+    "C"
+  ],
+  "step": 20
+}
+
+@answer jsEval
+const slots = $slots;
+return slots.cycle[(slots.step - 1) % slots.cycle.length] + ".";
+

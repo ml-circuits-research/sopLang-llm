@@ -1,0 +1,22 @@
+@slots literal
+{
+  "items": [
+    "A",
+    "B",
+    "C"
+  ],
+  "first": "A",
+  "second": "B"
+}
+
+@answer jsEval
+const slots = $slots;
+const permute = (items) => items.length <= 1 ? [items] : items.flatMap((item, index) => permute(items.slice(0, index).concat(items.slice(index + 1))).map((rest) => [item].concat(rest)));
+let total = 0;
+for (const order of permute(slots.items)) {
+  if (Math.abs(order.indexOf(slots.first) - order.indexOf(slots.second)) === 1) {
+    total += 1;
+  }
+}
+return String(total) + " orders.";
+

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sopLang-llm Documentation</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+  </script>
+</head>
+<body>
+  <div data-include="partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel">
+      <p class="breadcrumbs"><a href="index.html">Home</a></p>
+      <p class="kicker">Execution</p>
+      <h1>Runtime</h1>
+      <p class="lede">The runtime turns a <a href="wiki.html#definition-circuit">circuit</a> into a result that can be defended. It extracts dependencies, rejects cycles, computes a deterministic schedule, evaluates wires in <a href="wiki.html#definition-epoch">epochs</a> over immutable snapshots, commits staged effects at epoch boundaries, and publishes only a validated output wire together with a <a href="wiki.html#definition-trace">trace</a>.</p>
+
+      <h2>Scheduling</h2>
+      <p>For a fixed graph revision the runtime computes the active dependency closure from the requested output wires and any configured control roots, then performs a deterministic topological sort. Kahn's algorithm is the reference implementation: compute the in-degree of every active node, repeatedly select zero-in-degree nodes in a stable lexical or creation order, emit them, and decrement their successors. If active nodes remain when no zero-in-degree node exists, the circuit contains a cycle and execution fails before any final answer is published.</p>
+      <p>The reference implementation may execute all ready wires serially while preserving epoch semantics, and parallel execution is enabled later for wire types declared safe. Correctness takes precedence over throughput because the research depends on trustworthy traces.</p>
+
+      <h2>Epochs and commits</h2>
+      <p>An epoch is the evaluation of a stable graph and state snapshot. Wires observe immutable dependency values from that snapshot, pure wires may run in parallel once their dependencies are satisfied, and effect-producing wires stage validated effects instead of mutating shared state immediately. At the epoch barrier the runtime groups <a href="wiki.html#definition-container-patch">container patches</a> by target container, validates conflicts, orders them deterministically, and commits one new container revision. Structural graph transactions commit in the same barrier.</p>
+
+      <figure class="diagram">
+        <pre class="mermaid">flowchart TB
+  Request[Evaluation request with output wires] --> Closure[Compute active dependency closure]
+  Closure --> Sort[Deterministic topological sort]
+  Sort --> Epoch[Epoch over immutable snapshot]
+  Epoch --> Pure[Pure wires execute]
+  Epoch --> Effects[Effect wires stage patches and transactions]
+  Pure --> Barrier[Epoch barrier]
+  Effects --> Barrier
+  Barrier --> Commit[Commit revisions and invalidate affected wires]
+  Commit --> Next{More work scheduled?}
+  Next -->|yes| Epoch
+  Next -->|no| Publish[Publish validated output wire and trace]</pre>
+        <figcaption><em>Epoch-based execution cycle</em></figcaption>
+      </figure>
+
+      <h2>Revisions and invalidation</h2>
+      <p>A restart is a move from one immutable snapshot to another, not a jump backward in execution. Cached values are reused only when their <a href="wiki.html#definition-definition-hash">definition hashes</a>, dependency revisions, command implementation versions, and external resource versions remain compatible. A redefinition of a wire invalidates that wire and all downstream value consumers. An update to a container invalidates materialized views and any wire that depended on the old revision. A graph mutation that does not touch a pure subgraph does not force recomputation of that subgraph.</p>
+      <p>Every structural change advances the circuit revision counter, so two same-size revisions stay distinguishable. A read of a container is recognized both when it is declared, as in the <code>source</code> of a <code>containerFilter</code>, and when it is an ordinary value read such as <code>$claims</code> in a <code>jsEval</code> body or a model instruction; both activate the contributions of the writers and the invalidation of the readers. A composed chain such as base container, first filter, second filter, and the scalar computed from it is invalidated link by link from the base commit.</p>
+      <p>Explicit invalidation follows the same reach. <code>circuit.invalidateWire</code> marks the named wire and every affected consumer, including transitive dependencies, because a refreshed observation must reach the output that depends on it; <code>circuit.invalidateDownstream</code> marks the consumers without invalidating the named wire. A wire that read a definition through <code>circuit.getDefinition</code> or listed names through <code>circuit.listDefinitions</code> is a structural consumer and is invalidated when an observed definition changes or when the set of names matching a listed prefix changes.</p>
+      <p>Structural invalidation is separate from semantic correction. When reconciliation concludes that two extracted identifiers refer to the same entity, the container state changes and downstream views are invalidated, but historical provenance is not rewritten: the original record and its source span stay in the audit log, and a <a href="wiki.html#definition-canonical-view">canonical view</a> merges them.</p>
+
+      <h2>Isolated JavaScript</h2>
+      <p>Generated code runs in a private guest realm inside a worker thread. The realm contains only ECMAScript intrinsics, so a body cannot reach the host process, the module system, or any runtime object. Dependency values and container snapshots cross the <a href="wiki.html#definition-value-profile">value profile</a> as copies, so a mutation inside a body never reaches a caller value, a sibling observation, a stored record, or a container revision; persistent change requires a committed patch and a new revision. The <code>circuit</code> parameter is a guest-realm facade whose operations and structural reads are replayed onto the real transaction after the call, and an uncommitted transaction publishes nothing. Container filter predicates run in the same isolated realm.</p>
+      <p>Execution is bounded twice. The synchronous part of a call runs under the realm's script timeout, and the worker is terminated when the call exceeds its JavaScript deadline, so a nonterminating body ends as a structured <code>budget_exceeded</code> outcome instead of blocking the runtime. Consumed JavaScript time is charged cumulatively against the request budget.</p>
+
+      <h2>Tracing and replay</h2>
+      <p>A trace records at least the circuit revision, epoch number, wire name, command identity and version, definition hash, dependency identities, execution start and end, output hash, staged effects, transaction details, neural-call metadata where relevant, replay provenance, and any error. A dependency identity names the dependency, its definition hash, and the hash of the value that was observed, so a record identifies the exact graph-and-state snapshot it belongs to. A rejected wire is recorded with the same identity fields as a successful one, and a failed run keeps the trace of the wires that completed before it.</p>
+      <p>For neural wires, exact replay and fresh rerun are distinguished. Exact replay substitutes a recorded response only when the definition hash and the dependency value hashes match; a mismatch is rejected as <code>replay_mismatch</code> rather than returning a stale answer, and the substitution is recorded with the provenance of the entry it replayed. A rerun invokes the model again and may produce a different result even with nominally deterministic decoding, so the project does not claim bit-for-bit reproducibility of neural generation.</p>
+
+      <h2>Budgets and structured outcomes</h2>
+      <p>The runtime caps the number of epochs, total created wires, neural calls, JavaScript time, output bytes, and transaction operations. Exceeding a budget yields a structured <a href="wiki.html#definition-budget-exceeded">budget_exceeded</a> result with a trace of partial progress rather than an invented answer. The same principle covers unresolved dependencies, cycle detection, schema failure, and tool errors: they produce structured partial or failed outcomes. A malformed program is normalized into a failed outcome with a stable <code>parse_error</code> code and an error record instead of rejecting the call, so a dataset worker rejects one candidate without aborting its batch.</p>
+
+      <h2>Normative runtime contract</h2>
+      <p>The normative implementation state contains a versioned circuit definition, a dependency graph, a value store, a command registry, container revisions, an effect staging area, a transaction log, and explicit resource budgets. A wire has a name, command identity and version, body, normalized definition hash, value dependencies, structural dependencies, metadata, and evaluation state. Valid states include at least <code>pending</code>, <code>ready</code>, <code>running</code>, <code>valid</code>, <code>dirty</code>, <code>failed</code>, and <code>cancelled</code>.</p>
+      <p>The API available to <code>jsEval</code> exposes graph mutation but no hidden value store. <code>circuit.getDefinition</code> returns the actual definition of the current revision and <code>circuit.listDefinitions</code> returns the definitions matching a prefix, while <code>circuit.getValue</code> does not exist, so values enter through declared <code>$wire</code> dependencies. A transaction records <code>transactionId</code>, <code>parentRevision</code>, <code>originWire</code>, the structural read set, the write set, operations, and an intent hash. Replaying the same intent against the same parent revision returns the same commit result without repeating its effects, re-adding a name whose definition is unchanged is an idempotent no-op, reusing an identifier with different content is a conflict, and a wire that stages operations without calling <code>circuit.commit</code> publishes nothing.</p>
+
+      <h2>Running a circuit</h2>
+      <p>The library entry point is <code>runtime/kernel.mjs</code>. A request supplies input bindings, the output wires to produce, optional model bindings for <code>modelCall</code>, optional budgets, an optional output schema, an optional existing container store, and the run mode.</p>
+
+      <pre><code>import { createRuntime } from './runtime/kernel.mjs';
+
+const runtime = createRuntime();
+const result = await runtime.run(source, {
+  inputs: { rows: [{ enabled: true, amount: 4 }] },
+  outputs: ['output'],
+  models: { modelCall: async ({ instruction, values }) => judge(instruction, values) },
+  budget: { maxNeuralCalls: 4 },
+  outputSchema: { type: 'object', required: ['answer'] }
+});
+
+console.log(result.status);   // completed
+console.log(result.outputs);  // requested wire values
+console.log(result.trace);    // per-wire hashes, dependencies, and output hashes</code></pre>
+
+      <p>A <a href="wiki.html#definition-run-status">run status</a> reports one of three outcomes. <code>completed</code> carries the requested output values. <code>partial</code> reports a budget limit or an unresolved dependency together with the partial output and trace. <code>failed</code> reports a parse, validation, execution, or cycle error with a stable code such as <code>parse_error</code>, <code>unknown_command</code>, <code>unknown_output</code>, <code>unknown_dependency</code>, <code>cycle_detected</code>, <code>validation_error</code>, <code>missing_input</code>, <code>stale_definition</code>, <code>effect_not_permitted</code>, <code>execution_error</code>, <code>unsupported_schema</code>, <code>unsupported_value</code>, <code>replay_mismatch</code>, or <code>budget_exceeded</code>, and <code>partial</code> reports <code>unresolved_dependencies</code> when a producer never appears.</p>
+
+      <h2>Replay</h2>
+      <p>Running the same circuit in <a href="wiki.html#definition-replay">replay</a> mode with a recorded <a href="wiki.html#definition-trace">trace</a> substitutes each recorded neural generation instead of invoking the model again. The downstream deterministic computation then runs over the recorded text, which is how a reviewer verifies that a reported answer follows from the recorded generation.</p>
+
+      <pre><code>const live = await runtime.run(source, { inputs, models });
+const replayed = await runtime.run(source, { inputs, mode: 'replay', replayFrom: live.trace });</code></pre>
+
+      <h2>Where the contract lives</h2>
+      <p>The full runtime contract is specified in <a href="specsLoader.html?spec=DS002-sop-lang-core.md">DS002-sop-lang-core</a>. Command effects and the extension interface are specified in <a href="specsLoader.html?spec=DS004-wire-types.md">DS004-wire-types</a>, container revisions and patches in <a href="specsLoader.html?spec=DS005-containers.md">DS005-containers</a>, and the source-level state machine that drives ingestion and analysis in <a href="specsLoader.html?spec=DS006-context-adapter.md">DS006-context-adapter</a>.</p>
+    </div>
+  </main>
+  <div data-include="partials/footer.html"></div>
+  <script src="partials-loader.js"></script>
+</body>
+</html>

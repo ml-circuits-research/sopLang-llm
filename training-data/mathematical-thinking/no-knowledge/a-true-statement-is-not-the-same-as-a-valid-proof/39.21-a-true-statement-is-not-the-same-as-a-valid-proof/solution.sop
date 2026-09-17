@@ -1,0 +1,13 @@
+@slots literal
+{
+  "claim": "2+2=4",
+  "justification": "the sky is blue."
+}
+
+@answer jsEval
+const slots = $slots;
+const stop = ["because", "the", "a", "an", "is", "are", "it", "that", "this", "of", "and", "by"];
+const terms = slots.justification.toLowerCase().split(/[^a-z0-9]+/).filter((word) => word !== "" && stop.indexOf(word) === -1);
+const relevant = terms.some((word) => slots.claim.toLowerCase().indexOf(word) !== -1);
+return relevant ? "Yes." : "No.";
+

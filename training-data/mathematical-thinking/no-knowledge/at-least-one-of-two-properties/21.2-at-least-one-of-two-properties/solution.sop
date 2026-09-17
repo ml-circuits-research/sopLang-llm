@@ -1,0 +1,11 @@
+@slots literal
+{
+  "star": 6,
+  "stripe": 5,
+  "both": 3
+}
+
+@answer jsEval
+const slots = $slots;
+return String(slots.star + slots.stripe - slots.both) + " pieces.";
+

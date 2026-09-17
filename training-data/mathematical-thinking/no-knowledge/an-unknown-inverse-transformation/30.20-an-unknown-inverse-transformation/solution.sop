@@ -1,0 +1,11 @@
+@slots literal
+{
+  "distance": 5,
+  "direction": "right"
+}
+
+@answer jsEval
+const slots = $slots;
+const opposite = slots.direction === "right" ? "left" : "right";
+return "Translate " + slots.distance + " units to the " + opposite + ".";
+

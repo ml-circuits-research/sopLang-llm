@@ -1,0 +1,11 @@
+@slots literal
+{
+  "facingKnown": false,
+  "relativeInstruction": true
+}
+
+@answer jsEval
+const slots = $slots;
+const unique = slots.facingKnown || !slots.relativeInstruction;
+return unique ? "Yes; the note fixes a unique destination." : "No; the starting orientation is missing.";
+

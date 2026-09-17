@@ -1,0 +1,18 @@
+@slots literal
+{
+  "win": [
+    1,
+    2,
+    3
+  ],
+  "lose": [
+    4,
+    5,
+    6
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+return slots.win.length === slots.lose.length ? "Yes." : "No.";
+

@@ -1,0 +1,17 @@
+@slots literal
+{
+  "start": 0,
+  "list": [
+    2,
+    5,
+    8,
+    3
+  ],
+  "increment": 1
+}
+
+@answer jsEval
+const slots = $slots;
+const even = slots.list.filter((value) => value % 2 === 0).length;
+return (slots.start + slots.increment * even) + ".";
+

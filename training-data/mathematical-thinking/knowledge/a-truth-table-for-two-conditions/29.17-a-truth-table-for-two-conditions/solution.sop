@@ -1,0 +1,25 @@
+@facts literal
+{ "on": "O", "off": "F" }
+
+@slots literal
+{
+  "count": 2,
+  "options": [
+    "on",
+    "off"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let states = [[]];
+for (let index = 0; index < slots.count; index += 1) {
+  const next = [];
+  for (const state of states) {
+    for (const option of slots.options) next.push(state.concat([option]));
+  }
+  states = next;
+}
+const initials = states.map((state) => state.map((value) => $facts[value]).join(""));
+return initials.join(", ") + " (on/off).";
+

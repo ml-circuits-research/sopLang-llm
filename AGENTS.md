@@ -1,0 +1,50 @@
+# AGENTS.md
+
+## Scope
+
+This repository is the sopLang-llm project. It fine-tunes a small code-capable language model to compile problems into SOP Lang circuits, ships the runtime that executes those circuits, and builds the verified teaching pipeline that produces its training data. The vision handbook `vision/Small_Models_Compiled_Context_SOP_Lang_EN.docx` holds the research hypothesis and the engineering specification for the whole system. The design specifications under `docs/specs/` are the source of truth for documented behavior and structure.
+
+## Mandatory Reading Order
+
+1. Read `README.md` for the project purpose, overview, and onboarding paths.
+2. Read `docs/index.html` for the system architecture and the documentation map.
+3. Read `docs/specs/DS001-coding-style.md` for coding style, module structure, and test organization.
+4. Read `docs/specs/DS002-sop-lang-core.md` for the language and runtime contract.
+5. Read `docs/wiki.html` for the canonical terminology of the project.
+6. Read the affected design specification under `docs/specs/` before changing code that touches it.
+
+## Current Skill Catalog
+
+The repository does not distribute skills as product artifacts. The agent skills available under `.agents/skills/` are imported tooling used while working in this repository; they are not part of the project's documented surface, and their guidance and dependency records stay inside their own folders. The product surfaces of this repository are the language runtime, the wire registry, the context adapter, the teaching pipeline, and the training data suite described by the design specifications.
+
+## Repository Rules
+
+- Everything written to disk is in English: documentation, specifications, code comments, identifiers, commit messages, test prose, and every generated artifact under `training-data/`, `teacher/`, `context/`, `runtime/`, and `docs/` — problem statements, solution circuits, explanations, prompts, manifests, reports, traces, and rejection records. Romanian is reserved for spoken communication with the repository owner only. The only permitted non-English text on disk is verbatim source material quoted for provenance (for example, a seed-book passage reproduced inside a rejection record) and deliberately non-linguistic payload in tests that exercise Unicode handling; any non-English content in a source that would flow into generated data must be quarantined from the accepted dataset.
+- Treat the design specifications under `docs/specs/` as the source of truth. When wording diverges, the specifications win.
+- Update the HTML documentation and the affected specifications whenever source behavior, interfaces, structure, dependencies, or constraints change.
+- Keep DS numbering contiguous and gap-free. `DS000-vision.md`, `DS001-coding-style.md`, and exactly one `DS003-main-behavior.md` are mandatory.
+- Give every `DSxxx-*.md` file exactly two frontmatter fields, `title` and `summary`, with `title` equal to the filename stem. Never add `id`, `status`, `owner`, or other metadata.
+- Write rationale, limitations, assumptions, and contract boundaries as declarative statements inside `Core Content`. Do not create a separate decision log.
+- Run the Main Behavior analysis again when source or product changes may alter the project's purpose, user outcomes, essential paths, interfaces, subsystems, hidden functional consequences, or architecture.
+- Keep documentation prose unwrapped in source and let the specs viewer wrap text naturally.
+- Regenerate `docs/specs/matrix.md` from the specification files instead of editing it by hand.
+- Keep the seed books in `vision/` unchanged and treat them as read-only research material.
+- The library and its tests use Node.js built-ins only. Do not add an external dependency without explicit approval and a matching entry in `dependencies.md`.
+
+## Runtime Defaults
+
+- Default executable language: Node.js using `.mjs` ECMAScript modules with explicit exports, relative imports that include file extensions, `node:` imports for built-ins, and async/await for asynchronous work.
+- Default test organization: `node --test` with `node:assert/strict`, with unit, property, and end-to-end coverage for every semantic rule in the specifications.
+- Default dependency policy: eliminate or avoid dependencies. Record accepted exceptions in `dependencies.md` with justification, alternatives, authorization, license, source and update URLs, startup checks, and removal opportunities.
+- Runtime code keeps the language kernel, the wire registry, the context adapter, and the data pipeline in separate modules, and it must not silently change SOP Lang semantics to accommodate a model output. Parser or runtime changes require a version increment and migration of training data.
+- Model behavior stays measurable: every neural call is explicit in the circuit, recorded in the trace, and counted against a request budget.
+
+## Key Paths
+
+- Design specifications: `docs/specs/`
+- Specification entry point: `docs/specsLoader.html?spec=matrix.md`
+- Canonical terminology: `docs/wiki.html`
+- HTML documentation: `docs/`
+- Research handbook and seed books: `vision/`
+- Training data suite: `training-data/`
+- Phase plan: `todo.md`

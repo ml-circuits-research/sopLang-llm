@@ -1,0 +1,17 @@
+@facts literal
+{"minutesPerHour": 60}
+
+@slots literal
+{
+  "hours": 10,
+  "minutes": 0,
+  "interval": 25,
+  "index": 4
+}
+
+@answer jsEval
+const slots = $slots;
+const perHour = $facts.minutesPerHour;
+const departure = slots.hours * perHour + slots.minutes + (slots.index - 1) * slots.interval;
+return String(Math.floor(departure / perHour)) + ":" + String(departure % perHour).padStart(2, "0");
+

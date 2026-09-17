@@ -1,0 +1,17 @@
+@slots literal
+{
+  "cards": [
+    2,
+    5,
+    8,
+    11
+  ],
+  "threshold": 10
+}
+
+@answer jsEval
+const slots = $slots;
+const witnesses = slots.cards.filter(function (value) { return value > slots.threshold; });
+if (witnesses.length !== 1) { throw new Error("the condition has " + witnesses.length + " witnesses instead of one"); }
+return "Card " + witnesses[0] + ".";
+

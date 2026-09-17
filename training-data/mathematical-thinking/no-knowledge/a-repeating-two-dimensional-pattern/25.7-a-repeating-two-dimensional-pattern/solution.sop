@@ -1,0 +1,16 @@
+@slots literal
+{
+  "rows": 3,
+  "columns": 3,
+  "topLeft": "white",
+  "opposite": "black",
+  "row": 3,
+  "column": 3
+}
+
+@answer jsEval
+const s = $slots;
+const steps = (s.row - 1) + (s.column - 1);
+const color = steps % 2 === 0 ? s.topLeft : s.opposite;
+return color.charAt(0).toUpperCase() + color.slice(1) + ".";
+

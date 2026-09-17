@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sopLang-llm Documentation</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+  </script>
+</head>
+<body>
+  <div data-include="partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel">
+      <p class="breadcrumbs"><a href="index.html">Home</a></p>
+      <p class="kicker">Language</p>
+      <h1>Wire types</h1>
+      <p class="lede">Every capability the runtime offers is a <a href="wiki.html#definition-wire-command">wire command</a>. A small standard vocabulary gives the student stable concepts, and installable <a href="wiki.html#definition-wire-type">wire types</a> add capability that the model composes from descriptions instead of memorizing.</p>
+
+      <h2>Standard vocabulary</h2>
+      <table>
+        <thead>
+          <tr><th>Command</th><th>Purpose</th><th>State and effect model</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>input</code></td><td>Bind a value supplied by the wrapper, such as the current problem, chunk, or runtime parameter.</td><td>Immutable for one request or declared snapshot.</td></tr>
+          <tr><td><code>literal</code></td><td>Produce a literal scalar, JSON value, or text body.</td><td>Pure.</td></tr>
+          <tr><td><code>jsEval</code></td><td>Execute JavaScript over declared <code>$wire</code> dependencies in an isolated realm, and optionally stage graph or container transactions.</td><td>Pure unless it explicitly stages effects; bounded by the JavaScript deadline.</td></tr>
+          <tr><td><code>modelCall</code></td><td>Invoke the configured neural model for a local semantic judgment or generation step.</td><td>Explicit non-deterministic neural effect, fully logged.</td></tr>
+          <tr><td><code>container</code></td><td>Declare a typed persistent collection with its schema and identity policy.</td><td>Structural state declaration.</td></tr>
+          <tr><td><code>containerAdd</code></td><td>Stage one or more new records for a target container.</td><td>Batched container patch.</td></tr>
+          <tr><td><code>containerUpsert</code></td><td>Stage keyed inserts or replacements under a declared merge policy.</td><td>Batched container patch.</td></tr>
+          <tr><td><code>containerRemove</code></td><td>Stage deletion or tombstone operations under an explicit identity contract.</td><td>Batched container patch.</td></tr>
+          <tr><td><code>containerFilter</code></td><td>Define a pure derived view of a source container that keeps provenance.</td><td>Pure, and invalidated when source or predicate dependencies change.</td></tr>
+        </tbody>
+      </table>
+
+      <p><a href="wiki.html#definition-input-wire">Input wires</a> are normally injected by the wrapper rather than invented by the student. A problem call may bind <code>problem</code>, <code>sourceChunk</code>, <code>requestedOutputSchema</code>, or a selected state projection, and the model sees their names and contracts in the <a href="wiki.html#definition-control-plane">control plane</a>. Large source documents are not embedded as <code>literal</code> values inside generated programs; they stay in a source store and are referenced by input wires or source identifiers, which keeps provenance stable.</p>
+
+      <h2>The deterministic escape hatch</h2>
+      <p><a href="wiki.html#definition-js-eval">jsEval</a> supports ordinary JavaScript data structures and small algorithms, and the student is trained to prefer it whenever the remaining problem is mechanical: sorting records by timestamp, computing a median, joining rows by identifier, finding connected components, validating a JSON object, or serializing an answer. A body runs in an isolated guest realm inside a worker thread: dependency values arrive as copies through the <a href="wiki.html#definition-value-profile">value profile</a>, generated code cannot reach the host process or the module system, and the <code>circuit</code> parameter is a facade whose operations are replayed onto the real transaction after the call. Execution is bounded, so a nonterminating body ends as a structured <code>budget_exceeded</code> outcome, and consumed JavaScript time is charged cumulatively. The research semantics do not depend on pretending JavaScript is less expressive than it is, and they also do not depend on a deployment sandbox: the isolation makes a generated program unable to mutate runtime state outside its declared effects.</p>
+
+      <h2>Explicit neural work</h2>
+      <p><a href="wiki.html#definition-model-call">modelCall</a> makes recursive neural reasoning visible. A wire body contains the local instruction, the relevant dependency values, and an optional constrained output schema. A summarization circuit may use model calls for claim extraction or paraphrase while accounting for coverage in JavaScript, and a novelty circuit may use retrieval and deterministic overlap metrics first and a neural judge only on the remaining candidate comparisons. Every invocation is a visible cost center that can be ablated.</p>
+
+      <h2>Wire type modules</h2>
+      <p>An additional command is implemented by an ECMAScript module that exports a <code>wireType</code> object with three layers: a <a href="wiki.html#definition-wire-manifest">manifest</a> that may be shown to the model, an analyzer and validator used by the compiler, and an executor used by the runtime. The relative module path may determine the command name: a file at <code>wires/text/paraphrase.mjs</code> can expose <code>text.paraphrase</code>, and a file placed directly at <code>wires/paraphrase.mjs</code> exposes <code>paraphrase</code>.</p>
+
+      <pre><code>export const wireType = {
+  manifest: {
+    name: "text.paraphrase",
+    version: "1.0.0",
+    summary: "Rewrite supplied text while preserving specified facts and constraints.",
+    whenToUse: "Use when wording must change but semantic content is already known.",
+    whenNotToUse: "Do not use to discover facts or perform arithmetic.",
+    bodyFormat: "text",
+    syntax: "@out text.paraphrase\n$input\n&lt;rewrite instruction&gt;",
+    inputContract: {
+      requiredDependencies: ["text-like value"],
+      notes: "All referenced values must appear as $wire dependencies."
+    },
+    outputSchema: { "type": "string" },
+    effectClass: "neural",
+    determinism: "not_guaranteed",
+    examples: [
+      {
+        source: "@short text.paraphrase\n$draft\nMake this concise without dropping qualifications.",
+        explanation: "Uses an existing draft as the value dependency."
+      }
+    ]
+  },
+
+  analyze({ body, parser }) {
+    return parser.findValueReferences(body);
+  },
+
+  validate({ body, capabilities }) {
+    return { ok: true };
+  },
+
+  async execute(ctx) {
+    return ctx.models.paraphrase({
+      body: ctx.body,
+      values: ctx.values,
+      budget: ctx.budget
+    });
+  }
+};</code></pre>
+
+      <h2>The three layers</h2>
+      <p>The manifest is part of the capability catalog presented to the planner, not documentation for humans alone. It states the command name and version, purpose, when to use it and when not to, the accepted body form, how dependencies are referenced, the output contract, the <a href="wiki.html#definition-effect-class">effect class</a>, determinism, and canonical examples. A vague description such as "processes text intelligently" is unacceptable because the student cannot make a reliable planning decision from it.</p>
+      <p>The analyzer is equally important. Scheduling is sound only when the runtime knows which values are required before execution, so a command never inspects runtime values to discover dependencies after execution has begun. The body language decides the lexical rule: JavaScript analysis ignores string literals, comments, regular-expression literals, and property names, while instruction text has no string literals and therefore reads a <code>$name</code> token wherever it appears, so an apostrophe in <code>What's $x?</code> never hides a required input. Dynamic dependency creation belongs to <a href="wiki.html#definition-metaprogramming">metaprogramming</a> and a new <a href="wiki.html#definition-circuit-revision">circuit revision</a>.</p>
+      <p>The validator checks body syntax and static constraints before execution. A validation error is a compilation failure, not a natural-language warning. The executor receives immutable resolved dependency values, the original body, declared budgets, versioned resources, and only the runtime APIs permitted by its effect class, which prevents the scheduler from assuming that two commands are parallel-safe merely because their current data dependencies do not intersect. A declared data contract is validated fail-closed: a schema outside the published profile is rejected as <code>unsupported_schema</code> before any record or output is accepted.</p>
+
+      <h2>Versioning and conformance</h2>
+      <p>The manifest and the executable code are versioned together, and the trace records the implementation hash. If a description says that a command sorts ascending while the code sorts descending, the experiment is invalid regardless of how well the student follows the description. Automated conformance tests generate sample inputs from the declared schema and check the relationships the manifest claims.</p>
+      <p>Training exposes the student to varying capability catalogs. Some examples rename semantically equivalent tools with random identifiers and provide only the manifest, and other examples withhold a wire type entirely until evaluation. Success on unseen commands shows that the model interprets tool descriptions and composes them rather than memorizing SOP Lang token sequences.</p>
+
+      <h2>Where the contract lives</h2>
+      <p>The vocabulary, the module contract, and the conformance requirements are specified in <a href="specsLoader.html?spec=DS004-wire-types.md">DS004-wire-types</a>. Container commands are specified in detail in <a href="specsLoader.html?spec=DS005-containers.md">DS005-containers</a>, and the scheduling and transaction rules that all commands obey are specified in <a href="specsLoader.html?spec=DS002-sop-lang-core.md">DS002-sop-lang-core</a>.</p>
+    </div>
+  </main>
+  <div data-include="partials/footer.html"></div>
+  <script src="partials-loader.js"></script>
+</body>
+</html>

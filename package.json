@@ -1,0 +1,20 @@
+{
+  "name": "soplang-llm",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "SOP Lang symbolic interpreter: parser, dependency analysis, deterministic topological scheduler, epoch and revision semantics, metaprogramming transactions, typed containers, tracing, and JavaScript execution.",
+  "license": "AGPL-3.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "exports": {
+    ".": "./runtime/kernel.mjs",
+    "./runtime": "./runtime/kernel.mjs",
+    "./wires/standard": "./wires/standard/index.mjs"
+  },
+  "scripts": {
+    "test": "node --test \"tests/**/*.test.mjs\"",
+    "size-check": "bash fileSizesCheck.sh"
+  }
+}

@@ -1,0 +1,13 @@
+@slots literal
+{
+  "day": "Wednesday",
+  "offset": 14,
+  "weekLength": 7
+}
+
+@answer jsEval
+const slots = $slots;
+const displacement = slots.offset % slots.weekLength;
+if (displacement !== 0) { throw new Error(slots.offset + " days is not a whole number of " + slots.weekLength + "-day weeks"); }
+return slots.day + ".";
+

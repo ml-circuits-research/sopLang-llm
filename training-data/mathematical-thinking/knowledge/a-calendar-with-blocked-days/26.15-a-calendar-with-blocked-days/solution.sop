@@ -1,0 +1,26 @@
+@facts literal
+{"weekdays":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]}
+
+@slots literal
+{
+  "blocked": [
+    "Tuesday",
+    "Thursday"
+  ],
+  "bounds": [
+    "Monday",
+    "Friday"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const facts = (typeof $facts === "object" && $facts !== null) ? $facts : JSON.parse(String($facts));
+const days = facts.weekdays;
+const from = days.indexOf(slots.bounds[0]);
+const to = days.indexOf(slots.bounds[1]);
+if (from === -1 || to <= from) { throw new Error("the meeting bounds do not match the weekday order"); }
+const open = days.slice(from + 1, to).filter((day) => !slots.blocked.includes(day));
+if (open.length !== 1) { throw new Error("the constraints leave " + open.length + " days instead of one"); }
+return open[0] + ".";
+

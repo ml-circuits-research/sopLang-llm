@@ -1,0 +1,175 @@
+---
+title: DS008-training-data
+summary: Defines the training data suite in training-data/, the problem-family factory with latent structures and oracles, the seed books as environments, the competence coverage matrix, acceptance classes, deduplication, leakage prevention, and the training example format.
+---
+
+## Introduction
+
+The weakest way to create synthetic data is to ask a coding agent to invent a hundred thousand diverse reasoning problems. The resulting dataset usually contains repeated surface forms, uneven difficulty, invisible gaps in coverage, and many tasks whose answers cannot be checked independently. The stronger approach treats dataset generation as software engineering: [the coding agent builds families of parameterized problems](wiki.html#definition-data-factory) and samples them under a controlled curriculum.
+
+This specification defines the data suite that the Phase 3 work builds under `training-data/`. The teacher behavior that produces examples is described in `DS003-main-behavior.md`, the model tiers that consume the data are described in `DS007-model-strategy.md`, and the training and evaluation procedures are described in `DS009-fine-tuning-and-evaluation.md`.
+
+## Core Content
+
+### Problem families and their specifications
+
+[Every problem family has a specification](wiki.html#definition-problem-family) containing the latent structure of the task, a generator, a natural-language renderer, an oracle, mutation operators, a difficulty vector, and coverage labels.
+
+The latent structure is the center of the design. A table-reasoning generator first samples a relational pipeline such as filtering by predicate, joining two keyed tables, grouping by a field, computing an aggregate, selecting the top k, and rendering the result. The natural-language question is produced from this latent plan, and [the oracle executes the plan independently](wiki.html#definition-oracle). The teacher sees the natural-language problem and the available wire types, not the hidden oracle program, so it must compile its own SOP Lang solution.
+
+Difficulty is multidimensional. A single scalar such as "level 7" hides too much. Useful dimensions include the number of subproblems, dependency depth, branching factor, the amount of irrelevant information, the number of available but unnecessary wire types, the need for recursion, the number of container revisions, ambiguity that requires additional context, the size of intermediate data, and the fraction of work that can be delegated symbolically. The factory records these dimensions so evaluation can reveal where the student fails.
+
+Five family groups anchor the pilot.
+
+A mathematical family generates word problems whose underlying operations are known exactly. A data family generates tables and queries. A program-analysis family generates small codebases with seeded defects and unit tests. A tool-orchestration family generates simulated APIs with manifests and deterministic responses. A long-document family generates synthetic books with distributed facts, exceptions, aliases, contradictions, and distractors. Because the ground truth is constructed, the system measures whether the student extracted and used each critical item.
+
+### Seed environments from the vision books
+
+The books in `vision/` provide semantic structure that procedural generators struggle to invent naturally. Real arguments contain qualifications, repetitions with changed meaning, implicit dependencies, minority positions, local definitions, apparent contradictions, references across chapters, changes of perspective, and long-range narrative events, which are exactly the places where naive synthetic tasks are too clean.
+
+| Source | Seed use |
+| --- | --- |
+| `vision/Small_Models_Compiled_Context_SOP_Lang_EN.docx` | The research handbook and semantic contract for the runtime, adapter, teacher, and evaluation. |
+| `vision/Decompose_to_Solve_1000_Problems.docx` | Decomposition tasks with minimal sufficient inputs, dependency graphs, and deliberate false-decomposition cases. |
+| `vision/Logical_Reasoning_Types_Course.docx` | Deduction, conditionals, induction, analogy, cause, abduction, quantity, fallacies, and mixed scientific reasoning tasks. |
+| `vision/Adult_Reasoning_and_Everyday_Knowledge_Course.docx` | Everyday-document reasoning where the text is a closed world and conclusions must stop at its edge. |
+| `vision/Common_Sense_for_Adults_1000_Problems.docx` | Self-contained practical reasoning with successive percentages, weighted averages, units, bottlenecks, and constrained optimization. |
+| `vision/Mathematical_Thinking_1000_Problems_Grades_1-4_EN.docx` | Graded mathematics where every problem supplies its own rules and trains relations, states, and constraints. |
+| `vision/World_as_a_System_1000_Reasoning_Problems_Grades_1-4_EN.docx` | Geography, history, civics, and environment reasoning over explicit facts, rules, relationships, and constraints. |
+
+The books are not fed into fine-tuning as raw next-token data, which would risk memorization and would not teach compiler behavior. [They act as environments.](wiki.html#definition-seed-environment) The teacher reads a source, constructs candidate semantic inventories, and creates tasks whose answers must be grounded in the source.
+
+A philosophy source yields argument-dependency tasks, qualifier-preservation tasks, counterargument mapping, definition tracking, and comparisons between incompatible frameworks. A novel yields entity resolution, chronology, causality, perspective tracking, character relationships, and evidence-preserving summarization. A machine-learning research source yields method and result extraction, comparison tables, limitation tracking, novelty-candidate generation, and prior-art queries.
+
+The same source supports multiple abstraction levels. A local level trains extraction from one chunk into a schema. A mesoscopic level trains reconciliation or cross-chapter contradiction detection over several chapters. A global level trains decomposition, controlled summarization, novelty analysis, and anti-smoothing over the whole book. The factory varies the computational structure of the requested analysis rather than producing near-duplicate questions that differ only in wording.
+
+Copyright and licensing are respected. Sources the project owns or may use internally serve as private training material, while redistributed datasets may contain only derived annotations or generated synthetic substitutes. The experiment manifest records the rights status of each source and whether it may appear in released artifacts.
+
+### Grounded task families from books
+
+A coding agent builds task generators on top of an annotated book representation. After a teacher compiles a novel into characters, events, places, relations, claims, and source spans, the generator can sample a pair of characters and ask for all causally connected events, sample a rare event and ask which later consequences depend on it, hide one alias mapping and ask the student to resolve it from evidence, move a critical passage to different positions in synthetic versions of the document, or set a controlled summary budget and mark which events are mandatory.
+
+For philosophy, the generator creates argument graphs where a claim may have premises, objections, replies, scope conditions, examples, and definitions. The system asks whether a summary preserves a low-frequency but structurally central objection, compares a dominant thesis with an explicitly preserved minority position, and tests whether the student keeps modal qualifiers such as "may", "under condition X", or "for this class of cases" instead of converting them into universal claims.
+
+For research literature, the generator creates tables of methods, datasets, metrics, and results. It asks whether a reported improvement is actually comparable, which requires checking dataset version, metric direction, evaluation split, and baseline configuration. Numerical comparisons are delegated to code after the records have been semantically aligned. Novelty tasks ask whether a candidate contribution differs from earlier work under a time-bounded reference corpus, with retrieval traces preserved. A novelty-labelled example carries the evidence of its search rather than a conclusion alone: the queries issued, the indexes searched, the corpus snapshot identifier, the publication cutoff, the number of candidates examined, the comparison method, and the limitations of the search. A candidate that no retrieved document matches is recorded as negative evidence under the searched corpus and never as proof of novelty, and an example whose evidence list is incomplete is rejected as a novelty example instead of being admitted with a stronger label than the search supports.
+
+The teacher also generates synthetic perturbations of real material: an inserted exception, an altered result, a definition split across sections, two entities with similar names, or a plausible distractor paragraph. Because the perturbation is known exactly, the benchmark has stronger ground truth while retaining the complexity of authentic prose. Procedural families remain necessary for exact oracles and controlled extrapolation, and the strongest curriculum mixes both with a volume cap that prevents the books from dominating the dataset.
+
+### The competence coverage matrix
+
+The dataset needs a competence matrix before large-scale generation begins. Without it, volume becomes a distraction.
+
+The first axis describes the role of the student call: initial decomposition, circuit planning, chunk ingestion, local semantic judgment, repair after runtime error, replanning after new evidence, final synthesis, schema planning, or tool selection. The second axis describes task families: numerical, algorithmic, tabular, document, legal, literary, scientific, debugging, retrieval, summarization, anti-smoothing, novelty, and mixed tool workflows. The third axis captures the difficulty dimensions.
+
+The factory tracks how many accepted examples occupy each cell and also tracks failure rate, average circuit size, average neural-call count, and symbolic delegation ratio. A dataset where ninety percent of examples use `jsEval` only for arithmetic and almost none require graph expansion will not teach recursive planning regardless of total size. A dataset where every custom tool has a descriptive English name may teach the model to memorize the name instead of reading the manifest.
+
+A useful early target is a balanced pilot set rather than millions of examples. Ten to fifty thousand high-quality examples can be sufficient to test whether fine-tuning changes behavior in the intended direction. A single teacher trajectory produces many supervised examples because each decision point is recorded as a control plane, a current state, and a desired next patch instead of one giant problem and final program pair.
+
+### Quality gates
+
+Before an example enters the training set, it passes syntax parsing, command validation, dependency analysis, acyclicity checks for the generated revision, execution where applicable, oracle comparison, schema checks, provenance checks, and leakage checks. For document-derived examples, source spans must point into the declared source snapshot. When a teacher claims that a row comes from a passage but the passage does not support it, the example is rejected or marked at a lower confidence tier.
+
+[Acceptance classes make data quality auditable](wiki.html#definition-acceptance-class). `exact_verified` means the complete final output is checked by an independent oracle. When the family computation and the circuit computation are two transcriptions of one algorithm over one shared reference parse, the label is `exact_verified` only with its independence limitation stated in the dataset report: the agreement is verified over every variant of a multi-variant template, and for a single-variant template it certifies one instance; full independence requires a structurally different oracle route, such as the printed step list. `execution_verified` means the circuit executes and satisfies structural properties while some semantic labels are teacher-generated. `evidence_verified` means every claim is tied to source spans and a separate verifier confirms support. `human_audited` means a human reviewer has checked a sample or the full item.
+
+Rejected examples are preserved with their reasons because rejection reasons are diagnostic data: parse error, missing dependency, cycle, incorrect result, failed schema, oracle mismatch, circuit answer mismatch, source quarantine, excessive neural use, hidden access to source, unsupported tool, budget violation, incomplete novelty evidence, or semantic evidence failure. Trends in rejection reasons show where the teacher or the runtime needs improvement, and a candidate whose template has no family is recorded as `family_not_implemented` so coverage is a number rather than an impression.
+
+### Deduplication and leakage prevention
+
+Deduplication operates at several levels. Exact text duplicates are trivial to remove. The important cases are structural duplicates, where two problems use different entity names but compile into the same shallow operator template. Hashes of latent generator plans, normalized circuit graphs, and problem-family metadata provide better duplicate signals than text embeddings alone. A balanced dataset keeps some structural repetition for language robustness and does not let one motif dominate.
+
+The split of an example is a directory fact, and the evaluation holdout is excluded from the training sets by construction rather than by a filter that a later run could forget. Within a source, the variants of one printed template share a plan, so they are grouped by template before any split decision and the holdout takes whole template groups. Selection units are template groups merged whenever they share a plan fingerprint, so neither a template nor a plan that already appears in the training rows straddles the split boundary, and the writer asserts that no `eval` example's plan fingerprint occurs in any training row.
+
+Document-level splitting happens before task generation. When a book contributes training examples, no chapter or paraphrased derivative from that book appears in the final held-out book evaluation unless the evaluation is explicitly about within-book adaptation. The cleanest design has separate source pools for training, validation, and test, plus a second out-of-domain pool with genres or authors absent from training. Evaluation problem generators and held-out source books are stored behind a separate interface, and the agent that creates the training set has no access to test seeds or hidden test manifests.
+
+Dataset diversity is measured rather than assumed. Token-level diversity is weak evidence. The factory reports distributions over latent operators, graph motifs, wire types, decomposition depth, source domains, schema shapes, and failure modes, and a human reviewer can answer "what skill is this checkpoint supposed to learn from these data?" without reading random samples blindly.
+
+### Dataset layout and text artifacts
+
+The suite is a tree of text files under `training-data/`. Text is the canonical form: a human reads an example without opening a tool, a diff shows what changed, and no artifact in the suite is a serialized object dump. The message records a trainer consumes are derived from these artifacts by the export step of `DS009-fine-tuning-and-evaluation.md`; the derived form is never hand-maintained.
+
+```
+training-data/
+  sources.md                          source inventory: role, rights, hashes, extractor, permitted use
+  <source>/                           one directory per registered source, for example mathematical-thinking
+    manifest.md                       one row per accepted example, with hashes, split, category, type, template, span
+    report.md                         counts, rejection reasons, coverage, limitations
+    no-knowledge/<type>/<problem>/    examples whose solution needs no fact outside the statement
+    knowledge/<type>/<problem>/       examples whose solution needs an external fact, materialized in the circuit
+    eval/<category>/<type>/<problem>/ the evaluation holdout, excluded from every training set
+    rejected/<problem>/               preserved candidates with the reason they were not accepted
+```
+
+Two main sets separate the examples by the knowledge they require. An example belongs to `no-knowledge/` when every premise of its solution is stated or defined by the problem text, and to `knowledge/` when the solution needs a fact that the text does not state, such as a unit convention, a calendar fact, a currency, a formula, or a named entity. A knowledge-requiring problem is never discarded: it is filed under `knowledge/`, and its circuit materializes the external fact as a structured `literal` facts wire that the computation reads. The writer removes the wire and re-runs the circuit: a fact that the program does not actually read leaves the answer unchanged and is rejected as `fact_not_load_bearing`, while a read fact makes the answer wire unresolvable without its wire. A substring guard on the fact text is rejected at load time, because such a guard pins English phrasing instead of stating a dependency. The category is therefore visible in the artifact and structural in the circuit instead of being asserted in the prose.
+
+Inside a category, the first subdirectory level is the problem type, which is the printed template of the problem reduced to a slug, such as `order-in-a-line` or `two-boxes-with-a-given-difference`. Types keep a large dataset navigable and let a coverage report count latent plans directly.
+
+Each problem folder holds exactly three files.
+
+- `problem.md` is the statement and nothing else: a heading with the problem identity and the source text of the problem, plus a labelled `Referenced context` line when the statement hands its premise to an earlier problem. The worked solution, the printed answer, and the abstract model of the source are never part of this file, because it is the solver-visible projection.
+- `solution.sop` is the SOP Lang circuit that solves the problem. Its shape is [the compiled plan](wiki.html#definition-compiled-plan) of that instance: a `slots` `literal` wire carries the values the compiling model extracted from the statement, an optional `facts` `literal` wire carries the external knowledge the solution needs, and the `answer` wire performs the deterministic `jsEval` computation. A dataset circuit contains no `input` wire and no `modelCall` wire: the SOP Lang file is itself the output of a model that already read the problem, so an input wire would only re-state data the compiled plan carries and a model call would ask a model to re-parse its own input. The runtime keeps both commands for interactive use; the dataset contract excludes them, and the family loader rejects a program that declares either.
+- `explanation.md` has two sections. `## Explanation` states the reasoning steps of the solution and cites the reference solution printed by the source. `## Result` states the answer, the acceptance class with the evidence that produced it, and the file that holds the program.
+
+A problem that was extracted but not accepted is preserved under `rejected/` as `problem.md` plus `rejection.md`, and the rejection reason is one of the diagnostic classes of the quality gates. Keeping rejected candidates is what makes coverage measurable: the report states how many problems of a source have a verified circuit and how many are still waiting for a family.
+
+### The evaluation holdout
+
+One percent of the accepted examples of a source form the evaluation holdout and live under `eval/`. The selection is deterministic: examples are ordered by a hash of their category and template cluster, so the split is reproducible without storing a seed, and it is stratified by category so the holdout contains every kind of problem rather than one corner of the dataset. The selection takes whole template clusters, merged by shared plan fingerprint, so neither the variants of one template nor a plan that already appears in the training rows straddle the split boundary, and an `eval` example is excluded from `no-knowledge/` and `knowledge/` by construction rather than by a training-time filter. A dataset report states the holdout size and its composition, and an evaluation run may read only `eval/`.
+
+### Source inventory, rights, and canonical extraction
+
+`sources.md` records for every registered source its path, its role (research handbook, seed book, or derived annotation), its rights status and permitted uses, the raw hash of the source bytes, the canonical hash of the extracted text, the extractor profile and version, and the paragraph count. Derivatives inherit the split and the rights of their source, and an unresolved rights status blocks use or export of the derivative.
+
+The canonical extraction profile is versioned and lives with the extractor. `docx-canvas-text 1.1.0` reads the document body in paragraph order, converts a line break to a newline and a tab to a tab inside a paragraph, decodes XML entities including decimal and hexadecimal numeric character references, normalizes spaces and trailing whitespace, and keeps tables in reading order by treating each cell paragraph as a paragraph of the document, with each paragraph carrying whether it belongs to an enclosing table cell. Unicode characters are preserved as printed. Images, drawings, footnotes, headers, and comments are outside the profile: the extractor reports how many drawing elements it saw instead of guessing text that the profile does not cover. Every example records the paragraph span of its problem, and the span, the raw hash, and the canonical hash together make a derivative reproducible from the source bytes. Extraction is faithful to the printed text: a missing space inside the source, such as a word glued to a digit, is preserved rather than repaired, and the dataset report records such blemishes instead of silently editing the statement.
+
+### Problem families and verification
+
+A problem family is the unit of work that turns a printed template into a verified example. It carries the reference parse that the compiling model performs when it reads the statement, an independent computation over the parsed values, the answer text the source prints, the SOP Lang computation body that the circuit executes, and the explanation steps. The dataset writer materializes the parsed values of each instance as the `slots` literal of that instance's circuit, so the shipped program is the compiled plan rather than a program that parses its own input. The family is written against the source text only: its parse and its computation read the problem statement, never the printed answer and never the abstract model. A statement that hands its premise to an earlier problem ("Using the same dictionary") requires the family to declare that premise as `sharedPremise`; the writer prints it in `problem.md` under a labelled `Referenced context` line and feeds the same text to the reference parse, so the premise stays solver-visible and a statement with an unresolved reference is rejected as `unresolved_reference` instead of shipping as an unanswerable example. The loader validates each family at load time: the output wire must be a deterministic `jsEval` wire, so the printed answer can never reach a model; no `input` or `modelCall` wire is permitted; and the declared `type` must equal the slugified template that paths and manifests derive.
+
+Acceptance is a three-way agreement. The circuit is executed by the runtime with the instance's parsed values materialized as the `slots` literal; the executed answer must equal the printed answer of the source and the independent computation of the family. Only then is the example `exact_verified`. A copied source answer is not accepted as verification on its own: the source answer is one of the three signals, and the other two are computed. The circuit compute bodies carry the validity guards of their family `solve`, so a circuit never returns a value the oracle would reject. Every other outcome is rejected with a reason, and a candidate without a family is rejected as `family_not_implemented`.
+
+Two policy gates run before a manifest is locked. The English-only gate scans every generated file and every printed answer for non-English tokens, including Romanian diacritics and the polarity tokens the source book prints; rejection records may quote source material verbatim as provenance and are the one exempt artifact. The shape gate validates every family at load time, so a dataset circuit can never declare an `input` or `modelCall` wire and its answer can never be anything but deterministic `jsEval` work. The shipped tree is re-checked independently of the writer by `training-data/verify.mjs`, which warns on any forbidden wire in any `solution.sop` and, when the shape holds, executes every circuit without inputs and without model bindings and compares the executed answer with the printed answer of its manifest row. The same tool probes answer provenance: it perturbs each `slots` literal (number shifts, zeroing, flipped booleans, strings mirrored into palindromes, flipped characters, changed array lengths, same-shaped sibling objects aligned, scalar pairs aligned and swapped, values composed from scalar strings) and re-runs the circuit, so an answer that never reacts to any perturbation is reported per file with its text. A circuit whose answer wire reads no input value is a hardcoded answer and fails the run; a verdict that never reacts where every circuit of the plan prints the same answer is information — the probe cannot tell a computed verdict from a stored one and the run is not failed. The tool exits nonzero on any warning or mismatch. The language gate and the quarantine lexicon are the enforcement of the repository rule that everything on disk is English.
+
+Because a compiled circuit embeds the values of its instance, the variants of one template have distinct circuit text. The [plan fingerprint](wiki.html#definition-plan-fingerprint) — the fact body and the compute body, without the instance values — is the identity of the latent plan, and the report states the number of distinct plans next to the number of accepted examples. A family that cannot reproduce a template is left out rather than approximated, because a wrong family hides real work behind an accepted-looking example.
+
+### Training example format
+
+The training example is the tuple of the three files of a problem folder, together with the dataset-level facts that identify it. Its solver-visible part is `problem.md`; its target is `solution.sop`; its evidence is `explanation.md`.
+
+```md
+# Problem 1.1 — Order in a Line 1
+
+Four children stand in a single line, with no two people in the same position. …
+```
+
+```sop
+@slots literal
+{
+  "people": ["Ana", "Mara", "Daria", "Luca"],
+  "clues": [["Ana", "Mara"], ["Mara", "Daria"], ["Daria", "Luca"]]
+}
+
+@answer jsEval
+const slots = $slots;
+…
+return order.join(", ") + ".";
+```
+
+The trainer view is derived, not maintained: the export step of DS009 reads `problem.md` as the user message, `solution.sop` as the assistant target, and the manifest row as the metadata that a run records. Loss masking follows the production objective, so the loss is computed on the assistant target tokens while the problem text provides context, and the same chat template is used at inference. Metadata used for analysis stays out of the model-visible tokens unless it is also present at deployment.
+
+Long-document compilation produces additional roles. A schema-planning example maps a task description to container definitions and ingestion policy. A chunk-ingestion example maps schemas, a chunk, and selected state to `containerAdd` and obligation wires. A repair example maps a runtime error and the current circuit revision to a patch. A replan example maps newly produced values to graph expansion. A synthesis example maps verified semantic records to a final presentation circuit.
+
+The dataset teaches one canonical SOP Lang style rather than twenty equivalent whitespace patterns. Variability focuses on semantic structure, tool catalogs, schemas, and task language, which reduces output entropy and makes syntax easier for a small model.
+
+### State distribution and curriculum
+
+If all training examples come from perfect teacher states, the student may fail after its first deployment mistake because the subsequent state differs from anything seen during training. Once an initial checkpoint exists, the factory collects trajectories from the student itself, and the teacher repairs or relabels those off-policy states. The final report distinguishes teacher-state and student-state training data.
+
+Curriculum scheduling is data-driven and reproducible. The pilot begins with problems whose correct decomposition is shallow and whose leaves have obvious deterministic solutions. Depth increases after the student reaches a threshold on held-out instances from the same family, followed by unseen compositions, larger depth, dynamic graph expansion, and long-document ingestion. A controller may increase graph depth when validation success exceeds a threshold, introduce unseen tool manifests after basic syntax is stable, or increase document length after ingestion recall reaches a target. Every transition is logged as configuration, the final test set never drives tuning, and validation families or reserved seeds provide the feedback loop.
+
+Data quality is evaluated before expensive training. The repository generates random human-readable samples, execution summaries, distribution reports, and failure statistics. A coding agent can perform automated audits, and a human manually inspects examples from every major family because a small number of systematic data bugs can teach a small model a strong wrong habit.
+
+### Rationale and boundaries
+
+Generators with independent oracles are the only scalable way to obtain exact labels, and books are the only readily available source of authentic semantic complexity. Mixing both keeps the dataset honest: procedural families control extrapolation and provide exact verification, and authentic sources provide ambiguity and structure that synthetic tasks miss.
+
+The suite deliberately does not claim that volume equals competence, and it does not release derived annotations from sources whose rights status is unresolved. It also does not treat near-duplicate prompting as diversity: structural variety in latent plans and graph motifs is measured directly.

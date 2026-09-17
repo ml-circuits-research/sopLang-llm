@@ -1,0 +1,21 @@
+@facts literal
+{"red":2,"green":5,"blue":7}
+
+@slots literal
+{
+  "codes": [
+    5,
+    5,
+    2
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const names = new Map(Object.entries($facts).map(([name, code]) => [String(code), name]));
+const words = slots.codes.map((code) => {
+  if (names.get(String(code)) === undefined) { throw new Error("the dictionary has no entry for code " + code); }
+  return names.get(String(code));
+});
+return words.join("-") + ".";
+

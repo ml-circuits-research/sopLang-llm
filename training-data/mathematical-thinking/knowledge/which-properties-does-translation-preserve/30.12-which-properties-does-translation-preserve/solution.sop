@@ -1,0 +1,15 @@
+@facts literal
+{"translationPreservesLengths":true}
+
+@slots literal
+{
+  "length": 5
+}
+
+@answer jsEval
+const slots = $slots;
+if ($facts.translationPreservesLengths === true) {
+  return "No; the length remains " + slots.length + ".";
+}
+return "Yes; the length can change.";
+

@@ -1,0 +1,16 @@
+@slots literal
+{
+  "start": 8,
+  "add": 6,
+  "subtract": 2
+}
+
+@answer jsEval
+const slots = $slots;
+const terms = [slots.start];
+for (let index = 0; index < 4; index += 1) {
+  const previous = terms[terms.length - 1];
+  terms.push(index % 2 === 0 ? previous + slots.add : previous - slots.subtract);
+}
+return terms.slice(1).join(", ");
+

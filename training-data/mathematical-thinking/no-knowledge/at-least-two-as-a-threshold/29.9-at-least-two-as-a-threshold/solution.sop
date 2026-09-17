@@ -1,0 +1,14 @@
+@slots literal
+{
+  "threshold": 2,
+  "total": 3,
+  "solved": [
+    1,
+    3
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+return slots.solved.length >= slots.threshold ? "Yes." : "No.";
+

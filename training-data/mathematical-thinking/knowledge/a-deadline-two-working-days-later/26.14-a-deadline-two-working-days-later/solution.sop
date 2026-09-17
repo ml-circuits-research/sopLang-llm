@@ -1,0 +1,30 @@
+@facts literal
+{"weekdays":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]}
+
+@slots literal
+{
+  "received": "Friday",
+  "count": 2,
+  "range": [
+    "Monday",
+    "Friday"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const facts = (typeof $facts === "object" && $facts !== null) ? $facts : JSON.parse(String($facts));
+const days = facts.weekdays;
+const first = days.indexOf(slots.range[0]);
+const last = days.indexOf(slots.range[1]);
+if (first === -1 || last < first) { throw new Error("the working-day range does not match the weekday order"); }
+const working = days.slice(first, last + 1);
+let index = days.indexOf(slots.received);
+if (index === -1) { throw new Error("unknown weekday \"" + slots.received + "\""); }
+let counted = 0;
+while (counted < slots.count) {
+  index = (index + 1) % days.length;
+  if (working.includes(days[index])) { counted += 1; }
+}
+return days[index] + ".";
+

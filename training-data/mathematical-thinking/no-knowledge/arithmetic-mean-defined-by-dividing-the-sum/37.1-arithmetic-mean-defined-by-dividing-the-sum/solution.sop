@@ -1,0 +1,17 @@
+@slots literal
+{
+  "values": [
+    4,
+    6,
+    8
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const total = slots.values.reduce((sum, value) => sum + value, 0);
+if (total % slots.values.length !== 0) {
+  throw new Error("the mean of the given numbers is not a whole number");
+}
+return String(total / slots.values.length) + ".";
+

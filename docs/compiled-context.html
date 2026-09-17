@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sopLang-llm Documentation</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+  </script>
+</head>
+<body>
+  <div data-include="partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel">
+      <p class="breadcrumbs"><a href="index.html">Home</a></p>
+      <p class="kicker">Compiled context</p>
+      <h1>Compiled context</h1>
+      <p class="lede"><a href="wiki.html#definition-compiled-context">Compiled context</a> lets a model with a modest context window process a book, a legal corpus, or a long research record. The system plans persistent typed containers, reads the source in chunks, compiles each chunk into inert contributions, seals the result, and then queries the accumulated state.</p>
+
+      <h2>Plan first, ingest second, execute third</h2>
+      <p>A long document is not treated as a giant prompt divided into arbitrary pieces. The architecture begins by asking what persistent representation will support the intended class of questions, so the initial call performs compilation planning before any source chunk is interpreted. It defines container schemas, source-provenance requirements, identity policies, possible reconciliation stages, and the analysis obligations that later execution will need.</p>
+      <p>For a legal corpus the planner may create containers for provisions, definitions, obligations, permissions, exceptions, jurisdictions, effective dates, amendments, cases, and cross-references. For a novel it may create characters, aliases, places, events, statements, relationships, motifs, narrative perspectives, unresolved identities, and source spans. For a machine-learning research corpus it may create papers, claims, methods, datasets, metrics, baselines, results, limitations, prior-art links, and novelty candidates. These are task-conditioned compilation choices rather than universal schemas.</p>
+
+      <figure class="diagram">
+        <pre class="mermaid">flowchart TB
+  Task[Requested analysis and source metadata] --> Plan[plan call designs containers and policy]
+  Plan --> Ingest[ingest calls compile chunks]
+  Ingest --> Validate[Validate syntax schemas spans and identity]
+  Validate --> Seal[Seal snapshot]
+  Seal --> Commits[Batched container commits]
+  Commits --> Reconcile[Reconciliation and canonicalization]
+  Reconcile --> Query[Query planning over stable revisions]
+  Query --> Result[Executable analysis and answer]</pre>
+        <figcaption><em>Compiled-context pipeline</em></figcaption>
+      </figure>
+
+      <h2>Chunk compilation and provenance</h2>
+      <p>The wrapper streams the source in chunks. Each call sees the current chunk, its stable source coordinates, the accepted schemas, and a limited <a href="wiki.html#definition-state-projection">state projection</a> when necessary. The model emits an <a href="wiki.html#definition-ingestion-patch">ingestion patch</a>, and the wrapper validates syntax, schemas, span boundaries, identifiers, and patch identity before appending the fragment.</p>
+      <p>A <a href="wiki.html#definition-source-span">source span</a> is always first-class. Every semantic record that originates in text should be traceable to one or more intervals in the canonical source, with offsets defined against a stable encoding and source version. Raw chunks are stored independently of compiled containers, so a later analysis can reread the passages behind a contradiction or a suspected extraction error.</p>
+
+      <h2>Compile-only ingestion and the seal</h2>
+      <p>In <a href="wiki.html#definition-compile-only-ingestion">compile-only ingestion</a> the model generates SOP Lang that represents container contributions, but the analysis circuit is not executed. After all planned chunks are processed and the ingestion manifest is <a href="wiki.html#definition-seal">sealed</a>, the runtime evaluates the independent additions in the same or a small number of ingestion epochs, commits the resulting container revisions, performs reconciliation passes, and only then begins the final analysis circuit.</p>
+      <p>Sealing checks that all expected source ranges were processed, accepted patches are persisted, schemas are version-consistent, references resolve or are explicitly marked unresolved, and the compiled dependency graph is valid. A patch is persisted before acknowledgment so an interrupted run can resume idempotently.</p>
+      <p>The ordering is not absolute. Some documents require progressive state to interpret later sections, and the architecture allows controlled intermediate barriers. Such barriers are explicit and counted, so the system does not accidentally become a hidden sequential agent that continuously summarizes its own previous output without a stable representation.</p>
+
+      <h2>Position sensitivity and honest bounds</h2>
+      <p>The intended advantage over a single long prompt is that the source position of a fact matters less once the fact is compiled into a typed record. An exception on page 7 and an exception on page 307 become rows in the same exceptions container, and a JavaScript filter does not care which one was physically near the middle of the prompt. A direct benchmark places one critical fact at 5%, 25%, 50%, 75%, and 95% of the source while all other content stays controlled, and compares a long-context direct model, a retrieval baseline, a chunk-and-merge system, and the compiled-context system.</p>
+      <p>The phrase "after successful ingestion" is crucial. The architecture moves part of the memory problem to compilation: when the model fails to recognize a rare qualification while reading its chunk, no later filter can recover it from the typed container. That is why raw source retention and source retrieval remain mandatory, and why ingestion recall and synthesis recall are scored separately.</p>
+      <p>Compiled context also creates new forms of error. Entity identifiers can fragment or merge incorrectly, a table schema can force nuanced statements into coarse fields, reconciliation can privilege the most frequent interpretation, and a sequence can impose an order the text does not justify. The design therefore favors append-only evidence and derived canonical views over destructive normalization, and the container preserves alternatives when uncertainty cannot be resolved.</p>
+
+      <h2>Reuse and cost</h2>
+      <p>The strongest potential outcome is reuse. Once a book has been compiled into a stable semantic state, many queries can be answered without rereading the entire source. A law can be analyzed for exceptions, queried for effective dates, compared with a new amendment, and summarized under a different policy. When the representation is reusable, the expensive ingestion cost is amortized, and when every new question requires rebuilding containers because the initial plan was too task-specific, the practical advantage is weaker. Experiments therefore compare task-specific compilation with a more general reusable schema.</p>
+
+      <h2>Where the contract lives</h2>
+      <p>The adapter contract, including source registration, chunk records, patch persistence, seal checks, the source state machine, and projection rules, is specified in <a href="specsLoader.html?spec=DS006-context-adapter.md">DS006-context-adapter</a>. Container semantics are specified in <a href="specsLoader.html?spec=DS005-containers.md">DS005-containers</a>, and the evaluation measures that judge ingestion and synthesis are specified in <a href="specsLoader.html?spec=DS009-fine-tuning-and-evaluation.md">DS009-fine-tuning-and-evaluation</a>.</p>
+    </div>
+  </main>
+  <div data-include="partials/footer.html"></div>
+  <script src="partials-loader.js"></script>
+</body>
+</html>

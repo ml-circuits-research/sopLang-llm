@@ -1,0 +1,55 @@
+@facts literal
+{"yes": 1, "no": 0}
+
+@slots literal
+{
+  "objects": [
+    {
+      "name": "A",
+      "description": "small red cube"
+    },
+    {
+      "name": "B",
+      "description": "small red sphere"
+    }
+  ],
+  "questions": [
+    "large?",
+    "red?"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const matches = (value, predicate) => {
+  if (predicate.op === "and") { return predicate.of.every((part) => matches(value, part)); }
+  if (predicate.op === "eq") { return Number(value) === predicate.value; }
+  if (predicate.op === "gt") { return Number(value) > predicate.value; }
+  if (predicate.op === "lt") { return Number(value) < predicate.value; }
+  if (predicate.op === "ge") { return Number(value) >= predicate.value; }
+  if (predicate.op === "le") { return Number(value) <= predicate.value; }
+  if (predicate.op === "even") { return Number(value) % 2 === 0; }
+  if (predicate.op === "odd") { return Math.abs(Number(value) % 2) === 1; }
+  if (predicate.op === "lacks") { return !String(value).includes(predicate.word); }
+  throw new Error("unsupported predicate " + predicate.op);
+};
+const keep = (candidates, predicate) => candidates.filter((value) => matches(value, predicate));
+const joinList = (items) => {
+  const parts = items.map(String);
+  if (parts.length === 1) { return parts[0]; }
+  if (parts.length === 2) { return parts[0] + " and " + parts[1]; }
+  return parts.slice(0, -1).join(", ") + ", and " + parts[parts.length - 1];
+};
+const codeOf = (description) => slots.questions.map((question) => {
+  const word = question.replace("is it ", "").replace("?", "").trim().toLowerCase();
+  const words = description.toLowerCase().split(/\s+/);
+  const opposites = { large: "small", small: "large" };
+  let value = words.includes(word) ? true : null;
+  if (value === null && opposites[word] !== undefined && words.includes(opposites[word])) { value = false; }
+  if (value === null) { throw new Error("the description does not state " + word); }
+  return value ? String($facts.yes) : String($facts.no);
+}).join("");
+const codes = slots.objects.map((object) => codeOf(object.description));
+const same = codes.every((code) => code === codes[0]);
+return same ? "No; both have code " + codes[0] + "." : "Yes; the codes differ.";
+

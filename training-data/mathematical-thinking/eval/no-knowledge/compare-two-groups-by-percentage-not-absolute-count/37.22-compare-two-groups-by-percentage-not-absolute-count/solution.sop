@@ -1,0 +1,27 @@
+@slots literal
+{
+  "groups": [
+    [
+      "A",
+      8,
+      10
+    ],
+    [
+      "B",
+      15,
+      20
+    ]
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const first = slots.groups[0];
+const second = slots.groups[1];
+const firstShare = first[1] / first[2];
+const secondShare = second[1] / second[2];
+if (firstShare === secondShare) {
+  throw new Error("the two proportions are equal");
+}
+return "Class " + (firstShare > secondShare ? first[0] : second[0]) + ".";
+

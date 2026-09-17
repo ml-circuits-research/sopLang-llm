@@ -1,0 +1,23 @@
+@slots literal
+{
+  "moves": [
+    "N",
+    "E",
+    "N",
+    "W"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let dx = 0; let dy = 0;
+for (const move of slots.moves) {
+  if (move === "E") dx += 1; else if (move === "W") dx -= 1;
+  else if (move === "N") dy += 1; else if (move === "S") dy -= 1;
+}
+if (dx === 0 && dy === 0) return "Yes.";
+const pieces = [];
+if (dx !== 0) pieces.push(Math.abs(dx) + " squares " + (dx > 0 ? "east" : "west"));
+if (dy !== 0) pieces.push(Math.abs(dy) + " squares " + (dy > 0 ? "north" : "south"));
+return "No; it ends " + pieces.join(" and ") + " of the start.";
+

@@ -1,0 +1,13 @@
+@slots literal
+{
+  "cycle": [
+    "works",
+    "charges"
+  ],
+  "day": 17
+}
+
+@answer jsEval
+const slots = $slots;
+return "It " + slots.cycle[(slots.day - 1) % slots.cycle.length] + ".";
+

@@ -1,0 +1,15 @@
+@slots literal
+{
+  "lengths": [
+    9,
+    3,
+    5
+  ],
+  "unit": "cm"
+}
+
+@answer jsEval
+const slots = $slots;
+const total = slots.lengths.reduce((sum, value) => sum + value, 0);
+return total + " " + slots.unit;
+

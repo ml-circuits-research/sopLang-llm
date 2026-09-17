@@ -1,0 +1,17 @@
+@slots literal
+{
+  "width": 12,
+  "height": 9,
+  "cutWidth": 4,
+  "cutHeight": 3
+}
+
+@answer jsEval
+const slots = $slots;
+const board = slots.width * slots.height;
+const cut = slots.cutWidth * slots.cutHeight;
+if (cut > board) {
+  throw new Error("the cut-out is larger than the board");
+}
+return String(board - cut);
+

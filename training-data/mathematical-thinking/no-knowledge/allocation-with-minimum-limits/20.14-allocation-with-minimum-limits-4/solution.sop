@@ -1,0 +1,15 @@
+@slots literal
+{
+  "total": 48,
+  "minimumA": 15,
+  "minimumB": 16
+}
+
+@answer jsEval
+const slots = $slots;
+const remaining = slots.total - slots.minimumA - slots.minimumB;
+if (remaining < 0) {
+  throw new Error("the minimum limits exceed the available resources");
+}
+return String(remaining);
+

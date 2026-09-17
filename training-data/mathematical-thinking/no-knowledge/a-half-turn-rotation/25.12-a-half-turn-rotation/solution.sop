@@ -1,0 +1,12 @@
+@slots literal
+{
+  "angle": 180,
+  "marked": false
+}
+
+@answer jsEval
+const s = $slots;
+const normalized = ((s.angle % 360) + 360) % 360;
+const sameOutline = (normalized === 0 || normalized === 180) && !s.marked;
+return sameOutline ? "Yes." : "No.";
+

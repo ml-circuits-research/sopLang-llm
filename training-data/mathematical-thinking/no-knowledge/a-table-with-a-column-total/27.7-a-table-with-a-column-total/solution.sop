@@ -1,0 +1,23 @@
+@slots literal
+{
+  "values": [
+    [
+      "A",
+      7
+    ],
+    [
+      "B",
+      5
+    ]
+  ],
+  "missing": "C",
+  "total": 16
+}
+
+@answer jsEval
+const slots = $slots;
+const known = slots.values.reduce((sum, entry) => sum + entry[1], 0);
+const value = slots.total - known;
+if (value < 0) { throw new Error("the stated total is smaller than the printed values"); }
+return String(value) + ".";
+

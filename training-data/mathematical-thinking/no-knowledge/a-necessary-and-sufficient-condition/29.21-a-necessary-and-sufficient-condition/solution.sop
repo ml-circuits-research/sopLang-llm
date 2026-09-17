@@ -1,0 +1,13 @@
+@slots literal
+{
+  "forward": true,
+  "backward": true
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.forward && slots.backward) return "Yes.";
+if (slots.forward) return "It is sufficient, but not necessary.";
+if (slots.backward) return "Necessary, but not sufficient.";
+return "Neither necessary nor sufficient.";
+

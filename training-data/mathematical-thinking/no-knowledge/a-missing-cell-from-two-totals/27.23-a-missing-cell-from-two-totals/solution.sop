@@ -1,0 +1,38 @@
+@slots literal
+{
+  "cells": [
+    [
+      "A",
+      "Monday",
+      2
+    ],
+    [
+      "A",
+      "Tuesday",
+      5
+    ],
+    [
+      "B",
+      "Monday",
+      4
+    ],
+    [
+      "B",
+      "Tuesday",
+      null
+    ]
+  ],
+  "row": "B",
+  "column": "Tuesday",
+  "rowTotal": 10
+}
+
+@answer jsEval
+const slots = $slots;
+let known = 0;
+for (const cell of slots.cells) { if (cell[0] === slots.row && cell[2] !== null) { known += cell[2]; } }
+const value = slots.rowTotal - known;
+let columnTotal = 0;
+for (const cell of slots.cells) { if (cell[1] === slots.column) { columnTotal += cell[2] === null ? value : cell[2]; } }
+return "x=" + value + "; " + slots.column + " total=" + columnTotal + ".";
+

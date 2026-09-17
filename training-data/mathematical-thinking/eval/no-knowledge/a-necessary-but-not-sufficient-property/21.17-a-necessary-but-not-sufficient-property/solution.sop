@@ -1,0 +1,18 @@
+@slots literal
+{
+  "required": "gold",
+  "asked": [
+    "blue",
+    "gold"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const parts = slots.asked.map(function (value) {
+  const capital = value.charAt(0).toUpperCase() + value.slice(1);
+  if (value === slots.required) { return capital + ": we cannot know for certain"; }
+  return capital + ": it cannot be VIP";
+});
+return parts.join(". ") + ".";
+

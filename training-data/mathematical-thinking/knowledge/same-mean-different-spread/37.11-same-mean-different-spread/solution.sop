@@ -1,0 +1,34 @@
+@facts literal
+{"meanRule":{"numerator":"sum","denominator":"count"},"rangeRule":{"from":"max","to":"min","combine":"difference"}}
+
+@slots literal
+{
+  "setA": [
+    5,
+    5,
+    5
+  ],
+  "setB": [
+    1,
+    5,
+    9
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const meanRule = $facts.meanRule;
+const rangeRule = $facts.rangeRule;
+const mean = (values) => {
+  const numerator = meanRule.numerator === "sum" ? values.reduce((sum, value) => sum + value, 0) : (() => { throw new Error("unsupported numerator " + meanRule.numerator); })();
+  const denominator = meanRule.denominator === "count" ? values.length : (() => { throw new Error("unsupported denominator " + meanRule.denominator); })();
+  return numerator / denominator;
+};
+const range = (values) => {
+  const from = rangeRule.from === "max" ? Math.max(...values) : (() => { throw new Error("unsupported range from " + rangeRule.from); })();
+  const to = rangeRule.to === "min" ? Math.min(...values) : (() => { throw new Error("unsupported range to " + rangeRule.to); })();
+  return rangeRule.combine === "difference" ? from - to : (() => { throw new Error("unsupported range combine " + rangeRule.combine); })();
+};
+return "The mean is " + (mean(slots.setA) === mean(slots.setB) ? "the same" : "not the same") +
+  "; the range is " + (range(slots.setA) === range(slots.setB) ? "the same" : "not") + ".";
+

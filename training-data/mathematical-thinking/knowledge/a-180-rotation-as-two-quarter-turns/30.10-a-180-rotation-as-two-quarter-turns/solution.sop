@@ -1,0 +1,20 @@
+@facts literal
+{"degreesPerQuarterTurn":90,"clockwiseQuarterTurn":{"north":"east","east":"south","south":"west","west":"north"}}
+
+@slots literal
+{
+  "start": "north",
+  "times": 2,
+  "degrees": 90
+}
+
+@answer jsEval
+const slots = $slots;
+const map = $facts.clockwiseQuarterTurn;
+const steps = Math.round((slots.times * slots.degrees) / $facts.degreesPerQuarterTurn);
+let direction = slots.start;
+for (let index = 0; index < steps; index += 1) {
+  direction = map[direction];
+}
+return direction[0].toUpperCase() + direction.slice(1) + ".";
+

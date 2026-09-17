@@ -1,0 +1,30 @@
+@slots literal
+{
+  "teams": [
+    [
+      "A",
+      8,
+      2
+    ],
+    [
+      "B",
+      8,
+      1
+    ],
+    [
+      "C",
+      7,
+      0
+    ]
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let winner = slots.teams[0];
+for (const team of slots.teams) {
+  if (team[1] > winner[1]) { winner = team; }
+  else if (team[1] === winner[1] && team[2] < winner[2]) { winner = team; }
+}
+return "Team " + winner[0] + ".";
+

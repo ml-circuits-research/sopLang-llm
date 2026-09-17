@@ -1,0 +1,12 @@
+@slots literal
+{
+  "first": 2,
+  "step": 2,
+  "figure": 5
+}
+
+@answer jsEval
+const s = $slots;
+const dots = s.first + s.step * (s.figure - 1);
+return dots + " dots.";
+

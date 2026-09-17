@@ -1,0 +1,10 @@
+@slots literal
+{
+  "shirts": 2,
+  "trousers": 3
+}
+
+@answer jsEval
+const slots = $slots;
+return String(slots.shirts * slots.trousers) + " outfits.";
+

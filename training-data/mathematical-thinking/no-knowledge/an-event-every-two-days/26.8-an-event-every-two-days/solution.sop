@@ -1,0 +1,21 @@
+@slots literal
+{
+  "days": [
+    2,
+    4,
+    6
+  ],
+  "step": 2,
+  "count": 3
+}
+
+@answer jsEval
+const slots = $slots;
+for (let index = 1; index < slots.days.length; index += 1) { if (slots.days[index] - slots.days[index - 1] !== slots.step) { throw new Error("the days given in the problem are not evenly spaced"); } }
+const last = slots.days[slots.days.length - 1];
+const next = [];
+for (let index = 1; index <= slots.count; index += 1) {
+  next.push(last + index * slots.step);
+}
+return next.join(", ") + ".";
+

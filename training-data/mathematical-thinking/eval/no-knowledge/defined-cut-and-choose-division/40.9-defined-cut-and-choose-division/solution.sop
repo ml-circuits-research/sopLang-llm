@@ -1,0 +1,22 @@
+@slots literal
+{
+  "people": 2,
+  "pieces": 2,
+  "cutter": "first",
+  "chooser": "second"
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.pieces !== 2) { throw new Error("the cut-and-choose rule needs two pieces"); }
+if (slots.cutter === slots.chooser) { throw new Error("the cutter and the chooser must be different people"); }
+let bestShare = -1;
+let bestCut = null;
+for (let tenths = 0; tenths <= 10; tenths += 1) {
+  const left = tenths / 10;
+  const guaranteed = Math.min(left, 1 - left);
+  if (guaranteed > bestShare) { bestShare = guaranteed; bestCut = left; }
+}
+if (bestCut !== 0.5) { throw new Error("the equal cut is not the maximin cut"); }
+return "To avoid the risk of being left with a part they consider smaller.";
+

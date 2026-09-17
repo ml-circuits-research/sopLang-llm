@@ -1,0 +1,28 @@
+@slots literal
+{
+  "row": 1,
+  "column": 1,
+  "moves": [
+    "E",
+    "E",
+    "N",
+    "N"
+  ],
+  "blocked": {
+    "row": 1,
+    "column": 3
+  }
+}
+
+@answer jsEval
+const slots = $slots;
+let row = slots.row; let column = slots.column;
+for (const move of slots.moves) {
+  if (move === "E") column += 1;
+  else if (move === "W") column -= 1;
+  else if (move === "N") row += 1;
+  else if (move === "S") row -= 1;
+  if (row === slots.blocked.row && column === slots.blocked.column) return "No.";
+}
+return "Yes.";
+

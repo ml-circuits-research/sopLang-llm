@@ -1,0 +1,10 @@
+@slots literal
+{
+  "reading": 20,
+  "error": 1
+}
+
+@answer jsEval
+const slots = $slots;
+return "Between " + (slots.reading - slots.error) + "°C and " + (slots.reading + slots.error) + "°C.";
+

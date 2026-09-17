@@ -1,0 +1,17 @@
+@slots literal
+{
+  "digits": [
+    1,
+    2,
+    3
+  ],
+  "special": 1,
+  "length": 2
+}
+
+@answer jsEval
+const slots = $slots;
+const all = Math.pow(slots.digits.length, slots.length);
+const without = Math.pow(slots.digits.length - 1, slots.length);
+return String(all - without) + " codes.";
+

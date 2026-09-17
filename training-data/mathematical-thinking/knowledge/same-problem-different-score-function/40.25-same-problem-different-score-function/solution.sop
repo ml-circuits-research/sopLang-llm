@@ -1,0 +1,18 @@
+@facts literal
+{"A":{"cost":4,"time":6},"B":{"cost":6,"time":3}}
+
+@slots literal
+{
+  "costWeight": 2,
+  "timeWeight": 1
+}
+
+@answer jsEval
+const slots = $slots;
+const facts = typeof $facts === "string" ? JSON.parse($facts) : $facts;
+const names = Object.keys(facts);
+const scored = names.map((name) => ({ name: name, score: slots.costWeight * facts[name].cost + slots.timeWeight * facts[name].time }));
+scored.sort((left, right) => left.score - right.score);
+if (scored.length < 2 || scored[0].score === scored[1].score) { throw new Error("the scores do not single out one plan"); }
+return "Plan " + scored[0].name + ".";
+
