@@ -1,0 +1,21 @@
+@slots literal
+{
+  "arrangements": [
+    [
+      2,
+      2
+    ],
+    [
+      1,
+      4
+    ]
+  ]
+}
+
+@answer jsEval
+const s = $slots;
+const areas = s.arrangements.map(([rows, columns]) => rows * columns);
+const perimeters = s.arrangements.map(([rows, columns]) => 2 * (rows + columns));
+const sameArea = areas.every((area) => area === areas[0]);
+return (sameArea ? "Same area" : "Different area") + "; perimeters " + perimeters.join(" and ") + ".";
+

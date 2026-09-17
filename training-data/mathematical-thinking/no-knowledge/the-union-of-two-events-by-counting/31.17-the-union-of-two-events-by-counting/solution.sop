@@ -1,0 +1,31 @@
+@slots literal
+{
+  "universe": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "a": [
+    2,
+    4,
+    6
+  ],
+  "b": [
+    5,
+    6
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+const favorable = slots.a.concat(slots.b.filter((value) => !slots.a.includes(value))).length;
+const total = slots.universe.length;
+const factor = gcd(favorable, total);
+const n = favorable / factor;
+const d = total / factor;
+return d === 1 ? String(n) : n + "/" + d;
+

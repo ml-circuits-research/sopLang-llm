@@ -1,0 +1,10 @@
+@slots literal
+{
+  "tiles": 9,
+  "tileLength": 20
+}
+
+@answer jsEval
+const slots = $slots;
+return String(slots.tiles * slots.tileLength) + " cm.";
+

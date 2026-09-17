@@ -1,0 +1,10 @@
+@slots literal
+{
+  "longer": "A",
+  "shorter": "B"
+}
+
+@answer jsEval
+const slots = $slots;
+return "Shelf " + slots.longer + " is longer than " + slots.shorter + ".";
+

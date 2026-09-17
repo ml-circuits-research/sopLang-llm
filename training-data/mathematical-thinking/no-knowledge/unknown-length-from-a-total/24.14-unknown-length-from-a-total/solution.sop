@@ -1,0 +1,11 @@
+@slots literal
+{
+  "total": 150,
+  "first": 90
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.total - slots.first <= 0) { throw new Error("the second board would have a non-positive length"); }
+return String(slots.total - slots.first) + " cm.";
+

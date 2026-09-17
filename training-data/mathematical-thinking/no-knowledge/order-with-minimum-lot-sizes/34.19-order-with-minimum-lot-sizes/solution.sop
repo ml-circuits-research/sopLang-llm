@@ -1,0 +1,11 @@
+@slots literal
+{
+  "bagSize": 8,
+  "need": 18
+}
+
+@answer jsEval
+const slots = $slots;
+const bought = Math.ceil(slots.need / slots.bagSize);
+return bought + " bags; " + (bought * slots.bagSize - slots.need) + " extra screws.";
+

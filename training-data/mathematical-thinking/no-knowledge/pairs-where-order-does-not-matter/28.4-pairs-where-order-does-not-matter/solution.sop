@@ -1,0 +1,25 @@
+@slots literal
+{
+  "letters": [
+    "A",
+    "B",
+    "C"
+  ],
+  "size": 2
+}
+
+@answer jsEval
+const slots = $slots;
+const teams = [];
+const walk = (start, chosen) => {
+  if (chosen.length === slots.size) {
+    teams.push(chosen.join(""));
+    return;
+  }
+  for (let index = start; index < slots.letters.length; index += 1) {
+    walk(index + 1, chosen.concat(slots.letters[index]));
+  }
+};
+walk(0, []);
+return teams.join(", ") + "; " + teams.length + " teams.";
+

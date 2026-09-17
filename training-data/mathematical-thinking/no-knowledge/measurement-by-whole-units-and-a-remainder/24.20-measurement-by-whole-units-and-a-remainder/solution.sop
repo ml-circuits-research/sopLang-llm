@@ -1,0 +1,11 @@
+@slots literal
+{
+  "whole": 4,
+  "fraction": 0.5,
+  "unit": 10
+}
+
+@answer jsEval
+const slots = $slots;
+return String((slots.whole + slots.fraction) * slots.unit) + " cm.";
+

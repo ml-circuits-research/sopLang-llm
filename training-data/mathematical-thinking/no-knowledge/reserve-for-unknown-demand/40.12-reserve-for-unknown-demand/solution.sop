@@ -1,0 +1,10 @@
+@slots literal
+{
+  "low": 8,
+  "high": 12
+}
+
+@answer jsEval
+const slots = $slots;
+return slots.high + " units.";
+

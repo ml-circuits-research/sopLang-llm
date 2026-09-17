@@ -1,0 +1,20 @@
+@slots literal
+{
+  "answers": [
+    "yes",
+    "yes",
+    "no",
+    "suppose"
+  ],
+  "faulty": 2,
+  "value": "yes"
+}
+
+@answer jsEval
+const slots = $slots;
+const counts = new Map();
+for (const answer of slots.answers) { counts.set(answer, (counts.get(answer) || 0) + 1); }
+const ordered = Array.from(counts.entries()).sort((left, right) => right[1] - left[1]);
+if (ordered[0][0] !== slots.value) { throw new Error("the claimed value is not the majority answer"); }
+return slots.faulty * 2 < slots.answers.length ? "Yes." : "No.";
+

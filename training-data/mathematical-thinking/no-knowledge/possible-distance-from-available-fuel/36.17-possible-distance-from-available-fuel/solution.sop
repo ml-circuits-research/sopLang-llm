@@ -1,0 +1,10 @@
+@slots literal
+{
+  "liters": 6,
+  "available": 24
+}
+
+@answer jsEval
+const slots = $slots;
+return (slots.available / slots.liters) * 100 + " km.";
+

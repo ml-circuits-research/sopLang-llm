@@ -1,0 +1,16 @@
+@slots literal
+{
+  "modulus": 3,
+  "count": 3
+}
+
+@answer jsEval
+const slots = $slots;
+const words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+let everyCase = true;
+for (let remainder = 0; remainder < slots.modulus; remainder += 1) {
+  const hits = [...Array(slots.count).keys()].filter((step) => (remainder + step) % slots.modulus === 0).length;
+  everyCase = everyCase && hits === 1;
+}
+return everyCase ? "Exactly one of " + words[slots.count] + " consecutive integers is divisible by " + slots.modulus + "." : "The statement is false.";
+

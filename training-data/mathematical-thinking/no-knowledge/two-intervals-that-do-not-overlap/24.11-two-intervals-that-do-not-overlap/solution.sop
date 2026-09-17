@@ -1,0 +1,18 @@
+@slots literal
+{
+  "a": {
+    "lower": 10,
+    "upper": 11
+  },
+  "b": {
+    "lower": 12,
+    "upper": 13
+  }
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.a.upper < slots.b.lower) { return "B is certainly longer."; }
+if (slots.b.upper < slots.a.lower) { return "A is certainly longer."; }
+return "It cannot be determined with certainty.";
+

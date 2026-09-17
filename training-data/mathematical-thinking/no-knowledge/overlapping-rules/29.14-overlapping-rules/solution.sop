@@ -1,0 +1,26 @@
+@slots literal
+{
+  "value": 6,
+  "conditions": [
+    {
+      "label": "A",
+      "operator": ">=",
+      "value": 5
+    },
+    {
+      "label": "B",
+      "operator": "<=",
+      "value": 7
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const holds = (condition) => condition.operator === ">=" ? slots.value >= condition.value : condition.operator === "<=" ? slots.value <= condition.value : condition.operator === ">" ? slots.value > condition.value : slots.value < condition.value;
+const labels = slots.conditions.filter(holds).map((condition) => condition.label);
+if (labels.length === 0) return "None.";
+if (labels.length === 1) return "One: " + labels[0] + ".";
+if (labels.length === 2) return "Two: " + labels[0] + " and " + labels[1] + ".";
+return "Three: " + labels[0] + ", " + labels[1] + ", and " + labels[2] + ".";
+

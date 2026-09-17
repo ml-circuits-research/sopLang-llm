@@ -1,0 +1,13 @@
+@slots literal
+{
+  "onBelow": 18,
+  "offAbove": 20,
+  "start": 17,
+  "temperature": 19
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.start >= slots.onBelow) { throw new Error("the heating is not in the on state described by the statement"); }
+return slots.temperature > slots.offAbove ? "Yes." : "No.";
+

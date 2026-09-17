@@ -1,0 +1,10 @@
+@slots literal
+{
+  "node": "X",
+  "neighbours": []
+}
+
+@answer jsEval
+const slots = $slots;
+return slots.neighbours.length > 0 ? "Yes." : "No.";
+

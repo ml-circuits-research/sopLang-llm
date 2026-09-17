@@ -1,0 +1,15 @@
+@slots literal
+{
+  "initial": "north",
+  "turn": "right",
+  "count": 2
+}
+
+@answer jsEval
+const slots = $slots;
+const cycle = ["north", "east", "south", "west"];
+const step = slots.turn === "right" ? 1 : -1;
+const index = (cycle.indexOf(slots.initial) + step * slots.count + 8) % 4;
+const word = cycle[index];
+return word.charAt(0).toUpperCase() + word.slice(1) + ".";
+

@@ -1,0 +1,52 @@
+@slots literal
+{
+  "tasks": [
+    "T1",
+    "T2",
+    "T3",
+    "T4"
+  ],
+  "constraints": [
+    [
+      "T4",
+      "T1"
+    ],
+    [
+      "T2",
+      "T4"
+    ],
+    [
+      "T1",
+      "T3"
+    ]
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const tasks = slots.tasks;
+const before = new Map(tasks.map((task) => [task, new Set()]));
+for (const [first, second] of slots.constraints) {
+  before.get(second).add(first);
+}
+let changed = true;
+while (changed) {
+  changed = false;
+  for (const task of tasks) {
+    for (const earlier of [...before.get(task)]) {
+      for (const evenEarlier of before.get(earlier)) {
+        if (!before.get(task).has(evenEarlier)) {
+          before.get(task).add(evenEarlier);
+          changed = true;
+        }
+      }
+    }
+  }
+}
+const order = [...tasks].sort((left, right) => before.get(left).size - before.get(right).size);
+const ranks = new Set(order.map((task) => before.get(task).size));
+if (ranks.size !== order.length) {
+  throw new Error("the rules do not determine a single order");
+}
+return order.join(", ") + ".";
+

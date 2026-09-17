@@ -1,0 +1,35 @@
+@slots literal
+{
+  "stages": [
+    {
+      "name": "A",
+      "capacity": 10
+    },
+    {
+      "name": "B",
+      "capacity": 6
+    },
+    {
+      "name": "C",
+      "capacity": 8
+    }
+  ],
+  "options": [
+    "A",
+    "B"
+  ],
+  "delta": 2
+}
+
+@answer jsEval
+const slots = $slots;
+const base = Math.min.apply(null, slots.stages.map((stage) => stage.capacity));
+let best = null;
+for (const option of slots.options) {
+  const capacities = slots.stages.map((stage) => (stage.name === option ? stage.capacity + slots.delta : stage.capacity));
+  const throughput = Math.min.apply(null, capacities);
+  if (best === null || throughput > best.throughput) { best = { name: option, throughput: throughput }; }
+}
+if (best.throughput <= base) { throw new Error("no allowed upgrade improves the throughput"); }
+return "Increase the capacity of " + best.name + ".";
+

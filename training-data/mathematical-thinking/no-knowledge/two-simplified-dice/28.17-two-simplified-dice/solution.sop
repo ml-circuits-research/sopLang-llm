@@ -1,0 +1,13 @@
+@slots literal
+{
+  "faces": [
+    1,
+    2
+  ],
+  "cubes": 2
+}
+
+@answer jsEval
+const slots = $slots;
+return String(Math.pow(slots.faces.length, slots.cubes)) + " results.";
+

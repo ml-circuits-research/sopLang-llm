@@ -1,0 +1,32 @@
+@slots literal
+{
+  "points": [
+    {
+      "name": "P",
+      "row": 2,
+      "column": 5
+    },
+    {
+      "name": "Q",
+      "row": 6,
+      "column": 5
+    },
+    {
+      "name": "R",
+      "row": 4,
+      "column": 7
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+for (let i = 0; i < slots.points.length; i += 1) {
+  for (let j = i + 1; j < slots.points.length; j += 1) {
+    if (slots.points[i].column === slots.points[j].column) {
+      return slots.points[i].name + " and " + slots.points[j].name + ".";
+    }
+  }
+}
+throw new Error("no two points share a column");
+

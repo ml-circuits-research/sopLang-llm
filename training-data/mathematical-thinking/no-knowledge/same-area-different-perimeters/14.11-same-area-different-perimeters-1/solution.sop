@@ -1,0 +1,17 @@
+@slots literal
+{
+  "side1a": 6,
+  "side1b": 6,
+  "side2a": 9,
+  "side2b": 4
+}
+
+@answer jsEval
+const slots = $slots;
+const area1 = slots.side1a * slots.side1b;
+const area2 = slots.side2a * slots.side2b;
+const perimeter1 = 2 * (slots.side1a + slots.side1b);
+const perimeter2 = 2 * (slots.side2a + slots.side2b);
+const verdict = area1 === area2 ? "Equal areas" : "Different areas";
+return verdict + "; P1=" + perimeter1 + ", P2=" + perimeter2 + ".";
+

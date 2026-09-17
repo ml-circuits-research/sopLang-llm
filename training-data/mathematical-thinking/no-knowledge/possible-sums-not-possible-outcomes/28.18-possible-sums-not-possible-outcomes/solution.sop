@@ -1,0 +1,31 @@
+@slots literal
+{
+  "faces": [
+    1,
+    2
+  ],
+  "cubes": 2
+}
+
+@answer jsEval
+const slots = $slots;
+const sums = new Set();
+const walk = (left, total) => {
+  if (left === 0) {
+    sums.add(total);
+    return;
+  }
+  for (const face of slots.faces) {
+    walk(left - 1, total + face);
+  }
+};
+walk(slots.cubes, 0);
+const values = [...sums].sort((left, right) => left - right);
+let text;
+if (values.length === 1) {
+  text = String(values[0]);
+} else {
+  text = values.slice(0, -1).join(", ") + ", and " + values[values.length - 1];
+}
+return text + ".";
+

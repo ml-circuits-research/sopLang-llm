@@ -1,0 +1,11 @@
+@slots literal
+{
+  "a": 2,
+  "b": 3,
+  "c": 4
+}
+
+@answer jsEval
+const slots = $slots;
+return String(slots.a * slots.b * slots.c) + " unit cubes.";
+

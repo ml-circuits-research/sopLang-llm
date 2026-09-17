@@ -1,0 +1,19 @@
+@slots literal
+{
+  "total": 30,
+  "size": 6
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.total % slots.size !== 0) {
+  throw new Error("the pencils do not divide exactly into packages");
+}
+let remaining = slots.total;
+let packages = 0;
+while (remaining > 0) {
+  remaining -= slots.size;
+  packages += 1;
+}
+return packages + " packages.";
+

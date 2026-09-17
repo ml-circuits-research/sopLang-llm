@@ -1,0 +1,33 @@
+@slots literal
+{
+  "actions": [
+    "A",
+    "B"
+  ],
+  "states": [
+    "X",
+    "Y"
+  ],
+  "table": {
+    "A": {
+      "X": 10,
+      "Y": 0
+    },
+    "B": {
+      "X": 0,
+      "Y": 10
+    }
+  },
+  "target": 10
+}
+
+@answer jsEval
+const slots = $slots;
+let guarantee = Infinity;
+for (const state of slots.states) {
+  let best = -Infinity;
+  for (const action of slots.actions) { best = Math.max(best, slots.table[action][state]); }
+  guarantee = Math.min(guarantee, best);
+}
+return guarantee >= slots.target ? "Yes." : "No.";
+

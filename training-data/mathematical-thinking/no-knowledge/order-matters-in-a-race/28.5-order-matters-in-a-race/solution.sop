@@ -1,0 +1,18 @@
+@slots literal
+{
+  "children": [
+    "A",
+    "B",
+    "C"
+  ],
+  "places": 2
+}
+
+@answer jsEval
+const slots = $slots;
+let total = 1;
+for (let step = 0; step < slots.places; step += 1) {
+  total *= slots.children.length - step;
+}
+return String(total) + " results.";
+

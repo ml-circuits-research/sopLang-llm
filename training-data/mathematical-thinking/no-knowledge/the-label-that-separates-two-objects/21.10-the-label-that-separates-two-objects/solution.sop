@@ -1,0 +1,24 @@
+@slots literal
+{
+  "first": [
+    "red",
+    "round",
+    "small"
+  ],
+  "second": [
+    "red",
+    "square",
+    "small"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.first.length !== slots.second.length) { throw new Error("the two objects do not have comparable properties"); }
+let property = null;
+for (let index = 0; index < slots.first.length; index += 1) {
+  if (slots.first[index] !== slots.second[index]) { property = slots.first[index]; break; }
+}
+if (property === null) { throw new Error("the two objects are indistinguishable"); }
+return "“Is it " + property + "?”";
+

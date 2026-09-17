@@ -1,0 +1,22 @@
+@slots literal
+{
+  "list": [
+    7,
+    3,
+    5,
+    2
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const list = [...slots.list];
+let smallest = 0;
+for (let index = 1; index < list.length; index += 1) {
+  if (list[index] < list[smallest]) { smallest = index; }
+}
+const held = list[0];
+list[0] = list[smallest];
+list[smallest] = held;
+return "[" + list.join(",") + "].";
+

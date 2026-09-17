@@ -1,0 +1,11 @@
+@slots literal
+{
+  "horizontal": 3,
+  "vertical": 5,
+  "factor": 2
+}
+
+@answer jsEval
+const slots = $slots;
+return (slots.horizontal * slots.factor) + "×" + (slots.vertical * slots.factor) + ".";
+

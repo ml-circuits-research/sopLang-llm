@@ -1,0 +1,16 @@
+@slots literal
+{
+  "elements": [
+    "small",
+    "small",
+    "large"
+  ],
+  "position": 13
+}
+
+@answer jsEval
+const slots = $slots;
+const cycle = slots.elements.length;
+const localIndex = ((slots.position - 1) % cycle + cycle) % cycle;
+return slots.elements[localIndex];
+

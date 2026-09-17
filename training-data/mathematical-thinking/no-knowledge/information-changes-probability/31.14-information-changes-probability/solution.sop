@@ -1,0 +1,22 @@
+@slots literal
+{
+  "universe": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "threshold": 2,
+  "target": 4
+}
+
+@answer jsEval
+const slots = $slots;
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+const favorable = slots.universe.filter((value) => value > slots.threshold && value === slots.target).length;
+const total = slots.universe.filter((value) => value > slots.threshold).length;
+const factor = gcd(favorable, total);
+const n = favorable / factor;
+const d = total / factor;
+return d === 1 ? String(n) : n + "/" + d;
+

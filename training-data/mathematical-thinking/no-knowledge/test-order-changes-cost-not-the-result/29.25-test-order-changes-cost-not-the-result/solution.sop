@@ -1,0 +1,29 @@
+@slots literal
+{
+  "operator": "and",
+  "value": 3,
+  "parts": [
+    {
+      "expression": "x is even",
+      "kind": "even",
+      "cost": 10
+    },
+    {
+      "expression": "x>10",
+      "kind": "compare",
+      "operator": ">",
+      "threshold": 10,
+      "cost": 1
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const holds = (part) => part.kind === "even" ? slots.value % 2 === 0 : (part.operator === ">" ? slots.value > part.threshold : slots.value < part.threshold);
+const failing = slots.parts.filter((part) => !holds(part));
+const pool = failing.length > 0 ? failing : slots.parts;
+let chosen = pool[0];
+for (const part of pool) { if (part.cost < chosen.cost) chosen = part; }
+return "Test " + chosen.expression + " first.";
+

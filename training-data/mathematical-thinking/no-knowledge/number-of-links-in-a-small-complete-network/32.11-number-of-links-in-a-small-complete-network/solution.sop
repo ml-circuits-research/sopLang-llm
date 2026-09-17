@@ -1,0 +1,11 @@
+@slots literal
+{
+  "nodes": 4
+}
+
+@answer jsEval
+const slots = $slots;
+const n = slots.nodes;
+if (n < 2) { throw new Error("a complete network needs at least two nodes"); }
+return String((n * (n - 1)) / 2) + ".";
+

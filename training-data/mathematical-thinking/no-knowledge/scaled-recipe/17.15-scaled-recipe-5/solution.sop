@@ -1,0 +1,11 @@
+@slots literal
+{
+  "people": 4,
+  "flour": 280,
+  "factor": 3
+}
+
+@answer jsEval
+const slots = $slots;
+return (slots.people * slots.factor) + " people and " + (slots.flour * slots.factor) + " g.";
+

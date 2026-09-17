@@ -1,0 +1,20 @@
+@slots literal
+{
+  "operations": 3,
+  "restMinutes": 1,
+  "cycle": [
+    "O",
+    "O",
+    "O",
+    "R"
+  ],
+  "minute": 10
+}
+
+@answer jsEval
+const slots = $slots;
+const built = new Array(slots.operations).fill("O").concat(new Array(slots.restMinutes).fill("R"));
+if (built.join(",") !== slots.cycle.join(",")) { throw new Error("the stated cycle does not match the described operations and rest"); }
+const symbol = slots.cycle[(slots.minute - 1) % slots.cycle.length];
+return symbol === "O" ? "It performs an operation." : "It rests.";
+

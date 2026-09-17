@@ -1,0 +1,19 @@
+@slots literal
+{
+  "boxes": 5,
+  "perBox": 12,
+  "numerator": 1,
+  "denominator": 3,
+  "added": 7
+}
+
+@answer jsEval
+const slots = $slots;
+const total = slots.boxes * slots.perBox;
+if (total % slots.denominator !== 0) {
+  throw new Error("the total does not split into the given number of equal parts");
+}
+const part = total / slots.denominator;
+const removed = part * slots.numerator;
+return String(Math.round(total - removed + slots.added));
+

@@ -1,0 +1,13 @@
+@slots literal
+{
+  "text": "ABCBA"
+}
+
+@answer jsEval
+const slots = $slots;
+const reversed = slots.text.split("").reverse().join("");
+if (reversed === slots.text) {
+  return "Yes, the string is symmetric.";
+}
+return "No, the string is not symmetric.";
+

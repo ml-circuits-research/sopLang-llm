@@ -1,0 +1,11 @@
+@slots literal
+{
+  "deltaA": -1,
+  "deltaB": 1
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.deltaA + slots.deltaB !== 0) { throw new Error("the operation does not preserve the sum"); }
+return "The sum A+B.";
+

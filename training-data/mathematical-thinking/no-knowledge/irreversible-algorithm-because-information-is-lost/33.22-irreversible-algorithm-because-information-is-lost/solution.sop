@@ -1,0 +1,19 @@
+@slots literal
+{
+  "evenOutput": 0,
+  "oddOutput": 1,
+  "output": 0,
+  "candidates": [
+    2,
+    4,
+    6
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const matching = slots.candidates.filter((x) => (x % 2 === 0 ? slots.evenOutput : slots.oddOutput) === slots.output);
+if (matching.length === 1) { return "Yes; x must be " + matching[0] + "."; }
+if (matching.length === 2) { return "No; x can be " + matching[0] + " or " + matching[1] + "."; }
+return "No; x can be " + matching.slice(0, -1).join(", ") + ", or " + matching[matching.length - 1] + ".";
+

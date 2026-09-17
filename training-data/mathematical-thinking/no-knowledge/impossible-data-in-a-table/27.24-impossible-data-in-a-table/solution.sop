@@ -1,0 +1,14 @@
+@slots literal
+{
+  "values": [
+    6,
+    5
+  ],
+  "stated": 9
+}
+
+@answer jsEval
+const slots = $slots;
+const sum = slots.values.reduce((acc, value) => acc + value, 0);
+return sum === slots.stated ? "Yes." : "No.";
+

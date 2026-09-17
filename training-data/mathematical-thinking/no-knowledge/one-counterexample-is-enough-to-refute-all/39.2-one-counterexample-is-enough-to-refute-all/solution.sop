@@ -1,0 +1,16 @@
+@slots literal
+{
+  "threshold": 5,
+  "list": [
+    6,
+    7,
+    8,
+    9
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const witness = slots.list.find((value) => value > slots.threshold && value % 2 !== 0);
+return witness === undefined ? "There is no counterexample." : witness + " is a counterexample.";
+

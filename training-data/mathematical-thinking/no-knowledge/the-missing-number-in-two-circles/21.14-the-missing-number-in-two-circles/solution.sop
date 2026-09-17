@@ -1,0 +1,18 @@
+@slots literal
+{
+  "total": 15,
+  "apples": 9,
+  "pears": 8,
+  "both": 4
+}
+
+@answer jsEval
+const slots = $slots;
+const applesOnly = slots.apples - slots.both;
+const pearsOnly = slots.pears - slots.both;
+const union = applesOnly + slots.both + pearsOnly;
+if (union !== slots.total) {
+  return "The data are incompatible; they account for only " + union + " children.";
+}
+return "Only apples: " + applesOnly + ", only pears: " + pearsOnly + ".";
+

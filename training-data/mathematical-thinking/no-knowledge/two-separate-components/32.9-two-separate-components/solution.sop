@@ -1,0 +1,46 @@
+@slots literal
+{
+  "nodes": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E"
+  ],
+  "edges": [
+    [
+      "A",
+      "B"
+    ],
+    [
+      "B",
+      "C"
+    ],
+    [
+      "D",
+      "E"
+    ]
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+function adjacency(nodes, edges) {
+  const map = new Map(nodes.map((node) => [node, []]));
+  for (const [a, b] of edges) { map.get(a).push(b); map.get(b).push(a); }
+  for (const list of map.values()) list.sort();
+  return map;
+}
+function countComponents(nodes, edges) {
+  const neighbours = adjacency(nodes, edges);
+  const seen = new Set();
+  let count = 0;
+  for (const start of nodes) {
+    if (seen.has(start)) continue; count += 1; const stack = [start]; seen.add(start); while (stack.length > 0) {
+      for (const next of neighbours.get(stack.pop())) if (!seen.has(next)) { seen.add(next); stack.push(next); }
+    }
+  }
+  return count;
+}
+return countComponents(slots.nodes, slots.edges) + " groups.";
+

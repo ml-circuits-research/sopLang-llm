@@ -1,0 +1,51 @@
+@slots literal
+{
+  "cards": [
+    {
+      "name": "A",
+      "properties": [
+        "red",
+        "round",
+        "large"
+      ]
+    },
+    {
+      "name": "B",
+      "properties": [
+        "red",
+        "square",
+        "small"
+      ]
+    },
+    {
+      "name": "C",
+      "properties": [
+        "blue",
+        "round",
+        "small"
+      ]
+    },
+    {
+      "name": "D",
+      "properties": [
+        "blue",
+        "square",
+        "large"
+      ]
+    }
+  ],
+  "excluded": [
+    "red",
+    "square",
+    "large"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const matching = slots.cards.filter(function (card) {
+  return card.properties.every(function (property) { return slots.excluded.indexOf(property) === -1; });
+});
+if (matching.length !== 1) { throw new Error("the filters keep " + matching.length + " cards instead of one"); }
+return "Card " + matching[0].name + ".";
+

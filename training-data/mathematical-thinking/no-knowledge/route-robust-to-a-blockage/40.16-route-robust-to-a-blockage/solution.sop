@@ -1,0 +1,20 @@
+@slots literal
+{
+  "networks": [
+    {
+      "index": 1,
+      "routes": 1
+    },
+    {
+      "index": 2,
+      "routes": 2
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const ordered = slots.networks.slice().sort((left, right) => right.routes - left.routes);
+if (ordered.length < 2 || ordered[0].routes === ordered[1].routes) { throw new Error("no single more robust structure"); }
+return "Network " + ordered[0].index + ".";
+

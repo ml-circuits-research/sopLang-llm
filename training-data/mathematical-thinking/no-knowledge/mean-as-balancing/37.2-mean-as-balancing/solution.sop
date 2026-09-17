@@ -1,0 +1,17 @@
+@slots literal
+{
+  "values": [
+    2,
+    5,
+    8
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const total = slots.values.reduce((sum, value) => sum + value, 0);
+if (total % slots.values.length !== 0) {
+  throw new Error("the balls do not split into equal whole shares");
+}
+return String(total / slots.values.length) + " balls.";
+

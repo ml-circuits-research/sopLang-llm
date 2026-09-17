@@ -1,0 +1,11 @@
+@slots literal
+{
+  "inner": 3,
+  "outer": 8
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.inner > slots.outer) { throw new Error("the contained group cannot be larger than the container"); }
+return String(slots.outer - slots.inner) + " pieces.";
+

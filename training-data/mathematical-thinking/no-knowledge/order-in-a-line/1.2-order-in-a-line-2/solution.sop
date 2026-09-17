@@ -1,0 +1,51 @@
+@slots literal
+{
+  "people": [
+    "Daria",
+    "Luca",
+    "Matei",
+    "Radu"
+  ],
+  "clues": [
+    [
+      "Daria",
+      "Luca"
+    ],
+    [
+      "Matei",
+      "Radu"
+    ],
+    [
+      "Luca",
+      "Matei"
+    ]
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const ancestors = new Map(slots.people.map((name) => [name, new Set()]));
+for (const [before, after] of slots.clues) {
+  ancestors.get(after).add(before);
+}
+let changed = true;
+while (changed) {
+  changed = false;
+  for (const name of slots.people) {
+    for (const ancestor of [...ancestors.get(name)]) {
+      for (const earlier of ancestors.get(ancestor)) {
+        if (!ancestors.get(name).has(earlier)) {
+          ancestors.get(name).add(earlier);
+          changed = true;
+        }
+      }
+    }
+  }
+}
+const order = [...slots.people].sort((left, right) => ancestors.get(left).size - ancestors.get(right).size);
+const ranks = new Set(order.map((name) => ancestors.get(name).size));
+if (ranks.size !== order.length) {
+  throw new Error("the clues do not determine a single order");
+}
+return order.join(", ") + ".";
+

@@ -1,0 +1,10 @@
+@slots literal
+{
+  "capacity": 100,
+  "reserve": 10
+}
+
+@answer jsEval
+const slots = $slots;
+return (slots.capacity - slots.reserve) + " L.";
+

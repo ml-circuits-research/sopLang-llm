@@ -1,0 +1,16 @@
+@slots literal
+{
+  "numbers": [
+    4,
+    6,
+    7,
+    8
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const counterexamples = slots.numbers.filter(function (value) { return value % 2 !== 0; });
+if (counterexamples.length !== 1) { throw new Error("the list has " + counterexamples.length + " counterexamples instead of one"); }
+return String(counterexamples[0]) + ".";
+

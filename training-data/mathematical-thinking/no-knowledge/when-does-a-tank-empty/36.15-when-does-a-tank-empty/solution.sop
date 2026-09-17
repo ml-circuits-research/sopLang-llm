@@ -1,0 +1,10 @@
+@slots literal
+{
+  "volume": 36,
+  "drain": 6
+}
+
+@answer jsEval
+const slots = $slots;
+return slots.volume / slots.drain + " minutes.";
+

@@ -1,0 +1,11 @@
+@slots literal
+{
+  "capacity": 750,
+  "current": 500
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.capacity - slots.current < 0) { throw new Error("the bottle already exceeds its capacity"); }
+return String(slots.capacity - slots.current) + " ml.";
+

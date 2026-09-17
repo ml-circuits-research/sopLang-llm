@@ -1,0 +1,15 @@
+@slots literal
+{
+  "total": 90,
+  "numerator1": 4,
+  "denominator1": 9,
+  "numerator2": 1,
+  "denominator2": 5
+}
+
+@answer jsEval
+const slots = $slots;
+const first = (slots.total / slots.denominator1) * slots.numerator1;
+const remaining = slots.total - first;
+return String((remaining / slots.denominator2) * slots.numerator2);
+

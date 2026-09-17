@@ -1,0 +1,34 @@
+@slots literal
+{
+  "seatCount": 8,
+  "start": {
+    "name": "Ioana",
+    "seat": 3
+  },
+  "steps": [
+    {
+      "name": "Sofia",
+      "after": "Ioana"
+    },
+    {
+      "name": "Tudor",
+      "after": "Sofia"
+    }
+  ],
+  "step": 2
+}
+
+@answer jsEval
+const slots = $slots;
+const seats = new Map([[slots.start.name, slots.start.seat]]);
+for (const entry of slots.steps) {
+  seats.set(entry.name, seats.get(entry.after) + slots.step);
+}
+const asked = slots.steps.map((entry) => ({ name: entry.name, seat: seats.get(entry.name) }));
+for (const entry of asked) {
+  if (entry.seat > slots.seatCount) {
+    throw new Error(`${entry.name} falls outside the seat line`);
+  }
+}
+return asked.map((entry) => entry.name + ": seat " + entry.seat).join("; ") + ".";
+

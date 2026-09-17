@@ -1,0 +1,11 @@
+@slots literal
+{
+  "squares": 3,
+  "sides": 4
+}
+
+@answer jsEval
+const s = $slots;
+const boundary = s.squares * s.sides - 2 * (s.squares - 1);
+return boundary + " unit sides.";
+

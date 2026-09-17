@@ -1,0 +1,12 @@
+@slots literal
+{
+  "sameSideLengths": true,
+  "differentOrientations": true,
+  "orientationCanChange": true
+}
+
+@answer jsEval
+const slots = $slots;
+const congruent = slots.sameSideLengths === true && slots.orientationCanChange === true;
+return congruent ? "No." : "Yes.";
+

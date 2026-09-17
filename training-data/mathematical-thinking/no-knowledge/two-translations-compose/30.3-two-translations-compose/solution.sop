@@ -1,0 +1,13 @@
+@slots literal
+{
+  "displacements": [
+    2,
+    5
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const total = slots.displacements.reduce((sum, value) => sum + value, 0);
+return Math.abs(total) + " units to the " + (total >= 0 ? "right" : "left") + ".";
+

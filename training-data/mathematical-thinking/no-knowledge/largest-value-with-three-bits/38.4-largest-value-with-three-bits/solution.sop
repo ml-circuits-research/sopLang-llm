@@ -1,0 +1,17 @@
+@slots literal
+{
+  "weights": [
+    4,
+    2,
+    1
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let maximum = 0;
+for (const weight of slots.weights) {
+  maximum += weight;
+}
+return maximum + ".";
+

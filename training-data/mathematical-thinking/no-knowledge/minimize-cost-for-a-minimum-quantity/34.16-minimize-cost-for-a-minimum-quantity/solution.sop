@@ -1,0 +1,23 @@
+@slots literal
+{
+  "unitsA": 4,
+  "costA": 5,
+  "unitsB": 7,
+  "costB": 8,
+  "need": 8
+}
+
+@answer jsEval
+const slots = $slots;
+let best = null;
+const limitA = Math.ceil(slots.need / slots.unitsA) + 1;
+const limitB = Math.ceil(slots.need / slots.unitsB) + 1;
+for (let a = 0; a <= limitA; a += 1) {
+  for (let b = 0; b <= limitB; b += 1) {
+    if (a * slots.unitsA + b * slots.unitsB < slots.need) { continue; }
+    const cost = a * slots.costA + b * slots.costB;
+    if (best === null || cost < best.cost || (cost === best.cost && a + b < best.a + best.b)) { best = { a, b, cost, units: a * slots.unitsA + b * slots.unitsB }; }
+  }
+}
+return best.a + " package" + (best.a === 1 ? "" : "s") + " A, cost " + best.cost + ".";
+

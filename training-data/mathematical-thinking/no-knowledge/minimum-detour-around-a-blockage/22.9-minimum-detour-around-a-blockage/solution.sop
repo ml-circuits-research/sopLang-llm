@@ -1,0 +1,12 @@
+@slots literal
+{
+  "target": 4,
+  "blocked": 2
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.blocked >= slots.target) throw new Error("the blocked square prevents reaching the target");
+const steps = slots.target + (slots.blocked >= 1 ? 2 : 0);
+return steps + " steps.";
+

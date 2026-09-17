@@ -1,0 +1,46 @@
+@slots literal
+{
+  "operator": "or",
+  "properties": [
+    "red",
+    "round"
+  ],
+  "pieces": [
+    {
+      "name": "A",
+      "properties": [
+        "red",
+        "square"
+      ]
+    },
+    {
+      "name": "B",
+      "properties": [
+        "blue",
+        "round"
+      ]
+    },
+    {
+      "name": "C",
+      "properties": [
+        "red",
+        "round"
+      ]
+    },
+    {
+      "name": "D",
+      "properties": [
+        "blue",
+        "square"
+      ]
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const accepted = slots.pieces.filter((piece) => piece.properties.some((property) => slots.properties.indexOf(property) !== -1)).map((piece) => piece.name);
+if (accepted.length === 1) return accepted[0] + ".";
+if (accepted.length === 2) return accepted[0] + " and " + accepted[1] + ".";
+return accepted.slice(0, -1).join(", ") + ", and " + accepted[accepted.length - 1] + ".";
+

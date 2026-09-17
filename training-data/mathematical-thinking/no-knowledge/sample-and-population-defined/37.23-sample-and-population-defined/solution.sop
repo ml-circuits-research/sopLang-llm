@@ -1,0 +1,10 @@
+@slots literal
+{
+  "students": 500,
+  "surveyed": 50
+}
+
+@answer jsEval
+const slots = $slots;
+return "Population: " + slots.students + "; sample: " + slots.surveyed + ".";
+

@@ -1,0 +1,16 @@
+@slots literal
+{
+  "trials": 20,
+  "occurrences": 8
+}
+
+@answer jsEval
+const slots = $slots;
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+const favorable = slots.occurrences;
+const total = slots.trials;
+const factor = gcd(favorable, total);
+const n = favorable / factor;
+const d = total / factor;
+return d === 1 ? String(n) : n + "/" + d;
+

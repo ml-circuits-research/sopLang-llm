@@ -1,0 +1,22 @@
+@slots literal
+{
+  "tickets": 8,
+  "priceA": 6,
+  "priceB": 10,
+  "total": 64
+}
+
+@answer jsEval
+const slots = $slots;
+const difference = slots.priceB - slots.priceA;
+const extra = slots.total - slots.tickets * slots.priceA;
+if (difference <= 0 || extra % difference !== 0) {
+  throw new Error("the prices do not split the total into whole tickets");
+}
+const b = extra / difference;
+const a = slots.tickets - b;
+if (a < 0 || b < 0) {
+  throw new Error("the solution assigns a negative number of tickets");
+}
+return "A=" + a + ", B=" + b + ".";
+

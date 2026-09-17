@@ -1,0 +1,20 @@
+@slots literal
+{
+  "sides": [
+    9,
+    3,
+    2,
+    5,
+    7,
+    8
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let perimeter = 0;
+for (const side of slots.sides) {
+  perimeter += side;
+}
+return String(perimeter) + " cm";
+

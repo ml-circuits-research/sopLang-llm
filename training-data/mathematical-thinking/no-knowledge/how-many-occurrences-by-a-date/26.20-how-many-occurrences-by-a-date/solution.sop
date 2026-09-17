@@ -1,0 +1,19 @@
+@slots literal
+{
+  "days": [
+    1,
+    4,
+    7,
+    10
+  ],
+  "step": 3,
+  "limit": 13
+}
+
+@answer jsEval
+const slots = $slots;
+for (let index = 1; index < slots.days.length; index += 1) { if (slots.days[index] - slots.days[index - 1] !== slots.step) { throw new Error("the listed inspection days are not evenly spaced"); } }
+const first = slots.days[0];
+const count = slots.limit < first ? 0 : Math.floor((slots.limit - first) / slots.step) + 1;
+return count + " inspection" + (count === 1 ? "" : "s") + ".";
+

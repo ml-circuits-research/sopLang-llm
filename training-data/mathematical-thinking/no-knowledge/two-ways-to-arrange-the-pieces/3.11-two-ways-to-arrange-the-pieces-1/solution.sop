@@ -1,0 +1,19 @@
+@slots literal
+{
+  "total": 12,
+  "first": 2,
+  "second": 3
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.first <= 0 || slots.second <= 0) {
+  throw new Error("the row sizes must be positive");
+}
+if (slots.total % slots.first !== 0 || slots.total % slots.second !== 0) {
+  throw new Error("the claim of two remainder-free arrangements is false");
+}
+const firstRows = slots.total / slots.first;
+const secondRows = slots.total / slots.second;
+return firstRows + " rows of " + slots.first + "; " + secondRows + " rows of " + slots.second + ".";
+

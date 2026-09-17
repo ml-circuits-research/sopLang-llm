@@ -1,0 +1,10 @@
+@slots literal
+{
+  "translation": 3,
+  "final": 9
+}
+
+@answer jsEval
+const slots = $slots;
+return "Column " + (slots.final - slots.translation) + ".";
+

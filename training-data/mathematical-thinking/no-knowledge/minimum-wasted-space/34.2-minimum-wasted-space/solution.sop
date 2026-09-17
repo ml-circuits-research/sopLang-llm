@@ -1,0 +1,21 @@
+@slots literal
+{
+  "objects": 10,
+  "optionA": {
+    "boxes": 2,
+    "capacity": 6
+  },
+  "optionB": {
+    "boxes": 3,
+    "capacity": 4
+  }
+}
+
+@answer jsEval
+const slots = $slots;
+const waste = (option) => option.boxes * option.capacity - slots.objects;
+const wasteA = waste(slots.optionA);
+const wasteB = waste(slots.optionB);
+if (wasteA === wasteB) { return "Equal: " + wasteA + " unused places."; }
+return wasteA < wasteB ? "Option A: " + wasteA + " unused places." : "Option B: " + wasteB + " unused places.";
+

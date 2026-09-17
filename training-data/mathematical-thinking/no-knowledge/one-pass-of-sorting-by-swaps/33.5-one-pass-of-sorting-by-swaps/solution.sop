@@ -1,0 +1,21 @@
+@slots literal
+{
+  "list": [
+    5,
+    2,
+    4
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const list = [...slots.list];
+for (let index = 0; index + 1 < list.length; index += 1) {
+  if (list[index] > list[index + 1]) {
+    const held = list[index];
+    list[index] = list[index + 1];
+    list[index + 1] = held;
+  }
+}
+return "[" + list.join(",") + "].";
+

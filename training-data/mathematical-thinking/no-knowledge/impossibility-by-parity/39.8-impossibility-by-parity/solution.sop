@@ -1,0 +1,12 @@
+@slots literal
+{
+  "start": 0,
+  "step": 2,
+  "target": 7
+}
+
+@answer jsEval
+const slots = $slots;
+const gap = (((slots.target - slots.start) % slots.step) + slots.step) % slots.step;
+return gap === 0 ? "Yes." : "No.";
+

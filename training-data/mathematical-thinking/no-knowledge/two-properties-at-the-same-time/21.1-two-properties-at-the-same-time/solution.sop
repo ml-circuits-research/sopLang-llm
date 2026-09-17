@@ -1,0 +1,13 @@
+@slots literal
+{
+  "total": 8,
+  "first": 5,
+  "second": 4,
+  "both": 2
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.both > slots.first || slots.both > slots.second) { throw new Error("the intersection is larger than a property"); }
+return String(slots.first - slots.both) + " cards.";
+

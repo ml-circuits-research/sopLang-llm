@@ -1,0 +1,12 @@
+@slots literal
+{
+  "mode": "half",
+  "height": 8
+}
+
+@answer jsEval
+const slots = $slots;
+const fmt = (v) => String(Number(Number(v).toFixed(6)));
+const shadow = slots.mode === "half" ? slots.height / 2 : slots.height * 2;
+return fmt(shadow) + " m.";
+

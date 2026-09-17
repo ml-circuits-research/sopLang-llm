@@ -1,0 +1,13 @@
+@slots literal
+{
+  "letters": [
+    "A",
+    "B",
+    "C"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+return [...slots.letters].reverse().join("-") + ".";
+

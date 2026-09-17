@@ -1,0 +1,21 @@
+@slots literal
+{
+  "scale": 100,
+  "moves": [
+    {
+      "count": 3,
+      "direction": "east"
+    },
+    {
+      "count": 2,
+      "direction": "north"
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let squares = 0;
+for (const move of slots.moves) squares += move.count;
+return (squares * slots.scale) + " m.";
+

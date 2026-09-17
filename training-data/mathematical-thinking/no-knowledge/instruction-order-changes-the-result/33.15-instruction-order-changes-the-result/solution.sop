@@ -1,0 +1,37 @@
+@slots literal
+{
+  "input": 3,
+  "p": [
+    {
+      "op": "add",
+      "operand": 2
+    },
+    {
+      "op": "multiply",
+      "operand": 2
+    }
+  ],
+  "q": [
+    {
+      "op": "multiply",
+      "operand": 2
+    },
+    {
+      "op": "add",
+      "operand": 2
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const run = (value, steps) => steps.reduce((current, step) => {
+  if (step.op === "add") { return current + step.operand; }
+  if (step.op === "subtract") { return current - step.operand; }
+  if (step.op === "multiply") { return current * step.operand; }
+  return current / step.operand;
+}, value);
+const p = run(slots.input, slots.p);
+const q = run(slots.input, slots.q);
+return p === q ? "Yes; both give " + p + "." : "No; P=" + p + ", Q=" + q + ".";
+

@@ -1,0 +1,23 @@
+@slots literal
+{
+  "stages": [
+    {
+      "name": "A",
+      "capacity": 10
+    },
+    {
+      "name": "B",
+      "capacity": 6
+    },
+    {
+      "name": "C",
+      "capacity": 8
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const bottleneck = slots.stages.reduce((lowest, stage) => (stage.capacity < lowest.capacity ? stage : lowest));
+return bottleneck.capacity + " objects/hour.";
+

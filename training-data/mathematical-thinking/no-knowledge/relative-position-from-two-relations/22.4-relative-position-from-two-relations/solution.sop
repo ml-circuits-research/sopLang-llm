@@ -1,0 +1,50 @@
+@slots literal
+{
+  "relations": [
+    {
+      "subject": "library",
+      "direction": "east",
+      "reference": "park"
+    },
+    {
+      "subject": "school",
+      "direction": "east",
+      "reference": "library"
+    }
+  ],
+  "subject": "park",
+  "reference": "school"
+}
+
+@answer jsEval
+const slots = $slots;
+const names = new Set();
+for (const r of slots.relations) { names.add(r.subject); names.add(r.reference); }
+const east = {}; const north = {};
+for (const n of names) { east[n] = new Set(); north[n] = new Set(); }
+for (const r of slots.relations) {
+  const alongEast = r.direction === "east" || r.direction === "west";
+  const forward = r.direction === "east" || r.direction === "north";
+  const map = alongEast ? east : north;
+  const greater = forward ? r.subject : r.reference;
+  const lesser = forward ? r.reference : r.subject;
+  map[greater].add(lesser);
+}
+for (const n of names) {
+  for (const map of [east, north]) {
+    const stack = [...map[n]];
+    while (stack.length) {
+      const middle = stack.pop();
+      for (const further of map[middle]) {
+        if (!map[n].has(further)) { map[n].add(further); stack.push(further); }
+      }
+    }
+  }
+}
+const s = slots.subject; const t = slots.reference;
+if (east[s].has(t)) return "East of the " + t + ".";
+if (east[t].has(s)) return "West of the " + t + ".";
+if (north[s].has(t)) return "North of the " + t + ".";
+if (north[t].has(s)) return "South of the " + t + ".";
+throw new Error("the relations do not determine the relative position");
+

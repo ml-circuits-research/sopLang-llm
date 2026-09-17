@@ -1,0 +1,16 @@
+@slots literal
+{
+  "x": 3,
+  "threshold": 0,
+  "letters": {
+    "even": "A",
+    "odd": "B",
+    "nonPositive": "C"
+  }
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.x <= slots.threshold) { return slots.letters.nonPositive + "."; }
+return (slots.x % 2 === 0 ? slots.letters.even : slots.letters.odd) + ".";
+

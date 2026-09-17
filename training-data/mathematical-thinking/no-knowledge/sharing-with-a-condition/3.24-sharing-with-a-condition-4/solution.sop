@@ -1,0 +1,15 @@
+@slots literal
+{
+  "total": 15,
+  "difference": 1
+}
+
+@answer jsEval
+const slots = $slots;
+const remainder = slots.total - slots.difference;
+if (remainder < 0 || remainder % 2 !== 0) {
+  throw new Error("the total and the difference do not split into two whole shares");
+}
+const second = remainder / 2;
+return "First person: " + (second + slots.difference) + "; second person: " + second + ".";
+

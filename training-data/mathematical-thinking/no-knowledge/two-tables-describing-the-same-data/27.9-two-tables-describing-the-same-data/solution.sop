@@ -1,0 +1,38 @@
+@slots literal
+{
+  "tableA": [
+    [
+      "Monday",
+      4
+    ],
+    [
+      "Tuesday",
+      6
+    ],
+    [
+      "Wednesday",
+      5
+    ]
+  ],
+  "tableB": [
+    [
+      "Monday",
+      4
+    ],
+    [
+      "Wednesday",
+      5
+    ],
+    [
+      "Tuesday",
+      6
+    ]
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const mapA = new Map(slots.tableA);
+const same = slots.tableA.length === slots.tableB.length && slots.tableB.every((row) => mapA.get(row[0]) === row[1]);
+return same ? "Yes." : "No.";
+

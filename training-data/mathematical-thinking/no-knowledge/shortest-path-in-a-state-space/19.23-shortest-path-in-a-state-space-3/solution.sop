@@ -1,0 +1,44 @@
+@slots literal
+{
+  "start": 2,
+  "moves": [
+    2,
+    5
+  ],
+  "target": 19
+}
+
+@answer jsEval
+const slots = $slots;
+const small = Math.min(...slots.moves);
+const big = Math.max(...slots.moves);
+const increase = slots.target - slots.start;
+if (increase < 0) {
+  throw new Error("the target is below the start");
+}
+const span = big - small;
+let found = null;
+for (let count = 1; count <= increase; count += 1) {
+  const rest = increase - count * small;
+  if (rest < 0 || rest % span !== 0) {
+    continue;
+  }
+  const bigCount = rest / span;
+  if (bigCount < 0 || bigCount > count) {
+    continue;
+  }
+  const steps = [];
+  for (let index = 0; index < count - bigCount; index += 1) {
+    steps.push(small);
+  }
+  for (let index = 0; index < bigCount; index += 1) {
+    steps.push(big);
+  }
+  found = { moves: count, steps };
+  break;
+}
+if (found === null) {
+  throw new Error("the target cannot be reached with the allowed increases");
+}
+return found.moves + " moves; one example of steps: [" + found.steps.join(", ") + "].";
+

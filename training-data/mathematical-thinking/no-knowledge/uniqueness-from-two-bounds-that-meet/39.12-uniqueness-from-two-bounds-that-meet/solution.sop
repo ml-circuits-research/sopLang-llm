@@ -1,0 +1,10 @@
+@slots literal
+{
+  "lower": 7,
+  "upper": 7
+}
+
+@answer jsEval
+const slots = $slots;
+return slots.lower === slots.upper ? "x=" + slots.lower + "." : "x is not determined.";
+

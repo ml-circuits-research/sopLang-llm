@@ -1,0 +1,10 @@
+@slots literal
+{
+  "total": 7,
+  "colors": 2
+}
+
+@answer jsEval
+const slots = $slots;
+return "At least " + Math.ceil(slots.total / slots.colors) + " pencils have the same color.";
+

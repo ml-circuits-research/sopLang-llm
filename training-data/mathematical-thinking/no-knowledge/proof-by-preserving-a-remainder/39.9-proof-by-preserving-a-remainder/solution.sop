@@ -1,0 +1,12 @@
+@slots literal
+{
+  "start": 1,
+  "step": 3,
+  "target": 8
+}
+
+@answer jsEval
+const slots = $slots;
+const reachable = (slots.start % slots.step) === (slots.target % slots.step);
+return reachable ? "Yes." : "No.";
+

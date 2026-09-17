@@ -1,0 +1,28 @@
+@slots literal
+{
+  "mapping": [
+    [
+      "north",
+      "east"
+    ],
+    [
+      "east",
+      "south"
+    ],
+    [
+      "south",
+      "west"
+    ],
+    [
+      "west",
+      "north"
+    ]
+  ],
+  "direction": "south"
+}
+
+@answer jsEval
+const slots = $slots;
+const direction = new Map(slots.mapping).get(slots.direction);
+return direction[0].toUpperCase() + direction.slice(1) + ".";
+

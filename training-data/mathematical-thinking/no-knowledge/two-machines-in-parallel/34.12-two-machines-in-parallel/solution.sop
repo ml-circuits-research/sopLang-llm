@@ -1,0 +1,11 @@
+@slots literal
+{
+  "machines": 2,
+  "tasks": 4,
+  "minutes": 3
+}
+
+@answer jsEval
+const slots = $slots;
+return Math.ceil(slots.tasks / slots.machines) * slots.minutes + " minutes.";
+

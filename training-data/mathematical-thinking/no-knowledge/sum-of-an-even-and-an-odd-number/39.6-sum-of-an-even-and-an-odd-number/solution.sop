@@ -1,0 +1,9 @@
+@slots literal
+{
+  "oddConstant": 1
+}
+
+@answer jsEval
+const slots = $slots;
+return slots.oddConstant % 2 === 1 ? "Odd." : "Even.";
+

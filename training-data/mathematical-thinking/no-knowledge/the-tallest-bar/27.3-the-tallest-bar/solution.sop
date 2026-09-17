@@ -1,0 +1,28 @@
+@slots literal
+{
+  "entries": [
+    [
+      "A",
+      6
+    ],
+    [
+      "B",
+      9
+    ],
+    [
+      "C",
+      4
+    ],
+    [
+      "D",
+      8
+    ]
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let best = slots.entries[0];
+for (const entry of slots.entries) { if (entry[1] > best[1]) { best = entry; } }
+return best[0] + ".";
+

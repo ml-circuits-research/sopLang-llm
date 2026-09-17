@@ -1,0 +1,11 @@
+@slots literal
+{
+  "regenerate": 5,
+  "use": 5
+}
+
+@answer jsEval
+const slots = $slots;
+const net = slots.regenerate - slots.use;
+return net === 0 ? "It remains constant." : (net > 0 ? "It grows." : "It shrinks.");
+

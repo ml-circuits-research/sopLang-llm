@@ -1,0 +1,23 @@
+@slots literal
+{
+  "p": {
+    "row": 2,
+    "column": 2
+  },
+  "q": {
+    "row": 2,
+    "column": 5
+  },
+  "rowDelta": 3,
+  "columnDelta": -1
+}
+
+@answer jsEval
+const slots = $slots;
+const pRow = slots.p.row + slots.rowDelta;
+const pColumn = slots.p.column + slots.columnDelta;
+const qRow = slots.q.row + slots.rowDelta;
+const qColumn = slots.q.column + slots.columnDelta;
+const sameRow = pRow === qRow;
+return "P′=(" + pRow + "," + pColumn + "), Q′=(" + qRow + "," + qColumn + "); " + (sameRow ? "yes" : "no") + ".";
+

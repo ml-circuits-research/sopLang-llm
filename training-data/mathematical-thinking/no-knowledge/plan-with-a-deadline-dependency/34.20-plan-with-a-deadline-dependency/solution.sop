@@ -1,0 +1,10 @@
+@slots literal
+{
+  "aMinutes": 4,
+  "bMinutes": 3
+}
+
+@answer jsEval
+const slots = $slots;
+return "Minute " + (slots.aMinutes + slots.bMinutes) + ".";
+

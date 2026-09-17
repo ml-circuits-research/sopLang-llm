@@ -1,0 +1,21 @@
+# Explanation 8.6 — How Many Packages? 1
+
+## Explanation
+
+1. The problem defines the number of packages as how many times 4 can be subtracted from 24 before reaching zero.
+2. Repeated subtraction succeeds 6 times, since 4×6 = 24.
+3. Because nothing remains, 24 pencils fill exactly 6 packages of 4.
+
+Reference solution as printed in the source (chapter 8, 3 steps):
+
+1. Each package uses 4 pencils.
+2. 4×6=24, so 6 packages use exactly all the pencils.
+3. There is no remainder, so the grouping is exact.
+
+## Result
+
+**Answer.** 6 packages.
+
+**Verification.** exact_verified: the executed circuit produced this answer, and the family computation reproduced it from the statement. The independence limitation of this class is stated in `report.md`.
+
+**Program.** `solution.sop` (compiled values in `slots`, computation in `jsEval`).

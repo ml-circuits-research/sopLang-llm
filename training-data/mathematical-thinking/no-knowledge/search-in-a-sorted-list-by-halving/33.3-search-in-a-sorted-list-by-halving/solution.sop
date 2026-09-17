@@ -1,0 +1,28 @@
+@slots literal
+{
+  "list": [
+    2,
+    4,
+    6,
+    8,
+    10,
+    12,
+    14
+  ],
+  "target": 12
+}
+
+@answer jsEval
+const slots = $slots;
+const probes = [];
+let low = 0;
+let high = slots.list.length - 1;
+while (low <= high) {
+  const middle = Math.floor((low + high) / 2);
+  probes.push(slots.list[middle]);
+  if (slots.list[middle] === slots.target) { break; }
+  if (slots.list[middle] < slots.target) { low = middle + 1; } else { high = middle - 1; }
+}
+if (probes.length < 2) { throw new Error("the search stops at the first probe, so there is no next element"); }
+return probes[1] + ".";
+

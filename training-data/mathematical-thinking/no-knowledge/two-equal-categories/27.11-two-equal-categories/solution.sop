@@ -1,0 +1,29 @@
+@slots literal
+{
+  "entries": [
+    [
+      "A",
+      6
+    ],
+    [
+      "B",
+      4
+    ],
+    [
+      "C",
+      6
+    ],
+    [
+      "D",
+      2
+    ]
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const groups = new Map();
+for (const entry of slots.entries) { groups.set(entry[1], [...(groups.get(entry[1]) ?? []), entry[0]]); }
+for (const list of groups.values()) { if (list.length === 2) { return list[0] + " and " + list[1] + "."; } }
+throw new Error("no two categories share a value");
+

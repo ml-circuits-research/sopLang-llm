@@ -1,0 +1,44 @@
+@slots literal
+{
+  "nodes": [
+    "A",
+    "B",
+    "C"
+  ],
+  "arcs": [
+    [
+      "A",
+      "B"
+    ],
+    [
+      "B",
+      "C"
+    ]
+  ],
+  "queries": [
+    [
+      "A",
+      "C"
+    ],
+    [
+      "C",
+      "A"
+    ]
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+function reachableIn(arcs, from, to) {
+  const nexts = new Map();
+  for (const [a, b] of arcs) nexts.set(a, [...(nexts.get(a) ?? []), b]);
+  const seen = new Set([from]);
+  const queue = [from];
+  while (queue.length > 0) {
+    for (const next of nexts.get(queue.shift()) ?? []) if (!seen.has(next)) { seen.add(next); queue.push(next); }
+  }
+  return seen.has(to);
+}
+const answers = slots.queries.map(([from, to]) => from + "→" + to + ": " + (reachableIn(slots.arcs, from, to) ? "yes" : "no"));
+return answers.join("; ") + ".";
+

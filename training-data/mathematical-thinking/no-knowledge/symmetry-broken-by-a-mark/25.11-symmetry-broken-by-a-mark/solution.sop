@@ -1,0 +1,18 @@
+@slots literal
+{
+  "corners": [
+    "top-left"
+  ],
+  "axis": "vertical"
+}
+
+@answer jsEval
+const s = $slots;
+const mirror = {
+  "top-left": "top-right", "top-right": "top-left",
+  "bottom-left": "bottom-right", "bottom-right": "bottom-left",
+  left: "right", right: "left"
+};
+const symmetric = s.corners.every((corner) => s.corners.includes(mirror[corner]));
+return symmetric ? "Yes." : "No.";
+

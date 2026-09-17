@@ -1,0 +1,10 @@
+@slots literal
+{
+  "people": 73,
+  "capacity": 18
+}
+
+@answer jsEval
+const slots = $slots;
+return String(Math.ceil(slots.people / slots.capacity)) + " trips.";
+

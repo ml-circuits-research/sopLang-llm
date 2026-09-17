@@ -1,0 +1,15 @@
+@slots literal
+{
+  "collected": [
+    7,
+    6
+  ],
+  "target": 20,
+  "unit": "points"
+}
+
+@answer jsEval
+const slots = $slots;
+const collected = slots.collected.reduce((sum, value) => sum + value, 0);
+return String(slots.target - collected) + " " + slots.unit + ".";
+

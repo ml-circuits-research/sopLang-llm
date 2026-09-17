@@ -1,0 +1,12 @@
+@slots literal
+{
+  "lower": 1,
+  "upper": 10,
+  "hypothesis": "multiple of 4",
+  "conclusion": "even"
+}
+
+@answer jsEval
+const slots = $slots;
+return "Domain " + slots.lower + "–" + slots.upper + "; hypothesis “" + slots.hypothesis + "”; conclusion “" + slots.conclusion + ".”";
+

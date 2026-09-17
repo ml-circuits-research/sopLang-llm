@@ -1,0 +1,19 @@
+@slots literal
+{
+  "values": [
+    1,
+    3,
+    7,
+    9
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const ordered = [...slots.values].sort((a, b) => a - b);
+if (ordered.length % 2 !== 0) {
+  throw new Error("the statement defines the even case only");
+}
+const middle = ordered.length / 2;
+return String((ordered[middle - 1] + ordered[middle]) / 2) + ".";
+

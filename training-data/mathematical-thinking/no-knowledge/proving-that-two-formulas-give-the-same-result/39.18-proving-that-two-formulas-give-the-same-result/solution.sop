@@ -1,0 +1,22 @@
+@slots literal
+{
+  "formulas": [
+    "a+b+a+b",
+    "2(a+b)"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const coefficients = (formula) => {
+  const product = formula.match(/^(\d*)\((.*)\)$/);
+  const factor = product === null || product[1] === "" ? 1 : Number(product[1]);
+  const counts = {};
+  for (const term of (product === null ? formula : product[2]).split("+")) { counts[term] = (counts[term] || 0) + factor; }
+  return counts;
+};
+const left = coefficients(slots.formulas[0]);
+const right = coefficients(slots.formulas[1]);
+const terms = [...new Set([...Object.keys(left), ...Object.keys(right)])];
+return terms.every((term) => (left[term] || 0) === (right[term] || 0)) ? "The formulas are equivalent." : "The formulas are not equivalent.";
+

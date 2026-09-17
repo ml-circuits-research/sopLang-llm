@@ -1,0 +1,17 @@
+@slots literal
+{
+  "tens": 8,
+  "ones": 5
+}
+
+@answer jsEval
+const slots = $slots;
+const a = 10 * slots.tens + slots.ones;
+const b = 10 * slots.ones + slots.tens;
+if (a === b) {
+  throw new Error("the two digits are equal, so reversing changes nothing");
+}
+const larger = a > b ? "A" : "B";
+const difference = a > b ? a - b : b - a;
+return larger + " is larger by " + difference + ".";
+

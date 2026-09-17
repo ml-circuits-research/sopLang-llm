@@ -1,0 +1,16 @@
+@slots literal
+{
+  "adds": 5,
+  "input": 9,
+  "output": 18
+}
+
+@answer jsEval
+const slots = $slots;
+const forward = slots.input + slots.adds;
+const backward = slots.output - slots.adds;
+if (backward < 0) {
+  throw new Error("the given output is smaller than the machine rule");
+}
+return "Output " + forward + "; input " + backward + ".";
+

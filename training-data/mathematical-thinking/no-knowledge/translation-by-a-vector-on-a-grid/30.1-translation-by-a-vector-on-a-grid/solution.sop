@@ -1,0 +1,14 @@
+@slots literal
+{
+  "row": 2,
+  "column": 3,
+  "right": 4,
+  "up": 1
+}
+
+@answer jsEval
+const slots = $slots;
+const row = slots.row - slots.up;
+const column = slots.column + slots.right;
+return "(" + row + "," + column + ").";
+

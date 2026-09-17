@@ -1,0 +1,11 @@
+@slots literal
+{
+  "tokens": 12,
+  "boxes": 3
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.tokens % slots.boxes !== 0) { throw new Error("the tokens do not divide evenly among the boxes"); }
+return (slots.tokens / slots.boxes) + " in each.";
+

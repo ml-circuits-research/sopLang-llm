@@ -1,0 +1,11 @@
+@slots literal
+{
+  "first": 6,
+  "second": 3
+}
+
+@answer jsEval
+const slots = $slots;
+const perimeter = 2 * (slots.first + slots.second);
+return perimeter + " cm";
+

@@ -1,0 +1,12 @@
+@slots literal
+{
+  "person": "Ana",
+  "action": "enter through door A",
+  "holds": true
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.holds !== true) throw new Error("the antecedent is not satisfied");
+return slots.person + " may " + slots.action + ".";
+

@@ -1,0 +1,15 @@
+@slots literal
+{
+  "route": [
+    "E",
+    "N",
+    "E",
+    "S"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const route = slots.route.map((move) => (move === "E" ? "W" : move === "W" ? "E" : move));
+return route.join(",") + ".";
+

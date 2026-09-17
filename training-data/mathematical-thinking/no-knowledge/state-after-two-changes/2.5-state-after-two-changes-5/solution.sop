@@ -1,0 +1,23 @@
+@slots literal
+{
+  "initial": 16,
+  "first": {
+    "op": "add",
+    "amount": 7
+  },
+  "second": {
+    "op": "remove",
+    "amount": 2
+  }
+}
+
+@answer jsEval
+const slots = $slots;
+const apply = (value, change) => (change.op === "add" ? value + change.amount : value - change.amount);
+const afterFirst = apply(slots.initial, slots.first);
+const afterSecond = apply(afterFirst, slots.second);
+if (afterSecond < 0) {
+  throw new Error("the second rule would remove more than the box holds");
+}
+return String(afterSecond);
+

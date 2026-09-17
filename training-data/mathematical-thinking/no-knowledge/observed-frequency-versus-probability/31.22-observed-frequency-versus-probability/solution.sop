@@ -1,0 +1,24 @@
+@slots literal
+{
+  "probs": [
+    [
+      "A",
+      1,
+      2
+    ]
+  ],
+  "observed": [
+    "A",
+    "A",
+    "A",
+    "A"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const bySymbol = new Map(slots.probs.map((entry) => [entry[0], entry[1] / entry[2]]));
+let chance = 1;
+for (const symbol of slots.observed) chance *= bySymbol.get(symbol);
+return chance > 0 ? "No." : "Yes.";
+

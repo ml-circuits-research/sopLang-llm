@@ -1,0 +1,15 @@
+@slots literal
+{
+  "durations": [
+    2,
+    3,
+    1
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let total = 0;
+for (const minutes of slots.durations) { total += minutes; }
+return total + " minutes.";
+

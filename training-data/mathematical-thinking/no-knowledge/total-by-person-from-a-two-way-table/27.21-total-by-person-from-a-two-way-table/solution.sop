@@ -1,0 +1,33 @@
+@slots literal
+{
+  "cells": [
+    [
+      "Ana",
+      "Monday",
+      3
+    ],
+    [
+      "Ana",
+      "Tuesday",
+      5
+    ],
+    [
+      "Dan",
+      "Monday",
+      4
+    ],
+    [
+      "Dan",
+      "Tuesday",
+      2
+    ]
+  ],
+  "person": "Ana"
+}
+
+@answer jsEval
+const slots = $slots;
+let total = 0;
+for (const cell of slots.cells) { if (cell[0] === slots.person) { total += cell[2]; } }
+return String(total) + ".";
+

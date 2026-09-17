@@ -1,0 +1,10 @@
+@slots literal
+{
+  "speed": 5,
+  "hours": 3
+}
+
+@answer jsEval
+const slots = $slots;
+return slots.speed + "×" + slots.hours + "=" + slots.speed * slots.hours + " km.";
+

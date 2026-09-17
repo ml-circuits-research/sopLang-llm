@@ -1,0 +1,13 @@
+@slots literal
+{
+  "operator": "and",
+  "properties": [
+    "blue",
+    "large"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+return "All pieces that are not simultaneously " + slots.properties.join(" and ") + ".";
+

@@ -1,0 +1,25 @@
+@slots literal
+{
+  "moves": [
+    {
+      "count": 4,
+      "direction": "east"
+    },
+    {
+      "count": 3,
+      "direction": "north"
+    },
+    {
+      "count": 2,
+      "direction": "west"
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const opposite = { north: "south", south: "north", east: "west", west: "east" };
+const moves = slots.moves.slice().reverse();
+const parts = moves.map((move, index) => move.count + (index === 0 ? " steps" : "") + " " + opposite[move.direction]);
+return parts.join(", ") + ".";
+

@@ -1,0 +1,29 @@
+@slots literal
+{
+  "nodes": [
+    "A",
+    "B",
+    "C"
+  ],
+  "edges": [
+    [
+      "A",
+      "B"
+    ],
+    [
+      "A",
+      "C"
+    ],
+    [
+      "B",
+      "C"
+    ]
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const degrees = slots.nodes.map((node) => slots.edges.filter((e) => e[0] === node || e[1] === node).length);
+let sum = 0; for (const value of degrees) { sum += value; }
+return degrees.join(", ") + "; sum " + sum + ".";
+

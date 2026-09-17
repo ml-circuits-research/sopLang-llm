@@ -1,0 +1,19 @@
+@slots literal
+{
+  "values": [
+    9,
+    2,
+    5,
+    1,
+    7
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const ordered = [...slots.values].sort((a, b) => a - b);
+if (ordered.length % 2 === 0) {
+  throw new Error("the statement defines the median only for an odd number of values");
+}
+return String(ordered[(ordered.length - 1) / 2]) + ".";
+

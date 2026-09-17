@@ -1,0 +1,41 @@
+@slots literal
+{
+  "nodes": [
+    "A",
+    "B",
+    "C"
+  ],
+  "edges": [
+    [
+      "A",
+      "B"
+    ],
+    [
+      "B",
+      "C"
+    ],
+    [
+      "C",
+      "A"
+    ]
+  ],
+  "start": "A"
+}
+
+@answer jsEval
+const slots = $slots;
+function eulerianTrail(edges, start, mustReturn) {
+  const path = [start];
+  const used = new Set();
+  const visit = () => {
+    if (used.size === edges.length) return mustReturn === false || path.at(-1) === start; const node = path.at(-1); for (let index = 0; index < edges.length; index += 1) {
+      const [a, b] = edges[index]; if (used.has(index) || (a !== node && b !== node)) continue; used.add(index); path.push(a === node ? b : a); if (visit()) return true; path.pop();
+      used.delete(index);
+    }
+    return false;
+  };
+  return visit() ? path : null;
+}
+const path = eulerianTrail(slots.edges, slots.start, true);
+return "Yes: " + path.join("-") + ".";
+

@@ -1,0 +1,16 @@
+@slots literal
+{
+  "start": 38,
+  "step": 2,
+  "target": 45
+}
+
+@answer jsEval
+const slots = $slots;
+const difference = slots.target - slots.start;
+const reachable = difference >= 0 && difference % slots.step === 0;
+if (reachable) {
+  return "Yes, " + slots.target + " is reachable.";
+}
+return "No, " + slots.target + " is impossible to reach.";
+

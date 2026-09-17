@@ -1,0 +1,17 @@
+@slots literal
+{
+  "x": 7,
+  "formula": "x+x"
+}
+
+@answer jsEval
+const slots = $slots;
+const y = String(slots.formula).split("+").reduce((total, term) => {
+  const cleaned = term.trim();
+  if (cleaned === "x") { return total + slots.x; }
+  const product = cleaned.match(/^(\d+)[×*]x$/);
+  if (product !== null) { return total + Number(product[1]) * slots.x; }
+  return total + Number(cleaned);
+}, 0);
+return y % 2 === 0 ? "Yes, y=" + y + " is even." : "No, y=" + y + " is odd.";
+

@@ -1,0 +1,46 @@
+@slots literal
+{
+  "budget": 3,
+  "tasks": [
+    {
+      "name": "B",
+      "value": 8,
+      "time": 2,
+      "requires": "A"
+    },
+    {
+      "name": "A",
+      "value": 1,
+      "time": 2,
+      "requires": null
+    },
+    {
+      "name": "C",
+      "value": 6,
+      "time": 3,
+      "requires": null
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let best = null;
+for (let mask = 0; mask < (1 << slots.tasks.length); mask += 1) {
+  const chosen = slots.tasks.filter((task, index) => (mask & (1 << index)) !== 0);
+  const names = chosen.map((task) => task.name);
+  let feasible = true;
+  let time = 0;
+  let value = 0;
+  for (const task of chosen) {
+    time += task.time;
+    value += task.value;
+    if (task.requires !== null && !names.includes(task.requires)) { feasible = false; }
+  }
+  if (!feasible || time > slots.budget) { continue; }
+  if (best === null || value > best.value || (value === best.value && time < best.time)) {
+    best = { names: names, time: time, value: value };
+  }
+}
+return best.names.join("+") + ".";
+

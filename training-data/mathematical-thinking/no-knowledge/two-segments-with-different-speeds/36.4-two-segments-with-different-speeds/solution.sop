@@ -1,0 +1,18 @@
+@slots literal
+{
+  "stages": [
+    {
+      "hours": 2,
+      "speed": 40
+    },
+    {
+      "hours": 1,
+      "speed": 60
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+return slots.stages.reduce((total, stage) => total + stage.hours * stage.speed, 0) + " km.";
+

@@ -1,0 +1,16 @@
+@slots literal
+{
+  "total": 80,
+  "a": 23,
+  "b": 19,
+  "c": 15
+}
+
+@answer jsEval
+const slots = $slots;
+const d = slots.total - slots.a - slots.b - slots.c;
+if (d < 0) {
+  throw new Error("the three known categories already exceed the total");
+}
+return String(d);
+

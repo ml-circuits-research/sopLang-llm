@@ -1,0 +1,13 @@
+@slots literal
+{
+  "round": 5,
+  "square": 3
+}
+
+@answer jsEval
+const slots = $slots;
+const pairs = Math.min(slots.round, slots.square);
+const leftover = Math.abs(slots.round - slots.square);
+const type = slots.round > slots.square ? "round" : "square";
+return pairs + " pairs; " + leftover + " " + type + " buttons remain.";
+

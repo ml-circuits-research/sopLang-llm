@@ -1,0 +1,14 @@
+@slots literal
+{
+  "initial": 14,
+  "final": 23
+}
+
+@answer jsEval
+const slots = $slots;
+const change = slots.final - slots.initial;
+if (change < 0) {
+  throw new Error('the stated action was "add", so the final count cannot be smaller');
+}
+return String(change);
+

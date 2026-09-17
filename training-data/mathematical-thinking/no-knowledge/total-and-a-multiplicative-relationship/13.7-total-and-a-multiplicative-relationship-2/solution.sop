@@ -1,0 +1,18 @@
+@slots literal
+{
+  "total": 30,
+  "factor": 3,
+  "extra": 2
+}
+
+@answer jsEval
+const slots = $slots;
+const groups = slots.factor + 1;
+const remaining = slots.total - slots.extra;
+if (remaining % groups !== 0) {
+  throw new Error("the total does not split into whole groups");
+}
+const b = remaining / groups;
+const a = slots.factor * b + slots.extra;
+return "A=" + a + ", B=" + b + ".";
+

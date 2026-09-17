@@ -1,0 +1,10 @@
+@slots literal
+{
+  "original": "AAAA",
+  "code": "4A"
+}
+
+@answer jsEval
+const slots = $slots;
+return String(slots.code).length < String(slots.original).length ? "Yes." : "No.";
+

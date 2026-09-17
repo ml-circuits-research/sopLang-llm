@@ -1,0 +1,15 @@
+@slots literal
+{
+  "total": 6
+}
+
+@answer jsEval
+const s = $slots;
+const pairs = [];
+for (let rows = 1; rows * rows <= s.total; rows += 1) {
+  if (s.total % rows === 0) {
+    pairs.push(rows + "×" + (s.total / rows));
+  }
+}
+return pairs.join(" or ") + ".";
+

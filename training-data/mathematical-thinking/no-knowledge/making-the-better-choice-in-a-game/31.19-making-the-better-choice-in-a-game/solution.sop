@@ -1,0 +1,25 @@
+@slots literal
+{
+  "bags": [
+    {
+      "name": "A",
+      "wins": 3,
+      "total": 6
+    },
+    {
+      "name": "B",
+      "wins": 4,
+      "total": 10
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const first = slots.bags[0];
+const second = slots.bags[1];
+const left = first.wins * second.total;
+const right = second.wins * first.total;
+if (left === right) return "They are equal.";
+return "Bag " + (left > right ? first.name : second.name) + ".";
+

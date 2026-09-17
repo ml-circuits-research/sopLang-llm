@@ -1,0 +1,13 @@
+@slots literal
+{
+  "value": 2738,
+  "lower": 2700,
+  "upper": 2800
+}
+
+@answer jsEval
+const slots = $slots;
+const lowerDistance = slots.value - slots.lower;
+const upperDistance = slots.upper - slots.value;
+return String(lowerDistance < upperDistance ? slots.lower : slots.upper);
+

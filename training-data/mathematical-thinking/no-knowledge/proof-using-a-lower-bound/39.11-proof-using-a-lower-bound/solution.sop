@@ -1,0 +1,12 @@
+@slots literal
+{
+  "tickets": 4,
+  "price": 3,
+  "budget": 10
+}
+
+@answer jsEval
+const slots = $slots;
+const minimum = slots.tickets * slots.price;
+return minimum <= slots.budget ? "Yes." : "No.";
+

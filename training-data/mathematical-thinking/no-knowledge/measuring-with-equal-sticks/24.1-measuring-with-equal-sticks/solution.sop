@@ -1,0 +1,11 @@
+@slots literal
+{
+  "first": 7,
+  "second": 5
+}
+
+@answer jsEval
+const slots = $slots;
+const longer = slots.first > slots.second ? "first" : "second";
+return "The " + longer + " pencil, by " + Math.abs(slots.first - slots.second) + " units.";
+

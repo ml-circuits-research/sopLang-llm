@@ -1,0 +1,12 @@
+@slots literal
+{
+  "lower": 4,
+  "upper": 6
+}
+
+@answer jsEval
+const slots = $slots;
+const between = [];
+for (let value = slots.lower + 1; value < slots.upper; value += 1) { between.push(value); }
+return between.length === 1 ? "x=" + between[0] + "." : "x is not determined.";
+

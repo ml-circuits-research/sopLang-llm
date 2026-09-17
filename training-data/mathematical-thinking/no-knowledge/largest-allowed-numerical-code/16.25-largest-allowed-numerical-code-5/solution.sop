@@ -1,0 +1,33 @@
+@slots literal
+{
+  "digits": [
+    3,
+    5,
+    6,
+    8
+  ],
+  "lower": 6000,
+  "upper": 9000
+}
+
+@answer jsEval
+const slots = $slots;
+const results = [];
+const walk = (used, prefix) => {
+  if (prefix.length === slots.digits.length) {
+    results.push(Number(prefix.join("")));
+    return;
+  }
+  for (let index = 0; index < slots.digits.length; index += 1) {
+    if (used[index] === true) { continue; }
+    used[index] = true;
+    prefix.push(slots.digits[index]);
+    walk(used, prefix);
+    prefix.pop();
+    used[index] = false;
+  }
+};
+walk(slots.digits.map(() => false), []);
+const allowed = results.filter((value) => value > slots.lower && value < slots.upper);
+return String(Math.max(...allowed));
+

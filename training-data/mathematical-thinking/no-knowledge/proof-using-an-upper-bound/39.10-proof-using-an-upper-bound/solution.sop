@@ -1,0 +1,12 @@
+@slots literal
+{
+  "boxes": 3,
+  "capacity": 5,
+  "objects": 16
+}
+
+@answer jsEval
+const slots = $slots;
+const maximum = slots.boxes * slots.capacity;
+return maximum >= slots.objects ? "Yes." : "No.";
+

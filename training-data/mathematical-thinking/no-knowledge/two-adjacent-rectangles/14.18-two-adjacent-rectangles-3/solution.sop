@@ -1,0 +1,11 @@
+@slots literal
+{
+  "height": 5,
+  "width1": 8,
+  "width2": 2
+}
+
+@answer jsEval
+const slots = $slots;
+return String(slots.height * (slots.width1 + slots.width2));
+

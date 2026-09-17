@@ -1,0 +1,17 @@
+@slots literal
+{
+  "values": [
+    10,
+    14,
+    18
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const values = [...slots.values].sort((left, right) => left - right);
+if (new Set(values).size !== values.length) {
+  throw new Error("the three quantities are not distinct");
+}
+return "A=" + values[1] + ", B=" + values[2] + ", C=" + values[0] + ".";
+

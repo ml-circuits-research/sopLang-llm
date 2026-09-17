@@ -1,0 +1,12 @@
+@slots literal
+{
+  "threshold": 5,
+  "inventory": 7,
+  "sold": 3
+}
+
+@answer jsEval
+const slots = $slots;
+const stock = slots.inventory - slots.sold;
+return stock < slots.threshold ? "Yes." : "No.";
+

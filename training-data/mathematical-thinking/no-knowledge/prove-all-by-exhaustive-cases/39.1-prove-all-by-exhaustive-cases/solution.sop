@@ -1,0 +1,16 @@
+@slots literal
+{
+  "domain": [
+    2,
+    4,
+    6,
+    8
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+const holds = slots.domain.every((value) => value % 2 === 0);
+return holds ? "The statement is true for all " + words[slots.domain.length] + " cases." : "The statement is false.";
+

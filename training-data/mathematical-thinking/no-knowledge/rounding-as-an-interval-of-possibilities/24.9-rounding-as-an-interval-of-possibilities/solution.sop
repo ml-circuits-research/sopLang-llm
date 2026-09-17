@@ -1,0 +1,14 @@
+@slots literal
+{
+  "displayed": 10,
+  "lower": 9.5,
+  "upper": 10.5,
+  "first": 10.4,
+  "second": 10.6
+}
+
+@answer jsEval
+const slots = $slots;
+const compatible = (value) => value >= slots.lower && value < slots.upper;
+return slots.first + " cm: " + (compatible(slots.first) ? "yes" : "no") + "; " + slots.second + " cm: " + (compatible(slots.second) ? "yes" : "no") + ".";
+

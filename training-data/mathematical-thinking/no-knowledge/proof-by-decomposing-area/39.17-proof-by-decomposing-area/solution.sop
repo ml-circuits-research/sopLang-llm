@@ -1,0 +1,10 @@
+@slots literal
+{
+  "a": "a",
+  "b": "b"
+}
+
+@answer jsEval
+const slots = $slots;
+return "The area is " + slots.a + "×" + slots.b + " unit squares.";
+

@@ -1,0 +1,11 @@
+@slots literal
+{
+  "baseA": 6,
+  "baseB": 9,
+  "count": 3
+}
+
+@answer jsEval
+const slots = $slots;
+return "A=" + (slots.baseA * slots.count) + ", B=" + (slots.baseB * slots.count) + ".";
+

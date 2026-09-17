@@ -1,0 +1,16 @@
+@slots literal
+{
+  "list": [
+    3,
+    6,
+    8,
+    1
+  ],
+  "target": 5
+}
+
+@answer jsEval
+const slots = $slots;
+const index = slots.list.indexOf(slots.target);
+return (index === -1 ? slots.list.length : index + 1) + " comparisons.";
+

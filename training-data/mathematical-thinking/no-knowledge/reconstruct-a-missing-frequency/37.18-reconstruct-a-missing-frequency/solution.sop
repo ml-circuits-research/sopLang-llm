@@ -1,0 +1,25 @@
+@slots literal
+{
+  "entries": [
+    [
+      "A",
+      4
+    ],
+    [
+      "B",
+      null
+    ],
+    [
+      "C",
+      3
+    ]
+  ],
+  "total": 10,
+  "label": "B"
+}
+
+@answer jsEval
+const slots = $slots;
+const known = slots.entries.filter((entry) => entry[1] !== null).reduce((sum, entry) => sum + entry[1], 0);
+return String(slots.total - known) + ".";
+

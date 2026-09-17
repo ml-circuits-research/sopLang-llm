@@ -1,0 +1,12 @@
+@slots literal
+{
+  "precondition": "x≠0",
+  "forbidden": 0,
+  "tested": 0
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.tested !== slots.forbidden) { throw new Error("the questioned input satisfies the precondition"); }
+return "Because it violates the precondition " + slots.precondition + ".";
+

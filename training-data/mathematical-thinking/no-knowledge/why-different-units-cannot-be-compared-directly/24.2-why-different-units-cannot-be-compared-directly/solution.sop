@@ -1,0 +1,17 @@
+@slots literal
+{
+  "first": {
+    "count": 6,
+    "unit": "child handspans"
+  },
+  "second": {
+    "count": 5,
+    "unit": "adult handspans"
+  }
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.first.unit !== slots.second.unit) { return "It cannot be determined."; }
+return slots.first.count > slots.second.count ? "The first table is longer." : "The second table is longer.";
+

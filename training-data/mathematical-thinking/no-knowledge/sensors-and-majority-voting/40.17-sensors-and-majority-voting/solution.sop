@@ -1,0 +1,21 @@
+@slots literal
+{
+  "answers": [
+    "yes",
+    "yes",
+    "no",
+    "which"
+  ],
+  "faulty": 1
+}
+
+@answer jsEval
+const slots = $slots;
+const counts = new Map();
+for (const answer of slots.answers) { counts.set(answer, (counts.get(answer) || 0) + 1); }
+const ordered = Array.from(counts.entries()).sort((left, right) => right[1] - left[1]);
+if (ordered.length < 2 || ordered[0][1] === ordered[1][1]) { throw new Error("there is no majority answer"); }
+if (slots.faulty * 2 >= slots.answers.length) { throw new Error("the majority answer is not guaranteed for this fault bound"); }
+const value = ordered[0][0];
+return value.charAt(0).toUpperCase() + value.slice(1) + ".";
+

@@ -1,0 +1,10 @@
+@slots literal
+{
+  "rate": 7,
+  "minutes": 8
+}
+
+@answer jsEval
+const slots = $slots;
+return slots.rate * slots.minutes + " pieces.";
+

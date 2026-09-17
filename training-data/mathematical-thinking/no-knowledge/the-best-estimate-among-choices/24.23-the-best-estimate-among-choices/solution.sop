@@ -1,0 +1,17 @@
+@slots literal
+{
+  "lower": 30,
+  "upper": 40,
+  "candidates": [
+    25,
+    34,
+    45
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const compatible = slots.candidates.filter((value) => value > slots.lower && value < slots.upper);
+if (compatible.length !== 1) { throw new Error(compatible.length + " candidates are compatible with the observation instead of one"); }
+return compatible[0] + " cm.";
+

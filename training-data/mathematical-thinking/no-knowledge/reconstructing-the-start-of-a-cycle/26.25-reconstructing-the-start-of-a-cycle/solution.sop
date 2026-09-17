@@ -1,0 +1,17 @@
+@slots literal
+{
+  "cycle": [
+    "A",
+    "B",
+    "C"
+  ],
+  "position": 8,
+  "symbol": "B"
+}
+
+@answer jsEval
+const slots = $slots;
+const index = (slots.position - 1) % slots.cycle.length;
+if (slots.cycle[index] !== slots.symbol) { throw new Error("position " + slots.position + " holds " + slots.cycle[index] + ", not " + slots.symbol); }
+return slots.cycle[0] + ".";
+

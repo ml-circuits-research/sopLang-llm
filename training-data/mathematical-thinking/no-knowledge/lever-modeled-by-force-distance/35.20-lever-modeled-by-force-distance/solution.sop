@@ -1,0 +1,12 @@
+@slots literal
+{
+  "leftWeight": 3,
+  "leftDistance": 4,
+  "rightWeight": 6
+}
+
+@answer jsEval
+const slots = $slots;
+const fmt = (v) => String(Number(Number(v).toFixed(6)));
+return "Distance " + fmt(slots.leftWeight * slots.leftDistance / slots.rightWeight) + ".";
+

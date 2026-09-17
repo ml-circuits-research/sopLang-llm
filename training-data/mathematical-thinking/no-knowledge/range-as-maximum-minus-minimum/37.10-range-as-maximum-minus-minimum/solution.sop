@@ -1,0 +1,14 @@
+@slots literal
+{
+  "values": [
+    3,
+    8,
+    5,
+    11
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+return String(Math.max(...slots.values) - Math.min(...slots.values)) + ".";
+

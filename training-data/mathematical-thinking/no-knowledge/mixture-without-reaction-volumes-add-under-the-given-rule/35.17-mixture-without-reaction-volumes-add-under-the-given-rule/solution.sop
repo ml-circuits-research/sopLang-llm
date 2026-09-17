@@ -1,0 +1,10 @@
+@slots literal
+{
+  "first": 250,
+  "second": 150
+}
+
+@answer jsEval
+const slots = $slots;
+return String(slots.first + slots.second) + " ml.";
+

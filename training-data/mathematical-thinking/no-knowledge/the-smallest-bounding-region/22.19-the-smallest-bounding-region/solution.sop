@@ -1,0 +1,25 @@
+@slots literal
+{
+  "points": [
+    {
+      "row": 2,
+      "column": 3
+    },
+    {
+      "row": 5,
+      "column": 4
+    },
+    {
+      "row": 4,
+      "column": 8
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const rows = slots.points.map((point) => point.row);
+const columns = slots.points.map((point) => point.column);
+return "Rows " + Math.min.apply(null, rows) + "\u2013" + Math.max.apply(null, rows) +
+  " and columns " + Math.min.apply(null, columns) + "\u2013" + Math.max.apply(null, columns) + ".";
+

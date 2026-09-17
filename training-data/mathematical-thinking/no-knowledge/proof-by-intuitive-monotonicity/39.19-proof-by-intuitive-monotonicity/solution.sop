@@ -1,0 +1,9 @@
+@slots literal
+{
+  "offset": 3
+}
+
+@answer jsEval
+const slots = $slots;
+return "a+" + slots.offset + "<b+" + slots.offset + ".";
+

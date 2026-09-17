@@ -1,0 +1,14 @@
+@slots literal
+{
+  "domain": [
+    2,
+    4,
+    8
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const holds = slots.domain.some((value) => value % 2 !== 0);
+return holds ? "The statement is true." : "The statement is false.";
+

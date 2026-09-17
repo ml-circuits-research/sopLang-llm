@@ -1,0 +1,59 @@
+@slots literal
+{
+  "possibilities": [
+    "a small red cube",
+    "a small red sphere"
+  ],
+  "options": [
+    "is it small?",
+    "is it red?",
+    "does it have flat faces?"
+  ],
+  "flatFaces": {
+    "yes": "cube",
+    "no": "sphere"
+  }
+}
+
+@answer jsEval
+const slots = $slots;
+const matches = (value, predicate) => {
+  if (predicate.op === "and") { return predicate.of.every((part) => matches(value, part)); }
+  if (predicate.op === "eq") { return Number(value) === predicate.value; }
+  if (predicate.op === "gt") { return Number(value) > predicate.value; }
+  if (predicate.op === "lt") { return Number(value) < predicate.value; }
+  if (predicate.op === "ge") { return Number(value) >= predicate.value; }
+  if (predicate.op === "le") { return Number(value) <= predicate.value; }
+  if (predicate.op === "even") { return Number(value) % 2 === 0; }
+  if (predicate.op === "odd") { return Math.abs(Number(value) % 2) === 1; }
+  if (predicate.op === "lacks") { return !String(value).includes(predicate.word); }
+  throw new Error("unsupported predicate " + predicate.op);
+};
+const keep = (candidates, predicate) => candidates.filter((value) => matches(value, predicate));
+const joinList = (items) => {
+  const parts = items.map(String);
+  if (parts.length === 1) { return parts[0]; }
+  if (parts.length === 2) { return parts[0] + " and " + parts[1]; }
+  return parts.slice(0, -1).join(", ") + ", and " + parts[parts.length - 1];
+};
+let separating = null;
+for (const option of slots.options) {
+  const word = option.toLowerCase().replace("does it have ", "").replace("is it ", "").replace("does it ", "").replace("?", "").trim();
+  const values = slots.possibilities.map((description) => {
+    const words = description.toLowerCase().split(/\s+/);
+    if (word === "flat faces" || word === "flat face") {
+      if (words.includes(slots.flatFaces.yes)) { return true; }
+      if (words.includes(slots.flatFaces.no)) { return false; }
+      return null;
+    }
+    const opposites = { large: "small", small: "large" };
+    if (words.includes(word)) { return true; }
+    if (opposites[word] !== undefined && words.includes(opposites[word])) { return false; }
+    return null;
+  });
+  if (values.some((value) => value === null)) { throw new Error("the descriptions do not answer " + option); }
+  if (values[0] !== values[1]) { separating = option; break; }
+}
+const first = separating.charAt(0).toUpperCase() + separating.slice(1);
+return "“" + first + "”.";
+

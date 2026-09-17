@@ -1,0 +1,10 @@
+@slots literal
+{
+  "offset": 1
+}
+
+@answer jsEval
+const slots = $slots;
+const flip = slots.offset % 2 === 1;
+return flip ? "Yes, two consecutive integers have different parity." : "No, they have the same parity.";
+

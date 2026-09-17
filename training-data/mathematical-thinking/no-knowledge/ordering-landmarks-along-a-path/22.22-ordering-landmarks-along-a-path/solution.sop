@@ -1,0 +1,24 @@
+@slots literal
+{
+  "landmarks": [
+    {
+      "name": "fountain",
+      "position": 3
+    },
+    {
+      "name": "bridge",
+      "position": 8
+    },
+    {
+      "name": "oak tree",
+      "position": 5
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const order = slots.landmarks.slice().sort((a, b) => a.position - b.position).map((landmark) => landmark.name);
+const text = order.join(", ");
+return text.charAt(0).toUpperCase() + text.slice(1) + ".";
+

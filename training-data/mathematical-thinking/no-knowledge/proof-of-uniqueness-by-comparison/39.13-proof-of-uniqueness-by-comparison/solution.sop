@@ -1,0 +1,10 @@
+@slots literal
+{
+  "term": 5,
+  "rhs": 12
+}
+
+@answer jsEval
+const slots = $slots;
+return "The unique solution is " + (slots.rhs - slots.term) + ".";
+

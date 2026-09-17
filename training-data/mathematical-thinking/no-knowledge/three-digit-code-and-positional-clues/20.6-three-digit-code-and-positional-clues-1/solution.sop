@@ -1,0 +1,35 @@
+@slots literal
+{
+  "digits": [
+    4,
+    2,
+    7
+  ],
+  "first": 4,
+  "earlier": 2,
+  "later": 7
+}
+
+@answer jsEval
+const slots = $slots;
+const digits = slots.digits.map(String);
+const permutations = [];
+const build = (prefix, rest) => {
+  if (rest.length === 0) {
+    permutations.push(prefix);
+    return;
+  }
+  for (let index = 0; index < rest.length; index += 1) {
+    build(prefix + rest[index], rest.slice(0, index).concat(rest.slice(index + 1)));
+  }
+};
+build("", digits);
+const first = String(slots.first);
+const earlier = String(slots.earlier);
+const later = String(slots.later);
+const matching = permutations.filter((code) => code[0] === first && code.indexOf(earlier) < code.indexOf(later));
+if (matching.length !== 1) {
+  throw new Error("the clues leave " + matching.length + " codes instead of one");
+}
+return matching[0];
+

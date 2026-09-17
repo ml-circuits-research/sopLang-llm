@@ -1,0 +1,16 @@
+@slots literal
+{
+  "sum": 36,
+  "difference": 6
+}
+
+@answer jsEval
+const slots = $slots;
+const rest = slots.sum - slots.difference;
+if (rest % 2 !== 0) {
+  throw new Error("the sum and the difference do not give whole numbers");
+}
+const first = (slots.sum + slots.difference) / 2;
+const second = rest / 2;
+return first + " and " + second + ".";
+

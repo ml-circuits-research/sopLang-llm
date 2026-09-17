@@ -1,0 +1,27 @@
+@slots literal
+{
+  "positions": [
+    {
+      "minute": 0,
+      "meters": 0
+    },
+    {
+      "minute": 2,
+      "meters": 8
+    },
+    {
+      "minute": 5,
+      "meters": 20
+    }
+  ],
+  "from": 2,
+  "to": 5
+}
+
+@answer jsEval
+const slots = $slots;
+const start = slots.positions.find((position) => position.minute === slots.from);
+const end = slots.positions.find((position) => position.minute === slots.to);
+if (start === undefined || end === undefined) { throw new Error("the segment bounds are not in the table"); }
+return (end.meters - start.meters) / (end.minute - start.minute) + " m/min.";
+

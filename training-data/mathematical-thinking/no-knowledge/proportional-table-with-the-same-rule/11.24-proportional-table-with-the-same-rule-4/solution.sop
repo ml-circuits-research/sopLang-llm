@@ -1,0 +1,20 @@
+@slots literal
+{
+  "factor": 5,
+  "a": 7,
+  "candidates": [
+    28,
+    35,
+    42
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const expected = slots.factor * slots.a;
+const matching = slots.candidates.filter((candidate) => candidate === expected);
+if (matching.length !== 1) {
+  throw new Error(matching.length + " candidates follow the rule instead of one");
+}
+return String(matching[0]);
+

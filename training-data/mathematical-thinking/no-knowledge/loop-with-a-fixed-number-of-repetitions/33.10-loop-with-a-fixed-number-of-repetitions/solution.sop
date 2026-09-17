@@ -1,0 +1,21 @@
+@slots literal
+{
+  "start": 1,
+  "step": {
+    "op": "add",
+    "operand": 3
+  },
+  "count": 4
+}
+
+@answer jsEval
+const slots = $slots;
+let value = slots.start;
+for (let index = 0; index < slots.count; index += 1) {
+  if (slots.step.op === "add") { value = value + slots.step.operand; }
+  else if (slots.step.op === "subtract") { value = value - slots.step.operand; }
+  else if (slots.step.op === "multiply") { value = value * slots.step.operand; }
+  else { value = value / slots.step.operand; }
+}
+return value + ".";
+

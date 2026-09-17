@@ -1,0 +1,42 @@
+@slots literal
+{
+  "candidates": [
+    3,
+    6,
+    9,
+    12
+  ],
+  "clues": [
+    {
+      "number": 1,
+      "op": "greater",
+      "value": 5
+    },
+    {
+      "number": 2,
+      "op": "less",
+      "value": 10
+    },
+    {
+      "number": 3,
+      "op": "less",
+      "value": 20
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const keep = function (values, clue) {
+  return values.filter(function (value) {
+    return clue.op === "greater" ? value > clue.value : value < clue.value;
+  });
+};
+let base = keep(keep(slots.candidates, slots.clues[0]), slots.clues[1]);
+let answer = null;
+for (const clue of slots.clues.slice(2)) {
+  if (keep(base, clue).length === base.length) { answer = clue.number; break; }
+}
+if (answer === null) { throw new Error("no redundant clue was found"); }
+return "Clue " + answer + ".";
+

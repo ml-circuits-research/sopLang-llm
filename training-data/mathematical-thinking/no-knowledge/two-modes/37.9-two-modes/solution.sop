@@ -1,0 +1,21 @@
+@slots literal
+{
+  "values": [
+    1,
+    1,
+    2,
+    2,
+    3
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const counts = new Map();
+for (const value of slots.values) {
+  counts.set(value, (counts.get(value) || 0) + 1);
+}
+const highest = Math.max(...counts.values());
+const modes = [...counts].filter(([, count]) => count === highest).map(([value]) => value).sort((a, b) => a - b);
+return modes.join(" and ") + ".";
+

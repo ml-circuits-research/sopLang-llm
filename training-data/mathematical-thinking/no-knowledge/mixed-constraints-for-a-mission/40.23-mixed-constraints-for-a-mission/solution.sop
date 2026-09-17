@@ -1,0 +1,24 @@
+@slots literal
+{
+  "energy": 10,
+  "time": 6,
+  "missions": [
+    {
+      "name": "X",
+      "energy": 6,
+      "time": 4
+    },
+    {
+      "name": "Y",
+      "energy": 5,
+      "time": 2
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const energy = slots.missions.reduce((sum, mission) => sum + mission.energy, 0);
+const time = slots.missions.reduce((sum, mission) => sum + mission.time, 0);
+return energy <= slots.energy && time <= slots.time ? "Yes." : "No.";
+

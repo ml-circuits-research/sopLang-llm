@@ -1,0 +1,14 @@
+@slots literal
+{
+  "a": 30,
+  "b": 22,
+  "first": 5,
+  "second": 2
+}
+
+@answer jsEval
+const slots = $slots;
+const a = slots.a - slots.first + slots.second;
+const b = slots.b + slots.first - slots.second;
+return "A=" + a + ", B=" + b + ".";
+

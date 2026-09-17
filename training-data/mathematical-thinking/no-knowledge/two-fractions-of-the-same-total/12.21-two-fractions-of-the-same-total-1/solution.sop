@@ -1,0 +1,24 @@
+@slots literal
+{
+  "total": 24,
+  "a": {
+    "numerator": 2,
+    "denominator": 6
+  },
+  "b": {
+    "numerator": 3,
+    "denominator": 6
+  }
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.a.denominator !== slots.b.denominator) {
+  throw new Error("the two fractions do not share a denominator");
+}
+if (slots.total % slots.a.denominator !== 0) {
+  throw new Error("the total does not divide into equal parts");
+}
+const part = slots.total / slots.a.denominator;
+return String(part * (slots.a.numerator + slots.b.numerator));
+

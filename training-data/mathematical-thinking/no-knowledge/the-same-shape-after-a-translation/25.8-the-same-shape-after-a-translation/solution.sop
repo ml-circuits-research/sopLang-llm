@@ -1,0 +1,15 @@
+@slots literal
+{
+  "distance": 3,
+  "direction": "right",
+  "rotated": false,
+  "reflected": false
+}
+
+@answer jsEval
+const s = $slots;
+const rigid = !s.rotated && !s.reflected;
+return rigid
+  ? "The shape does not change; only the position changes."
+  : "The shape changes because the piece is turned over.";
+

@@ -1,0 +1,51 @@
+@slots literal
+{
+  "rules": [
+    {
+      "name": "R1",
+      "tokens": [
+        "(",
+        "red",
+        "OR",
+        "blue",
+        ")",
+        "AND",
+        "round"
+      ]
+    },
+    {
+      "name": "R2",
+      "tokens": [
+        "red",
+        "OR",
+        "(",
+        "blue",
+        "AND",
+        "round",
+        ")"
+      ]
+    }
+  ],
+  "environment": {
+    "red": true,
+    "square": true
+  }
+}
+
+@answer jsEval
+const slots = $slots;
+const evaluate = (tokens) => {
+  let position = 0;
+  const primary = () => {
+    if (tokens[position] === "(") { position += 1; const value = or(); position += 1; return value; }
+    const token = tokens[position]; position += 1;
+    return slots.environment[token] === true;
+  };
+  const not = () => { if (tokens[position] === "NOT") { position += 1; return !not(); } return primary(); };
+  const and = () => { let value = not(); while (tokens[position] === "AND") { position += 1; const right = not(); value = value && right; } return value; };
+  const or = () => { let value = and(); while (tokens[position] === "OR") { position += 1; const right = and(); value = value || right; } return value; };
+  return or();
+};
+const parts = slots.rules.map((rule) => rule.name + " " + String(evaluate(rule.tokens)));
+return parts.join("; ") + ".";
+

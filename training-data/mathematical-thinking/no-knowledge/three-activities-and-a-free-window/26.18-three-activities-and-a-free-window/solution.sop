@@ -1,0 +1,39 @@
+@slots literal
+{
+  "busy": [
+    [
+      "9:00",
+      "9:30"
+    ],
+    [
+      "10:00",
+      "10:45"
+    ],
+    [
+      "11:15",
+      "12:00"
+    ]
+  ],
+  "window": [
+    "9:00",
+    "12:00"
+  ],
+  "need": 30
+}
+
+@answer jsEval
+const slots = $slots;
+const minutes = (text) => { const parts = String(text).split(":"); return Number(parts[0]) * 60 + Number(parts[1]); };
+const clock = (value) => Math.floor(value / 60) + ":" + String(value % 60).padStart(2, "0");
+const busy = slots.busy.map((interval) => [minutes(interval[0]), minutes(interval[1])]).sort((left, right) => left[0] - right[0]);
+const windowEnd = minutes(slots.window[1]);
+let cursor = minutes(slots.window[0]);
+let found = null;
+for (const [start, end] of busy) {
+  if (start - cursor >= slots.need) { found = [cursor, start]; break; }
+  if (end > cursor) { cursor = end; }
+}
+if (found === null && windowEnd - cursor >= slots.need) { found = [cursor, windowEnd]; }
+if (found === null) { throw new Error("no free window is long enough"); }
+return clock(found[0]) + "–" + clock(found[1]) + ".";
+

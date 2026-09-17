@@ -1,0 +1,15 @@
+@slots literal
+{
+  "target": 1200,
+  "lower": 1150,
+  "upper": 1249,
+  "candidate": 1160
+}
+
+@answer jsEval
+const slots = $slots;
+const accepted = slots.candidate >= slots.lower && slots.candidate <= slots.upper;
+return accepted
+  ? "Yes, " + slots.candidate + " rounds to " + slots.target + "."
+  : "No, " + slots.candidate + " does not round to " + slots.target + ".";
+

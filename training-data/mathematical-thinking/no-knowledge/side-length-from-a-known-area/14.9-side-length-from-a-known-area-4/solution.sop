@@ -1,0 +1,13 @@
+@slots literal
+{
+  "area": 45,
+  "perRow": 15
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.perRow <= 0 || slots.area % slots.perRow !== 0) {
+  throw new Error("the area does not split into whole rows of that size");
+}
+return String(slots.area / slots.perRow);
+

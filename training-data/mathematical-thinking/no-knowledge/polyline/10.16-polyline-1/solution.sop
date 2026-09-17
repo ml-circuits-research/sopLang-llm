@@ -1,0 +1,18 @@
+@slots literal
+{
+  "segments": [
+    3,
+    5,
+    4,
+    2
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let total = 0;
+for (const segment of slots.segments) {
+  total += segment;
+}
+return total + " cm";
+

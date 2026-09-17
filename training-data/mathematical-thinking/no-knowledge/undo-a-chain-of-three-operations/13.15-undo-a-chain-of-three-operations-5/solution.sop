@@ -1,0 +1,28 @@
+@slots literal
+{
+  "operations": [
+    {
+      "sign": "+",
+      "value": 9
+    },
+    {
+      "sign": "-",
+      "value": 3
+    },
+    {
+      "sign": "+",
+      "value": 6
+    }
+  ],
+  "result": 37
+}
+
+@answer jsEval
+const slots = $slots;
+let value = slots.result;
+for (let index = slots.operations.length - 1; index >= 0; index -= 1) {
+  const operation = slots.operations[index];
+  value += operation.sign === "+" ? -operation.value : operation.value;
+}
+return String(value);
+

@@ -1,0 +1,11 @@
+@slots literal
+{
+  "direction": "larger",
+  "sorted": false
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.sorted) { throw new Error("a sorted list keeps the discard rule safe"); }
+return "Because without sorting, position gives no reliable information about size.";
+

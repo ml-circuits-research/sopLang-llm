@@ -1,0 +1,20 @@
+@slots literal
+{
+  "numbers": [
+    5,
+    9,
+    16,
+    18
+  ],
+  "lower": 8,
+  "upper": 12
+}
+
+@answer jsEval
+const slots = $slots;
+const matching = slots.numbers.filter((value) => value > slots.lower && value < slots.upper);
+if (matching.length !== 1) {
+  throw new Error(`the bounds keep ${matching.length} candidates instead of one`);
+}
+return String(matching[0]);
+

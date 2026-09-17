@@ -1,0 +1,37 @@
+@slots literal
+{
+  "a": {
+    "row": 2,
+    "column": 2
+  },
+  "c": {
+    "row": 5,
+    "column": 5
+  },
+  "b": {
+    "count": 3,
+    "direction": "east"
+  },
+  "d": {
+    "count": 3,
+    "direction": "north"
+  }
+}
+
+@answer jsEval
+const slots = $slots;
+const shift = (point, offset) => {
+  const result = { row: point.row, column: point.column };
+  if (offset.direction === "north") result.row += offset.count;
+  else if (offset.direction === "south") result.row -= offset.count;
+  else if (offset.direction === "east") result.column += offset.count;
+  else if (offset.direction === "west") result.column -= offset.count;
+  return result;
+};
+const b = shift(slots.a, slots.b);
+const d = shift(b, slots.d);
+if (slots.c.row === d.row && slots.c.column === d.column) {
+  return "Yes; C=D=(" + slots.c.row + "," + slots.c.column + ").";
+}
+return "No; C=(" + slots.c.row + "," + slots.c.column + ") and D=(" + d.row + "," + d.column + ").";
+

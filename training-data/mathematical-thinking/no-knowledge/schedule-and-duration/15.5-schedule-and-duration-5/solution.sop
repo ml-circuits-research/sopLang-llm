@@ -1,0 +1,12 @@
+@slots literal
+{
+  "hours": 15,
+  "minutes": 50,
+  "duration": 35
+}
+
+@answer jsEval
+const slots = $slots;
+const end = slots.hours * 60 + slots.minutes + slots.duration;
+return String(Math.floor(end / 60)) + ":" + String(end % 60).padStart(2, "0");
+

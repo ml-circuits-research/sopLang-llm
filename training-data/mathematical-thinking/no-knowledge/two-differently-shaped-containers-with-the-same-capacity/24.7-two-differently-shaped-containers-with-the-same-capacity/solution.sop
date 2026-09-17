@@ -1,0 +1,9 @@
+@slots literal
+{
+  "capacity": 500
+}
+
+@answer jsEval
+const slots = $slots;
+return "They contain the same amount: " + slots.capacity + " ml.";
+

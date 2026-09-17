@@ -1,0 +1,11 @@
+@slots literal
+{
+  "right": 4,
+  "up": 1
+}
+
+@answer jsEval
+const slots = $slots;
+const moves = slots.right + slots.up;
+return moves + " moves.";
+

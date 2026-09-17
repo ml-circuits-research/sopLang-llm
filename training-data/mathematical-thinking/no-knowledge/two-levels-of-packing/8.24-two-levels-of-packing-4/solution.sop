@@ -1,0 +1,11 @@
+@slots literal
+{
+  "bags": 2,
+  "beads": 8,
+  "boxes": 5
+}
+
+@answer jsEval
+const slots = $slots;
+return String(slots.boxes * slots.bags * slots.beads);
+

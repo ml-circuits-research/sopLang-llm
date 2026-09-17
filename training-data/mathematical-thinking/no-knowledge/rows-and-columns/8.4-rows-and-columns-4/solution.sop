@@ -1,0 +1,14 @@
+@slots literal
+{
+  "rows": 6,
+  "perRow": 4
+}
+
+@answer jsEval
+const slots = $slots;
+let total = 0;
+for (let row = 0; row < slots.rows; row += 1) {
+  total += slots.perRow;
+}
+return String(total);
+

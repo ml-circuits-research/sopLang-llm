@@ -1,0 +1,11 @@
+@slots literal
+{
+  "earlier": 8,
+  "later": 11
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.later < slots.earlier) { throw new Error("the problem states an increase but the later count is smaller"); }
+return "By " + (slots.later - slots.earlier) + ".";
+

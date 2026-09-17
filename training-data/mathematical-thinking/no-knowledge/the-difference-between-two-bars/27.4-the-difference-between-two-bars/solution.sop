@@ -1,0 +1,12 @@
+@slots literal
+{
+  "left": "X",
+  "leftValue": 12,
+  "right": "Y",
+  "rightValue": 7
+}
+
+@answer jsEval
+const slots = $slots;
+return String(slots.leftValue - slots.rightValue) + ".";
+

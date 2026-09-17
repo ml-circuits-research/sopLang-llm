@@ -1,0 +1,15 @@
+@slots literal
+{
+  "tokens": 8,
+  "moves": [
+    1,
+    2
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const winning = slots.moves.filter((move) => (slots.tokens - move) % 3 === 0);
+if (winning.length !== 1) { throw new Error("the statement does not describe a single first move"); }
+return "Take " + winning[0] + ".";
+

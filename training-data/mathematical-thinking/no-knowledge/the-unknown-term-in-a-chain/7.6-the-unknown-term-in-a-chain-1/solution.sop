@@ -1,0 +1,15 @@
+@slots literal
+{
+  "start": 7,
+  "second": 5,
+  "end": 20
+}
+
+@answer jsEval
+const slots = $slots;
+const added = slots.end - slots.second - slots.start;
+if (added < 0) {
+  throw new Error("the final amount is below the starting amount");
+}
+return String(added);
+

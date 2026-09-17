@@ -1,0 +1,48 @@
+@slots literal
+{
+  "nodes": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "edges": [
+    [
+      "A",
+      "B"
+    ],
+    [
+      "B",
+      "C"
+    ],
+    [
+      "C",
+      "D"
+    ]
+  ],
+  "start": "A"
+}
+
+@answer jsEval
+const slots = $slots;
+function adjacency(nodes, edges) {
+  const map = new Map(nodes.map((node) => [node, []]));
+  for (const [a, b] of edges) { map.get(a).push(b); map.get(b).push(a); }
+  for (const list of map.values()) list.sort();
+  return map;
+}
+function hamiltonianPath(nodes, edges, start) {
+  const neighbours = adjacency(nodes, edges);
+  const path = [start];
+  const used = new Set([start]);
+  const extend = () => {
+    if (path.length === nodes.length) return true; for (const next of neighbours.get(path.at(-1))) {
+      if (used.has(next)) continue; path.push(next); used.add(next); if (extend()) return true; path.pop(); used.delete(next);
+    }
+    return false;
+  };
+  return extend() ? path : null;
+}
+const path = hamiltonianPath(slots.nodes, slots.edges, slots.start);
+return "Yes: " + path.join("-") + ".";
+

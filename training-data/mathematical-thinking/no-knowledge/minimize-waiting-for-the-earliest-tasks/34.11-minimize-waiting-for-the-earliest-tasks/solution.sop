@@ -1,0 +1,21 @@
+@slots literal
+{
+  "tasks": [
+    {
+      "name": "A",
+      "minutes": 1
+    },
+    {
+      "name": "B",
+      "minutes": 5
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const order = slots.tasks.slice().sort((left, right) => left.minutes - right.minutes);
+const cost = (list) => list.reduce((sum, task, index) => sum + list.slice(0, index + 1).reduce((inner, other) => inner + other.minutes, 0), 0);
+const chosen = cost(order) <= cost(order.slice().reverse()) ? order : order.slice().reverse();
+return "Order " + chosen.map((task) => task.name).join(",") + ".";
+

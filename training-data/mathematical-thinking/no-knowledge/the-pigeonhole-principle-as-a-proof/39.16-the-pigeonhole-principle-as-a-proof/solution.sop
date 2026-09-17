@@ -1,0 +1,10 @@
+@slots literal
+{
+  "objects": 5,
+  "colors": 4
+}
+
+@answer jsEval
+const slots = $slots;
+return slots.objects > slots.colors ? "Yes, at least two have the same color." : "No, they can all differ.";
+

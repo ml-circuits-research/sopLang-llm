@@ -1,0 +1,18 @@
+@slots literal
+{
+  "measurements": [
+    15,
+    15,
+    25
+  ],
+  "tolerance": 1
+}
+
+@answer jsEval
+const slots = $slots;
+const base = slots.measurements[0];
+if (Math.abs(slots.measurements[1] - base) > slots.tolerance) { throw new Error("the first two measurements do not agree within the stated error"); }
+const incompatible = slots.measurements.filter((value) => Math.abs(value - base) > slots.tolerance);
+if (incompatible.length !== 1) { throw new Error(incompatible.length + " measurements are incompatible with the first two"); }
+return String(incompatible[0]) + " cm.";
+

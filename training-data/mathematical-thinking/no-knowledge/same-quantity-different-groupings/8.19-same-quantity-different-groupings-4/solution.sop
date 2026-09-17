@@ -1,0 +1,16 @@
+@slots literal
+{
+  "total": 40,
+  "first": 5,
+  "second": 8
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.total % slots.first !== 0 || slots.total % slots.second !== 0) {
+  throw new Error("one of the groupings leaves a remainder");
+}
+const firstGroups = slots.total / slots.first;
+const secondGroups = slots.total / slots.second;
+return firstGroups + " groups of " + slots.first + "; " + secondGroups + " groups of " + slots.second + ".";
+

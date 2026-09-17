@@ -1,0 +1,13 @@
+@slots literal
+{
+  "east": 2,
+  "north": 1,
+  "asked": 2
+}
+
+@answer jsEval
+const slots = $slots;
+const minimum = Math.abs(slots.east) + Math.abs(slots.north);
+if (slots.asked >= minimum) return "Yes; a route of " + slots.asked + " steps reaches the target.";
+return "No; the minimum is " + minimum + " steps.";
+

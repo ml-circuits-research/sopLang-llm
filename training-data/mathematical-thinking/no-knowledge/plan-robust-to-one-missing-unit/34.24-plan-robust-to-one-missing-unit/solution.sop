@@ -1,0 +1,11 @@
+@slots literal
+{
+  "vehicles": 3,
+  "capacity": 5,
+  "people": 10
+}
+
+@answer jsEval
+const slots = $slots;
+return (slots.vehicles - 1) * slots.capacity >= slots.people ? "Yes." : "No.";
+

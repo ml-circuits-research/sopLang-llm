@@ -1,0 +1,32 @@
+@slots literal
+{
+  "options": [
+    {
+      "name": "A",
+      "payoffs": [
+        4,
+        2
+      ]
+    },
+    {
+      "name": "B",
+      "payoffs": [
+        5,
+        0
+      ]
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let optimistic = null;
+let robust = null;
+for (const option of slots.options) {
+  const best = Math.max.apply(null, option.payoffs);
+  const worst = Math.min.apply(null, option.payoffs);
+  if (optimistic === null || best > optimistic.best) { optimistic = { name: option.name, best: best }; }
+  if (robust === null || worst > robust.worst) { robust = { name: option.name, worst: worst }; }
+}
+return "Optimistic: " + optimistic.name + "; robust: " + robust.name + ".";
+

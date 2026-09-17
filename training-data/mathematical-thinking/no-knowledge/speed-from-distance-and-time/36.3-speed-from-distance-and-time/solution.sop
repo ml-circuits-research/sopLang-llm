@@ -1,0 +1,10 @@
+@slots literal
+{
+  "distance": 18,
+  "minutes": 3
+}
+
+@answer jsEval
+const slots = $slots;
+return slots.distance / slots.minutes + " m/min.";
+

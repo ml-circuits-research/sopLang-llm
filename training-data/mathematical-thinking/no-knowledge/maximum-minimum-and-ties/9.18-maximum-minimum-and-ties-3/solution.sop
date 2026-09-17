@@ -1,0 +1,21 @@
+@slots literal
+{
+  "a": 7,
+  "b": 10,
+  "c": 10,
+  "d": 5
+}
+
+@answer jsEval
+const slots = $slots;
+const entries = [["A", slots.a], ["B", slots.b], ["C", slots.c], ["D", slots.d]];
+const highest = Math.max(...entries.map((entry) => entry[1]));
+const lowest = Math.min(...entries.map((entry) => entry[1]));
+const maxima = entries.filter((entry) => entry[1] === highest).map((entry) => entry[0]);
+const minima = entries.filter((entry) => entry[1] === lowest).map((entry) => entry[0]);
+if (minima.length !== 1) {
+  throw new Error("the minimum is not unique");
+}
+const minimum = entries.find((entry) => entry[1] === lowest)[0];
+return "Maxima: " + maxima.join(" and ") + "; minimum: " + minimum + ".";
+

@@ -1,0 +1,14 @@
+@slots literal
+{
+  "side": 3,
+  "perimeter": 12,
+  "factor": 2
+}
+
+@answer jsEval
+const slots = $slots;
+const newPerimeter = (slots.perimeter / slots.side) * slots.side * slots.factor;
+const times = newPerimeter / slots.perimeter;
+const word = times === 2 ? "doubles" : times === 3 ? "triples" : "is multiplied by " + times;
+return "It becomes " + newPerimeter + ", so it " + word + ".";
+

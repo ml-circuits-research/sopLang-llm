@@ -1,0 +1,41 @@
+@slots literal
+{
+  "capacity": 6,
+  "items": [
+    {
+      "name": "A",
+      "weight": 4,
+      "value": 7
+    },
+    {
+      "name": "B",
+      "weight": 3,
+      "value": 6
+    },
+    {
+      "name": "C",
+      "weight": 2,
+      "value": 4
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let best = null;
+for (let mask = 0; mask < (1 << slots.items.length); mask += 1) {
+  let weight = 0;
+  let value = 0;
+  const names = [];
+  for (let index = 0; index < slots.items.length; index += 1) {
+    if ((mask >> index) & 1) {
+      weight += slots.items[index].weight;
+      value += slots.items[index].value;
+      names.push(slots.items[index].name);
+    }
+  }
+  if (weight > slots.capacity) { continue; }
+  if (best === null || value > best.value || (value === best.value && names.length < best.names.length)) { best = { names, value }; }
+}
+return best.names.join("+") + ", value " + best.value + ".";
+

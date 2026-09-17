@@ -1,0 +1,18 @@
+@slots literal
+{
+  "a": [
+    "10:00",
+    "11:00"
+  ],
+  "b": [
+    "10:30",
+    "11:30"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const minutes = (text) => { const parts = String(text).split(":"); return Number(parts[0]) * 60 + Number(parts[1]); };
+const shared = Math.min(minutes(slots.a[1]), minutes(slots.b[1])) - Math.max(minutes(slots.a[0]), minutes(slots.b[0]));
+return (shared > 0 ? "Yes" : "No") + ".";
+

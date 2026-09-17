@@ -1,0 +1,24 @@
+@slots literal
+{
+  "listed": [
+    2,
+    4,
+    6
+  ],
+  "lower": 1,
+  "upper": 7
+}
+
+@answer jsEval
+const slots = $slots;
+const defined = [];
+for (let value = slots.lower + 1; value < slots.upper; value += 1) {
+  if (value % 2 === 0) { defined.push(value); }
+}
+const listed = slots.listed.slice().sort(function (left, right) { return left - right; });
+let equal = listed.length === defined.length;
+for (let index = 0; index < listed.length; index += 1) {
+  if (listed[index] !== defined[index]) { equal = false; }
+}
+return equal ? "Yes, the groups are equal." : "No, the groups are different.";
+

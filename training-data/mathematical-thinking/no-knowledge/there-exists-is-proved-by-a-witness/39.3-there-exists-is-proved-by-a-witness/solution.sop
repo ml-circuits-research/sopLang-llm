@@ -1,0 +1,15 @@
+@slots literal
+{
+  "domain": [
+    10,
+    11,
+    12
+  ],
+  "divisor": 3
+}
+
+@answer jsEval
+const slots = $slots;
+const witness = slots.domain.find((value) => value % slots.divisor === 0);
+return witness === undefined ? "There is no witness." : witness + ".";
+

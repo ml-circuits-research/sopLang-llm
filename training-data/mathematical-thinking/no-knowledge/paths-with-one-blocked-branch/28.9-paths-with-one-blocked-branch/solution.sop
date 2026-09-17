@@ -1,0 +1,33 @@
+@slots literal
+{
+  "first": [
+    "A",
+    "B"
+  ],
+  "branches": [
+    {
+      "from": "A",
+      "to": [
+        "X",
+        "Y",
+        "Z"
+      ]
+    },
+    {
+      "from": "B",
+      "to": [
+        "X",
+        "Y"
+      ]
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let total = 0;
+for (const branch of slots.branches) {
+  total += branch.to.length;
+}
+return String(total) + " paths.";
+

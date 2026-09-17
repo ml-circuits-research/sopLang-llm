@@ -1,0 +1,19 @@
+@slots literal
+{
+  "observed": [
+    5,
+    10,
+    15
+  ],
+  "guess": 20,
+  "step": 5
+}
+
+@answer jsEval
+const s = $slots;
+const last = s.observed[s.observed.length - 1];
+const consistent = s.guess === last + s.step;
+return consistent
+  ? "It is not required; " + s.guess + " is a plausible hypothesis."
+  : "No; the guess contradicts the observed sequence.";
+

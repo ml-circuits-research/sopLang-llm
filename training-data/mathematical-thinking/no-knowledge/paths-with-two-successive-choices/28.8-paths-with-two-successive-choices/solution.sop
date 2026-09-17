@@ -1,0 +1,17 @@
+@slots literal
+{
+  "first": [
+    "A",
+    "B"
+  ],
+  "second": [
+    "X",
+    "Y",
+    "Z"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+return String(slots.first.length * slots.second.length) + " paths.";
+

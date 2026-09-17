@@ -1,0 +1,16 @@
+@slots literal
+{
+  "node": "B",
+  "neighbours": [
+    "A",
+    "C",
+    "D",
+    "E"
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.neighbours.includes(slots.node)) { throw new Error("a node cannot be its own neighbour"); }
+return String(slots.neighbours.length) + ".";
+

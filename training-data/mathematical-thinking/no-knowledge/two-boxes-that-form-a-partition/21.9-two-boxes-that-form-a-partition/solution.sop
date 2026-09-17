@@ -1,0 +1,18 @@
+@slots literal
+{
+  "total": 14,
+  "low": 1,
+  "high": 14,
+  "threshold": 7
+}
+
+@answer jsEval
+const slots = $slots;
+let first = 0;
+let second = 0;
+for (let value = slots.low; value <= slots.high; value += 1) {
+  if (value <= slots.threshold) { first += 1; } else { second += 1; }
+}
+if (first + second !== slots.total) { throw new Error("the two boxes do not cover the collection"); }
+return first + " in the first box and " + second + " in the second.";
+

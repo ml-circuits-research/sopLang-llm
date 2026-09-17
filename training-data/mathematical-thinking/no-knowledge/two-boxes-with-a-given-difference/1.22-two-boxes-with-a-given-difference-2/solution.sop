@@ -1,0 +1,15 @@
+@slots literal
+{
+  "total": 12,
+  "difference": 4
+}
+
+@answer jsEval
+const slots = $slots;
+const remainder = slots.total - slots.difference;
+if (remainder < 0 || remainder % 2 !== 0) {
+  throw new Error("the total and the difference do not split into two whole boxes");
+}
+const second = remainder / 2;
+return "Box A: " + (second + slots.difference) + "; Box B: " + second + ".";
+

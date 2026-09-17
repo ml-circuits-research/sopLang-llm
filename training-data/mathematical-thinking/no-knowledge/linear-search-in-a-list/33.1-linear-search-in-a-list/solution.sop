@@ -1,0 +1,17 @@
+@slots literal
+{
+  "list": [
+    4,
+    7,
+    2,
+    9
+  ],
+  "target": 2
+}
+
+@answer jsEval
+const slots = $slots;
+const index = slots.list.indexOf(slots.target);
+if (index === -1) { throw new Error("the target does not appear in the list"); }
+return (index + 1) + " comparisons.";
+

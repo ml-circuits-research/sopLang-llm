@@ -1,0 +1,11 @@
+@slots literal
+{
+  "rows": 1,
+  "columns": 2
+}
+
+@answer jsEval
+const s = $slots;
+const rectangle = s.rows > 0 && s.columns > 0;
+return (rectangle ? 4 : 0) + " corners.";
+

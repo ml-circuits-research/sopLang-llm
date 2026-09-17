@@ -1,0 +1,14 @@
+@slots literal
+{
+  "extra": 9,
+  "right": 24
+}
+
+@answer jsEval
+const slots = $slots;
+const value = slots.right - slots.extra;
+if (value < 0) {
+  throw new Error("the right-hand side is smaller than the loose cubes alone");
+}
+return String(value);
+

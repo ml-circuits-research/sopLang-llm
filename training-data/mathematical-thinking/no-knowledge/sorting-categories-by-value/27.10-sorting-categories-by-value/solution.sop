@@ -1,0 +1,27 @@
+@slots literal
+{
+  "entries": [
+    [
+      "A",
+      3
+    ],
+    [
+      "B",
+      9
+    ],
+    [
+      "C",
+      5
+    ],
+    [
+      "D",
+      7
+    ]
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const order = [...slots.entries].sort((left, right) => right[1] - left[1]).map((entry) => entry[0]);
+return order.join(", ") + ".";
+

@@ -1,0 +1,28 @@
+@slots literal
+{
+  "degrees": [
+    [
+      "A",
+      2
+    ],
+    [
+      "B",
+      4
+    ],
+    [
+      "C",
+      1
+    ],
+    [
+      "D",
+      3
+    ]
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+let best = slots.degrees[0];
+for (const entry of slots.degrees) { if (entry[1] > best[1]) { best = entry; } }
+return best[0] + ".";
+

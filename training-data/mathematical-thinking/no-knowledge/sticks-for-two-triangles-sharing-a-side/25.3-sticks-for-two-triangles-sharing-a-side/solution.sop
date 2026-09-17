@@ -1,0 +1,11 @@
+@slots literal
+{
+  "perTriangle": 3,
+  "triangles": 2
+}
+
+@answer jsEval
+const s = $slots;
+const sticks = s.perTriangle + (s.perTriangle - 1) * (s.triangles - 1);
+return sticks + " sticks.";
+

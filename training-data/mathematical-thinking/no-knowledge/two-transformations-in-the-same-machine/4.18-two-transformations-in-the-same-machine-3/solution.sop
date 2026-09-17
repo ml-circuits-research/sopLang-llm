@@ -1,0 +1,12 @@
+@slots literal
+{
+  "add": 4,
+  "input": 4
+}
+
+@answer jsEval
+const slots = $slots;
+const correct = (slots.input + slots.add) * 2;
+const reversed = slots.input * 2 + slots.add;
+return "Correct output: " + correct + "; with the reversed order: " + reversed + ".";
+

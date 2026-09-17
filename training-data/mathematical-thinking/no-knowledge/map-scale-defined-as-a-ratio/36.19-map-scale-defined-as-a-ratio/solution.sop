@@ -1,0 +1,10 @@
+@slots literal
+{
+  "scale": 5,
+  "centimeters": 7
+}
+
+@answer jsEval
+const slots = $slots;
+return slots.scale * slots.centimeters + " km.";
+

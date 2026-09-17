@@ -1,0 +1,23 @@
+@slots literal
+{
+  "x": 7,
+  "even": {
+    "op": "divide",
+    "operand": 2
+  },
+  "odd": {
+    "op": "add",
+    "operand": 1
+  }
+}
+
+@answer jsEval
+const slots = $slots;
+const step = slots.x % 2 === 0 ? slots.even : slots.odd;
+let y = slots.x;
+if (step.op === "add") { y = y + step.operand; }
+else if (step.op === "subtract") { y = y - step.operand; }
+else if (step.op === "multiply") { y = y * step.operand; }
+else { y = y / step.operand; }
+return y + ".";
+

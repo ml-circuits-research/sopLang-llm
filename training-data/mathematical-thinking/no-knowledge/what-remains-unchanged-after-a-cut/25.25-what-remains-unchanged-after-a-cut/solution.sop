@@ -1,0 +1,11 @@
+@slots literal
+{
+  "cuts": 1,
+  "discarded": false
+}
+
+@answer jsEval
+const s = $slots;
+const pieces = s.cuts + 1;
+return "The number of pieces changes; the total amount " + (s.discarded ? "decreases" : "remains the same") + ".";
+

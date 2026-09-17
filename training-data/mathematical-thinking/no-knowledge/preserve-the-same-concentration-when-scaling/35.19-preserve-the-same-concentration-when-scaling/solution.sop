@@ -1,0 +1,17 @@
+@slots literal
+{
+  "syrup": 2,
+  "water": 8,
+  "word": "double"
+}
+
+@answer jsEval
+const slots = $slots;
+function reduce(a, b) { return b === 0 ? a : reduce(b, a % b); }
+const factor = slots.word === "double" ? 2 : slots.word === "triple" ? 3 : 1;
+const syrup = slots.syrup * factor;
+const water = slots.water * factor;
+const divide = reduce(syrup, syrup + water);
+return String(syrup) + " parts syrup, " + String(water) + " parts water; the fraction remains "
+  + String(syrup / divide) + "/" + String((syrup + water) / divide) + ".";
+

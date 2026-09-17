@@ -1,0 +1,26 @@
+@slots literal
+{
+  "a": [
+    1,
+    4,
+    7,
+    10
+  ],
+  "b": [
+    2,
+    5,
+    8,
+    11
+  ],
+  "period": 3
+}
+
+@answer jsEval
+const slots = $slots;
+const gcd = (left, right) => { let a = Math.abs(left); let b = Math.abs(right); while (b !== 0) { const next = a % b; a = b; b = next; } return a; };
+const periodA = slots.a[1] - slots.a[0];
+const periodB = slots.b[1] - slots.b[0];
+if (periodA !== slots.period || periodB !== slots.period) { throw new Error("the stated period does not match the two day lists"); }
+const coincide = (slots.b[0] - slots.a[0]) % gcd(periodA, periodB) === 0;
+return (coincide ? "Yes" : "No") + ".";
+

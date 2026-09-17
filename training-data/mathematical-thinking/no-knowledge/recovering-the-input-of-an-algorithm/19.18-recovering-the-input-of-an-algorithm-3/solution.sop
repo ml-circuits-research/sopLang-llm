@@ -1,0 +1,15 @@
+@slots literal
+{
+  "add": 5,
+  "multiply": 3,
+  "output": 33
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.output % slots.multiply !== 0) {
+  throw new Error("the output is not an exact multiple of the multiplier");
+}
+const input = slots.output / slots.multiply - slots.add;
+return String(input);
+

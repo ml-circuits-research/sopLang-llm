@@ -1,0 +1,20 @@
+@slots literal
+{
+  "added": 7,
+  "removed": 3,
+  "final": 14
+}
+
+@answer jsEval
+const slots = $slots;
+const steps = [{ op: "add", amount: slots.added }, { op: "remove", amount: slots.removed }];
+let value = slots.final;
+for (let index = steps.length - 1; index >= 0; index -= 1) {
+  const step = steps[index];
+  value = step.op === "add" ? value - step.amount : value + step.amount;
+}
+if (value < 0) {
+  throw new Error("the reconstructed start is negative");
+}
+return String(value);
+

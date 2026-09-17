@@ -1,0 +1,23 @@
+@slots literal
+{
+  "a": {
+    "period": 2,
+    "start": 2
+  },
+  "b": {
+    "period": 3,
+    "start": 3
+  }
+}
+
+@answer jsEval
+const slots = $slots;
+const occursOn = (activity, day) => day >= activity.start && (day - activity.start) % activity.period === 0;
+const limit = slots.a.start + slots.b.start + slots.a.period * slots.b.period;
+let day = 1;
+while (day <= limit && !(occursOn(slots.a, day) && occursOn(slots.b, day))) {
+  day += 1;
+}
+if (day > limit) { throw new Error("the two activities never occur on the same day"); }
+return "Day " + day + ".";
+

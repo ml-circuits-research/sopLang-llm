@@ -1,0 +1,12 @@
+@slots literal
+{
+  "trays": 3,
+  "objects": 5,
+  "shelves": 2
+}
+
+@answer jsEval
+const slots = $slots;
+const total = slots.shelves * slots.trays * slots.objects;
+return String(total);
+

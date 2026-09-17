@@ -1,0 +1,19 @@
+@slots literal
+{
+  "minutes": [
+    0,
+    10,
+    20,
+    30
+  ],
+  "step": 10,
+  "after": 23
+}
+
+@answer jsEval
+const slots = $slots;
+if (slots.step <= 0) { throw new Error("the departures are not increasing"); }
+let minute = slots.minutes[0];
+while (minute <= slots.after) { minute += slots.step; }
+return "Minute " + minute + ".";
+

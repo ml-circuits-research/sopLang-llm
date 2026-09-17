@@ -1,0 +1,15 @@
+@slots literal
+{
+  "direction": "right",
+  "mirror": "vertical"
+}
+
+@answer jsEval
+const s = $slots;
+const flip = {
+  vertical: { left: "right", right: "left" },
+  horizontal: { up: "down", down: "up" }
+};
+const direction = flip[s.mirror][s.direction];
+return "It will point " + direction + " and have the same length.";
+

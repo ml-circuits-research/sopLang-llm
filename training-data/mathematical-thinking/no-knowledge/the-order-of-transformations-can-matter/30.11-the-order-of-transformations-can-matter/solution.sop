@@ -1,0 +1,12 @@
+@slots literal
+{
+  "column": 2,
+  "add": 1
+}
+
+@answer jsEval
+const slots = $slots;
+const tThenS = -(slots.column + slots.add);
+const sThenT = -slots.column + slots.add;
+return tThenS === sThenT ? "Yes; the results are equal." : "No; the results differ.";
+
