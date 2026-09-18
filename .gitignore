@@ -141,3 +141,12 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Training infrastructure artifacts (training/PLAN.md defines the layout)
+training/.venv/
+training/models/
+training/checkpoints/
+tools/
+*.gguf
+__pycache__/
+*.pyc

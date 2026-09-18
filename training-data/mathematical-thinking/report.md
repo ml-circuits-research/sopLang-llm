@@ -288,6 +288,22 @@ The source itself prints these missing-space artifacts around digits (a word glu
 - 31.21: and2
 - 31.22: and1
 
+## Invariant-answer plans
+
+The provenance probe perturbs every compiled value and asks whether the executed answer changes. Seven plan fingerprints of this book print one verdict for the whole family, and their `answer` wire returns that verdict as a constant after probing the shape of `slots`; no perturbation of the compiled values can change the answer, so the verifier reports those rows as "could not be proven either way". They are listed here because the invariance is a property of the source family rather than an unresolved defect: every one of these circuits reproduces the printed answer of its manifest row, and every statement of the family carries the same printed verdict.
+
+| plan | family | rows | shipped answer |
+| --- | --- | --- | --- |
+| e49de3c9796e | Transforming a shape and the path of a point | 1 | All points must move by the same displacement. |
+| 7e89232cd46e | A chain of implications does not work backward | 1 | No. |
+| 96788d84b56f | A rule true for all tested examples is not automatically universal | 1 | No. |
+| 59667009a39b | Detect a missing letter using the length field | 1 | The message is incomplete or corrupted. |
+| 4ac8985e5563 | Run-length coding and when it compresses | 1 | Yes. |
+| 80f981e6da33 | Run-length coding can enlarge a message | 1 | No; it makes it longer. |
+| 597657b1ffa5 | Symmetry broken by a mark | 1 | No. |
+
+Consequence for training: these rows teach a constant-verdict plan — the compiled values are extracted and shape-checked, but the computation does not dispatch on them — which is exactly what the source family prints. Whether such families are extended with cases whose verdict differs is decided by the failure analysis of the first training run, not here.
+
 ## Limitations
 
 - The compiled values of every circuit come from the reference parse of its problem family, because the pilot runs without a teacher model: the shipped circuit is the plan a model would emit after reading the statement. The stage that replaces the reference parse with a real model call keeps the same acceptance checks.
