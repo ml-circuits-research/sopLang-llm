@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { registerDocxSource } from '../context/sources/docx.mjs';
-import { BOOK_PATH, parseMathThinking, BOOK_QUARANTINE_RULES } from '../teacher/sources/math-thinking.mjs';
+import { BOOK_PATH, parseMathThinking, BOOK_QUARANTINE_RULES, normalizePrintedAnswer } from '../teacher/sources/math-thinking.mjs';
 import { normalizeAnswer, answerMatches } from '../teacher/naming.mjs';
 
 function book() {
@@ -45,13 +45,26 @@ test('the first problem keeps the source text and the reference material apart',
 test('the quarantine rules name the defects of this source', () => {
   const problems = book().problems;
   const quarantined = problems.filter((problem) => BOOK_QUARANTINE_RULES.some((rule) => rule.test(problem)));
+  assert.deepEqual(quarantined, [], 'no problem of this book is quarantined: the polarity answers are normalized instead');
   assert.deepEqual(
-    quarantined.map((problem) => problem.id),
-    ['19.11', '19.12', '19.13', '19.14', '19.15'],
-    'the book prints non-English polarity tokens in five problems of chapter 19'
+    BOOK_QUARANTINE_RULES.map((rule) => rule.id),
+    ['missing-answer', 'missing-statement']
   );
-  assert.equal(quarantined[0].printedAnswer.trim(), 'Da.');
-  assert.equal(quarantined[1].printedAnswer.trim(), 'Nu.');
+});
+
+test('the source declares the English equivalent of its polarity answers', () => {
+  const polarity = book().problems.filter((problem) => ['19.11', '19.12', '19.13', '19.14', '19.15'].includes(problem.id));
+  assert.equal(polarity[0].printedAnswer.trim(), 'Da.', 'the book keeps its own token');
+  assert.equal(polarity[1].printedAnswer.trim(), 'Nu.');
+  assert.deepEqual(
+    polarity.map((problem) => normalizePrintedAnswer(problem)),
+    ['Yes.', 'No.', 'Yes.', 'No.', 'Yes.']
+  );
+  assert.equal(
+    normalizePrintedAnswer({ printedAnswer: 'Ana, Mara.' }),
+    'Ana, Mara.',
+    'an answer without a declared equivalent is shipped verbatim'
+  );
 });
 
 test('answer comparison ignores formatting but not values', () => {

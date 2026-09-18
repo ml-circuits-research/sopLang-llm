@@ -1,0 +1,42 @@
+@slots literal
+{
+  "visitor": {
+    "name": "Jules",
+    "age": 34,
+    "homeVest": true,
+    "arrival": "12:10"
+  },
+  "minor": {
+    "name": "Kara",
+    "age": 17
+  },
+  "openFrom": "11:00",
+  "openUntil": "19:00",
+  "intermittentAlarm": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.visitor === "object" && slots.visitor !== null, "the case must describe the visitor wearing the vest");
+probe(typeof slots.minor === "object" && slots.minor !== null, "the case must describe the person asking about the cabin");
+probe(Number.isInteger(slots.visitor.age) && slots.visitor.age >= 0, "the visitor age must be a whole number");
+probe(Number.isInteger(slots.minor.age) && slots.minor.age >= 0, "the asking person age must be a whole number");
+probe(slots.visitor.name !== slots.minor.name, "the two described people must be different");
+const visitorClause = slots.visitor.homeVest
+  ? slots.visitor.name + " may not enter in the home vest (the rail vest is required)."
+  : slots.visitor.name + " may enter in the rail vest.";
+const minorClause = slots.minor.age < 18
+  ? slots.minor.name + " may not enter: under 18; the cabin is still inside the perimeter."
+  : slots.minor.name + " may enter: adult and willing to wait outside the perimeter.";
+const alarmClause = slots.intermittentAlarm
+  ? "The intermittent alarm means stay put."
+  : "The continuous alarm means leave by the east gate.";
+return visitorClause + " " + minorClause + " " + alarmClause;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

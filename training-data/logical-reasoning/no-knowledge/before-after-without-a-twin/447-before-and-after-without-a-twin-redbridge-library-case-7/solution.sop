@@ -1,0 +1,29 @@
+@slots literal
+{
+  "place": "Redbridge",
+  "institution": "library",
+  "itemPlural": "atlases",
+  "itemSingular": "atlas",
+  "rise": "higher",
+  "letterAccepter": "Dora",
+  "cautionSpeaker": "Eli",
+  "comparison": "without",
+  "commonsenseSpeaker": "Fran"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the expansion");
+probe(typeof slots.itemSingular === "string" && slots.itemSingular.length > 0, "the case must name the item the rule lends");
+probe(slots.itemPlural.slice(0, slots.itemSingular.length) === slots.itemSingular, "the recorded item and the thing the rule lends must be the same word");
+probe(slots.rise === "higher", "the recorded damage must have risen after the change");
+probe(slots.comparison === "without", "the case must state a before-after without a comparison town");
+return "No. Sequence is a clue, not a finished cause. Other changes are not closed off.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,61 @@
+@slots literal
+{
+  "person": "Sam",
+  "spoonSticksToMagnet": true,
+  "plateLightsTester": false,
+  "trialMaterial": "glass",
+  "wantsBoard": true,
+  "materials": [
+    {
+      "name": "copper",
+      "description": "conducts heat and electricity, does not magnetise"
+    },
+    {
+      "name": "wood",
+      "description": "does not conduct electricity here, burns"
+    },
+    {
+      "name": "glass",
+      "description": "does not conduct, does not burn easily, breaks"
+    },
+    {
+      "name": "steel",
+      "description": "can magnetise, conducts"
+    }
+  ],
+  "magnetising": [
+    "steel"
+  ],
+  "nonConducting": [
+    "wood",
+    "glass"
+  ],
+  "flammable": [
+    "wood"
+  ],
+  "brittle": [
+    "glass"
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person");
+probe(slots.spoonSticksToMagnet === true, "the spoon must stick to a magnet");
+probe(slots.plateLightsTester === false, "the plate must fail the continuity tester");
+probe(Array.isArray(slots.materials) && slots.materials.length >= 4, "the table must list its materials");
+probe(slots.magnetising.length === 1 && slots.flammable.length === 1 && slots.brittle.length === 1, "exactly one material must magnetise, burn, and break");
+probe(slots.nonConducting.indexOf(slots.trialMaterial) !== -1, "the trial the plate matched must not conduct");
+const capitalise = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+const spoonClause = "Spoon: " + slots.magnetising[0] + ".";
+const plateClause = "Plate: " + slots.trialMaterial + "-like behaviour.";
+const boardClause = capitalise(slots.flammable[0]) + " burns; " + slots.brittle[0] + " is not a chopping board.";
+return spoonClause + " " + plateClause + " " + boardClause;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,16 @@
+# Explanation 9.5.3 — Normalization and Capacity
+
+## Explanation
+
+1. Normalizing first: 57 samples × 0.5 = 28.5 standard units.
+2. Adjusting for the 12% loss, enough input must be supplied for 28.5 / 0.88 = 32.39 standard units.
+3. Discretizing that need into containers of 22 standard units gives ceil(32.39/22) = 2 capacity units.
+4. Comparing with the 5 available containers makes the plan feasible; the color-coding note does not affect capacity.
+
+## Result
+
+**Answer.** The operation needs 2 capacity units and is feasible. The decomposition follows the semantic transformations: normalize → adjust for loss → discretize into containers → compare with availability.
+
+**Verification.** exact_verified: the executed circuit produced this answer, and the family computation reproduced it from the statement. The independence limitation of this class is stated in `report.md`.
+
+**Program.** `solution.sop` (compiled values in `slots`, computation in `jsEval`).

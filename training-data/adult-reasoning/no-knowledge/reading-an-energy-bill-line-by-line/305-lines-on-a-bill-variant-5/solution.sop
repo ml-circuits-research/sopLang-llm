@@ -1,0 +1,45 @@
+@slots literal
+{
+  "person": "Cara",
+  "district": "Station Quarter",
+  "useKwh": 128,
+  "rateCents": 74,
+  "standingCents": 1200,
+  "standingDays": 30,
+  "levyCents": 450,
+  "oldIndex": 10230,
+  "newIndex": 10358,
+  "freeUntilDay": 25,
+  "dailyPenaltyPercentHundredths": 2,
+  "payer": "Cara",
+  "paidOnDay": 28,
+  "daysLate": 3,
+  "claimedStandingCents": 1200,
+  "askedDaysLate": 3
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.person === "string" && slots.person.length > 0, "the statement must name the person the bill belongs to");
+probe(typeof slots.district === "string" && slots.district.length > 0, "the statement must name the ward or district");
+probe(Number.isInteger(slots.useKwh) && slots.useKwh > 0, "the billed consumption must be a positive whole number of kWh");
+probe(Number.isInteger(slots.rateCents) && slots.rateCents > 0, "the energy rate must be a positive amount");
+probe(Number.isInteger(slots.standingCents) && slots.standingCents > 0, "the standing charge must be a positive amount");
+probe(Number.isInteger(slots.levyCents) && slots.levyCents > 0, "the environment levy must be a positive amount");
+probe(slots.newIndex - slots.oldIndex === slots.useKwh, "the index readings must confirm the billed consumption");
+probe(slots.payer === slots.person, "the payer must be the person the bill belongs to");
+probe(slots.daysLate === slots.paidOnDay - slots.freeUntilDay, "the late days must follow from the payment day and the free-until day");
+probe(slots.askedDaysLate === slots.daysLate, "the question must ask about the late days the statement states");
+const totalCents = slots.useKwh * slots.rateCents + slots.standingCents + slots.levyCents;
+const penaltyTenThousandths = Math.round((totalCents * slots.daysLate * slots.dailyPenaltyPercentHundredths) / 100);
+const totalText = Math.floor(totalCents / 100) + "." + String(totalCents % 100).padStart(2, "0");
+const penaltyText = Math.floor(penaltyTenThousandths / 10000) + "." + String(penaltyTenThousandths % 10000).padStart(4, "0");
+return "Total " + totalText + ". Penalty " + penaltyText + ". The standing charge is monthly, not daily.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

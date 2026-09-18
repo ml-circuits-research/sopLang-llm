@@ -1,0 +1,48 @@
+@slots literal
+{
+  "quantity": "bending angle",
+  "unit": "degrees",
+  "values": [
+    20,
+    21,
+    20,
+    19,
+    21,
+    30
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.quantity === "string" && slots.quantity.length > 0, "the series must name the measured quantity");
+probe(Array.isArray(slots.values) && slots.values.length >= 4, "the series must list at least four repeated measurements");
+probe(slots.values.every((value) => Number.isFinite(value) && value > 0), "every measurement must be a positive finite number");
+const sorted = [...slots.values].sort((left, right) => left - right);
+const median = (list) => { const half = Math.floor(list.length / 2); return list.length % 2 === 1 ? list[half] : (list[half - 1] + list[half]) / 2; };
+const center = median(sorted);
+const half = Math.floor(sorted.length / 2);
+const low = median(sorted.slice(0, half));
+const high = median(sorted.slice(sorted.length - half));
+const spread = high - low;
+const suspicious = slots.values.filter((value) => value < low - 1.5 * spread || value > high + 1.5 * spread);
+probe(suspicious.length <= 1, "the series must show at most one value beyond the fences, not " + suspicious.length);
+probe(Number.isFinite(low) && Number.isFinite(high) && spread >= 0, "the fences of the series must be finite and ordered");
+probe(center >= low && center <= high, "the robust center must lie between the first and third quartiles");
+probe(suspicious.length === 0 || suspicious[0] !== center, "an isolated point must differ from the robust center");
+const steps = slots.values.slice(1).map((value, index) => value - slots.values[index]);
+const drifting = steps.every((step) => step === steps[0] && step !== 0);
+if (suspicious.length === 1) {
+  return "The series contains an isolated suspicious point: " + suspicious[0] + "; verification must precede any correction. A robust center is the median " + center + ".";
+}
+if (!drifting) {
+  return "The series shows no evident outlier in the model; verification must precede any correction. A robust center is the median " + center + ".";
+}
+return "The diagnosis of the series: a gradual drift, not a single outlier; verification must precede any correction. A robust center is the median " + center + ", but the series must also be analyzed in temporal order.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

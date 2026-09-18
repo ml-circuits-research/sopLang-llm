@@ -1,0 +1,69 @@
+@slots literal
+{
+  "routes": [
+    {
+      "name": "Kite–Meadow–Dover",
+      "segments": [
+        "Kite",
+        "Meadow",
+        "Dover"
+      ],
+      "costs": [
+        4,
+        5
+      ],
+      "total": 9
+    },
+    {
+      "name": "Kite–Pine–Iris–Dover",
+      "segments": [
+        "Kite",
+        "Pine",
+        "Iris",
+        "Dover"
+      ],
+      "costs": [
+        3,
+        3,
+        3
+      ],
+      "total": 9
+    },
+    {
+      "name": "Kite–Quartz–Dover",
+      "segments": [
+        "Kite",
+        "Quartz",
+        "Dover"
+      ],
+      "costs": [
+        7,
+        2
+      ],
+      "total": 9
+    }
+  ],
+  "closed": []
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.routes) && slots.routes.length > 0, "the statement must list at least one candidate route");
+probe(Array.isArray(slots.closed), "the closed-road list must be an array");
+const usable = slots.routes.filter((route) => slots.closed.every((segment) => !route.name.includes(segment)));
+probe(usable.length > 0, "at least one listed route must avoid every closed road");
+let best = usable[0];
+for (const route of usable.slice(1)) {
+  if (route.total < best.total) {
+    best = route;
+  }
+}
+return "Use " + best.name + "; total cost " + best.total + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

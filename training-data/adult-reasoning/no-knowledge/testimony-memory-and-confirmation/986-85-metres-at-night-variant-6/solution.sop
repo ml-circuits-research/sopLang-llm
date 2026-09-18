@@ -1,0 +1,51 @@
+@slots literal
+{
+  "far": {
+    "name": "Elena",
+    "distance": 85,
+    "atNight": true,
+    "firstColour": "green",
+    "secondColour": "blue",
+    "changed": true
+  },
+  "close": {
+    "name": "Farid",
+    "colour": "blue",
+    "avoided": "Elena",
+    "closeUp": true,
+    "daylight": true,
+    "independent": true
+  },
+  "echo": {
+    "name": "Gina",
+    "source": "Elena",
+    "repeatsFirstVersion": true
+  }
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots === "object" && slots !== null, "the case must carry the three accounts");
+probe(typeof slots.far.name === "string" && slots.far.name.length > 0, "the far account must name its witness");
+probe(typeof slots.close.name === "string" && slots.close.name.length > 0, "the close-up account must name its witness");
+probe(typeof slots.echo.name === "string" && slots.echo.name.length > 0, "the echoing account must name its narrator");
+probe(slots.far.name !== slots.close.name && slots.far.name !== slots.echo.name && slots.close.name !== slots.echo.name, "the three accounts must name three different people");
+probe(Number.isInteger(slots.far.distance) && slots.far.distance > 0, "the far witness must stand a positive whole number of metres away");
+probe(slots.echo.source === slots.far.name, "the echoing account must repeat the far witness’s first version");
+probe(slots.close.independent === true, "the close-up account must not have spoken to the far witness");
+probe(slots.close.avoided === slots.far.name, "the close-up account must name the far witness it avoided");
+const weaknesses = [];
+if (slots.far.distance >= 25) weaknesses.push("distance");
+if (slots.far.atNight) weaknesses.push("night");
+if (slots.far.changed) weaknesses.push("change");
+probe(weaknesses.length > 0, "the far account must carry at least one weakness from the notebook");
+probe(slots.close.closeUp === true && slots.close.daylight === true, "the firmer account must be close up in daylight");
+return slots.close.name + "’s. " + slots.far.name + "’s is weakened by " + weaknesses.join(", ") + ". " + slots.echo.name + " is an echo, not confirmation.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

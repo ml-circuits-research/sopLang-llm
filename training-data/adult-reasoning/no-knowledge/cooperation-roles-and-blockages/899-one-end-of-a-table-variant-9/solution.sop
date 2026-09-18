@@ -1,0 +1,28 @@
+@slots literal
+{
+  "lifter": "Tess",
+  "requiredPeople": 2,
+  "presentPeople": 1,
+  "blocker": "Ugo",
+  "phoneMinutes": 18,
+  "doorNarrow": true,
+  "dragForbidden": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.lifter === "string" && slots.lifter.length > 0, "the case must name the person lifting one end");
+probe(typeof slots.blocker === "string" && slots.blocker.length > 0, "the case must name the person on the phone");
+probe(slots.lifter !== slots.blocker, "the lifting person and the blocked person must be different");
+probe(slots.requiredPeople === 2 && slots.presentPeople === 1, "moving the table must need two people with only one present");
+probe(Number.isInteger(slots.phoneMinutes) && slots.phoneMinutes > 0, "the phone time must be a positive whole number of minutes");
+probe(slots.doorNarrow === true && slots.dragForbidden === true, "the door and floor prohibitions must both hold");
+return "No. The second person is missing. The floor is not an allowed path. " + slots.blocker + "\u2019s phone holds the resource.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

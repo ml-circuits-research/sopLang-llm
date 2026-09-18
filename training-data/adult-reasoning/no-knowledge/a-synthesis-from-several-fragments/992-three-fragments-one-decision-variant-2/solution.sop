@@ -1,0 +1,51 @@
+@slots literal
+{
+  "place": "Forest Parish",
+  "buyer": "Ned",
+  "quantityKg": 2,
+  "pricePerKg": 19,
+  "budget": 50,
+  "closesAt": 1020,
+  "arrival": 1010,
+  "lastBoarding": 1030,
+  "walkMinutes": 8,
+  "shoppingMinutes": null
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots === "object" && slots !== null, "the case must carry the three fragments");
+probe(typeof slots.buyer === "string" && slots.buyer.length > 0, "the purchase fragment must name the buyer");
+probe(typeof slots.place === "string" && slots.place.length > 0, "the closing fragment must name the place");
+probe(Number.isInteger(slots.quantityKg) && slots.quantityKg > 0, "the purchase must ask for a positive whole number of kilograms");
+probe(Number.isInteger(slots.pricePerKg) && slots.pricePerKg > 0, "the sugar must carry a positive whole-number price per kilogram");
+probe(Number.isInteger(slots.budget) && slots.budget > 0, "the buyer must carry a positive whole-number budget");
+probe(Number.isInteger(slots.walkMinutes) && slots.walkMinutes > 0, "the walk from the stop to the door must be a positive whole number of minutes");
+probe(slots.closesAt > slots.arrival, "the shop must close after the bus arrives");
+probe(slots.lastBoarding > slots.arrival, "the last boarding back must leave after the bus arrives");
+const toClock = (total) => {
+  const wrapped = ((total % 1440) + 1440) % 1440;
+  return String(Math.floor(wrapped / 60)).padStart(2, "0") + ":" + String(wrapped % 60).padStart(2, "0");
+};
+const cost = slots.quantityKg * slots.pricePerKg;
+const moneyOk = cost <= slots.budget;
+const moneyClause = moneyOk
+  ? "Money: " + cost + " ≤ " + slots.budget + " → ok."
+  : "Money: " + cost + " > " + slots.budget + " → no.";
+const arrivalPlus = slots.arrival + slots.walkMinutes;
+const minutesLeft = slots.closesAt - arrivalPlus;
+const minutesText = minutesLeft === 1 ? "1 minute" : minutesLeft + " minutes";
+const timeOk = slots.shoppingMinutes !== null && slots.shoppingMinutes <= minutesLeft;
+const timeClause = "Time: " + toClock(slots.arrival) + "+" + slots.walkMinutes + " min=" + toClock(arrivalPlus) + ", close " + toClock(slots.closesAt) + " — " + minutesText + " in the shop, " + (timeOk ? "enough." : "not given as enough.");
+const verdict = moneyOk && timeOk
+  ? "The synthesis is a sure yes: both time and money suffice."
+  : (timeOk ? "The synthesis is not a sure yes: money is not secured." : "The synthesis is not a sure yes: time is not secured.");
+return moneyClause + " " + timeClause + " " + verdict;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

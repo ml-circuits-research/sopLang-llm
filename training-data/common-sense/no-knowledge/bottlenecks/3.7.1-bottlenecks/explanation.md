@@ -1,0 +1,22 @@
+# Explanation 3.7.1 — Bottlenecks
+
+## Explanation
+
+1. Because every unit passes through every serial stage, the capacity of the process is the smallest stage capacity, so the initial capacity is min(A=150, B=130, C=140, D=90) = 90 participants/hour.
+2. Stage D grows by 30%, from 90 to 117 participants/hour; the other stages keep their capacities.
+3. The smallest capacity after the improvement is 117 participants/hour, attained by D, so that stage is the final bottleneck.
+4. Adding the stage capacities would treat serial stages as if they were parallel sources, which the process rule excludes.
+
+Reference solution as printed in the source (template 3, 3 steps):
+
+1. Because every unit must pass through every serial stage, initial throughput is min(150, 130, 140, 90) = 90 participants/hour.
+2. Stage D increases from 90 to 117 participants/hour.
+3. The new capacities are 150, 130, 140, 117. Their minimum is 117, so the bottleneck is D. Adding capacities would incorrectly treat required serial stages as if they were parallel sources.
+
+## Result
+
+**Answer.** Initial capacity: 90 participants/hour. After the improvement: 117 participants/hour. Final bottleneck stage(s): D.
+
+**Verification.** exact_verified: the executed circuit produced this answer, and the family computation reproduced it from the statement. The independence limitation of this class is stated in `report.md`.
+
+**Program.** `solution.sop` (compiled values in `slots`, computation in `jsEval`).

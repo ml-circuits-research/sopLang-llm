@@ -1,0 +1,34 @@
+@slots literal
+{
+  "first": {
+    "name": "Mira",
+    "north": 280,
+    "east": 140
+  },
+  "second": {
+    "name": "Ned",
+    "north": 280,
+    "east": 140
+  },
+  "town": "Station Quarter",
+  "gridWithoutDiagonals": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.first === "object" && slots.first !== null, "the case must describe the first walker");
+probe(typeof slots.second === "object" && slots.second !== null, "the case must describe the second walker");
+probe(slots.first.name !== slots.second.name, "the two walkers must be different people");
+probe(slots.first.north > 0 && slots.first.east > 0, "both legs of the first walk must be positive distances");
+probe(slots.second.north > 0 && slots.second.east > 0, "both legs of the second walk must be positive distances");
+probe(slots.gridWithoutDiagonals === true, "the statement must place the walks on a grid without diagonals");
+probe(slots.first.north === slots.second.north && slots.first.east === slots.second.east, "the two walks must cover the same north and east distances in the opposite order");
+return "Yes. On a grid, north " + slots.first.north + " + east " + slots.first.east + " = east " + slots.second.east + " + north " + slots.second.north + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

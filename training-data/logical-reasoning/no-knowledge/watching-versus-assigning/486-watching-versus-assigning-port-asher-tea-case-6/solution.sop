@@ -1,0 +1,40 @@
+@slots literal
+{
+  "place": "Port Asher",
+  "observedPage": "A",
+  "observedSubject": "evening tea",
+  "observedOutcome": "easier nights",
+  "assignedPage": "B",
+  "assignedSubject": "tea",
+  "assignedCount": 100,
+  "restCount": 100,
+  "measure": "rate",
+  "equate": "Ade",
+  "equatedLeft": "A",
+  "equatedRight": "B",
+  "design": "Bela",
+  "leakyPage": "A",
+  "betterPage": "B",
+  "designSubject": "tea",
+  "unnatural": "Chris"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the two pages must name their place");
+probe(typeof slots.observedPage === "string" && slots.observedPage.length > 0, "the watching page must carry a label");
+probe(typeof slots.assignedPage === "string" && slots.assignedPage.length > 0, "the assigned page must carry a label");
+probe(slots.observedPage !== slots.assignedPage, "the watching page and the assigned page must be different pages");
+probe(Number.isInteger(slots.assignedCount) && slots.assignedCount > 0, "the assigned group must have a positive listed size");
+probe(Number.isInteger(slots.restCount) && slots.restCount > 0, "the rest-only group must have a positive listed size");
+probe(slots.equatedLeft === slots.observedPage && slots.equatedRight === slots.assignedPage, "the equating verdict must compare the watching page with the assigned page");
+probe(slots.leakyPage === slots.observedPage && slots.betterPage === slots.assignedPage, "the design verdict must name the watching page as leaky and the assigned page as better");
+return "Page " + slots.assignedPage + ", as written. Page " + slots.observedPage + " observes choosers. Design, not sincerity, is the difference.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

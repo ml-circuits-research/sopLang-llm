@@ -1,0 +1,30 @@
+@slots literal
+{
+  "seller": "Elena",
+  "buyer": "Farid",
+  "floor": 470,
+  "ceiling": 520,
+  "oneObject": true,
+  "cashToday": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.seller === "string" && slots.seller.length > 0, "the case must name the side with the floor");
+probe(typeof slots.buyer === "string" && slots.buyer.length > 0, "the case must name the side with the ceiling");
+probe(slots.seller !== slots.buyer, "the two sides of the bargain must be different people");
+probe(Number.isInteger(slots.floor) && slots.floor > 0, "the floor must be a positive whole amount");
+probe(Number.isInteger(slots.ceiling) && slots.ceiling > 0, "the ceiling must be a positive whole amount");
+probe(slots.floor <= slots.ceiling, "the written intervals must overlap");
+probe((slots.floor + slots.ceiling) % 2 === 0, "the common interval must have a whole middle figure");
+const middle = (slots.floor + slots.ceiling) / 2;
+probe(slots.cashToday === true && slots.oneObject === true, "the sheet must fix one object and cash today");
+return "Yes, [" + slots.floor + ", " + slots.ceiling + "]. Example: " + middle + " cash today.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

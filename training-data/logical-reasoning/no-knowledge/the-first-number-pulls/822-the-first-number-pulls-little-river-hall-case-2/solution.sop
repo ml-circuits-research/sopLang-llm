@@ -1,0 +1,34 @@
+@slots literal
+{
+  "place": "Little River",
+  "anchor": 80,
+  "firstCount": 18,
+  "secondCount": 17,
+  "guessWord": "forty",
+  "guess": 40,
+  "jokeVoice": "Ben",
+  "anchoringVoice": "Cara",
+  "liveVoice": "Nia",
+  "liveAnchor": 80,
+  "liveCount": 18
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the hall");
+probe(Number.isInteger(slots.anchor) && slots.anchor > 0, "the joking number must be a positive integer");
+probe(Number.isInteger(slots.firstCount) && slots.firstCount > 0 && Number.isInteger(slots.secondCount) && slots.secondCount > 0, "both chair counts must be positive integers");
+probe(slots.jokeVoice !== slots.anchoringVoice && slots.jokeVoice !== slots.liveVoice && slots.anchoringVoice !== slots.liveVoice, "the three readings must belong to three different speakers");
+probe(slots.liveAnchor === slots.anchor && slots.liveCount === slots.firstCount, "the last speaker must quote the joking number and the first count");
+probe(slots.anchor !== slots.firstCount && slots.anchor !== slots.secondCount, "the joking number must not be one of the counted values");
+probe(slots.firstCount !== slots.secondCount, "the two independent counts must differ");
+probe(Number.isInteger(slots.guess) && slots.guess > slots.firstCount && slots.guess < slots.anchor, "the quick guesses must settle between the counted value and the joking number");
+return "Yes. Anchors do not need to be sincere. Compare " + slots.firstCount + " with " + slots.secondCount + ", not with a theatrical " + slots.anchor + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

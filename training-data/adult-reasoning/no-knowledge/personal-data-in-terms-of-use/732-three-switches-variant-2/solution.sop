@@ -1,0 +1,31 @@
+@slots literal
+{
+  "name": "Sam",
+  "retentionMonths": 12,
+  "newsSwitchInAccount": true,
+  "emailListNotSold": true,
+  "photosPublicWhileInApp": true,
+  "beliefPhotosPrivate": true,
+  "beliefHistoryDeletedAtOnce": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.name === "string" && slots.name.length > 0, "the case must attribute the belief to a named reader");
+probe(Number.isInteger(slots.retentionMonths) && slots.retentionMonths > 0, "the terms must keep the history for a positive whole number of months");
+probe(slots.newsSwitchInAccount === true, "the terms must place the news switch in Account");
+probe(slots.emailListNotSold === true, "the terms must state that the email list is not sold");
+probe(slots.photosPublicWhileInApp === true, "the terms must state that uploaded photos stay public while they are in the app");
+probe(slots.beliefPhotosPrivate === true && slots.beliefHistoryDeletedAtOnce === true, "the reader must hold the two beliefs the terms contradict");
+const switchClause = "It stops news.";
+const photoClause = "It does not change photos.";
+const historyClause = "It does not delete history before " + slots.retentionMonths + " months.";
+return switchClause + " " + photoClause + " " + historyClause;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

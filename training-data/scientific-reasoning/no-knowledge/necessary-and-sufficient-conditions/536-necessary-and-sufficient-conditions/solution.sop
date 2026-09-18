@@ -1,0 +1,48 @@
+@slots literal
+{
+  "result": "restoration follows the expected pattern",
+  "conditions": [
+    {
+      "letter": "A",
+      "text": "measurements have been taken at equal intervals"
+    },
+    {
+      "letter": "B",
+      "text": "the effort has ended"
+    },
+    {
+      "letter": "C",
+      "text": "the values gradually approach the resting level"
+    }
+  ],
+  "letters": [
+    "A",
+    "B",
+    "C"
+  ],
+  "yesAlone": "B",
+  "noAlone": "B",
+  "analyzed": "B"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.result === "string" && slots.result.length > 0, "the model must state the target result");
+probe(Array.isArray(slots.conditions) && slots.conditions.length === 3, "the model must state exactly three simultaneous conditions");
+probe(slots.conditions.every((entry) => typeof entry.letter === "string" && entry.letter.length === 1 && typeof entry.text === "string" && entry.text.length > 0), "every condition must carry a name and its text");
+const letters = slots.conditions.map((entry) => entry.letter).join("");
+probe(letters === slots.letters.join(""), "case R must confirm the same three conditions");
+probe(letters.includes(slots.analyzed), "the analyzed condition must belong to the stated set");
+probe(slots.noAlone === slots.analyzed, "case Q must be the case where the analyzed condition is off");
+probe(slots.yesAlone === slots.analyzed, "case P must be the case where only the analyzed condition is on");
+probe(new Set(letters).size === letters.length, "the three conditions must be distinct");
+const clause = slots.analyzed === "A" ? "not sufficient on its own" : "is not alone sufficient";
+return slots.analyzed + " is necessary, but " + clause + ". The set " + slots.letters.join("\u2227") + " is sufficient in the model.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

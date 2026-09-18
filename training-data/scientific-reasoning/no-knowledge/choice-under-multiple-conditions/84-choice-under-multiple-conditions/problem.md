@@ -1,0 +1,7 @@
+# 84 — Choice under multiple conditions
+
+Problem world. In the model, a magnet can attract certain magnetic materials without direct contact. Two magnet ends can attract or repel depending on orientation. We do not assume that all metals are magnetic; the result of the test is stated explicitly for every object. A thin nonmagnetic barrier does not necessarily stop the magnet’s effect in our model.
+
+Case data. Option A: the object responds to the magnet: YES; the magnet is close enough: YES; the orientation produces attraction: NO; there is no large obstacle: YES. Option B: the object responds to the magnet: YES; the magnet is close enough: NO; the orientation produces attraction: YES; there is no large obstacle: YES. Option C: the object responds to the magnet: NO; the magnet is close enough: YES; the orientation produces attraction: YES; there is no large obstacle: YES. Option D: the object responds to the magnet: YES; the magnet is close enough: YES; the orientation produces attraction: YES; there is no large obstacle: YES.
+
+Question. Choose the option that simultaneously meets all conditions: the magnet is close enough, there is no large obstacle, the object responds to the magnet, the orientation produces attraction. If even one mandatory condition is NO, the option must be eliminated. Which one remains, and why can the “count the most YES values” method give a wrong answer?

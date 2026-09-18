@@ -1,0 +1,42 @@
+@slots literal
+{
+  "demand": 103,
+  "demandUnit": "electrical loads",
+  "errorPercent": 20,
+  "marginPercent": 8,
+  "capacityA": 135,
+  "costA": 96,
+  "capacityB": 138,
+  "costB": 136
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+const formatTenths = (tenths) => Math.floor(tenths / 10) + "." + (tenths % 10);
+probe(Number.isInteger(slots.demand) && slots.demand > 0, "the expected demand must be a positive whole number");
+probe(Number.isInteger(slots.errorPercent) && slots.errorPercent > 0, "the forecast error must be a positive whole number of percent");
+probe(Number.isInteger(slots.marginPercent) && slots.marginPercent > 0, "the safety margin must be a positive whole number of percent");
+for (const side of ["A", "B"]) {
+  probe(Number.isInteger(slots["capacity" + side]) && slots["capacity" + side] > 0, "the capacity of option " + side + " must be a positive whole number");
+  probe(Number.isInteger(slots["cost" + side]) && slots["cost" + side] > 0, "the cost of option " + side + " must be a positive whole number");
+}
+const scaled = slots.demand * (100 + slots.errorPercent) * (100 + slots.marginPercent);
+const requirementTenths = Math.floor((scaled + 500) / 1000);
+probe(requirementTenths > slots.demand * 10, "the robust requirement must exceed the average forecast");
+const options = [
+  { label: "A", capacity: slots.capacityA, cost: slots.costA },
+  { label: "B", capacity: slots.capacityB, cost: slots.costB }
+];
+const feasible = options.filter((option) => option.capacity * 10 >= requirementTenths);
+probe(feasible.length > 0, "at least one stated option must reach the robust requirement");
+const chosen = feasible.reduce((best, option) => (option.cost < best.cost ? option : best));
+probe(feasible.every((option) => option.cost >= chosen.cost), "the chosen option must have the lowest cost among the feasible ones");
+return "The robust capacity requirement is " + formatTenths(requirementTenths) + ", and Option " + chosen.label + " is the lowest-cost option that meets it. The uncertainty interval and safety policy are separate transformations, which prevents double-counting the margin.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

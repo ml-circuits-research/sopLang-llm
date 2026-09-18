@@ -1,0 +1,39 @@
+@slots literal
+{
+  "place": "Redbridge",
+  "cluster": [
+    "fuel",
+    "oxygen",
+    "heat"
+  ],
+  "trigger": "match",
+  "damp": "fuel",
+  "withheld": "airflow",
+  "sufficiencySpeaker": "Dora",
+  "claimedFactor": "match",
+  "triggerPlural": "matches",
+  "clusterSpeaker": "Eli",
+  "irrelevanceSpeaker": "Fran",
+  "missingFactor": "oxygen",
+  "triggerPresent": "match"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the drill card");
+probe(typeof slots.trigger === "string" && slots.trigger.length > 0, "the case must name the struck trigger");
+probe(slots.claimedFactor === slots.trigger && slots.triggerPresent === slots.trigger, "the three readings must talk about the same struck trigger");
+probe(slots.triggerPlural === slots.trigger + "es", "the plural the sufficiency reading quotes must be the trigger plural");
+const cluster = slots.cluster;
+probe(Array.isArray(cluster) && cluster.length === 3 && new Set(cluster).size === 3, "the card must list three different pieces a fire needs");
+probe(cluster.indexOf(slots.missingFactor) >= 0 && cluster.indexOf(slots.damp) >= 0, "the pieces the card names as damp or withheld must be listed pieces");
+probe(cluster.indexOf(slots.trigger) < 0, "the struck trigger must not be one of the listed pieces");
+return "No. The card listed a cluster. " + (/^[aeiou]/.test(slots.trigger) ? "An " : "A ") + slots.trigger + " is one factor. Necessary pieces of a cluster are not each sufficient.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

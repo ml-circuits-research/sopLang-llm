@@ -1,0 +1,40 @@
+@slots literal
+{
+  "place": "Port Asher",
+  "workers": 15,
+  "average": 400,
+  "lowCluster": 200,
+  "highCluster": 600,
+  "askedAverage": 400,
+  "portraitVoice": "Ade",
+  "claimedAverage": 400,
+  "centreVoice": "Bela",
+  "restatedAverage": 400,
+  "believer": "Chris"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the town whose card this is");
+probe(Number.isInteger(slots.workers) && slots.workers > 0, "the card must list a positive number of workers");
+probe(Number.isInteger(slots.average) && slots.average > 0, "the card must print a positive average pay");
+probe(Number.isInteger(slots.lowCluster) && Number.isInteger(slots.highCluster) && slots.lowCluster < slots.highCluster, "the two clusters must sit at different positive pays");
+probe(slots.average > slots.lowCluster && slots.average < slots.highCluster, "the average must sit strictly between the two clusters");
+probe(slots.lowCluster + slots.highCluster === 2 * slots.average, "the average must be the midpoint of the two printed clusters");
+probe(slots.askedAverage === slots.average, "the question must ask about the average the card prints");
+probe(slots.claimedAverage === slots.average && slots.restatedAverage === slots.average, "both voices must name the average the card prints");
+probe(typeof slots.portraitVoice === "string" && slots.portraitVoice.length > 0, "the case must name the voice that reads the average as a worker");
+probe(typeof slots.centreVoice === "string" && slots.centreVoice.length > 0, "the case must name the voice that calls the average a centre of mass");
+probe(typeof slots.believer === "string" && slots.believer.length > 0, "the case must name the voice that trusts averages as portraits");
+probe(slots.portraitVoice !== slots.centreVoice && slots.centreVoice !== slots.believer && slots.portraitVoice !== slots.believer, "the three voices must be different people");
+const averageIsGhost = slots.average !== slots.lowCluster && slots.average !== slots.highCluster;
+probe(averageIsGhost, "no listed person need stand on the average for the card to hide its split");
+return averageIsGhost ? "Not as a portrait. The listed people sit at " + slots.lowCluster + " and " + slots.highCluster + ". The average is a mix, not a resident." : "The average is one of the listed pays in this card.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

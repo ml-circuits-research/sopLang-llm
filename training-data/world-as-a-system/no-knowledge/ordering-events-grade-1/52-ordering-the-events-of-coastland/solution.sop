@@ -1,0 +1,101 @@
+@slots literal
+{
+  "pairs": [
+    {
+      "earlier": "Founding",
+      "later": "Market charter"
+    },
+    {
+      "earlier": "Market charter",
+      "later": "Flood"
+    },
+    {
+      "earlier": "Founding",
+      "later": "Bridge opening"
+    }
+  ],
+  "must": {
+    "first": "Founding",
+    "second": "Flood"
+  },
+  "determined": {
+    "first": "Bridge opening",
+    "second": "Market charter"
+  },
+  "crossDomain": null
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const describeCrossDomain = function describeCrossDomain(check) {
+  if (check.kind === 'distance') {
+    return `${check.centimetres * check.kilometresPerCentimetre} km.`;
+  }
+  if (check.kind === 'time') {
+    const minutes = check.startHour * 60 + check.startMinute + check.hours * 60;
+    const hour = String(Math.floor(minutes / 60)).padStart(2, '0');
+    const minute = String(minutes % 60).padStart(2, '0');
+    return `${hour}:${minute}.`;
+  }
+  if (check.kind === 'quorum') {
+    return check.present >= check.threshold ? 'quorum is met.' : 'quorum is not met.';
+  }
+  if (check.kind === 'reports') {
+    return `${check.total - check.duplicates} independent reports.`;
+  }
+  if (check.kind === 'sheets') {
+    return `${check.start + check.received} map sheets.`;
+  }
+  throw new Error(`Unknown cross-domain check "${check.kind}".`);
+};
+const renderCrossDomain = function renderCrossDomain(checks) {
+  if (checks === null || checks === undefined || checks.length === 0) {
+    return '';
+  }
+  const parts = checks.map((check, index) => {
+    const label = index === 1 ? 'Mixed-domain answer:' : 'Cross-domain answer:';
+    return `${label} ${describeCrossDomain(check)}`;
+  });
+  return parts.join(' ');
+};
+const slots = $slots;
+probe(Array.isArray(slots.pairs) && slots.pairs.length > 0, "the facts must order at least two events");
+probe(slots.pairs.every((pair) => typeof pair.earlier === "string" && typeof pair.later === "string" && pair.earlier !== pair.later), "a stated order must relate two different events");
+probe(slots.must !== null && slots.determined !== null, "the task must ask one forced and one open comparison");
+const edges = new Map();
+for (const pair of slots.pairs) {
+  if (!edges.has(pair.earlier)) {
+    edges.set(pair.earlier, []);
+  }
+  edges.get(pair.earlier).push(pair.later);
+}
+const reaches = (from, to) => {
+  const seen = new Set([from]);
+  const queue = [from];
+  while (queue.length > 0) {
+    const node = queue.shift();
+    for (const next of edges.get(node) || []) {
+      if (next === to) {
+        return true;
+      }
+      if (!seen.has(next)) {
+        seen.add(next);
+        queue.push(next);
+      }
+    }
+  }
+  return false;
+};
+const earlier = reaches(slots.must.first, slots.must.second) ? slots.must.first : reaches(slots.must.second, slots.must.first) ? slots.must.second : null;
+probe(earlier !== null, "the first questioned pair must be ordered by the stated facts");
+probe(!reaches(slots.determined.first, slots.determined.second) && !reaches(slots.determined.second, slots.determined.first), "the second questioned pair must stay undetermined");
+const main = earlier + " must be before " + (earlier === slots.must.first ? slots.must.second : slots.must.first) + ". The relative order of " + slots.determined.first + " and " + slots.determined.second + " cannot be determined from the given facts.";
+const suffix = renderCrossDomain(slots.crossDomain);
+return suffix === "" ? main : main + " " + suffix;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

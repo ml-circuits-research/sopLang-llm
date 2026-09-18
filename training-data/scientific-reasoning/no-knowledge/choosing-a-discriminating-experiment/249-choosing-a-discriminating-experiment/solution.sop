@@ -1,0 +1,35 @@
+@slots literal
+{
+  "name1": "the value unusual is a random error",
+  "predictions1": [
+    "the instrument passes the check",
+    "a alone measurement differs",
+    "the repeated measurements groups"
+  ],
+  "name2": "the instrument is misadjusted",
+  "predictions2": [
+    "another instrument gives a different level",
+    "repetition keeps deviation",
+    "all the measurements are shifted"
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.name1 === "string" && slots.name1.length > 0, "the first hypothesis must carry its name");
+probe(Array.isArray(slots.predictions1) && slots.predictions1.length > 0, "the first hypothesis must state its predictions");
+probe(typeof slots.name2 === "string" && slots.name2.length > 0, "the second hypothesis must carry its name");
+probe(Array.isArray(slots.predictions2) && slots.predictions2.length > 0, "the second hypothesis must state its predictions");
+const first = slots.predictions1.find((prediction) => slots.predictions2.indexOf(prediction) === -1);
+const second = slots.predictions2.find((prediction) => slots.predictions1.indexOf(prediction) === -1);
+probe(first !== undefined, "the first hypothesis must predict something the second does not");
+probe(second !== undefined, "the second hypothesis must predict something the first does not");
+return "We test whether “" + first + "” (or “" + second + "”). The appearance of the first supports H1: " + slots.name1 + ", while the second result supports H2: " + slots.name2 + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

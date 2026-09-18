@@ -1,0 +1,39 @@
+@slots literal
+{
+  "name": "Rita",
+  "deletedVersion": "12sep",
+  "deletedFromComputer": true,
+  "staysInBin": true,
+  "editsOnlyStick": true,
+  "newerLabel": "work_12sep",
+  "olderLabel": "work_10sep",
+  "newerDay": 12,
+  "olderDay": 10
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.name === "string" && slots.name.length > 0, "the case must name the person acting on the copies");
+probe(slots.deletedFromComputer === true, "the stem deletes the newer version from the computer");
+probe(slots.staysInBin === true, "the deleted version only stays in the recycle bin");
+probe(slots.editsOnlyStick === true, "the stem edits the only stick");
+probe(typeof slots.newerLabel === "string" && slots.newerLabel !== slots.olderLabel, "the guide names two different versions");
+probe(Number.isInteger(slots.newerDay) && Number.isInteger(slots.olderDay) && slots.newerDay > slots.olderDay, "the guide dates the newer version later than the older one");
+const usefulPlaces = slots.deletedFromComputer ? 1 : 2;
+probe(usefulPlaces === 1, "the deletion must leave a single useful place");
+const clauses = [];
+if (usefulPlaces === 1) { clauses.push("only one useful place"); }
+if (slots.staysInBin) { clauses.push("the bin is not a copy"); }
+if (slots.editsOnlyStick) { clauses.push("editing the only stick"); }
+const words = { 2: "two", 3: "three" };
+const word = words[clauses.length];
+probe(typeof word === "string", "the broken-rule count must have a printed word");
+return "At least " + word + ": " + clauses.join("; ") + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

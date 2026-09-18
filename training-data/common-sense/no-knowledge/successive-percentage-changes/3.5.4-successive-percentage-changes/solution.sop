@@ -1,0 +1,44 @@
+@slots literal
+{
+  "start": 800,
+  "unit": "participants",
+  "increasePercent": 10,
+  "decreasePercent": 20,
+  "proposedIncreasePercent": 10,
+  "proposedDecreasePercent": 20,
+  "threshold": 1,
+  "thresholdUnit": "participants"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.start) && slots.start > 0, "the base value must be a positive integer");
+probe(typeof slots.unit === "string" && slots.unit.length > 0, "the base value must carry a unit noun");
+probe(slots.unit === slots.thresholdUnit, "the base value and the threshold must use the same unit noun");
+probe(Number.isInteger(slots.increasePercent) && slots.increasePercent > 0 && slots.increasePercent < 100, "the first percentage must lie strictly between zero and one hundred");
+probe(Number.isInteger(slots.decreasePercent) && slots.decreasePercent > 0 && slots.decreasePercent < 100, "the second percentage must lie strictly between zero and one hundred");
+probe(slots.proposedIncreasePercent === slots.increasePercent && slots.proposedDecreasePercent === slots.decreasePercent, "the simplified method must restate the two stated percentages");
+probe(Number.isInteger(slots.threshold) && slots.threshold >= 0, "the materiality threshold must be a non-negative integer");
+const numerator = slots.start * (100 + slots.increasePercent) * (100 - slots.decreasePercent);
+probe(numerator % 100 === 0, "the successive percentages must produce a whole number of hundredths");
+const finalHundredths = numerator / 100;
+const simplifiedHundredths = slots.start * (100 + slots.increasePercent - slots.decreasePercent);
+const differenceHundredths = simplifiedHundredths - finalHundredths;
+probe(differenceHundredths === slots.start * slots.increasePercent * slots.decreasePercent / 100, "the difference must be the original value times the product of the two percentages");
+const format = (value) => {
+  const whole = Math.floor(value / 100);
+  const fraction = value % 100;
+  if (fraction === 0) { return String(whole); }
+  if (fraction % 10 === 0) { return whole + "." + (fraction / 10); }
+  return whole + "." + (fraction < 10 ? "0" + fraction : String(fraction));
+};
+const verdict = differenceHundredths <= slots.threshold * 100 ? "acceptable" : "not acceptable";
+return "Correct final value: " + format(finalHundredths) + " " + slots.unit + ". The simplified method gives " + format(simplifiedHundredths) + ", a difference of " + format(differenceHundredths) + " " + slots.unit + ", so it is " + verdict + " under the stated threshold.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

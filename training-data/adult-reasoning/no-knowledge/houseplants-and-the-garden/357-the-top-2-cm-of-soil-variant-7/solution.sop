@@ -1,0 +1,47 @@
+@slots literal
+{
+  "name": "Piotr",
+  "schedule": "every Saturday",
+  "soilWet": true,
+  "soilDepth": 2,
+  "saucerContents": "last night’s water",
+  "lightNow": "midday sun",
+  "depthRule": 2,
+  "typicalDays": {
+    "low": 10,
+    "high": 14
+  },
+  "allowedLight": "east/west",
+  "saucerLimitMinutes": 30
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.name === "string" && slots.name.length > 0, "the case must name the person who waters the plant");
+probe(typeof slots.schedule === "string" && slots.schedule.length > 0, "the case must state the watering calendar");
+probe(Number.isInteger(slots.depthRule) && slots.depthRule > 0, "the card must test a positive whole number of centimetres");
+probe(Number.isInteger(slots.soilDepth) && slots.soilDepth > 0, "the practice must report a positive whole number of centimetres");
+probe(slots.typicalDays.low > 0 && slots.typicalDays.high > slots.typicalDays.low, "the card must give an increasing typical winter interval");
+probe(typeof slots.allowedLight === "string" && slots.allowedLight.length > 0, "the card must state the allowed light");
+probe(Number.isInteger(slots.saucerLimitMinutes) && slots.saucerLimitMinutes > 0, "the card must limit the water in the saucer to a positive number of minutes");
+probe(slots.soilWet === true, "the printed practice must leave the top layer wet");
+const calendarClause = slots.soilWet
+  ? "Waters by calendar although " + slots.soilDepth + " cm are wet"
+  : "Waters by calendar, and the top " + slots.soilDepth + " cm are dry";
+const saucerClause = /water/i.test(slots.saucerContents)
+  ? "water hours in the saucer"
+  : "the saucer is already empty";
+probe(typeof slots.saucerContents === "string" && slots.saucerContents.length > 0, "the case must describe what stands in the saucer");
+const lightClause = /midday sun/i.test(slots.lightNow)
+  ? "midday sun"
+  : "the light is " + slots.allowedLight;
+probe(slots.lightNow.length > 0, "the case must describe the light the plant receives");
+return calendarClause + "; " + saucerClause + "; " + lightClause + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

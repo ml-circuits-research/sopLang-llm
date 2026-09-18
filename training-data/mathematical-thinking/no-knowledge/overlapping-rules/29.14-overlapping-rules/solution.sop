@@ -16,6 +16,10 @@
 }
 
 @answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
 const slots = $slots;
 const holds = (condition) => condition.operator === ">=" ? slots.value >= condition.value : condition.operator === "<=" ? slots.value <= condition.value : condition.operator === ">" ? slots.value > condition.value : slots.value < condition.value;
 const labels = slots.conditions.filter(holds).map((condition) => condition.label);
@@ -23,4 +27,7 @@ if (labels.length === 0) return "None.";
 if (labels.length === 1) return "One: " + labels[0] + ".";
 if (labels.length === 2) return "Two: " + labels[0] + " and " + labels[1] + ".";
 return "Three: " + labels[0] + ", " + labels[1] + ", and " + labels[2] + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
 

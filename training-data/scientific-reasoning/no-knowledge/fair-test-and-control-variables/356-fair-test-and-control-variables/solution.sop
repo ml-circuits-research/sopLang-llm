@@ -1,0 +1,28 @@
+@slots literal
+{
+  "factor": "water speed in the model",
+  "levelA": 1,
+  "levelB": 3,
+  "controls": [
+    "the same quantity of fragments",
+    "the same channel",
+    "the same time"
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.factor === "string" && slots.factor.length > 0, "the statement must name the factor to test");
+probe(Number.isFinite(slots.levelA) && Number.isFinite(slots.levelB), "both groups must receive a stated level of the factor");
+probe(slots.levelA !== slots.levelB, "the two groups must receive different levels, otherwise no effect can be tested");
+probe(Array.isArray(slots.controls) && slots.controls.length > 0, "the statement must keep at least one condition constant");
+probe(slots.controls.every((control) => typeof control === "string" && control.length > 0), "every controlled condition must be named");
+return "We change only \u201c" + slots.factor + "\u201d and we control " + slots.controls.join(", ") + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

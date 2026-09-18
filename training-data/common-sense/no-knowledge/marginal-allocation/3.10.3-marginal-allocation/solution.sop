@@ -1,0 +1,70 @@
+@slots literal
+{
+  "units": 6,
+  "resourceUnit": "resource units",
+  "programs": {
+    "A": [
+      12,
+      8,
+      4,
+      1
+    ],
+    "B": [
+      17,
+      13,
+      9,
+      5
+    ],
+    "C": [
+      12,
+      9,
+      6,
+      3
+    ]
+  }
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+const names = ["A", "B", "C"];
+probe(slots.programs !== null && typeof slots.programs === "object", "the statement must state the marginal benefits of three programs");
+probe(names.every((name) => Array.isArray(slots.programs[name]) && slots.programs[name].length > 0), "every program must list at least one marginal benefit");
+probe(names.every((name) => slots.programs[name].every((value) => Number.isInteger(value) && value > 0)), "every marginal benefit must be a positive integer");
+probe(names.every((name) => slots.programs[name].length === slots.programs.A.length), "the programs must list the same number of marginal benefits");
+probe(Number.isInteger(slots.units) && slots.units > 0, "the statement must state a positive number of units to allocate");
+const depth = slots.programs.A.length;
+probe(slots.units <= names.length * depth, "the stated units must not exceed the benefits the programs can absorb");
+const totalOf = (taken) => names.reduce((sum, name) => sum + slots.programs[name].slice(0, taken[name]).reduce((left, right) => left + right, 0), 0);
+let best = null;
+let optima = 0;
+let allocation = null;
+for (let a = 0; a <= slots.units; a += 1) {
+  for (let b = 0; a + b <= slots.units; b += 1) {
+    const taken = { A: a, B: b, C: slots.units - a - b };
+    if (names.some((name) => taken[name] > depth)) {
+      continue;
+    }
+    const value = totalOf(taken);
+    if (best === null || value > best) {
+      best = value;
+      optima = 1;
+      allocation = taken;
+    } else if (value === best) {
+      optima += 1;
+    }
+  }
+}
+probe(allocation !== null, "at least one allocation of the stated units must be feasible");
+probe(best > 0, "the optimal allocation must have a positive total benefit");
+const chosen = "A=" + allocation.A + ", B=" + allocation.B + ", C=" + allocation.C;
+return optima === 1
+  ? chosen + "; maximum total benefit = " + best + " points."
+  : "One optimal allocation is " + chosen + ", with " + best + " points. There are " + optima + " tied optimal allocations.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

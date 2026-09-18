@@ -1,0 +1,45 @@
+@slots literal
+{
+  "context": "building a defensible historical timeline",
+  "costA": 82,
+  "timeA": 39,
+  "qualityA": 89,
+  "costB": 102,
+  "timeB": 62,
+  "qualityB": 74,
+  "timeWeight": 1.5,
+  "qualityWeight": 3
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+const formatScore = (scaled) => {
+  const sign = scaled < 0 ? "-" : "";
+  const magnitude = Math.abs(scaled);
+  return sign + Math.floor(magnitude / 10) + "." + (magnitude % 10);
+};
+const timeWeightScales = { 1: 10, 1.5: 15, 2: 20 };
+const timeScale = timeWeightScales[slots.timeWeight];
+probe(timeScale !== undefined, "the stated time weight must be one of 1, 1.5, 2");
+probe(Number.isInteger(slots.qualityWeight) && slots.qualityWeight > 0, "the stated quality weight must be a positive whole number");
+for (const side of ["A", "B"]) {
+  probe(Number.isInteger(slots["cost" + side]) && slots["cost" + side] > 0, "the cost of configuration " + side + " must be a positive whole number");
+  probe(Number.isInteger(slots["time" + side]) && slots["time" + side] > 0, "the time of configuration " + side + " must be a positive whole number");
+  probe(Number.isInteger(slots["quality" + side]) && slots["quality" + side] >= 0 && slots["quality" + side] <= 100, "the quality score of configuration " + side + " must be a percentage");
+}
+const scoreA = slots.costA * 10 + timeScale * slots.timeA - slots.qualityWeight * 10 * slots.qualityA;
+const scoreB = slots.costB * 10 + timeScale * slots.timeB - slots.qualityWeight * 10 * slots.qualityB;
+const winner = scoreA <= scoreB ? "A" : "B";
+const winnerScore = winner === "A" ? scoreA : scoreB;
+const loserScore = winner === "A" ? scoreB : scoreA;
+probe(winnerScore <= loserScore, "the winning coupled score must not exceed the losing one");
+probe(Number.isInteger(winnerScore) && Number.isInteger(loserScore), "both coupled scores must be exact in tenths");
+return "This is intentionally a false-decomposition case. The best formulation is one optimization subproblem, not three independent choices. Configuration " + winner + " wins because the predetermined combined score is " + formatScore(winnerScore) + " versus " + formatScore(loserScore) + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,72 @@
+@slots literal
+{
+  "place": "Forest Parish",
+  "shiftFrom": "09:00",
+  "shiftTo": "17:30",
+  "breakFrom": "12:30",
+  "breakTo": "13:00",
+  "threshold": "09:10",
+  "warningCount": 3,
+  "extraAfter": "17:30",
+  "restDay": "Saturday",
+  "employee": "Drew",
+  "punchIns": [
+    {
+      "day": "Mon",
+      "clock": "09:12"
+    },
+    {
+      "day": "Tue",
+      "clock": "09:05"
+    },
+    {
+      "day": "Wed",
+      "clock": "09:20"
+    },
+    {
+      "day": "Thu",
+      "clock": "09:09"
+    },
+    {
+      "day": "Fri",
+      "clock": "09:15"
+    }
+  ],
+  "makeUpDay": "Saturday"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the workplace");
+probe(typeof slots.employee === "string" && slots.employee.length > 0, "the case must name the employee");
+probe(Array.isArray(slots.punchIns) && slots.punchIns.length > 0, "the case must record the week of punch-ins");
+probe(typeof slots.restDay === "string" && slots.restDay.length > 0, "the clock must name the day it does not count");
+probe(Number.isInteger(slots.warningCount) && slots.warningCount > 0, "the warning must be a positive number of lates");
+const minutesOf = (clock) => {
+  const parts = clock.split(":");
+  return Number(parts[0]) * 60 + Number(parts[1]);
+};
+const threshold = minutesOf(slots.threshold);
+const late = slots.punchIns.filter((entry) => minutesOf(entry.clock) > threshold);
+const onTime = slots.punchIns.filter((entry) => minutesOf(entry.clock) <= threshold);
+probe(late.length > 0 && onTime.length > 0, "the week must contain a late arrival and a clean arrival");
+probe(slots.punchIns.every((entry) => typeof entry.day === "string" && entry.day.length > 0), "every punch-in must name its weekday");
+probe(late.length + onTime.length === slots.punchIns.length, "every punch-in is either late or clean against the threshold");
+const COUNT_WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+const count = late.length;
+const rawWord = count < COUNT_WORDS.length ? COUNT_WORDS[count] : String(count);
+const countWord = rawWord.charAt(0).toUpperCase() + rawWord.slice(1);
+const lateDays = late.map((entry) => entry.day).join(", ");
+const cleanClocks = onTime.map((entry) => entry.clock).join(" and ");
+const makeUpClause = slots.makeUpDay === slots.restDay
+  ? slots.makeUpDay + " erases nothing: it is not a working day on this clock."
+  : slots.makeUpDay + " counts as a working day on this clock, so the offer is a real shift.";
+return countWord + ": " + lateDays + ". " + cleanClocks + " ≤ " + slots.threshold + ". " + makeUpClause;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

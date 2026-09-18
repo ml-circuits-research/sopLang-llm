@@ -1,0 +1,47 @@
+@slots literal
+{
+  "place": "Long Hill",
+  "rainyMornings": 10,
+  "rainyLate": 7,
+  "dryMornings": 10,
+  "dryLate": 2,
+  "guarantor": "Leo",
+  "counter": "Mira",
+  "quotedDryLate": 2,
+  "quotedDryMornings": 10,
+  "quotedRainyLate": 7,
+  "quotedRainyMornings": 10,
+  "quotedOnTime": 3,
+  "dismisser": "Quinn",
+  "dismissedRainyLate": 7,
+  "dismissedDryLate": 2
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place whose notes these are");
+probe(Number.isInteger(slots.rainyMornings) && slots.rainyMornings > 0, "the notes must count a positive number of rainy mornings");
+probe(Number.isInteger(slots.dryMornings) && slots.dryMornings > 0, "the notes must count a positive number of dry mornings");
+probe(Number.isInteger(slots.rainyLate) && slots.rainyLate >= 0 && slots.rainyLate <= slots.rainyMornings, "the rainy late count must fit inside the counted mornings");
+probe(Number.isInteger(slots.dryLate) && slots.dryLate >= 0 && slots.dryLate <= slots.dryMornings, "the dry late count must fit inside the counted mornings");
+probe(typeof slots.guarantor === "string" && slots.guarantor.length > 0, "the case must name the voice that reads rain as a guarantee");
+probe(typeof slots.counter === "string" && slots.counter.length > 0, "the case must name the voice that compares the rates");
+probe(typeof slots.dismisser === "string" && slots.dismisser.length > 0, "the case must name the voice that dismisses the counts");
+probe(slots.guarantor !== slots.counter && slots.counter !== slots.dismisser && slots.guarantor !== slots.dismisser, "the three voices must be different people");
+probe(slots.quotedDryLate === slots.dryLate && slots.quotedDryMornings === slots.dryMornings && slots.quotedRainyLate === slots.rainyLate && slots.quotedRainyMornings === slots.rainyMornings, "the counting voice must quote the notes’ own rates");
+probe(slots.dismissedRainyLate === slots.rainyLate && slots.dismissedDryLate === slots.dryLate, "the dismissing voice must quote the notes’ own counts");
+const onTimeRainy = slots.rainyMornings - slots.rainyLate;
+probe(onTimeRainy === slots.quotedOnTime, "the counting voice must state the rainy on-time mornings the notes leave");
+const higherOnRainy = slots.rainyLate * slots.dryMornings > slots.dryLate * slots.rainyMornings;
+const guarantee = slots.rainyLate === slots.rainyMornings;
+probe(higherOnRainy, "the notes must show a higher late-rate on rainy mornings");
+probe(!guarantee, "the rainy run must leave at least one on-time morning, so the notes do not state a guarantee");
+return higherOnRainy && !guarantee ? "A higher late-rate on rainy mornings in this notebook, not a guarantee." : "The two counts do not separate the mornings in this notebook.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,40 @@
+@slots literal
+{
+  "place": "Stadium District",
+  "rateTenths": 4,
+  "roundingKg": 10,
+  "heatAboveC": 28,
+  "heatTenths": 5,
+  "overKm": 15,
+  "effortTenths": 5,
+  "hiker": "Gina",
+  "massKg": 83,
+  "routeKm": 12,
+  "noonC": 30
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.hiker === "string" && slots.hiker.length > 0, "the case must name the hiker");
+probe(Number.isInteger(slots.massKg) && slots.massKg > 0, "the body mass must be a positive whole number of kilograms");
+probe(Number.isInteger(slots.roundingKg) && slots.roundingKg > 0, "the guide must round the body mass up to a positive step");
+probe(Number.isInteger(slots.rateTenths) && slots.rateTenths > 0, "the guide must state a positive rate of litres per mass step");
+probe(slots.routeKm > 0 && slots.overKm > 0, "the route length and the effort threshold must be positive");
+const tenths = (value) => (value / 10).toFixed(1);
+const blocks = Math.ceil(slots.massKg / slots.roundingKg);
+const baseTenths = blocks * slots.rateTenths;
+const heatTenths = slots.noonC > slots.heatAboveC ? slots.heatTenths : 0;
+const effortTenths = slots.routeKm > slots.overKm ? slots.effortTenths : 0;
+const totalTenths = baseTenths + heatTenths + effortTenths;
+const heat = heatTenths > 0 ? tenths(heatTenths) : "0";
+const effort = effortTenths > 0 ? tenths(effortTenths) : "0";
+const comparison = slots.routeKm > slots.overKm ? ">" : "≤";
+return tenths(baseTenths) + " + " + heat + " (heat) + " + effort + " (" + slots.routeKm + comparison + slots.overKm + ") = " + tenths(totalTenths) + " l. Morning water is explicitly excluded.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

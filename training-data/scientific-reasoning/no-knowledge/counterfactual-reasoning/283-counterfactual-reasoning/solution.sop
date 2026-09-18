@@ -1,0 +1,63 @@
+@slots literal
+{
+  "edges": [
+    {
+      "from": "efficient breathing",
+      "to": "oxygen in lungs"
+    },
+    {
+      "from": "oxygen in lungs",
+      "to": "oxygen in blood"
+    },
+    {
+      "from": "oxygen in blood",
+      "to": "oxygen transported"
+    },
+    {
+      "from": "oxygen transported",
+      "to": "oxygen at the cells"
+    }
+  ],
+  "start": "efficient breathing",
+  "blocked": "oxygen in lungs"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.start === "string" && slots.start.length > 0, "the statement must name the cause the normal world starts from");
+probe(typeof slots.blocked === "string" && slots.blocked.length > 0, "the statement must name the blocked node");
+probe(Array.isArray(slots.edges) && slots.edges.length > 0, "the statement must state at least one causal link");
+probe(slots.edges.every((edge) => typeof edge.from === "string" && edge.from.length > 0 && typeof edge.to === "string" && edge.to.length > 0), "every causal link must connect two named nodes");
+const key = (name) => name.toLowerCase().split(/\s+/).sort().join(" ");
+const walk = (skip) => {
+  const reached = [];
+  const queue = [key(slots.start)];
+  const visited = new Set(queue);
+  while (queue.length > 0) {
+    const node = queue.shift();
+    for (const edge of slots.edges) {
+      const to = key(edge.to);
+      if (key(edge.from) !== node || to === skip || visited.has(to)) {
+        continue;
+      }
+      visited.add(to);
+      reached.push(edge.to);
+      queue.push(to);
+    }
+  }
+  return reached;
+};
+const normal = walk(null);
+probe(normal.some((name) => key(name) === key(slots.blocked)), "the blocked node must lie on the path from the stated start");
+const surviving = walk(key(slots.blocked));
+const lost = normal.filter((name) => !surviving.some((other) => key(other) === key(name)));
+probe(lost.length > 0, "blocking the node must lose at least one effect");
+return "By blocking \u201c" + slots.blocked + "\u201d, we lose along the given path: " + lost.join(", ") + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

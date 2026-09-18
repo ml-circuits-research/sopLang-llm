@@ -1,0 +1,32 @@
+@slots literal
+{
+  "place": "East Wharf",
+  "admitted": "one listed extra visitor at the archive",
+  "consequence": "the charter is dead by winter",
+  "mechanismWritten": false,
+  "claimant": "Omar",
+  "escalation": "the winter-death",
+  "critic": "Pia",
+  "sloganeer": "Rafi",
+  "chainSteps": 0
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place that writes the letter");
+probe(typeof slots.admitted === "string" && slots.admitted.length > 0, "the case must name the exception the letter allows");
+probe(typeof slots.consequence === "string" && slots.consequence.length > 0, "the case must state the consequence the letter asserts");
+probe(slots.mechanismWritten === false, "the case must record that no mechanism for the chain is written");
+probe(Number.isInteger(slots.chainSteps) && slots.chainSteps === 0, "the page must print no linking step of the chain");
+const chainPresent = slots.mechanismWritten || slots.chainSteps >= 2;
+probe(chainPresent === false, "an asserted slide with no written step is not a chain");
+const verdict = chainPresent ? "Yes" : "No";
+return verdict + ". A slope was asserted, not built. Fear can be real and still not be a step-by-step engine.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

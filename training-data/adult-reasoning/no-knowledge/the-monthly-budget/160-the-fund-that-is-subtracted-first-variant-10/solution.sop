@@ -1,0 +1,38 @@
+@slots literal
+{
+  "saver": "Ben",
+  "village": "Mill Hamlet",
+  "incomeCents": 480000,
+  "fixedCents": 246000,
+  "coatCents": 70000,
+  "fundPercent": 10,
+  "fundFirst": true,
+  "noDoubleCount": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.saver === "string" && /^[A-Z][a-z]+$/.test(slots.saver), "the case must name the person the sheet belongs to");
+probe(typeof slots.village === "string" && slots.village.trim().length > 0, "the case must name the village of the sheet");
+probe(Number.isInteger(slots.incomeCents) && slots.incomeCents > 0, "the net income must be a positive whole number of cents");
+probe(Number.isInteger(slots.fixedCents) && slots.fixedCents >= 0, "the fixed lines must be a whole number of cents");
+probe(Number.isInteger(slots.coatCents) && slots.coatCents > 0, "the wanted coat must cost a positive whole number of cents");
+probe(typeof slots.fundPercent === "number" && slots.fundPercent > 0 && slots.fundPercent < 100, "the emergency fund must take a positive percent below the whole income");
+probe(slots.fundFirst === true, "the sheet must take the fund first");
+probe(slots.noDoubleCount === true, "the sheet must forbid counting one unit of currency twice");
+const format = (cents) => cents % 100 === 0 ? String(cents / 100) : Math.trunc(cents / 100) + "." + String(cents % 100).padStart(2, "0");
+const fundCents = Math.round((slots.incomeCents * Math.round(slots.fundPercent * 100)) / 10000);
+const remainderCents = slots.incomeCents - fundCents - slots.fixedCents;
+probe(fundCents > 0, "the fund must take something from a positive income");
+probe(remainderCents >= 0, "the fund and the fixed lines must not exceed the net income");
+probe(fundCents + slots.fixedCents + remainderCents === slots.incomeCents, "the fund, the fixed lines, and the remainder must add back to the income");
+const fits = remainderCents >= slots.coatCents;
+return "Fund " + format(fundCents) + ". Remainder " + format(remainderCents) + ". " + (fits ? "The coat fits." : "The coat does not fit.");
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

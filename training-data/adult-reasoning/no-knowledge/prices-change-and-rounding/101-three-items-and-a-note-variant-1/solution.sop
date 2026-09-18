@@ -1,0 +1,48 @@
+@slots literal
+{
+  "place": "Maple Ward",
+  "prices": {
+    "roll": 4,
+    "sandwich": 8,
+    "water": 3
+  },
+  "cardFloor": 20,
+  "noChangeRule": true,
+  "buyer": {
+    "name": "Ann",
+    "rolls": 2,
+    "sandwiches": 1,
+    "waters": 3,
+    "tendered": 50
+  },
+  "sellerHasChange": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the kiosk must name the ward it stands in");
+probe(typeof slots.buyer === "object" && slots.buyer !== null, "the statement must name the customer and the order");
+probe(typeof slots.buyer.name === "string" && slots.buyer.name.length > 0, "the customer name must be on record");
+probe(Number.isInteger(slots.prices.roll) && slots.prices.roll > 0, "a roll must cost a positive whole, crown amount");
+probe(Number.isInteger(slots.prices.sandwich) && slots.prices.sandwich > 0, "a sandwich must cost a positive whole amount");
+probe(Number.isInteger(slots.prices.water) && slots.prices.water > 0, "a water must cost a positive whole amount");
+probe(slots.buyer.rolls > 0 && slots.buyer.sandwiches > 0 && slots.buyer.waters > 0, "the order must ask for at least one of each item");
+probe(Number.isInteger(slots.cardFloor) && slots.cardFloor > 0, "the card floor must be a positive amount");
+probe(slots.sellerHasChange === true, "the statement must say the seller has change");
+const cost = slots.buyer.rolls * slots.prices.roll + slots.buyer.sandwiches * slots.prices.sandwich + slots.buyer.waters * slots.prices.water;
+const change = slots.buyer.tendered - cost;
+probe(slots.buyer.tendered >= cost, "the tendered note must cover the cost");
+probe(change > 0, "the seller must be able to give change");
+probe(cost > slots.prices.water, "the full order must cost more than a single water");
+probe(slots.prices.roll < slots.cardFloor && slots.prices.sandwich < slots.cardFloor, "a single item must fall under the floor the kiosk refuses cards below");
+probe(slots.prices.water < slots.cardFloor, "a single water must fall under the floor the kiosk refuses cards below");
+const card = "One water at " + slots.prices.water + " < " + slots.cardFloor + " → card refused.";
+return "Cost " + cost + ", change " + change + ". " + card;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

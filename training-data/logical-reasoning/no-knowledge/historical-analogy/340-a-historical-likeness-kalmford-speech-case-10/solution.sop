@@ -1,0 +1,29 @@
+@slots literal
+{
+  "place": "Kalmford",
+  "rowNoun": "row",
+  "year": 1929,
+  "countWord": "two",
+  "alarmer": "Sol",
+  "mapper": "Una",
+  "mappedYear": 1929,
+  "banner": "Wes"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+const countOfWord = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10 };
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the speech");
+probe(Number.isInteger(slots.year) && slots.year >= 1000 && slots.year <= 9999, "the quoted likeness must name a four-digit year");
+probe(countOfWord[slots.countWord] !== undefined && countOfWord[slots.countWord] > 0, "the case must give a tally this section counts");
+probe(slots.mappedYear === slots.year, "the reader who asks about the mapped parts must speak about the quoted year");
+probe(slots.alarmer !== slots.mapper && slots.mapper !== slots.banner, "the three reactions must be given by different people");
+return "It has not mapped the parts that did the work in " + slots.year + " onto this " + slots.rowNoun + " of " + slots.countWord + " stalls. A year-name is not a mechanism.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

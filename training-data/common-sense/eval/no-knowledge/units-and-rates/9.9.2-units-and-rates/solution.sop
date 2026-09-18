@@ -1,0 +1,42 @@
+@slots literal
+{
+  "throughput": 36,
+  "unit": "uses",
+  "overheadPercent": 0,
+  "minutes": 75
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.throughput) && slots.throughput > 0, "the nominal throughput must be a positive integer");
+probe(typeof slots.unit === "string" && slots.unit.length > 0, "the statement must name the unit of the throughput");
+probe(Number.isInteger(slots.overheadPercent) && slots.overheadPercent >= 0 && slots.overheadPercent < 100, "the overhead must be a percentage below one hundred");
+probe(Number.isInteger(slots.minutes) && slots.minutes > 0, "the running time must be a positive number of minutes");
+const roundHundredths = (numerator, denominator) => {
+  let hundredths = Math.floor((numerator * 100) / denominator);
+  const remainder = (numerator * 100) % denominator;
+  if (2 * remainder > denominator || (2 * remainder === denominator && hundredths % 2 === 1)) {
+    hundredths += 1;
+  }
+  return hundredths;
+};
+const formatHundredths = (hundredths) => {
+  const whole = Math.floor(hundredths / 100);
+  const rest = hundredths % 100;
+  if (rest === 0) { return String(whole); }
+  return whole + "." + String(rest).padStart(2, "0").replace(/0$/, "");
+};
+const usefulPercent = 100 - slots.overheadPercent;
+const rate = roundHundredths(slots.throughput * usefulPercent, 100);
+probe(rate > 0, "the useful rate must stay positive");
+const quantity = roundHundredths(slots.throughput * usefulPercent * slots.minutes, 6000);
+probe(quantity > 0, "the produced quantity must stay positive");
+return formatHundredths(quantity) + " useful " + slots.unit + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

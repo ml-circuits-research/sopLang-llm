@@ -1,0 +1,26 @@
+@slots literal
+{
+  "kitchen": "Wells Village",
+  "cardMinutes": 12,
+  "nightMinutes": 12,
+  "attacker": "Harun",
+  "hedger": "Iona",
+  "third": "Ruth"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.kitchen === "string" && slots.kitchen.length > 0, "the case must name the kitchen");
+probe(Number.isInteger(slots.cardMinutes) && slots.cardMinutes > 0, "the card must state a positive cooking time in minutes");
+probe(slots.nightMinutes === slots.cardMinutes, "the firm night must fall at the time the card names");
+probe(typeof slots.attacker === "string" && slots.attacker.length > 0, "the case must name the speaker who attacks the card");
+probe(slots.attacker !== slots.hedger && slots.attacker !== slots.third && slots.hedger !== slots.third, "the case must name three different speakers");
+return "An inductive policy with slack in \u201cusually.\u201d " + slots.attacker + " attacked a universal that was not posted.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

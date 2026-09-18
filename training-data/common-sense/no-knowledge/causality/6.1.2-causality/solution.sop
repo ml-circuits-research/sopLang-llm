@@ -1,0 +1,39 @@
+@slots literal
+{
+  "confounder": "staffing is complete",
+  "randomized": true,
+  "total": 40,
+  "treatmentSize": 20,
+  "controlSize": 20,
+  "treatment": {
+    "successes": 15,
+    "total": 20
+  },
+  "control": {
+    "successes": 12,
+    "total": 20
+  }
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(slots.randomized === true, "the statement must state a randomized comparison");
+probe(typeof slots.confounder === "string" && slots.confounder.length > 0, "the statement must name the factor that travels with X in the observational phase");
+probe(Number.isInteger(slots.total) && slots.total > 0, "the randomized phase must assign a positive number of comparable cases");
+probe(Number.isInteger(slots.treatmentSize) && Number.isInteger(slots.controlSize) && slots.treatmentSize > 0 && slots.controlSize > 0, "each randomized group must be a positive size");
+probe(slots.treatmentSize + slots.controlSize === slots.total, "the two groups must account for the assigned cases");
+probe(Number.isInteger(slots.treatment.successes) && Number.isInteger(slots.treatment.total) && slots.treatment.successes >= 0 && slots.treatment.successes <= slots.treatment.total, "the X group must report a success count inside its size");
+probe(Number.isInteger(slots.control.successes) && Number.isInteger(slots.control.total) && slots.control.successes >= 0 && slots.control.successes <= slots.control.total, "the control group must report a success count inside its size");
+probe(slots.treatment.total === slots.treatmentSize && slots.control.total === slots.controlSize, "the reported group sizes must match the assignment");
+const observational = "correlational";
+const randomized = "stronger causal evidence";
+probe(observational !== randomized, "the observational and randomized phases must not be conflated");
+return "The first four weeks provide " + observational + " evidence; the randomized comparison provides " + randomized + ", but not absolute certainty.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

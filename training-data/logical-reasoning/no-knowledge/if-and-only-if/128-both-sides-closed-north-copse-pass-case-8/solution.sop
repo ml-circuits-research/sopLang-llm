@@ -1,0 +1,39 @@
+@slots literal
+{
+  "place": "North Copse",
+  "fee": 12,
+  "applicants": [
+    {
+      "name": "Jules",
+      "paid": true,
+      "photograph": false
+    },
+    {
+      "name": "Kat",
+      "paid": false,
+      "photograph": true
+    },
+    {
+      "name": "Ned",
+      "paid": true,
+      "photograph": true
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.fee) && slots.fee > 0, "the fee must be a positive whole number");
+probe(Array.isArray(slots.applicants) && slots.applicants.length === 3, "the case must record exactly three applicants");
+probe(new Set(slots.applicants.map((applicant) => applicant.name)).size === 3, "the three applicants must be different people");
+const holders = slots.applicants.filter((applicant) => applicant.paid === true && applicant.photograph === true);
+probe(holders.length === 1, "exactly one applicant holds both halves of the biconditional");
+return "Only " + holders[0].name + ". \u201cIf and only if\u201d makes the pair necessary and sufficient. Missing either half blocks the pass.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

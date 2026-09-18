@@ -1,0 +1,38 @@
+@slots literal
+{
+  "place": "Long Hill",
+  "indexFrom": 1020,
+  "indexTo": 1035,
+  "pricePerCubicMetre": 6,
+  "litresPerHour": 3,
+  "litresPerCubicMetre": 1000,
+  "name": "Jules",
+  "days": 20,
+  "hoursPerDay": 24
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the village whose water book is read");
+probe(typeof slots.name === "string" && slots.name.length > 0, "the case must name the person with the dripping tap");
+probe(Number.isInteger(slots.indexFrom) && Number.isInteger(slots.indexTo) && slots.indexTo > slots.indexFrom, "the two index readings must be whole numbers in increasing order");
+probe(typeof slots.pricePerCubicMetre === "number" && slots.pricePerCubicMetre > 0, "the book must state a positive price per cubic metre");
+probe(Number.isInteger(slots.litresPerHour) && slots.litresPerHour > 0, "the drip table must state a positive rate in litres per hour");
+probe(slots.litresPerCubicMetre === 1000, "the table must equate 1000 litres with one cubic metre");
+probe(Number.isInteger(slots.days) && slots.days > 0, "the drip must last a positive whole number of days");
+probe(Number.isInteger(slots.hoursPerDay) && slots.hoursPerDay > 0 && slots.hoursPerDay <= 24, "the drip must run a positive whole number of hours per day, at most 24");
+const indexUse = slots.indexTo - slots.indexFrom;
+const cost = Math.round(indexUse * slots.pricePerCubicMetre * 100) / 100;
+probe(cost > 0, "the billed cost must be positive");
+const dripLitres = slots.litresPerHour * slots.hoursPerDay * slots.days;
+probe(dripLitres > 0, "the leak must lose a positive number of litres");
+const dripText = (dripLitres / slots.litresPerCubicMetre).toFixed(2);
+return "Index " + indexUse + " m³ = " + cost + ". Drip " + dripText + " m³ (" + dripLitres + " l).";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

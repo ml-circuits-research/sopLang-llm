@@ -1,0 +1,40 @@
+@slots literal
+{
+  "name": "Piotr",
+  "minutes": 18,
+  "asksPassword": true,
+  "demandsSecrecy": true,
+  "link": "http://example-reset.invalid",
+  "urgencyMinutes": 30,
+  "checkTypedByHand": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.name === "string" && slots.name.length > 0, "the message must be addressed to a named recipient");
+probe(Number.isInteger(slots.minutes) && slots.minutes > 0, "the message must give a positive whole number of minutes");
+probe(Number.isInteger(slots.urgencyMinutes) && slots.urgencyMinutes > 0, "the guide must state a positive urgency threshold");
+probe(slots.minutes < slots.urgencyMinutes, "the deadline must fall under the threshold the guide calls manufactured urgency");
+probe(slots.asksPassword === true, "the message must ask for the password");
+probe(slots.demandsSecrecy === true, "the message must demand secrecy");
+probe(typeof slots.link === "string" && slots.link.length > 0, "the message must carry the link the guide warns about");
+probe(slots.checkTypedByHand === true, "the guide must tell the reader to check on a site typed by hand");
+const signs = [];
+if (slots.asksPassword) { signs.push("the password request"); }
+if (slots.minutes < slots.urgencyMinutes) { signs.push("the urgency"); }
+if (slots.demandsSecrecy) { signs.push("the secrecy"); }
+probe(signs.length > 0, "the message must show at least one sign from the guide");
+const actionClause = "Do not send password/card, do not click.";
+const checkClause = "Type the known address or ignore.";
+const summary = signs.length === 3
+  ? "Every sign on the guide is present."
+  : "Only " + signs.length + " of the 3 signs are present.";
+return actionClause + " " + checkClause + " " + summary;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

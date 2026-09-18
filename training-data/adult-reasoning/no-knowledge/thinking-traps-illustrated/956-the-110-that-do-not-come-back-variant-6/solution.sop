@@ -1,0 +1,43 @@
+@slots literal
+{
+  "person": "Jules",
+  "amount": 110,
+  "saidAmount": 110,
+  "vignetteText": "Jules paid 110 for a poor course and stays “so as not to lose 110”, although the remaining hours do not bring the money back, the text says.",
+  "definitions": [
+    {
+      "label": "confirmation",
+      "definition": "you hunt only proof you are right"
+    },
+    {
+      "label": "anchor",
+      "definition": "the first price seen pulls the estimate"
+    },
+    {
+      "label": "sunk cost",
+      "definition": "you continue because “I already put money in”"
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots === "object" && slots !== null, "the trap case must carry its parsed values");
+probe(typeof slots.person === "string" && slots.person.length > 0, "the person in the vignette must be named");
+probe(Number.isInteger(slots.amount) && slots.amount > 0, "the sum paid for the course must be a positive whole number");
+probe(slots.amount === slots.saidAmount, "the sum paid and the sum the person wants to save must be the same");
+probe(Array.isArray(slots.definitions) && slots.definitions.length === 3, "the statement must define the three traps");
+const trap = slots.definitions.find((entry) => /already put money in/.test(entry.definition));
+probe(trap !== undefined, "the listed traps must include the one defined by continuing because money was already put in");
+probe(/so as not to lose/.test(slots.vignetteText), "the vignette must show the person staying so as not to lose the sum");
+const label = trap.label.charAt(0).toUpperCase() + trap.label.slice(1);
+const answer = label + ". The " + slots.amount + " are gone on both branches. The next hour is a new cost of time.";
+return answer;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,46 @@
+@slots literal
+{
+  "values": [
+    40,
+    45,
+    35,
+    40,
+    50,
+    55,
+    20,
+    40,
+    130
+  ],
+  "extreme": 130
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.values) && slots.values.length === 9, "the statement must list nine observations");
+probe(slots.values.every((value) => Number.isInteger(value) && value >= 0), "every observation must be a whole non-negative number");
+probe(slots.values[slots.values.length - 1] === slots.extreme, "the named extreme value must be the last observation");
+probe(slots.values[slots.values.length - 1] === Math.max.apply(null, slots.values), "the named extreme value must be the largest observation");
+const hundredthsOf = (sum, count) => {
+  const scaled = sum * 100;
+  const quotient = Math.floor(scaled / count);
+  const remainder = scaled % count;
+  return remainder * 2 > count || (remainder * 2 === count && quotient % 2 === 1) ? quotient + 1 : quotient;
+};
+const sorted = slots.values.slice().sort((left, right) => left - right);
+const sum = slots.values.reduce((total, value) => total + value, 0);
+probe(sum > 0, "the observations must carry a positive total");
+const median = sorted[Math.floor(sorted.length / 2)];
+const rest = slots.values.slice(0, -1);
+const restSum = rest.reduce((total, value) => total + value, 0);
+const mean = hundredthsOf(sum, slots.values.length);
+const withoutExtreme = hundredthsOf(restSum, rest.length);
+probe(mean >= withoutExtreme, "the extreme value must not pull the mean below the mean without it");
+return "Mean = " + String(mean / 100) + "; median = " + median + ". Use the mean for total amount per observation and the median for a more robust 'typical' value.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

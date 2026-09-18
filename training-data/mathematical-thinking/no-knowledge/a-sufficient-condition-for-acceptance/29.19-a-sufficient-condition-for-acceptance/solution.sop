@@ -9,6 +9,10 @@
 }
 
 @answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
 const slots = $slots;
 const sufficient = slots.operator === "or" ? slots.properties.indexOf(slots.query) !== -1 : slots.properties.length === 1;
 const necessary = slots.operator === "and" ? slots.properties.indexOf(slots.query) !== -1 : slots.properties.length === 1;
@@ -16,4 +20,7 @@ if (sufficient && necessary) return "It is necessary and sufficient.";
 if (sufficient) return "It is sufficient, but not necessary.";
 if (necessary) return "Necessary, but not sufficient.";
 return "Neither necessary nor sufficient.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
 

@@ -1,0 +1,41 @@
+@slots literal
+{
+  "place": "Maple Ward",
+  "pinchMinutes": 10,
+  "emergencyMinutes": 20,
+  "patient": "Ben",
+  "bleedingMinutes": 5,
+  "helper": "Ann",
+  "questionHelper": "Ann",
+  "postureReversed": true,
+  "cottonPacked": true,
+  "aspirinGiven": true,
+  "waitMinutes": 5
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.patient === "string" && slots.patient.length > 0, "the statement must name the person bleeding");
+probe(typeof slots.helper === "string" && slots.helper.length > 0, "the statement must name the person helping");
+probe(slots.patient !== slots.helper, "the two named people must be different");
+probe(slots.questionHelper === slots.helper, "the question must ask about the person who acted");
+probe(Number.isInteger(slots.pinchMinutes) && slots.pinchMinutes > 0, "the sheet pinch time must be a positive whole number of minutes");
+probe(Number.isInteger(slots.emergencyMinutes) && slots.emergencyMinutes > slots.pinchMinutes, "the emergency time must exceed the pinch time");
+probe(Number.isInteger(slots.waitMinutes) && slots.waitMinutes >= 0, "the waiting time must be a whole number of minutes");
+probe(slots.waitMinutes < slots.pinchMinutes, "the helper must wait less than the sheet requires");
+const breaches = [];
+if (slots.postureReversed) { breaches.push("Posture reversed"); }
+if (slots.cottonPacked) { breaches.push("cotton"); }
+if (slots.aspirinGiven) { breaches.push("aspirin"); }
+if (slots.waitMinutes < slots.pinchMinutes) { breaches.push("time too short"); }
+const list = breaches.join(", ");
+const breachClause = list.charAt(0).toUpperCase() + list.slice(1);
+return breachClause + ". Correct: forward, " + slots.pinchMinutes + " min pinch, no cotton/aspirin.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

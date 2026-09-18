@@ -1,0 +1,32 @@
+@slots literal
+{
+  "place": "Port Asher",
+  "busLeaves": "09:00",
+  "traveller": "Ade",
+  "actualArrival": "09:04",
+  "licensedSpeaker": "Bela",
+  "counterfactualArrival": "08:55",
+  "unlicensedSpeaker": "Chris"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+const minutesOf = (hhmm) => { const parts = String(hhmm).split(":"); return Number(parts[0]) * 60 + Number(parts[1]); };
+probe(typeof slots.place === "string" && slots.place.length > 0, "the notes must name the place of the bus");
+probe(typeof slots.traveller === "string" && slots.traveller.length > 0, "the notes must name the traveller");
+const departure = minutesOf(slots.busLeaves);
+const actual = minutesOf(slots.actualArrival);
+const licensed = minutesOf(slots.counterfactualArrival);
+probe(actual > departure, "the recorded arrival must be after the printed leaving minute");
+probe(licensed <= departure, "the licensed counterfactual must arrive by the printed leaving minute");
+probe(licensed < actual, "the licensed counterfactual must move the arrival earlier");
+probe(slots.licensedSpeaker !== slots.unlicensedSpeaker, "the two counterfactuals must come from two different people");
+return slots.licensedSpeaker + "\u2019s. It changes arrival time and holds the printed leaving rule. " + slots.unlicensedSpeaker + " changes the bus\u2019s rule without a licence.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

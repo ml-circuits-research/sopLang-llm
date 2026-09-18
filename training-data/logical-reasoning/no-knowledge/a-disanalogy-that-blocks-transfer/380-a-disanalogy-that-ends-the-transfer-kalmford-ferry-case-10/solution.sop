@@ -1,0 +1,35 @@
+@slots literal
+{
+  "place": "Kalmford",
+  "domain": "timetable",
+  "extraPlural": "tide windows",
+  "keeper": "Sol",
+  "analyst": "Una",
+  "extra": "tide window",
+  "dismisser": "Wes"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the poster");
+probe(typeof slots.domain === "string" && slots.domain.length > 0, "the case must name the domain of the rule the poster imports");
+probe(typeof slots.extraPlural === "string" && slots.extraPlural.length > 0, "the case must name the listed extra part");
+probe(typeof slots.extra === "string" && slots.extra.length > 0, "the case must name the extra part in the singular");
+probe(typeof slots.keeper === "string" && slots.keeper.length > 0, "the case must name the speaker who keeps the bus rules");
+probe(typeof slots.analyst === "string" && slots.analyst.length > 0, "the case must name the speaker who calls the extra part a relevant disanalogy");
+probe(typeof slots.dismisser === "string" && slots.dismisser.length > 0, "the case must name the speaker who dismisses one extra part");
+probe(new Set([slots.keeper, slots.analyst, slots.dismisser]).size === 3, "the three speakers must be three different people");
+const singular = slots.extraPlural.replace(/s$/, "");
+probe(singular === slots.extra, "the analyst must name the listed extra part in the singular");
+const doesRuleWork = singular === slots.extra && slots.domain.length > 0;
+const mayMove = !doesRuleWork;
+probe(mayMove === false, "an extra part that does work inside the imported rule stops the transfer");
+return (mayMove ? "Yes" : "No") + ". The " + slots.extra + " is an extra part that does " + slots.domain + " work.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

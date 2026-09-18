@@ -1,0 +1,32 @@
+@slots literal
+{
+  "holder": "Drew",
+  "excess": 320,
+  "premium": 215,
+  "reserve": 420,
+  "loss": 720
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots === "object" && slots !== null, "the insurance case must carry its parsed values");
+probe(typeof slots.holder === "string" && slots.holder.length > 0, "the person holding the policy must be named");
+probe(Number.isInteger(slots.premium) && slots.premium > 0, "the yearly premium must be a positive whole number");
+probe(Number.isInteger(slots.excess) && slots.excess > 0, "the excess must be a positive whole number");
+probe(Number.isInteger(slots.reserve) && slots.reserve > 0, "the reserve must be a positive whole number");
+probe(Number.isInteger(slots.loss) && slots.loss > 0, "the loss must be a positive whole number");
+probe(slots.reserve < slots.loss, "the reserve must not cover the uninsured loss for this section");
+const insured = slots.premium + slots.excess;
+const uninsured = slots.loss;
+let comparison = ">";
+if (slots.reserve < uninsured) { comparison = "<"; } else if (slots.reserve === uninsured) { comparison = "="; }
+const answer = "With: " + slots.premium + "+" + slots.excess + "=" + insured + ". Without: " + uninsured + ". Reserve " + slots.reserve + " " + comparison + " the uninsured loss.";
+return answer;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

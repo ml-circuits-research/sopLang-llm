@@ -1,0 +1,111 @@
+@slots literal
+{
+  "letters": [
+    "A",
+    "B"
+  ],
+  "meanings": [
+    {
+      "letter": "A",
+      "meaning": "the direction of light is known"
+    },
+    {
+      "letter": "B",
+      "meaning": "the Moon’s position in its orbit is known"
+    }
+  ],
+  "examples": [
+    {
+      "values": [
+        false,
+        false
+      ],
+      "result": true
+    },
+    {
+      "values": [
+        false,
+        true
+      ],
+      "result": false
+    },
+    {
+      "values": [
+        true,
+        true
+      ],
+      "result": false
+    }
+  ],
+  "candidates": [
+    {
+      "label": "R1",
+      "kind": "and"
+    },
+    {
+      "label": "R2",
+      "kind": "or"
+    },
+    {
+      "label": "R3",
+      "kind": "xor"
+    },
+    {
+      "label": "R4",
+      "kind": "nor"
+    }
+  ],
+  "newCase": {
+    "first": {
+      "letter": "A",
+      "value": "YES"
+    },
+    "second": {
+      "letter": "B",
+      "value": "NO"
+    }
+  }
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.letters) && slots.letters.length === 2, "the statement must name exactly two conditions");
+probe(Array.isArray(slots.meanings) && slots.meanings.length === 2 && slots.meanings.every((meaning) => typeof meaning.meaning === "string" && meaning.meaning.length > 0), "the statement must say what each condition means");
+probe(Array.isArray(slots.examples) && slots.examples.length > 0, "the statement must show at least one example");
+for (const example of slots.examples) {
+  probe(Array.isArray(example.values) && example.values.length === 2, "every example must give both input values");
+  probe(typeof example.result === "boolean", "every example must give its output");
+}
+probe(Array.isArray(slots.candidates) && slots.candidates.length > 1, "the statement must offer several candidate rules");
+const kinds = ["and", "or", "xor", "nor"];
+for (const candidate of slots.candidates) {
+  probe(kinds.indexOf(candidate.kind) !== -1, "every candidate must be one of the four stated logical rules");
+}
+const applies = (kind, values) => {
+  if (kind === "and") { return values[0] && values[1]; }
+  if (kind === "or") { return values[0] || values[1]; }
+  if (kind === "xor") { return values[0] !== values[1]; }
+  return !values[0] && !values[1];
+};
+const surviving = slots.candidates.filter((candidate) => slots.examples.every((example) => applies(candidate.kind, example.values) === example.result));
+probe(surviving.length > 0, "at least one candidate rule must reproduce the examples");
+probe(surviving.length === 1, "the examples must leave exactly one candidate rule, not " + surviving.length);
+const kind = surviving[0].kind;
+const first = slots.newCase.first;
+const second = slots.newCase.second;
+const result = applies(kind, [first.value === "YES", second.value === "YES"]);
+const prefixes = {
+  and: "The rule is " + slots.letters[0] + " AND " + slots.letters[1],
+  or: "Rule is " + slots.letters[0] + " or " + slots.letters[1] + " (at least one)",
+  xor: "Rule is exactly one of " + slots.letters[0] + " and " + slots.letters[1],
+  nor: "Rule is neither " + slots.letters[0] + " nor " + slots.letters[1]
+};
+return prefixes[kind] + "; for " + first.letter + "=" + first.value + ", " + second.letter + "=" + second.value + " the result is " + (result ? "YES" : "NO") + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

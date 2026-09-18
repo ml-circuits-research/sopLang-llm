@@ -1,0 +1,36 @@
+@slots literal
+{
+  "place": "Bridge City",
+  "person": "Elena",
+  "good": 40,
+  "middle": 55,
+  "bad": 80,
+  "meeting": "10:00",
+  "meetingMinutes": 600,
+  "departure": "09:20",
+  "departureMinutes": 560
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots === "object" && slots !== null, "the scenario case must carry its parsed values");
+probe(typeof slots.place === "string" && slots.place.length > 0, "the route must reach a named place");
+probe(typeof slots.person === "string" && slots.person.length > 0, "the traveller must be named");
+probe(Number.isInteger(slots.good) && slots.good > 0, "the good scenario must be a positive whole number of minutes");
+probe(Number.isInteger(slots.middle) && slots.middle > slots.good, "the middle scenario must be slower than the good one");
+probe(Number.isInteger(slots.bad) && slots.bad > slots.middle, "the bad scenario must be the slowest of the three");
+probe(Number.isInteger(slots.meetingMinutes) && Number.isInteger(slots.departureMinutes), "the meeting and the departure must be clock times on the same day");
+probe(slots.departureMinutes < slots.meetingMinutes, "the traveller must set out before the meeting");
+const arrivalMinutes = slots.departureMinutes + slots.bad;
+probe(arrivalMinutes > slots.meetingMinutes, "the bad scenario must miss the immovable meeting");
+const relation = arrivalMinutes > slots.meetingMinutes ? "overruns" : (arrivalMinutes === slots.meetingMinutes ? "lands exactly at" : "arrives before");
+const answer = slots.departure + "+" + slots.bad + " min " + relation + " " + slots.meeting + ". Required departure: " + slots.meeting + " minus " + slots.bad + " min.";
+return answer;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

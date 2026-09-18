@@ -1,0 +1,57 @@
+@slots literal
+{
+  "place": "Mill Hamlet",
+  "family": {
+    "name": "Leo",
+    "children": 2,
+    "from": "8:00",
+    "until": "16:00"
+  },
+  "rows": [
+    {
+      "from": "8:00",
+      "until": "13:00",
+      "one": 400,
+      "two": 700,
+      "threePlus": 900
+    },
+    {
+      "from": "8:00",
+      "until": "16:00",
+      "one": 620,
+      "two": 1050,
+      "threePlus": 1350
+    }
+  ],
+  "lunchPerChild": 185,
+  "discount": {
+    "amount": 50,
+    "place": "Mill Hamlet"
+  },
+  "columnsReplaceBaseFee": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.family === "object" && slots.family !== null, "the yearbook must name the family that asks for the fee");
+probe(typeof slots.family.name === "string" && slots.family.name.length > 0, "the family name must be on record");
+probe(Number.isInteger(slots.family.children) && slots.family.children >= 1, "the family size must be a whole number of children");
+probe(Array.isArray(slots.rows) && slots.rows.length === 2, "the yearbook must print the two opening-hours rows");
+probe(slots.rows.every((row) => row.one > 0 && row.two > row.one && row.threePlus > row.two), "each row must charge more as the family grows");
+probe(Number.isInteger(slots.lunchPerChild) && slots.lunchPerChild > 0, "lunch must cost a positive amount per child");
+probe(Number.isInteger(slots.discount.amount) && slots.discount.amount > 0, "the neighbourhood discount must be a positive amount");
+const row = slots.rows.find((candidate) => candidate.from === slots.family.from && candidate.until === slots.family.until);
+probe(row !== undefined, "the family must ask for one of the printed opening-hours rows");
+const base = slots.family.children === 1 ? row.one : (slots.family.children === 2 ? row.two : row.threePlus);
+const discount = slots.discount.place === slots.place ? slots.discount.amount : 0;
+const total = base + slots.family.children * slots.lunchPerChild - discount;
+probe(total > base, "adding lunch must raise the fee above the hours fee");
+return base + " + " + slots.family.children + "×" + slots.lunchPerChild + " − " + discount + " = " + total + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

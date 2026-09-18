@@ -23,6 +23,10 @@
 }
 
 @answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
 const slots = $slots;
 const matching = slots.rules.filter((rule) => slots.pairs.every((pair) => {
   const operation = rule.match(/^(add|subtract)\s+(\d+)$/);
@@ -37,4 +41,7 @@ const operation = matching[0].match(/^(add|subtract)\s+(\d+)$/);
 const amount = Number(operation[2]);
 const result = operation[1] === "add" ? slots.input + amount : slots.input - amount;
 return "Rule: " + matching[0] + "; the output for " + slots.input + " is " + result + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
 

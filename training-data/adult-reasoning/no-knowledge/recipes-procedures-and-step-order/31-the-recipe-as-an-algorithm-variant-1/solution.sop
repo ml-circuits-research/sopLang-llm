@@ -1,0 +1,59 @@
+@slots literal
+{
+  "kitchenOf": "Mira",
+  "place": "Station Quarter",
+  "baker": "Mira",
+  "tins": "2",
+  "flour": 200,
+  "water": 100,
+  "yeastStep": 1,
+  "yeastMinutes": 10,
+  "saltStep": 2,
+  "kneadStep": 3,
+  "kneadMinutes": 8,
+  "riseStep": 4,
+  "riseMinutes": 60,
+  "riseLowC": 24,
+  "riseHighC": 26,
+  "proofStep": 5,
+  "proofMinutes": 20,
+  "bakeStep": 6,
+  "bakeMinutes": 18,
+  "bakeC": 220,
+  "coldBelow": 20,
+  "coldRise": 90,
+  "roomTemp": 18,
+  "observedKnead": 4,
+  "observedRise": 30,
+  "saltWithYeast": true,
+  "halvesEverything": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots === "object" && slots !== null, "the case must carry the parsed recipe");
+probe(typeof slots.baker === "string" && slots.baker.length > 0, "the episode must name the baker");
+probe(slots.flour > 0 && slots.water > 0, "the recipe must carry positive amounts");
+probe(Number.isInteger(slots.kneadMinutes) && slots.kneadMinutes > 0, "the kneading time must be a whole number of minutes");
+probe(Number.isInteger(slots.riseMinutes) && slots.riseMinutes > 0, "the rise time must be a whole number of minutes");
+probe(slots.roomTemp < slots.coldBelow, "the workroom must be below the temperature that lengthens the rise");
+probe(slots.coldRise > slots.riseMinutes, "the cold-room rise must be longer than the warm rise");
+probe(slots.observedKnead === slots.kneadMinutes / 2, "the baker must have halved the kneading time");
+probe(slots.observedRise === slots.riseMinutes / 2, "the baker must have halved the rise time");
+const effectiveRise = slots.roomTemp < slots.coldBelow ? slots.coldRise : slots.riseMinutes;
+const respectClause = "Halved ingredients: " + (slots.halvesEverything ? "yes" : "no") + ".";
+const breaches = [];
+if (slots.saltWithYeast) { breaches.push("salt in S" + slots.yeastStep); }
+if (slots.observedKnead !== slots.kneadMinutes) { breaches.push(slots.observedKnead + "-minute knead"); }
+if (slots.observedRise !== effectiveRise) { breaches.push(slots.observedRise + "-minute rise"); }
+if (slots.observedRise !== slots.coldRise) { breaches.push("ignoring the " + slots.coldRise + " minutes at " + slots.roomTemp + " °C"); }
+const breachesClause = breaches.length === 0 ? "Breaches: none." : "Breaches: " + breaches.join("; ") + ".";
+return respectClause + " " + breachesClause;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

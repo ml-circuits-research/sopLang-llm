@@ -1,0 +1,68 @@
+@slots literal
+{
+  "costs": {
+    "plain": 1,
+    "forest": 2,
+    "hill": 3,
+    "marsh": 4
+  },
+  "routes": [
+    {
+      "name": "R1",
+      "terrains": [
+        "plain",
+        "hill",
+        "plain"
+      ]
+    },
+    {
+      "name": "R2",
+      "terrains": [
+        "plain",
+        "forest",
+        "plain",
+        "plain"
+      ]
+    },
+    {
+      "name": "R3",
+      "terrains": [
+        "plain",
+        "marsh"
+      ]
+    }
+  ],
+  "limit": 9
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.routes) && slots.routes.length > 0, "the statement must list at least one candidate route");
+probe(typeof slots.costs === "object" && slots.costs !== null && Object.keys(slots.costs).length > 0, "the statement must state the terrain energy costs");
+probe(Number.isFinite(slots.limit), "the statement must state a numeric energy limit");
+const scored = slots.routes.map((route) => {
+  probe(Array.isArray(route.terrains) && route.terrains.length > 0, "every candidate route must list at least one terrain segment");
+  let energy = 0;
+  for (const terrain of route.terrains) {
+    probe(typeof slots.costs[terrain] === "number", "every terrain of a route must have a stated cost");
+    energy += slots.costs[terrain];
+  }
+  return { name: route.name, energy };
+});
+const feasible = scored.filter((route) => route.energy <= slots.limit);
+probe(feasible.length > 0, "at least one listed route must stay within the energy limit");
+let best = feasible[0];
+for (const route of feasible.slice(1)) {
+  if (route.energy < best.energy) {
+    best = route;
+  }
+}
+return "Route " + best.name + ", using " + best.energy + " energy units.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,83 @@
+@slots literal
+{
+  "subject": "dated records",
+  "requiredFlow": 37,
+  "limitMinutes": 42,
+  "routes": [
+    {
+      "name": "A",
+      "times": [
+        18,
+        8,
+        12
+      ],
+      "capacities": [
+        72,
+        90,
+        37
+      ]
+    },
+    {
+      "name": "B",
+      "times": [
+        17,
+        15,
+        16
+      ],
+      "capacities": [
+        80,
+        60,
+        71
+      ]
+    },
+    {
+      "name": "C",
+      "times": [
+        17,
+        14,
+        15
+      ],
+      "capacities": [
+        61,
+        66,
+        80
+      ]
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.routes) && slots.routes.length === 3, "the scenario must state three routes");
+probe(Number.isInteger(slots.requiredFlow) && slots.requiredFlow > 0, "the required flow must be a positive whole number");
+probe(Number.isInteger(slots.limitMinutes) && slots.limitMinutes > 0, "the route time limit must be a positive whole number");
+for (const route of slots.routes) {
+  probe(Array.isArray(route.times) && route.times.length === route.capacities.length, "every link time must be paired with a link capacity");
+  probe(route.times.every((minutes) => Number.isInteger(minutes) && minutes > 0), "every link time must be a positive whole number");
+  probe(route.capacities.every((capacity) => Number.isInteger(capacity) && capacity > 0), "every link capacity must be a positive whole number");
+}
+const summaries = slots.routes.map((route) => ({
+  name: route.name,
+  timeMinutes: route.times.reduce((total, minutes) => total + minutes, 0),
+  bottleneck: Math.min(...route.capacities)
+}));
+const feasible = summaries.filter((summary) => summary.bottleneck >= slots.requiredFlow && summary.timeMinutes <= slots.limitMinutes);
+probe(feasible.length > 0, "at least one route must carry the required flow within the time limit");
+let chosen = feasible[0];
+for (const summary of feasible) {
+  if (summary.timeMinutes < chosen.timeMinutes) {
+    chosen = summary;
+  }
+}
+probe(chosen.bottleneck >= slots.requiredFlow, "the chosen route must carry the required flow");
+probe(chosen.timeMinutes <= slots.limitMinutes, "the chosen route must stay within the time limit");
+probe(feasible.every((summary) => summary.timeMinutes >= chosen.timeMinutes), "no feasible route may be faster than the chosen route");
+return "Choose Route " + chosen.name + ". The decomposition uses different aggregation operators for different meanings: sequential times add, serial capacities take a minimum, then shared constraints filter entire-route summaries.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

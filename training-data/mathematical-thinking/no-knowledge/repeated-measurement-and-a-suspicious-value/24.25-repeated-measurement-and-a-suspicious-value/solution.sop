@@ -9,10 +9,17 @@
 }
 
 @answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
 const slots = $slots;
 const base = slots.measurements[0];
 if (Math.abs(slots.measurements[1] - base) > slots.tolerance) { throw new Error("the first two measurements do not agree within the stated error"); }
 const incompatible = slots.measurements.filter((value) => Math.abs(value - base) > slots.tolerance);
 if (incompatible.length !== 1) { throw new Error(incompatible.length + " measurements are incompatible with the first two"); }
 return String(incompatible[0]) + " cm.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
 

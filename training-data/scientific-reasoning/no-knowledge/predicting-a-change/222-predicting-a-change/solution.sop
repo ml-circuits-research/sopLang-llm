@@ -1,0 +1,61 @@
+@slots literal
+{
+  "change": "heating a of the water",
+  "rules": [
+    {
+      "from": "heating a of the water",
+      "to": "more intense evaporation"
+    },
+    {
+      "from": "Water vapor in air",
+      "to": "possible condensation at cooling"
+    },
+    {
+      "from": "Condensation",
+      "to": "droplets"
+    },
+    {
+      "from": "Droplets large enough",
+      "to": "precipitation"
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.change === "string" && slots.change.length > 0, "the statement must name the activated change");
+probe(Array.isArray(slots.rules) && slots.rules.length > 0, "the statement must list at least one causal rule");
+for (const rule of slots.rules) {
+  probe(typeof rule.from === "string" && rule.from.length > 0, "every rule must name the state it requires");
+  probe(typeof rule.to === "string" && rule.to.length > 0, "every rule must name the effect it produces");
+}
+const filler = ["the", "a", "an"];
+const stateKey = (text) => [...new Set(text.toLowerCase().replace(/\s+/g, " ").trim().split(" ").filter((word) => filler.indexOf(word) === -1))].sort().join(" ");
+const activated = [stateKey(slots.change)];
+const effects = [];
+let grown = true;
+while (grown) {
+  grown = false;
+  for (const rule of slots.rules) {
+    if (activated.indexOf(stateKey(rule.from)) === -1) {
+      continue;
+    }
+    const effected = stateKey(rule.to);
+    if (activated.indexOf(effected) !== -1) {
+      continue;
+    }
+    activated.push(effected);
+    effects.push(rule.to);
+    grown = true;
+  }
+}
+probe(effects.length > 0, "the activated change must trigger at least one rule");
+return "Direct effect: " + effects[0] + ". Downstream effects: " + effects.join(", ") + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

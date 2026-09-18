@@ -1,0 +1,43 @@
+@slots literal
+{
+  "subject": "Dora",
+  "trigger": "the red key",
+  "links": [
+    {
+      "if": "the red key is issued",
+      "then": "the inner light comes on"
+    },
+    {
+      "if": "the inner light is on",
+      "then": "the lock may be turned"
+    },
+    {
+      "if": "the lock is turned",
+      "then": "the archive opens"
+    }
+  ],
+  "denier": "Eli",
+  "denierClaim": "the archive",
+  "asker": "Fran"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.links) && slots.links.length === 3, "a chain case carries three conditional links");
+probe(typeof slots.subject === "string" && slots.subject.length > 0, "the case must name the person issued the key");
+probe(typeof slots.trigger === "string" && slots.trigger.length > 0, "the case must name the condition that is issued");
+probe(slots.links[0]["if"] === slots.trigger + " is issued", "the chain must start at the condition the holder satisfies");
+const conclusion = slots.links[slots.links.length - 1].then;
+probe(typeof conclusion === "string" && conclusion.length > 0, "the chain must end in a conclusion");
+probe(conclusion.indexOf(slots.denierClaim) === 0 && conclusion !== slots.denierClaim, "the denial must name the subject of the chain conclusion");
+probe(typeof slots.denier === "string" && slots.denier.length > 0, "the case must name the person who denied the front of the chain");
+const verdict = conclusion.charAt(0).toUpperCase() + conclusion.slice(1);
+return verdict + ". " + slots.denier + " denied the front of the first link and treated that as a proof of the opposite end. The card did not say the key is the only possible door.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

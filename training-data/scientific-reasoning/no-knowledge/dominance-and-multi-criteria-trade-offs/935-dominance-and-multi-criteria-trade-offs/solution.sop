@@ -1,0 +1,76 @@
+@slots literal
+{
+  "criteria": [
+    {
+      "label": "C1",
+      "name": "stability"
+    },
+    {
+      "label": "C2",
+      "name": "mass total"
+    },
+    {
+      "label": "C3",
+      "name": "occupied space"
+    }
+  ],
+  "options": [
+    {
+      "label": "A",
+      "scores": [
+        4,
+        4,
+        4
+      ]
+    },
+    {
+      "label": "B",
+      "scores": [
+        5,
+        2,
+        4
+      ]
+    },
+    {
+      "label": "C",
+      "scores": [
+        3,
+        3,
+        3
+      ]
+    },
+    {
+      "label": "D",
+      "scores": [
+        2,
+        5,
+        5
+      ]
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.criteria) && slots.criteria.length > 0, "the problem must score its options on at least one criterion");
+probe(slots.criteria.every((criterion) => typeof criterion.name === "string" && criterion.name.length > 0), "every criterion must be named");
+probe(Array.isArray(slots.options) && slots.options.length >= 2, "dominance needs at least two options");
+probe(new Set(slots.options.map((option) => option.label)).size === slots.options.length, "the option labels must be distinct");
+probe(slots.options.every((option) => Array.isArray(option.scores) && option.scores.length === slots.criteria.length), "every option must be scored on every criterion");
+probe(slots.options.every((option) => option.scores.every((score) => Number.isInteger(score) && score >= 1 && score <= 5)), "every score must be an integer from 1 to 5");
+const dominates = (left, right) => left.scores.every((score, index) => score >= right.scores[index]) && left.scores.some((score, index) => score > right.scores[index]);
+const dominators = new Map(slots.options.map((option) => [option.label, slots.options.filter((other) => other.label !== option.label && dominates(other, option)).map((other) => other.label)]));
+const eliminated = slots.options.filter((option) => dominators.get(option.label).length > 0);
+const frontier = slots.options.filter((option) => dominators.get(option.label).length === 0);
+probe(eliminated.length === 1, "exactly one option must be dominated, not " + eliminated.length);
+probe(frontier.length > 1, "the frontier must keep several candidates, not " + frontier.length);
+probe(frontier.length + eliminated.length === slots.options.length, "an option is either dominated or on the frontier");
+return "Eliminate " + eliminated[0].label + "; non-dominated frontier: " + frontier.map((option) => option.label).join(", ") + ". There is no unique winner without additional criteria.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

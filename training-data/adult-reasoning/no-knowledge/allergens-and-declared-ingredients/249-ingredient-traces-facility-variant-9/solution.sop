@@ -1,0 +1,49 @@
+@slots literal
+{
+  "ingredients": [
+    "Wheat flour",
+    "sugar",
+    "palm oil",
+    "butter 4%",
+    "eggs",
+    "flavourings",
+    "salt"
+  ],
+  "butterPercent": 4,
+  "traces": [
+    "soya",
+    "sesame"
+  ],
+  "facilityAllergens": [
+    "peanuts"
+  ],
+  "canteen": "Wells Village",
+  "guest": {
+    "name": "Piotr",
+    "peanutAllergy": true,
+    "lactoseIntolerance": true
+  }
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.guest === "object" && slots.guest !== null, "the case must describe the guest and the declaration");
+probe(typeof slots.guest.name === "string" && slots.guest.name.length > 0, "the guest must be named");
+probe(slots.traces.length + slots.facilityAllergens.length > 0, "the label must print a warning channel");
+probe(slots.facilityAllergens.some((item) => /^peanuts?$/.test(item)), "the facility warning must name peanuts");
+probe(slots.ingredients.some((item) => /^butter/.test(item)), "the ingredient list must name butter, a milk product");
+probe(slots.guest.peanutAllergy === true && slots.guest.lactoseIntolerance === true, "the guest must declare both the peanut allergy and lactose intolerance");
+const channels = [];
+if (slots.guest.peanutAllergy && slots.facilityAllergens.some((item) => /^peanuts?$/.test(item))) { channels.push("Peanuts in the facility warning"); }
+if (slots.guest.lactoseIntolerance && slots.ingredients.some((item) => /^butter/.test(item))) { channels.push("butter/milk as an ingredient"); }
+probe(channels.length > 0, "at least one channel must name a declared allergen");
+const enough = channels.length > 1 ? "Each channel alone is enough." : "One channel is enough.";
+return channels.join("; ") + ". " + enough;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

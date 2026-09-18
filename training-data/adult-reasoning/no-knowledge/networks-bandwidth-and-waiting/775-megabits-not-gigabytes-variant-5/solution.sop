@@ -1,0 +1,46 @@
+@slots literal
+{
+  "name": "Jules",
+  "gbInMb": 8000,
+  "rateMbps": 8,
+  "workMb": 8000,
+  "workMbps": 8,
+  "secondsShown": 1000,
+  "minutesShown": 16,
+  "userCount": 8,
+  "sharingMbps": 8,
+  "perUserShown": 1,
+  "bitsPerByte": 8,
+  "believedGbRate": 8,
+  "instantUsers": 5
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.name === "string" && slots.name.length > 0, "the case must name the person who misreads the unit");
+probe(Number.isInteger(slots.gbInMb) && slots.gbInMb > 0, "the sheet states the megabit content of one gigabyte");
+probe(Number.isInteger(slots.rateMbps) && slots.rateMbps > 0, "the line rate must be a positive number of megabits per second");
+probe(slots.workMb === slots.gbInMb && slots.workMbps === slots.rateMbps && slots.sharingMbps === slots.rateMbps, "the worked division and the sharing model must use the sheet rate");
+const seconds = slots.gbInMb / slots.rateMbps;
+probe(Number.isInteger(seconds) && seconds === slots.secondsShown && seconds > 0, "the exclusive transfer takes the whole number of seconds the sheet prints");
+const minutes = Math.floor(seconds / 60);
+probe(minutes === slots.minutesShown && minutes > 0, "the printed minutes are the truncated quotient of the seconds");
+probe(Number.isInteger(slots.userCount) && slots.userCount > 1, "several users share the line");
+const perUser = slots.rateMbps / slots.userCount;
+probe(perUser === slots.perUserShown && perUser > 0, "the equal model divides the rate between the sharers");
+const slowFactor = slots.userCount / perUser;
+probe(Number.isInteger(slowFactor) && slowFactor === slots.userCount, "the slowdown equals the number of sharers");
+probe(Number.isInteger(slots.instantUsers) && slots.instantUsers > 0, "the stem states how many people start watching at once");
+probe(slots.believedGbRate === slots.rateMbps, "the case reads the megabit rate as the same number of gigabytes per second");
+const words = { 1: "One", 2: "Two", 3: "Three", 4: "Four", 5: "Five", 6: "Six", 7: "Seven", 8: "Eight", 9: "Nine", 10: "Ten" };
+const peopleWord = words[slots.userCount];
+probe(typeof peopleWord === "string", "the number of sharers must have a printed word");
+return "One person: ~" + minutes + " min/GB. " + peopleWord + " people: about " + slowFactor + " times slower.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

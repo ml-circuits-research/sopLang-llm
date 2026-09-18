@@ -1,0 +1,45 @@
+@slots literal
+{
+  "place": "Harbour Town",
+  "renter": "Tess",
+  "staff": "Ugo",
+  "termDays": 11,
+  "returnDays": 13,
+  "lateDays": 2,
+  "deposit": 390,
+  "depositArticle": 4,
+  "latePerDay": 25,
+  "batteryLimit": 50,
+  "batteryKeep": 30,
+  "batteryPercent": 40,
+  "scratchCm": 8,
+  "changeArticle": 9
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots === "object" && slots !== null, "the case must carry the parsed contract");
+probe(Number.isInteger(slots.termDays) && slots.termDays > 0, "the contracted term must be a whole number of days");
+probe(Number.isInteger(slots.lateDays) && slots.lateDays > 0, "the return must be after the contracted term");
+probe(Number.isInteger(slots.latePerDay) && slots.latePerDay > 0, "the late fee per calendar day must be positive");
+probe(Number.isInteger(slots.batteryPercent) && Number.isInteger(slots.batteryLimit), "the battery charge and its threshold must be whole percentages");
+probe(Number.isInteger(slots.depositArticle) && Number.isInteger(slots.changeArticle), "every clause must keep its article number");
+probe(slots.depositArticle !== slots.changeArticle, "the deposit clause and the written-changes clause must be different articles");
+probe(slots.renter !== slots.staff, "the renter and the staff member must be different people");
+const lateTotal = slots.lateDays * slots.latePerDay;
+const lateClause = "Late fee " + slots.lateDays + "×" + slots.latePerDay + "=" + lateTotal + ".";
+const batteryClause = slots.batteryPercent < slots.batteryLimit
+  ? "Battery " + slots.batteryPercent + "%<" + slots.batteryLimit + "% → " + slots.batteryKeep + " from the deposit."
+  : "Battery " + slots.batteryPercent + "%≥" + slots.batteryLimit + "% → nothing kept from the deposit.";
+const depositClause = "The scratch cancels the duty to return the deposit in full (Art. " + slots.depositArticle + ").";
+const speechClause = "Speech does not amend Art. " + slots.changeArticle + ".";
+const cashClause = "Return is not “same day cash”.";
+return [lateClause, batteryClause, depositClause, speechClause, cashClause].join(" ");
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

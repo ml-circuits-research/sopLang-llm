@@ -1,0 +1,26 @@
+@slots literal
+{
+  "place": "Dunwick",
+  "antecedent": "the street pipe is frozen solid",
+  "consequent": "every ground-floor tap gives no water",
+  "tapOpener": "Sam",
+  "denier": "Tess",
+  "overreacher": "Owen"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the card must name the place of the caretaker");
+probe(typeof slots.antecedent === "string" && slots.antecedent.length > 0, "the card must state the antecedent of the conditional");
+probe(typeof slots.consequent === "string" && slots.consequent.length > 0, "the card must state the consequent of the conditional");
+probe(slots.consequent.indexOf("no water") !== -1, "the consequent of the card must be the dryness of the taps");
+probe(new Set([slots.tapOpener, slots.denier, slots.overreacher]).size === 3, "the observation and the two sentences must come from three different speakers");
+return slots.denier + " is forced (modus tollens). " + slots.overreacher + " affirms the back: a dry tap has more than one possible path. The card named one sufficient path to dryness, not the only path.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

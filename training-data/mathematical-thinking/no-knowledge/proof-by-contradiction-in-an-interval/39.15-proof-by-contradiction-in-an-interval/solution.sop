@@ -5,8 +5,15 @@
 }
 
 @answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
 const slots = $slots;
 const between = [];
 for (let value = slots.lower + 1; value < slots.upper; value += 1) { between.push(value); }
 return between.length === 1 ? "x=" + between[0] + "." : "x is not determined.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
 

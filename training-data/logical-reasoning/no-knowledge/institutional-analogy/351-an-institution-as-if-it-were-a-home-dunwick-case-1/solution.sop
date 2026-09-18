@@ -1,0 +1,32 @@
+@slots literal
+{
+  "place": "Dunwick",
+  "institution": "hospital",
+  "likeness": "hotel",
+  "letterFixture": "monitors",
+  "capWord": "two",
+  "follower": "Sam",
+  "followedLikeness": "hotel",
+  "mapper": "Tess",
+  "mapperInstitution": "hospital",
+  "leveller": "Owen",
+  "sharedFixture": "beds"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+const countOfWord = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10 };
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the letter");
+probe(countOfWord[slots.capWord] !== undefined && countOfWord[slots.capWord] > 0, "the card must post a visitor cap this section counts");
+probe(slots.likeness !== slots.institution, "the likeness must be an institution other than the one the card governs");
+probe(slots.followedLikeness === slots.likeness, "the reader who follows the likeness must follow the likeness the letter draws");
+probe(typeof slots.sharedFixture === "string" && slots.sharedFixture.length > 0, "the leveller must name the fixture the buildings share");
+return "No. Shared " + slots.sharedFixture + " are decorative. The infection card names the relevant constraints.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

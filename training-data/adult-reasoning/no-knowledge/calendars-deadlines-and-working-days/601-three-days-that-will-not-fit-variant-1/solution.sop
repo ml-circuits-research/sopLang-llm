@@ -1,0 +1,58 @@
+@slots literal
+{
+  "place": "Wells Village",
+  "person": "Piotr",
+  "deadlineDay": "Friday",
+  "deadlineTime": "18:00",
+  "deadlineMinutes": 1080,
+  "requiredDays": 3,
+  "tripDay": "Friday",
+  "refundPercent": 50,
+  "today": "Tuesday",
+  "todayTime": "17:00",
+  "todayMinutes": 1020,
+  "tripNoticeDay": "Friday",
+  "workingDays": [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday"
+  ],
+  "feePaid": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+const WEEKDAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+probe(typeof slots.person === "string" && slots.person.length > 0, "the question must name the person");
+probe(WEEKDAY_NAMES.indexOf(slots.today) !== -1 && WEEKDAY_NAMES.indexOf(slots.tripDay) !== -1, "today and the trip day must be weekdays of the calendar");
+probe(WEEKDAY_NAMES.indexOf(slots.deadlineDay) !== -1, "the sign-up deadline must be a weekday of the calendar");
+probe(Array.isArray(slots.workingDays) && slots.workingDays.length > 0, "the statement must name its working days");
+probe(Number.isInteger(slots.requiredDays) && slots.requiredDays > 0, "the withdrawal rule must require whole working days");
+probe(slots.feePaid === true, "the fee must be paid for the withdrawal rule to apply");
+const start = WEEKDAY_NAMES.indexOf(slots.today);
+const end = WEEKDAY_NAMES.indexOf(slots.tripDay);
+probe(end > start, "the trip day must come after today");
+const days = [];
+for (let index = start + 1; index < end; index += 1) {
+  if (slots.workingDays.indexOf(WEEKDAY_NAMES[index]) !== -1) { days.push(WEEKDAY_NAMES[index]); }
+}
+const recovered = days.length >= slots.requiredDays ? slots.refundPercent : 0;
+const open = start < WEEKDAY_NAMES.indexOf(slots.deadlineDay)
+  || (start === WEEKDAY_NAMES.indexOf(slots.deadlineDay) && slots.todayMinutes <= slots.deadlineMinutes);
+const signupClause = open
+  ? "Sign-up is open until " + slots.deadlineDay + " " + slots.deadlineTime + "."
+  : "Sign-up closed at " + slots.deadlineDay + " " + slots.deadlineTime + ".";
+const qualifier = days.length >= slots.requiredDays ? "has" : "has only";
+const shortfall = days.length >= slots.requiredDays ? "≥" : "<";
+const withdrawClause = "Withdrawal from " + slots.today + " " + qualifier + " " + days.join("+") + " (" + days.length + ") " + shortfall + " " + slots.requiredDays + " → " + recovered + "%";
+return signupClause + " " + withdrawClause;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

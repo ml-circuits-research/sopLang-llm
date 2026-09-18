@@ -1,0 +1,54 @@
+@slots literal
+{
+  "owner": "Olga",
+  "asker": "Piotr",
+  "runner": "Rita",
+  "askTime": "18:01",
+  "runnerTime": "18:04",
+  "passesAt": "18:20",
+  "loaves": "two",
+  "ownerReplyTime": "18:06",
+  "ownerWithdrew": true,
+  "milkRuleTime": "18:07",
+  "milkRunner": "Rita",
+  "milkLimit": 11,
+  "reportTime": "18:25",
+  "reportRunner": "Rita",
+  "shopFloor": 11,
+  "tookOnlyLoaves": true,
+  "stopTime": "18:26",
+  "stopSaysBuy": false,
+  "sentTime": "18:25",
+  "walkMinutes": 8,
+  "unreadTime": "18:26"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots === "object" && slots !== null, "the case must carry the parsed thread");
+probe(typeof slots.owner === "string" && slots.owner.length > 0, "the thread must belong to a phone owner");
+probe(typeof slots.asker === "string" && slots.asker.length > 0, "the thread must name the person who asked for bread");
+probe(slots.runner !== slots.owner, "the volunteer who passes the shop must not be the phone owner");
+probe(slots.milkRunner === slots.runner && slots.reportRunner === slots.runner, "the milk errand and its report must belong to the volunteer");
+probe(Number.isInteger(slots.milkLimit) && slots.milkLimit > 0, "the milk limit must be a positive price");
+probe(slots.sentTime === slots.reportTime, "the report must be sent from the car park");
+probe(slots.unreadTime === slots.stopTime, "the unread message must be the last message of the thread");
+const holder = slots.ownerWithdrew ? slots.runner : slots.owner;
+const holderClause = holder + " stays on bread.";
+const conditionMet = slots.shopFloor < slots.milkLimit;
+const boughtMilk = !slots.tookOnlyLoaves;
+const milkClause = conditionMet
+  ? "Milk: the condition is true, so " + (boughtMilk ? "it was correctly bought" : "it should have been bought") + "."
+  : "Milk: the condition is false, so " + (boughtMilk ? "buying it broke the rule" : "correctly not bought") + ".";
+const order = slots.stopSaysBuy ? "buy" : "don’t buy";
+const respected = boughtMilk === slots.stopSaysBuy;
+const stopClause = slots.unreadTime + " was unread and, in any case, said “" + order + "” — " + (respected ? "already respected" : "still open") + ".";
+return holderClause + " " + milkClause + " " + stopClause;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -8,6 +8,10 @@
 }
 
 @answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
 const slots = $slots;
 const facts = typeof $facts === "string" ? JSON.parse($facts) : $facts;
 const names = Object.keys(facts);
@@ -15,4 +19,7 @@ const scored = names.map((name) => ({ name: name, score: slots.costWeight * fact
 scored.sort((left, right) => left.score - right.score);
 if (scored.length < 2 || scored[0].score === scored[1].score) { throw new Error("the scores do not single out one plan"); }
 return "Plan " + scored[0].name + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
 

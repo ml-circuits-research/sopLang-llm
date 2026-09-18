@@ -1,0 +1,24 @@
+# Explanation 125 — Both sides closed — Long Hill pass — case 5
+
+## Explanation
+
+1. The office in Long Hill issues a day pass if and only if the fee of 9 is paid today and a photograph is on file, so the two halves are together necessary and sufficient.
+2. Leo paid today but has no photograph, so one half of the pair is missing and the pass is blocked.
+3. Mira has a photograph but did not pay today, so the other half is missing and the pass is blocked just the same.
+4. Quinn holds both halves, and the sufficiency direction of "if and only if" issues the pass to Quinn.
+
+Reference solution as printed in the source (section 13, 5 steps):
+
+1. Biconditional: both directions.
+2. Pay-without-photo fails one half.
+3. Photo-without-pay fails the other.
+4. Both halves present: the pass is issued.
+5. Do not treat “and” as “or.”
+
+## Result
+
+**Answer.** Only Quinn. “If and only if” makes the pair necessary and sufficient. Missing either half blocks the pass.
+
+**Verification.** exact_verified: the executed circuit produced this answer, and the family computation reproduced it from the statement. The independence limitation of this class is stated in `report.md`.
+
+**Program.** `solution.sop` (compiled values in `slots`, computation in `jsEval`).

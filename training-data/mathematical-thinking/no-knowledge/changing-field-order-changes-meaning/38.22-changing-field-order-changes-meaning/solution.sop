@@ -4,9 +4,16 @@
 }
 
 @answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
 const slots = $slots;
 if (String(slots.code).length !== 2) { throw new Error("the string must have exactly two digits"); }
 const a = slots.code[0];
 const b = slots.code[1];
 return "It can mean (" + a + "," + b + ") or (" + b + "," + a + "), depending on the format.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
 

@@ -1,0 +1,31 @@
+@slots literal
+{
+  "population": 10000,
+  "prevalence": 1,
+  "sensitivity": 85,
+  "specificity": 98
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.population) && slots.population > 0, "the model population must be a positive whole number of cases");
+probe(Number.isInteger(slots.prevalence) && slots.prevalence > 0 && slots.prevalence < 100, "the prevalence must be a percentage of the population");
+probe(Number.isInteger(slots.sensitivity) && slots.sensitivity > 0 && slots.sensitivity <= 100, "the sensitivity must be a percentage of the cases that carry the event");
+probe(Number.isInteger(slots.specificity) && slots.specificity > 0 && slots.specificity < 100, "the specificity must be a percentage below one hundred, so false positives exist");
+const present = slots.population * slots.prevalence / 100;
+const absent = slots.population - present;
+const truePositives = present * slots.sensitivity / 100;
+const falsePositives = absent * (100 - slots.specificity) / 100;
+probe(Number.isInteger(present) && Number.isInteger(absent) && Number.isInteger(truePositives) && Number.isInteger(falsePositives), "the stated rates must split the population into whole case counts");
+const alerts = truePositives + falsePositives;
+probe(alerts > 0, "the stated rates must produce at least one positive alert");
+const shareTenths = Math.round(1000 * truePositives / alerts);
+return "Approximately " + (shareTenths / 10).toFixed(1) + "% of positive alerts are true positives.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

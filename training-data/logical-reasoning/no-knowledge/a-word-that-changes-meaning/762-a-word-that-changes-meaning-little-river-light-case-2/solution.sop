@@ -1,0 +1,23 @@
+@slots literal
+{
+  "place": "Little River",
+  "carrier": "Ben",
+  "shifted": "Cara",
+  "keeper": "Nia"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place on the notice");
+probe(typeof slots.carrier === "string" && slots.carrier.length > 0, "the case must name the person who carries the lamp");
+probe(typeof slots.shifted === "string" && slots.shifted.length > 0, "the case must name the person who reports the shift");
+probe(slots.carrier !== slots.shifted && slots.carrier !== slots.keeper && slots.shifted !== slots.keeper, "the case must name three different people");
+return "Equivocation: one spelling, two jobs. The floor rule was about weight. The lamp line is about visibility.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

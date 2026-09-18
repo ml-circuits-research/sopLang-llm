@@ -1,0 +1,95 @@
+@slots literal
+{
+  "intervals": [
+    {
+      "name": "Technology A",
+      "start": 1200,
+      "end": 1600
+    },
+    {
+      "name": "Institution B",
+      "start": 1500,
+      "end": 1900
+    },
+    {
+      "name": "Tool C",
+      "start": 1700,
+      "end": 2000
+    },
+    {
+      "name": "Practice D",
+      "start": 1300,
+      "end": 1450
+    }
+  ],
+  "year": 1550,
+  "mentioned": [
+    "Technology A",
+    "Tool C"
+  ],
+  "crossDomain": [
+    {
+      "kind": "time",
+      "startHour": 12,
+      "startMinute": 0,
+      "hours": 2
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const describeCrossDomain = function describeCrossDomain(check) {
+  if (check.kind === 'distance') {
+    return `${check.centimetres * check.kilometresPerCentimetre} km.`;
+  }
+  if (check.kind === 'time') {
+    const minutes = check.startHour * 60 + check.startMinute + check.hours * 60;
+    const hour = String(Math.floor(minutes / 60)).padStart(2, '0');
+    const minute = String(minutes % 60).padStart(2, '0');
+    return `${hour}:${minute}.`;
+  }
+  if (check.kind === 'quorum') {
+    return check.present >= check.threshold ? 'quorum is met.' : 'quorum is not met.';
+  }
+  if (check.kind === 'reports') {
+    return `${check.total - check.duplicates} independent reports.`;
+  }
+  if (check.kind === 'sheets') {
+    return `${check.start + check.received} map sheets.`;
+  }
+  throw new Error(`Unknown cross-domain check "${check.kind}".`);
+};
+const renderCrossDomain = function renderCrossDomain(checks) {
+  if (checks === null || checks === undefined || checks.length === 0) {
+    return '';
+  }
+  const parts = checks.map((check, index) => {
+    const label = index === 1 ? 'Mixed-domain answer:' : 'Cross-domain answer:';
+    return `${label} ${describeCrossDomain(check)}`;
+  });
+  return parts.join(' ');
+};
+const slots = $slots;
+probe(Array.isArray(slots.intervals) && slots.intervals.length > 0, "the statement must supply at least one availability interval");
+probe(Array.isArray(slots.mentioned) && slots.mentioned.length > 0, "the statement must name the mentioned items");
+probe(typeof slots.year === "number", "the statement must set a story year");
+const byName = new Map(slots.intervals.map((interval) => [interval.name, interval]));
+const anachronistic = [];
+for (const item of slots.mentioned) {
+  const interval = byName.get(item);
+  probe(interval !== undefined, "every mentioned item must have a stated availability interval");
+  if (!(slots.year >= interval.start && slots.year <= interval.end)) {
+    anachronistic.push(item);
+  }
+}
+const main = anachronistic.length === 0 ? "No anachronistic item." : "Anachronistic: " + anachronistic.join(", ") + ".";
+const suffix = renderCrossDomain(slots.crossDomain);
+return suffix === "" ? main : main + " " + suffix;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

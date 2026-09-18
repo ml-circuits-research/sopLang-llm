@@ -1,0 +1,104 @@
+@slots literal
+{
+  "steps": [
+    {
+      "day": 1,
+      "kind": "found",
+      "holder": "Excavator",
+      "sender": null,
+      "receiver": null
+    },
+    {
+      "day": 2,
+      "kind": "transfer",
+      "holder": null,
+      "sender": null,
+      "receiver": "Museum A"
+    },
+    {
+      "day": 5,
+      "kind": "transfer",
+      "holder": null,
+      "sender": "Museum A",
+      "receiver": "Research Lab"
+    },
+    {
+      "day": 8,
+      "kind": "transfer",
+      "holder": null,
+      "sender": "Research Lab",
+      "receiver": "Museum B"
+    }
+  ],
+  "statedGap": null,
+  "crossDomain": null
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const describeCrossDomain = function describeCrossDomain(check) {
+  if (check.kind === 'distance') {
+    return `${check.centimetres * check.kilometresPerCentimetre} km.`;
+  }
+  if (check.kind === 'time') {
+    const minutes = check.startHour * 60 + check.startMinute + check.hours * 60;
+    const hour = String(Math.floor(minutes / 60)).padStart(2, '0');
+    const minute = String(minutes % 60).padStart(2, '0');
+    return `${hour}:${minute}.`;
+  }
+  if (check.kind === 'quorum') {
+    return check.present >= check.threshold ? 'quorum is met.' : 'quorum is not met.';
+  }
+  if (check.kind === 'reports') {
+    return `${check.total - check.duplicates} independent reports.`;
+  }
+  if (check.kind === 'sheets') {
+    return `${check.start + check.received} map sheets.`;
+  }
+  throw new Error(`Unknown cross-domain check "${check.kind}".`);
+};
+const renderCrossDomain = function renderCrossDomain(checks) {
+  if (checks === null || checks === undefined || checks.length === 0) {
+    return '';
+  }
+  const parts = checks.map((check, index) => {
+    const label = index === 1 ? 'Mixed-domain answer:' : 'Cross-domain answer:';
+    return `${label} ${describeCrossDomain(check)}`;
+  });
+  return parts.join(' ');
+};
+const slots = $slots;
+probe(Array.isArray(slots.steps) && slots.steps.length > 0, "the artifact record must state at least one handoff");
+probe(slots.steps.some((step) => step.kind === "found"), "the artifact record must state how the object was found");
+const ordered = [...slots.steps].sort((left, right) => left.day - right.day);
+let holder = null;
+let gap = slots.statedGap || null;
+for (const step of ordered) {
+  if (step.kind === "found") {
+    holder = step.holder;
+    continue;
+  }
+  if (step.receiver === null) {
+    gap = gap || { day: step.day, kind: "receiver" };
+    continue;
+  }
+  if (step.sender !== null && holder !== null && step.sender !== holder) {
+    gap = gap || { day: step.day, kind: "link" };
+  }
+  holder = step.receiver;
+}
+probe(new Set(ordered.map((step) => step.day)).size === ordered.length, "every record entry must carry its own day");
+const main = gap === null
+  ? "The chain is complete under the stated rule."
+  : gap.kind === "link"
+    ? "The chain is incomplete because the day-" + gap.day + " handoff does not connect to the previous holder."
+    : "The chain is incomplete because the day-" + gap.day + " " + gap.kind + " is missing.";
+const suffix = renderCrossDomain(slots.crossDomain);
+return suffix === "" ? main : main + " " + suffix;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

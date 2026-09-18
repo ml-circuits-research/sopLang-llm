@@ -1,0 +1,50 @@
+@slots literal
+{
+  "months": "Jan–Jun",
+  "axisStart": 83,
+  "axisEnd": 103,
+  "values": [
+    85,
+    87,
+    86,
+    93,
+    94,
+    95
+  ],
+  "title": "Explosion in subscriptions",
+  "name": "Piotr",
+  "claim": "doubled",
+  "cutAxis": true,
+  "titleIsJudgement": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.values) && slots.values.length === 6, "the chart must plot the six months it names");
+probe(slots.values.every((value) => Number.isInteger(value) && value >= 0), "every plotted value must be a whole count");
+probe(Number.isInteger(slots.axisStart) && slots.axisStart > 0, "the vertical axis must start above zero");
+probe(Number.isInteger(slots.axisEnd) && slots.axisEnd - slots.axisStart === 20, "the axis must span the twenty units the header states");
+probe(slots.values[5] > slots.values[0], "the series must end above where it began");
+probe(typeof slots.name === "string" && slots.name.length > 0 && slots.claim === "doubled", "the case must quote a doubling claim by a named reader");
+probe(slots.cutAxis === true, "the described chart must cut its axis");
+const first = slots.values[0];
+const last = slots.values[5];
+const difference = last - first;
+const doubled = first * 2;
+probe(doubled !== last, "a plotted endpoint that really doubled would carry no defect to report");
+const growth = first + " → " + last + " is +" + difference + ", not ×2 (that would be " + doubled + ").";
+const axisClause = slots.cutAxis
+  ? "A cut axis makes the slope look steep."
+  : "The axis starts at zero, so the slope is honest.";
+const titleClause = slots.titleIsJudgement
+  ? "The title is a judgement."
+  : "The title is neutral.";
+return growth + " " + axisClause + " " + titleClause;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,24 @@
+@slots literal
+{
+  "place": "North Copse",
+  "forced": "Jules",
+  "keyStory": "Kat",
+  "cinematic": "Ned"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the yard note");
+probe(typeof slots.forced === "string" && slots.forced.length > 0, "the case must name the speaker of the forced-entry story");
+probe(typeof slots.keyStory === "string" && slots.keyStory.length > 0, "the case must name the speaker of the key story");
+probe(typeof slots.cinematic === "string" && slots.cinematic.length > 0, "the case must name the speaker who prefers the cinematic story");
+probe(slots.forced !== slots.keyStory && slots.forced !== slots.cinematic && slots.keyStory !== slots.cinematic, "the three speakers must be different people");
+return slots.keyStory + "\u2019s family of stories. Tool-forced entry would ordinarily leave marks the note says are absent.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,38 @@
+@slots literal
+{
+  "white": 6,
+  "red": 2,
+  "statedTotal": 8,
+  "drawer": "Mira",
+  "draws": 8,
+  "claimNumerator": 2,
+  "claimDenominator": 8,
+  "claimDraws": 8,
+  "claimExpected": 2
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.white) && slots.white > 0, "the urn must hold a positive whole number of white balls");
+probe(Number.isInteger(slots.red) && slots.red > 0, "the urn must hold a positive whole number of red balls");
+probe(typeof slots.drawer === "string" && slots.drawer.length > 0, "the case must name the person drawing");
+probe(Number.isInteger(slots.draws) && slots.draws > 0, "the number of draws must be a positive whole number");
+const total = slots.white + slots.red;
+probe(slots.statedTotal === total, "the stated denominator must be the number of balls in the urn");
+probe(slots.claimNumerator === slots.red && slots.claimDenominator === total && slots.claimDraws === slots.draws, "the quoted claim must restate the urn odds and the number of draws");
+let a = slots.red;
+let b = total;
+while (b !== 0) { const next = a % b; a = b; b = next; }
+const probability = a === 1 ? slots.red + "/" + total : slots.red + "/" + total + "=" + (slots.red / a) + "/" + (total / a);
+const expected = (slots.draws * slots.red) / total;
+probe(Number.isInteger(expected), "the expected number of reds must be a whole number for the stated draws");
+probe(slots.claimExpected === expected, "the quoted claim must state the same expected number");
+return "P=" + probability + ". Expected number in " + slots.draws + " draws = " + expected + ", not certainty. Zero reds can occur.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,42 @@
+@slots literal
+{
+  "driverName": "Ben",
+  "place": "Mill Hamlet",
+  "driverMinutes": 4,
+  "driverSaysHidden": true,
+  "neighbourName": "Cara",
+  "neighbourMinutes": 25,
+  "neighbourSaysVisible": true,
+  "arrivalHours": 9,
+  "arrivalMinutes": 2,
+  "departureHours": 9,
+  "departureMinutes": 7,
+  "durationMinutes": 5
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.driverName === "string" && slots.driverName.length > 0, "the case must name the driver");
+probe(typeof slots.neighbourName === "string" && slots.neighbourName.length > 0, "the case must name the neighbour");
+probe(slots.driverName !== slots.neighbourName, "the driver and the neighbour must be different people");
+probe(Number.isInteger(slots.arrivalHours) && Number.isInteger(slots.arrivalMinutes) && Number.isInteger(slots.departureHours) && Number.isInteger(slots.departureMinutes), "the camera must print whole clock times");
+const arrival = slots.arrivalHours * 60 + slots.arrivalMinutes;
+const departure = slots.departureHours * 60 + slots.departureMinutes;
+const duration = (departure - arrival + 1440) % 1440;
+probe(Number.isInteger(duration) && duration > 0, "the camera must record a positive standing time");
+probe(duration === slots.durationMinutes, "the reported duration matches the camera times");
+probe(Number.isInteger(slots.driverMinutes) && slots.driverMinutes > 0, "the driver states a positive number of minutes");
+probe(Number.isInteger(slots.neighbourMinutes) && slots.neighbourMinutes > 0, "the neighbour states a positive number of minutes");
+probe(Math.abs(slots.driverMinutes - duration) <= 1, "the driver account is close to the measured duration");
+probe(Math.abs(slots.neighbourMinutes - duration) > 1, "the neighbour account contradicts the measured duration");
+probe(slots.driverSaysHidden === true && slots.neighbourSaysVisible === true, "the two accounts disagree about the tree");
+const visibility = slots.driverSaysHidden && slots.neighbourSaysVisible ? "Visibility of the tree remains disputed." : "Visibility of the tree is agreed.";
+return "The " + duration + "-minute duration contradicts " + slots.neighbourMinutes + " and is close to " + slots.driverMinutes + ". " + visibility;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

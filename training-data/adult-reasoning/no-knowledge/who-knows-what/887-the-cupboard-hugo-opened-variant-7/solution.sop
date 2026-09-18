@@ -1,0 +1,29 @@
+@slots literal
+{
+  "placer": "Farid",
+  "placerAlone": true,
+  "witness": "Farid",
+  "waiting": "Gina",
+  "opener": "Hugo",
+  "asker": "Gina",
+  "askedAbout": "Hugo",
+  "denier": "Farid"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.placer === "string" && slots.placer.length > 0, "the case must name the person who hid the gift");
+probe(typeof slots.opener === "string" && slots.opener.length > 0, "the case must name the person who opened the cupboard");
+probe(typeof slots.waiting === "string" && slots.waiting.length > 0, "the case must name the person in another room");
+probe(slots.placerAlone === true, "the placing must be seen only by the placer");
+probe(slots.placer !== slots.opener && slots.opener !== slots.waiting && slots.placer !== slots.waiting, "the three people must be different");
+probe(slots.askedAbout === slots.opener && slots.denier === slots.placer, "the question must be about the opener and the denial by the placer");
+return slots.placer + " and " + slots.opener + " know. " + slots.waiting + " does not. " + slots.placer + " did not see " + slots.opener + "\u2019s act and said \u201Cnobody\u201D.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

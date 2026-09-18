@@ -1,0 +1,53 @@
+@slots literal
+{
+  "causes": [
+    {
+      "cause": "energy insufficient",
+      "signs": [
+        "the others criteria can be good",
+        "requirement energy is not reached"
+      ]
+    },
+    {
+      "cause": "Lack of protein",
+      "signs": [
+        "the criterion of protein is missing",
+        "energy can be sufficient"
+      ]
+    },
+    {
+      "cause": "Sugar over limit",
+      "signs": [
+        "Option is eliminated of constraint",
+        "all the others can be present"
+      ]
+    }
+  ],
+  "observed": [
+    "the criterion of protein is missing",
+    "energy can be sufficient"
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.causes) && slots.causes.length > 0, "the statement must list at least one possible cause");
+probe(Array.isArray(slots.observed) && slots.observed.length > 0, "the statement must report at least one observation");
+for (const entry of slots.causes) {
+  probe(typeof entry.cause === "string" && entry.cause.length > 0, "every cause must carry a name");
+  probe(Array.isArray(entry.signs) && entry.signs.length > 0, "every cause must list the signs it produces: " + entry.cause);
+}
+const matching = slots.causes.filter((entry) => entry.signs.length === slots.observed.length && slots.observed.every((sign) => entry.signs.includes(sign)));
+probe(matching.length > 0, "at least one cause must explain every observed sign");
+probe(matching.length === 1, "exactly one cause must match the observations, not " + matching.length);
+const cause = matching[0].cause;
+const lowerFirst = cause.length === 0 ? cause : cause[0].toLowerCase() + cause.slice(1);
+return "The cause supported by the data is “" + lowerFirst + "”.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

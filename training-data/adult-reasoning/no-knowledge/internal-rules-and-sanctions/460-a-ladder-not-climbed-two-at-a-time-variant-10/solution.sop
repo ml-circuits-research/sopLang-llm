@@ -1,0 +1,40 @@
+@slots literal
+{
+  "rungs": [
+    "verbal",
+    "written",
+    "bonus cut"
+  ],
+  "person": "Kara",
+  "priorSanction": "verbal",
+  "priorAct": "phone",
+  "otherAct": "Smoking",
+  "conductVerb": "smokes"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.rungs) && slots.rungs.length >= 2, "the rules must print a ladder of at least two rungs");
+probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the employee");
+probe(typeof slots.priorAct === "string" && slots.priorAct.length > 0, "the case must name the act already sanctioned");
+probe(typeof slots.otherAct === "string" && slots.otherAct.length > 0, "the case must name the act of the day");
+probe(typeof slots.conductVerb === "string" && slots.conductVerb.length > 0, "the case must describe the conduct of the day");
+const priorIndex = slots.rungs.indexOf(slots.priorSanction);
+probe(priorIndex !== -1, "the prior sanction must be one of the printed rungs");
+probe(priorIndex + 1 < slots.rungs.length, "the ladder must have a rung above the prior sanction");
+probe(slots.otherAct.toLowerCase().slice(0, 4) === slots.conductVerb.slice(0, 4), "the day’s conduct must be the act the rules call the other type");
+probe(slots.otherAct !== slots.priorAct.charAt(0).toUpperCase() + slots.priorAct.slice(1), "the two acts must be of different types");
+const nextIndex = priorIndex + 1;
+const lastRungWord = slots.rungs[slots.rungs.length - 1].split(" ")[0];
+const sameActClause = slots.priorAct.charAt(0).toUpperCase() + slots.priorAct.slice(1) + ": same act → rung " + (nextIndex + 1) + " (" + slots.rungs[nextIndex] + ").";
+const otherActClause = slots.otherAct + ": other type → rung 1 possible.";
+const warningClause = "Do not jump to the " + lastRungWord + " for the " + slots.priorAct + ".";
+return sameActClause + " " + otherActClause + " " + warningClause;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

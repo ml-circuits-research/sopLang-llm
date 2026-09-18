@@ -1,0 +1,28 @@
+@slots literal
+{
+  "name": "Leo",
+  "percent": 90,
+  "readPercent": 90,
+  "replied": 22,
+  "sales": 420
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.name === "string" && slots.name.length > 0, "the case must name the reader who widens the claim");
+probe(Number.isInteger(slots.percent) && slots.percent > 0 && slots.percent <= 100, "the note states a whole percentage");
+probe(slots.readPercent === slots.percent, "the reader repeats the same percentage");
+probe(Number.isInteger(slots.replied) && slots.replied > 0, "some customers replied");
+probe(Number.isInteger(slots.sales) && slots.sales > slots.replied, "the sales outnumber the replies");
+const satisfied = Math.floor(slots.replied * slots.percent / 100);
+probe(satisfied > 0 && satisfied <= slots.replied, "the satisfied respondents are a part of the replies");
+probe(slots.sales - slots.replied > 0, "the silent customers are a positive group");
+return "Of " + slots.replied + " respondents (≈" + satisfied + " people), not of " + slots.sales + ". Non-response is unknown.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,29 @@
+@slots literal
+{
+  "place": "East Wharf",
+  "claimant": "Omar",
+  "subject": "density card about ice",
+  "topic": "density",
+  "reply": "You only say that because you are not from here.",
+  "defender": "Pia",
+  "originClaimant": "Rafi"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the exchange");
+probe(typeof slots.claimant === "string" && slots.claimant.length > 0, "the case must name the speaker who says the card is right");
+probe(typeof slots.subject === "string" && slots.subject.length > 0, "the case must name the sentence's subject");
+probe(typeof slots.topic === "string" && slots.topic.length > 0 && slots.subject.split(" ")[0] === slots.topic, "the topic must be the head of the sentence under discussion");
+probe(/\bfrom here\b/.test(slots.reply), "the reply must attack the speaker's origin for this section's verdict");
+probe(!slots.reply.toLowerCase().includes(slots.topic), "the reply must leave the sentence's own subject untouched");
+probe(slots.claimant !== slots.defender && slots.claimant !== slots.originClaimant && slots.defender !== slots.originClaimant, "the three voices of the exchange must come from three different speakers");
+return "No. Motive or origin may explain why someone spoke. It does not, by itself, make the sentence false.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,36 @@
+@slots literal
+{
+  "ward": "Station Quarter",
+  "borrower": "Cara",
+  "capitalCents": 520000,
+  "months": 5,
+  "ratePercent": 14,
+  "latePercent": 1,
+  "onTime": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.ward === "string" && slots.ward.trim().length > 0, "the case must name the ward of the poster");
+probe(typeof slots.borrower === "string" && /^[A-Z][a-z]+$/.test(slots.borrower), "the case must name the borrower");
+probe(Number.isInteger(slots.capitalCents) && slots.capitalCents > 0, "the capital must be a positive whole number of cents");
+probe(Number.isInteger(slots.months) && slots.months > 0 && slots.months <= 12, "the term must be a whole number of months within one year");
+probe(typeof slots.ratePercent === "number" && slots.ratePercent > 0 && slots.ratePercent < 100, "the yearly rate must be a positive percent below 100");
+probe(typeof slots.latePercent === "number" && slots.latePercent > 0, "the late charge must be a positive percent of the capital");
+probe(slots.onTime === true, "the case must bring the money exactly on time");
+const format = (cents) => Math.trunc(cents / 100) + "." + String(cents % 100).padStart(2, "0");
+const interestCents = Math.round((slots.capitalCents * Math.round(slots.ratePercent * 100) * slots.months) / 120000);
+const termCents = slots.capitalCents + interestCents;
+const lateCents = Math.round((slots.capitalCents * Math.round(slots.latePercent * 100)) / 10000);
+probe(interestCents > 0, "the simple interest must be positive for a positive rate and term");
+probe(termCents === slots.capitalCents + interestCents, "the sum at term must add the interest to the capital");
+probe(lateCents === Math.round((slots.capitalCents * slots.latePercent) / 100), "one late month must charge the late percent of the capital alone");
+return "Interest " + format(interestCents) + ". At term " + format(termCents) + ". One late month: +" + format(lateCents) + " (" + slots.latePercent + "% of capital, not of the total).";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

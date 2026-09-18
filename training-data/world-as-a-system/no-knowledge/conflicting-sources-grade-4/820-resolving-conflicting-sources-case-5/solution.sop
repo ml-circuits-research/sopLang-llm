@@ -1,0 +1,102 @@
+@slots literal
+{
+  "sources": [
+    {
+      "label": "A",
+      "description": "written on the day of an event",
+      "claim": "40 carts arrived"
+    },
+    {
+      "label": "B",
+      "description": "copied 80 years later from an unknown account",
+      "claim": "90 carts arrived"
+    },
+    {
+      "label": "C",
+      "description": "an independent warehouse record from the same week",
+      "claim": "42 carts"
+    }
+  ],
+  "crossDomain": [
+    {
+      "kind": "distance",
+      "kilometresPerCentimetre": 2,
+      "centimetres": 3
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const describeCrossDomain = function describeCrossDomain(check) {
+  if (check.kind === 'distance') {
+    return `${check.centimetres * check.kilometresPerCentimetre} km.`;
+  }
+  if (check.kind === 'time') {
+    const minutes = check.startHour * 60 + check.startMinute + check.hours * 60;
+    const hour = String(Math.floor(minutes / 60)).padStart(2, '0');
+    const minute = String(minutes % 60).padStart(2, '0');
+    return `${hour}:${minute}.`;
+  }
+  if (check.kind === 'quorum') {
+    return check.present >= check.threshold ? 'quorum is met.' : 'quorum is not met.';
+  }
+  if (check.kind === 'reports') {
+    return `${check.total - check.duplicates} independent reports.`;
+  }
+  if (check.kind === 'sheets') {
+    return `${check.start + check.received} map sheets.`;
+  }
+  throw new Error(`Unknown cross-domain check "${check.kind}".`);
+};
+const renderCrossDomain = function renderCrossDomain(checks) {
+  if (checks === null || checks === undefined || checks.length === 0) {
+    return '';
+  }
+  const parts = checks.map((check, index) => {
+    const label = index === 1 ? 'Mixed-domain answer:' : 'Cross-domain answer:';
+    return `${label} ${describeCrossDomain(check)}`;
+  });
+  return parts.join(' ');
+};
+const slots = $slots;
+probe(Array.isArray(slots.sources) && slots.sources.length === 3, "the statement must confront three sources");
+const isSound = (source) => /independent|on the day|eyewitness/.test(source.description);
+const sound = slots.sources.filter(isSound);
+probe(sound.length === 2, "two sources must be close to the event and independent");
+const derivative = slots.sources.filter((source) => !isSound(source));
+probe(derivative.length === 1, "one source must be the late or derivative account");
+const valueOf = (claim) => {
+  const counted = /(\d+)\s+([a-z]+)/.exec(claim);
+  if (counted !== null) {
+    return { text: counted[1], number: Number(counted[1]), unit: counted[2] };
+  }
+  const day = /(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)/.exec(claim);
+  return day === null ? null : { text: day[1], number: null, unit: null };
+};
+const values = sound.map((source) => valueOf(source.claim));
+probe(values.every((value) => value !== null), "every sound source must state a comparable value");
+const outlier = valueOf(derivative[0].claim);
+probe(outlier !== null, "the derivative account must state a value to compare against");
+const texts = values.map((value) => value.text);
+let main;
+if (texts.every((text) => text === texts[0])) {
+  probe(outlier.text !== texts[0], "the late account must conflict with the corroborated value");
+  main = texts[0] + " is better supported, while remaining a historical conclusion rather than absolute proof.";
+} else {
+  probe(values.every((value) => value.number !== null) && outlier.number !== null, "the corroborating sources must report comparable counts");
+  const numbers = values.map((value) => value.number);
+  const low = Math.min.apply(null, numbers);
+  const high = Math.max.apply(null, numbers);
+  probe(outlier.number < low || outlier.number > high, "the derivative count must fall outside the corroborated range");
+  main = "An arrival count near " + low + "\u2013" + high + " " + values[0].unit + " is better supported than " + outlier.number + ".";
+}
+const suffix = renderCrossDomain(slots.crossDomain);
+return suffix === "" ? main : main + " " + suffix;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

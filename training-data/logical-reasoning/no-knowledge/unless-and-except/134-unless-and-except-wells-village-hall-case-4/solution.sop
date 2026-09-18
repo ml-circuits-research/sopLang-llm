@@ -1,0 +1,26 @@
+@slots literal
+{
+  "place": "Wells Village",
+  "closing": "22:00",
+  "cancelledClass": "roof-repair class",
+  "warningPosted": false,
+  "doubter": "Harun",
+  "reader": "Iona",
+  "overreach": "Ruth"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.closing === "string" && /^\d{1,2}:\d{2}$/.test(slots.closing), "the board must state a closing time of the form HH:MM");
+probe(typeof slots.cancelledClass === "string" && slots.cancelledClass.length > 0, "the board must name the class it cancels");
+probe(slots.warningPosted === false, "the case must post no storm warning, so the default closing time stands");
+probe(new Set([slots.doubter, slots.reader, slots.overreach]).size === 3, "the three reactions must come from three different people");
+return "Without a posted warning, the hall stays open until " + slots.closing + ". The " + slots.cancelledClass + " is the listed hole. Other classes still run.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

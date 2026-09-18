@@ -1,0 +1,30 @@
+@slots literal
+{
+  "owner": "Kara",
+  "length": 11,
+  "width": 5,
+  "rugIsArea": true,
+  "cordIsPerimeter": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.owner === "string" && slots.owner.length > 0, "the room must belong to a named person");
+probe(typeof slots.length === "number" && slots.length > 0, "the first side of the room must be a positive length");
+probe(typeof slots.width === "number" && slots.width > 0, "the second side of the room must be a positive length");
+probe(slots.rugIsArea === true && slots.cordIsPerimeter === true, "the sheet must map the rug to the area and the cord to the perimeter");
+const area = slots.length * slots.width;
+const perimeter = 2 * (slots.length + slots.width);
+probe(area === slots.length * slots.width, "the rug must be the rectangle area L×W");
+probe(perimeter === 2 * (slots.length + slots.width), "the cord must be the perimeter 2(L+W)");
+probe(area > 0 && perimeter > 0, "the room must give a positive area and perimeter");
+const formatValue = (value) => Number.isInteger(value) ? String(value) : String(Math.round(value * 1000) / 1000);
+return "Area " + formatValue(area) + " m². Perimeter " + formatValue(perimeter) + " m.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

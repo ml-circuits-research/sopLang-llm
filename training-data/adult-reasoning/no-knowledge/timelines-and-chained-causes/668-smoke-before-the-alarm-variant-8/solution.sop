@@ -1,0 +1,39 @@
+@slots literal
+{
+  "cook": "Ned",
+  "ovenOn": "10:00",
+  "trayIn": "10:10",
+  "alarmAt": "10:28",
+  "outAt": "10:30",
+  "oldTrayCondition": "forgotten on top",
+  "oldTrayFat": true,
+  "alarmAfterSmoke": true,
+  "newTrayRaw": true,
+  "rivalAlarmClaim": true,
+  "rivalBurnClaim": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.cook === "string" && slots.cook.length > 0, "the account must name the person who turns the oven on");
+probe(typeof slots.oldTrayCondition === "string" && slots.oldTrayCondition.length > 0, "the account must describe the old tray forgotten on top");
+const timeShape = /^[0-9]{1,2}:[0-9]{2}$/;
+probe(timeShape.test(slots.ovenOn) && timeShape.test(slots.trayIn) && timeShape.test(slots.alarmAt) && timeShape.test(slots.outAt), "the account must print whole clock times");
+const minutesOf = (time) => { const parts = time.split(":"); return Number(parts[0]) * 60 + Number(parts[1]); };
+const times = [slots.ovenOn, slots.trayIn, slots.alarmAt, slots.outAt].map(minutesOf);
+probe(times[0] <= times[1] && times[1] < times[2] && times[2] <= times[3], "the oven, the new tray, the alarm and the removal must be in that order");
+probe(slots.oldTrayFat === true, "the old tray forgotten on top must be the one that had fat");
+probe(slots.alarmAfterSmoke === true, "the account must place the alarm after the smoke");
+probe(slots.newTrayRaw === true, "the new tray must come out raw");
+const orderClause = (slots.oldTrayFat ? "Old tray" : "Burning tray") + " → smoke → alarm.";
+const trayClause = slots.newTrayRaw ? "The new tray is raw, not burned." : "The new tray is burned.";
+const alarmClause = slots.rivalAlarmClaim && slots.rivalBurnClaim ? "The alarm does not produce smoke." : "The alarm is the cause of the smoke.";
+return orderClause + " " + trayClause + " " + alarmClause;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,32 @@
+@slots literal
+{
+  "subject": "Jules",
+  "rulePlace": "grinder",
+  "place": "grinder",
+  "garment": "eye-shields",
+  "store": "inner store",
+  "lamp": "yellow lamp",
+  "offLamp": "yellow lamp",
+  "sayer": "Kat",
+  "namedWorker": "Jules",
+  "darkPlace": "store",
+  "applier": "Ned"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.subject === "string" && slots.subject.length > 0, "the case must name the apprentice");
+probe(typeof slots.garment === "string" && slots.garment.length > 0, "Rule One must name what the apprentice wears");
+probe(slots.place === slots.rulePlace, "the worker must stand at the place Rule One speaks about");
+probe(slots.offLamp === slots.lamp, "the lamp that is off must be the lamp Rule Two names");
+probe(slots.store.indexOf(slots.darkPlace) !== -1, "the darkness the excuse cites must be the darkness of Rule Two");
+probe(slots.namedWorker === slots.subject, "the excuse must be made for the apprentice the case records");
+return slots.subject + " wears the shield. Darkness in the store follows Rule Two and does not cancel Rule One. Visibility is not a clause of Rule One.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

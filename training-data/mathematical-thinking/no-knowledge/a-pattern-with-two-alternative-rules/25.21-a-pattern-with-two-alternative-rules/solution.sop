@@ -10,6 +10,10 @@
 }
 
 @answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
 const s = $slots;
 const ruleA = s.observed.concat([s.observed[s.observed.length - 1] + s.step]);
 const ruleB = s.observed.concat([s.thenComes]);
@@ -19,4 +23,7 @@ if (!matches(ruleA) || !matches(ruleB)) {
 }
 const decided = ruleA.some((value, index) => index >= s.observed.length && value !== ruleB[index]);
 return decided ? "Yes; the data are insufficient to choose." : "No; the rules agree everywhere.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
 

@@ -41,12 +41,26 @@ export const BOOK_PATH = 'vision/Mathematical_Thinking_1000_Problems_Grades_1-4_
  * Print-level quirks of this source that the pipeline quarantines instead of
  * silently repairing. Each rule names the defect and the action.
  */
+/**
+ * The five problems of chapter 19 print their answer as a Romanian polarity
+ * token left in from another edition of an English book. The dataset is
+ * English-only, so the source declares the English equivalent instead of
+ * quarantining the items: the family computes the polarity from the statement
+ * and renders the English token, while the source token stays in the book and
+ * is never copied into a generated artifact. The mapping is the source's own
+ * declaration of the normalization, recorded in `sources.md`.
+ */
+export const ANSWER_TOKEN_NORMALIZATION = Object.freeze({
+  'Da.': 'Yes.',
+  'Nu.': 'No.'
+});
+
+export function normalizePrintedAnswer(problem) {
+  const token = String(problem.printedAnswer ?? '').trim();
+  return ANSWER_TOKEN_NORMALIZATION[token] ?? problem.printedAnswer;
+}
+
 export const BOOK_QUARANTINE_RULES = Object.freeze([
-  {
-    id: 'non-english-answer-token',
-    description: 'The printed answer uses a non-English token that the source left in from another edition. Both Romanian polarity tokens (Da., Nu.) are quarantined because the dataset policy is English-only.',
-    test: (problem) => /\b(DA|Da|NU|Nu)\b\.?/.test(problem.printedAnswer)
-  },
   {
     id: 'missing-answer',
     description: 'The problem has no printed answer, so no label can be inherited.',
@@ -179,6 +193,7 @@ export function parseMathThinking(paragraphs) {
     problem.templateKey = problem.templateTitle;
     problem.type = slugify(problem.templateTitle);
     problem.folder = `${problem.id}-${slugify(problem.title)}`;
+    problem.order = problem.chapter * 100 + problem.section;
     problem.paragraphSpan = { from: problem.firstParagraph, to: problem.lastParagraph };
     delete problem.firstParagraph;
     delete problem.lastParagraph;

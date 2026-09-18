@@ -1,0 +1,28 @@
+@slots literal
+{
+  "place": "Kalmford",
+  "sample": 2,
+  "late": 1,
+  "onTime": 1,
+  "typeHastener": "Sol",
+  "sampleSceptic": "Una",
+  "alarmist": "Wes"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the two mornings");
+probe(Number.isInteger(slots.sample) && slots.sample >= 2 && slots.sample <= 4, "the section is about a sample of a few mornings, not a long record");
+probe(slots.late === 1, "the printed verdict names a single miss, so the case must report exactly one late morning");
+probe(Number.isInteger(slots.onTime) && slots.onTime >= 1, "the sample must also list a morning that was on time");
+probe(slots.sample === slots.late + slots.onTime, "every listed morning must be late or on time");
+probe(slots.typeHastener !== slots.sampleSceptic && slots.sampleSceptic !== slots.alarmist && slots.typeHastener !== slots.alarmist, "the three speakers must be three different people");
+return "Almost nothing as a type. n = " + slots.sample + " is almost all noise. A single miss is not a destiny.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

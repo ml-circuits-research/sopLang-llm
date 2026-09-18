@@ -1,0 +1,23 @@
+@slots literal
+{
+  "place": "Little River",
+  "panicker": "Ben",
+  "ignorer": "Cara",
+  "matcher": "Nia"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+const responders = [slots.panicker, slots.ignorer, slots.matcher];
+probe(typeof slots.place === "string" && slots.place.length > 0, "the board must name the place of the river");
+probe(responders.every((name) => typeof name === "string" && name.length > 0), "the board must name the panicker, the ignorer, and the matcher");
+probe(new Set(responders).size === responders.length, "the three responses must come from three different people");
+return slots.matcher + ". The picture is availability. The rise is a small listed change. Proportion is the adult tool.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

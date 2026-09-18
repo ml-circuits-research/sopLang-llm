@@ -1,0 +1,38 @@
+@slots literal
+{
+  "landlord": "Ben",
+  "tenant": "Ann",
+  "district": "Maple Ward",
+  "chairsInInventory": 6,
+  "tablesInInventory": 1,
+  "stainsInInventory": 0,
+  "chargePerChair": 40,
+  "deposit": 1200,
+  "noticeLimitHours": 48,
+  "noticeHours": 3,
+  "missingChairs": 1,
+  "burntBulbs": 1
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.landlord === "string" && slots.landlord.length > 0, "the lease must name the landlord");
+probe(typeof slots.tenant === "string" && slots.tenant.length > 0, "the lease must name the tenant");
+probe(slots.landlord !== slots.tenant, "the landlord and the tenant must be different people");
+probe(Number.isInteger(slots.chargePerChair) && slots.chargePerChair > 0, "the per-chair charge must be a positive whole number");
+probe(Number.isInteger(slots.deposit) && slots.deposit >= slots.chargePerChair, "the deposit must cover an inventory charge");
+probe(Number.isInteger(slots.noticeHours) && slots.noticeHours >= 0, "the notice delay must be a whole number of hours");
+probe(slots.missingChairs >= 1 && slots.missingChairs <= slots.chairsInInventory, "the missing chairs must come from the recorded inventory");
+probe(slots.burntBulbs >= 1, "the move-out report must count the burnt bulbs");
+const notice = slots.noticeHours <= slots.noticeLimitHours ? "notice ok" : "notice late";
+const chairCharge = slots.missingChairs * slots.chargePerChair;
+probe(chairCharge <= slots.deposit, "the missing-chair charge must fit inside the deposit");
+return "Pipe: " + slots.landlord + " (structure, " + notice + "). Bulb: " + slots.tenant + ". Chair: " + chairCharge + " from the deposit.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

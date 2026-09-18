@@ -1,0 +1,98 @@
+@slots literal
+{
+  "options": [
+    "Park",
+    "Library"
+  ],
+  "groups": [
+    {
+      "voters": 4,
+      "ranking": [
+        "Park",
+        "Library",
+        "Sports Hall"
+      ]
+    },
+    {
+      "voters": 7,
+      "ranking": [
+        "Library",
+        "Sports Hall",
+        "Park"
+      ]
+    },
+    {
+      "voters": 2,
+      "ranking": [
+        "Sports Hall",
+        "Park",
+        "Library"
+      ]
+    }
+  ],
+  "crossDomain": null
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const describeCrossDomain = function describeCrossDomain(check) {
+  if (check.kind === 'distance') {
+    return `${check.centimetres * check.kilometresPerCentimetre} km.`;
+  }
+  if (check.kind === 'time') {
+    const minutes = check.startHour * 60 + check.startMinute + check.hours * 60;
+    const hour = String(Math.floor(minutes / 60)).padStart(2, '0');
+    const minute = String(minutes % 60).padStart(2, '0');
+    return `${hour}:${minute}.`;
+  }
+  if (check.kind === 'quorum') {
+    return check.present >= check.threshold ? 'quorum is met.' : 'quorum is not met.';
+  }
+  if (check.kind === 'reports') {
+    return `${check.total - check.duplicates} independent reports.`;
+  }
+  if (check.kind === 'sheets') {
+    return `${check.start + check.received} map sheets.`;
+  }
+  throw new Error(`Unknown cross-domain check "${check.kind}".`);
+};
+const renderCrossDomain = function renderCrossDomain(checks) {
+  if (checks === null || checks === undefined || checks.length === 0) {
+    return '';
+  }
+  const parts = checks.map((check, index) => {
+    const label = index === 1 ? 'Mixed-domain answer:' : 'Cross-domain answer:';
+    return `${label} ${describeCrossDomain(check)}`;
+  });
+  return parts.join(' ');
+};
+const slots = $slots;
+probe(Array.isArray(slots.options) && slots.options.length === 2, "the task must name exactly two options of the contest");
+probe(Array.isArray(slots.groups) && slots.groups.length > 0, "the statement must state at least one voter group");
+let firstVotes = 0;
+let secondVotes = 0;
+for (const group of slots.groups) {
+  const left = group.ranking.indexOf(slots.options[0]);
+  const right = group.ranking.indexOf(slots.options[1]);
+  probe(left !== -1 && right !== -1, "every voter group must rank both options of the contest");
+  if (left < right) {
+    firstVotes += group.voters;
+  } else {
+    secondVotes += group.voters;
+  }
+}
+probe(firstVotes + secondVotes > 0, "the contest must count at least one voter");
+const main = firstVotes === secondVotes
+  ? "tie " + firstVotes + "–" + secondVotes + "."
+  : firstVotes > secondVotes
+    ? slots.options[0] + " wins " + firstVotes + " to " + secondVotes + "."
+    : slots.options[1] + " wins " + secondVotes + " to " + firstVotes + ".";
+const suffix = renderCrossDomain(slots.crossDomain);
+return suffix === "" ? main : main + " " + suffix;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

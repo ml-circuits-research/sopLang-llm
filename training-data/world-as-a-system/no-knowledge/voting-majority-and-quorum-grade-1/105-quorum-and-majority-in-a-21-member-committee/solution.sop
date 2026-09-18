@@ -1,0 +1,64 @@
+@slots literal
+{
+  "members": 21,
+  "present": 20,
+  "yes": 12,
+  "no": 7,
+  "abstain": 1,
+  "quorumPercent": 60,
+  "crossDomain": null
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const describeCrossDomain = function describeCrossDomain(check) {
+  if (check.kind === 'distance') {
+    return `${check.centimetres * check.kilometresPerCentimetre} km.`;
+  }
+  if (check.kind === 'time') {
+    const minutes = check.startHour * 60 + check.startMinute + check.hours * 60;
+    const hour = String(Math.floor(minutes / 60)).padStart(2, '0');
+    const minute = String(minutes % 60).padStart(2, '0');
+    return `${hour}:${minute}.`;
+  }
+  if (check.kind === 'quorum') {
+    return check.present >= check.threshold ? 'quorum is met.' : 'quorum is not met.';
+  }
+  if (check.kind === 'reports') {
+    return `${check.total - check.duplicates} independent reports.`;
+  }
+  if (check.kind === 'sheets') {
+    return `${check.start + check.received} map sheets.`;
+  }
+  throw new Error(`Unknown cross-domain check "${check.kind}".`);
+};
+const renderCrossDomain = function renderCrossDomain(checks) {
+  if (checks === null || checks === undefined || checks.length === 0) {
+    return '';
+  }
+  const parts = checks.map((check, index) => {
+    const label = index === 1 ? 'Mixed-domain answer:' : 'Cross-domain answer:';
+    return `${label} ${describeCrossDomain(check)}`;
+  });
+  return parts.join(' ');
+};
+const slots = $slots;
+probe(Number.isInteger(slots.members) && slots.members > 0, "the committee must have a positive whole number of members");
+probe(Number.isInteger(slots.present) && slots.present >= 0 && slots.present <= slots.members, "the number present must be a whole number within the committee");
+probe([slots.yes, slots.no, slots.abstain].every((count) => Number.isInteger(count) && count >= 0), "the yes, no, and abstain counts must be non-negative whole numbers");
+probe(slots.yes + slots.no + slots.abstain === slots.present, "the stated votes must add up to the number present");
+probe(Number.isInteger(slots.quorumPercent) && slots.quorumPercent > 0 && slots.quorumPercent <= 100, "the quorum share must be a stated percentage of all members");
+const threshold = Math.ceil((slots.quorumPercent * slots.members) / 100);
+probe(threshold > 0 && threshold <= slots.members, "the quorum threshold must fall inside the committee");
+const quorumMet = slots.present >= threshold;
+const passes = quorumMet && slots.yes > slots.no;
+const main = (quorumMet ? "Quorum is met" : "Quorum is not met") + "; " + (passes ? "the motion passes." : "the motion does not pass.");
+const suffix = renderCrossDomain(slots.crossDomain);
+return suffix === "" ? main : main + " " + suffix;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

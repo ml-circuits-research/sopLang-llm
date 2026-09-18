@@ -1,0 +1,34 @@
+@slots literal
+{
+  "shape": "rate-given",
+  "name": "trapped air",
+  "unit": "mmodel L",
+  "start": 3,
+  "rate": 2,
+  "intervals": 3
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.unit === "string" && slots.unit.length > 0, "the tracked quantity must carry a unit");
+probe(Number.isInteger(slots.start) && slots.start >= 0, "the tracked quantity must start from a whole non-negative value");
+probe(Number.isInteger(slots.intervals) && slots.intervals > 0, "the statement must track a positive number of intervals");
+const rate = slots.shape === "rate-given" ? slots.rate : (slots.final - slots.start) / slots.intervals;
+probe(Number.isInteger(rate) && rate > 0, "the constant rate must be a whole positive change per interval");
+const afterTracked = slots.start + slots.intervals * rate;
+if (slots.shape === "rate-given") {
+  probe(afterTracked > slots.start, "accumulating a positive rate must raise the value");
+  return "after " + slots.intervals + " intervals: " + afterTracked + " " + slots.unit + "; after two more: " + (afterTracked + 2 * rate) + " " + slots.unit + ".";
+}
+probe(slots.final > slots.start, "the measured value must be above the starting value");
+probe((slots.final - slots.start) % slots.intervals === 0, "the whole increase must divide into the tracked intervals");
+probe(afterTracked === slots.final, "the computed rate must reach the measured value after the tracked intervals");
+return "The rate is +" + rate + " " + slots.unit + "/interval; after first interval " + (slots.start + rate) + ", and after one additional interval " + (slots.final + rate) + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

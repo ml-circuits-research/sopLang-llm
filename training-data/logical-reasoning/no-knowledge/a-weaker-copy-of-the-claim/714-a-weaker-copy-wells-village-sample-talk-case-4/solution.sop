@@ -1,0 +1,30 @@
+@slots literal
+{
+  "speaker": "Harun",
+  "place": "Wells Village",
+  "originalClaim": "this sample of four is too small for a town-wide claim.",
+  "replyClaim": "So you want us to know nothing forever",
+  "critic": "Iona",
+  "sloganeer": "Ruth",
+  "sampleSize": 4
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.speaker === "string" && slots.speaker.length > 0, "the case must name the speaker who made the sample claim");
+probe(typeof slots.critic === "string" && slots.critic.length > 0, "the case must name the commentator who called the reply a knock-down of a stronger copy");
+probe(typeof slots.originalClaim === "string" && slots.originalClaim.length > 0, "the case must quote the claim that was made");
+probe(typeof slots.replyClaim === "string" && slots.replyClaim.length > 0, "the case must quote the reply");
+probe(Number.isInteger(slots.sampleSize) && slots.sampleSize > 0, "the sample the claim admits must be a positive whole number");
+const attached = slots.originalClaim === slots.replyClaim;
+probe(attached === false, "the reply must not be the sentence that was made");
+const verdict = attached ? "Yes" : "No";
+return verdict + ". “Too small for this climb” is not “know nothing forever.” That is a straw man.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

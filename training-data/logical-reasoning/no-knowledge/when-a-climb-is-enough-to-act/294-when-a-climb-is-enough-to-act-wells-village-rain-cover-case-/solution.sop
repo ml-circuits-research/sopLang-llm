@@ -1,0 +1,28 @@
+@slots literal
+{
+  "place": "Wells Village",
+  "successes": 9,
+  "trials": 10,
+  "deducer": "Harun",
+  "climber": "Iona",
+  "overhardener": "Ruth",
+  "echoedSuccesses": 9,
+  "echoedTrials": 10
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the town of the fete committee");
+probe(Number.isInteger(slots.successes) && slots.successes > 0 && slots.successes <= slots.trials, "the rainy mornings must be a positive count within the listed mornings");
+probe(slots.echoedSuccesses === slots.successes && slots.echoedTrials === slots.trials, "the last speaker must quote the same run of mornings");
+probe(typeof slots.climber === "string" && slots.climber.length > 0, "the case must name the speaker who acts on the climb");
+probe(slots.deducer !== slots.climber && slots.deducer !== slots.overhardener && slots.climber !== slots.overhardener, "the case must name three different speakers");
+return "Yes, as practical induction. " + slots.climber + " has the family right. " + slots.overhardener + " over-hardened a climb into a law.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

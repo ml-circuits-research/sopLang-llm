@@ -4,71 +4,60 @@
  * The runner is the first real stage of the data pipeline described in
  * DS008-training-data. For one registered seed book it extracts the canonical
  * text, parses the problem records, matches every problem to a problem family,
- * assembles the SOP Lang circuit of that family, executes the circuit in the
- * runtime with the family's reference parse bound to the `modelCall` stage, and
- * compares the executed answer with the answer the book printed.
+ * assembles the SOP Lang circuit of that family — the compiled values in a
+ * `slots` literal plus the deterministic computation wrapped in the probe
+ * harness — executes the circuit in the runtime without inputs and without
+ * model bindings, and compares the executed answer with the answer the book
+ * printed.
  *
- * Only a three-way agreement is accepted as `exact_verified`: the executed
- * circuit output, the family's independent computation, and the printed answer.
+ * The book is chosen by id from the source registry (`teacher/sources/`), and a
+ * run may be restricted to a subset of its units: a chapter number for the
+ * mathematical book, a reasoning-family code for the world book. Only a
+ * three-way agreement is accepted as `exact_verified`: the executed circuit
+ * output, the family's independent computation, and the printed answer.
  * Everything else is preserved under `rejected/` with its reason, because
- * rejection reasons are diagnostic data rather than noise.
+ * rejection reasons are diagnostic data rather than noise; the artifact writer
+ * lives in `teacher/dataset.mjs`.
  *
- * Text artifacts are the canonical form of the dataset (DS008):
- *
- *   <source>/no-knowledge/<type>/<problem>/{problem.md,solution.sop,explanation.md}
- *   <source>/knowledge/<type>/<problem>/{problem.md,solution.sop,explanation.md}
- *   <source>/eval/<category>/<type>/<problem>/{problem.md,solution.sop,explanation.md}
- *   <source>/rejected/<problem>/{problem.md,rejection.md}
- *   <source>/manifest.md, <source>/report.md, sources.md
- *
- * A variant of one template shares the same circuit text, so the report can
- * measure distinct latent plans by counting distinct circuit hashes.
+ * `pilot.mjs` is the library; the command line lives in `pilot-cli.mjs`.
+ * Running the library as a main module would take no flags and rewrite the
+ * canonical dataset root with a full-book run, so a direct execution is
+ * refused instead of silently performing the wrong command.
  */
 
-import { mkdirSync, writeFileSync, rmSync, existsSync } from 'node:fs';
-import { join, dirname } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { sha256 } from '../runtime/hashing.mjs';
 import { createRuntime } from '../runtime/kernel.mjs';
 import { registerDocxSource } from '../context/sources/docx.mjs';
-import { BOOK_ID, BOOK_PATH, parseMathThinking, BOOK_QUARANTINE_RULES } from './sources/math-thinking.mjs';
-import { loadFamilies, buildProgram, planFingerprint } from './families/index.mjs';
-import { answerMatches } from './naming.mjs';
-import { assertEnglishContent } from './language.mjs';
+import { DEFAULT_SOURCE_ID, getSource } from './sources/index.mjs';
+import { loadFamilies, buildProgram } from './families/index.mjs';
+import { orderHash, planHashOf } from './hashing.mjs';
+import { answerMatches, normalizeAnswer } from './naming.mjs';
+import { OUTPUT_ROOT, writeDataset } from './dataset.mjs';
+import { referencesExternalContext, hasDeclaredPremise, solverText } from './statements.mjs';
 
-const OUTPUT_ROOT = 'training-data';
-
-export function contentHash(text) {
-  return sha256(String(text)).slice(0, 12);
-}
-
-export function orderHash(text) {
-  return sha256(String(text));
-}
-
-/**
- * The plan hash of an accepted item: the hash a reader can recompute from the
- * family to identify the latent plan of the example across its variants.
- */
-export function planHashOf(item) {
-  return contentHash(planFingerprint(item.entry));
-}
-
-export async function runPilot({ chapters = null, limit = null, write = true, verbose = false, outputRoot = OUTPUT_ROOT } = {}) {
-  const source = registerDocxSource(BOOK_PATH);
-  const parsed = parseMathThinking(source.paragraphs);
-  const { families } = await loadFamilies({ only: chapters === null ? null : new Set(chapters) });
-  let problems = chapters === null ? parsed.problems : parsed.problems.filter((problem) => chapters.includes(problem.chapter));
+export async function runPilot({
+  book = DEFAULT_SOURCE_ID,
+  units = null,
+  limit = null,
+  write = true,
+  verbose = false,
+  outputRoot = OUTPUT_ROOT
+} = {}) {
+  const source = getSource(book);
+  const registration = registerDocxSource(source.path);
+  const parsed = source.parse(registration.paragraphs);
+  const { families } = await loadFamilies({ book, only: units === null ? null : new Set(units) });
+  let problems = units === null ? parsed.problems : parsed.problems.filter((problem) => units.includes(source.unitOf(problem)));
   if (limit !== null) {
     problems = problems.slice(0, limit);
   }
 
-  const accepted = [];
+  let accepted = [];
   const rejected = [];
   const runtime = createRuntime();
 
   for (const problem of problems) {
-    const quarantine = BOOK_QUARANTINE_RULES.find((rule) => rule.test(problem));
+    const quarantine = source.quarantineRules.find((rule) => rule.test(problem));
     if (quarantine !== undefined) {
       rejected.push({ problem, reason: `quarantine:${quarantine.id}` });
       continue;
@@ -82,9 +71,18 @@ export async function runPilot({ chapters = null, limit = null, write = true, ve
       rejected.push({ problem, reason: 'unresolved_reference' });
       continue;
     }
-    const verification = await verifyProblem({ runtime, entry, problem });
+    const verification = await verifyProblem({ runtime, entry, problem, source });
     if (verification.accepted) {
-      accepted.push({ problem, entry, verification });
+      // A computed_verified example ships the computed answer: the printed one
+      // is reference material the statement does not determine, and the
+      // verifier compares every circuit against the shipped column.
+      accepted.push({
+        problem,
+        entry,
+        verification,
+        shippedAnswer:
+          verification.verification.printedStatus === 'match' ? shippedAnswerOf(source, problem) : verification.computed
+      });
     } else {
       rejected.push({ problem, reason: verification.reason });
     }
@@ -93,44 +91,104 @@ export async function runPilot({ chapters = null, limit = null, write = true, ve
     }
   }
 
+  accepted = rejectAmbiguousStatements(accepted, rejected);
   const split = selectEvalSplit(accepted);
   if (write) {
-    writeDataset({ source, accepted, rejected, split, outputRoot });
+    writeDataset({ source, registration, accepted, rejected, split, outputRoot });
   }
   return { source, accepted, rejected, split };
 }
 
 /**
- * Some printed statements hand their premise to the previous problem ("Using
- * the same dictionary"). A solver that receives the statement alone cannot
- * recover that data, so the family must declare it: `sharedPremise` states the
- * referenced fact in one sentence, and the artifact writer prints it as a
- * labelled referenced-context line in `problem.md`. A statement that still
- * references outside data without a declared premise is rejected instead of
- * being shipped as an unanswerable example.
+ * Two shipped examples must not share the solver-visible text while carrying
+ * different printed answers. When the source prints a different answer for the
+ * same statement, neither the model compiling the statement nor the student
+ * can know which answer is expected, and the training pair teaches guessing.
+ * The group is rejected whole with `ambiguous_statement`, and every group
+ * member keeps its rejection record, so the defect is visible in the report
+ * instead of being hidden behind one arbitrary survivor. The gate is the
+ * safety net under the family contract: the world book's land-use family, whose
+ * five cases per grade repeated one constraint statement, now states the
+ * selection rule its case numbering follows as a declared clarification, so
+ * each case's statement differs and the group is accepted.
+ *
+ * `verifyProblem` already rejects a family that refuses an ambiguous variant;
+ * this pass catches the same defect at dataset level, independently of what a
+ * family chose to do.
  */
-const REFERENCE_PATTERN = /\b(previous problem|previous|same (dictionary|data|code|table|rules?|convention|map))\b/i;
-
-function referencesExternalContext(problem) {
-  return REFERENCE_PATTERN.test(problem.statement);
-}
-
-function hasDeclaredPremise(entry) {
-  return typeof entry.sharedPremise === 'string' && entry.sharedPremise.trim() !== '';
+export function rejectAmbiguousStatements(accepted, rejected) {
+  const groups = new Map();
+  for (const item of accepted) {
+    const key = solverText(item.entry, item.problem);
+    const group = groups.get(key) ?? [];
+    group.push(item);
+    groups.set(key, group);
+  }
+  const conflicted = new Set();
+  for (const group of groups.values()) {
+    if (group.length < 2) {
+      continue;
+    }
+    const answers = new Set(group.map((item) => normalizeAnswer(item.problem.printedAnswer)));
+    if (answers.size > 1) {
+      for (const item of group) {
+        conflicted.add(item);
+        rejected.push({
+          problem: item.problem,
+          reason: 'ambiguous_statement:the same statement carries different printed answers'
+        });
+      }
+    }
+  }
+  if (conflicted.size === 0) {
+    return accepted;
+  }
+  return accepted.filter((item) => !conflicted.has(item));
 }
 
 /**
- * The exact text a solver receives and `problem.md` carries: the statement,
- * plus the declared referenced context when the family materializes one.
+ * The answer text the dataset ships for a problem. A source may normalize its
+ * own printed answer when the printed form cannot enter the dataset — the
+ * mathematical book prints five answers as a Romanian polarity token in an
+ * English book — and the normalization is declared by the source registration
+ * instead of being hidden in a family, so the shipped text is reproducible
+ * from the source definition.
  */
-export function solverText(entry, problem) {
-  if (!hasDeclaredPremise(entry)) {
-    return problem.statement;
-  }
-  return `${problem.statement}\n\nReferenced context: ${entry.sharedPremise}`;
+export function shippedAnswerOf(source, problem) {
+  const normalize = source?.normalizePrintedAnswer;
+  const normalized = typeof normalize === 'function' ? normalize(problem) : problem.printedAnswer;
+  return typeof normalized === 'string' && normalized !== '' ? normalized : problem.printedAnswer;
 }
 
-export async function verifyProblem({ runtime, entry, problem }) {
+/**
+ * The printed answer of a case whose task admits several valid answers, or
+ * whose printed value contradicts the statement's own numbers, is not the
+ * value a compiler can derive. Such a family declares
+ * `printedAnswerStatus` ('alternative' or 'inconsistent') and a
+ * `verifyPrinted` predicate: the shipped answer is the computed one, the class
+ * becomes `computed_verified`, and the printed answer is only accepted as
+ * reference material when the predicate confirms the declared status.
+ */
+const PRINTED_ANSWER_STATUSES = new Set(['match', 'alternative', 'inconsistent']);
+
+/**
+ * The printed-answer status of one variant. A template covers many variants, so
+ * the declaration may be a function of the parsed values and the solution: the
+ * scientific book's route template ties on thirteen of its twenty-five variants
+ * and is exact on the other twelve, and one entry has to describe both.
+ */
+function printedStatusOf(entry, parsedSlots, solution) {
+  const declared = entry.printedAnswerStatus ?? 'match';
+  const status = typeof declared === 'function' ? declared(parsedSlots, solution) : declared;
+  if (!PRINTED_ANSWER_STATUSES.has(status)) {
+    throw new Error(`the family declared an unknown printed answer status "${status}"`);
+  }
+  return status;
+}
+
+export async function verifyProblem({ runtime, entry, problem, source = undefined }) {
+  const shippedAnswer = shippedAnswerOf(source, problem);
+  let printedStatus = 'match';
   const solverInput = solverText(entry, problem);
   let parsedSlots;
   try {
@@ -144,12 +202,22 @@ export async function verifyProblem({ runtime, entry, problem }) {
   } catch (error) {
     // A family may refuse a variant by design (ambiguity, non-unique orders,
     // out-of-vocabulary words). That is a rejection reason, never a crash: at
-    // 10-50k scale one ambiguous variant must not abort the run.
+    // 10-50k scale one ambiguous variant must not abort the run. An ambiguity
+    // is marked by the family with `ambiguous: true`, because an answer that
+    // is chosen among several valid ones must not enter the dataset.
+    if (error.ambiguous === true) {
+      return { accepted: false, reason: `ambiguous_statement:${error.message}` };
+    }
     return { accepted: false, reason: `oracle_failed:${error.message}` };
   }
   let expected;
   try {
     expected = entry.render(solution);
+  } catch (error) {
+    return { accepted: false, reason: `oracle_failed:${error.message}` };
+  }
+  try {
+    printedStatus = printedStatusOf(entry, parsedSlots, solution);
   } catch (error) {
     return { accepted: false, reason: `oracle_failed:${error.message}` };
   }
@@ -160,7 +228,7 @@ export async function verifyProblem({ runtime, entry, problem }) {
     // explanation fails is rejected instead of aborting the dataset build.
     return { accepted: false, reason: `explain_failed:${error.message}` };
   }
-  if (!answerMatches(problem.printedAnswer, expected)) {
+  if (printedStatus === 'match' && !answerMatches(shippedAnswer, expected)) {
     return { accepted: false, reason: 'oracle_mismatch' };
   }
   const program = buildProgram(entry, parsedSlots);
@@ -169,11 +237,22 @@ export async function verifyProblem({ runtime, entry, problem }) {
     return { accepted: false, reason: `circuit_${result.status}:${result.code}` };
   }
   const computed = String(result.outputs.answer);
-  if (!answerMatches(problem.printedAnswer, computed)) {
+  if (printedStatus === 'match' && !answerMatches(shippedAnswer, computed)) {
     return { accepted: false, reason: 'circuit_answer_mismatch' };
   }
   if (!answerMatches(expected, computed)) {
     return { accepted: false, reason: 'circuit_oracle_disagreement' };
+  }
+  if (printedStatus !== 'match') {
+    let printedAccepted = false;
+    try {
+      printedAccepted = entry.verifyPrinted(parsedSlots, solution, shippedAnswer) === true;
+    } catch (error) {
+      return { accepted: false, reason: `printed_answer_unverified:${error.message}` };
+    }
+    if (!printedAccepted) {
+      return { accepted: false, reason: 'printed_answer_unverified' };
+    }
   }
   if (entry.category === 'knowledge') {
     const declared = await factDependencyCheck({ runtime, entry, parsedSlots, computed });
@@ -181,16 +260,17 @@ export async function verifyProblem({ runtime, entry, problem }) {
       return { accepted: false, reason: 'fact_not_load_bearing' };
     }
   }
+  const acceptanceClass = printedStatus === 'match' ? 'exact_verified' : 'computed_verified';
   return {
     accepted: true,
-    reason: 'exact_verified',
+    reason: acceptanceClass,
     computed,
     expected,
     program,
     solution,
     parsedSlots,
     trace: result.trace,
-    verification: { class: 'exact_verified', epochs: result.epochs }
+    verification: { class: acceptanceClass, epochs: result.epochs, printedStatus }
   };
 }
 
@@ -212,7 +292,6 @@ async function factDependencyCheck({ runtime, entry, parsedSlots, computed }) {
   }
   return true;
 }
-
 /**
  * The evaluation holdout is one percent of the accepted examples, selected
  * deterministically from a hash ordering, stratified by category, and taken in
@@ -329,366 +408,6 @@ export function selectEvalSplit(accepted) {
   return chosen;
 }
 
-function writeDataset({ source, accepted, rejected, split, outputRoot }) {
-  const root = join(outputRoot, BOOK_ID);
-
-  // Every file is generated and gated before anything is written, so a policy
-  // violation can never leave a partial dataset behind.
-  const files = [];
-  const rows = [];
-  for (const item of accepted) {
-    const inEval = split.has(item.problem.id);
-    const category = item.entry.category;
-    const relative = inEval
-      ? ['eval', category, item.problem.type, item.problem.folder].join('/')
-      : [category, item.problem.type, item.problem.folder].join('/');
-    const problemText = problemFile(item.problem, item.entry);
-    const solutionText = `${item.verification.program}\n`;
-    const explanationText = explanationFile(item);
-    files.push({ relative: join(relative, 'problem.md'), content: problemText });
-    files.push({ relative: join(relative, 'solution.sop'), content: solutionText });
-    files.push({ relative: join(relative, 'explanation.md'), content: explanationText });
-    assertEnglishContent(item.problem.printedAnswer, `${relative} printed answer`);
-    rows.push({
-      relative,
-      problem: item.problem.id,
-      title: item.problem.title,
-      chapter: item.problem.chapter,
-      template: item.problem.templateKey,
-      type: item.problem.type,
-      category,
-      split: inEval ? 'eval' : 'train',
-      paragraphs: `${item.problem.paragraphSpan.from}-${item.problem.paragraphSpan.to}`,
-      answer: item.problem.printedAnswer,
-      planHash: planHashOf(item),
-      hashes: [contentHash(problemText), contentHash(solutionText), contentHash(explanationText)]
-    });
-  }
-
-  for (const item of rejected) {
-    const relative = join('rejected', item.problem.folder);
-    files.push({ relative: join(relative, 'problem.md'), content: problemFile(item.problem) });
-    // The rejection record quotes the printed answer verbatim as provenance,
-    // so it is the one generated file the English gate does not scan.
-    files.push({ relative: join(relative, 'rejection.md'), content: rejectionFile(item), gated: false });
-  }
-
-  // Split integrity: no eval example may share its plan fingerprint with a
-  // training row. A compiled circuit embeds the values it was compiled from,
-  // so the plan fingerprint — the facts and compute body — is what would make
-  // an eval item a near-copy of a training item. The clustering in
-  // selectEvalSplit guarantees this, and the assertion makes the guarantee
-  // load-bearing instead of incidental.
-  const trainPlans = new Set(rows.filter((row) => row.split === 'train').map((row) => row.planHash));
-  for (const row of rows.filter((candidate) => candidate.split === 'eval')) {
-    if (trainPlans.has(row.planHash)) {
-      throw new Error(`Holdout example ${row.problem} shares its plan fingerprint ${row.planHash} with a training row.`);
-    }
-  }
-
-  const sourcesContent = sourcesFile(source);
-  const blemishes = findTextBlemishes(accepted.map((item) => item.problem));
-  files.push(...buildManifestFiles(rows));
-  files.push({ relative: 'report.md', content: reportFile({ source, accepted, rejected, split, rows, blemishes }) });
-
-  // Gate every generated file before anything is written: the manifest and
-  // report inherit printed answers and titles from the source, so they are
-  // scanned exactly like the per-problem artifacts, and a violation leaves the
-  // previous dataset intact instead of a half-rewritten tree.
-  for (const file of files) {
-    if (file.gated !== false) {
-      assertEnglishContent(file.content, file.relative);
-    }
-  }
-  assertEnglishContent(sourcesContent, 'sources.md');
-
-  if (existsSync(root)) {
-    rmSync(root, { recursive: true, force: true });
-  }
-  mkdirSync(root, { recursive: true });
-  for (const file of files) {
-    const target = join(root, file.relative);
-    mkdirSync(dirname(target), { recursive: true });
-    writeFileSync(target, file.content);
-  }
-  mkdirSync(outputRoot, { recursive: true });
-  writeFileSync(join(outputRoot, 'sources.md'), sourcesContent);
-}
-
-function problemFile(problem, entry = undefined) {
-  const body = entry === undefined ? problem.statement : solverText(entry, problem);
-  return [`# ${problem.id} — ${problem.title}`, '', body, ''].join('\n');
-}
-
-function explanationFile(item) {
-  const { problem, entry, verification } = item;
-  const { solution, parsedSlots } = verification;
-  const steps = entry.explain(parsedSlots, solution);
-  const sourceSteps = problem.steps.map((step, index) => `${index + 1}. ${step}`);
-  return [
-    `# Explanation ${problem.id} — ${problem.title}`,
-    '',
-    '## Explanation',
-    '',
-    ...steps.map((step, index) => `${index + 1}. ${step}`),
-    '',
-    `Reference solution as printed in the source (chapter ${problem.chapter}, ${problem.steps.length} steps):`,
-    '',
-    ...sourceSteps,
-    '',
-    '## Result',
-    '',
-    `**Answer.** ${problem.printedAnswer}`,
-    '',
-    `**Verification.** ${verification.verification.class}: the executed circuit produced this answer, and the family computation reproduced it from the statement. The independence limitation of this class is stated in \`report.md\`.`,
-    '',
-    '**Program.** `solution.sop` (compiled values in `slots`, computation in `jsEval`).',
-    ''
-  ].join('\n');
-}
-
-function rejectionFile(item) {
-  return [
-    `# Rejection ${item.problem.id} — ${item.problem.title}`,
-    '',
-    `**Reason.** ${item.reason}`,
-    '',
-    `**Printed answer.** ${item.problem.printedAnswer}`,
-    ''
-  ].join('\n');
-}
-
-function manifestHeader(title) {
-  return [
-    `# ${title}`,
-    '',
-    'One row per accepted example. `split` is `train` or `eval`, and an `eval` example is excluded from the training sets. The three hashes identify `problem.md`, `solution.sop`, and `explanation.md`; `plan` fingerprints the deterministic plan (facts and compute body) of the circuit, which is what the variants of one template share.',
-    '',
-    '| folder | problem | chapter | template | type | category | split | paragraphs | answer | plan | problem | solution | explanation |',
-    '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
-  ];
-}
-
-function manifestRow(row) {
-  return `| ${row.relative} | ${row.problem} | ${row.chapter} | ${row.template} | ${row.type} | ${row.category} | ${row.split} | ${row.paragraphs} | ${row.answer} | ${row.planHash} | ${row.hashes[0]} | ${row.hashes[1]} | ${row.hashes[2]} |`;
-}
-
-/**
- * Builds the manifest files as content, so the writer can gate every page
- * before the dataset root is touched. The index records the count and the
- * content hash of every chapter file, which is what makes the index and the
- * chapter manifests verifiable against each other.
- */
-function buildManifestFiles(rows) {
-  const byChapter = new Map();
-  for (const row of rows) {
-    const list = byChapter.get(row.chapter) ?? [];
-    list.push(row);
-    byChapter.set(row.chapter, list);
-  }
-  const index = [
-    '# Manifest',
-    '',
-    'The manifest is split by chapter so a thousand-row table stays reviewable. Each chapter manifest holds one row per accepted example, and the index records the counts and the content hash of every chapter file. `distinct plans` counts the plan fingerprints of the chapter: the compiled circuits differ between variants of one template because they embed their instance values, so the plan fingerprint is the latent-plan measure.',
-    '',
-    '| chapter | examples | train | eval | knowledge | no-knowledge | distinct plans | file | hash |',
-    '| --- | --- | --- | --- | --- | --- | --- | --- | --- |'
-  ];
-  const files = [];
-  for (const chapter of [...byChapter.keys()].sort((left, right) => left - right)) {
-    const chapterRows = [...byChapter.get(chapter)].sort(compareProblems);
-    const lines = [manifestHeader(`Manifest, chapter ${chapter}`), ...chapterRows.map(manifestRow), ''];
-    const content = lines.join('\n');
-    const relative = `manifest/chapter-${String(chapter).padStart(2, '0')}.md`;
-    files.push({ relative, content });
-    const distinct = new Set(chapterRows.map((row) => row.planHash)).size;
-    index.push(
-      `| ${chapter} | ${chapterRows.length} | ${chapterRows.filter((row) => row.split === 'train').length} | ${chapterRows.filter((row) => row.split === 'eval').length} | ${chapterRows.filter((row) => row.category === 'knowledge').length} | ${chapterRows.filter((row) => row.category === 'no-knowledge').length} | ${distinct} | ${relative} | ${contentHash(content)} |`
-    );
-  }
-  index.push('', `Total accepted examples: ${rows.length}.`, '');
-  files.push({ relative: 'manifest.md', content: index.join('\n') });
-  return files;
-}
-
-function sourcesFile(source) {
-  return [
-    '# Sources',
-    '',
-    'Source inventory of the pilot pipeline. Rights status is recorded per source and determines whether a derivative may appear in a released artifact.',
-    '',
-    '| source | path | role | raw hash | canonical hash | extractor | paragraphs | rights | permitted use |',
-    '| --- | --- | --- | --- | --- | --- | --- | --- | --- |',
-    `| ${BOOK_ID} | ${BOOK_PATH} | seed book | ${source.rawHash} | ${source.canonicalHash} | ${source.extractor} | ${source.paragraphs.length} | project-owned seed book, research use | internal training and evaluation; no public redistribution of source text |`,
-    ''
-  ].join('\n');
-}
-
-/**
- * Family integrity checks. Acceptance already proves that the executed circuit
- * computed the printed answer from the statement, so a family cannot pass by
- * copying the source label. What remains reportable is how much recomputation
- * the accepted variants actually exercise: a template whose variants all print
- * one answer does not test that the computation reacts to its input, and a
- * template with several variants and several answers does.
- */
-function integrityFindings(accepted) {
-  const byTemplate = new Map();
-  for (const item of accepted) {
-    const group = byTemplate.get(item.problem.templateKey) ?? { variants: 0, answers: new Set(), type: item.problem.type };
-    group.variants += 1;
-    group.answers.add(item.problem.printedAnswer);
-    byTemplate.set(item.problem.templateKey, group);
-  }
-  let multiVariant = 0;
-  let multiAnswer = 0;
-  const constantAnswer = [];
-  for (const [template, group] of byTemplate) {
-    if (group.variants > 1) {
-      multiVariant += 1;
-      if (group.answers.size > 1) {
-        multiAnswer += 1;
-      } else {
-        constantAnswer.push(`${template} (${group.variants} variants, one printed answer)`);
-      }
-    }
-  }
-  return {
-    templates: byTemplate.size,
-    multiVariant,
-    multiAnswer,
-    constantAnswer: constantAnswer.sort()
-  };
-}
-
-/**
- * Source-owned text blemishes. The extractor is faithful to the printed page:
- * when the book itself prints a word glued to a digit ("0 or1"), the canonical
- * text carries the defect and the pipeline records it instead of silently
- * rewriting the statement. The scan runs before the manifest is locked, and the
- * report lists every finding next to the accepted counts, so a reviewer sees
- * the residual source defects rather than discovering them downstream.
- */
-const GLUED_WORD_PATTERN = /([a-z]{2,})(\d)|(\d)([a-z]{2,})\b/g;
-const ORDINAL_SUFFIX = /^(st|nd|rd|th)$/;
-
-export function findTextBlemishes(problems) {
-  const findings = [];
-  for (const problem of problems) {
-    const text = `${problem.title} ${problem.statement}`;
-    for (const match of text.matchAll(GLUED_WORD_PATTERN)) {
-      if (match[4] !== undefined && ORDINAL_SUFFIX.test(match[4])) {
-        continue;
-      }
-      findings.push(`${problem.id}: ${match[0]}`);
-    }
-  }
-  return findings;
-}
-
-function reportFile({ source, accepted, rejected, split, rows, blemishes = [] }) {
-  const byCategory = countBy(accepted, (item) => item.entry.category);
-  const byType = countBy(accepted, (item) => `${item.entry.category}/${item.problem.type}`);
-  const byChapter = countBy(accepted, (item) => item.problem.chapter);
-  const byReason = countBy(rejected, (item) => item.reason.split(':')[0]);
-  const distinctPlans = new Set(rows.map((row) => row.planHash));
-  const distinctCircuits = new Set(rows.map((row) => row.hashes[1]));
-  const evaluated = rows.filter((row) => row.split === 'eval').length;
-  const lines = [
-    '# Dataset report',
-    '',
-    `Source: \`${source.path}\` (raw ${source.rawHash.slice(0, 16)}, canonical ${source.canonicalHash.slice(0, 16)}, extractor ${source.extractor}).`,
-    '',
-    `Accepted examples: ${accepted.length}. Rejected candidates: ${rejected.length}. Evaluation holdout: ${evaluated} (${((evaluated / Math.max(1, accepted.length)) * 100).toFixed(1)}%). Distinct plans: ${distinctPlans.size}. Distinct compiled circuits: ${distinctCircuits.size} (a circuit embeds the values it was compiled from, so the count equals the accepted set unless two problems compile to identical text).`,
-    '',
-    'Acceptance class: every accepted example is `exact_verified` in the qualified sense defined by `DS008-training-data`: the executed circuit produced the printed answer, and the family computation reproduced it from the same reference parse. The independence that qualifies is stated under Limitations.',
-    '',
-    '## Accepted by category',
-    ''
-  ];
-  for (const [category, count] of [...byCategory].sort()) {
-    lines.push(`- ${category}: ${count}`);
-  }
-  lines.push('', '## Accepted by problem type', '');
-  const typeEntries = [...byType]
-    .sort((left, right) => (left[0] < right[0] ? -1 : 1))
-    .map(([type, count]) => `${type} (${count})`);
-  let currentLine = '';
-  for (const entry of typeEntries) {
-    if (currentLine.length + entry.length > 180) {
-      lines.push(currentLine.trimEnd());
-      currentLine = '';
-    }
-    currentLine += `${entry}, `;
-  }
-  if (currentLine !== '') {
-    lines.push(currentLine.replace(/, $/, ''));
-  }
-  lines.push('');
-  lines.push('', '## Accepted by chapter', '');
-  for (const [chapter, count] of [...byChapter].sort((left, right) => left[0] - right[0])) {
-    lines.push(`- chapter ${chapter}: ${count}`);
-  }
-  lines.push('', '## Rejected by reason', '');
-  for (const [reason, count] of [...byReason].sort()) {
-    lines.push(`- ${reason}: ${count}`);
-  }
-  const findings = integrityFindings(accepted);
-  lines.push(
-    '',
-    '## Family integrity checks',
-    '',
-    `Templates covered: ${findings.templates}, of which ${findings.multiVariant} have several variants and ${findings.multiAnswer} of those print several distinct answers, which is what shows that the computation reacts to its input.`
-  );
-  if (findings.constantAnswer.length === 0) {
-    lines.push('', 'No template with several variants prints one answer for every variant.');
-  } else {
-    lines.push('', 'Templates whose variants all print one answer, so the variants do not test recomputation:');
-    for (const entry of findings.constantAnswer) {
-      lines.push(`- ${entry}`);
-    }
-  }
-  lines.push(
-    '',
-    '## Text blemishes',
-    '',
-    blemishes.length === 0
-      ? 'The statement scan found no missing-space artifacts around digits.'
-      : 'The source itself prints these missing-space artifacts around digits (a word glued to a digit); the extraction is faithful and does not repair them:',
-    ...(blemishes.length === 0 ? [] : blemishes.map((finding) => `- ${finding}`))
-  );
-  lines.push(
-    '',
-    '## Limitations',
-    '',
-    '- The compiled values of every circuit come from the reference parse of its problem family, because the pilot runs without a teacher model: the shipped circuit is the plan a model would emit after reading the statement. The stage that replaces the reference parse with a real model call keeps the same acceptance checks.',
-    '- `exact_verified` certifies that the circuit executed, that the family computation agreed with the printed answer, and that the executed circuit agreed with the family computation. The family `solve` and the circuit `jsEval` body are two transcriptions of one algorithm over one shared reference parse: for a template with several variants the agreement is checked over every variant, and for a single-variant template it certifies one instance. The circuit compute bodies keep the validity guards of their `solve` so a circuit never returns a value the oracle would reject. A structurally different oracle (for example the printed step list) is the next stage of independence and is not claimed here.',
-    '- Problems without an implemented family are preserved under `rejected/` with the reason `family_not_implemented` and are the next work item of the pilot.',
-    '- Statements that reference data of an earlier problem carry the referenced premise in `problem.md` under a labelled `Referenced context` line; an item without that context is rejected as `unresolved_reference` instead of shipping as an unanswerable example.',
-    '- The evaluation holdout is selected deterministically from a hash ordering rather than by a random seed, so it is reproducible. Selection units are template clusters merged by shared plan fingerprint (the facts and compute body), so no eval example repeats a plan that appears in the training rows.',
-    ''
-  );
-  return lines.join('\n');
-}
-
-function compareProblems(left, right) {
-  const [leftChapter, leftSection] = left.problem.split('.').map(Number);
-  const [rightChapter, rightSection] = right.problem.split('.').map(Number);
-  if (leftChapter !== rightChapter) {
-    return leftChapter - rightChapter;
-  }
-  return leftSection - rightSection;
-}
-
-function countBy(items, keyOf) {
-  const counts = new Map();
-  for (const item of items) {
-    const key = keyOf(item);
-    counts.set(key, (counts.get(key) ?? 0) + 1);
-  }
-  return counts;
-}
-
 /**
  * `pilot.mjs` is the library; the command line lives in `pilot-cli.mjs`.
  * Running the library as a main module would take no flags and rewrite the
@@ -697,7 +416,8 @@ function countBy(items, keyOf) {
  */
 if (process.argv[1] !== undefined && import.meta.url === pathToFileURL(process.argv[1]).href) {
   process.stderr.write(
-    'pilot.mjs is the pilot library and takes no flags. Run the command line instead: node teacher/pilot-cli.mjs [--verify] [--chapters 1,2] [--out <dir>]\n'
+    'pilot.mjs is the pilot library and takes no flags. Run the command line instead: node teacher/pilot-cli.mjs [--book <id>] [--verify] [--chapters 1,2 | --families G1,G2] [--out <dir>]\n'
   );
   process.exit(1);
 }
+

@@ -1,0 +1,39 @@
+@slots literal
+{
+  "town": "Maple Ward",
+  "neighbourClaim": "It’s dry, I heard from someone.",
+  "notice": {
+    "from": 10,
+    "to": 20
+  },
+  "photoDay": 12,
+  "speaker": "Kara",
+  "speakerClaim": "“Everybody knows it’s dry.”"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.town === "string" && slots.town.length > 0, "the case must name the town of the well");
+probe(typeof slots.neighbourClaim === "string" && slots.neighbourClaim.length > 0, "the case must carry the neighbour claim");
+probe(typeof slots.speaker === "string" && slots.speaker.length > 0, "the case must name the person who repeats the rumour");
+probe(slots.notice.from > 0 && slots.notice.to >= slots.notice.from, "the notice must announce a well-formed closure range");
+probe(slots.photoDay > 0, "the photo must carry a day of September");
+const hearsay = /I heard from someone/i.test(slots.neighbourClaim);
+probe(hearsay === true, "the neighbour claim must be second-hand rather than first-hand");
+const photoInWindow = slots.photoDay >= slots.notice.from && slots.photoDay <= slots.notice.to;
+probe(photoInWindow === true, "the photo must fall inside the announced closure to be compatible with it");
+const noticeMentionsDry = /dry/i.test("Closed for repairs " + slots.notice.from + "–" + slots.notice.to + " September");
+const authorityIsSource = /^Everybody/.test(slots.speakerClaim);
+const primaryClause = "C2 states the closure and the cause.";
+const compatibleClause = photoInWindow ? "C3 is visually compatible." : "C3 is visually incompatible.";
+const hearsayClause = hearsay && !noticeMentionsDry ? "C1 is hearsay; “dry” is not in C2." : "C1 is a first-hand source.";
+const authorityClause = authorityIsSource ? "“Everybody” is a source." : "“Everybody” is not a source.";
+return primaryClause + " " + compatibleClause + " " + hearsayClause + " " + authorityClause;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

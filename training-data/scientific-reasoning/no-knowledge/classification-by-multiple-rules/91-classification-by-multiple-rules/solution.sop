@@ -1,0 +1,70 @@
+@slots literal
+{
+  "cases": [
+    {
+      "label": "A",
+      "properties": {
+        "the same amount of soil": true,
+        "the same amount of water": true,
+        "the same time of drainage": true,
+        "the same container": false
+      }
+    },
+    {
+      "label": "B",
+      "properties": {
+        "the same amount of soil": true,
+        "the same amount of water": false,
+        "the same time of drainage": true,
+        "the same container": true
+      }
+    },
+    {
+      "label": "C",
+      "properties": {
+        "the same amount of soil": false,
+        "the same amount of water": true,
+        "the same time of drainage": true,
+        "the same container": true
+      }
+    },
+    {
+      "label": "D",
+      "properties": {
+        "the same amount of soil": true,
+        "the same amount of water": true,
+        "the same time of drainage": true,
+        "the same container": true
+      }
+    }
+  ],
+  "required": [
+    "the same amount of water",
+    "the same amount of soil",
+    "the same container",
+    "the same time of drainage"
+  ],
+  "forbidden": []
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.cases) && slots.cases.length > 0, "the statement must list at least one case");
+probe(Array.isArray(slots.required) && slots.required.length > 0, "the rule must require at least one property");
+probe(Array.isArray(slots.forbidden), "the rule must state its forbidden properties, possibly none");
+for (const entry of slots.cases) {
+  probe(typeof entry.label === "string" && entry.label.length > 0, "every case must carry a label");
+  probe(slots.required.every((property) => property in entry.properties), "every required property must appear in every case: " + entry.label);
+}
+const matching = slots.cases.filter((entry) => slots.required.every((property) => entry.properties[property] === true) && slots.forbidden.every((property) => entry.properties[property] === false));
+probe(matching.length > 0, "at least one case must satisfy the competition rule");
+probe(matching.length === 1, "the competition rule must leave exactly one case, not " + matching.length);
+return "Case " + matching[0].label + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -2,14 +2,16 @@
 
 Source: `vision/Mathematical_Thinking_1000_Problems_Grades_1-4_EN.docx` (raw 9b6168e51d504f80, canonical 8d9698559858c746, extractor docx-canvas-text 1.1.0).
 
-Accepted examples: 994. Rejected candidates: 6. Evaluation holdout: 10 (1.0%). Distinct plans: 587. Distinct compiled circuits: 993 (a circuit embeds the values it was compiled from, so the count equals the accepted set unless two problems compile to identical text).
+Accepted examples: 1000. Rejected candidates: 0. Evaluation holdout: 10 (1.0%). Distinct plans: 589. Distinct compiled circuits: 999 (a circuit embeds the values it was compiled from, so the count equals the accepted set unless two problems compile to identical text).
 
-Acceptance class: every accepted example is `exact_verified` in the qualified sense defined by `DS008-training-data`: the executed circuit produced the printed answer, and the family computation reproduced it from the same reference parse. The independence that qualifies is stated under Limitations.
+Acceptance class: every accepted example is `exact_verified` in the qualified sense defined by `DS008-training-data`: the executed circuit produced the printed answer, and the family computation reproduced it from the same reference parse. The independence that qualifies is stated under Limitations. An example whose printed answer the statement does not determine ships the computed answer instead and is `computed_verified`; it is listed under "Answers not shipped as printed".
+
+Probes: every assembled circuit carries the probe harness of `teacher/families/probes.mjs` inside its `jsEval` answer stage — two assertions on the compiled `slots` wire and one assertion on the computed answer — so a malformed input or an empty result ends the run with a structured `execution_error` instead of publishing a wrong value.
 
 ## Accepted by category
 
 - knowledge: 60
-- no-knowledge: 934
+- no-knowledge: 940
 
 ## Accepted by problem type
 
@@ -157,11 +159,11 @@ no-knowledge/proportional-table-with-the-same-rule (5), no-knowledge/prove-all-b
 no-knowledge/range-as-maximum-minus-minimum (1), no-knowledge/rate-on-a-segment-from-a-table (1), no-knowledge/ratio-preserved-in-a-table (5),
 no-knowledge/reconstruct-a-missing-frequency (1), no-knowledge/reconstruct-the-starting-state (5), no-knowledge/reconstructing-the-start-of-a-cycle (1),
 no-knowledge/recovering-the-input-of-an-algorithm (5), no-knowledge/reflecting-a-route-in-a-vertical-mirror (1), no-knowledge/reflection-reverses-the-orientation-of-a-sequence (1),
-no-knowledge/relative-frequency-from-data (1), no-knowledge/relative-position-from-two-relations (1), no-knowledge/remaining-capacity (1),
-no-knowledge/repeated-measurement-and-a-suspicious-value (1), no-knowledge/reserve-for-unknown-demand (1), no-knowledge/returning-along-exactly-the-same-route (1),
-no-knowledge/reversible-algorithm (1), no-knowledge/rotating-an-arrow-by-a-quarter-turn (1), no-knowledge/rotating-directions-by-90 (1),
-no-knowledge/rounding-as-an-interval-of-possibilities (1), no-knowledge/rounding-to-the-nearest-hundred (5), no-knowledge/route-on-a-grid (5),
-no-knowledge/route-robust-to-a-blockage (1), no-knowledge/rows-and-columns (5), no-knowledge/run-length-coding-and-when-it-compresses (1),
+no-knowledge/relative-frequency-from-data (1), no-knowledge/relative-position-from-two-relations (1), no-knowledge/remainder-upon-division-by-3-as-an-invariant (5),
+no-knowledge/remaining-capacity (1), no-knowledge/repeated-measurement-and-a-suspicious-value (1), no-knowledge/reserve-for-unknown-demand (1),
+no-knowledge/returning-along-exactly-the-same-route (1), no-knowledge/reversible-algorithm (1), no-knowledge/rotating-an-arrow-by-a-quarter-turn (1),
+no-knowledge/rotating-directions-by-90 (1), no-knowledge/rounding-as-an-interval-of-possibilities (1), no-knowledge/rounding-to-the-nearest-hundred (5),
+no-knowledge/route-on-a-grid (5), no-knowledge/route-robust-to-a-blockage (1), no-knowledge/rows-and-columns (5), no-knowledge/run-length-coding-and-when-it-compresses (1),
 no-knowledge/run-length-coding-can-enlarge-a-message (1), no-knowledge/safety-reserve (1), no-knowledge/same-area-after-rearrangement-different-perimeter (1),
 no-knowledge/same-area-different-perimeters (5), no-knowledge/same-portion-more-pieces (5), no-knowledge/same-quantity-different-groupings (5),
 no-knowledge/sample-and-population-defined (1), no-knowledge/scaled-recipe (5), no-knowledge/scaling-and-area-counted-in-squares (1), no-knowledge/scaling-and-perimeter (1),
@@ -191,12 +193,12 @@ no-knowledge/the-union-of-two-events-by-counting (1), no-knowledge/the-unknown-t
 no-knowledge/three-activities-and-a-free-window (1), no-knowledge/three-digit-code-and-positional-clues (5), no-knowledge/three-levels-of-grouping (5),
 no-knowledge/three-properties-only-one-possible-object (1), no-knowledge/three-quantities-three-clues (5), no-knowledge/three-squares-in-a-row (1),
 no-knowledge/time-from-distance-and-speed (1), no-knowledge/to-refute-there-exists-all-cases-must-be-eliminated (1), no-knowledge/total-and-a-multiplicative-relationship (5),
-no-knowledge/total-by-person-from-a-two-way-table (1), no-knowledge/transforming-a-pair-of-points (1), no-knowledge/translation-by-a-vector-on-a-grid (1),
-no-knowledge/transport-in-multiple-trips (5), no-knowledge/traverse-each-link-exactly-once (1), no-knowledge/two-activities-that-coincide (1),
-no-knowledge/two-adjacent-rectangles (5), no-knowledge/two-boxes-that-form-a-partition (1), no-knowledge/two-boxes-with-a-given-difference (5),
-no-knowledge/two-cycles-with-different-phases (1), no-knowledge/two-descriptions-of-the-same-group (1), no-knowledge/two-different-results (1),
-no-knowledge/two-different-routes-the-same-destination (1), no-knowledge/two-differently-shaped-containers-with-the-same-capacity (1), no-knowledge/two-equal-categories (1),
-no-knowledge/two-figures-congruent-through-rigid-transformations (1), no-knowledge/two-fractions-of-the-same-total (5),
+no-knowledge/total-by-day-from-a-two-way-table (1), no-knowledge/total-by-person-from-a-two-way-table (1), no-knowledge/transforming-a-pair-of-points (1),
+no-knowledge/translation-by-a-vector-on-a-grid (1), no-knowledge/transport-in-multiple-trips (5), no-knowledge/traverse-each-link-exactly-once (1),
+no-knowledge/two-activities-that-coincide (1), no-knowledge/two-adjacent-rectangles (5), no-knowledge/two-boxes-that-form-a-partition (1),
+no-knowledge/two-boxes-with-a-given-difference (5), no-knowledge/two-cycles-with-different-phases (1), no-knowledge/two-descriptions-of-the-same-group (1),
+no-knowledge/two-different-results (1), no-knowledge/two-different-routes-the-same-destination (1), no-knowledge/two-differently-shaped-containers-with-the-same-capacity (1),
+no-knowledge/two-equal-categories (1), no-knowledge/two-figures-congruent-through-rigid-transformations (1), no-knowledge/two-fractions-of-the-same-total (5),
 no-knowledge/two-independent-tasks-can-run-simultaneously (1), no-knowledge/two-instructions-meet-at-the-same-point (1), no-knowledge/two-intervals-that-do-not-overlap (1),
 no-knowledge/two-intervals-that-overlap (1), no-knowledge/two-levels-of-packing (5), no-knowledge/two-machines-in-parallel (1), no-knowledge/two-machines-working-simultaneously (1),
 no-knowledge/two-modes (1), no-knowledge/two-numbers-sum-and-difference (5), no-knowledge/two-opposing-processes-inflow-and-loss (1),
@@ -234,7 +236,7 @@ no-knowledge/who-has-the-longest-object (5), no-knowledge/why-different-units-ca
 - chapter 16: 25
 - chapter 17: 25
 - chapter 18: 25
-- chapter 19: 20
+- chapter 19: 25
 - chapter 20: 25
 - chapter 21: 25
 - chapter 22: 25
@@ -242,7 +244,7 @@ no-knowledge/who-has-the-longest-object (5), no-knowledge/why-different-units-ca
 - chapter 24: 25
 - chapter 25: 25
 - chapter 26: 25
-- chapter 27: 24
+- chapter 27: 25
 - chapter 28: 25
 - chapter 29: 25
 - chapter 30: 25
@@ -259,12 +261,16 @@ no-knowledge/who-has-the-longest-object (5), no-knowledge/why-different-units-ca
 
 ## Rejected by reason
 
-- family_not_implemented: 1
-- quarantine: 5
+
+## Answers not shipped as printed
+
+
+5 accepted examples ship a normalized answer because the source prints it in a form the English-only policy cannot ship; the source registration declares the equivalent:
+- remainder-upon-division-by-3-as-an-invariant: 5 examples
 
 ## Family integrity checks
 
-Templates covered: 608, of which 97 have several variants and 96 of those print several distinct answers, which is what shows that the computation reacts to its input.
+Templates covered: 610, of which 98 have several variants and 97 of those print several distinct answers, which is what shows that the computation reacts to its input.
 
 Templates whose variants all print one answer, so the variants do not test recomputation:
 - Maximum, Minimum, and Ties (5 variants, one printed answer)

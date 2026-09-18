@@ -1,0 +1,29 @@
+@slots literal
+{
+  "place": "Kalmford",
+  "person": "Sol",
+  "total": 6,
+  "right": 2,
+  "tracker": "Una",
+  "selfProver": "Wes"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the quiz place");
+probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person who is extremely sure");
+probe(typeof slots.tracker === "string" && slots.tracker.length > 0, "the case must name the voice that distrusts the feeling");
+probe(typeof slots.selfProver === "string" && slots.selfProver.length > 0, "the case must name the voice that treats certainty as self-proving");
+probe(slots.tracker !== slots.selfProver, "the two voices must be different people");
+probe(Number.isInteger(slots.total) && slots.total > 0, "the sure record must list a positive number of times");
+probe(Number.isInteger(slots.right) && slots.right >= 0, "the sure record must list a non-negative number of right calls");
+probe(slots.right < slots.total, "the record must be short of certainty for the feeling to be weak evidence");
+return "A nervous-system state. On this record it is weak evidence of accuracy (" + slots.right + " of " + slots.total + ").";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

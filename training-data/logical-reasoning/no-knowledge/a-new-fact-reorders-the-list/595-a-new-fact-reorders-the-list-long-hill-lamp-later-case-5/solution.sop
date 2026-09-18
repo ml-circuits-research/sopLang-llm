@@ -1,0 +1,28 @@
+@slots literal
+{
+  "place": "Long Hill",
+  "earlierRank": "dead bulb first",
+  "keeper": "Leo",
+  "keptRank": "dead bulb",
+  "mover": "Mira",
+  "shamer": "Quinn"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the earlier lamp problem");
+probe(typeof slots.earlierRank === "string" && slots.earlierRank.length > 0, "the case must quote the earlier rank");
+probe(typeof slots.keptRank === "string" && slots.keptRank.length > 0, "the case must quote the rank the keeper defends");
+probe(slots.keptRank !== slots.earlierRank, "keeping a rank must defend an old winner, not restate the earlier rank");
+const people = [slots.keeper, slots.mover, slots.shamer];
+probe(people.every((name) => typeof name === "string" && name.length > 0), "the case must name the person behind each reaction");
+probe(new Set(people).size === people.length, "the three reactions must come from three different people");
+return "Reorder. The new fact fights \u201Cthis bulb only\u201D and supports \u201Cthis socket.\u201D Updating is the method working.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

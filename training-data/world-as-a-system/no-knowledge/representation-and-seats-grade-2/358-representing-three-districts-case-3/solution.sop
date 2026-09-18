@@ -1,0 +1,76 @@
+@slots literal
+{
+  "districts": [
+    {
+      "name": "A",
+      "population": 160
+    },
+    {
+      "name": "B",
+      "population": 100
+    },
+    {
+      "name": "C",
+      "population": 90
+    }
+  ],
+  "seats": 12,
+  "crossDomain": null
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const describeCrossDomain = function describeCrossDomain(check) {
+  if (check.kind === 'distance') {
+    return `${check.centimetres * check.kilometresPerCentimetre} km.`;
+  }
+  if (check.kind === 'time') {
+    const minutes = check.startHour * 60 + check.startMinute + check.hours * 60;
+    const hour = String(Math.floor(minutes / 60)).padStart(2, '0');
+    const minute = String(minutes % 60).padStart(2, '0');
+    return `${hour}:${minute}.`;
+  }
+  if (check.kind === 'quorum') {
+    return check.present >= check.threshold ? 'quorum is met.' : 'quorum is not met.';
+  }
+  if (check.kind === 'reports') {
+    return `${check.total - check.duplicates} independent reports.`;
+  }
+  if (check.kind === 'sheets') {
+    return `${check.start + check.received} map sheets.`;
+  }
+  throw new Error(`Unknown cross-domain check "${check.kind}".`);
+};
+const renderCrossDomain = function renderCrossDomain(checks) {
+  if (checks === null || checks === undefined || checks.length === 0) {
+    return '';
+  }
+  const parts = checks.map((check, index) => {
+    const label = index === 1 ? 'Mixed-domain answer:' : 'Cross-domain answer:';
+    return `${label} ${describeCrossDomain(check)}`;
+  });
+  return parts.join(' ');
+};
+const slots = $slots;
+probe(Array.isArray(slots.districts) && slots.districts.length > 0, "the statement must name at least one district");
+probe(slots.districts.every((district) => typeof district.name === "string" && district.name.length > 0), "every district must carry a name");
+probe(slots.districts.every((district) => Number.isInteger(district.population) && district.population > 0), "every district must have a positive whole population");
+probe(Number.isInteger(slots.seats) && slots.seats > 0, "the seat total must be a positive whole number");
+const total = slots.districts.reduce((sum, district) => sum + district.population, 0);
+probe(total > 0, "the stated populations must add up to a positive total");
+const quotas = slots.districts.map((district) => { const scaled = district.population * slots.seats; return { name: district.name, seats: Math.floor(scaled / total), remainder: scaled % total }; });
+const remaining = slots.seats - quotas.reduce((sum, quota) => sum + quota.seats, 0);
+probe(remaining >= 0 && remaining < quotas.length, "the whole-number parts must leave fewer seats than there are districts");
+const order = quotas.map((quota, index) => ({ index, remainder: quota.remainder })).sort((left, right) => right.remainder - left.remainder || right.index - left.index);
+for (let assigned = 0; assigned < remaining; assigned += 1) { quotas[order[assigned].index].seats += 1; }
+probe(quotas.reduce((sum, quota) => sum + quota.seats, 0) === slots.seats, "the final allocation must sum to the available seats");
+const main = quotas.map((quota) => quota.name + "=" + quota.seats).join(", ") + " seats.";
+const suffix = renderCrossDomain(slots.crossDomain);
+return suffix === "" ? main : main + " " + suffix;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

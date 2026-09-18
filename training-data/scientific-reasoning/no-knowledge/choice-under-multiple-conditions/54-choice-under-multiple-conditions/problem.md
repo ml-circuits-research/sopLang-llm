@@ -1,0 +1,7 @@
+# 54 — Choice under multiple conditions
+
+Problem world. Our model mixture contains iron filings, pebbles, sand, and salt dissolved in water. A magnet attracts the iron filings; a sieve separates larger particles from smaller ones; filtration can retain sand while water passes through; evaporating the water can leave the salt behind. A method must be chosen according to the property that differs between the components.
+
+Case data. Option iron: the component is attracted by a magnet: YES; is greater than the mesh of the sieve: NO; does not pass through the filter: YES; remains after evaporation of the water: YES. Option pebbles: the component is attracted by a magnet: NO; is greater than the mesh of the sieve: YES; does not pass through the filter: YES; remains after evaporation of the water: YES. Option sand: the component is attracted by a magnet: NO; is greater than the mesh of the sieve: NO; does not pass through the filter: YES; remains after evaporation of the water: YES. Option salt dissolved: the component is attracted by a magnet: NO; is greater than the mesh of the sieve: NO; does not pass through the filter: NO; remains after evaporation of the water: YES.
+
+Question. Choose the option that simultaneously meets all conditions: the component is attracted by a magnet, does not pass through the filter, remains after evaporation of the water. If even one mandatory condition is NO, the option must be eliminated. Which one remains, and why can the “count the most YES values” method give a wrong answer?

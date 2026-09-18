@@ -1,0 +1,28 @@
+@slots literal
+{
+  "payer": "Dora",
+  "place": "Redbridge",
+  "preferrer": "Dora",
+  "liveVoice": "Eli",
+  "wasteVoice": "Fran",
+  "mustStay": "Dora"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.payer === "string" && slots.payer.length > 0, "the case must name the person who already paid");
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the lecture");
+probe(slots.payer === slots.preferrer && slots.payer === slots.mustStay, "the payer, the person who prefers the walk, and the person told to stay must be the same");
+probe(typeof slots.liveVoice === "string" && slots.liveVoice.length > 0, "the case must name the speaker who separates the spent payment from the live question");
+probe(typeof slots.wasteVoice === "string" && slots.wasteVoice.length > 0, "the case must name the speaker who calls leaving a waste");
+probe(slots.payer !== slots.liveVoice && slots.payer !== slots.wasteVoice && slots.liveVoice !== slots.wasteVoice, "the readings must belong to three different speakers");
+const sunk = "The payment is sunk";
+return sunk + ". It will not return if " + slots.payer + " stays. The live question is which next hour is better.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

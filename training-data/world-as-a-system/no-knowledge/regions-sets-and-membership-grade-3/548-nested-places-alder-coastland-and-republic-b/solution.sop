@@ -1,0 +1,107 @@
+@slots literal
+{
+  "pairs": [
+    {
+      "inner": "Alder",
+      "outer": "Coastland"
+    },
+    {
+      "inner": "Coastland",
+      "outer": "Republic B"
+    },
+    {
+      "inner": "Republic B",
+      "outer": "Meridian"
+    },
+    {
+      "inner": "Republic B",
+      "outer": "Alder"
+    }
+  ],
+  "question": {
+    "kind": "reversal",
+    "subject": "Republic B",
+    "object": "Alder"
+  },
+  "crossDomain": null
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const describeCrossDomain = function describeCrossDomain(check) {
+  if (check.kind === 'distance') {
+    return `${check.centimetres * check.kilometresPerCentimetre} km.`;
+  }
+  if (check.kind === 'time') {
+    const minutes = check.startHour * 60 + check.startMinute + check.hours * 60;
+    const hour = String(Math.floor(minutes / 60)).padStart(2, '0');
+    const minute = String(minutes % 60).padStart(2, '0');
+    return `${hour}:${minute}.`;
+  }
+  if (check.kind === 'quorum') {
+    return check.present >= check.threshold ? 'quorum is met.' : 'quorum is not met.';
+  }
+  if (check.kind === 'reports') {
+    return `${check.total - check.duplicates} independent reports.`;
+  }
+  if (check.kind === 'sheets') {
+    return `${check.start + check.received} map sheets.`;
+  }
+  throw new Error(`Unknown cross-domain check "${check.kind}".`);
+};
+const renderCrossDomain = function renderCrossDomain(checks) {
+  if (checks === null || checks === undefined || checks.length === 0) {
+    return '';
+  }
+  const parts = checks.map((check, index) => {
+    const label = index === 1 ? 'Mixed-domain answer:' : 'Cross-domain answer:';
+    return `${label} ${describeCrossDomain(check)}`;
+  });
+  return parts.join(' ');
+};
+const slots = $slots;
+probe(Array.isArray(slots.pairs) && slots.pairs.length > 0, "the facts must state at least one containment");
+probe(slots.question !== null && typeof slots.question === "object" && typeof slots.question.kind === "string", "the task must state one of the containment questions");
+probe(slots.pairs.every((pair) => typeof pair.inner === "string" && typeof pair.outer === "string" && pair.inner !== pair.outer), "a containment must relate two different named units");
+const parent = new Map(slots.pairs.map((pair) => [pair.inner, pair.outer]));
+const chainOf = (start) => {
+  const chain = [];
+  const seen = new Set([start]);
+  let node = start;
+  while (parent.has(node)) {
+    node = parent.get(node);
+    if (seen.has(node)) {
+      break;
+    }
+    seen.add(node);
+    chain.push(node);
+  }
+  return chain;
+};
+const contains = (inner, outer) => chainOf(inner).indexOf(outer) >= 0;
+const listPhrase = (items) => items.length === 1 ? items[0] : items.length === 2 ? items[0] + " and " + items[1] : items.slice(0, -1).join(", ") + ", and " + items[items.length - 1];
+const question = slots.question;
+let main;
+if (question.kind === "membership") {
+  probe(contains(question.subject, question.object), "the asked membership must follow from the stated containment");
+  main = "Yes, " + question.subject + " is in " + question.object + ".";
+} else if (question.kind === "reversal") {
+  probe(contains(question.object, question.subject), "the reversed question must reverse a containment the facts state");
+  main = "No. The containment relation cannot be reversed.";
+} else if (question.kind === "ancestors") {
+  const chain = chainOf(question.subject);
+  probe(chain.length > 0, "the facts must state a larger unit for the asked place");
+  main = listPhrase(chain) + ".";
+} else {
+  probe(question.kind === "region", "the task question must be one the family recognises");
+  main = "No. Country membership alone is insufficient to identify the region.";
+}
+const suffix = renderCrossDomain(slots.crossDomain);
+return suffix === "" ? main : main + " " + suffix;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

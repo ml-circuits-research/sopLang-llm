@@ -1,0 +1,31 @@
+@slots literal
+{
+  "subjectNoun": "measurements",
+  "lowerBound": 43,
+  "upperBound": 46,
+  "divisor": 4,
+  "resourceLimit": 49,
+  "reserve": 5
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.lowerBound) && slots.lowerBound > 0, "the lower bound must be a positive whole number");
+probe(Number.isInteger(slots.upperBound) && slots.upperBound >= slots.lowerBound, "the stated upper bound must not fall below the lower bound");
+probe(Number.isInteger(slots.divisor) && slots.divisor > 1, "the divisibility rule must name a whole number greater than one");
+probe(Number.isInteger(slots.resourceLimit) && slots.resourceLimit > 0, "the resource limit must be a positive whole number");
+probe(Number.isInteger(slots.reserve) && slots.reserve > 0, "the reserve must be a positive whole number");
+probe(slots.reserve < slots.resourceLimit, "the reserve must be smaller than the resource limit");
+const effectiveUpper = Math.min(slots.upperBound, slots.resourceLimit - slots.reserve);
+const x = Math.floor(effectiveUpper / slots.divisor) * slots.divisor;
+probe(x >= slots.lowerBound, "the clauses must admit at least one multiple of the divisor");
+probe(x % slots.divisor === 0 && x >= slots.lowerBound && x <= slots.upperBound && x + slots.reserve <= slots.resourceLimit, "x must satisfy every clause of the one predicate");
+return "The best representation is a single constraint-satisfaction subproblem, yielding x=" + x + ". The apparent subproblems are merely clauses of one predicate over the same variable.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

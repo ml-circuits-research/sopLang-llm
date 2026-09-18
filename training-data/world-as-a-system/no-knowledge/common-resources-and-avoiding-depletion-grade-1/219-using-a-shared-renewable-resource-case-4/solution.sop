@@ -1,0 +1,62 @@
+@slots literal
+{
+  "start": 70,
+  "regeneration": 13,
+  "users": 4,
+  "withdrawalPerUser": 6,
+  "crossDomain": null
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const describeCrossDomain = function describeCrossDomain(check) {
+  if (check.kind === 'distance') {
+    return `${check.centimetres * check.kilometresPerCentimetre} km.`;
+  }
+  if (check.kind === 'time') {
+    const minutes = check.startHour * 60 + check.startMinute + check.hours * 60;
+    const hour = String(Math.floor(minutes / 60)).padStart(2, '0');
+    const minute = String(minutes % 60).padStart(2, '0');
+    return `${hour}:${minute}.`;
+  }
+  if (check.kind === 'quorum') {
+    return check.present >= check.threshold ? 'quorum is met.' : 'quorum is not met.';
+  }
+  if (check.kind === 'reports') {
+    return `${check.total - check.duplicates} independent reports.`;
+  }
+  if (check.kind === 'sheets') {
+    return `${check.start + check.received} map sheets.`;
+  }
+  throw new Error(`Unknown cross-domain check "${check.kind}".`);
+};
+const renderCrossDomain = function renderCrossDomain(checks) {
+  if (checks === null || checks === undefined || checks.length === 0) {
+    return '';
+  }
+  const parts = checks.map((check, index) => {
+    const label = index === 1 ? 'Mixed-domain answer:' : 'Cross-domain answer:';
+    return `${label} ${describeCrossDomain(check)}`;
+  });
+  return parts.join(' ');
+};
+const slots = $slots;
+probe(Number.isFinite(slots.start) && slots.start >= 0, "the starting stock must be a stated non-negative number");
+probe(Number.isFinite(slots.regeneration) && slots.regeneration >= 0, "the regeneration must be a stated non-negative number");
+probe(Number.isInteger(slots.users) && slots.users > 0, "the number of users must be a positive integer");
+probe(Number.isFinite(slots.withdrawalPerUser) && slots.withdrawalPerUser >= 0, "the per-user withdrawal must be a stated non-negative number");
+const totalHarvest = slots.users * slots.withdrawalPerUser;
+const endStock = slots.start + slots.regeneration - totalHarvest;
+probe(endStock >= 0, "the stated stock equation must not drive the stock below zero");
+const equalShare = slots.regeneration / slots.users;
+const verdict = endStock >= slots.start ? "non-depleting" : "depleting";
+const main = "End stock " + endStock + "; " + verdict + ". Equal regeneration-matching share: " + equalShare.toFixed(2) + " each.";
+const suffix = renderCrossDomain(slots.crossDomain);
+return suffix === "" ? main : main + " " + suffix;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

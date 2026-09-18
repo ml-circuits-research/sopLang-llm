@@ -1,0 +1,100 @@
+@slots literal
+{
+  "labels": [
+    "A",
+    "B",
+    "C"
+  ],
+  "fund": 35,
+  "populations": [
+    10,
+    20,
+    30
+  ],
+  "needScores": [
+    3,
+    3,
+    5
+  ],
+  "method": "need",
+  "minimum": null,
+  "crossDomain": null
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const describeCrossDomain = function describeCrossDomain(check) {
+  if (check.kind === 'distance') {
+    return `${check.centimetres * check.kilometresPerCentimetre} km.`;
+  }
+  if (check.kind === 'time') {
+    const minutes = check.startHour * 60 + check.startMinute + check.hours * 60;
+    const hour = String(Math.floor(minutes / 60)).padStart(2, '0');
+    const minute = String(minutes % 60).padStart(2, '0');
+    return `${hour}:${minute}.`;
+  }
+  if (check.kind === 'quorum') {
+    return check.present >= check.threshold ? 'quorum is met.' : 'quorum is not met.';
+  }
+  if (check.kind === 'reports') {
+    return `${check.total - check.duplicates} independent reports.`;
+  }
+  if (check.kind === 'sheets') {
+    return `${check.start + check.received} map sheets.`;
+  }
+  throw new Error(`Unknown cross-domain check "${check.kind}".`);
+};
+const renderCrossDomain = function renderCrossDomain(checks) {
+  if (checks === null || checks === undefined || checks.length === 0) {
+    return '';
+  }
+  const parts = checks.map((check, index) => {
+    const label = index === 1 ? 'Mixed-domain answer:' : 'Cross-domain answer:';
+    return `${label} ${describeCrossDomain(check)}`;
+  });
+  return parts.join(' ');
+};
+const slots = $slots;
+probe(Array.isArray(slots.labels) && slots.labels.length > 0, "the statement must name at least one district");
+probe(Number.isFinite(slots.fund) && slots.fund > 0, "the fund must be a stated positive number");
+probe(Array.isArray(slots.populations) && slots.populations.length === slots.labels.length, "every district must have one stated population");
+probe(Array.isArray(slots.needScores) && slots.needScores.length === slots.labels.length, "every district must have one stated need score");
+const count = slots.labels.length;
+const proportional = (weights) => {
+  const total = weights.reduce((sum, weight) => sum + weight, 0);
+  probe(total > 0, "the stated weights must sum to a positive total");
+  return weights.map((weight) => (slots.fund * weight) / total);
+};
+const equal = () => slots.labels.map(() => slots.fund / count);
+let amounts;
+if (slots.method === "equal") {
+  amounts = equal();
+} else if (slots.method === "population") {
+  amounts = proportional(slots.populations);
+} else if (slots.method === "need") {
+  amounts = proportional(slots.needScores);
+} else if (slots.method === "guarantee") {
+  probe(Number.isFinite(slots.minimum) && slots.minimum >= 0, "the minimum guarantee must be a stated non-negative number");
+  const remainder = slots.fund - slots.minimum * count;
+  probe(remainder >= 0, "the stated minimum guarantees must not exceed the fund");
+  amounts = slots.labels.map(() => slots.minimum + remainder / count);
+} else if (slots.method === "compare") {
+  const highest = slots.needScores.indexOf(Math.max(...slots.needScores));
+  const byNeed = proportional(slots.needScores);
+  const byEqual = equal();
+  probe(byNeed[highest] !== byEqual[highest], "the two compared allocations must not tie at the highest-need district");
+  amounts = byNeed[highest] > byEqual[highest] ? byNeed : byEqual;
+} else {
+  throw new Error("unknown fairness principle");
+}
+probe(amounts.length === count && amounts.every((amount) => Number.isFinite(amount)), "every district must receive a finite share");
+const main = slots.labels.map((label, index) => label + "=" + amounts[index].toFixed(2)).join(", ") + ".";
+const suffix = renderCrossDomain(slots.crossDomain);
+return suffix === "" ? main : main + " " + suffix;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

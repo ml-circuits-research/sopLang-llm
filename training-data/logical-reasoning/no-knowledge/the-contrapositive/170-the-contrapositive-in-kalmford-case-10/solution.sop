@@ -1,0 +1,22 @@
+@slots literal
+{
+  "contrapositive": "Sol",
+  "converse": "Una",
+  "bystander": "Wes"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.contrapositive === "string" && slots.contrapositive.length > 0, "the case must name the speaker of the contrapositive twin");
+probe(typeof slots.converse === "string" && slots.converse.length > 0, "the case must name the speaker of the converse twin");
+probe(typeof slots.bystander === "string" && slots.bystander.length > 0, "the case must name the speaker who hears no difference");
+probe(slots.contrapositive !== slots.converse && slots.contrapositive !== slots.bystander && slots.converse !== slots.bystander, "the three speakers must be different people");
+return "Only " + slots.contrapositive + "\u2019s twin \u2014 the contrapositive. " + slots.converse + " wrote the converse, a new claim. Wetness can arrive by a street-cleaning truck.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

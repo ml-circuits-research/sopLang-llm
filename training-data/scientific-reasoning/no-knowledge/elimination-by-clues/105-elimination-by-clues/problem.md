@@ -1,0 +1,7 @@
+# 105 — Elimination by clues
+
+Problem world. In the model, Earth is approximated as a sphere rotating around its axis. The side facing the Sun is illuminated, while the opposite side is in night. As Earth rotates, a place can move from the illuminated region to the dark region and back again. These problems do not require astronomical distances or real durations; we use only the stated geometric model.
+
+Case data. Case A: the location is on the part oriented toward Sun: YES; nothing blocks the light in the model: YES; Earth rotates: YES; the observer remains at the same place on the surface: NO. Case B: the location is on the part oriented toward Sun: YES; nothing blocks the light in the model: NO; Earth rotates: YES; the observer remains at the same place on the surface: YES. Case C: the location is on the part oriented toward Sun: NO; nothing blocks the light in the model: YES; Earth rotates: YES; the observer remains at the same place on the surface: YES. Case D: the location is on the part oriented toward Sun: YES; nothing blocks the light in the model: YES; Earth rotates: YES; the observer remains at the same place on the surface: YES.
+
+Question. An unknown case matches the clues: “the location is on the part oriented toward Sun” is YES; “nothing blocks the light in the model” is YES; “the observer remains at the same place on the surface” is YES. Which case is it? Show the elimination of the other possibilities, not just the final answer.

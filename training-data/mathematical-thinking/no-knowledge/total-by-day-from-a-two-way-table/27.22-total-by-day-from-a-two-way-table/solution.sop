@@ -1,0 +1,42 @@
+@slots literal
+{
+  "cells": [
+    [
+      "Ana",
+      "Monday",
+      3
+    ],
+    [
+      "Ana",
+      "Tuesday",
+      5
+    ],
+    [
+      "Dan",
+      "Monday",
+      4
+    ],
+    [
+      "Dan",
+      "Tuesday",
+      2
+    ]
+  ],
+  "day": "Monday"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+const column = slots.cells.filter((cell) => cell[1] === slots.day);
+if (column.length === 0) { throw new Error("the requested day is not a column of the table"); }
+let total = 0;
+for (const cell of column) { total += cell[2]; }
+return String(total) + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,7 @@
+# 51 — Classification by multiple rules
+
+Problem world. Our model mixture contains iron filings, pebbles, sand, and salt dissolved in water. A magnet attracts the iron filings; a sieve separates larger particles from smaller ones; filtration can retain sand while water passes through; evaporating the water can leave the salt behind. A method must be chosen according to the property that differs between the components.
+
+Case data. Case iron: the component is attracted by a magnet: YES; is greater than the mesh of the sieve: NO; does not pass through the filter: YES; remains after evaporation of the water: YES. Case pebbles: the component is attracted by a magnet: NO; is greater than the mesh of the sieve: YES; does not pass through the filter: YES; remains after evaporation of the water: YES. Case sand: the component is attracted by a magnet: NO; is greater than the mesh of the sieve: NO; does not pass through the filter: YES; remains after evaporation of the water: YES. Case salt dissolved: the component is attracted by a magnet: NO; is greater than the mesh of the sieve: NO; does not pass through the filter: NO; remains after evaporation of the water: YES.
+
+Question. The competition rule says that only the case meeting ALL requirements is accepted: the component is attracted by a magnet, does not pass through the filter, remains after evaporation of the water; and the forbidden properties are: is greater than the mesh of the sieve. Which case is accepted? It is not enough to find a case that meets only some of the conditions.

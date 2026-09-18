@@ -1,0 +1,96 @@
+@slots literal
+{
+  "targets": [
+    "comparison fair",
+    "friction reduced"
+  ],
+  "forbidden": [
+    "friction increased"
+  ],
+  "interventions": [
+    {
+      "name": "surface more smooth",
+      "cost": 2,
+      "effects": [
+        "friction reduced"
+      ],
+      "undesired": []
+    },
+    {
+      "name": "The same push",
+      "cost": 1,
+      "effects": [
+        "comparison fair"
+      ],
+      "undesired": []
+    },
+    {
+      "name": "Gears",
+      "cost": 2,
+      "effects": [
+        "movement more light"
+      ],
+      "undesired": []
+    },
+    {
+      "name": "Sand along the route",
+      "cost": 1,
+      "effects": [
+        "traction"
+      ],
+      "undesired": [
+        "friction increased"
+      ]
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.targets) && slots.targets.length > 0, "the statement must name at least one target");
+probe(Array.isArray(slots.forbidden) && slots.forbidden.length > 0, "the statement must name the forbidden effects");
+probe(Array.isArray(slots.interventions) && slots.interventions.length > 0, "the statement must list its interventions");
+for (const entry of slots.interventions) {
+  probe(typeof entry.name === "string" && entry.name.length > 0, "every intervention must carry a name");
+  probe(Number.isInteger(entry.cost) && entry.cost > 0, "every intervention must have a positive cost: " + entry.name);
+  probe(Array.isArray(entry.effects) && entry.effects.length > 0, "every intervention must state the effects it produces: " + entry.name);
+  probe(Array.isArray(entry.undesired), "every intervention must state its undesired effects, possibly none: " + entry.name);
+}
+const count = slots.interventions.length;
+probe(count <= 20, "the catalogue must be small enough for an exhaustive search");
+const optima = [];
+for (let mask = 1; mask < 1 << count; mask += 1) {
+  const chosen = slots.interventions.filter((entry, index) => (mask & (1 << index)) !== 0);
+  const effects = new Set(chosen.flatMap((entry) => entry.effects));
+  if (chosen.flatMap((entry) => entry.undesired).some((effect) => slots.forbidden.includes(effect))) {
+    continue;
+  }
+  if (!slots.targets.every((target) => effects.has(target))) {
+    continue;
+  }
+  const cost = chosen.reduce((total, entry) => total + entry.cost, 0);
+  const candidate = { cost: cost, count: chosen.length, names: chosen.map((entry) => entry.name) };
+  const best = optima[0];
+  if (best === undefined || cost < best.cost || (cost === best.cost && candidate.count < best.count)) {
+    optima.length = 0;
+    optima.push(candidate);
+  } else if (cost === best.cost && candidate.count === best.count) {
+    optima.push(candidate);
+  }
+}
+probe(optima.length > 0, "some combination must cover the targets without a forbidden effect");
+probe(new Set(optima.map((entry) => entry.names.join(" | "))).size === 1, "the stated goals must leave exactly one minimum intervention");
+const best = optima[0];
+probe(Number.isInteger(best.cost) && best.cost > 0, "the minimum total cost must be a positive number");
+probe(best.names.length > 0, "the minimum intervention must contain at least one action");
+const printed = new Map([["protecting of the spring","protecting the spring"],["protecting of the eggs","protecting the eggs"],["close the lid","closing of the lid"],["changing of orientation","changing the orientation"],["add a protein source","adding a protein source"],["add vegetables","adding vegetables"]]);
+const names = best.names.map((name) => printed.get(String(name).toLowerCase()) || String(name).toLowerCase());
+return "The minimum intervention is " + names.join(", ") + ", with total cost " + best.cost + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

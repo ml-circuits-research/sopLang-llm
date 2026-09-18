@@ -1,0 +1,25 @@
+@slots literal
+{
+  "assertor": "Omar",
+  "place": "East Wharf",
+  "claim": "The well is unsafe.",
+  "reporter": "Pia",
+  "silence": "Rafi"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+const assertor = slots.assertor;
+probe(typeof assertor === "string" && assertor.length > 0, "the case must name the person who pinned the claim");
+probe(typeof slots.claim === "string" && slots.claim.length > 0, "the case must state the pinned claim");
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the board");
+probe(assertor !== slots.reporter && assertor !== slots.silence && slots.reporter !== slots.silence, "the case must name three different speakers");
+return assertor + ", the assertor. Shifting the burden asks the room to disprove an unsupported claim. Silence is not a premise.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

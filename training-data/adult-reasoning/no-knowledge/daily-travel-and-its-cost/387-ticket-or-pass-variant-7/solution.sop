@@ -1,0 +1,32 @@
+@slots literal
+{
+  "rider": "Kara",
+  "place": "Maple Ward",
+  "ridePrice": 5,
+  "passCost": 94,
+  "passDays": 30,
+  "workdays": 20
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots === "object" && slots !== null, "the travel case must carry its parsed values");
+probe(typeof slots.rider === "string" && slots.rider.length > 0, "the commuter must be named");
+probe(typeof slots.place === "string" && slots.place.length > 0, "the commuter must travel from a named district");
+probe(Number.isInteger(slots.ridePrice) && slots.ridePrice > 0, "the return ticket price must be a positive whole number");
+probe(Number.isInteger(slots.passCost) && slots.passCost > 0, "the monthly pass price must be a positive whole number");
+probe(Number.isInteger(slots.passDays) && slots.passDays > 0, "the pass must cover a positive number of days");
+probe(Number.isInteger(slots.workdays) && slots.workdays > 0 && slots.workdays <= slots.passDays, "the workdays must fit inside the days the pass covers");
+const ticketCost = slots.ridePrice * 2 * slots.workdays;
+probe(ticketCost !== slots.passCost, "the rule cannot choose when the two options cost the same");
+const choice = slots.passCost < ticketCost ? "pass" : "tickets";
+const answer = "Tickets " + ticketCost + " vs pass " + slots.passCost + ". Chooses the " + choice + ".";
+return answer;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

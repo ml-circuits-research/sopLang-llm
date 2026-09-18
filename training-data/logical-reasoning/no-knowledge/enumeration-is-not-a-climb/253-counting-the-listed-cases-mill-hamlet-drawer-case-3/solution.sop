@@ -1,0 +1,32 @@
+@slots literal
+{
+  "place": "Mill Hamlet",
+  "total": 6,
+  "totalWord": "six",
+  "open": 5,
+  "bent": 1,
+  "counted": 5,
+  "countedOf": 6,
+  "enumerator": "Pavel",
+  "weak": "Farid",
+  "climber": "Gina"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the drawer");
+probe(Number.isInteger(slots.total) && slots.total >= 2, "the drawer must hold a plurality of labelled keys");
+probe(Number.isInteger(slots.open) && slots.open >= 1 && Number.isInteger(slots.bent) && slots.bent >= 1, "a count of the open keys needs both outcomes listed");
+probe(slots.total === slots.open + slots.bent, "the enumeration must account for every labelled key in the drawer");
+probe(slots.counted === slots.open && slots.countedOf === slots.total, "the quoted count must be the enumeration’s own numbers");
+probe(typeof slots.totalWord === "string" && slots.totalWord.length > 0, "the case must give the count in words for the printed verdict");
+probe(slots.enumerator !== slots.weak && slots.weak !== slots.climber && slots.enumerator !== slots.climber, "the three speakers must be three different people");
+return slots.enumerator + " is right about the " + slots.totalWord + ". " + slots.weak + " is also true and weaker. " + slots.climber + " climbed from " + slots.totalWord + " keys to the world.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

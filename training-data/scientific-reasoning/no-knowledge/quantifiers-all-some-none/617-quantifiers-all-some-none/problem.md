@@ -1,0 +1,7 @@
+# 617 — Quantifiers: all, some, none
+
+Given knowledge. River water flows from upstream to downstream and can carry particles or substances. In the treatment-plant model, screening stops large objects, filtration retains smaller particles, and a separate disinfection stage is required to reduce microorganisms. A particle filter does not automatically remove all dissolved substances. A pollution source upstream can affect points downstream.
+
+Problem data. The observations for the five cases are: the sample A: has microorganisms in the model; the sample B: has large particles, has fine particles; the sample C: has large particles, has microorganisms in the model; the sample D: has fine particles, has microorganisms in the model; the sample E: has large particles, has fine particles, has microorganisms in the model.
+
+Question. Decide whether each statement is true or false in the table: all cases with the property “has large particles” also have the property “has fine particles”. / some cases with the property “has large particles” also have the property “has fine particles”. / no case with the property “has fine particles” does not have the property “has microorganisms in the model”. / some cases with the property “has microorganisms in the model” do not have the property “has large particles”. For every false statement, give a counterexample; for a true existential statement, give a witness.

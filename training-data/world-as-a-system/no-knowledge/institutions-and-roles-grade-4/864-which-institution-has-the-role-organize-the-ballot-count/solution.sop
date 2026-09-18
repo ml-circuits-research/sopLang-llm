@@ -1,0 +1,87 @@
+@slots literal
+{
+  "roles": [
+    {
+      "name": "Town Council",
+      "definition": "makes local policy and approves the budget"
+    },
+    {
+      "name": "Public Works Office",
+      "definition": "maintains roads"
+    },
+    {
+      "name": "Local Court",
+      "definition": "decides legal disputes"
+    },
+    {
+      "name": "Election Committee",
+      "definition": "administers elections"
+    },
+    {
+      "name": "School Board",
+      "definition": "sets school policies"
+    }
+  ],
+  "action": "organize the ballot count",
+  "options": [
+    "Election Committee",
+    "Local Court"
+  ],
+  "crossDomain": null
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const describeCrossDomain = function describeCrossDomain(check) {
+  if (check.kind === 'distance') {
+    return `${check.centimetres * check.kilometresPerCentimetre} km.`;
+  }
+  if (check.kind === 'time') {
+    const minutes = check.startHour * 60 + check.startMinute + check.hours * 60;
+    const hour = String(Math.floor(minutes / 60)).padStart(2, '0');
+    const minute = String(minutes % 60).padStart(2, '0');
+    return `${hour}:${minute}.`;
+  }
+  if (check.kind === 'quorum') {
+    return check.present >= check.threshold ? 'quorum is met.' : 'quorum is not met.';
+  }
+  if (check.kind === 'reports') {
+    return `${check.total - check.duplicates} independent reports.`;
+  }
+  if (check.kind === 'sheets') {
+    return `${check.start + check.received} map sheets.`;
+  }
+  throw new Error(`Unknown cross-domain check "${check.kind}".`);
+};
+const renderCrossDomain = function renderCrossDomain(checks) {
+  if (checks === null || checks === undefined || checks.length === 0) {
+    return '';
+  }
+  const parts = checks.map((check, index) => {
+    const label = index === 1 ? 'Mixed-domain answer:' : 'Cross-domain answer:';
+    return `${label} ${describeCrossDomain(check)}`;
+  });
+  return parts.join(' ');
+};
+const ROLE_TOPICS = [{"role":"Public Works Office","keywords":["road","roads","street","streets","bridge","bridges","pavement","maintain","maintains","maintenance","repair","repairs","infrastructure"]},{"role":"Local Court","keywords":["dispute","disputes","law","laws","legal","court","courts","hearing","hearings","judge","judges","justice"]},{"role":"Town Council","keywords":["budget","budgets","policy","tax","taxes","fund","funds","funding","levy"]},{"role":"Election Committee","keywords":["election","elections","ballot","ballots","vote","votes","voting","count","counting","tally"]},{"role":"School Board","keywords":["school","schools","calendar","calendars","curriculum","class","classes","student","students","pupil","pupils"]}];
+const slots = $slots;
+probe(Array.isArray(slots.roles) && slots.roles.length > 0, "the statement must define at least one institutional role");
+probe(slots.roles.every((role) => typeof role.name === "string" && role.name.length > 0 && typeof role.definition === "string" && role.definition.length > 0), "every role must carry a name and a stated function");
+probe(Array.isArray(slots.options) && slots.options.length === 2, "the task must offer exactly two candidate institutions");
+probe(typeof slots.action === "string" && slots.action.length > 0, "the statement must name the requested action");
+const tokens = slots.action.toLowerCase().split(/[^a-z]+/).filter((token) => token !== "");
+let matched = null; let bestScore = 0; let tied = false;
+for (const entry of ROLE_TOPICS) { const score = entry.keywords.filter((keyword) => tokens.includes(keyword)).length; if (score > bestScore) { matched = entry.role; bestScore = score; tied = false; } else if (score > 0 && score === bestScore) { tied = true; } }
+probe(matched !== null, "one stated role must cover the requested action");
+probe(tied === false, "exactly one stated role must cover the requested action");
+probe(slots.options.includes(matched), "the matched institution must be one of the two offered candidates");
+const main = "The request should go first to the " + matched + ".";
+const suffix = renderCrossDomain(slots.crossDomain);
+return suffix === "" ? main : main + " " + suffix;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

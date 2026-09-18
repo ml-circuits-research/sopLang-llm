@@ -1,0 +1,35 @@
+@slots literal
+{
+  "place": "Harbour Town",
+  "person": "Ines",
+  "percent": 53,
+  "showerFrom": "13",
+  "showerTo": "16",
+  "windFrom": "18:00",
+  "picnicFrom": "14:00",
+  "picnicTo": "21:00",
+  "noShelter": true,
+  "leavesRaincoat": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots === "object" && slots !== null, "the weather case must carry its parsed values");
+probe(typeof slots.person === "string" && slots.person.length > 0, "the bulletin must name the person planning the picnic");
+probe(typeof slots.place === "string" && slots.place.length > 0, "the bulletin must name the district");
+probe(Number.isInteger(slots.percent) && slots.percent > 0 && slots.percent <= 100, "the shower chance must be a whole percentage");
+probe(slots.noShelter === true && slots.leavesRaincoat === true, "the plan must be an unsheltered picnic with the raincoat left behind");
+const hourValue = (value) => { const parts = String(value).split(":"); return Number(parts[0]) + Number(parts[1]) / 60; };
+probe(hourValue(slots.windFrom) < hourValue(slots.picnicTo), "the wind warning must start before the picnic ends");
+probe(slots.percent >= 50, "the printed answer only challenges a claim at or above 50%");
+const hourLabel = (value) => { const parts = String(value).split(":"); return parts[1] === "00" ? String(Number(parts[0])) : Number(parts[0]) + ":" + parts[1]; };
+const answer = "Showers " + slots.showerFrom + "–" + slots.showerTo + " and wind after " + hourLabel(slots.windFrom) + ", picnic to " + hourLabel(slots.picnicTo) + " with no shelter. " + slots.percent + "% > 50: not “rather not” if it is ≥50.";
+return answer;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

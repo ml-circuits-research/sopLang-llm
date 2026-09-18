@@ -1,0 +1,67 @@
+@slots literal
+{
+  "tasks": [
+    {
+      "name": "energy is stored",
+      "after": []
+    },
+    {
+      "name": "the circuit closes",
+      "after": []
+    },
+    {
+      "name": "energy is transferred",
+      "after": [
+        "energy is stored",
+        "the circuit closes"
+      ]
+    },
+    {
+      "name": "the device transforms it",
+      "after": [
+        "energy is transferred"
+      ]
+    },
+    {
+      "name": "the useful output and heat appear",
+      "after": [
+        "the circuit closes"
+      ]
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.tasks) && slots.tasks.length > 0, "the statement must list at least one task");
+const names = new Set(slots.tasks.map((task) => task.name));
+for (const task of slots.tasks) {
+  probe(typeof task.name === "string" && task.name.length > 0, "every task must carry a name");
+  probe(Array.isArray(task.after), "every task must declare its prerequisites, possibly none");
+  for (const dependency of task.after) {
+    probe(names.has(dependency), "every prerequisite must be a stated task: " + dependency);
+  }
+}
+const completed = new Set();
+const plan = [];
+let remaining = slots.tasks;
+while (remaining.length > 0) {
+  const level = remaining.filter((task) => task.after.every((name) => completed.has(name)));
+  probe(level.length > 0, "the stated dependencies must not contain a cycle");
+  for (const task of level) {
+    completed.add(task.name);
+  }
+  plan.push(level.map((task) => task.name));
+  remaining = remaining.filter((task) => !completed.has(task.name));
+}
+probe(plan.length > 0, "the plan must have at least one level");
+probe(plan.reduce((total, level) => total + level.length, 0) === slots.tasks.length, "every task must appear exactly once in the plan");
+return "Plan by levels: " + plan.map((level) => level.join(", ")).join(" | ") + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

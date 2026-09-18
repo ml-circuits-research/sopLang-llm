@@ -1,0 +1,24 @@
+@slots literal
+{
+  "place": "Mill Hamlet",
+  "firstBundle": "Farid",
+  "rash": "Gina",
+  "sceptic": "Pavel"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place on the leaflet");
+probe(typeof slots.firstBundle === "string" && slots.firstBundle.length > 0, "the case must name the reader with the first bundle of symptoms");
+probe(typeof slots.rash === "string" && slots.rash.length > 0, "the case must name the reader with the rash");
+probe(typeof slots.sceptic === "string" && slots.sceptic.length > 0, "the case must name the speaker who calls any path fine");
+probe(slots.firstBundle !== slots.rash && slots.firstBundle !== slots.sceptic && slots.rash !== slots.sceptic, "the three speakers must be different people");
+return slots.firstBundle + "\u2019s symptoms match the first printed bundle. " + slots.rash + " matches the second bundle.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

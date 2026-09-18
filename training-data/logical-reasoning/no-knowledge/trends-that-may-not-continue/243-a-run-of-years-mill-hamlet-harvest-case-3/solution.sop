@@ -1,0 +1,32 @@
+@slots literal
+{
+  "place": "Mill Hamlet",
+  "years": 4,
+  "base": 120,
+  "unit": "baskets",
+  "lastYear": 144,
+  "nextYear": 5,
+  "mustRiseSpeaker": "Farid",
+  "cautiousSpeaker": "Gina",
+  "lawSpeaker": "Pavel",
+  "rises": 4
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the harvest notes");
+probe(Number.isInteger(slots.years) && slots.years >= 1, "a run needs at least one year of rises");
+probe(Number.isInteger(slots.base) && slots.base > 0 && Number.isInteger(slots.lastYear) && slots.lastYear > slots.base, "the notes must report a yield that rose from its base to the last year");
+probe(typeof slots.unit === "string" && slots.unit.length > 0, "the case must name the unit of the yield");
+probe(slots.nextYear === slots.years + 1, "the questioned year must come right after the reported run");
+probe(slots.rises === slots.years, "the law-of-nature speaker must count the run’s own rises");
+probe(slots.mustRiseSpeaker !== slots.cautiousSpeaker && slots.cautiousSpeaker !== slots.lawSpeaker && slots.mustRiseSpeaker !== slots.lawSpeaker, "the three speakers must be three different people");
+return "Nothing as a deduction. As induction it is a climb with a hidden premise: that whatever lifted the yield continues. The page did not write that premise.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

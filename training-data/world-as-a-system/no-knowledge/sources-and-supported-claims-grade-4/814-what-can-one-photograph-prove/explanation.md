@@ -1,0 +1,22 @@
+# Explanation 814 — What can one photograph prove?
+
+## Explanation
+
+1. The source is a photograph, and it directly shows that a scene was photographed.
+2. Claim C1 repeats exactly that recorded content, so the evidence entails it.
+3. Claim C2 asserts "the whole population agreed with the ruler", which nothing in the source measures; absence of evidence for a broad claim is not proof of it.
+4. The verdict is therefore that C1 is supported and C2 is not established by this source alone.
+
+Reference solution as printed in the source (family H3, 3 steps):
+
+1. The photograph directly contains evidence for C1.
+2. C2 is much broader and no stated feature of the source measures the opinion of the whole population.
+3. Therefore C1 is supported and C2 is not established. Cross-domain check: compare 11 with 7; 11≥7 is true.
+
+## Result
+
+**Answer.** C1 is supported. C2 is not justified by the source alone. Cross-domain answer: quorum is met.
+
+**Verification.** exact_verified: the executed circuit produced this answer, and the family computation reproduced it from the statement. The independence limitation of this class is stated in `report.md`.
+
+**Program.** `solution.sop` (compiled values in `slots`, computation in `jsEval`).

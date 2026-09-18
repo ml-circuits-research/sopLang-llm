@@ -1,0 +1,34 @@
+@slots literal
+{
+  "shop": "Forest Parish",
+  "customer": "Ned",
+  "originalCents": 24000,
+  "firstPercent": 12,
+  "secondPercent": 7,
+  "tillLoyalty": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.shop === "string" && slots.shop.trim().length > 0, "the case must name the shop");
+probe(typeof slots.customer === "string" && /^[A-Z][a-z]+$/.test(slots.customer), "the case must name the customer who holds the card");
+probe(Number.isInteger(slots.originalCents) && slots.originalCents > 0, "the ticket must be a positive whole number of cents");
+probe(Number.isInteger(slots.firstPercent) && slots.firstPercent >= 1, "the first discount must be a whole percent of at least one");
+probe(Number.isInteger(slots.secondPercent) && slots.secondPercent >= 1, "the second discount must be a whole percent of at least one");
+probe(slots.firstPercent + slots.secondPercent < 100, "the two percents must leave a positive price when added");
+probe(slots.tillLoyalty === true, "the second discount must be the till 2 card discount");
+const format = (cents) => Math.trunc(cents / 100) + "." + String(cents % 100).padStart(2, "0");
+const reducedCents = Math.round((slots.originalCents * (100 - slots.firstPercent)) / 100);
+const paidCents = Math.round((reducedCents * (100 - slots.secondPercent)) / 100);
+const wrongCents = Math.round((slots.originalCents * (100 - slots.firstPercent - slots.secondPercent)) / 100);
+probe(paidCents < slots.originalCents, "the two-stage discount must lower the ticket");
+probe(paidCents > wrongCents, "adding the percents to the original price undercharges, so the wrong method must come out lower");
+return format(paidCents) + ". Wrong method " + format(wrongCents) + ", difference " + format(paidCents - wrongCents) + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

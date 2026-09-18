@@ -1,0 +1,31 @@
+@slots literal
+{
+  "person": "Drew",
+  "denominator": 50000,
+  "metresPerCm": 500,
+  "kilometresPerCm": 0.5,
+  "measuredCm": 11
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person who measures");
+probe(Number.isInteger(slots.denominator) && slots.denominator > 1, "the scale denominator must be a whole number larger than one");
+probe(typeof slots.metresPerCm === "number" && slots.metresPerCm > 0, "one map centimetre must carry a positive real length");
+probe(slots.kilometresPerCm === slots.metresPerCm / 1000, "the printed kilometre reading must be the metre reading divided by a thousand");
+probe(slots.metresPerCm === slots.denominator / 100, "one map centimetre must be the scale denominator in centimetres");
+probe(typeof slots.measuredCm === "number" && slots.measuredCm > 0, "the measured length on the map must be positive");
+const kilometres = slots.measuredCm * slots.kilometresPerCm;
+const metres = slots.measuredCm * slots.metresPerCm;
+probe(kilometres > 0 && metres > 0, "the real distance must be a positive quantity");
+probe(Math.abs(kilometres * 1000 - metres) < 1e-9, "the kilometre and metre answers must be the same distance");
+probe(Number.isInteger(metres), "the real distance in metres must be a whole number for the printed brackets");
+return slots.measuredCm + " × " + slots.kilometresPerCm + " km = " + kilometres.toFixed(1) + " km (" + metres + " m).";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

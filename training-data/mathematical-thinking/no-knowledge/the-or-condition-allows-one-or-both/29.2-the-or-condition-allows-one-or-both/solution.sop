@@ -38,9 +38,16 @@
 }
 
 @answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
 const slots = $slots;
 const accepted = slots.pieces.filter((piece) => piece.properties.some((property) => slots.properties.indexOf(property) !== -1)).map((piece) => piece.name);
 if (accepted.length === 1) return accepted[0] + ".";
 if (accepted.length === 2) return accepted[0] + " and " + accepted[1] + ".";
 return accepted.slice(0, -1).join(", ") + ", and " + accepted[accepted.length - 1] + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
 

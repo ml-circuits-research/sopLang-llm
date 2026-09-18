@@ -1,0 +1,38 @@
+@slots literal
+{
+  "townHall": "Wells Village",
+  "filer": "Piotr",
+  "filingWeekday": "Monday",
+  "filedDay": 1,
+  "replyDays": 30,
+  "dayThirtyIsSunday": true,
+  "chaseDay": 15,
+  "chaseHasAddress": false,
+  "noReplyWithoutAddress": true,
+  "chaseLeavesClock": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.filer === "string" && slots.filer.length > 0, "the case must name the filer");
+probe(typeof slots.townHall === "string" && slots.townHall.length > 0, "the case must name the town hall");
+probe(Number.isInteger(slots.replyDays) && slots.replyDays > 0, "the reply period must be a whole number of days");
+probe(Number.isInteger(slots.filedDay) && slots.filedDay >= 1 && slots.filedDay < slots.replyDays, "the filing day must fall inside the reply period");
+probe(Number.isInteger(slots.chaseDay) && slots.chaseDay > slots.filedDay, "the chase must arrive after the filing day");
+probe(slots.noReplyWithoutAddress === true, "the guide must file an address-less petition without a reply");
+probe(slots.chaseLeavesClock === true, "the guide must state that a chase does not reset the clock");
+const ordinal = (value) => { const rest = value % 100; if (rest >= 11 && rest <= 13) { return value + "th"; } return value + ({ 1: "st", 2: "nd", 3: "rd" }[value % 10] || "th"); };
+const deadline = slots.dayThirtyIsSunday ? "Monday after Sunday the " + ordinal(slots.replyDays) : "day " + ordinal(slots.replyDays) + " itself";
+const fate = !slots.chaseHasAddress && slots.noReplyWithoutAddress
+  ? "The email is filed away"
+  : "The email is answered within the reply period";
+const clock = slots.chaseLeavesClock ? "does not reset the clock" : "restarts the clock";
+return "Deadline: " + deadline + ". " + fate + " and " + clock + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

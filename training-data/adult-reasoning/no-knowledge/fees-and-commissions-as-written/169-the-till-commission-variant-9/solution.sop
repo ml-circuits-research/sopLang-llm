@@ -1,0 +1,33 @@
+@slots literal
+{
+  "place": "Station Quarter",
+  "sellerPrice": 240,
+  "commissionPercent": 5,
+  "deliveryFee": 18,
+  "pickupFee": 0,
+  "buyer": "Cara"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the notice must name the place of the fair");
+probe(typeof slots.buyer === "string" && slots.buyer.length > 0, "the case must name the buyer");
+probe(Number.isInteger(slots.sellerPrice) && slots.sellerPrice > 0, "the seller price must be a positive whole number");
+probe(Number.isInteger(slots.commissionPercent) && slots.commissionPercent > 0, "the commission must be a positive percentage");
+probe(Number.isInteger(slots.deliveryFee) && slots.deliveryFee > 0, "the home delivery must cost a positive amount");
+probe(Number.isInteger(slots.pickupFee) && slots.pickupFee >= 0, "the pick-up fee must be a non-negative amount");
+const commissionCents = slots.sellerPrice * slots.commissionPercent;
+const baseCents = slots.sellerPrice * 100;
+const homeCents = baseCents + commissionCents + slots.deliveryFee * 100;
+const pickupCents = baseCents + commissionCents + slots.pickupFee * 100;
+probe(homeCents > pickupCents, "home delivery must cost more than the pick-up point");
+const money = (cents) => (cents / 100).toFixed(2);
+return "Commission " + money(commissionCents) + ". Home " + money(homeCents) + ". Pick-up " + money(pickupCents) + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,46 @@
+@slots literal
+{
+  "plans": {
+    "A": {
+      "fixed": 700,
+      "variable": 14
+    },
+    "B": {
+      "fixed": 100,
+      "variable": 16
+    }
+  }
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+const plans = slots.plans;
+probe(plans !== null && typeof plans === "object", "the statement must state both plans");
+probe(["A", "B"].every((label) => plans[label] !== null && typeof plans[label] === "object"), "each plan must state its fixed cost and its per-unit cost");
+probe(["A", "B"].every((label) => Number.isInteger(plans[label].fixed) && plans[label].fixed > 0), "every fixed cost must be a positive integer");
+probe(["A", "B"].every((label) => Number.isInteger(plans[label].variable) && plans[label].variable > 0), "every per-unit cost must be a positive integer");
+probe(plans.A.variable !== plans.B.variable, "the plans must differ in their per-unit cost so that they cross");
+probe(plans.A.fixed !== plans.B.fixed, "the plans must differ in their fixed cost so that one is cheaper at low volume");
+let numerator = (plans.B.fixed - plans.A.fixed) * 100;
+let denominator = plans.A.variable - plans.B.variable;
+if (denominator < 0) {
+  numerator = -numerator;
+  denominator = -denominator;
+}
+const sign = numerator < 0 ? -1 : 1;
+const magnitude = Math.abs(numerator);
+const quotient = Math.floor(magnitude / denominator);
+const remainder = magnitude - quotient * denominator;
+const threshold = sign * (quotient + (2 * remainder >= denominator ? 1 : 0));
+probe(threshold > 0, "the two plans must cross at a positive volume");
+const cheaperBelow = plans.A.fixed < plans.B.fixed ? "A" : "B";
+const cheaperAbove = plans.A.variable < plans.B.variable ? "A" : "B";
+return "Break-even volume: " + String(threshold / 100) + " units. Below it, Plan " + cheaperBelow + " is cheaper; above it, Plan " + cheaperAbove + " is cheaper.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

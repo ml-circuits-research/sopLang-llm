@@ -6,9 +6,16 @@
 }
 
 @answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
 const slots = $slots;
 const newPerimeter = (slots.perimeter / slots.side) * slots.side * slots.factor;
 const times = newPerimeter / slots.perimeter;
 const word = times === 2 ? "doubles" : times === 3 ? "triples" : "is multiplied by " + times;
 return "It becomes " + newPerimeter + ", so it " + word + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
 

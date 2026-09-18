@@ -1,0 +1,136 @@
+@slots literal
+{
+  "links": [
+    {
+      "parent": "Maya",
+      "child": "Noah"
+    },
+    {
+      "parent": "Noah",
+      "child": "Lina"
+    },
+    {
+      "parent": "Maya",
+      "child": "Owen"
+    },
+    {
+      "parent": "Owen",
+      "child": "Sara"
+    }
+  ],
+  "subject": "Noah",
+  "object": "Lina",
+  "crossDomain": [
+    {
+      "kind": "distance",
+      "kilometresPerCentimetre": 4,
+      "centimetres": 7
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const describeCrossDomain = function describeCrossDomain(check) {
+  if (check.kind === 'distance') {
+    return `${check.centimetres * check.kilometresPerCentimetre} km.`;
+  }
+  if (check.kind === 'time') {
+    const minutes = check.startHour * 60 + check.startMinute + check.hours * 60;
+    const hour = String(Math.floor(minutes / 60)).padStart(2, '0');
+    const minute = String(minutes % 60).padStart(2, '0');
+    return `${hour}:${minute}.`;
+  }
+  if (check.kind === 'quorum') {
+    return check.present >= check.threshold ? 'quorum is met.' : 'quorum is not met.';
+  }
+  if (check.kind === 'reports') {
+    return `${check.total - check.duplicates} independent reports.`;
+  }
+  if (check.kind === 'sheets') {
+    return `${check.start + check.received} map sheets.`;
+  }
+  throw new Error(`Unknown cross-domain check "${check.kind}".`);
+};
+const renderCrossDomain = function renderCrossDomain(checks) {
+  if (checks === null || checks === undefined || checks.length === 0) {
+    return '';
+  }
+  const parts = checks.map((check, index) => {
+    const label = index === 1 ? 'Mixed-domain answer:' : 'Cross-domain answer:';
+    return `${label} ${describeCrossDomain(check)}`;
+  });
+  return parts.join(' ');
+};
+const slots = $slots;
+probe(Array.isArray(slots.links) && slots.links.length > 0, "the statement must state at least one parent link");
+probe(typeof slots.subject === "string" && typeof slots.object === "string" && slots.subject !== slots.object, "the task must name two different people");
+const parents = new Map();
+const children = new Map();
+const remember = (map, key, value) => {
+  if (!map.has(key)) {
+    map.set(key, new Set());
+  }
+  map.get(key).add(value);
+};
+for (const link of slots.links) {
+  probe(typeof link.parent === "string" && typeof link.child === "string", "every stated link must name a parent and a child");
+  remember(parents, link.child, link.parent);
+  remember(children, link.parent, link.child);
+}
+const descendantsAt = (person, levels) => {
+  let frontier = new Set([person]);
+  for (let step = 0; step < levels; step += 1) {
+    const next = new Set();
+    for (const current of frontier) {
+      for (const child of children.get(current) || []) {
+        next.add(child);
+      }
+    }
+    frontier = next;
+  }
+  return frontier;
+};
+const shareParent = (left, right) => {
+  const leftParents = parents.get(left) || new Set();
+  for (const parent of parents.get(right) || []) {
+    if (leftParents.has(parent)) {
+      return true;
+    }
+  }
+  return false;
+};
+const left = slots.subject;
+const right = slots.object;
+const leftParents = parents.get(left) || new Set();
+const rightParents = parents.get(right) || new Set();
+let relation = null;
+if (leftParents.has(right)) {
+  relation = right + " is a parent of " + left + ".";
+} else if (rightParents.has(left)) {
+  relation = left + " is a parent of " + right + ".";
+} else if (descendantsAt(left, 2).has(right)) {
+  relation = left + " is a grandparent of " + right + ".";
+} else if (descendantsAt(right, 2).has(left)) {
+  relation = right + " is a grandparent of " + left + ".";
+} else if (shareParent(left, right)) {
+  relation = left + " and " + right + " are siblings.";
+} else {
+  for (const leftParent of leftParents) {
+    for (const rightParent of rightParents) {
+      if (leftParent !== rightParent && shareParent(leftParent, rightParent)) {
+        relation = left + " and " + right + " are cousins under the implied family tree.";
+      }
+    }
+  }
+}
+probe(relation !== null, "the stated links must determine the relation between the two named people");
+const suffix = renderCrossDomain(slots.crossDomain);
+return suffix === "" ? relation : relation + " " + suffix;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

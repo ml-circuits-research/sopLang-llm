@@ -1,0 +1,53 @@
+@slots literal
+{
+  "place": "Redbridge",
+  "population": 1000,
+  "prevalence": 1,
+  "condition": "K",
+  "sensitivityNumerator": 99,
+  "sensitivityDenominator": 100,
+  "sensitivityCondition": "K",
+  "falseAlarmNumerator": 1,
+  "falseAlarmDenominator": 100,
+  "healthyCondition": "K",
+  "doubter": "Dora",
+  "voicedCondition": "K",
+  "counter": "Eli",
+  "claimedTrueFlags": 1,
+  "claimedFalseFlags": 10,
+  "sensitivityVoice": "Fran",
+  "voicedSensitivityNumerator": 99,
+  "voicedSensitivityDenominator": 100
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+const NUMBER_WORDS = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen","twenty"];
+const word = (value) => NUMBER_WORDS[value] ?? String(value);
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the clinic place");
+probe(typeof slots.condition === "string" && /^[A-Z]$/.test(slots.condition), "the case must name the condition with one capital letter");
+probe(slots.condition === slots.sensitivityCondition && slots.condition === slots.healthyCondition && slots.condition === slots.voicedCondition, "every mention of the condition must name the same letter");
+probe(Number.isInteger(slots.population) && slots.population > 0, "the crowd must be a positive whole number");
+probe(Number.isInteger(slots.prevalence) && slots.prevalence > 0 && slots.prevalence < slots.population, "the condition must be rare yet present in the crowd");
+probe(Number.isInteger(slots.sensitivityDenominator) && slots.sensitivityDenominator > 0 && slots.sensitivityNumerator <= slots.sensitivityDenominator, "the sensitivity must be a fraction no greater than one");
+probe(Number.isInteger(slots.falseAlarmDenominator) && slots.falseAlarmDenominator > 0 && slots.falseAlarmNumerator <= slots.falseAlarmDenominator, "the false-alarm rate must be a fraction no greater than one");
+probe(typeof slots.doubter === "string" && slots.doubter.length > 0, "the case must name the voice that trusts the flag");
+probe(typeof slots.counter === "string" && slots.counter.length > 0, "the case must name the voice that counts the flags");
+probe(typeof slots.sensitivityVoice === "string" && slots.sensitivityVoice.length > 0, "the case must name the voice that trusts the sensitivity");
+probe(slots.doubter !== slots.counter && slots.counter !== slots.sensitivityVoice && slots.doubter !== slots.sensitivityVoice, "the three voices must be different people");
+probe(slots.voicedSensitivityNumerator === slots.sensitivityNumerator && slots.voicedSensitivityDenominator === slots.sensitivityDenominator, "the last voice must quote the card’s own sensitivity");
+const trueFlags = Math.round((slots.prevalence * slots.sensitivityNumerator) / slots.sensitivityDenominator);
+const falseFlags = Math.round(((slots.population - slots.prevalence) * slots.falseAlarmNumerator) / slots.falseAlarmDenominator);
+probe(trueFlags >= 1, "the test must catch at least one real case");
+const mostFlagsFalse = falseFlags > trueFlags;
+probe(mostFlagsFalse, "the base rate must keep most flags false");
+probe(slots.claimedTrueFlags === trueFlags && slots.claimedFalseFlags === falseFlags, "the counter must count the flags this arithmetic produces");
+return mostFlagsFalse ? "No. About " + word(trueFlags) + " true flag beside about " + word(falseFlags) + " false flags. Catching almost all real " + slots.condition + " does not make a flag trustworthy when " + slots.condition + " is rare." : "Yes. Most flags would be true in this arithmetic.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

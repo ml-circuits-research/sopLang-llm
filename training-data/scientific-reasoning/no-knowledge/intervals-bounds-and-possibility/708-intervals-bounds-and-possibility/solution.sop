@@ -1,0 +1,56 @@
+@slots literal
+{
+  "zone": {
+    "low": 7,
+    "high": 11,
+    "unit": "units"
+  },
+  "samples": [
+    {
+      "label": "A",
+      "low": 5,
+      "high": 6
+    },
+    {
+      "label": "B",
+      "low": 7,
+      "high": 8
+    },
+    {
+      "label": "C",
+      "low": 10,
+      "high": 12
+    },
+    {
+      "label": "D",
+      "low": 12,
+      "high": 14
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(slots.zone !== null && typeof slots.zone === "object", "the statement must state an accepted zone");
+probe(Number.isInteger(slots.zone.low) && Number.isInteger(slots.zone.high) && slots.zone.low <= slots.zone.high, "the accepted zone must be an increasing closed interval");
+probe(Array.isArray(slots.samples) && slots.samples.length >= 2, "the statement must state at least two samples");
+for (const sample of slots.samples) {
+  probe(typeof sample.label === "string" && sample.label.length > 0, "every sample must carry a label");
+  probe(Number.isInteger(sample.low) && Number.isInteger(sample.high) && sample.low <= sample.high, "every sample must be an increasing closed interval: " + sample.label);
+}
+const entries = slots.samples.map((sample) => {
+  const verdict = sample.low >= slots.zone.low && sample.high <= slots.zone.high ? "certainly accepted" : (sample.high < slots.zone.low || sample.low > slots.zone.high ? "certainly rejected" : "uncertain");
+  return { label: sample.label, verdict };
+});
+const open = entries.filter((entry) => entry.verdict === "uncertain");
+probe(open.length > 0, "at least one sample must stay open under its stated interval");
+probe(open.length === 1, "the stated samples must leave exactly one candidate for remeasurement, not " + open.length);
+return entries.map((entry) => entry.label + ": " + entry.verdict).join(", ") + "; remeasurement is useful for " + open[0].label + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

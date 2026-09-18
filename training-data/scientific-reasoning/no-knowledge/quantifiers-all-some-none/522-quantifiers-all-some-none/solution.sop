@@ -1,0 +1,112 @@
+@slots literal
+{
+  "cases": [
+    {
+      "label": "the animal A",
+      "properties": [
+        "migrates",
+        "stores food",
+        "has a protected shelter"
+      ]
+    },
+    {
+      "label": "the animal B",
+      "properties": [
+        "migrates",
+        "has a protected shelter"
+      ]
+    },
+    {
+      "label": "the animal C",
+      "properties": [
+        "stores food"
+      ]
+    },
+    {
+      "label": "the animal D",
+      "properties": [
+        "migrates"
+      ]
+    },
+    {
+      "label": "the animal E",
+      "properties": [
+        "stores food",
+        "has a protected shelter"
+      ]
+    }
+  ],
+  "statements": [
+    {
+      "quantifier": "all",
+      "negative": false,
+      "properties": [
+        "migrates",
+        "stores food"
+      ]
+    },
+    {
+      "quantifier": "some",
+      "negative": false,
+      "properties": [
+        "migrates",
+        "stores food"
+      ]
+    },
+    {
+      "quantifier": "no",
+      "negative": false,
+      "properties": [
+        "stores food",
+        "has a protected shelter"
+      ]
+    },
+    {
+      "quantifier": "some",
+      "negative": true,
+      "properties": [
+        "has a protected shelter",
+        "migrates"
+      ]
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.cases) && slots.cases.length > 0, "the data block must list at least one case");
+probe(Array.isArray(slots.statements) && slots.statements.length > 0, "the question must state at least one quantified statement");
+const holds = (entry, property) => entry.properties.indexOf(property) !== -1;
+for (const entry of slots.cases) {
+  probe(typeof entry.label === "string" && entry.label.length > 0, "every case must carry a label");
+  probe(Array.isArray(entry.properties) && entry.properties.length > 0, "every case must carry at least one property: " + entry.label);
+}
+for (const statement of slots.statements) {
+  probe(statement.properties.length === 2, "every quantified statement must name two properties");
+  probe(["all", "some", "no"].indexOf(statement.quantifier) !== -1, "a quantifier must be all, some, or no: " + statement.quantifier);
+  probe(statement.properties.every((property) => slots.cases.some((entry) => holds(entry, property))), "every named property must appear in the observations");
+}
+const verdicts = slots.statements.map((statement) => {
+  const subject = statement.properties[0];
+  const predicate = statement.properties[1];
+  if (statement.quantifier === "all") {
+    const holders = slots.cases.filter((entry) => holds(entry, subject));
+    return holders.every((entry) => holds(entry, predicate) === !statement.negative);
+  }
+  if (statement.quantifier === "some") {
+    const holders = slots.cases.filter((entry) => holds(entry, subject));
+    return holders.some((entry) => holds(entry, predicate) === !statement.negative);
+  }
+  return !slots.cases.some((entry) => holds(entry, subject) && holds(entry, predicate));
+});
+probe(verdicts.length === slots.statements.length, "every statement must receive a truth value");
+probe(verdicts.every((verdict) => typeof verdict === "boolean"), "every verdict must be true or false");
+return "In order: " + verdicts.map((verdict) => (verdict ? "true" : "false")).join(", ") + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

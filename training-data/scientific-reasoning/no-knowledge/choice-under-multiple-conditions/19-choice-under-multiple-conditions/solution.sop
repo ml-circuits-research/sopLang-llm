@@ -1,0 +1,69 @@
+@slots literal
+{
+  "options": [
+    {
+      "label": "A",
+      "properties": {
+        "there is water": true,
+        "there is food": true,
+        "shelter is available": false,
+        "temperature is tolerable": true
+      }
+    },
+    {
+      "label": "B",
+      "properties": {
+        "there is water": true,
+        "there is food": false,
+        "shelter is available": true,
+        "temperature is tolerable": true
+      }
+    },
+    {
+      "label": "C",
+      "properties": {
+        "there is water": false,
+        "there is food": true,
+        "shelter is available": true,
+        "temperature is tolerable": true
+      }
+    },
+    {
+      "label": "D",
+      "properties": {
+        "there is water": true,
+        "there is food": true,
+        "shelter is available": true,
+        "temperature is tolerable": true
+      }
+    }
+  ],
+  "required": [
+    "shelter is available",
+    "there is water",
+    "there is food",
+    "temperature is tolerable"
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.options) && slots.options.length > 0, "the statement must list at least one option");
+probe(Array.isArray(slots.required) && slots.required.length > 0, "the question must list at least one mandatory condition");
+for (const option of slots.options) {
+  probe(typeof option.label === "string" && option.label.length > 0, "every option must carry a label");
+  probe(slots.required.every((property) => property in option.properties), "option " + option.label + " must state every mandatory condition");
+}
+const failed = (option) => slots.required.find((property) => option.properties[property] !== true) ?? null;
+const matching = slots.options.filter((option) => failed(option) === null);
+probe(matching.length > 0, "at least one option must meet every mandatory condition");
+probe(matching.length === 1, "the mandatory conditions must leave exactly one option, not " + matching.length);
+return "Option " + matching[0].label + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

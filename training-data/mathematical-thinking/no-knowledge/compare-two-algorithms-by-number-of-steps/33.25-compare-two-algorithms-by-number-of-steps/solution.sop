@@ -14,6 +14,10 @@
 }
 
 @answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
 const slots = $slots;
 const linear = slots.list.indexOf(slots.target) + 1;
 if (linear === 0) { throw new Error("the target does not appear in the list"); }
@@ -27,4 +31,7 @@ while (low <= high) {
   if (slots.list[middle] < slots.target) { low = middle + 1; } else { high = middle - 1; }
 }
 return "L: " + linear + "; H: " + halving + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
 

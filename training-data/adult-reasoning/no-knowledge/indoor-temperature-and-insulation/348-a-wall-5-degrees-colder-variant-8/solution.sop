@@ -1,0 +1,62 @@
+@slots literal
+{
+  "place": "Bridge City",
+  "coldWallDrop": 4,
+  "airingMinutes": 5,
+  "tiltLimit": 3,
+  "humidityLow": 40,
+  "humidityHigh": 60,
+  "riskHumidity": 70,
+  "name": "Olga",
+  "midTemperature": 21,
+  "wallTemperature": 16,
+  "humidityPercent": 70,
+  "tiltHours": 3,
+  "radiatorOn": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place whose guide is quoted");
+probe(typeof slots.name === "string" && slots.name.length > 0, "the case must name the person whose room is read");
+probe(Number.isInteger(slots.coldWallDrop) && slots.coldWallDrop > 0, "the cold-wall threshold must be a positive whole number of degrees");
+probe(Number.isInteger(slots.airingMinutes) && slots.airingMinutes > 0, "the airing must be a positive whole number of minutes");
+probe(Number.isInteger(slots.tiltLimit) && slots.tiltLimit > 0, "the forbidden tilt must be a positive whole number of hours");
+probe(slots.humidityLow < slots.humidityHigh && slots.riskHumidity > slots.humidityHigh, "the guide must order the target band below the risk humidity");
+probe(Number.isInteger(slots.midTemperature) && Number.isInteger(slots.wallTemperature), "the two temperatures must be whole numbers of degrees");
+const drop = slots.midTemperature - slots.wallTemperature;
+probe(drop > 0, "the inner wall must be colder than mid-room");
+const coldWall = drop > slots.coldWallDrop;
+const tempClause = coldWall
+  ? slots.midTemperature + "−" + slots.wallTemperature + "=" + drop + ">" + slots.coldWallDrop + " cold wall"
+  : slots.midTemperature + "−" + slots.wallTemperature + "=" + drop + "≤" + slots.coldWallDrop + " no cold wall";
+let humidityClause;
+if (coldWall && slots.humidityPercent >= slots.riskHumidity) {
+  humidityClause = slots.humidityPercent + "% + cold wall = condensation risk";
+} else if (slots.humidityPercent > slots.humidityHigh) {
+  humidityClause = slots.humidityPercent + "% is above the " + slots.humidityLow + "–" + slots.humidityHigh + "% target";
+} else if (slots.humidityPercent < slots.humidityLow) {
+  humidityClause = slots.humidityPercent + "% is below the " + slots.humidityLow + "–" + slots.humidityHigh + "% target";
+} else {
+  humidityClause = slots.humidityPercent + "% is inside the " + slots.humidityLow + "–" + slots.humidityHigh + "% target";
+}
+let actClause;
+if (slots.tiltHours >= slots.tiltLimit) {
+  actClause = "Long tilt breaks the " + slots.airingMinutes + "-minute airing.";
+} else if (slots.radiatorOn) {
+  actClause = "The radiator must be off during the airing.";
+} else {
+  actClause = "A wide " + slots.airingMinutes + "-minute airing with the radiator off is the gesture.";
+}
+probe(slots.humidityPercent >= 0 && slots.humidityPercent <= 100, "the humidity must be a percentage between 0 and 100");
+const answer = tempClause + "; " + humidityClause + ". " + actClause;
+probe(coldWall === true, "the printed room must show a wall colder than the guide allows");
+return answer;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,38 @@
+@slots literal
+{
+  "place": "Bridge City",
+  "proposer": "Elena",
+  "objector": "Farid",
+  "conditionalVoter": "Gina",
+  "priceCeiling": 860,
+  "theirsSpeaker": "Elena",
+  "voteRecorded": true,
+  "quotesOnlyNoted": true,
+  "deferralRecorded": true,
+  "ruleAttached": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the minutes must record the district they belong to");
+probe(typeof slots.proposer === "string" && slots.proposer.length > 0, "the minutes must name the person who proposed the painting");
+probe(typeof slots.objector === "string" && slots.objector.length > 0, "the minutes must name the person who objected");
+probe(typeof slots.conditionalVoter === "string" && slots.conditionalVoter.length > 0, "the minutes must name the person who promised a conditional vote");
+probe(slots.proposer !== slots.objector && slots.proposer !== slots.conditionalVoter && slots.objector !== slots.conditionalVoter, "the three people named in the minutes must be different");
+probe(Number.isInteger(slots.priceCeiling) && slots.priceCeiling > 0, "the conditional vote must state a positive price ceiling");
+probe(slots.theirsSpeaker === slots.proposer, "the “theirs” request must come from the speaker who proposed the painting");
+probe(slots.voteRecorded === true, "the minutes must record that a vote was held");
+probe(slots.quotesOnlyNoted === true, "the three quotes must appear only in the note");
+const voted = "Today " + slots.proposer + "’s proposal (the painting) was voted.";
+const deferred = "“This” (" + slots.conditionalVoter + "’s conditional proposal) is deferred.";
+const referent = "“He” = " + slots.conditionalVoter + ".";
+const quotes = "The three quotes are “noted”, not explicitly voted.";
+return voted + " " + deferred + " " + referent + " " + quotes;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

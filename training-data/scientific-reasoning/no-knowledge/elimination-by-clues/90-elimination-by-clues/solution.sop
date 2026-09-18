@@ -1,0 +1,79 @@
+@slots literal
+{
+  "cases": [
+    {
+      "label": "A",
+      "properties": {
+        "the battery is connected": true,
+        "the wires form a path continuous": true,
+        "the bulb is connected": true,
+        "the switch is closed": false
+      }
+    },
+    {
+      "label": "B",
+      "properties": {
+        "the battery is connected": true,
+        "the wires form a path continuous": false,
+        "the bulb is connected": true,
+        "the switch is closed": true
+      }
+    },
+    {
+      "label": "C",
+      "properties": {
+        "the battery is connected": false,
+        "the wires form a path continuous": true,
+        "the bulb is connected": true,
+        "the switch is closed": true
+      }
+    },
+    {
+      "label": "D",
+      "properties": {
+        "the battery is connected": true,
+        "the wires form a path continuous": true,
+        "the bulb is connected": true,
+        "the switch is closed": true
+      }
+    }
+  ],
+  "clues": [
+    {
+      "property": "the battery is connected",
+      "value": true
+    },
+    {
+      "property": "the wires form a path continuous",
+      "value": true
+    },
+    {
+      "property": "the switch is closed",
+      "value": true
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.cases) && slots.cases.length > 0, "the statement must list at least one case");
+probe(Array.isArray(slots.clues) && slots.clues.length > 0, "the question must state at least one clue");
+for (const entry of slots.cases) {
+  probe(typeof entry.label === "string" && entry.label.length > 0, "every case must carry a label");
+  probe(slots.clues.every((clue) => clue.property in entry.properties), "case " + entry.label + " must record every clue property");
+}
+let compatible = slots.cases.slice();
+for (const clue of slots.clues) {
+  compatible = compatible.filter((entry) => entry.properties[clue.property] === clue.value);
+}
+probe(compatible.length > 0, "the clues must not contradict every case");
+probe(compatible.length === 1, "the clues must leave exactly one case, not " + compatible.length);
+return "Case " + compatible[0].label + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,55 @@
+@slots literal
+{
+  "place": "Long Hill",
+  "driver": "Jules",
+  "arrival": {
+    "hour": 7,
+    "minute": "13"
+  },
+  "standMinutes": 15,
+  "window": {
+    "from": {
+      "hour": 6,
+      "minute": "00"
+    },
+    "until": {
+      "hour": 8,
+      "minute": "00"
+    }
+  },
+  "parkingPlateCancelled": true,
+  "exceptionAmendsParking": false,
+  "bicyclesAreGoodsVehicles": false,
+  "carIsDelivery": false
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots === "object" && slots !== null, "the case must carry the parsed register");
+probe(typeof slots.driver === "string" && slots.driver.length > 0, "the episode must name the driver");
+probe(slots.standMinutes > 0, "the driver must want to stand for a positive number of minutes");
+probe(Number.isInteger(slots.window.from.hour) && Number.isInteger(slots.window.until.hour), "the exception window must be printed in hours");
+probe(slots.window.from.hour < slots.window.until.hour, "the exception window must open before it closes");
+probe(slots.parkingPlateCancelled && !slots.exceptionAmendsParking, "the cancelled P must stand, because the exception amends only the lorry ban");
+probe(slots.bicyclesAreGoodsVehicles === false, "a bicycle must not count as a goods vehicle");
+probe(slots.carIsDelivery === false, "a private car with shopping bags must not count as a delivery");
+const toMinutes = (hour, minute) => hour * 60 + minute;
+const label = (hour, minute) => (minute === "00" ? String(Number(hour)) : Number(hour) + ":" + minute);
+const from = toMinutes(slots.window.from.hour, slots.window.from.minute);
+const until = toMinutes(slots.window.until.hour, slots.window.until.minute);
+const arrival = toMinutes(slots.arrival.hour, slots.arrival.minute);
+probe(arrival >= from && arrival <= until, "the delivery van must arrive inside the excepted window");
+const windowLabel = label(slots.window.from.hour, slots.window.from.minute) + "–" + label(slots.window.until.hour, slots.window.until.minute);
+const parkingBanned = slots.parkingPlateCancelled && !slots.exceptionAmendsParking;
+const vanClause = "The van may move in the " + windowLabel + " window but may not stand (cancelled P).";
+const carClause = "The car is not a lorry, but it " + (parkingBanned ? "may not park" : "may park") + ".";
+const bicycleClause = "The bicycle " + (slots.bicyclesAreGoodsVehicles ? "may not pass" : "may pass") + "; the register is silent on P for bicycles — do not fill the silence.";
+return vanClause + " " + carClause + " " + bicycleClause;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

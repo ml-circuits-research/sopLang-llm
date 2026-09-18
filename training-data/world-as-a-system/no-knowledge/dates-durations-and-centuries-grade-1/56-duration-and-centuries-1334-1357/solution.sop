@@ -1,0 +1,24 @@
+@slots literal
+{
+  "start": 1334,
+  "end": 1357
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.start) && Number.isInteger(slots.end), "the two events must be dated with whole years");
+probe(slots.start >= 1 && slots.start < slots.end, "the later event must follow the earlier one");
+const centuryOf = (year) => Math.floor((year - 1) / 100) + 1;
+const ordinal = (value) => { const remainder = value % 100; const suffix = remainder >= 11 && remainder <= 13 ? "th" : value % 10 === 1 ? "st" : value % 10 === 2 ? "nd" : value % 10 === 3 ? "rd" : "th"; return value + suffix; };
+const startCentury = centuryOf(slots.start);
+const endCentury = centuryOf(slots.end);
+probe(startCentury >= 1 && endCentury >= startCentury, "the century rule must order the two labels consistently with the years");
+return (slots.end - slots.start) + " years; " + slots.start + " is in the " + ordinal(startCentury) + " century and " + slots.end + " in the " + ordinal(endCentury) + " century.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

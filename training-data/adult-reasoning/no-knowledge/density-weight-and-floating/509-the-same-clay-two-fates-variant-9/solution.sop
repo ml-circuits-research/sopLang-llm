@@ -1,0 +1,40 @@
+@slots literal
+{
+  "place": "Bridge City",
+  "waterDensity": 1,
+  "massGrams": 28,
+  "cubeVolumeCm3": 16,
+  "boatVolumeCm3": 41,
+  "suspendedAtWaterDensity": true,
+  "trappedAirLowersDensity": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the club");
+probe(slots.waterDensity > 0, "the sheet must state a positive density for water");
+probe(Number.isInteger(slots.massGrams) && slots.massGrams > 0, "the clay must have a positive whole mass");
+probe(Number.isInteger(slots.cubeVolumeCm3) && slots.cubeVolumeCm3 > 0, "the cube must have a positive whole volume");
+probe(Number.isInteger(slots.boatVolumeCm3) && slots.boatVolumeCm3 > slots.cubeVolumeCm3, "the boat must displace more water than the solid cube");
+probe(slots.trappedAirLowersDensity === true, "the sheet must explain that trapped air lowers the average density");
+const formatDensity = (value) => Number.isInteger(value) ? String(value) : value.toFixed(2);
+const densityFate = (massGrams, volumeCm3) => {
+  const density = massGrams / volumeCm3;
+  const shown = density.toFixed(2);
+  const water = formatDensity(slots.waterDensity);
+  if (density > slots.waterDensity) { return shown + " > " + water + " → sinks"; }
+  if (density < slots.waterDensity) { return shown + " < " + water + " → floats"; }
+  return shown + " = " + water + " → suspended";
+};
+const cube = densityFate(slots.massGrams, slots.cubeVolumeCm3);
+const boat = densityFate(slots.massGrams, slots.boatVolumeCm3);
+probe(slots.massGrams / slots.cubeVolumeCm3 > slots.massGrams / slots.boatVolumeCm3, "the same clay must be denser as a cube than as a boat");
+return "Cube " + cube + ". Boat " + boat + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

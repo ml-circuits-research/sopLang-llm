@@ -1,0 +1,95 @@
+@slots literal
+{
+  "scale": {
+    "minimum": 0,
+    "maximum": 10,
+    "better": 10
+  },
+  "weights": [
+    {
+      "criterion": 1,
+      "percent": 50
+    },
+    {
+      "criterion": 2,
+      "percent": 30
+    },
+    {
+      "criterion": 3,
+      "percent": 20
+    }
+  ],
+  "options": [
+    {
+      "label": "A",
+      "scores": [
+        9,
+        7,
+        7
+      ]
+    },
+    {
+      "label": "B",
+      "scores": [
+        10,
+        5,
+        5
+      ]
+    },
+    {
+      "label": "C",
+      "scores": [
+        5,
+        5,
+        9
+      ]
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.weights) && slots.weights.length > 0, "the statement must state the criterion weights");
+probe(Array.isArray(slots.options) && slots.options.length > 0, "the statement must state the option scores");
+probe(slots.scale !== null && typeof slots.scale === "object", "the statement must state the scoring scale");
+const scale = slots.scale;
+probe(Number.isInteger(scale.minimum) && Number.isInteger(scale.maximum) && scale.maximum > scale.minimum, "the scoring scale must be an ordered pair of integers");
+const criteria = slots.weights.length;
+let weightSum = 0;
+for (const weight of slots.weights) {
+  probe(Number.isInteger(weight.percent) && weight.percent > 0 && weight.percent <= 100, "every criterion weight must be a positive percentage");
+  weightSum += weight.percent;
+}
+probe(weightSum === 100, "the criterion weights must sum to one hundred percent");
+const labels = [];
+const hundredths = {};
+for (const option of slots.options) {
+  probe(typeof option.label === "string" && option.label.length > 0, "every option must carry a label");
+  probe(Array.isArray(option.scores) && option.scores.length === criteria, "every option must carry one score per criterion");
+  let total = 0;
+  for (let index = 0; index < criteria; index += 1) {
+    const score = option.scores[index];
+    probe(Number.isInteger(score) && score >= scale.minimum && score <= scale.maximum, "every score must be an integer inside the stated scale");
+    total += slots.weights[index].percent * score;
+  }
+  probe(hundredths[option.label] === undefined, "the option labels must be distinct");
+  hundredths[option.label] = total;
+  labels.push(option.label);
+}
+const maximum = Math.max(...labels.map((label) => hundredths[label]));
+const winners = labels.filter((label) => hundredths[label] === maximum);
+probe(winners.length > 0, "the weighted scores must attain a maximum");
+const format = (value) => {
+  const whole = Math.floor(value / 100);
+  const fraction = value % 100;
+  return whole + "." + (fraction < 10 ? "0" + fraction : String(fraction));
+};
+return "Scores: " + labels.map((label) => label + "=" + format(hundredths[label])).join(", ") + ". Winner(s) under these weights: " + winners.join(", ") + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

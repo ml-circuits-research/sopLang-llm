@@ -1,0 +1,71 @@
+@slots literal
+{
+  "relations": [
+    {
+      "subject": "the clover bed",
+      "direction": "east",
+      "object": "the lavender bed"
+    },
+    {
+      "subject": "the central path",
+      "direction": "north",
+      "object": "the clover bed"
+    },
+    {
+      "subject": "the mint corner",
+      "direction": "west",
+      "object": "the central path"
+    },
+    {
+      "subject": "the insect shelter",
+      "direction": "northeast",
+      "object": "the clover bed"
+    }
+  ],
+  "target": "the mint corner",
+  "anchor": "the lavender bed"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+const VECTORS = { north: [0, 1], south: [0, -1], east: [1, 0], west: [-1, 0], northeast: [1, 1], northwest: [-1, 1], southeast: [1, -1], southwest: [-1, -1] };
+const COMPASS = new Map(Object.entries(VECTORS).map(([word, step]) => [step[0] + "," + step[1], word]));
+probe(Array.isArray(slots.relations) && slots.relations.length > 0, "the map must state at least one spatial relation");
+probe(typeof slots.target === "string" && slots.target.length > 0, "the question must name the place it asks about");
+probe(typeof slots.anchor === "string" && slots.anchor.length > 0, "the question must name the reference place");
+probe(slots.target !== slots.anchor, "the asked place must differ from the reference place");
+for (const relation of slots.relations) {
+  probe(VECTORS[relation.direction] !== undefined, "every relation must use a compass direction: " + relation.direction);
+  probe(relation.subject !== relation.object, "a relation must connect two different places");
+}
+const reached = new Map([[slots.anchor, { x: 0, y: 0, steps: 0 }]]);
+let frontier = [slots.anchor];
+while (frontier.length > 0 && !reached.has(slots.target)) {
+  const next = [];
+  for (const place of frontier) {
+    const here = reached.get(place);
+    for (const relation of slots.relations) {
+      if (relation.object !== place || reached.has(relation.subject)) {
+        continue;
+      }
+      const step = VECTORS[relation.direction];
+      reached.set(relation.subject, { x: here.x + step[0], y: here.y + step[1], steps: here.steps + 1 });
+      next.push(relation.subject);
+    }
+  }
+  frontier = next;
+}
+probe(reached.has(slots.target), "the described route must reach the asked place");
+const place = reached.get(slots.target);
+const word = COMPASS.get(place.x + "," + place.y);
+probe(typeof word === "string" && word.length > 0, "the net displacement must be a compass direction");
+probe(place.steps > 0 && place.steps < slots.relations.length + 1, "the route must use at least one and fewer than all the stated relations");
+return "\"" + slots.target + "\" is " + word + " of \"" + slots.anchor + "\"; the given route has " + place.steps + " steps.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

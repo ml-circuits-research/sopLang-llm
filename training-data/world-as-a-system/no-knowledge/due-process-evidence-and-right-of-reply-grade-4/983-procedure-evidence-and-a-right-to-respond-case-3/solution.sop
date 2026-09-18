@@ -1,0 +1,80 @@
+@slots literal
+{
+  "requiredEvidence": 2,
+  "independentEvidence": 2,
+  "responseOpportunity": false,
+  "crossDomain": [
+    {
+      "kind": "reports",
+      "total": 9,
+      "duplicates": 4
+    },
+    {
+      "kind": "sheets",
+      "start": 100,
+      "received": 4
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const describeCrossDomain = function describeCrossDomain(check) {
+  if (check.kind === 'distance') {
+    return `${check.centimetres * check.kilometresPerCentimetre} km.`;
+  }
+  if (check.kind === 'time') {
+    const minutes = check.startHour * 60 + check.startMinute + check.hours * 60;
+    const hour = String(Math.floor(minutes / 60)).padStart(2, '0');
+    const minute = String(minutes % 60).padStart(2, '0');
+    return `${hour}:${minute}.`;
+  }
+  if (check.kind === 'quorum') {
+    return check.present >= check.threshold ? 'quorum is met.' : 'quorum is not met.';
+  }
+  if (check.kind === 'reports') {
+    return `${check.total - check.duplicates} independent reports.`;
+  }
+  if (check.kind === 'sheets') {
+    return `${check.start + check.received} map sheets.`;
+  }
+  throw new Error(`Unknown cross-domain check "${check.kind}".`);
+};
+const renderCrossDomain = function renderCrossDomain(checks) {
+  if (checks === null || checks === undefined || checks.length === 0) {
+    return '';
+  }
+  const parts = checks.map((check, index) => {
+    const label = index === 1 ? 'Mixed-domain answer:' : 'Cross-domain answer:';
+    return `${label} ${describeCrossDomain(check)}`;
+  });
+  return parts.join(' ');
+};
+const slots = $slots;
+probe(Number.isInteger(slots.requiredEvidence) && slots.requiredEvidence >= 1, "the procedure must state how many independent pieces of evidence it requires");
+probe(Number.isInteger(slots.independentEvidence) && slots.independentEvidence >= 0, "the case must state how many independent sources support the allegation");
+probe(typeof slots.responseOpportunity === "boolean", "the case must state whether a chance to respond was given");
+const evidenceMet = slots.independentEvidence >= slots.requiredEvidence;
+const responseMet = slots.responseOpportunity;
+const authorized = evidenceMet && responseMet;
+let condition;
+if (authorized) {
+  condition = "Both the evidence requirement and the right-to-respond condition are met.";
+} else if (!evidenceMet && !responseMet) {
+  condition = "Both the evidence requirement and the right-to-respond condition are not met.";
+} else if (!evidenceMet) {
+  condition = "The evidence requirement is not met.";
+} else {
+  condition = "The right-to-respond condition is not met.";
+}
+probe(!authorized || (evidenceMet && responseMet), "the verdict must follow from the conjunctive procedure");
+const main = (authorized ? "Yes." : "No.") + " " + condition;
+const suffix = renderCrossDomain(slots.crossDomain);
+return suffix === "" ? main : main + " " + suffix;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

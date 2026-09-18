@@ -1,0 +1,32 @@
+@slots literal
+{
+  "place": "North Copse",
+  "circuits": 2,
+  "loops": 2,
+  "mapper": "Jules",
+  "alternative": "Kat",
+  "leveler": "Ned"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the class card");
+probe(Number.isInteger(slots.circuits) && slots.circuits > 0, "the card must list a positive number of circuits");
+probe(Number.isInteger(slots.loops) && slots.loops > 0, "the surviving mapping must carry a positive number of loops");
+probe(typeof slots.mapper === "string" && slots.mapper.length > 0, "the case must name the speaker who maps the two-loop pump");
+probe(typeof slots.alternative === "string" && slots.alternative.length > 0, "the case must name the speaker who maps the bucket");
+probe(typeof slots.leveler === "string" && slots.leveler.length > 0, "the case must name the speaker who treats every water picture alike");
+probe(new Set([slots.mapper, slots.alternative, slots.leveler]).size === 3, "the three speakers must be three different people");
+probe(slots.loops === slots.circuits, "the mapping that keeps the listed structure must keep one loop per circuit");
+const NUMBER_WORDS = ["zero", "one", "two", "three"];
+const word = NUMBER_WORDS[slots.circuits];
+probe(word !== undefined, "the card must list at most three circuits so the answer can name the count");
+return slots.mapper + "\u2019s " + word + "-loop pump. The card\u2019s engine is " + word + " circuits, not \u201cwater moves.\u201d";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

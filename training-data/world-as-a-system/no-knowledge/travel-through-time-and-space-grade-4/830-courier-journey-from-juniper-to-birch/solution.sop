@@ -1,0 +1,31 @@
+@slots literal
+{
+  "from": "Juniper",
+  "destination": "Birch",
+  "departureHour": 11,
+  "distanceKm": 160,
+  "speedKmh": 30,
+  "meetingHour": 15.3
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.destination === "string" && slots.destination.length > 0, "the courier journey must name a destination");
+probe(typeof slots.departureHour === "number" && Number.isFinite(slots.departureHour), "the courier must depart at a stated hour");
+probe(typeof slots.distanceKm === "number" && slots.distanceKm > 0, "the stated distance must be a positive number of kilometres");
+probe(typeof slots.speedKmh === "number" && slots.speedKmh > 0, "the stated average speed must be positive");
+probe(typeof slots.meetingHour === "number" && Number.isFinite(slots.meetingHour), "the meeting must begin at a stated hour");
+const travelHours = slots.distanceKm / slots.speedKmh;
+const arrivalHour = Math.round((slots.departureHour + travelHours) * 10) / 10;
+probe(Number.isFinite(arrivalHour), "the stated journey must yield a finite arrival time");
+const formatHour = (hour) => hour.toFixed(1) + ":00";
+const verdict = arrivalHour <= slots.meetingHour ? "yes, on time" : "no, the meeting has already begun";
+return "Arrival at about " + formatHour(arrivalHour) + "; " + verdict + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,39 @@
+@slots literal
+{
+  "start": 2,
+  "add": 3,
+  "subtract": 1,
+  "cap": 12,
+  "cycles": 5
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.start) && slots.start >= 0, "the initial state must be a non-negative integer");
+probe(Number.isInteger(slots.add) && slots.add > slots.subtract && slots.subtract >= 0, "every cycle must have a positive net change");
+probe(Number.isInteger(slots.cap) && slots.cap > 0, "the cap must be a positive integer");
+probe(Number.isInteger(slots.cycles) && slots.cycles >= 1, "the statement must repeat at least one cycle");
+const states = [];
+let value = slots.start;
+let firstCapped = null;
+for (let cycle = 1; cycle <= slots.cycles; cycle += 1) {
+  const uncapped = value + slots.add - slots.subtract;
+  if (uncapped > slots.cap && firstCapped === null) { firstCapped = cycle; }
+  value = Math.min(slots.cap, uncapped);
+  states.push(value);
+}
+probe(states.length === slots.cycles, "the evolution must produce one state per cycle");
+probe(states.every((state) => state <= slots.cap), "no state may exceed the cap");
+probe(states[states.length - 1] <= slots.cap, "the last state must respect the cap");
+const words = { 1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight", 9: "nine", 10: "ten" };
+const span = words[slots.cycles] === undefined ? String(slots.cycles) : words[slots.cycles];
+const note = firstCapped === null ? "The cap does not intervene in the first " + span + " cycles." : "The cap intervenes at cycle " + firstCapped + ".";
+return "The states are " + states.join(", ") + ". " + note;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

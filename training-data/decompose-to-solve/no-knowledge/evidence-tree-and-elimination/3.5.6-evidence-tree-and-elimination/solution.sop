@@ -1,0 +1,75 @@
+@slots literal
+{
+  "domain": "comparing a constrained household budget",
+  "workNoun": "budget items",
+  "failureCount": 75,
+  "hypotheses": [
+    {
+      "id": "H1",
+      "claim": "insufficient capacity",
+      "kind": "capacity"
+    },
+    {
+      "id": "H2",
+      "claim": "an ordering or dependency mistake",
+      "kind": "ordering"
+    },
+    {
+      "id": "H3",
+      "claim": "a measurement or recording error",
+      "kind": "measurement"
+    }
+  ],
+  "observations": [
+    {
+      "kind": "capacity-availability",
+      "availableUnits": 93
+    },
+    {
+      "kind": "ordering-violation"
+    },
+    {
+      "kind": "measurement-reproduction"
+    },
+    {
+      "kind": "testimony",
+      "comment": "the team was busy that day"
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.hypotheses) && slots.hypotheses.length >= 2, "the scenario must propose several hypotheses");
+probe(Array.isArray(slots.observations) && slots.observations.length > 0, "the scenario must list observations");
+probe(Number.isInteger(slots.failureCount) && slots.failureCount > 0, "the handled count must be a positive whole number");
+const ids = slots.hypotheses.map((hypothesis) => hypothesis.id);
+probe(new Set(ids).size === ids.length, "each hypothesis must carry its own label");
+const supported = [];
+const eliminated = [];
+for (const observation of slots.observations) {
+  if (observation.kind === "capacity-availability") {
+    probe(Number.isInteger(observation.availableUnits) && observation.availableUnits > 0, "the capacity log must state a positive number of available units");
+    if (observation.availableUnits >= slots.failureCount) { eliminated.push("capacity"); } else { supported.push("capacity"); }
+  } else if (observation.kind === "ordering-violation") {
+    supported.push("ordering");
+  } else if (observation.kind === "measurement-reproduction") {
+    eliminated.push("measurement");
+  } else {
+    probe(observation.kind === "testimony", "the observation must name the claim it tests");
+  }
+}
+const survivors = slots.hypotheses.filter((hypothesis) => supported.includes(hypothesis.kind) && !eliminated.includes(hypothesis.kind));
+probe(survivors.length === 1, "exactly one hypothesis must survive the discriminating observations");
+const labels = { capacity: "capacity shortfall", ordering: "dependency/order mistake", measurement: "measurement error" };
+const winner = survivors[0];
+probe(typeof labels[winner.kind] === "string", "the surviving hypothesis must be a known claim");
+return winner.id + ", the " + labels[winner.kind] + ", is the best-supported explanation. The decomposition is evidential: each observation is sent only to the hypothesis it can actually discriminate, then the hypothesis-level results are recombined.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,44 @@
+@slots literal
+{
+  "budget": 1000,
+  "fixedCost": 220,
+  "unitCost": 50,
+  "unitBenefit": 8,
+  "minimumUnits": 13,
+  "addOnCost": 160,
+  "addOnBenefit": 120
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.budget) && slots.budget > 0, "the total budget must be a positive integer");
+probe(Number.isInteger(slots.fixedCost) && slots.fixedCost >= 0 && slots.fixedCost < slots.budget, "the fixed cost must be affordable");
+probe(Number.isInteger(slots.unitCost) && slots.unitCost > 0 && Number.isInteger(slots.unitBenefit) && slots.unitBenefit > 0, "each unit must cost and yield a positive integer");
+probe(Number.isInteger(slots.minimumUnits) && slots.minimumUnits > 0, "the minimum-unit requirement must be a positive integer");
+probe(Number.isInteger(slots.addOnCost) && slots.addOnCost > 0 && Number.isInteger(slots.addOnBenefit) && slots.addOnBenefit > 0, "the add-on must cost and add positive integers");
+const affordableUnits = (remaining, unitCost) => (remaining < 0 ? 0 : Math.floor(remaining / unitCost));
+const unitsWithout = affordableUnits(slots.budget - slots.fixedCost, slots.unitCost);
+const unitsWith = affordableUnits(slots.budget - slots.fixedCost - slots.addOnCost, slots.unitCost);
+probe(unitsWithout >= unitsWith, "the add-on must not increase the number of affordable units");
+const benefitWithout = unitsWithout * slots.unitBenefit;
+const benefitWith = unitsWith * slots.unitBenefit + slots.addOnBenefit;
+const feasibleWithout = unitsWithout >= slots.minimumUnits;
+const feasibleWith = unitsWith >= slots.minimumUnits;
+if (!feasibleWithout && !feasibleWith) {
+  return "Neither plan is feasible: the maximum is " + unitsWithout + " units without the add-on and " + unitsWith + " with it, both below the required " + slots.minimumUnits + ".";
+}
+if (feasibleWithout && feasibleWith && benefitWith > benefitWithout) {
+  return "The optimal feasible plan uses the add-on: " + unitsWith + " units plus the module for " + benefitWith + " benefit points.";
+}
+if (!feasibleWithout) {
+  return "The optimal feasible plan uses the add-on: " + unitsWith + " units plus the module for " + benefitWith + " benefit points.";
+}
+return "The optimal feasible plan is without the add-on: " + unitsWithout + " units for " + benefitWithout + " benefit points.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

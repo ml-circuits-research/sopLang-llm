@@ -1,0 +1,110 @@
+@slots literal
+{
+  "cases": [
+    {
+      "name": "the student A",
+      "properties": [
+        "has complete measurements"
+      ]
+    },
+    {
+      "name": "the student B",
+      "properties": [
+        "has complete measurements",
+        "made the same effort"
+      ]
+    },
+    {
+      "name": "the student C",
+      "properties": [
+        "made the same effort"
+      ]
+    },
+    {
+      "name": "the student D",
+      "properties": [
+        "made the same effort",
+        "values decrease gradually"
+      ]
+    },
+    {
+      "name": "the student E",
+      "properties": [
+        "has complete measurements",
+        "values decrease gradually"
+      ]
+    }
+  ],
+  "labels": {
+    "A": "has complete measurements",
+    "B": "made the same effort",
+    "C": "values decrease gradually"
+  },
+  "ops": [
+    "B∩C",
+    "A\\B",
+    "A∪C"
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+const INTERSECTION = String.fromCharCode(8745);
+const UNION = String.fromCharCode(8746);
+const DIFFERENCE = String.fromCharCode(92);
+const EMPTY = String.fromCharCode(8709);
+const OPERATORS = [INTERSECTION, UNION, DIFFERENCE];
+probe(Array.isArray(slots.cases) && slots.cases.length > 0, "the data block must list at least one case");
+probe(slots.labels !== null && typeof slots.labels === "object", "the question must label the sets");
+probe(Array.isArray(slots.ops) && slots.ops.length > 0, "the question must request at least one set operation");
+for (const entry of slots.cases) {
+  probe(typeof entry.name === "string" && entry.name.length > 0, "every case must carry a name");
+  probe(Array.isArray(entry.properties) && entry.properties.length > 0, "every case must carry at least one property: " + entry.name);
+}
+const sets = {};
+for (const letter of Object.keys(slots.labels)) {
+  probe(["A", "B", "C"].indexOf(letter) !== -1, "a set label must be A, B, or C: " + letter);
+  sets[letter] = slots.cases.filter((entry) => entry.properties.indexOf(slots.labels[letter]) !== -1).map((entry) => entry.name);
+  probe(sets[letter].length > 0, "the labelled property must appear in the observations: " + slots.labels[letter]);
+}
+const results = slots.ops.map((op) => {
+  const parts = [];
+  let current = "";
+  for (const character of op) {
+    if (OPERATORS.indexOf(character) !== -1) {
+      parts.push(current.trim());
+      parts.push(character);
+      current = "";
+    } else {
+      current += character;
+    }
+  }
+  parts.push(current.trim());
+  probe(parts.length >= 3 && parts.length % 2 === 1, "a requested operation must chain at least two sets: " + op);
+  for (let index = 0; index < parts.length; index += 2) {
+    probe(parts[index] in sets, "every operand must be a labelled set: " + op);
+  }
+  let members = sets[parts[0]].slice();
+  for (let index = 1; index < parts.length; index += 2) {
+    const other = sets[parts[index + 1]];
+    if (parts[index] === INTERSECTION) {
+      members = members.filter((name) => other.indexOf(name) !== -1);
+    } else if (parts[index] === UNION) {
+      members = members.concat(other.filter((name) => members.indexOf(name) === -1));
+    } else {
+      probe(parts[index] === DIFFERENCE, "an operator must be intersection, union, or difference: " + op);
+      members = members.filter((name) => other.indexOf(name) === -1);
+    }
+  }
+  probe(members.length <= slots.cases.length, "an operation must not invent members: " + op);
+  return op + "=" + (members.length === 0 ? EMPTY : "{" + members.join(", ") + "}");
+});
+return results.join("; ") + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,39 @@
+@slots literal
+{
+  "place": "Mill Hamlet",
+  "resident": "Ben",
+  "floor": 4,
+  "meetingPoint": "the bench",
+  "byWindow": true,
+  "takesLift": true,
+  "usesPhone": true,
+  "leavesId": true,
+  "goesToShop": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots === "object" && slots !== null, "the emergency case must carry its parsed values");
+probe(typeof slots.resident === "string" && slots.resident.length > 0, "the described resident must be named");
+probe(typeof slots.place === "string" && slots.place.length > 0, "the block must be placed in a named village");
+probe(Number.isInteger(slots.floor) && slots.floor > 0, "the described floor must be a positive whole number");
+probe(typeof slots.meetingPoint === "string" && slots.meetingPoint.length > 0, "the guide must name the meeting point");
+probe(slots.byWindow === true && slots.takesLift === true && slots.usesPhone === true, "the route must leave the window, take the lift, and make the panic call");
+probe(slots.leavesId === true && slots.goesToShop === true, "the route must leave the ID and end at a shop");
+const breaches = [];
+if (slots.byWindow) { breaches.push("not window"); }
+if (slots.takesLift) { breaches.push("not lift"); }
+if (slots.usesPhone) { breaches.push("not a panic call"); }
+probe(breaches.length === 3, "the route must break the window, the lift, and the panic call rules");
+const phase1 = ["wall/table"].concat(breaches).join(", ");
+const phase2 = ["stairs", slots.leavesId ? "ID if by the door" : "ID if to hand", slots.meetingPoint].join(", ");
+const answer = "Phase 1: " + phase1 + ". Phase 2: " + phase2 + ". The shop is not the point.";
+return answer;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

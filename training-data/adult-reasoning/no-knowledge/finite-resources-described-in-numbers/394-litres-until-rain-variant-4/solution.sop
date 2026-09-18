@@ -1,0 +1,29 @@
+@slots literal
+{
+  "place": "Forest Parish",
+  "gardener": "Drew",
+  "available": 101,
+  "dose": 7,
+  "days": 12
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots === "object" && slots !== null, "the tank case must carry its parsed values");
+probe(typeof slots.gardener === "string" && slots.gardener.length > 0, "the garden must belong to a named person");
+probe(typeof slots.place === "string" && slots.place.length > 0, "the tank must stand in a named place");
+probe(Number.isInteger(slots.available) && slots.available > 0, "the tank level must be a positive whole number of litres");
+probe(Number.isInteger(slots.dose) && slots.dose > 0, "the daily dose must be a positive whole number of litres");
+probe(Number.isInteger(slots.days) && slots.days > 0, "the days until the rain must be a positive whole number");
+const needed = slots.dose * slots.days;
+probe(needed <= slots.available, "the current dose must last until the rain for this answer");
+const answer = "Yes. " + slots.dose + "×" + slots.days + "=" + needed + " ≤ " + slots.available + ". Left " + (slots.available - needed) + " l.";
+return answer;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

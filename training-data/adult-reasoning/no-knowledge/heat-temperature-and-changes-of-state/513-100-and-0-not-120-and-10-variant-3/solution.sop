@@ -1,0 +1,39 @@
+@slots literal
+{
+  "student": "Farid",
+  "claimer": "Farid",
+  "place": "Wells Village",
+  "boilC": 100,
+  "meltC": 0,
+  "mixtureC": 0,
+  "lidCeilingC": 100,
+  "claimedBoilC": 120,
+  "claimedMeltC": 10,
+  "lidShortensOnly": true,
+  "iceWaterHolds": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.boilC === "number" && Number.isInteger(slots.boilC), "the sheet must state a whole boiling temperature");
+probe(typeof slots.meltC === "number" && Number.isInteger(slots.meltC), "the sheet must state a whole melting temperature");
+probe(slots.meltC < slots.boilC, "ice must melt below the temperature at which water boils");
+probe(slots.lidCeilingC === slots.boilC, "the sheet must state that the lid does not raise the boiling point");
+probe(slots.mixtureC === slots.meltC, "the sheet must hold the melting temperature while both phases are present");
+probe(typeof slots.student === "string" && slots.student.length > 0, "the case must name the student");
+probe(slots.claimedBoilC > slots.boilC, "the case must describe a claim above the stated boiling temperature");
+const boilClause = slots.lidShortensOnly
+  ? "Boil with lid: still " + slots.boilC + " °C."
+  : "Boil with lid: " + slots.claimedBoilC + " °C.";
+const glassClause = slots.iceWaterHolds
+  ? "Glass of ice+water: " + slots.mixtureC + " °C."
+  : "Glass of ice+water: " + slots.claimedMeltC + " °C.";
+return boilClause + " " + glassClause;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

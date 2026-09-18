@@ -1,0 +1,61 @@
+@slots literal
+{
+  "variables": [
+    {
+      "letter": "A",
+      "meaning": "the seed leaves the parent plant"
+    },
+    {
+      "letter": "B",
+      "meaning": "the agent can transport it"
+    },
+    {
+      "letter": "C",
+      "meaning": "the seed remains viable"
+    }
+  ],
+  "target": "the seed reaches a new place while still viable",
+  "rule": {
+    "kind": "count",
+    "exactly": 1
+  }
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.variables) && slots.variables.length >= 2, "the statement must name at least two conditions");
+for (const variable of slots.variables) {
+  probe(typeof variable.letter === "string" && variable.letter.length === 1, "every condition must carry a one-letter name");
+  probe(typeof variable.meaning === "string" && variable.meaning.length > 0, "every condition must state what it means");
+}
+probe(slots.rule !== null && typeof slots.rule === "object", "the statement must state the rule of the target result");
+probe(["count", "firstOrBothOthers", "firstAndAnyOther"].indexOf(slots.rule.kind) !== -1, "the stated rule must be one of the supported case rules");
+probe(slots.rule.kind !== "count" || slots.rule.exactly !== undefined || slots.rule.atLeast !== undefined, "a counting rule must carry its threshold");
+const total = Math.pow(2, slots.variables.length);
+const favorable = [];
+for (let index = 0; index < total; index += 1) {
+  const values = slots.variables.map((_, position) => ((index >> (slots.variables.length - 1 - position)) & 1) === 1);
+  const yes = values.filter(Boolean).length;
+  let holds;
+  if (slots.rule.kind === "count") {
+    holds = slots.rule.exactly === undefined ? yes >= slots.rule.atLeast : yes === slots.rule.exactly;
+  } else if (slots.rule.kind === "firstOrBothOthers") {
+    holds = values[0] || (values[1] && values[2]);
+  } else {
+    holds = values[0] && (values[1] || values[2]);
+  }
+  if (holds) {
+    favorable.push(values.map((value) => (value ? "Y" : "N")).join(""));
+  }
+}
+probe(favorable.length > 0, "the stated rule must leave at least one favorable combination");
+probe(favorable.length < total, "a rule that accepts every combination is not a case analysis");
+return "Favorable cases: " + favorable.join(", ") + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

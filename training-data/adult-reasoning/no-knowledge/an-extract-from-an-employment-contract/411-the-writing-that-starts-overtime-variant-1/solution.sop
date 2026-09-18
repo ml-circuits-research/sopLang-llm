@@ -1,0 +1,57 @@
+@slots literal
+{
+  "employee": "Olga",
+  "place": "Bridge City",
+  "hoursPerDay": 8,
+  "hoursPerWeek": 40,
+  "overtimeRate": 20,
+  "mealBreakMinutes": 30,
+  "capOutsideBreak": 8,
+  "noticeDays": 10,
+  "orderedInWriting": false,
+  "orderedOn": "Friday",
+  "requestedHours": 2,
+  "stays": "Olga",
+  "announceDay": "Monday",
+  "leaveDay": "Wednesday"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.employee === "string" && slots.employee.length > 0, "the case must name the employee");
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the workplace");
+probe(Number.isInteger(slots.hoursPerDay) && slots.hoursPerDay > 0, "the contract must state a positive daily hour cap");
+probe(Number.isInteger(slots.hoursPerWeek) && slots.hoursPerWeek >= slots.hoursPerDay, "the weekly cap must cover at least one day");
+probe(Number.isInteger(slots.overtimeRate) && slots.overtimeRate > 0, "the contract must state a positive overtime rate");
+probe(Number.isInteger(slots.mealBreakMinutes) && slots.mealBreakMinutes >= 0, "the meal break must be a whole number of minutes");
+probe(Number.isInteger(slots.noticeDays) && slots.noticeDays > 0, "the notice must be a positive number of working days");
+probe(typeof slots.orderedInWriting === "boolean", "the case must say whether the order was written or spoken");
+probe(Number.isInteger(slots.requestedHours) && slots.requestedHours > 0, "the manager must ask for a positive number of extra hours");
+probe(slots.stays === slots.employee, "the person who stays must be the person the contract names");
+const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const start = WEEKDAYS.indexOf(slots.announceDay);
+const end = WEEKDAYS.indexOf(slots.leaveDay);
+probe(start !== -1 && end !== -1, "the resignation episode must name two weekdays");
+const span = ((end - start) % 7 + 7) % 7;
+let availableWorkingDays = 0;
+for (let step = 1; step <= span; step += 1) {
+  if ((start + step) % 7 <= 4) {
+    availableWorkingDays += 1;
+  }
+}
+probe(slots.announceDay !== slots.leaveDay, "the announcement and the wanted departure must fall on different weekdays");
+const paidClause = slots.orderedInWriting
+  ? "Yes: the " + slots.requestedHours + " h were ordered in writing beforehand."
+  : "No: the written order is missing.";
+const leaveClause = availableWorkingDays >= slots.noticeDays
+  ? "Yes: " + availableWorkingDays + " working days cover the " + slots.noticeDays + " the extract requires."
+  : "No: " + slots.noticeDays + " working days > " + slots.announceDay + "-" + slots.leaveDay + ".";
+return paidClause + " " + leaveClause;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,42 @@
+@facts literal
+{"sheets":[["the seed absorbs water","the seed coat softens","the young root emerges","the shoot appears"],["water enters the root","water moves up through the stem","water reaches the leaf","the leaf uses water and light"],["plants grow","the rabbit eats plants","the fox finds the rabbit","energy from food reaches the fox"],["the animal finds shelter","avoids the hours very hot","finds water","goes out to look for food"],["egg","larva","pupa","adult"],["the mouth breaks up food","food reaches the stomach","reaches the small intestine","nutrients pass into the blood"],["air enters lungs","oxygen passes into the blood","the blood transports oxygen","oxygen reaches the cells"],["the receptor detects the stimulus","the signal starts","the signal is interpreted","the muscle performs the response"],["microbes reach the surface","has transferred onto the hands","hands touch the mouth","microbes can enters body"],["we establish the requirements","we test the properties","we eliminate the materials unsuitable","we choose the material which meets all the requirements"],["we use the magnet","we use the sieve","we filter the liquid","we evaporate the water"],["the ice receives heat","the ice melts","liquid water receives more heat","part turns into vapor"],["the warm body is placed in a cooler environment","heat begins to transfer","insulation slows the transfer","temperature falls more slowly"],["the source emits light","light reaches the object","the opaque object blocks part of the light","a shadowed area appears on the screen"],["the source vibrates","the vibration sets the medium in motion","the signal propagates","the receiver detects the sound"],["we apply a push","the object begins to move","friction opposes motion","the object slows down"],["we bring closer the magnet","the object enters the action zone","attraction occurs","the object moves toward the magnet"],["we connect the battery","we close the path through the wires","the path passes through the bulb","the bulb lights up"],["we pour water onto the soil","water enters the spaces between particles","a part is retained","the remainder drains away"],["water evaporates","the vapor rises","the vapor cools and condenses","the droplets can fall and be collected"],["the location is in zone illuminated","Earth rotates","the location reaches toward the edge of the zone illuminated","the location enters zone of night"],["the rock breaks into fragments","the fragments have been transported","the fragments have been deposited","forms layers of sediment"],["the pollutant enters the stream","the water carries it downstream","downstream organisms have been exposed","effects may appear farther from the source"],["we choose the food","the food is digested","nutrients have been absorbed","the body can use them"],["we define what we measure","we choose the instrument and unit","we measure several times","we compare values"]]}
+
+@slots literal
+{
+  "stages": [
+    "the rabbit eats plants",
+    "energy from food reaches the fox",
+    "plants grow",
+    "the fox finds the rabbit"
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+const facts = (typeof $facts === "object" && $facts !== null) ? $facts : JSON.parse(String($facts));
+const sheets = facts.sheets;
+const normalize = (text) => String(text).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().split(" ").filter((word) => word !== "" && word !== "the" && word !== "a" && word !== "an").join(" ");
+probe(Array.isArray(slots.stages) && slots.stages.length >= 2, "the statement must list at least two stages");
+probe(slots.stages.every((stage) => typeof stage === "string" && stage.length > 0), "every stage must carry text");
+probe(Array.isArray(sheets) && sheets.length > 0, "the fact wire must carry the knowledge sheets");
+probe(sheets.every((sheet) => Array.isArray(sheet) && sheet.length >= 2), "every knowledge sheet must list at least two steps in order");
+const wanted = slots.stages.map(normalize).sort().join(" | ");
+const candidates = sheets.filter((sheet) => sheet.length === slots.stages.length && sheet.map(normalize).sort().join(" | ") === wanted);
+probe(candidates.length > 0, "the stages of the case must match a knowledge sheet");
+probe(candidates.length === 1, "the stages of the case must match exactly one knowledge sheet, not " + candidates.length);
+const sheet = candidates[0];
+const rank = new Map(sheet.map((step, index) => [normalize(step), index]));
+const positions = slots.stages.map((stage) => rank.get(normalize(stage)));
+probe(positions.every((index) => typeof index === "number"), "every stage must be one step of the sheet");
+const chain = positions.slice().sort((left, right) => left - right).map((index) => sheet[index]);
+probe(chain.length === slots.stages.length, "the ordered chain must keep every stage of the case");
+const text = chain.join(" → ");
+return text.charAt(0).toUpperCase() + text.slice(1) + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

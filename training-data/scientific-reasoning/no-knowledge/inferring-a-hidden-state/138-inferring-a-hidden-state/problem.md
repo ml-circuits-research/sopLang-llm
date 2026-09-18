@@ -1,0 +1,7 @@
+# 138 — Inferring a hidden state
+
+Problem world. In the small meadow described here, grass is eaten by rabbits, and rabbits can be eaten by foxes. If the food available to one group decreases greatly, that group has fewer resources; the effect can then continue along the chain. We will not assume that animal numbers change instantly: we track only the likely direction of the effect after some time.
+
+Case data. In this model, each sign listed below can be produced only by the causes listed: lack of grass → grass a low, rabbits find hard food. Increased predation → grass is sufficient, the tracks of fox increase. Lack of water → the animals collects at the few sources of water, food there is. We observe the sign “grass is sufficient”.
+
+Question. Which hidden state remains possible? Note: we may reason from effect to cause only because the problem declares the list of causes complete within this model.

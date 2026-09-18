@@ -3,7 +3,10 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, readFileSync, readdirSync, existsSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { runPilot, verifyProblem, selectEvalSplit, planHashOf, findTextBlemishes } from '../teacher/pilot.mjs';
+import { runPilot, verifyProblem, selectEvalSplit, rejectAmbiguousStatements } from '../teacher/pilot.mjs';
+import { solverText } from '../teacher/statements.mjs';
+import { planHashOf } from '../teacher/hashing.mjs';
+import { findTextBlemishes } from '../teacher/dataset.mjs';
 import { createRuntime } from '../runtime/kernel.mjs';
 
 function syntheticProblem(id, statement, printedAnswer) {
@@ -100,14 +103,59 @@ test('the text blemish scan reports source words glued to digits', () => {
   assert.deepEqual(findings, ['1.1: or1']);
 });
 
-test('the Romanian polarity answers of chapter 19 are quarantined under one rule', async () => {
-  const result = await runPilot({ chapters: [19], write: false });
-  const quarantined = result.rejected.filter((item) => item.reason === 'quarantine:non-english-answer-token');
+test('the polarity answers of chapter 19 ship as their declared English equivalents', async () => {
+  const result = await runPilot({ units: [19], write: false });
+  assert.deepEqual(result.rejected, []);
+  assert.equal(result.accepted.length, 25);
+  const polarity = result.accepted.filter((item) => ['19.11', '19.12', '19.13', '19.14', '19.15'].includes(item.problem.id));
   assert.deepEqual(
-    quarantined.map((item) => item.problem.id).sort(),
-    ['19.11', '19.12', '19.13', '19.14', '19.15']
+    polarity.map((item) => item.shippedAnswer).sort(),
+    ['No.', 'No.', 'Yes.', 'Yes.', 'Yes.']
   );
-  assert.equal(result.accepted.length, 20);
+  assert.equal(
+    polarity.every((item) => item.problem.printedAnswer !== item.shippedAnswer),
+    true,
+    'the shipped answer is the declared English equivalent, not the source token'
+  );
+  assert.equal(polarity.every((item) => item.verification.verification.class === 'exact_verified'), true);
+});
+
+test('a case whose printed answer the statement does not determine ships the computed answer', async () => {
+  const entry = syntheticEntry({
+    printedAnswerStatus: 'alternative',
+    printedAnswerReason: 'the task admits several valid answers and the source prints one of them',
+    verifyPrinted: (slots, solution, printed) => printed === 'Another valid answer.'
+  });
+  const acceptedItem = await verifyProblem({
+    runtime: createRuntime(),
+    entry,
+    problem: syntheticProblem('99.6', 'Double 4.', 'Another valid answer.')
+  });
+  assert.equal(acceptedItem.accepted, true);
+  assert.equal(acceptedItem.verification.class, 'computed_verified');
+  assert.equal(acceptedItem.verification.printedStatus, 'alternative');
+
+  const refused = await verifyProblem({
+    runtime: createRuntime(),
+    entry,
+    problem: syntheticProblem('99.7', 'Double 4.', 'An answer the predicate rejects.')
+  });
+  assert.equal(refused.accepted, false);
+  assert.equal(refused.reason, 'printed_answer_unverified');
+});
+
+test('a declared clarification joins the solver-visible text', () => {
+  const problem = syntheticProblem('99.8', 'Give one valid assignment.', 'A=school, B=park.');
+  assert.equal(
+    solverText({ clarification: 'Case 2 takes the second valid assignment in the stated order.' }, problem),
+    'Give one valid assignment.\n\nAdditional information. Case 2 takes the second valid assignment in the stated order.'
+  );
+  assert.equal(solverText({}, problem), 'Give one valid assignment.');
+  assert.equal(
+    solverText({ clarification: (candidate) => `This is ${candidate.title.split(':').pop().trim()}.` }, { ...problem, title: 'One template: case 3' }),
+    'Give one valid assignment.\n\nAdditional information. This is case 3.'
+  );
+  assert.equal(solverText({ clarification: () => '' }, problem), 'Give one valid assignment.');
 });
 
 test('a decorative fact keyword guard is recognised by the family review', async () => {
@@ -158,7 +206,7 @@ test('a knowledge fact that the computation does not consume is rejected', async
 test('a statement that references an earlier problem ships with its referenced context', async () => {
   const outputRoot = mkdtempSync(join(tmpdir(), 'soplang-pilot-ref-'));
   try {
-    const result = await runPilot({ chapters: [38], write: true, outputRoot });
+    const result = await runPilot({ units: [38], write: true, outputRoot });
     const item = result.accepted.find((candidate) => candidate.problem.id === '38.19');
     assert.ok(item !== undefined, 'the referenced item is accepted');
     const relative = [
@@ -176,7 +224,7 @@ test('a statement that references an earlier problem ships with its referenced c
 });
 
 test('the pilot verifies the chapter 1 families by executing their circuits', async () => {
-  const result = await runPilot({ chapters: [1], write: false });
+  const result = await runPilot({ units: [1], write: false });
   assert.equal(result.accepted.length, 25);
   assert.equal(result.rejected.length, 0);
   for (const item of result.accepted) {
@@ -188,8 +236,8 @@ test('the pilot verifies the chapter 1 families by executing their circuits', as
 });
 
 test('the evaluation holdout is deterministic and never splits a template', async () => {
-  const first = await runPilot({ chapters: [1], write: false });
-  const second = await runPilot({ chapters: [1], write: false });
+  const first = await runPilot({ units: [1], write: false });
+  const second = await runPilot({ units: [1], write: false });
   assert.deepEqual([...first.split].sort(), [...second.split].sort());
   const templatesInSplit = new Set(
     first.accepted.filter((item) => first.split.has(item.problem.id)).map((item) => item.problem.templateKey)
@@ -203,7 +251,7 @@ test('the evaluation holdout is deterministic and never splits a template', asyn
 test('the dataset layout holds three text artifacts per problem and a text manifest', async () => {
   const outputRoot = mkdtempSync(join(tmpdir(), 'soplang-pilot-'));
   try {
-    const result = await runPilot({ chapters: [1], write: true, outputRoot });
+    const result = await runPilot({ units: [1], write: true, outputRoot });
     const root = join(outputRoot, 'mathematical-thinking');
     const trainFolder = join(root, 'no-knowledge', 'order-in-a-line', '1.1-order-in-a-line-1');
     assert.deepEqual(readdirSync(trainFolder).sort(), ['explanation.md', 'problem.md', 'solution.sop']);
@@ -252,4 +300,47 @@ test('the dataset layout holds three text artifacts per problem and a text manif
   } finally {
     rmSync(outputRoot, { recursive: true, force: true });
   }
+});
+
+test('a family that marks a variant ambiguous rejects it with a dedicated reason', async () => {
+  const entry = syntheticEntry({
+    solve: () => {
+      const error = new Error('two assignments satisfy the stated constraints');
+      error.ambiguous = true;
+      throw error;
+    }
+  });
+  const result = await verifyProblem({
+    runtime: createRuntime(),
+    entry,
+    problem: syntheticProblem('99.7', 'Double 4.', '8')
+  });
+  assert.equal(result.accepted, false);
+  assert.match(result.reason, /^ambiguous_statement:two assignments/);
+});
+
+test('identical statements with different printed answers are rejected whole', () => {
+  const entry = syntheticEntry();
+  const item = (id, statement, answer) => ({
+    problem: syntheticProblem(id, statement, answer),
+    entry,
+    verification: {}
+  });
+
+  const rejected = [];
+  const kept = rejectAmbiguousStatements(
+    [item('99.8', 'Double 4.', '8'), item('99.9', 'Double 4.', '9')],
+    rejected
+  );
+  assert.deepEqual(kept, []);
+  assert.deepEqual(
+    rejected.map((record) => record.reason.split(':')[0]),
+    ['ambiguous_statement', 'ambiguous_statement']
+  );
+
+  const survivors = rejectAmbiguousStatements(
+    [item('99.10', 'Double 4.', '8'), item('99.11', 'Double 4.', '8'), item('99.12', 'Double 5.', '10')],
+    []
+  );
+  assert.equal(survivors.length, 3, 'a repeated statement with one answer and a distinct statement survive');
 });

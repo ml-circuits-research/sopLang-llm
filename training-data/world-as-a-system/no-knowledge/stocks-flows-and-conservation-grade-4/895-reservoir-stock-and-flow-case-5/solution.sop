@@ -1,0 +1,61 @@
+@slots literal
+{
+  "start": 52,
+  "inflow": 9,
+  "outflow": 7,
+  "days": 6,
+  "crossDomain": null
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const describeCrossDomain = function describeCrossDomain(check) {
+  if (check.kind === 'distance') {
+    return `${check.centimetres * check.kilometresPerCentimetre} km.`;
+  }
+  if (check.kind === 'time') {
+    const minutes = check.startHour * 60 + check.startMinute + check.hours * 60;
+    const hour = String(Math.floor(minutes / 60)).padStart(2, '0');
+    const minute = String(minutes % 60).padStart(2, '0');
+    return `${hour}:${minute}.`;
+  }
+  if (check.kind === 'quorum') {
+    return check.present >= check.threshold ? 'quorum is met.' : 'quorum is not met.';
+  }
+  if (check.kind === 'reports') {
+    return `${check.total - check.duplicates} independent reports.`;
+  }
+  if (check.kind === 'sheets') {
+    return `${check.start + check.received} map sheets.`;
+  }
+  throw new Error(`Unknown cross-domain check "${check.kind}".`);
+};
+const renderCrossDomain = function renderCrossDomain(checks) {
+  if (checks === null || checks === undefined || checks.length === 0) {
+    return '';
+  }
+  const parts = checks.map((check, index) => {
+    const label = index === 1 ? 'Mixed-domain answer:' : 'Cross-domain answer:';
+    return `${label} ${describeCrossDomain(check)}`;
+  });
+  return parts.join(' ');
+};
+const slots = $slots;
+probe(Number.isInteger(slots.start) && slots.start >= 0, "the starting stock must be a non-negative integer");
+probe(Number.isInteger(slots.inflow) && Number.isInteger(slots.outflow), "both daily flows must be stated integers");
+probe(Number.isInteger(slots.days) && slots.days > 0, "the day count must be a positive integer");
+const dailyNet = slots.inflow - slots.outflow;
+const end = slots.start + slots.days * dailyNet;
+probe(Number.isInteger(end), "the end stock must be a whole number of units");
+const verdict = dailyNet > 0 ? "increasing" : dailyNet < 0 ? "decreasing" : "unchanged";
+probe(verdict === "increasing" || verdict === "decreasing" || verdict === "unchanged", "the verdict must follow the sign of the daily net change");
+const suffix = renderCrossDomain(slots.crossDomain);
+const main = end + " units; the stock is " + verdict + ".";
+return suffix === "" ? main : main + " " + suffix;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

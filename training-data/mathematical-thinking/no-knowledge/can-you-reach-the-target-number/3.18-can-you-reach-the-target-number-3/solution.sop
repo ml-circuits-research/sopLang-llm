@@ -6,6 +6,10 @@
 }
 
 @answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
 const slots = $slots;
 if (slots.step <= 0) {
   throw new Error("the move size must be positive");
@@ -13,4 +17,7 @@ if (slots.step <= 0) {
 const gap = slots.target - slots.start;
 const reachable = gap >= 0 && gap % slots.step === 0;
 return reachable ? "Yes, " + slots.target + " can be reached in " + (gap / slots.step) + " moves." : "No, " + slots.target + " cannot be reached.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
 

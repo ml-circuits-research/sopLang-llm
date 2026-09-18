@@ -1,0 +1,68 @@
+@slots literal
+{
+  "threshold": 12,
+  "households": 6,
+  "contributions": [
+    4,
+    1,
+    2,
+    3,
+    4,
+    1
+  ],
+  "crossDomain": null
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const describeCrossDomain = function describeCrossDomain(check) {
+  if (check.kind === 'distance') {
+    return `${check.centimetres * check.kilometresPerCentimetre} km.`;
+  }
+  if (check.kind === 'time') {
+    const minutes = check.startHour * 60 + check.startMinute + check.hours * 60;
+    const hour = String(Math.floor(minutes / 60)).padStart(2, '0');
+    const minute = String(minutes % 60).padStart(2, '0');
+    return `${hour}:${minute}.`;
+  }
+  if (check.kind === 'quorum') {
+    return check.present >= check.threshold ? 'quorum is met.' : 'quorum is not met.';
+  }
+  if (check.kind === 'reports') {
+    return `${check.total - check.duplicates} independent reports.`;
+  }
+  if (check.kind === 'sheets') {
+    return `${check.start + check.received} map sheets.`;
+  }
+  throw new Error(`Unknown cross-domain check "${check.kind}".`);
+};
+const renderCrossDomain = function renderCrossDomain(checks) {
+  if (checks === null || checks === undefined || checks.length === 0) {
+    return '';
+  }
+  const parts = checks.map((check, index) => {
+    const label = index === 1 ? 'Mixed-domain answer:' : 'Cross-domain answer:';
+    return `${label} ${describeCrossDomain(check)}`;
+  });
+  return parts.join(' ');
+};
+const slots = $slots;
+probe(Number.isFinite(slots.threshold) && slots.threshold >= 0, "the statement must state a provision threshold in tokens");
+probe(Array.isArray(slots.contributions) && slots.contributions.length > 0, "the statement must list the household contributions");
+probe(slots.contributions.length === slots.households, "the listed contributions must match the stated number of households");
+probe(slots.contributions.every((value) => Number.isFinite(value) && value >= 0), "a contribution must be a non-negative number");
+const total = slots.contributions.reduce((sum, value) => sum + value, 0);
+probe(Number.isFinite(total), "the summed contribution must be a finite number");
+const built = total >= slots.threshold;
+const additional = Math.max(0, slots.threshold - total);
+probe(built || additional > 0, "a project short of the threshold must still need tokens");
+const main = (built ? "The project is built." : "The project is not built.") + " Additional tokens needed: " + additional + ".";
+const suffix = renderCrossDomain(slots.crossDomain);
+return suffix === "" ? main : main + " " + suffix;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

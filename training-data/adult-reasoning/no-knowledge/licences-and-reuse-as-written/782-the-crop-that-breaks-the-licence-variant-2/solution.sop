@@ -1,0 +1,37 @@
+@slots literal
+{
+  "name": "Cara",
+  "actionText": "crops a piece, adds a company logo, sells posters.",
+  "changed": true,
+  "commercial": true,
+  "attributionStated": false,
+  "unchangedRequired": true,
+  "attributionRequired": true,
+  "changingForbidden": true,
+  "commercialForbidden": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.name === "string" && slots.name.length > 0, "the case must name the person who reuses the photo");
+probe(slots.changed === true, "the reuse changes the photo");
+probe(slots.commercial === true, "the reuse serves a commercial purpose");
+probe(slots.changingForbidden === true && slots.commercialForbidden === true, "the note forbids changing and commercial use");
+probe(slots.unchangedRequired === true && slots.attributionRequired === true, "the note allows only unchanged copies that keep the author name");
+probe(slots.attributionStated === false, "the action paragraph does not say the author is named");
+const definite = [];
+if (slots.changed && slots.changingForbidden) { definite.push("Changes"); }
+if (slots.commercial && slots.commercialForbidden) { definite.push("uses commercially"); }
+probe(definite.length === 2, "the reuse breaks the change ban and the commercial ban");
+const possible = [];
+if (!slots.attributionStated) { possible.push("the stem does not say the name is kept — possibly a third"); }
+probe(possible.length === 1, "the attribution stays unstated");
+return definite.concat(possible).join("; ") + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

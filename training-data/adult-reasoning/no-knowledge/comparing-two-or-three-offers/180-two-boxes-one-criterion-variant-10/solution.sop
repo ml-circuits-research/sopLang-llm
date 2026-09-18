@@ -1,0 +1,44 @@
+@slots literal
+{
+  "shopper": "Leo",
+  "threshold": 5,
+  "a": {
+    "price": 54,
+    "washes": 10,
+    "delivery": 9,
+    "weight": 4
+  },
+  "b": {
+    "price": 49,
+    "washes": 8,
+    "delivery": 19,
+    "weight": 3
+  }
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.shopper === "string" && slots.shopper.length > 0, "the case must name the shopper");
+probe(Number.isInteger(slots.threshold) && slots.threshold > 0, "the note threshold must be a positive amount");
+probe(Number.isInteger(slots.a.price) && slots.a.price > 0, "box A must cost a positive amount");
+probe(Number.isInteger(slots.b.price) && slots.b.price > 0, "box B must cost a positive amount");
+probe(Number.isInteger(slots.a.washes) && slots.a.washes > 0 && Number.isInteger(slots.b.washes) && slots.b.washes > 0, "both boxes must promise a positive number of washes");
+probe(Number.isInteger(slots.a.delivery) && slots.a.delivery >= 0 && Number.isInteger(slots.b.delivery) && slots.b.delivery >= 0, "both delivery charges must be non-negative");
+probe(slots.a.weight > 0 && slots.b.weight > 0 && slots.a.weight !== slots.b.weight, "the two boxes must carry different positive weights");
+const perHundredCents = (box) => ((box.price + box.delivery) * 10000) / box.washes;
+const aCents = perHundredCents(slots.a);
+const bCents = perHundredCents(slots.b);
+probe(Number.isInteger(aCents) && Number.isInteger(bCents), "both costs per 100 washes must be whole cents");
+const differenceCents = Math.abs(aCents - bCents);
+const useWeight = differenceCents < slots.threshold * 100;
+const choice = useWeight ? (slots.a.weight <= slots.b.weight ? "A" : "B") : (aCents <= bCents ? "A" : "B");
+const money = (cents) => (cents / 100).toFixed(2);
+return "A " + money(aCents) + ", B " + money(bCents) + ", difference " + money(differenceCents) + ". Chooses " + choice + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

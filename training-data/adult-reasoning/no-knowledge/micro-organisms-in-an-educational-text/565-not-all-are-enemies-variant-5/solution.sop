@@ -1,0 +1,34 @@
+@slots literal
+{
+  "person": "Tess",
+  "warmWetSponge": true,
+  "washedBeforeYoghurt": false,
+  "boilMinutes": 1,
+  "sheetBoilMinutes": 1
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person");
+probe(typeof slots.warmWetSponge === "boolean", "the case must state where the sponge was put");
+probe(typeof slots.washedBeforeYoghurt === "boolean", "the case must state whether the person washed");
+probe(Number.isInteger(slots.boilMinutes) && slots.boilMinutes > 0, "the boil length must be a positive whole number of minutes");
+probe(Number.isInteger(slots.sheetBoilMinutes) && slots.sheetBoilMinutes > 0, "the sheet must state its own boil method");
+const boilClause = slots.boilMinutes === slots.sheetBoilMinutes
+  ? "The boil is aligned."
+  : "A " + slots.boilMinutes + "-minute boil does not match the sheet.";
+const spongeClause = slots.warmWetSponge
+  ? "The warm wet sponge works against."
+  : "The cold sponge does not favour growth.";
+const handsClause = slots.washedBeforeYoghurt
+  ? "Washed hands reduce numbers before food."
+  : "Unwashed hands do not reduce numbers before food.";
+return boilClause + " " + spongeClause + " " + handsClause;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

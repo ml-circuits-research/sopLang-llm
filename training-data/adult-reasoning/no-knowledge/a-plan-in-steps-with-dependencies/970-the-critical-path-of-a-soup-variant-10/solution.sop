@@ -1,0 +1,40 @@
+@slots literal
+{
+  "cook": "Kara",
+  "shopping": 30,
+  "prep": 20,
+  "boil": 49,
+  "table": 10,
+  "tableOverlap": 10,
+  "wanted": 49,
+  "startsBoilBeforePrep": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots === "object" && slots !== null, "the plan must carry the parsed steps");
+probe(typeof slots.cook === "string" && slots.cook.length > 0, "the reordered plan must name the cook");
+probe(Number.isInteger(slots.shopping) && slots.shopping > 0, "shopping must last a positive whole number of minutes");
+probe(Number.isInteger(slots.prep) && slots.prep > 0, "prep must last a positive whole number of minutes");
+probe(Number.isInteger(slots.boil) && slots.boil > 0, "boiling must last a positive whole number of minutes");
+probe(Number.isInteger(slots.table) && slots.table > 0, "the table step must last a positive whole number of minutes");
+probe(slots.tableOverlap > 0 && slots.tableOverlap <= slots.table, "the table step must overlap the tail of the boil");
+probe(Number.isInteger(slots.wanted) && slots.wanted > 0, "the cook must state a whole target in minutes");
+const chain = slots.shopping + "+" + slots.prep + "+" + slots.boil;
+const total = slots.shopping + slots.prep + slots.boil;
+const tableClause = slots.tableOverlap === slots.table
+  ? "S4 does not cut S3."
+  : "S4 overlaps only the last " + slots.tableOverlap + " min of S3.";
+const orderClause = slots.startsBoilBeforePrep
+  ? "Boiling before prep breaks the arrow."
+  : "Boiling after prep respects the arrow.";
+const targetClause = slots.boil + " is S3’s duration, not the chain’s.";
+return "Critical path " + chain + "=" + total + " min. " + tableClause + " " + orderClause + " " + targetClause;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

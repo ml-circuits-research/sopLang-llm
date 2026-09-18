@@ -1,0 +1,48 @@
+@slots literal
+{
+  "person": "Kara",
+  "options": [
+    {
+      "ordinal": 1,
+      "label": "extra shift",
+      "value": 240
+    },
+    {
+      "ordinal": 2,
+      "label": "a visit home",
+      "value": null
+    },
+    {
+      "ordinal": 3,
+      "label": "sleep",
+      "value": null
+    }
+  ],
+  "chosen": 2
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots === "object" && slots !== null, "the opportunity-cost case must carry its parsed values");
+probe(typeof slots.person === "string" && slots.person.length > 0, "the person facing the choice must be named");
+probe(Array.isArray(slots.options) && slots.options.length === 3, "the Saturday must list exactly three options");
+probe(Number.isInteger(slots.chosen) && slots.chosen >= 1 && slots.chosen <= slots.options.length, "the chosen option must be one of the listed options");
+const chosen = slots.options.find((option) => option.ordinal === slots.chosen);
+probe(chosen !== undefined && chosen.value === null, "the chosen option carries no money value of its own");
+const valued = slots.options.filter((option) => option.ordinal !== slots.chosen && option.value !== null);
+probe(valued.length > 0, "some given-up option must carry a money value");
+probe(valued.every((option) => Number.isInteger(option.value) && option.value > 0), "every money value must be a positive whole number");
+const best = valued.reduce((leader, option) => (option.value > leader.value ? option : leader));
+const unvalued = slots.options.filter((option) => option.ordinal !== slots.chosen && option.value === null);
+probe(unvalued.length > 0, "one given-up option must carry no sum on the money axis");
+const unvaluedLabels = unvalued.map((option) => option.label.charAt(0).toUpperCase() + option.label.slice(1)).join(" and ");
+const answer = best.value + " (the " + best.label + "). " + unvaluedLabels + " has no sum on the chosen axis.";
+return answer;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

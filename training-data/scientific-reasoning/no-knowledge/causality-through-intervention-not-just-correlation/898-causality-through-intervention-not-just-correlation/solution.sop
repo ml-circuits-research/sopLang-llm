@@ -1,0 +1,42 @@
+@slots literal
+{
+  "quantity": "energy reserve",
+  "factors": [
+    "migrates",
+    "stores food"
+  ],
+  "tests": [
+    {
+      "test": "A",
+      "factor": "migrates",
+      "outcome": "disappears"
+    },
+    {
+      "test": "B",
+      "factor": "stores food",
+      "outcome": "remains"
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.quantity === "string" && slots.quantity.length > 0, "the subexperiment must name the quantity that increases");
+probe(Array.isArray(slots.factors) && slots.factors.length === 2, "the subexperiment must name exactly two factors");
+probe(slots.factors[0] !== slots.factors[1], "the two factors must be distinct");
+probe(Array.isArray(slots.tests) && slots.tests.length === 2, "the subexperiment must report exactly two interventions");
+probe(slots.tests.every((test) => slots.factors.includes(test.factor)), "every intervention must remove one of the stated factors");
+probe(slots.tests.every((test) => test.outcome === "disappears" || test.outcome === "remains"), "an intervention either removes the increase or leaves it in place");
+const causal = slots.tests.filter((test) => test.outcome === "disappears");
+probe(causal.length === 1, "exactly one intervention must remove the increase, not " + causal.length);
+const associated = slots.factors.find((factor) => factor !== causal[0].factor);
+probe(typeof associated === "string" && associated.length > 0, "the factor left associated must be the other stated factor");
+return "The factor supported as causal is “" + causal[0].factor + "”; “" + associated + "” remains merely associated in the initial data.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

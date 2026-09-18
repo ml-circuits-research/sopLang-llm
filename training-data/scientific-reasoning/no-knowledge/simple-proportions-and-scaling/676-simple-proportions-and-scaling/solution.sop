@@ -1,0 +1,38 @@
+@slots literal
+{
+  "perUnit": 3,
+  "quantity": "rotations transmitted",
+  "checkUnits": 2,
+  "checkValue": 6,
+  "askedUnits": 5,
+  "target": 18
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+const printedTails = [2, 3, 4];
+probe(Number.isInteger(slots.perUnit) && slots.perUnit > 0, "one unit of effort must yield a positive whole number of units of output");
+probe(typeof slots.quantity === "string" && slots.quantity.length > 0, "the statement must name the quantity that grows");
+probe(Number.isInteger(slots.askedUnits) && slots.askedUnits > 0, "the statement must ask about a positive number of units");
+probe(Number.isInteger(slots.target) && slots.target > 0, "the target quantity must be a positive number");
+probe(slots.checkValue === slots.checkUnits * slots.perUnit, "the worked example must show the value per unit it states");
+probe(printedTails.includes(slots.perUnit), "the source must print an answer for " + slots.perUnit + " units of output per unit of effort");
+probe(slots.target % slots.perUnit === 0, "the target quantity must be a whole number of units");
+const askedUnits = slots.askedUnits;
+const value = askedUnits * slots.perUnit;
+const unitsNeeded = slots.target / slots.perUnit;
+let tail;
+if (slots.perUnit === 2) tail = "for " + slots.target + ", we need " + unitsNeeded + " active units.";
+else if (slots.perUnit === 3) tail = unitsNeeded + " active units are needed for " + slots.target + ".";
+else tail = "for " + slots.target + ", " + unitsNeeded + " active units are needed.";
+probe(value === askedUnits * slots.perUnit && Number.isInteger(value), "the scaled quantity must be a whole number of units");
+probe(unitsNeeded * slots.perUnit === slots.target, "the computed units must produce exactly the target quantity");
+return "With " + askedUnits + " units: " + value + " " + slots.quantity + "; " + tail;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

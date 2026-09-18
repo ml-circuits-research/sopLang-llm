@@ -1,0 +1,93 @@
+@slots literal
+{
+  "intervention": "prevent high river",
+  "crossDomain": [
+    {
+      "kind": "reports",
+      "total": 15,
+      "duplicates": 4
+    },
+    {
+      "kind": "sheets",
+      "start": 97,
+      "received": 10
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const describeCrossDomain = function describeCrossDomain(check) {
+  if (check.kind === 'distance') {
+    return `${check.centimetres * check.kilometresPerCentimetre} km.`;
+  }
+  if (check.kind === 'time') {
+    const minutes = check.startHour * 60 + check.startMinute + check.hours * 60;
+    const hour = String(Math.floor(minutes / 60)).padStart(2, '0');
+    const minute = String(minutes % 60).padStart(2, '0');
+    return `${hour}:${minute}.`;
+  }
+  if (check.kind === 'quorum') {
+    return check.present >= check.threshold ? 'quorum is met.' : 'quorum is not met.';
+  }
+  if (check.kind === 'reports') {
+    return `${check.total - check.duplicates} independent reports.`;
+  }
+  if (check.kind === 'sheets') {
+    return `${check.start + check.received} map sheets.`;
+  }
+  throw new Error(`Unknown cross-domain check "${check.kind}".`);
+};
+const renderCrossDomain = function renderCrossDomain(checks) {
+  if (checks === null || checks === undefined || checks.length === 0) {
+    return '';
+  }
+  const parts = checks.map((check, index) => {
+    const label = index === 1 ? 'Mixed-domain answer:' : 'Cross-domain answer:';
+    return `${label} ${describeCrossDomain(check)}`;
+  });
+  return parts.join(' ');
+};
+const slots = $slots;
+probe(typeof slots.intervention === "string" && slots.intervention.length > 0, "the task must name one intervention");
+const phrase = slots.intervention.toLowerCase();
+const forms = [
+  { variable: "gate", closed: true, pattern: /close (?:the )?gate/ },
+  { variable: "gate", closed: false, pattern: /(?:keep|leave) (?:the )?gate open/ },
+  { variable: "rain", occurs: false, pattern: /(?:remove|stop) (?:the )?heavy rain/ },
+  { variable: "river", occurs: false, pattern: /(?:prevent|block) (?:the )?high river/ },
+  { variable: "market", open: true, pattern: /(?:keep|hold) (?:the )?market open/ }
+];
+const plan = forms.find((candidate) => candidate.pattern.test(phrase));
+probe(plan !== undefined, "the intervention must be one of the stated counterfactual changes");
+const rain = plan.variable === "rain" ? plan.occurs : true;
+const river = plan.variable === "river" ? plan.occurs : rain;
+const gateClosed = plan.variable === "gate" ? plan.closed : false;
+const flood = river && !gateClosed;
+const marketOpen = plan.variable === "market" ? true : !flood;
+probe(flood === (river && !gateClosed), "the flood consequence must follow from the stated rule");
+probe((plan.variable !== "river" || river === false) && (plan.variable !== "rain" || river === false), "the intervention must clear the river it addresses");
+let verdict;
+if (flood && marketOpen) {
+  verdict = "The square still floods; the market is held open only by the direct intervention.";
+} else if (flood) {
+  verdict = "The original chain remains: flood and market closure occur.";
+} else if (!river) {
+  verdict = rain
+    ? "Preventing the high river blocks the flood and market closure in this model."
+    : "Without heavy rain, the model generates neither high river, flood, nor market closure.";
+} else if (gateClosed) {
+  verdict = "With the gate closed, the model no longer implies flooding or market closure.";
+} else {
+  throw new Error("the intervention changes no consequence of the stated model");
+}
+probe(typeof verdict === "string" && verdict.length > 0, "the recomputed model must yield a verdict");
+const suffix = renderCrossDomain(slots.crossDomain);
+return suffix === "" ? verdict : verdict + " " + suffix;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

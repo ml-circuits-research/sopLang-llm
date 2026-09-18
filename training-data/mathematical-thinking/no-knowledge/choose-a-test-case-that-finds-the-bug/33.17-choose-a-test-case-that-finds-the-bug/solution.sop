@@ -15,6 +15,10 @@
 }
 
 @answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
 const slots = $slots;
 const apply = (value, step) => {
   if (step.op === "add") { return value + step.operand; }
@@ -26,4 +30,7 @@ const revealing = slots.candidates.filter((x) => apply(x, slots.correct) !== app
 if (revealing.length === 0) { return "Neither."; }
 const listed = revealing.map((x) => "x=" + x).join(" and ");
 return revealing.length === slots.candidates.length ? "Both: " + listed + "." : listed + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
 

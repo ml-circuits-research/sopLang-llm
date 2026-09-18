@@ -1,0 +1,23 @@
+# Explanation 456 — Competing hypotheses
+
+## Explanation
+
+1. The experiment observes “near of magnet”, so the comparison asks which stated explanation predicts exactly that result.
+2. H1: the object is not magnetic predicts it (its predictions are near of magnet, the magnet attracts another object, does not moves), so the observation supports that hypothesis in the model.
+3. The observation is not among the predictions of H2: the magnet is too far (does not move far, object known magnetic, moves then when we bring closer the magnet), so the model rules that hypothesis out for this comparison.
+4. The conclusion says “better supported in this model”, not “true”: the experiment tested the stated predictions only, and other explanations are not excluded by this evidence alone.
+
+Reference solution as printed in the source (form 16, 4 steps):
+
+1. Before deciding, we compare the observation “near of magnet” with the predictions of both hypotheses.
+2. The observation is predicted by H1: the object is not magnetic.
+3. The observation does not appear in the prediction set of H2: the magnet is too far in the given model; so the observation does not support the second hypothesis in this comparison.
+4. We say “is better supported in this model,” not “is the absolute truth,” because the problem tested a limited set of predictions.
+
+## Result
+
+**Answer.** The data support H1: the object is not magnetic and are incompatible with H2: the magnet is too far in the given model.
+
+**Verification.** exact_verified: the executed circuit produced this answer, and the family computation reproduced it from the statement. The independence limitation of this class is stated in `report.md`.
+
+**Program.** `solution.sop` (compiled values in `slots`, computation in `jsEval`).

@@ -1,0 +1,32 @@
+@slots literal
+{
+  "conclusion": {
+    "label": "Case A",
+    "property": "shelter is available"
+  },
+  "record": {
+    "caseLabel": "A",
+    "property": "shelter is available",
+    "value": "NO"
+  }
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(slots.conclusion !== null && typeof slots.conclusion === "object", "the case data must quote the student conclusion");
+probe(typeof slots.conclusion.label === "string" && slots.conclusion.label.length > 0, "the conclusion must name the case it claims to satisfy");
+probe(typeof slots.conclusion.property === "string" && slots.conclusion.property.length > 0, "the conclusion must name the property it asserts");
+probe(slots.record !== null && typeof slots.record === "object", "the case data must quote the explicit data record");
+probe(["YES", "NO"].includes(slots.record.value), "the record must state YES or NO");
+const normalize = (text) => String(text).trim().toLowerCase().replace(/^that\s+/, "");
+probe(normalize(slots.conclusion.property) === normalize(slots.record.property), "the conclusion and the record must speak about the same property");
+probe(slots.record.value === "NO", "a contradiction needs a record that negates the asserted property");
+return "The statement is contradictory because In the data, for case " + slots.record.caseLabel + ", “" + slots.record.property + "” is " + slots.record.value + ". The correction is not to assign the case or stage a property or order that the data explicitly negate.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

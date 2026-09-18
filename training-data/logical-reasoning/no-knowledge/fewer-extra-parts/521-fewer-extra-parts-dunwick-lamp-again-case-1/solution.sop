@@ -1,0 +1,25 @@
+@slots literal
+{
+  "place": "Dunwick",
+  "shortStory": "Sam",
+  "longStory": "Tess",
+  "ranker": "Owen"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the dark lamp");
+probe(typeof slots.shortStory === "string" && slots.shortStory.length > 0, "the case must name the speaker of the bulb-only story");
+probe(typeof slots.longStory === "string" && slots.longStory.length > 0, "the case must name the speaker of the long story");
+probe(typeof slots.ranker === "string" && slots.ranker.length > 0, "the case must name the speaker who ranks the shorter story");
+probe(slots.shortStory !== slots.longStory && slots.shortStory !== slots.ranker && slots.longStory !== slots.ranker, "the three speakers must be different people");
+probe(slots.shortStory !== slots.longStory, "the bulb-only story and the long story come from two speakers");
+return "Prefer the bulb-only story as a start; it adds less unlisted machinery. Ranking is not proof. Then do the cheap test.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

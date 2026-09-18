@@ -1,0 +1,42 @@
+@slots literal
+{
+  "place": "Little River",
+  "sideStandard": 180,
+  "proteinStandard": 120,
+  "breadSlice": 30,
+  "doublingSurcharge": 8,
+  "person": "Hugo",
+  "protein": 120,
+  "side": 270,
+  "slices": 2,
+  "claim": "one and a half meals"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.person === "string" && slots.person.length > 0, "the statement must name the person whose tray it is");
+probe(Number.isInteger(slots.sideStandard) && slots.sideStandard > 0, "the guide side weight must be a positive whole number of grams");
+probe(Number.isInteger(slots.proteinStandard) && slots.proteinStandard > 0, "the guide protein weight must be a positive whole number of grams");
+probe(Number.isInteger(slots.breadSlice) && slots.breadSlice > 0, "the guide bread slice must be a positive weight in grams");
+probe(Number.isInteger(slots.protein) && slots.protein > 0, "the tray protein must be a positive whole number of grams");
+probe(Number.isInteger(slots.side) && slots.side > 0, "the tray side must be a positive whole number of grams");
+probe(Number.isInteger(slots.slices) && slots.slices > 0, "the tray must carry a positive whole number of bread slices");
+probe(slots.side > slots.sideStandard, "the stem states the side exceeds the guide portion");
+probe(slots.slices > 1, "the stem states the tray carries more than the single guide slice");
+const lines = [];
+const proteinExcess = slots.protein - slots.proteinStandard;
+lines.push(proteinExcess > 0 ? "protein +" + proteinExcess + " g" : "Protein fine");
+const sideExcess = slots.side - slots.sideStandard;
+lines.push(sideExcess > 0 ? "side +" + sideExcess + " g" : "side fine");
+const breadExcess = (slots.slices - 1) * slots.breadSlice;
+lines.push(breadExcess > 0 ? "bread +" + breadExcess + " g" : "bread fine");
+const label = slots.claim.charAt(0).toUpperCase() + slots.claim.slice(1);
+return lines.join("; ") + ". “" + label + "” is not defined.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,36 @@
+@slots literal
+{
+  "place": "North Copse",
+  "product": "ice-cream",
+  "season": "hot month",
+  "claimant": "Jules",
+  "cause": "ice-cream",
+  "effect": "swimming",
+  "driverNamer": "Kat",
+  "driver": "heat",
+  "monthWord": "hot",
+  "leveler": "Ned"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the notes");
+probe(typeof slots.season === "string" && slots.season.length > 0, "the case must name the month the two counts rose in");
+probe(typeof slots.cause === "string" && slots.cause.length > 0, "the case must name the column the first speaker promotes as a cause");
+probe(typeof slots.effect === "string" && slots.effect.length > 0, "the case must name the outcome the first speaker claims it produces");
+probe(typeof slots.driver === "string" && slots.driver.length > 0, "the case must name the common driver listed in the same notes");
+probe(typeof slots.claimant === "string" && slots.claimant.length > 0, "the case must name the speaker who claims the cause");
+probe(typeof slots.driverNamer === "string" && slots.driverNamer.length > 0, "the case must name the speaker who names the common driver");
+probe(typeof slots.leveler === "string" && slots.leveler.length > 0, "the case must name the speaker who treats the joint rise as proof of a cause");
+probe(new Set([slots.claimant, slots.driverNamer, slots.leveler]).size === 3, "the three speakers must be three different people");
+probe(slots.season === slots.monthWord + " month", "the month of the notes must be the month the driver sentence names");
+probe(slots.cause !== slots.effect && slots.driver !== slots.cause && slots.driver !== slots.effect, "the common driver must be a third quantity");
+return "Only that the two counts rose together in a " + slots.season + ". Cause from " + slots.cause + " to " + slots.effect + " is not forced.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

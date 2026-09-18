@@ -1,0 +1,49 @@
+@slots literal
+{
+  "place": "Little River",
+  "fromPrice": 274,
+  "stock": 12,
+  "plusPrice": 354,
+  "discountPercent": 15,
+  "deliveryUnder": 20,
+  "deliveryThreshold": 300,
+  "deliveryFrom": 0,
+  "discountStacks": false,
+  "coverModel": "Plus",
+  "buyer": {
+    "name": "Sam",
+    "units": "one",
+    "day": "Saturday",
+    "expectedPrice": 274,
+    "expectedDiscount": 15
+  }
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the leaflet must name the town it belongs to");
+probe(typeof slots.buyer === "object" && slots.buyer !== null, "the leaflet must name the buyer");
+probe(typeof slots.buyer.name === "string" && slots.buyer.name.length > 0, "the buyer name must be on record");
+probe(Number.isInteger(slots.stock) && slots.stock > 0, "the small type must state a positive stock");
+probe(Number.isInteger(slots.fromPrice) && slots.fromPrice > 0, "the large type must advertise a positive price");
+probe(Number.isInteger(slots.plusPrice) && slots.plusPrice > slots.fromPrice, "the Plus model with its case must cost more than the advertised from-price");
+probe(Number.isInteger(slots.discountPercent) && slots.discountPercent > 0, "the store-card discount must be a positive percentage");
+probe(slots.deliveryUnder >= 0 && slots.deliveryFrom >= 0, "the delivery fees must not be negative");
+probe(Number.isInteger(slots.deliveryThreshold) && slots.deliveryThreshold > 0, "the delivery threshold must be a positive order value");
+probe(slots.discountStacks === false, "the card discount must not stack with the from-price");
+probe(slots.buyer.expectedPrice === slots.fromPrice, "the buyer expects the advertised from-price");
+probe(slots.buyer.expectedDiscount === slots.discountPercent, "the buyer expects the advertised card discount");
+const price = slots.plusPrice;
+const delivery = price < slots.deliveryThreshold ? slots.deliveryUnder : slots.deliveryFrom;
+probe(delivery === slots.deliveryUnder || delivery === slots.deliveryFrom, "the delivery fee must be one of the two printed fees");
+const total = price + delivery;
+probe(total >= price && total > 0, "the owed sum must cover the model price");
+return slots.coverModel + ", " + price + " + delivery " + delivery + " = " + total + ". No " + slots.discountPercent + "%.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,42 @@
+@slots literal
+{
+  "countA": 30,
+  "meanA": 60,
+  "countB": 45,
+  "meanB": 76
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.countA) && slots.countA > 0 && Number.isInteger(slots.countB) && slots.countB > 0, "both groups must have a positive case count");
+probe(Number.isInteger(slots.meanA) && slots.meanA > 0 && Number.isInteger(slots.meanB) && slots.meanB > 0, "both group means must be positive integers");
+const roundHundredths = (numerator, denominator) => {
+  let hundredths = Math.floor((numerator * 100) / denominator);
+  const remainder = (numerator * 100) % denominator;
+  if (2 * remainder > denominator || (2 * remainder === denominator && hundredths % 2 === 1)) {
+    hundredths += 1;
+  }
+  return hundredths;
+};
+const formatHundredths = (hundredths) => {
+  const whole = Math.floor(hundredths / 100);
+  const rest = hundredths % 100;
+  if (rest === 0) { return String(whole); }
+  return whole + "." + String(rest).padStart(2, "0").replace(/0$/, "");
+};
+const totalA = slots.countA * slots.meanA;
+const totalB = slots.countB * slots.meanB;
+const cases = slots.countA + slots.countB;
+probe(cases > 1, "the two groups must be compared across more than one case");
+const weighted = roundHundredths(totalA + totalB, cases);
+const simple = roundHundredths(slots.meanA + slots.meanB, 2);
+probe(weighted > 0 && simple > 0, "both combined means must be positive");
+return "The weighted mean is " + formatHundredths(weighted) + ", compared with a simple mean-of-means of " + formatHundredths(simple) + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

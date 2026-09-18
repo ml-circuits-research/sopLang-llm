@@ -1,0 +1,72 @@
+@slots literal
+{
+  "localUnits": 72,
+  "factor": 1.25,
+  "lossPercent": 8,
+  "capacity": 16,
+  "parallelBatches": 2,
+  "waveMinutes": 7,
+  "setupMinutes": 8,
+  "bufferMinutes": 4,
+  "batchSlots": 11,
+  "fixedCost": 42,
+  "ratePerUnit": 1.16,
+  "deadlineMinutes": 32,
+  "budgetUnits": 215.3
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.localUnits) && slots.localUnits > 0, "the local demand must be a positive whole number");
+probe(slots.factor > 0, "the conversion factor must be positive");
+probe(Number.isInteger(slots.lossPercent) && slots.lossPercent > 0 && slots.lossPercent < 100, "the process loss must be a whole percent below 100");
+probe(Number.isInteger(slots.capacity) && slots.capacity > 0, "the batch capacity must be a positive whole number");
+probe(Number.isInteger(slots.parallelBatches) && slots.parallelBatches > 0, "the parallel batch capacity must be a positive whole number");
+probe(Number.isInteger(slots.waveMinutes) && slots.waveMinutes > 0, "the wave time must be a positive whole number of minutes");
+probe(Number.isInteger(slots.setupMinutes) && slots.setupMinutes >= 0, "the setup time must be a whole number of minutes");
+probe(Number.isInteger(slots.bufferMinutes) && slots.bufferMinutes >= 0, "the buffer must be a whole number of minutes");
+probe(Number.isInteger(slots.batchSlots) && slots.batchSlots > 0, "the batch slots must be a positive whole number");
+probe(Number.isInteger(slots.fixedCost) && slots.fixedCost > 0, "the fixed cost must be a positive whole number");
+probe(slots.ratePerUnit > 0, "the per-unit rate must be positive");
+probe(Number.isInteger(slots.deadlineMinutes) && slots.deadlineMinutes > 0, "the deadline must be a positive whole number of minutes");
+probe(slots.budgetUnits > 0, "the budget must be positive");
+const preLossTenthsOf = (preLoss) => {
+  const scaled = preLoss * 10;
+  const lower = Math.floor(scaled);
+  if (Math.abs(scaled - lower - 0.5) < 1e-9 && lower % 2 === 0) {
+    return lower;
+  }
+  return Math.round(scaled);
+};
+const preLoss = slots.localUnits * slots.factor / (1 - slots.lossPercent / 100);
+probe(preLoss > 0, "the pre-loss demand must be positive");
+const preLossTenths = preLossTenthsOf(preLoss);
+const batches = Math.ceil(preLossTenths / (slots.capacity * 10));
+probe(batches === Math.ceil(preLoss / slots.capacity), "the one-decimal display must not change the whole-batch requirement");
+probe(batches > 0, "the demand must require at least one batch");
+const waves = Math.ceil(batches / slots.parallelBatches);
+probe(waves * slots.parallelBatches >= batches, "the waves must cover every batch");
+const minutes = waves * slots.waveMinutes + slots.setupMinutes + slots.bufferMinutes;
+probe(minutes >= slots.setupMinutes + slots.bufferMinutes, "the elapsed time must include the setup and the buffer");
+const cost = slots.fixedCost + slots.ratePerUnit * preLoss;
+probe(cost >= slots.fixedCost, "the cost must include the fixed charge");
+const capacityOk = batches <= slots.batchSlots;
+const timeOk = minutes <= slots.deadlineMinutes;
+const budgetOk = cost <= slots.budgetUnits;
+const feasible = capacityOk && timeOk && budgetOk;
+const failing = (capacityOk ? 0 : 1) + (timeOk ? 0 : 1) + (budgetOk ? 0 : 1);
+probe(feasible === (failing === 0), "the verdict must be feasible exactly when no hard constraint fails");
+const preLossText = Math.floor(preLossTenths / 10) + "." + (preLossTenths % 10);
+const costText = cost.toFixed(2);
+return "The plan is " + (feasible ? "feasible" : "not feasible") + ". Its key summaries are " + preLossText +
+  " pre-loss standard units, " + batches + " batches, " + minutes + " minutes, and " + costText + " cost units. " +
+  "The cost applies the stated per-unit rate to the pre-loss demand, the one quantity that every capacity " +
+  "and variable-cost step shares.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

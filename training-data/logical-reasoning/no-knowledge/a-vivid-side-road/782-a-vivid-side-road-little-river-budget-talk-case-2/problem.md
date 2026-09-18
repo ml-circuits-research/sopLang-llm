@@ -1,0 +1,5 @@
+# 782 — A vivid side road — Little River budget talk — case 2
+
+Committee in Little River is asked whether a listed budget line adds up. A speaker describes a moving childhood story about a grandparent’s kitchen. Ben treats the story as an answer to the sum. Cara says the story may be important and still be a different subject. Nia says vividness is how adults do arithmetic.
+
+Question. Did the story address the sum?

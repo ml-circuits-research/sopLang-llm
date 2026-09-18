@@ -1,0 +1,56 @@
+@slots literal
+{
+  "probabilityPercent": 8,
+  "loss": 7000,
+  "protectionCost": 180,
+  "reductionPercent": 25,
+  "riskLimit": 2400
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.probabilityPercent) && slots.probabilityPercent > 0 && slots.probabilityPercent < 100, "the probability must be a percentage below one hundred");
+probe(Number.isInteger(slots.loss) && slots.loss > 0, "the loss must be a positive amount");
+probe(Number.isInteger(slots.protectionCost) && slots.protectionCost > 0, "the protective measure must have a certain positive cost");
+probe(Number.isInteger(slots.reductionPercent) && slots.reductionPercent > 0 && slots.reductionPercent < 100, "the reduction must keep part of the loss");
+probe(Number.isInteger(slots.riskLimit) && slots.riskLimit > 0, "the risk limit must be a positive amount");
+const roundHundredths = (numerator, denominator) => {
+  let hundredths = Math.floor((numerator * 100) / denominator);
+  const remainder = (numerator * 100) % denominator;
+  if (2 * remainder > denominator || (2 * remainder === denominator && hundredths % 2 === 1)) {
+    hundredths += 1;
+  }
+  return hundredths;
+};
+const formatHundredths = (hundredths) => {
+  const whole = Math.floor(hundredths / 100);
+  const rest = hundredths % 100;
+  if (rest === 0) { return String(whole); }
+  return whole + "." + String(rest).padStart(2, "0").replace(/0$/, "");
+};
+const expectedWithout = roundHundredths(slots.probabilityPercent * slots.loss, 100);
+const expectedWith = roundHundredths(slots.protectionCost * 10000 + slots.probabilityPercent * slots.reductionPercent * slots.loss, 10000);
+const adverseWithout = slots.loss * 100;
+const adverseWith = slots.protectionCost * 100 + slots.reductionPercent * slots.loss;
+const limit = slots.riskLimit * 100;
+const acceptableWithout = adverseWithout <= limit;
+const acceptableWith = adverseWith <= limit;
+probe(adverseWith <= adverseWithout, "the protective measure must not increase the adverse-scenario loss");
+probe(expectedWithout > 0 && expectedWith > 0, "both expected costs must be positive");
+let justification = "neither option, because both violate the hard risk rule";
+if (acceptableWithout && acceptableWith) {
+  justification = expectedWith < expectedWithout ? "the protective measure" : "the option without protection";
+} else if (acceptableWithout) {
+  justification = "the option without protection";
+} else if (acceptableWith) {
+  justification = "the protective measure";
+}
+return "Expected cost without protection: " + formatHundredths(expectedWithout) + " CU; with protection: " + formatHundredths(expectedWith) + " CU. Under the hard risk rule, the justified choice is " + justification + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

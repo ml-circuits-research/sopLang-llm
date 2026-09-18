@@ -1,0 +1,26 @@
+@slots literal
+{
+  "place": "Long Hill",
+  "notes": 20,
+  "namer": "Leo",
+  "census": "Mira",
+  "inventor": "Quinn"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the café");
+probe(Number.isInteger(slots.notes) && slots.notes >= 2, "the review book must carry a sample of glowing notes");
+probe(typeof slots.namer === "string" && slots.namer.length > 0, "the case must name the speaker who asks who bothers to write");
+probe(typeof slots.census === "string" && slots.census.length > 0, "the case must name the speaker who treats the notes as a census");
+probe(typeof slots.inventor === "string" && slots.inventor.length > 0, "the case must name the speaker who invents the angry novel");
+probe(slots.namer !== slots.inventor && slots.namer !== slots.census && slots.census !== slots.inventor, "the three speakers must be three different people");
+return "People who liked the café enough, or were polite enough, to write. That is not “everyone.” " + slots.namer + " named the filter. " + slots.inventor + " invented an equal opposite filter the page did not show.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

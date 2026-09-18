@@ -1,0 +1,84 @@
+@slots literal
+{
+  "order": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F"
+  ],
+  "durations": {
+    "A": 5,
+    "B": 5,
+    "C": 5,
+    "D": 5,
+    "E": 5,
+    "F": 5
+  },
+  "prerequisites": {
+    "A": [],
+    "B": [],
+    "C": [
+      "A"
+    ],
+    "D": [
+      "A"
+    ],
+    "E": [
+      "B",
+      "C"
+    ],
+    "F": [
+      "D",
+      "E"
+    ]
+  },
+  "unit": "day"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.order) && slots.order.length > 0, "the statement must name the tasks");
+probe(slots.order.every((name) => Number.isInteger(slots.durations[name]) && slots.durations[name] > 0), "every task duration must be a positive whole number");
+probe(slots.order.every((name) => Array.isArray(slots.prerequisites[name])), "every task must state its prerequisites");
+probe(slots.order.every((name) => slots.prerequisites[name].every((prerequisite) => slots.order.indexOf(prerequisite) !== -1)), "every prerequisite must be a stated task");
+probe(typeof slots.unit === "string" && slots.unit.length > 0, "the statement must state the time unit of the durations");
+const start = {};
+const finish = {};
+const scheduled = [];
+const remaining = slots.order.slice();
+while (remaining.length > 0) {
+  const ready = remaining.filter((name) => slots.prerequisites[name].every((prerequisite) => scheduled.indexOf(prerequisite) !== -1));
+  if (ready.length === 0) {
+    throw new Error("the stated prerequisites contain a cycle, so no schedule exists");
+  }
+  for (const name of ready) {
+    const prerequisites = slots.prerequisites[name];
+    start[name] = prerequisites.length === 0 ? 0 : Math.max(...prerequisites.map((prerequisite) => finish[prerequisite]));
+    finish[name] = start[name] + slots.durations[name];
+    scheduled.push(name);
+    remaining.splice(remaining.indexOf(name), 1);
+  }
+}
+const last = scheduled.reduce((best, name) => (finish[name] > finish[best] ? name : best));
+probe(finish[last] > 0, "the project must have a positive duration");
+const chain = [last];
+let task = last;
+while (slots.prerequisites[task].length > 0) {
+  const binding = slots.prerequisites[task].find((prerequisite) => finish[prerequisite] === start[task]);
+  if (binding === undefined) {
+    throw new Error("no stated prerequisite of task " + task + " fixes its start time");
+  }
+  chain.unshift(binding);
+  task = binding;
+}
+return "The minimum duration is " + finish[last] + " " + slots.unit + "s. One critical chain is " + chain.join("\u2013") + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

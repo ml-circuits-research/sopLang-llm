@@ -1,0 +1,44 @@
+@slots literal
+{
+  "measurements": {
+    "A": {
+      "value": 6050,
+      "error": 200
+    },
+    "B": {
+      "value": 6110,
+      "error": 150
+    }
+  }
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+const measurements = slots.measurements;
+probe(measurements !== null && typeof measurements === "object", "the statement must report two measurements");
+probe(["A", "B"].every((name) => measurements[name] !== null && typeof measurements[name] === "object"), "each measurement must report a value and an error");
+probe(["A", "B"].every((name) => Number.isInteger(measurements[name].value) && measurements[name].value > 0), "each reported value must be a positive integer number of hundredths");
+probe(["A", "B"].every((name) => Number.isInteger(measurements[name].error) && measurements[name].error >= 0), "each stated error must be a non-negative integer number of hundredths");
+probe(["A", "B"].every((name) => measurements[name].error * 2 < measurements[name].value), "each error must leave a positive lower endpoint");
+const intervals = {};
+for (const name of ["A", "B"]) {
+  const measurement = measurements[name];
+  intervals[name] = { low: measurement.value - measurement.error, high: measurement.value + measurement.error };
+}
+probe(intervals.A.low <= intervals.A.high && intervals.B.low <= intervals.B.high, "every interval must run from its lower to its upper endpoint");
+const greater = intervals.A.high < intervals.B.low ? "B" : intervals.B.high < intervals.A.low ? "A" : null;
+if (greater === "B") {
+  return "B is certainly greater than A.";
+}
+if (greater === "A") {
+  return "A is certainly greater than B.";
+}
+return "The ordering cannot be established with certainty because the intervals overlap.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

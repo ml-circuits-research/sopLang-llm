@@ -1,0 +1,37 @@
+@slots literal
+{
+  "capacities": {
+    "A": 170,
+    "B": 80,
+    "C": 170,
+    "D": 110
+  },
+  "unit": "operations",
+  "stage": "B",
+  "percent": 20
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+const stages = ["A", "B", "C", "D"];
+probe(slots.capacities !== null && typeof slots.capacities === "object", "the statement must state the four stage capacities");
+probe(stages.every((stage) => Number.isInteger(slots.capacities[stage]) && slots.capacities[stage] > 0), "every stage capacity must be a positive integer");
+probe(stages.includes(slots.stage), "the improved stage must be one of A, B, C, D");
+probe(Number.isInteger(slots.percent) && slots.percent > 0 && slots.percent < 100, "the improvement must be a positive percentage below one hundred");
+const initial = Math.min(...stages.map((stage) => slots.capacities[stage]));
+const improved = {};
+for (const stage of stages) {
+  improved[stage] = stage === slots.stage ? slots.capacities[stage] * (100 + slots.percent) : slots.capacities[stage] * 100;
+}
+const after = Math.min(...stages.map((stage) => improved[stage]));
+const bottlenecks = stages.filter((stage) => improved[stage] === after);
+probe(bottlenecks.length > 0, "the improved capacities must have a smallest stage");
+return "Initial capacity: " + initial + " " + slots.unit + "/hour. After the improvement: " + String(after / 100) + " " + slots.unit + "/hour. Final bottleneck stage(s): " + bottlenecks.join(", ") + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

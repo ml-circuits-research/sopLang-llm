@@ -1,0 +1,117 @@
+@slots literal
+{
+  "students": [
+    "Ava",
+    "Ben",
+    "Cara",
+    "Dion"
+  ],
+  "tasks": [
+    "Map",
+    "Timeline",
+    "Budget",
+    "Survey"
+  ],
+  "choices": {
+    "Ava": [
+      "Map",
+      "Timeline"
+    ],
+    "Ben": [
+      "Budget",
+      "Survey"
+    ],
+    "Cara": [
+      "Map",
+      "Survey"
+    ],
+    "Dion": [
+      "Timeline",
+      "Budget"
+    ]
+  },
+  "crossDomain": [
+    {
+      "kind": "reports",
+      "total": 7,
+      "duplicates": 4
+    },
+    {
+      "kind": "sheets",
+      "start": 101,
+      "received": 2
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const describeCrossDomain = function describeCrossDomain(check) {
+  if (check.kind === 'distance') {
+    return `${check.centimetres * check.kilometresPerCentimetre} km.`;
+  }
+  if (check.kind === 'time') {
+    const minutes = check.startHour * 60 + check.startMinute + check.hours * 60;
+    const hour = String(Math.floor(minutes / 60)).padStart(2, '0');
+    const minute = String(minutes % 60).padStart(2, '0');
+    return `${hour}:${minute}.`;
+  }
+  if (check.kind === 'quorum') {
+    return check.present >= check.threshold ? 'quorum is met.' : 'quorum is not met.';
+  }
+  if (check.kind === 'reports') {
+    return `${check.total - check.duplicates} independent reports.`;
+  }
+  if (check.kind === 'sheets') {
+    return `${check.start + check.received} map sheets.`;
+  }
+  throw new Error(`Unknown cross-domain check "${check.kind}".`);
+};
+const renderCrossDomain = function renderCrossDomain(checks) {
+  if (checks === null || checks === undefined || checks.length === 0) {
+    return '';
+  }
+  const parts = checks.map((check, index) => {
+    const label = index === 1 ? 'Mixed-domain answer:' : 'Cross-domain answer:';
+    return `${label} ${describeCrossDomain(check)}`;
+  });
+  return parts.join(' ');
+};
+const slots = $slots;
+probe(Array.isArray(slots.students) && slots.students.length > 0, "the statement must name at least one student");
+probe(Array.isArray(slots.tasks) && slots.tasks.length > 0, "the statement must name at least one task");
+probe(slots.students.length === slots.tasks.length, "the statement must pair as many tasks as students");
+const used = new Set();
+const assignment = new Map();
+const search = (index) => {
+  if (index === slots.students.length) {
+    return true;
+  }
+  const student = slots.students[index];
+  const allowed = slots.choices[student];
+  probe(Array.isArray(allowed) && allowed.length > 0, "every student must have at least one allowed task");
+  for (const task of allowed) {
+    if (used.has(task)) {
+      continue;
+    }
+    used.add(task);
+    assignment.set(student, task);
+    if (search(index + 1)) {
+      return true;
+    }
+    used.delete(task);
+    assignment.delete(student);
+  }
+  return false;
+};
+probe(search(0), "the allowed tasks must admit at least one complete assignment");
+const main = "Valid assignment: " + slots.students.map((student) => student + "→" + assignment.get(student)).join(", ") + ".";
+const suffix = renderCrossDomain(slots.crossDomain);
+return suffix === "" ? main : main + " " + suffix;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

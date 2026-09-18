@@ -1,0 +1,56 @@
+@slots literal
+{
+  "origin": "Maple Ward",
+  "destination": "Little Halt",
+  "destinationWord": "Halt",
+  "departures": [
+    "07:10",
+    "07:40",
+    "08:10",
+    "08:40"
+  ],
+  "durationMinutes": 25,
+  "boardingMinutes": 2,
+  "missingDeparture": "09:10",
+  "person": "Ann",
+  "arrivalTime": "08:39",
+  "arrivalMinutes": 519,
+  "askedDeparture": "08:40",
+  "askedDepartureMinutes": 520
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person who reaches the stop");
+probe(typeof slots.origin === "string" && slots.origin.length > 0, "the timetable must name where the service starts");
+probe(typeof slots.destination === "string" && slots.destination.length > 0, "the timetable must name where the service ends");
+probe(Array.isArray(slots.departures) && slots.departures.length >= 2, "the timetable must print its departures as a list");
+probe(slots.departures.indexOf(slots.askedDeparture) >= 0, "the asked departure must be one of the printed departures");
+probe(slots.departures.indexOf(slots.missingDeparture) === -1, "the service removed on Mondays must not also be printed in the timetable");
+probe(Number.isInteger(slots.durationMinutes) && slots.durationMinutes > 0, "the ride duration must be a whole, positive number of minutes");
+probe(Number.isInteger(slots.boardingMinutes) && slots.boardingMinutes > 0 && slots.boardingMinutes < slots.durationMinutes, "the last-boarding margin must be a whole, positive number of minutes smaller than the ride");
+probe(Number.isInteger(slots.arrivalMinutes) && slots.arrivalMinutes >= 0 && slots.arrivalMinutes < 1440, "the hour the person reaches the stop must be a whole minute of the day");
+probe(slots.arrivalMinutes === Number(slots.arrivalTime.slice(0, 2)) * 60 + Number(slots.arrivalTime.slice(3, 5)), "the printed arrival hour must be the hour the comparison uses");
+const formatTime = (totalMinutes) => {
+  const wrapped = ((totalMinutes % 1440) + 1440) % 1440;
+  return String(Math.floor(wrapped / 60)).padStart(2, "0") + ":" + String(wrapped % 60).padStart(2, "0");
+};
+const lastBoardingMinutes = slots.askedDepartureMinutes - slots.boardingMinutes;
+probe(lastBoardingMinutes > 0, "the last boarding of the asked departure must fall inside the day");
+const haltMinutes = slots.askedDepartureMinutes + slots.durationMinutes;
+const catches = slots.arrivalMinutes <= lastBoardingMinutes;
+const destinationWord = slots.destination.slice(slots.destination.lastIndexOf(" ") + 1);
+const verdictClause = catches ? "Yes." : "No.";
+const boardingClause = "Last boarding " + formatTime(lastBoardingMinutes) + ".";
+const outcomeClause = catches
+  ? destinationWord + " arrival " + formatTime(haltMinutes) + "."
+  : slots.arrivalTime + " is late. There is no " + slots.missingDeparture + " on Monday.";
+return verdictClause + " " + boardingClause + " " + outcomeClause;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

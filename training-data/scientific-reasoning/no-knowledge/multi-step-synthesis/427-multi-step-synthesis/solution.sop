@@ -1,0 +1,46 @@
+@slots literal
+{
+  "label": "iron",
+  "properties": {
+    "the component is attracted by a magnet": true,
+    "is greater than the mesh of the sieve": false,
+    "does not pass through the filter": true,
+    "remains after evaporation of the water": true
+  },
+  "required": [
+    "the component is attracted by a magnet",
+    "does not pass through the filter",
+    "remains after evaporation of the water"
+  ],
+  "stages": [
+    "we use the magnet",
+    "we use the sieve",
+    "we filter the liquid",
+    "we evaporate the water"
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+const links = 3;
+probe(typeof slots.label === "string" && slots.label.length > 0, "the statement must name its case");
+probe(slots.properties !== null && typeof slots.properties === "object" && Object.keys(slots.properties).length > 0, "the case must state its properties");
+probe(Array.isArray(slots.required) && slots.required.length > 0, "the statement must state the eligibility rule");
+probe(Array.isArray(slots.stages) && slots.stages.length > links, "the process chain must have more than " + links + " stages");
+probe(slots.stages.every((stage) => typeof stage === "string" && stage.length > 0), "every stage of the chain must be a non-empty label");
+const missing = slots.required.filter((property) => !(property in slots.properties));
+probe(missing.length === 0, "the case must state every required property: " + missing.join(", "));
+probe(slots.required.every((property) => slots.properties[property] === true), "the case must satisfy every required property");
+const reached = slots.stages[links];
+const predecessor = slots.stages[slots.stages.length - 2];
+probe(predecessor !== reached, "the predecessor of the final stage must differ from the reached stage");
+const reach = reached.toLowerCase() === "we evaporate the water" ? "after three links we reach at “" + reached + "”" : "after three links we reach “" + reached + "”";
+return "(1) Yes, case " + slots.label + "; (2) " + reach + "; (3) immediately before it is “" + predecessor + "”.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

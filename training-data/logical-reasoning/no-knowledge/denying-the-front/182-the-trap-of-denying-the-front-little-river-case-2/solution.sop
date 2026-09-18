@@ -1,0 +1,35 @@
+@slots literal
+{
+  "claims": [
+    {
+      "name": "Ben",
+      "stance": "deny-front"
+    },
+    {
+      "name": "Cara",
+      "stance": "front-open"
+    },
+    {
+      "name": "Nia",
+      "stance": "front-open"
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.claims) && slots.claims.length === 3, "the case must record the three speakers on the dry gauge");
+probe(slots.claims.every((claim) => typeof claim.name === "string" && claim.name.length > 0), "every speaker must have a name");
+probe(slots.claims.every((claim) => claim.stance === "deny-front" || claim.stance === "front-open"), "every stance must deny the front or leave it open");
+probe(new Set(slots.claims.map((claim) => claim.name)).size === slots.claims.length, "the three speakers must be different people");
+const deniers = slots.claims.filter((claim) => claim.stance === "deny-front").map((claim) => claim.name);
+probe(deniers.length === 1, "exactly one speaker must read the dry gauge as a dry pavement");
+return "Nothing about the pavement. " + deniers[0] + " denied the front. The bucket is another door to wetness.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

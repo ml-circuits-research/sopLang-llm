@@ -1,0 +1,31 @@
+@slots literal
+{
+  "place": "Kalmford",
+  "livedCount": 90,
+  "livedDenominator": 100,
+  "diedCount": 10,
+  "diedDenominator": 100,
+  "livedWord": "ninety",
+  "diedWord": "ten",
+  "differentWorldsVoice": "Sol",
+  "oneQuantityVoice": "Una",
+  "darkerFrameVoice": "Wes"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the ward card");
+probe(Number.isInteger(slots.livedCount) && slots.livedCount > 0 && Number.isInteger(slots.diedCount) && slots.diedCount > 0, "both cells of the ward card must be positive counts");
+probe(slots.livedDenominator === slots.diedDenominator, "both posters must count the same listed group");
+probe(slots.livedCount + slots.diedCount === slots.livedDenominator, "the lived and died cells must exhaust the listed group");
+probe(typeof slots.livedWord === "string" && slots.livedWord.length > 0 && typeof slots.diedWord === "string" && slots.diedWord.length > 0, "both poster phrases must name a count in words");
+probe(slots.differentWorldsVoice !== slots.oneQuantityVoice && slots.differentWorldsVoice !== slots.darkerFrameVoice && slots.oneQuantityVoice !== slots.darkerFrameVoice, "the three readings must belong to three different speakers");
+return "No. They change the feeling. Write both before you choose a policy mood.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

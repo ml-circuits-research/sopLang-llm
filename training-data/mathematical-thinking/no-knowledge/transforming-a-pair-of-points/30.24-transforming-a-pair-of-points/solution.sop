@@ -13,6 +13,10 @@
 }
 
 @answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
 const slots = $slots;
 const pRow = slots.p.row + slots.rowDelta;
 const pColumn = slots.p.column + slots.columnDelta;
@@ -20,4 +24,7 @@ const qRow = slots.q.row + slots.rowDelta;
 const qColumn = slots.q.column + slots.columnDelta;
 const sameRow = pRow === qRow;
 return "P′=(" + pRow + "," + pColumn + "), Q′=(" + qRow + "," + qColumn + "); " + (sameRow ? "yes" : "no") + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
 

@@ -1,0 +1,51 @@
+@slots literal
+{
+  "place": "Harbour Town",
+  "referenceLabel": "R",
+  "referenceTime": "18:00",
+  "referenceMinutes": 1080,
+  "zoneLabel": "Q",
+  "person": "Ines",
+  "alarmTime": "18:00",
+  "alarmMinutes": 1080,
+  "zoneOffsets": {
+    "P": 60,
+    "Q": -120
+  }
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.zoneOffsets === "object" && slots.zoneOffsets !== null && !Array.isArray(slots.zoneOffsets), "the table must give the zone offsets");
+probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person who sets the alarm");
+probe(typeof slots.referenceLabel === "string" && slots.referenceLabel.length === 1, "the reference zone must carry a one-letter label");
+probe(slots.referenceLabel !== slots.zoneLabel, "the person must sit in another zone than the reference zone");
+probe(Number.isInteger(slots.referenceMinutes) && slots.referenceMinutes >= 0 && slots.referenceMinutes < 1440, "the call hour must be a whole minute of the day");
+const offset = slots.zoneOffsets[slots.zoneLabel];
+probe(Number.isInteger(offset) && offset !== 0, "the zone of the person must carry a whole, non-zero offset");
+const formatTime = (totalMinutes) => {
+  const wrapped = ((totalMinutes % 1440) + 1440) % 1440;
+  return String(Math.floor(wrapped / 60)).padStart(2, "0") + ":" + String(wrapped % 60).padStart(2, "0");
+};
+const spellHours = (minutes) => {
+  const hours = minutes / 60;
+  const value = Number.isInteger(hours) ? String(hours) : String(Number(hours.toFixed(2)));
+  return value + " " + (hours === 1 ? "hour" : "hours");
+};
+const localMinutes = slots.referenceMinutes + offset;
+const missMinutes = slots.alarmMinutes - localMinutes;
+probe(Number.isInteger(slots.alarmMinutes) && slots.alarmMinutes >= 0, "the alarm hour must be a whole minute of the day");
+probe(missMinutes !== 0, "the alarm must miss the local time for the printed clause to exist");
+const localTime = formatTime(localMinutes);
+const direction = missMinutes > 0 ? "late" : "early";
+const referenceClause = slots.referenceTime + " " + slots.referenceLabel + " = " + localTime + " in " + slots.zoneLabel + ".";
+const alarmClause = "The local alarm is " + spellHours(Math.abs(missMinutes)) + " " + direction + ".";
+return referenceClause + " " + alarmClause;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

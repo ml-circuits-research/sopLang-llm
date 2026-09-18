@@ -1,0 +1,54 @@
+@slots literal
+{
+  "items": 60,
+  "optionA": {
+    "label": "A",
+    "setupMinutes": 11,
+    "itemsPerCycle": 12,
+    "fixedCents": 3200,
+    "itemCents": 179
+  },
+  "optionB": {
+    "label": "B",
+    "setupMinutes": 13,
+    "itemsPerCycle": 19,
+    "fixedCents": 2200,
+    "itemCents": 255
+  },
+  "limitMinutes": 45,
+  "budgetCents": 18484
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.items) && slots.items > 0, "the workload must be a positive whole number of items");
+const optionFields = ["A", "B"];
+for (const label of optionFields) {
+  const option = slots["option" + label];
+  probe(Number.isInteger(option.setupMinutes) && option.setupMinutes > 0, "the setup time of Option " + label + " must be a positive whole number");
+  probe(Number.isInteger(option.itemsPerCycle) && option.itemsPerCycle > 0, "the cycle capacity of Option " + label + " must be a positive whole number");
+  probe(Number.isInteger(option.fixedCents) && option.fixedCents >= 0, "the fixed cost of Option " + label + " must be a whole number of units");
+  probe(Number.isInteger(option.itemCents) && option.itemCents > 0, "the per-item cost of Option " + label + " must be a positive whole number of units");
+}
+probe(Number.isInteger(slots.limitMinutes) && slots.limitMinutes > 0, "the completion limit must be a positive whole number of minutes");
+probe(Number.isInteger(slots.budgetCents) && slots.budgetCents > 0, "the cost ceiling must be a positive number of units");
+const evaluate = (option) => ({ label: option.label, minutes: option.setupMinutes + Math.ceil(slots.items / option.itemsPerCycle) * 6, costCents: option.fixedCents + option.itemCents * slots.items });
+const evaluated = [evaluate(slots.optionA), evaluate(slots.optionB)];
+for (const option of evaluated) {
+  option.feasible = option.minutes <= slots.limitMinutes && option.costCents <= slots.budgetCents;
+}
+const feasible = evaluated.filter((option) => option.feasible);
+probe(feasible.length > 0, "the scenario asks for a selection, so at least one option must satisfy both shared constraints");
+const chosen = feasible.reduce((best, option) => (option.costCents < best.costCents ? option : best));
+probe(chosen.feasible, "the selected option must stay within the stated time limit and cost ceiling");
+probe(feasible.every((option) => option.costCents >= chosen.costCents), "the selected option must be the cheapest feasible one");
+probe(feasible.filter((option) => option.costCents === chosen.costCents).length === 1, "the preference rule needs a unique cheapest feasible option");
+return "Choose Option " + chosen.label + ". The important architecture is “evaluate each option locally, then compare summaries under shared constraints,” rather than interleaving the arithmetic of both options.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

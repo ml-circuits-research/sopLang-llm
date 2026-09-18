@@ -1,0 +1,19 @@
+# Explanation 81 — The “from” price and the photo — variant 1
+
+## Explanation
+
+1. The Little River leaflet prints only a from-price for the Start model in its large type, and Sam asked for what the cover shows, which the small type says is the Plus model with a case.
+2. The card discount does not stack with this from-price, so the expected 199 minus 15% is not the sum the buyer owes, and the card stays out of the calculation.
+3. The Plus costs 279, which is under the 300 delivery threshold, so delivery is 20 and the sum is 299.
+
+Reference material as printed in the source:
+
+“From-price” is Start. The picture is Plus. The card is excluded from stacking. The 300 threshold decides delivery (279 < 300). Sam’s expectation glued together three things the leaflet keeps apart.
+
+## Result
+
+**Answer.** Plus, 279 + delivery 20 = 299. No 15%.
+
+**Verification.** exact_verified: the executed circuit produced this answer, and the family computation reproduced it from the statement. The independence limitation of this class is stated in `report.md`.
+
+**Program.** `solution.sop` (compiled values in `slots`, computation in `jsEval`).

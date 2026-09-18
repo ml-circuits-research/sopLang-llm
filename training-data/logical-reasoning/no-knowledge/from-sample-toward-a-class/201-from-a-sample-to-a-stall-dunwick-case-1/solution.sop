@@ -1,0 +1,41 @@
+@slots literal
+{
+  "taster": "Sam",
+  "sample": 8,
+  "carton": 200,
+  "claims": [
+    {
+      "name": "Sam",
+      "stance": "universal"
+    },
+    {
+      "name": "Tess",
+      "stance": "cautious"
+    },
+    {
+      "name": "Owen",
+      "stance": "census"
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.claims) && slots.claims.length === 3, "the case must record the three claims about the tasting");
+probe(slots.claims.every((claim) => typeof claim.name === "string" && claim.name.length > 0), "every speaker must have a name");
+probe(slots.claims.every((claim) => ["universal", "cautious", "census"].includes(claim.stance)), "every claim must be the universal, the cautious climb, or the census");
+probe(new Set(slots.claims.map((claim) => claim.name)).size === slots.claims.length, "the three speakers must be different people");
+probe(Number.isInteger(slots.sample) && slots.sample > 0 && Number.isInteger(slots.carton) && slots.carton > 0, "the tasting must count positive numbers of chocolates");
+probe(slots.sample < slots.carton, "the tasted set must be smaller than the carton, so the census stance cannot be right");
+const cautious = slots.claims.filter((claim) => claim.stance === "cautious").map((claim) => claim.name);
+const universal = slots.claims.filter((claim) => claim.stance === "universal").map((claim) => claim.name);
+probe(cautious.length === 1 && universal.length === 1 && universal[0] === slots.taster, "one second speaker must claim a cautious climb and the taster must claim the whole carton");
+return "A limited inductive claim about this carton, not a forced universal. " + cautious[0] + " has the strength right. \u201cSo far\u201d is the honest adverb.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

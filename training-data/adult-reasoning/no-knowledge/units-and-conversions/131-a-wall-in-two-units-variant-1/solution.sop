@@ -1,0 +1,39 @@
+@slots literal
+{
+  "village": "Wells Village",
+  "painter": "Piotr",
+  "wallWidthCm": 120,
+  "wallHeightMeters": 2.5,
+  "tinLitres": 2.5,
+  "stockedLitres": 2.5,
+  "coverageSquareMeters": 12,
+  "coats": 1,
+  "primed": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.village === "string" && slots.village.trim().length > 0, "the case must name the village of the guide");
+probe(typeof slots.painter === "string" && /^[A-Z][a-z]+$/.test(slots.painter), "the case must name the painter");
+probe(Number.isInteger(slots.wallWidthCm) && slots.wallWidthCm > 0, "the width must be a positive whole number of centimetres");
+probe(typeof slots.wallHeightMeters === "number" && slots.wallHeightMeters > 0, "the height must be a positive number of metres");
+probe(typeof slots.coverageSquareMeters === "number" && slots.coverageSquareMeters > 0, "the tin coverage must be a positive area");
+probe(slots.stockedLitres === slots.tinLitres, "the painter must own the tin the notice describes");
+probe(slots.coats === 1 || slots.coats === 2, "the case must ask for one or two coats");
+probe(slots.primed === true, "the wall must be primed for the stated coverage");
+const format = (hundredths) => Math.trunc(hundredths / 100) + "." + String(hundredths % 100).padStart(2, "0");
+const heightCentimetres = Math.round(slots.wallHeightMeters * 100);
+const areaHundredths = Math.round((slots.wallWidthCm * heightCentimetres) / 100);
+const coverageHundredths = Math.round(slots.coverageSquareMeters * 100) * slots.coats;
+probe(Number.isInteger(areaHundredths) && areaHundredths > 0, "the primed wall must have a positive area in whole hundredths of a square metre");
+probe(slots.wallWidthCm * heightCentimetres === areaHundredths * 100, "the area must be the wall area in square centimetres divided by ten thousand");
+const enough = areaHundredths <= coverageHundredths;
+return slots.wallWidthCm + " cm = " + format(slots.wallWidthCm) + " m. Area " + format(areaHundredths) + " m\u00b2. " + (enough ? "Enough" : "Not enough") + " (threshold " + slots.coverageSquareMeters + " m\u00b2).";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

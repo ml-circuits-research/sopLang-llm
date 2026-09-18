@@ -7,6 +7,10 @@
 }
 
 @answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
 const s = $slots;
 const mirror = {
   "top-left": "top-right", "top-right": "top-left",
@@ -15,4 +19,7 @@ const mirror = {
 };
 const symmetric = s.corners.every((corner) => s.corners.includes(mirror[corner]));
 return symmetric ? "Yes." : "No.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
 

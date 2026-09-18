@@ -1,0 +1,81 @@
+@slots literal
+{
+  "gridMin": 0,
+  "gridMax": 6,
+  "constraints": [
+    {
+      "a": 1,
+      "b": 1,
+      "op": "=",
+      "value": 9
+    },
+    {
+      "a": 1,
+      "b": -1,
+      "op": "=",
+      "value": 3
+    }
+  ],
+  "crossDomain": null
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const describeCrossDomain = function describeCrossDomain(check) {
+  if (check.kind === 'distance') {
+    return `${check.centimetres * check.kilometresPerCentimetre} km.`;
+  }
+  if (check.kind === 'time') {
+    const minutes = check.startHour * 60 + check.startMinute + check.hours * 60;
+    const hour = String(Math.floor(minutes / 60)).padStart(2, '0');
+    const minute = String(minutes % 60).padStart(2, '0');
+    return `${hour}:${minute}.`;
+  }
+  if (check.kind === 'quorum') {
+    return check.present >= check.threshold ? 'quorum is met.' : 'quorum is not met.';
+  }
+  if (check.kind === 'reports') {
+    return `${check.total - check.duplicates} independent reports.`;
+  }
+  if (check.kind === 'sheets') {
+    return `${check.start + check.received} map sheets.`;
+  }
+  throw new Error(`Unknown cross-domain check "${check.kind}".`);
+};
+const renderCrossDomain = function renderCrossDomain(checks) {
+  if (checks === null || checks === undefined || checks.length === 0) {
+    return '';
+  }
+  const parts = checks.map((check, index) => {
+    const label = index === 1 ? 'Mixed-domain answer:' : 'Cross-domain answer:';
+    return `${label} ${describeCrossDomain(check)}`;
+  });
+  return parts.join(' ');
+};
+const slots = $slots;
+probe(Array.isArray(slots.constraints) && slots.constraints.length >= 2, "the statement must state at least two simultaneous constraints");
+probe(Number.isInteger(slots.gridMax) && Number.isInteger(slots.gridMin) && slots.gridMax >= slots.gridMin, "the statement must state a valid integer grid range");
+probe(slots.constraints.every((constraint) => ["=", ">=", "<="].includes(constraint.op)), "every stated constraint must use a known comparison");
+const candidates = [];
+for (let x = slots.gridMin; x <= slots.gridMax; x += 1) {
+  for (let y = slots.gridMin; y <= slots.gridMax; y += 1) {
+    const satisfied = slots.constraints.every((constraint) => {
+      const left = constraint.a * x + constraint.b * y;
+      return constraint.op === "=" ? left === constraint.value : constraint.op === ">=" ? left >= constraint.value : left <= constraint.value;
+    });
+    if (satisfied) {
+      candidates.push("(" + x + ", " + y + ")");
+    }
+  }
+}
+probe(candidates.length > 0, "the stated constraints must admit at least one point of the integer grid");
+const main = "P=" + candidates.join(", ") + "; the solution is " + (candidates.length === 1 ? "unique" : "not unique") + ".";
+const suffix = renderCrossDomain(slots.crossDomain);
+return suffix === "" ? main : main + " " + suffix;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

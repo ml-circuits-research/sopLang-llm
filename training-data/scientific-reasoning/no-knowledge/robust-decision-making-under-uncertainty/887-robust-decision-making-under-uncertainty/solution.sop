@@ -1,0 +1,78 @@
+@slots literal
+{
+  "conditions": [
+    "there is enough moisture",
+    "the temperature is suitable"
+  ],
+  "labels": [
+    "B",
+    "C"
+  ],
+  "actions": [
+    {
+      "name": "X",
+      "repairs": [
+        "A"
+      ],
+      "cost": 1
+    },
+    {
+      "name": "Y",
+      "repairs": [
+        "B"
+      ],
+      "cost": 1
+    },
+    {
+      "name": "Z",
+      "repairs": [
+        "A",
+        "B"
+      ],
+      "cost": 2
+    },
+    {
+      "name": "W",
+      "repairs": [
+        "A",
+        "B",
+        "C"
+      ],
+      "cost": 4
+    },
+    {
+      "name": "V",
+      "repairs": [
+        "B",
+        "C"
+      ],
+      "cost": 3
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.conditions) && slots.conditions.length > 0, "the statement must name the possible faulty conditions");
+probe(Array.isArray(slots.labels) && slots.labels.length > 0, "the statement must state which labels the possible faults carry");
+probe(Array.isArray(slots.actions) && slots.actions.length > 0, "the statement must list the actions with their repair sets");
+const labels = [...new Set(slots.labels)];
+const covering = slots.actions.filter((action) => {
+  probe(typeof action.name === "string" && action.name.length > 0, "every action must carry a name");
+  probe(Array.isArray(action.repairs) && action.repairs.length > 0, "every action must repair at least one label");
+  probe(Number.isInteger(action.cost) && action.cost > 0, "every action must carry a positive integer cost");
+  return labels.every((label) => action.repairs.includes(label));
+});
+probe(covering.length > 0, "no stated action repairs every fault that is still possible");
+const cost = Math.min(...covering.map((action) => action.cost));
+const cheapest = covering.filter((action) => action.cost === cost);
+probe(cheapest.length === 1, "two actions must not tie for the minimum cost");
+return "The minimum-cost robust action is " + cheapest[0].name + ", cost " + cost + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

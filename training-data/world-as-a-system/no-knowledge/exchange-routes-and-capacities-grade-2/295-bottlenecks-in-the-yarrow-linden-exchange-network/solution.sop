@@ -1,0 +1,94 @@
+@slots literal
+{
+  "origin": "Yarrow",
+  "destination": "Linden",
+  "branches": [
+    {
+      "edges": [
+        {
+          "from": "Yarrow",
+          "to": "Kite",
+          "capacity": 9
+        },
+        {
+          "from": "Kite",
+          "to": "Linden",
+          "capacity": 4
+        }
+      ]
+    },
+    {
+      "edges": [
+        {
+          "from": "Yarrow",
+          "to": "Birch",
+          "capacity": 6
+        },
+        {
+          "from": "Birch",
+          "to": "Linden",
+          "capacity": 6
+        }
+      ]
+    }
+  ],
+  "destinationLimit": null,
+  "crossDomain": null
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const describeCrossDomain = function describeCrossDomain(check) {
+  if (check.kind === 'distance') {
+    return `${check.centimetres * check.kilometresPerCentimetre} km.`;
+  }
+  if (check.kind === 'time') {
+    const minutes = check.startHour * 60 + check.startMinute + check.hours * 60;
+    const hour = String(Math.floor(minutes / 60)).padStart(2, '0');
+    const minute = String(minutes % 60).padStart(2, '0');
+    return `${hour}:${minute}.`;
+  }
+  if (check.kind === 'quorum') {
+    return check.present >= check.threshold ? 'quorum is met.' : 'quorum is not met.';
+  }
+  if (check.kind === 'reports') {
+    return `${check.total - check.duplicates} independent reports.`;
+  }
+  if (check.kind === 'sheets') {
+    return `${check.start + check.received} map sheets.`;
+  }
+  throw new Error(`Unknown cross-domain check "${check.kind}".`);
+};
+const renderCrossDomain = function renderCrossDomain(checks) {
+  if (checks === null || checks === undefined || checks.length === 0) {
+    return '';
+  }
+  const parts = checks.map((check, index) => {
+    const label = index === 1 ? 'Mixed-domain answer:' : 'Cross-domain answer:';
+    return `${label} ${describeCrossDomain(check)}`;
+  });
+  return parts.join(' ');
+};
+const slots = $slots;
+probe(Array.isArray(slots.branches) && slots.branches.length > 0, "the statement must describe at least one branch");
+probe(typeof slots.origin === "string" && typeof slots.destination === "string", "the goods must move between two named places");
+for (const branch of slots.branches) {
+  probe(Array.isArray(branch.edges) && branch.edges.length > 0, "every branch must state at least one edge");
+  probe(branch.edges.every((edge) => Number.isInteger(edge.capacity) && edge.capacity > 0), "every edge capacity must be a positive whole number of units");
+}
+const capacities = slots.branches.map((branch) => Math.min(...branch.edges.map((edge) => edge.capacity)));
+const total = capacities.reduce((sum, capacity) => sum + capacity, 0);
+probe(capacities.every((capacity) => capacity > 0), "every branch must be able to carry at least one unit");
+probe(slots.destinationLimit === null || (Number.isInteger(slots.destinationLimit) && slots.destinationLimit > 0), "a stated destination limit must be a positive whole number of units");
+const maximum = slots.destinationLimit === null ? total : Math.min(total, slots.destinationLimit);
+probe(maximum <= total, "a destination limit can never raise what the branches carry");
+const main = maximum + " units.";
+const suffix = renderCrossDomain(slots.crossDomain);
+return suffix === "" ? main : main + " " + suffix;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

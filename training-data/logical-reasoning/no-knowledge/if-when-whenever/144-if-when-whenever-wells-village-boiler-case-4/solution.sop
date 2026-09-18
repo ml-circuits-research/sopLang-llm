@@ -1,0 +1,42 @@
+@slots literal
+{
+  "place": "Wells Village",
+  "rules": [
+    {
+      "trigger": "the pressure needle enters the red band",
+      "act": "open the relief valve",
+      "triggerKind": "red-band"
+    },
+    {
+      "trigger": "the tank is drained",
+      "act": "lock the cold tap",
+      "triggerKind": "draining"
+    }
+  ],
+  "needleInRedBand": true,
+  "draining": false,
+  "actor": "Harun",
+  "cautious": "Iona",
+  "reader": "Ruth"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.rules) && slots.rules.length === 2, "the card must post exactly two instructions");
+probe(slots.rules.every((rule) => typeof rule.act === "string" && rule.act.length > 0), "each instruction must name an act");
+probe(slots.needleInRedBand === true, "the case must place the needle in the red band");
+probe(slots.draining === false, "the case must report no draining, so the whenever rule has no occasion");
+const satisfied = { "red-band": slots.needleInRedBand, draining: slots.draining };
+const forced = slots.rules.filter((rule) => satisfied[rule.triggerKind] === true);
+probe(forced.length === 1, "exactly one of the two instructions must have its trigger satisfied");
+const other = slots.rules.find((rule) => rule !== forced[0]);
+const heading = (act) => { const parts = act.split(" "); const verb = parts[0]; const stem = verb.endsWith("e") && !verb.endsWith("ee") ? verb.slice(0, -1) : verb; const phrase = (stem + "ing " + parts.slice(1).join(" ")).trim(); return phrase.charAt(0).toUpperCase() + phrase.slice(1); };
+return heading(forced[0].act) + ". " + heading(other.act) + " is not forced, because draining is not occurring.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

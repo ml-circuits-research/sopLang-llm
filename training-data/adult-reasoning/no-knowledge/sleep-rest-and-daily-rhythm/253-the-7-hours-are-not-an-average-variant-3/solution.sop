@@ -1,0 +1,59 @@
+@slots literal
+{
+  "targetHours": 7,
+  "targetMinutes": 30,
+  "lightsOut": 1380,
+  "rise": 390,
+  "coffeeHoursBeforeLightsOut": 8,
+  "screenMinutesBeforeLightsOut": 45,
+  "napMaxMinutes": 20,
+  "napDeadline": 900,
+  "leaveAt": 450,
+  "departurePlace": "Stadium District",
+  "person": "Rita",
+  "planCoffee": 990,
+  "planPhone": 1400,
+  "planLightsOut": 1420,
+  "planRise": 430,
+  "planNapMinutes": 40,
+  "planNap": 930
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person keeping the notebook");
+probe(Number.isInteger(slots.lightsOut) && Number.isInteger(slots.rise), "the protocol clocks must be whole minutes");
+probe(slots.coffeeHoursBeforeLightsOut > 0 && slots.screenMinutesBeforeLightsOut > 0, "the protocol must name positive coffee and screen windows");
+probe(slots.planNapMinutes > slots.napMaxMinutes, "the plan nap must exceed the protocol maximum for this section pattern");
+const clock = (value) => String(Math.floor(value / 60)).padStart(2, "0") + ":" + String(value % 60).padStart(2, "0");
+const coffeeCutoff = slots.lightsOut - slots.coffeeHoursBeforeLightsOut * 60;
+const screenCutoff = slots.lightsOut - slots.screenMinutesBeforeLightsOut;
+const coffeeLate = slots.planCoffee > coffeeCutoff;
+const screenLate = slots.planPhone > screenCutoff;
+const bedtimeMoved = slots.planLightsOut !== slots.lightsOut;
+const risingMoved = slots.planRise !== slots.rise;
+const napLate = slots.planNap > slots.napDeadline;
+const napLong = slots.planNapMinutes > slots.napMaxMinutes;
+const breaches = [coffeeLate, screenLate, bedtimeMoved, risingMoved, napLate, napLong].filter(Boolean).length;
+probe(breaches >= 4, "the plan must break at least four rules for this section pattern");
+const clauses = [];
+clauses.push(coffeeLate ? "Coffee too late (last would be " + clock(coffeeCutoff) + ")" : "Coffee at " + clock(slots.planCoffee) + " is inside the window");
+clauses.push(screenLate ? "screen after " + clock(screenCutoff) : "screen within the window before lights out");
+if (bedtimeMoved && risingMoved) { clauses.push("bedtime and rising moved"); }
+else if (bedtimeMoved) { clauses.push("bedtime moved"); }
+else if (risingMoved) { clauses.push("rising moved"); }
+else { clauses.push("bedtime and rising kept"); }
+if (napLate && napLong) { clauses.push("nap after " + clock(slots.napDeadline) + " and too long"); }
+else if (napLate) { clauses.push("nap after " + clock(slots.napDeadline)); }
+else if (napLong) { clauses.push("nap too long"); }
+else { clauses.push("nap inside the rules"); }
+const verdict = breaches >= 4 ? "At least four breaches." : "At least " + breaches + " breaches.";
+return clauses.join("; ") + ". " + verdict;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

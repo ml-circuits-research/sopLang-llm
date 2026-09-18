@@ -1,0 +1,7 @@
+# 104 — Choice under multiple conditions
+
+Problem world. In the model, Earth is approximated as a sphere rotating around its axis. The side facing the Sun is illuminated, while the opposite side is in night. As Earth rotates, a place can move from the illuminated region to the dark region and back again. These problems do not require astronomical distances or real durations; we use only the stated geometric model.
+
+Case data. Option A: the location is on the part oriented toward Sun: YES; nothing blocks the light in the model: YES; Earth rotates: YES; the observer remains at the same place on the surface: NO. Option B: the location is on the part oriented toward Sun: YES; nothing blocks the light in the model: NO; Earth rotates: YES; the observer remains at the same place on the surface: YES. Option C: the location is on the part oriented toward Sun: NO; nothing blocks the light in the model: YES; Earth rotates: YES; the observer remains at the same place on the surface: YES. Option D: the location is on the part oriented toward Sun: YES; nothing blocks the light in the model: YES; Earth rotates: YES; the observer remains at the same place on the surface: YES.
+
+Question. Choose the option that simultaneously meets all conditions: Earth rotates, the location is on the part oriented toward Sun, nothing blocks the light in the model, the observer remains at the same place on the surface. If even one mandatory condition is NO, the option must be eliminated. Which one remains, and why can the “count the most YES values” method give a wrong answer?

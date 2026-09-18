@@ -1,0 +1,23 @@
+@slots literal
+{
+  "place": "Redbridge",
+  "headlineReader": "Dora",
+  "separator": "Eli",
+  "loudnessReader": "Fran"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+const readers = [slots.headlineReader, slots.separator, slots.loudnessReader];
+probe(typeof slots.place === "string" && slots.place.length > 0, "the square must name its place");
+probe(readers.every((name) => typeof name === "string" && name.length > 0), "the square must name the three people reading it");
+probe(new Set(readers).size === readers.length, "the three readings must come from three different people");
+return "It refuses the headline as costume, notes that iron sinking does not speak about ice, keeps the density mechanism, and sets aside the person-strike. Loudness is not a family of reasoning.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

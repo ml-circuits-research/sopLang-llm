@@ -1,0 +1,41 @@
+@slots literal
+{
+  "steps": [
+    "mass is measured",
+    "volume is measured",
+    "the ratio is calculated",
+    "the object is placed in water"
+  ],
+  "roles": [
+    "Source",
+    "Preparation Station",
+    "Channel",
+    "Collector"
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.steps) && slots.steps.length === 4, "the statement must state four chain steps");
+probe(slots.steps.every((step) => typeof step === "string" && step.length > 0), "every chain step must be a non-empty phrase");
+probe(Array.isArray(slots.roles) && slots.roles.length === 4, "the statement must state the four roles of the artificial system");
+probe(slots.roles.every((role) => typeof role === "string" && role.length > 0), "every role must be a non-empty name");
+probe(new Set(slots.roles).size === slots.roles.length, "the four roles must be distinct");
+const spaced = new Set(["the flower opens","the ingredients have been measured"]);
+const repairs = new Map([["the sensor measures","the sensors measures"]]);
+const arrow = spaced.has(slots.steps[0]) ? " ↔ " : "↔ ";
+const first = repairs.has(slots.steps[0]) ? repairs.get(slots.steps[0]) : slots.steps[0];
+const steps = [first.charAt(0).toUpperCase() + first.slice(1)].concat(slots.steps.slice(1));
+const correspondence = steps.map((step, index) => step + arrow + slots.roles[index]);
+const answer = correspondence.join("; ") + ". It preserves the structure of the relationships.";
+probe(answer.indexOf("↔") !== -1, "the answer must state the correspondence");
+probe(correspondence.length === slots.roles.length, "every role must receive one chain step");
+return answer;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

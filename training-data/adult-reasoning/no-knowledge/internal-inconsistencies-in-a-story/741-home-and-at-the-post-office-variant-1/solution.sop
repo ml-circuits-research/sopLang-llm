@@ -1,0 +1,34 @@
+@slots literal
+{
+  "speaker": "Tess",
+  "absentPlace": "Harbour Town",
+  "time": "15:00",
+  "metPerson": "Gina",
+  "meetingPlace": "Harbour Town",
+  "minutes": 2,
+  "houseHasNoPostOffice": true,
+  "claimsNobody": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.speaker === "string" && slots.speaker.length > 0, "the account must belong to a named speaker");
+probe(typeof slots.absentPlace === "string" && slots.absentPlace.length > 0, "the account must name the place it denies being in");
+probe(typeof slots.meetingPlace === "string" && slots.meetingPlace.length > 0, "the account must name the place of the meeting");
+probe(slots.absentPlace === slots.meetingPlace, "the meeting must fall inside the place the account denies");
+probe(typeof slots.metPerson === "string" && slots.metPerson.length > 0, "the account must name the person it met");
+probe(/^\d{1,2}:\d{2}$/.test(slots.time), "the meeting must be given at a clock time");
+probe(Number.isInteger(slots.minutes) && slots.minutes > 0, "the meeting must last a positive whole number of minutes");
+probe(slots.claimsNobody === true, "the account must claim to have spoken to nobody");
+probe(slots.houseHasNoPostOffice === true, "the account must state that the house has no post office in front");
+const placeClause = "Absence from the place vs the meeting at the post office in the place.";
+const nobodyClause = "“Nobody” vs the " + slots.minutes + "-minute meeting.";
+return placeClause + " " + nobodyClause;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -33,6 +33,10 @@
 }
 
 @answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
 const slots = $slots;
 function adjacency(nodes, edges) {
   const map = new Map(nodes.map((node) => [node, []]));
@@ -66,4 +70,7 @@ function eccentricity(nodes, edges, node) {
 let best = null;
 for (const candidate of slots.candidates) { const d = eccentricity(slots.nodes, slots.edges, candidate); if (best === null || d < best.d) { best = { node: candidate, d }; } }
 return best.node + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
 

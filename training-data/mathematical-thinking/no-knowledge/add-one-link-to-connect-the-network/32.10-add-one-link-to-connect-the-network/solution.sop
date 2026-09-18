@@ -14,6 +14,10 @@
 }
 
 @answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
 const slots = $slots;
 function joinComponents(components) {
   const words = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five'];
@@ -21,4 +25,7 @@ function joinComponents(components) {
 }
 const joined = joinComponents(slots.components);
 return joined.word + " link" + (joined.links === 1 ? "" : "s") + ", for example " + joined.example.join("-") + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
 

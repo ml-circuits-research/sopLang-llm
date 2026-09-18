@@ -1,0 +1,7 @@
+# 116 — Classification by multiple rules
+
+Problem world. In the teaching model, foods can provide energy and substances needed to build and operate the body. A balanced meal is not decided by a single food but by the combination and amount. For this problem, each option has explicitly stated properties; no real food values need to be memorized. We track three requirements at the same time: enough energy, a source of protein, and a source of fiber.
+
+Case data. Case A: provides enough energy: YES; contains source of protein: YES; contains fiber: YES; the amount of sugar is below the given limit: NO. Case B: provides enough energy: YES; contains source of protein: NO; contains fiber: YES; the amount of sugar is below the given limit: YES. Case C: provides enough energy: NO; contains source of protein: YES; contains fiber: YES; the amount of sugar is below the given limit: YES. Case D: provides enough energy: YES; contains source of protein: YES; contains fiber: YES; the amount of sugar is below the given limit: YES.
+
+Question. The competition rule says that only the case meeting ALL requirements is accepted: the amount of sugar is below the given limit, contains fiber, contains source of protein, provides enough energy; and the forbidden properties are: no additional forbidden property. Which case is accepted? It is not enough to find a case that meets only some of the conditions.

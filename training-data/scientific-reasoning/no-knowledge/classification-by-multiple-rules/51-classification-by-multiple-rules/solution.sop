@@ -1,0 +1,71 @@
+@slots literal
+{
+  "cases": [
+    {
+      "label": "iron",
+      "properties": {
+        "the component is attracted by a magnet": true,
+        "is greater than the mesh of the sieve": false,
+        "does not pass through the filter": true,
+        "remains after evaporation of the water": true
+      }
+    },
+    {
+      "label": "pebbles",
+      "properties": {
+        "the component is attracted by a magnet": false,
+        "is greater than the mesh of the sieve": true,
+        "does not pass through the filter": true,
+        "remains after evaporation of the water": true
+      }
+    },
+    {
+      "label": "sand",
+      "properties": {
+        "the component is attracted by a magnet": false,
+        "is greater than the mesh of the sieve": false,
+        "does not pass through the filter": true,
+        "remains after evaporation of the water": true
+      }
+    },
+    {
+      "label": "salt dissolved",
+      "properties": {
+        "the component is attracted by a magnet": false,
+        "is greater than the mesh of the sieve": false,
+        "does not pass through the filter": false,
+        "remains after evaporation of the water": true
+      }
+    }
+  ],
+  "required": [
+    "the component is attracted by a magnet",
+    "does not pass through the filter",
+    "remains after evaporation of the water"
+  ],
+  "forbidden": [
+    "is greater than the mesh of the sieve"
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.cases) && slots.cases.length > 0, "the statement must list at least one case");
+probe(Array.isArray(slots.required) && slots.required.length > 0, "the rule must require at least one property");
+probe(Array.isArray(slots.forbidden), "the rule must state its forbidden properties, possibly none");
+for (const entry of slots.cases) {
+  probe(typeof entry.label === "string" && entry.label.length > 0, "every case must carry a label");
+  probe(slots.required.every((property) => property in entry.properties), "every required property must appear in every case: " + entry.label);
+}
+const matching = slots.cases.filter((entry) => slots.required.every((property) => entry.properties[property] === true) && slots.forbidden.every((property) => entry.properties[property] === false));
+probe(matching.length > 0, "at least one case must satisfy the competition rule");
+probe(matching.length === 1, "the competition rule must leave exactly one case, not " + matching.length);
+return "Case " + matching[0].label + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

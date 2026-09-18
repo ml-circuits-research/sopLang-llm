@@ -1,0 +1,24 @@
+# Explanation 28 — If the front is present — night ward in North Copse — case 8
+
+## Explanation
+
+1. The rule of North Copse is a conditional whose antecedent is "arrives after 11:00" and whose consequent is "signs the late book and waits in the lobby".
+2. Jules arrives at 12:10, so the antecedent is true and the consequent follows by modus ponens.
+3. Kat arrives at 10:20, so the antecedent is false and this one sentence says nothing about that visitor.
+4. Ned appeals to an empty lobby, but atmosphere is not a clause of the rule; only a written exception could release the consequent.
+
+Reference solution as printed in the source (section 3, 5 steps):
+
+1. If A then B; A; therefore B.
+2. A is “arrives after 11:00.” For Jules, A is true.
+3. For Kat, A is false, so this rule is silent.
+4. Atmosphere is not a clause.
+5. Sufficient conditions are not moods.
+
+## Result
+
+**Answer.** Jules must sign and wait (modus ponens). Kat is not covered by this sentence. An empty lobby is not a written exception.
+
+**Verification.** exact_verified: the executed circuit produced this answer, and the family computation reproduced it from the statement. The independence limitation of this class is stated in `report.md`.
+
+**Program.** `solution.sop` (compiled values in `slots`, computation in `jsEval`).

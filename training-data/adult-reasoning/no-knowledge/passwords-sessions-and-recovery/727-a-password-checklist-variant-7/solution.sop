@@ -1,0 +1,47 @@
+@slots literal
+{
+  "name": "Mira",
+  "password": "CasaMea2016",
+  "minLength": 10,
+  "hasSymbol": false,
+  "reusesOldPassword": true,
+  "recoveryOnPublicProfile": true,
+  "recoveryAnswer": "the dog’s name on the profile photo",
+  "sessionPlace": "the library",
+  "sessionLeftOpen": true,
+  "emailedPassword": true
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.name === "string" && slots.name.length > 0, "the record must belong to a named person");
+probe(typeof slots.password === "string" && slots.password.length > 0, "the record must quote the chosen password");
+probe(Number.isInteger(slots.minLength) && slots.minLength > 0, "the guide must state a positive minimum length");
+probe(slots.hasSymbol === false, "this record must contain the password without a symbol");
+probe(slots.reusesOldPassword === true, "this record must reuse one of the last three passwords");
+probe(slots.recoveryOnPublicProfile === true, "this record must expose the recovery answer on the public profile");
+probe(typeof slots.sessionPlace === "string" && slots.sessionPlace.length > 0, "the record must name the shared place the session is left at");
+probe(slots.sessionLeftOpen === true && slots.emailedPassword === true, "this record must leave the session open and email the password");
+const broken = [];
+if (!slots.hasSymbol) { broken.push("No symbol."); }
+if (slots.reusesOldPassword) { broken.push("Reuse."); }
+if (slots.recoveryOnPublicProfile) { broken.push("Public recovery."); }
+if (slots.sessionLeftOpen) { broken.push("Session left open."); }
+if (slots.emailedPassword) { broken.push("Email with the password."); }
+probe(broken.length > 0, "the record must break at least one printed rule");
+const shortfalls = [];
+if (slots.password.length < slots.minLength) { shortfalls.push("short length"); }
+if (!/[A-Z]/.test(slots.password)) { shortfalls.push("no capital"); }
+if (!/[0-9]/.test(slots.password)) { shortfalls.push("no digit"); }
+const qualityClause = shortfalls.length === 0
+  ? "Length and capital/digit may be fine."
+  : "Length and capital/digit break: " + shortfalls.join(", ") + ".";
+return broken.join(" ") + " " + qualityClause;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

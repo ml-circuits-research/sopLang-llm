@@ -1,0 +1,35 @@
+@slots literal
+{
+  "claims": [
+    {
+      "name": "Omar",
+      "stance": "affirm-back"
+    },
+    {
+      "name": "Pia",
+      "stance": "rival-path"
+    },
+    {
+      "name": "Rafi",
+      "stance": "affirm-back"
+    }
+  ]
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.claims) && slots.claims.length === 3, "the case must record the three speakers on the wet pavement");
+probe(slots.claims.every((claim) => typeof claim.name === "string" && claim.name.length > 0), "every speaker must have a name");
+probe(slots.claims.every((claim) => claim.stance === "affirm-back" || claim.stance === "rival-path"), "every stance must be the affirming one or the rival path");
+probe(new Set(slots.claims.map((claim) => claim.name)).size === slots.claims.length, "the three speakers must be different people");
+const affirmers = slots.claims.filter((claim) => claim.stance === "affirm-back").map((claim) => claim.name);
+probe(affirmers.length === 2, "exactly two speakers must treat the wet pavement as proof of rain");
+return "No. " + affirmers.join(" and ") + " affirm the back. The card gives rain as one sufficient path, not the only path.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

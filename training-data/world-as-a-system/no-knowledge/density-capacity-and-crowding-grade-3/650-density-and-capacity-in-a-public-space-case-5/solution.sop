@@ -1,0 +1,65 @@
+@slots literal
+{
+  "area": 8,
+  "visitors": 51,
+  "threshold": 8,
+  "crossDomain": null
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const describeCrossDomain = function describeCrossDomain(check) {
+  if (check.kind === 'distance') {
+    return `${check.centimetres * check.kilometresPerCentimetre} km.`;
+  }
+  if (check.kind === 'time') {
+    const minutes = check.startHour * 60 + check.startMinute + check.hours * 60;
+    const hour = String(Math.floor(minutes / 60)).padStart(2, '0');
+    const minute = String(minutes % 60).padStart(2, '0');
+    return `${hour}:${minute}.`;
+  }
+  if (check.kind === 'quorum') {
+    return check.present >= check.threshold ? 'quorum is met.' : 'quorum is not met.';
+  }
+  if (check.kind === 'reports') {
+    return `${check.total - check.duplicates} independent reports.`;
+  }
+  if (check.kind === 'sheets') {
+    return `${check.start + check.received} map sheets.`;
+  }
+  throw new Error(`Unknown cross-domain check "${check.kind}".`);
+};
+const renderCrossDomain = function renderCrossDomain(checks) {
+  if (checks === null || checks === undefined || checks.length === 0) {
+    return '';
+  }
+  const parts = checks.map((check, index) => {
+    const label = index === 1 ? 'Mixed-domain answer:' : 'Cross-domain answer:';
+    return `${label} ${describeCrossDomain(check)}`;
+  });
+  return parts.join(' ');
+};
+const slots = $slots;
+probe(typeof slots.area === "number" && slots.area > 0, "the stated area must be a positive number of hectares");
+probe(Number.isInteger(slots.visitors) && slots.visitors >= 0, "the stated number of visitors must be a non-negative integer");
+probe(typeof slots.threshold === "number" && slots.threshold > 0, "the stated comfortable density must be a positive number");
+const densityText = (visitors, area) => {
+  const scaled = visitors * 100;
+  const quotient = Math.floor(scaled / area);
+  const remainder = scaled - quotient * area;
+  const twice = remainder * 2;
+  const rounded = twice > area ? quotient + 1 : twice < area ? quotient : quotient % 2 === 0 ? quotient : quotient + 1;
+  return String(Math.floor(rounded / 100)) + "." + String(rounded % 100).padStart(2, "0");
+};
+probe(Number.isFinite(slots.visitors / slots.area), "the stated area must yield a finite visitor density");
+const above = slots.visitors > slots.threshold * slots.area;
+const suffix = renderCrossDomain(slots.crossDomain);
+const main = densityText(slots.visitors, slots.area) + " visitors/hectare; " + (above ? "above" : "within") + " capacity.";
+return suffix === "" ? main : main + " " + suffix;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

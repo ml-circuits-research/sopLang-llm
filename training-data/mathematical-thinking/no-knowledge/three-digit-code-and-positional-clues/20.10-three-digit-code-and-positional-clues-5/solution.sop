@@ -11,6 +11,10 @@
 }
 
 @answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
 const slots = $slots;
 const digits = slots.digits.map(String);
 const permutations = [];
@@ -32,4 +36,7 @@ if (matching.length !== 1) {
   throw new Error("the clues leave " + matching.length + " codes instead of one");
 }
 return matching[0];
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
 

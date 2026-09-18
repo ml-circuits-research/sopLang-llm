@@ -1,0 +1,62 @@
+@slots literal
+{
+  "flows": [
+    {
+      "from": "Blue Creek",
+      "to": "North Fork"
+    },
+    {
+      "from": "Pine River",
+      "to": "North Fork"
+    },
+    {
+      "from": "North Fork",
+      "to": "Clearwater"
+    }
+  ],
+  "source": "North Fork",
+  "target": "Clearwater",
+  "canal": false
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.flows) && slots.flows.length > 0, "the statement must state at least one flow between rivers");
+probe(typeof slots.source === "string" && slots.source.length > 0, "the upstream river of the question must be named");
+probe(typeof slots.target === "string" && slots.target.length > 0, "the downstream river of the question must be named");
+const adjacency = new Map();
+for (const flow of slots.flows) {
+  probe(typeof flow.from === "string" && flow.from.length > 0 && typeof flow.to === "string" && flow.to.length > 0, "every stated flow must name both rivers");
+  if (!adjacency.has(flow.from)) {
+    adjacency.set(flow.from, []);
+  }
+  adjacency.get(flow.from).push(flow.to);
+}
+probe(adjacency.has(slots.source), "the upstream river of the question must appear in the stated network");
+const seen = new Set([slots.source]);
+const queue = [slots.source];
+let reachable = false;
+while (queue.length > 0) {
+  const river = queue.shift();
+  if (river === slots.target) {
+    reachable = true;
+    break;
+  }
+  for (const next of adjacency.get(river) ?? []) {
+    if (!seen.has(next)) {
+      seen.add(next);
+      queue.push(next);
+    }
+  }
+}
+return reachable
+  ? "Yes; water from " + slots.source + " can reach " + slots.target + "."
+  : "No; water from " + slots.source + " cannot reach " + slots.target + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

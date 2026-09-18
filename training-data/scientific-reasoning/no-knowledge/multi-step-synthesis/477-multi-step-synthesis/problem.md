@@ -1,0 +1,7 @@
+# 477 — Multi-step synthesis
+
+Problem world. In the model, Earth is approximated as a sphere rotating around its axis. The side facing the Sun is illuminated, while the opposite side is in night. As Earth rotates, a place can move from the illuminated region to the dark region and back again. These problems do not require astronomical distances or real durations; we use only the stated geometric model.
+
+Case data. Case D has the properties: the location is on the part oriented toward Sun: YES; nothing blocks the light in the model: YES; Earth rotates: YES; the observer remains at the same place on the surface: YES. The eligibility rule requires Earth rotates, the location is on the part oriented toward Sun, nothing blocks the light in the model, the observer remains at the same place on the surface. For the process, we have the following connected rules: the location is in zone illuminated → Earth rotates; Earth rotates → the location reaches toward the edge of the zone illuminated; the location reaches toward the edge of the zone illuminated → the location enters zone of night. The stated order is: the location is in zone illuminated → Earth rotates → the location reaches toward the edge of the zone illuminated → the location enters zone of night.
+
+Question. Solve at three levels: (1) is the case eligible? (2) starting from the first stage, what state do we reach after three links? (3) what is the immediate predecessor of the final stage?
