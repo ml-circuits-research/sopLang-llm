@@ -7,14 +7,16 @@
  * evaluation loop on the fixed validation slice, and tabulate oracle match and
  * parse validity. The winner is chosen by oracle match with parse validity as
  * the tiebreaker, never by training loss, and `selection.md` records the table,
- * the winner, and why.
+ * the winner, and why. Because most slice rows sit on a plan fingerprint the
+ * trainer also trains on, the table reports oracle match separately for
+ * plan-seen and plan-unseen rows (DS009 "Checkpoint selection").
  *
  * Usage:
  *   node evaluation/select-checkpoint.mjs --experiment exp-002-sft-lr2e-5 [--concurrency 4] [--port 8090] [--extra-args "--ctx-size 16384"]
  */
 
 import { spawn } from 'node:child_process';
-import { closeSync, mkdirSync, openSync, readdirSync, writeFileSync } from 'node:fs';
+import { closeSync, mkdirSync, openSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRuntime } from '../runtime/kernel.mjs';
@@ -132,6 +134,36 @@ function checkpointDirectories(root) {
     .sort((left, right) => left.step - right.step);
 }
 
+/**
+ * Plan fingerprints of the rows the trainer actually trains on: the export minus
+ * the D11 slice that selection scores. DS009 requires the selection table to
+ * separate plan-seen from plan-unseen rows, because a slice drawn from the
+ * training books is mostly plan-seen and reads as recall rather than as
+ * compilation.
+ */
+function trainingPlanFingerprints() {
+  const slice = JSON.parse(readFileSync(join(REPOSITORY_ROOT, 'training/data/validation-slice.json'), 'utf8'));
+  const excluded = new Set(slice.folders);
+  const plans = new Set();
+  for (const line of readFileSync(join(REPOSITORY_ROOT, 'training/data/all-books.jsonl'), 'utf8').split('\n')) {
+    if (line === '') continue;
+    const row = JSON.parse(line);
+    if (!excluded.has(`${row.meta.book}/${row.meta.folder}`)) plans.add(row.meta.plan);
+  }
+  return plans;
+}
+
+function planSplitOf(records, trainingPlans) {
+  const split = (rows) => (rows.length === 0 ? null : {
+    items: rows.length,
+    oracleMatch: rows.filter((row) => row.class === 'answer_match').length / rows.length,
+  });
+  return {
+    planSeen: split(records.filter((record) => trainingPlans.has(record.plan))),
+    planUnseen: split(records.filter((record) => !trainingPlans.has(record.plan))),
+  };
+}
+
 const options = parseArguments(process.argv.slice(2));
 const checkpointsRoot = options.checkpoints ?? join(REPOSITORY_ROOT, 'training/checkpoints', options.experiment);
 const registryDir = join(options.registry, options.experiment);
@@ -146,6 +178,7 @@ console.log(`selection: ${checkpoints.length} checkpoint(s) of ${options.experim
 
 const items = options.limit === null ? resolveSlice({ slice: options.slice }).items : resolveSlice({ slice: options.slice, limit: options.limit }).items;
 const runtime = createRuntime();
+const trainingPlans = options.slice === 'validation' ? trainingPlanFingerprints() : null;
 const rows = [];
 
 for (const checkpoint of checkpoints) {
@@ -164,9 +197,11 @@ for (const checkpoint of checkpoints) {
     }),
   );
   const metrics = aggregate(records.records);
-  rows.push({ checkpoint: checkpoint.name, step: checkpoint.step, gguf: ggufPath.replace(`${REPOSITORY_ROOT}/`, ''), metrics });
+  const planSplit = trainingPlans === null ? null : planSplitOf(records.records, trainingPlans);
+  rows.push({ checkpoint: checkpoint.name, step: checkpoint.step, gguf: ggufPath.replace(`${REPOSITORY_ROOT}/`, ''), metrics, planSplit });
   console.log(
-    `${checkpoint.name}: oracle ${(metrics.rates.oracle_match * 100).toFixed(1)}%, parse ${(metrics.rates.parse_validity * 100).toFixed(1)}%, graph ${(metrics.rates.graph_validity * 100).toFixed(1)}%`,
+    `${checkpoint.name}: oracle ${(metrics.rates.oracle_match * 100).toFixed(1)}%, parse ${(metrics.rates.parse_validity * 100).toFixed(1)}%, graph ${(metrics.rates.graph_validity * 100).toFixed(1)}%` +
+    (planSplit === null ? '' : `; plan-seen ${planSplit.planSeen === null ? 'n/a' : `${(planSplit.planSeen.oracleMatch * 100).toFixed(1)}% (${planSplit.planSeen.items})`}, plan-unseen ${planSplit.planUnseen === null ? 'n/a' : `${(planSplit.planUnseen.oracleMatch * 100).toFixed(1)}% (${planSplit.planUnseen.items})`}`),
   );
 }
 
@@ -183,12 +218,20 @@ lines.push('');
 lines.push(`Validation slice: ${items.length} rows, selected by the D11 slice of \`training/data/validation-slice.json\`.`);
 lines.push('Every checkpoint is converted to an F16 GGUF (no quantization during selection) and scored with the full evaluation loop:');
 lines.push('greedy decoding, one attempt, the recorded post-processing contract, then parse, graph, execution, and oracle comparison.');
+if (trainingPlans !== null) {
+  const seen = items.filter((item) => trainingPlans.has(item.plan)).length;
+  lines.push('');
+  lines.push(`${seen} of ${items.length} slice rows sit on a plan fingerprint that also occurs in the rows the trainer trains on, and ${items.length - seen} are on plans that occur nowhere else; DS009 requires the table to report oracle match for the two groups separately, because the first group measures recall of a known plan and only the second measures compilation of an unseen one. The winner is still chosen by overall oracle match, so selection stays comparable across experiments.`);
+}
 lines.push('');
-lines.push('| checkpoint | step | oracle match | parse validity | graph validity | runtime completion | items |');
-lines.push('| --- | --- | --- | --- | --- | --- | --- |');
+lines.push('| checkpoint | step | oracle match | oracle match (plan seen) | oracle match (plan unseen) | parse validity | graph validity | runtime completion | items |');
+lines.push('| --- | --- | --- | --- | --- | --- | --- | --- | --- |');
 for (const row of ranked) {
   const rate = (name) => (row.metrics.rates[name] === null ? 'n/a' : `${(row.metrics.rates[name] * 100).toFixed(1)}%`);
-  lines.push(`| ${row.checkpoint} | ${row.step} | ${rate('oracle_match')} | ${rate('parse_validity')} | ${rate('graph_validity')} | ${rate('runtime_completion')} | ${row.metrics.items} |`);
+  const split = (key) => (row.planSplit === null || row.planSplit[key] === null
+    ? 'n/a'
+    : `${(row.planSplit[key].oracleMatch * 100).toFixed(1)}% (${row.planSplit[key].items})`);
+  lines.push(`| ${row.checkpoint} | ${row.step} | ${rate('oracle_match')} | ${split('planSeen')} | ${split('planUnseen')} | ${rate('parse_validity')} | ${rate('graph_validity')} | ${rate('runtime_completion')} | ${row.metrics.items} |`);
 }
 lines.push('');
 lines.push(`Selected: **${winner.checkpoint}** (highest oracle match, parse validity as the tiebreaker; training loss is never used for selection).`);

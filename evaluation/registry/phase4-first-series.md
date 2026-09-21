@@ -1,0 +1,20 @@
+# First series — comparison of the completed arms
+
+`training/PLAN.md` T8 asks for one table that compares the first-series arms on the four rates of `DS009`. This is it, for every arm whose evaluation has landed. Numbers come from the registry folders named in the last column (`run-manifest.json`, `selection.md`, `items/holdout.jsonl`, `metrics.json`) and from `training/checkpoints/<experiment>/run-manifest.json`; the plan split is reproduced from the per-item records by `node evaluation/analyze-holdout.mjs --experiment <id>`.
+
+The holdout is the same 225 items in every row: the `eval/` examples of the seven books, whose 16 plan fingerprints occur nowhere in the export. The validation slice is the same 339 D11 rows, of which 323 sit on plan fingerprints that also occur in the training rows and 16 do not.
+
+| experiment | method | learning rate | rows | steps | final loss | tokens seen (input / target) | peak device memory | plan-seen oracle | plan-unseen oracle | validation oracle | holdout parse | holdout graph | holdout completion | holdout oracle | registry |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `exp-000-baseline` | none (untuned base) | — | 0 | 0 | — | — | — | — | — | — | 0.0% (50 items) | 0.0% | 0.0% | 0.0% (50 items) | `evaluation/registry/exp-000-baseline/` |
+| `exp-001-overfit` | full, overfit subset | 2e-5 | 284 | 180 | 0.179 | — | — | — | — | — | 100.0% (300 gate items) | 99.7% | 44.3% | 5.0% | `evaluation/registry/exp-001-overfit/` |
+| `exp-001-overfit-lr1e-4` | full, overfit subset | 1e-4 | 284 | 271 | 0.00032 | — | 16.2 GiB | — | — | — | 100.0% | 100.0% | 96.3% | 94.7% (284/284 on the trained rows) | `evaluation/registry/exp-001-overfit-lr1e-4/` |
+| `exp-002-sft-lr2e-5` | full | 2e-5 | 6436 | 606 | 0.023594 | 15,849,528 / 11,563,168 | 17.5 GiB | 56.0% (181/323) | 6.3% (1/16) | 53.7% | 100.0% | 99.6% | 12.4% | 0.0% | `evaluation/registry/exp-002-sft-lr2e-5/` |
+| `exp-003-sft-lr1e-4` | full | 1e-4 | 6436 | 606 | 0.00125 | 15,818,127 / 11,542,959 | 17.5 GiB | 98.8% (319/323) | 12.5% (2/16) | 94.7% | 100.0% | 100.0% | 27.6% | 0.0% | `evaluation/registry/exp-003-sft-lr1e-4/` |
+| `exp-004-lora` | LoRA r16 alpha32 | 1e-4 | 6436 | 606 (target) | running | — | 14.3 GiB peak so far | — | — | — | — | — | — | — | `training/checkpoints/exp-004-lora/` |
+
+Both completed full runs use the same recipe apart from the learning rate: 3 epochs over the 6436 training rows (606 optimizer steps at effective batch 32), per-device batch 4 with gradient accumulation 8, AdamW, gradient checkpointing, seed 3407, max sequence length 4096, BF16, chat profile `compiled-plan-chat-1`, and the declared device-memory budget of `training/PLAN.md` (fraction 0.75, floor 16 GiB, stop-and-resume). Each row's accuracy and speed come from the same artifact named in its own registry folder.
+
+Reading the ladder: the untuned base cannot emit a parseable program at all; after fine-tuning, parse and graph validity are perfect and the executed answers are correct for rows whose plan fingerprint the trainer saw (98.8% at the higher learning rate), partially correct for unseen plans of the same books (12.5% on 16 rows), and never correct for families absent from the export (0/225). The gap between the validation column and the holdout column is therefore not a slice artifact: it is the plan-coverage boundary, and `evaluation/registry/phase4-analysis.md` records the failure mechanisms behind it and the decision it implies for the next series.
+
+Open rows of T8: `exp-004-lora` completes the LoRA dimension; its selection and holdout run follow automatically through `evaluation/run-series.sh`. The capability probes (10 items, 4/10 for the base) have not yet been scored on a fine-tuned checkpoint; they belong to the next arm's evaluation and gate the capability-preservation decision (D-B of the analysis). The deployment measurement of T10 is queued behind them.
