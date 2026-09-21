@@ -1,0 +1,19 @@
+{
+  "experiment": "text-probes-exp-005-compiled",
+  "suite": {
+    "path": "/home/salboaie/work/sopLang-llm/evaluation/probes/text-reasoning-probes.json",
+    "profile": "text-reasoning-probes-1.0.0",
+    "items": 49,
+    "systemPromptSha256": null
+  },
+  "artifact": "/home/salboaie/work/sopLang-llm/evaluation/registry/exp-005-sft-widened/gguf/checkpoint-360.gguf",
+  "mode": "compiled-plan (the model must emit a circuit; the executed answer is compared)",
+  "decoding": {
+    "temperature": 0,
+    "maxTokens": 1024,
+    "concurrency": 4,
+    "attemptsPerItem": 1,
+    "transportRetries": 1
+  },
+  "startedAt": "2026-09-21T14:48:13.443Z"
+}

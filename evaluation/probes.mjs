@@ -91,6 +91,93 @@ export async function scoreProbes({
   return { profile: suite.profile, systemPromptSha256: sha256OfText(suite.systemPrompt), records };
 }
 
+/**
+ * Compiled-plan mode of a probe suite: the same probes, but the model must
+ * COMPILE them. Each prompt goes through the recorded compiled-plan profile, the
+ * completion is post-processed into a program, the program is executed by the
+ * runtime, and the executed answer is compared with the expected value. This is
+ * the mode the project trains for: a text task such as counting a letter becomes
+ * solvable when the plan delegates the count to `jsEval`, which direct-answer
+ * mode cannot do.
+ */
+export async function scoreProbesCompiled({
+  suite = loadProbes(),
+  base,
+  model = undefined,
+  concurrency = 1,
+  maxTokens = 1024,
+  timeoutMs = null,
+  runtime,
+}) {
+  const records = await mapWithConcurrency(suite.probes, concurrency, async (probe) => {
+    const result = await generate({
+      base,
+      model,
+      messages: buildMessages(probe.prompt),
+      temperature: 0,
+      maxTokens,
+      ...(timeoutMs === null ? {} : { timeoutMs }),
+    });
+    const generated = {
+      tokens: result.usage?.completion_tokens ?? null,
+      promptTokens: result.usage?.prompt_tokens ?? null,
+      attempts: result.attempts,
+      latencyMs: result.latencyMs,
+    };
+    if (result.error !== null) {
+      return { item: `probe/${probe.id}`, kind: probe.kind, class: 'generation_transport_error', expected: probe.expected, comparison: probe.comparison, answer: null, detail: result.error.message, completion: result.completion, generated };
+    }
+    const extracted = extractProgram(result.completion);
+    if (!extracted.ok) {
+      return { item: `probe/${probe.id}`, kind: probe.kind, class: 'wrapper_rejected', expected: probe.expected, comparison: probe.comparison, answer: null, detail: extracted.reason, completion: result.completion, generated };
+    }
+    let outcome;
+    try {
+      outcome = await runtime.run(parseCircuit(extracted.program), { outputs: ['answer'] });
+    } catch (error) {
+      outcome = { status: 'failed', code: 'parse_error', error: { message: error.message } };
+    }
+    const answer = outcome.status === 'completed' ? String(outcome.outputs.answer) : null;
+    const className = outcome.status !== 'completed'
+      ? 'execution_error'
+      : statesValue(probe.expected, answer) ? 'answer_match' : 'answer_mismatch';
+    return {
+      item: `probe/${probe.id}`,
+      kind: probe.kind,
+      class: className,
+      expected: probe.expected,
+      comparison: probe.comparison,
+      answer,
+      detail: outcome.status === 'completed' ? null : `${outcome.status}:${outcome.code ?? ''}`,
+      completion: result.completion,
+      generated,
+    };
+  });
+  records.sort((left, right) => (left.item < right.item ? -1 : 1));
+  return { profile: suite.profile, systemPromptSha256: null, records };
+}
+
+/**
+ * Value comparison for compiled-plan mode. An executed circuit phrases its result
+ * in the words of its plan ("3 times.", "The workshop can order 10 whole crates and
+ * has 7 units left."), so the declared tolerance is: a numeric expectation must
+ * equal the FIRST number the answer states, and any other expectation must appear
+ * as a standalone token or under the shared answer normalization. The rule is
+ * declared here, stated in every compiled-mode run manifest, and covered by
+ * tests/text-probes.test.mjs, so a tolerance can never be widened silently.
+ */
+export function statesValue(expected, answer) {
+  const wanted = String(expected ?? '').trim();
+  if (answer === null || wanted === '') return false;
+  const text = String(answer);
+  if (/^-?\d+(?:\.\d+)?$/.test(wanted)) {
+    const first = text.match(/-?\d+(?:\.\d+)?/);
+    return first !== null && Math.abs(Number(first[0]) - Number(wanted)) < 1e-9;
+  }
+  const tokens = text.toLowerCase().match(/[a-z0-9.,+-]+/g) ?? [];
+  return tokens.includes(wanted.toLowerCase()) || answerMatches(wanted, text);
+}
+
 export function summaryOf(records) {
   const byKind = {};
   for (const record of records) {

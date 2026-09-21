@@ -92,6 +92,18 @@ test('the letter-counting probes cover the reported failure mode', () => {
   assert.ok(mixedCase.length >= 4, 'the suite needs case-insensitive counts over sentences');
 });
 
+test('the declared value tolerance of compiled mode accepts phrasing and rejects wrong values', async () => {
+  const { statesValue } = await import('../evaluation/probes.mjs');
+  assert.equal(statesValue('3', '3 times.'), true);
+  assert.equal(statesValue('3', 'The letter appears 3 times.'), true);
+  assert.equal(statesValue('3', '4 times out of 3'), false);
+  assert.equal(statesValue('12', '12 words.'), true);
+  assert.equal(statesValue('12', '1 or 2 words'), false);
+  assert.equal(statesValue('ananab', 'ananab'), true);
+  assert.equal(statesValue('the same', 'The same.'), true);
+  assert.equal(statesValue('3', null), false);
+});
+
 test('the situation traps keep their stated answers and ask for one value', () => {
   const traps = suite.probes.filter((item) => item.kind === 'situation-trick');
   assert.equal(traps.length, 10);
