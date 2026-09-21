@@ -29,7 +29,7 @@ import { createRuntime } from '../runtime/kernel.mjs';
 import { generate } from './client.mjs';
 import { renderProbesReport, scoreProbes, summaryOf } from './probes.mjs';
 import { aggregate, resolveSlice, runSlice } from './run-eval.mjs';
-import { LLAMA_QUANTIZE, REPOSITORY_ROOT, withServer } from './server.mjs';
+import { LLAMA_QUANTIZE, REPOSITORY_ROOT, resolveArtifactPath, withServer } from './server.mjs';
 
 const DEFAULT_REGISTRY = join(REPOSITORY_ROOT, 'evaluation/registry');
 
@@ -71,7 +71,7 @@ function winnerOf(registryDir) {
   const selection = JSON.parse(readFileSync(join(registryDir, 'selection.json'), 'utf8'));
   const row = selection.rows.find((entry) => entry.checkpoint === selection.winner);
   if (row === undefined) throw new Error(`selection.json has no row for winner ${selection.winner}`);
-  return { checkpoint: selection.winner, gguf: join(REPOSITORY_ROOT, row.gguf) };
+  return { checkpoint: selection.winner, gguf: resolveArtifactPath(row.gguf) };
 }
 
 function quantize(sourceGguf, targetGguf, quant, logPath) {

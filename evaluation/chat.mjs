@@ -29,7 +29,7 @@ import { createInterface } from 'node:readline';
 import { fileURLToPath } from 'node:url';
 
 import { buildMessages, extractProgram, generate } from './client.mjs';
-import { LLAMA_SERVER, REPOSITORY_ROOT, serverArguments, waitForServer } from './server.mjs';
+import { LLAMA_SERVER, REPOSITORY_ROOT, resolveArtifactPath, serverArguments, waitForServer } from './server.mjs';
 import { parseCircuit } from '../runtime/parser.mjs';
 import { createRuntime } from '../runtime/kernel.mjs';
 
@@ -42,7 +42,7 @@ const HELP = `Usage: node evaluation/chat.mjs [options] [question]
 Options:
   --once <question>   answer one question and exit (no interactive prompt)
   --show-plan         also print the generated SOP Lang circuit
-  --gguf <path>       checkpoint artifact to serve (default: the newest selected winner)
+  --gguf <path>       checkpoint artifact to serve (default: the best measured winner)
   --experiment <id>   use the winner of that experiment's selection run
   --base <url>        attach to a server that is already running instead of starting one
   --port N            port for the managed server (default ${DEFAULT_PORT})
@@ -82,27 +82,42 @@ function parseArguments(argv) {
   return options;
 }
 
-/** The newest selection winner, so a fresh evaluation is picked up without typing a path. */
-export function newestWinner() {
+/**
+ * The best measured checkpoint: among every experiment with a selection run, the
+ * winner with the highest oracle match on the (shared) validation slice, ties
+ * broken by parse validity and then by recency. Recency alone would hand the
+ * session a weaker arm, because the arm that ran last is not the arm that scored
+ * best; --experiment and --gguf override the choice.
+ */
+export function bestWinner() {
   if (!existsSync(REGISTRY)) return null;
   const candidates = readdirSync(REGISTRY)
     .map((name) => join(REGISTRY, name, 'selection.json'))
     .filter((path) => existsSync(path))
-    .map((path) => ({ path, mtime: statSync(path).mtimeMs }))
-    .sort((left, right) => right.mtime - left.mtime);
+    .map((path) => ({ path, mtime: statSync(path).mtimeMs }));
+  const ranked = [];
   for (const candidate of candidates) {
     const selection = JSON.parse(readFileSync(candidate.path, 'utf8'));
     const row = selection.rows.find((entry) => entry.checkpoint === selection.winner);
     if (row === undefined) continue;
-    const gguf = join(REPOSITORY_ROOT, row.gguf);
-    if (existsSync(gguf)) return { experiment: selection.experiment, winner: selection.winner, gguf };
+    const gguf = resolveArtifactPath(row.gguf);
+    if (!existsSync(gguf)) continue;
+    ranked.push({
+      experiment: selection.experiment,
+      winner: selection.winner,
+      gguf,
+      oracle: row.metrics?.rates?.oracle_match ?? -1,
+      parse: row.metrics?.rates?.parse_validity ?? -1,
+      mtime: candidate.mtime,
+    });
   }
-  return null;
+  ranked.sort((left, right) => (right.oracle - left.oracle) || (right.parse - left.parse) || (right.mtime - left.mtime));
+  return ranked[0] ?? null;
 }
 
 function resolveArtifact(options) {
   if (options.gguf !== null) {
-    const gguf = options.gguf.startsWith('/') ? options.gguf : join(REPOSITORY_ROOT, options.gguf);
+    const gguf = resolveArtifactPath(options.gguf);
     if (!existsSync(gguf)) throw new Error(`the artifact ${gguf} does not exist`);
     return { experiment: 'explicit --gguf', winner: null, gguf };
   }
@@ -112,10 +127,10 @@ function resolveArtifact(options) {
     const selection = JSON.parse(readFileSync(selectionPath, 'utf8'));
     const row = selection.rows.find((entry) => entry.checkpoint === selection.winner);
     if (row === undefined) throw new Error(`selection.json of ${options.experiment} has no row for its winner`);
-    return { experiment: selection.experiment, winner: selection.winner, gguf: join(REPOSITORY_ROOT, row.gguf) };
+    return { experiment: selection.experiment, winner: selection.winner, gguf: resolveArtifactPath(row.gguf) };
   }
-  const newest = newestWinner();
-  if (newest !== null) return newest;
+  const best = bestWinner();
+  if (best !== null) return best;
   if (existsSync(BASE_GGUF)) return { experiment: 'base model (no fine-tuned selection found)', winner: 'base', gguf: BASE_GGUF };
   throw new Error('no artifact found: pass --gguf, or run an evaluation that writes a selection.json');
 }

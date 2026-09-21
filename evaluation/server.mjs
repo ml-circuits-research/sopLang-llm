@@ -8,6 +8,14 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const REPOSITORY_ROOT = fileURLToPath(new URL('..', import.meta.url));
+/**
+ * A registry path may be recorded absolute (older selection runs) or
+ * repository-relative (current ones); both must resolve to the same file.
+ */
+export function resolveArtifactPath(pathLike) {
+  return pathLike.startsWith('/') ? pathLike : join(REPOSITORY_ROOT, pathLike);
+}
+
 export const LLAMA_SERVER = join(REPOSITORY_ROOT, 'tools/llamacpp/build/bin/llama-server');
 export const LLAMA_QUANTIZE = join(REPOSITORY_ROOT, 'tools/llamacpp/build/bin/llama-quantize');
 
