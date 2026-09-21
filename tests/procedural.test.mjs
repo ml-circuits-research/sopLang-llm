@@ -96,3 +96,46 @@ test('a statement whose values changed is rejected by the circuit guards', async
   assert.equal(result.status, 'failed');
   assert.match(String(result.error?.message ?? ''), /probe failed/);
 });
+
+test('the procedural loader validates a generator and keys its families by name', async () => {
+  const { loadProceduralFamilies } = await import('../teacher/procedural/index.mjs');
+  const source = {
+    id: sourceId,
+    generator: 'arithmetic.mjs',
+    generatorVersion,
+    seed: SEED
+  };
+  const loaded = await loadProceduralFamilies({ source });
+  assert.equal(loaded.families.size, families.length);
+  assert.equal(loaded.ordered.length, families.length);
+  assert.deepEqual(loaded.generator, { id: sourceId, version: generatorVersion, seed: SEED });
+  for (const family of families) {
+    assert.equal(loaded.families.get(family.name).id, family.id);
+  }
+  const filtered = await loadProceduralFamilies({ source, only: new Set([families[0].id]) });
+  assert.deepEqual([...filtered.families.keys()], [families[0].name]);
+  await assert.rejects(() => loadProceduralFamilies({ source, only: new Set(['not-a-family']) }), /matched the requested units/);
+});
+
+test('the procedural loader refuses a mismatched registry entry', async () => {
+  const { loadProceduralFamilies } = await import('../teacher/procedural/index.mjs');
+  await assert.rejects(
+    () => loadProceduralFamilies({ source: { id: 'some-other-source', generator: 'arithmetic.mjs', generatorVersion, seed: SEED } }),
+    /declares sourceId/);
+  await assert.rejects(
+    () => loadProceduralFamilies({ source: { id: sourceId, generator: 'arithmetic.mjs', generatorVersion: '9.9.9', seed: SEED } }),
+    /declares generatorVersion/);
+});
+
+test('family validation and the load-time smoke check reject defective families', async () => {
+  const { validateProceduralFamily, smokeFamily } = await import('../teacher/procedural/index.mjs');
+  const good = families[0];
+  assert.equal(validateProceduralFamily(good, 'good'), good);
+  assert.throws(() => validateProceduralFamily({ ...good, type: 'Not A Slug' }, 'bad-type'), /must equal the slug/);
+  assert.throws(() => validateProceduralFamily({ ...good, category: 'maybe' }, 'bad-category'), /knowledge or no-knowledge/);
+  assert.throws(() => validateProceduralFamily({ ...good, explain: undefined }, 'no-explain'), /must declare explain as a function/);
+  assert.throws(() => validateProceduralFamily({ ...good, difficulty: { subproblems: 1 } }, 'thin-difficulty'), /difficulty vector is missing/);
+  assert.throws(() => smokeFamily({ ...good, parse: () => ({ wrong: true }) }, { seed: SEED }), /does not recover the sampled values/);
+  assert.throws(() => smokeFamily({ ...good, oracle: () => '' }, { seed: SEED }), /oracle returned an empty answer/);
+});
+
