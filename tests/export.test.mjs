@@ -147,6 +147,21 @@ test('the overfit subset is plan-diverse, deterministic, and a subset of the exp
   assert.deepEqual(selectOverfitSubset(rows).folders, subset.folders);
 });
 
+test('the overfit subset excludes the D11 validation slice when the slice is passed', async () => {
+  const { selectOverfitSubset, validationSliceFolders } = await import('../training/overfit/select.mjs');
+  const exclude = validationSliceFolders();
+  assert.ok(exclude.size > 0);
+  const subset = selectOverfitSubset(rows, { exclude });
+  assert.equal(subset.count, 300);
+  assert.equal(new Set(subset.folders).size, subset.count);
+  const exported = new Set(rows.map((row) => `${row.book}/${row.meta.folder}`));
+  for (const folder of subset.folders) {
+    assert.ok(!exclude.has(folder), `${folder} is a D11 validation-slice row`);
+    assert.ok(exported.has(folder), `${folder} is not an exported training row`);
+  }
+  assert.deepEqual(selectOverfitSubset(rows, { exclude }).folders, subset.folders);
+});
+
 test('an unknown book id is refused with the implemented list', () => {
   assert.throws(
     () => writeTrainerView({ datasetRoot: DATASET_ROOT, book: 'no-such-book' }),

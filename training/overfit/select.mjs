@@ -7,7 +7,10 @@
  * round-robin across books so no book dominates, written to
  * `training/overfit/overfit-subset.json` with the seed and the export snapshot
  * it was drawn from. Regenerating the selection from the same export
- * reproduces the file byte for byte.
+ * reproduces the file byte for byte. Rows of the D11 validation slice
+ * (`training/data/validation-slice.json`) are excluded, because the trainer
+ * never trains on them and the gate scores the selected folders;
+ * `--no-exclude-slice` restores the selection that predates this rule.
  *
  * The same selection is also written as an export-shaped JSONL view
  * (`training/overfit/overfit-subset.jsonl`, rows in export order) because the
@@ -16,7 +19,7 @@
  * `--slice file:training/overfit/overfit-subset.jsonl`.
  *
  * Usage:
- *   node training/overfit/select.mjs [--rows training/data/all-books.jsonl] [--out training/overfit/overfit-subset.json] [--out-jsonl training/overfit/overfit-subset.jsonl] [--size 300] [--seed 20260918]
+ *   node training/overfit/select.mjs [--rows training/data/all-books.jsonl] [--out training/overfit/overfit-subset.json] [--out-jsonl training/overfit/overfit-subset.jsonl] [--size 300] [--seed 20260918] [--slice training/data/validation-slice.json] [--no-exclude-slice]
  */
 
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -30,6 +33,7 @@ export const DEFAULT_OUT = join(TRAINING_DIR, 'overfit', 'overfit-subset.json');
 export const DEFAULT_JSONL = join(TRAINING_DIR, 'overfit', 'overfit-subset.jsonl');
 export const DEFAULT_SIZE = 300;
 export const DEFAULT_SEED = 20260918;
+export const DEFAULT_SLICE = join(TRAINING_DIR, 'data', 'validation-slice.json');
 
 /** The `{messages, meta}` rows of an exported JSONL file. */
 export function readExportedRows(path) {
@@ -40,16 +44,30 @@ export function readExportedRows(path) {
 }
 
 /**
+ * The D11 validation-slice folders (`training/data/validation-slice.json`), as
+ * `book/folder` keys. The trainer drops these rows, so the overfit subset must
+ * not spend its selection budget on them.
+ */
+export function validationSliceFolders(path = DEFAULT_SLICE) {
+  const slice = JSON.parse(readFileSync(path, 'utf8'));
+  return new Set(slice.folders);
+}
+
+/**
  * One representative per (book, plan) pair, then a seeded round-robin across
  * books until `size` examples are selected. The representative of a plan is
  * its first row in sorted folder order, so the choice does not depend on the
- * shuffle.
+ * shuffle. Rows whose `book/folder` appears in `exclude` are skipped, so the
+ * selected examples are rows the trainer actually trains on.
  */
-export function selectOverfitSubset(rows, { size = DEFAULT_SIZE, seed = DEFAULT_SEED } = {}) {
+export function selectOverfitSubset(rows, { size = DEFAULT_SIZE, seed = DEFAULT_SEED, exclude = null } = {}) {
   const groups = new Map();
   for (const row of rows) {
-    const key = `${row.meta.book}\u0000${row.meta.plan}`;
     const candidate = `${row.meta.book}/${row.meta.folder}`;
+    if (exclude !== null && exclude.has(candidate)) {
+      continue;
+    }
+    const key = `${row.meta.book}\u0000${row.meta.plan}`;
     const previous = groups.get(key);
     if (previous === undefined || candidate < previous.folder) {
       groups.set(key, { book: row.meta.book, plan: row.meta.plan, folder: candidate });
@@ -97,7 +115,7 @@ export function selectOverfitSubset(rows, { size = DEFAULT_SIZE, seed = DEFAULT_
 }
 
 function parseArguments(argv) {
-  const options = { rows: DEFAULT_ROWS, out: DEFAULT_OUT, outJsonl: DEFAULT_JSONL, size: DEFAULT_SIZE, seed: DEFAULT_SEED };
+  const options = { rows: DEFAULT_ROWS, out: DEFAULT_OUT, outJsonl: DEFAULT_JSONL, size: DEFAULT_SIZE, seed: DEFAULT_SEED, slice: DEFAULT_SLICE, excludeSlice: true };
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
     if (argument === '--rows') {
@@ -115,6 +133,11 @@ function parseArguments(argv) {
     } else if (argument === '--seed') {
       options.seed = Number(argv[index + 1]);
       index += 1;
+    } else if (argument === '--slice') {
+      options.slice = argv[index + 1];
+      index += 1;
+    } else if (argument === '--no-exclude-slice') {
+      options.excludeSlice = false;
     } else {
       throw new Error(`unknown argument: ${argument}`);
     }
@@ -125,16 +148,18 @@ function parseArguments(argv) {
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const options = parseArguments(process.argv.slice(2));
   const rows = readExportedRows(options.rows);
-  const subset = selectOverfitSubset(rows, { size: options.size, seed: options.seed });
+  const exclude = options.excludeSlice ? validationSliceFolders(options.slice) : null;
+  const subset = selectOverfitSubset(rows, { size: options.size, seed: options.seed, exclude });
   const exportManifest = JSON.parse(readFileSync(join(TRAINING_DIR, 'data', 'export-manifest.json'), 'utf8'));
   const document = {
     purpose: 'Training subset of the tiny overfit test (DS009); never used for the full runs.',
     seed: subset.seed,
     size: subset.size,
     count: subset.count,
-    method: subset.method,
+    method: exclude === null ? subset.method : `${subset.method}, D11 validation-slice rows excluded`,
     snapshot: exportManifest.snapshot,
     rowsSha256: exportManifest.files['all-books.jsonl'].sha256,
+    excludedSlice: exclude === null ? null : { path: options.slice, folders: exclude.size },
     folders: subset.folders,
   };
   writeFileSync(options.out, JSON.stringify(document, null, 2) + '\n');
