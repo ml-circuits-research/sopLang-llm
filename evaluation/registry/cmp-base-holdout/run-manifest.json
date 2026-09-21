@@ -1,0 +1,17 @@
+{
+  "experiment": "cmp-base-holdout",
+  "artifact": "/home/salboaie/work/sopLang-llm/training/checkpoints/base-f16.gguf",
+  "slice": {
+    "name": "holdout",
+    "spec": "holdout",
+    "items": 265
+  },
+  "decoding": {
+    "temperature": 0,
+    "maxTokens": 2048,
+    "concurrency": 4,
+    "attemptsPerItem": 1,
+    "transportRetries": 1
+  },
+  "startedAt": "2026-09-21T15:51:05.164Z"
+}

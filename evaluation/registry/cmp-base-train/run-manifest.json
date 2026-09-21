@@ -1,0 +1,17 @@
+{
+  "experiment": "cmp-base-train",
+  "artifact": "/home/salboaie/work/sopLang-llm/training/checkpoints/base-f16.gguf",
+  "slice": {
+    "name": "comparison-slice",
+    "spec": "file:training/data/comparison-slice.jsonl",
+    "items": 1000
+  },
+  "decoding": {
+    "temperature": 0,
+    "maxTokens": 2048,
+    "concurrency": 4,
+    "attemptsPerItem": 1,
+    "transportRetries": 1
+  },
+  "startedAt": "2026-09-21T15:29:29.803Z"
+}

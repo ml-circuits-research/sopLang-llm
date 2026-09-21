@@ -55,7 +55,7 @@
           <tr><td><code>exp-003</code> checkpoint-540</td><td>225</td><td>100.0%</td><td>100.0%</td><td>27.6%</td><td>0.0%</td></tr>
           <tr><td><code>exp-004</code> checkpoint-540</td><td>265</td><td>99.6%</td><td>99.6%</td><td>12.5%</td><td>0.0%</td></tr>
           <tr><td><code>exp-005</code> checkpoint-360</td><td>265</td><td>100.0%</td><td>100.0%</td><td>18.1%</td><td>0.4% (1/265)</td></tr>
-          <tr><td>running: <code>exp-000-baseline</code> on the same holdout</td><td>265</td><td colspan="4">in flight (<code>evaluation/registry/cmp-base-holdout/</code>)</td></tr>
+          <tr><td><code>exp-000-baseline</code></td><td>265</td><td>0.4%</td><td>0.4%</td><td>0.0%</td><td>0.0%</td></tr>
         </tbody>
       </table>
       <p>Source: <code>evaluation/registry/&lt;experiment&gt;/report.md</code> and <code>items/holdout.jsonl</code>. The holdout holds 225 book rows; the widened runs score 265 because the synthetic source contributes the 40 instances of the family it withholds.</p>
@@ -94,8 +94,8 @@
           <tr><th>Artifact</th><th>items</th><th>parse</th><th>graph</th><th>completion</th><th>oracle match</th></tr>
         </thead>
         <tbody>
-          <tr><td><code>exp-000-baseline</code></td><td>1000</td><td colspan="4">in flight (<code>evaluation/registry/cmp-base-train/</code>)</td></tr>
-          <tr><td><code>exp-005</code> checkpoint-360</td><td>1000</td><td colspan="4">in flight (<code>evaluation/registry/cmp-exp005-train/</code>)</td></tr>
+          <tr><td><code>exp-000-baseline</code></td><td>1000</td><td>3.9%</td><td>3.9%</td><td>0.0%</td><td>0.0%</td></tr>
+          <tr><td><code>exp-005</code> checkpoint-360</td><td>1000</td><td>100.0%</td><td>100.0%</td><td>98.9%</td><td>95.7% (957/1000)</td></tr>
         </tbody>
       </table>
       <p>Source: <code>evaluation/registry/cmp-*/report.md</code>, produced by <code>node evaluation/run-slice.mjs --experiment &lt;id&gt; --slice file:training/data/comparison-slice.jsonl --gguf &lt;artifact&gt;</code>. The slice holds 1000 training rows, 125 from each of the eight sources, sampled with a fixed stride over each source in export order.</p>
@@ -114,7 +114,7 @@
       <p>Source: <code>evaluation/registry/exp-003-sft-lr1e-4/deployment.md</code>. Each row comes from its own served file in one session on an aarch64 host with twenty cores, eight threads, greedy decoding, 265 holdout items. The F16 column is the selection table of the same checkpoint, measured on the 339-row validation slice, so it is not row-for-row comparable.</p>
 
       <h2>How to read this page</h2>
-      <p>Each table states one question and the artifact that answered it. Rows marked <em>in flight</em> are measured by a run that was still writing when this page was last updated; their registry folders are named next to them. Nothing here ranks the arms or explains them: the failure mechanisms, the diagnoses of <a href="specsLoader.html?spec=DS009-fine-tuning-and-evaluation.md">DS009-fine-tuning-and-evaluation</a>, and the decisions that follow from them are recorded in <code>evaluation/registry/phase4-analysis.md</code>, and the per-arm recipes in <code>evaluation/registry/phase4-first-series.md</code>.</p>
+      <p>Each table states one question and the artifact that answered it, and every row names the registry folder that carries its per-item records and the command that produced them. Nothing here ranks the arms or explains them: the failure mechanisms, the diagnoses of <a href="specsLoader.html?spec=DS009-fine-tuning-and-evaluation.md">DS009-fine-tuning-and-evaluation</a>, and the decisions that follow from them are recorded in <code>evaluation/registry/phase4-analysis.md</code>, and the per-arm recipes in <code>evaluation/registry/phase4-first-series.md</code>.</p>
     </div>
   </main>
   <div data-include="partials/footer.html"></div>
