@@ -131,3 +131,22 @@ echo "WHAT HAPPENS NEXT"
 echo "  when a run finishes its chain writes selection.md, report.md and probes.md under"
 echo "  evaluation/registry/<experiment>/; follow it live with:"
 echo "    tail -f evaluation/registry/<experiment>/series.log"
+
+# BACKGROUND GUARDS - the watchdog and any experiment that needs a resume
+echo
+echo "BACKGROUND GUARDS"
+if pgrep -f "[w]atchdog.sh" >/dev/null; then
+  echo "  watchdog                running   restarts anything that stops; log training/checkpoints/watchdog.log"
+else
+  echo "  watchdog                stopped   start: bash training/environment/start-detached.sh cmd watchdog \"bash training/environment/watchdog.sh\""
+fi
+for recipe in training/checkpoints/exp-*/resume-recipe.sh; do
+  [ -f "$recipe" ] || continue
+  dir="$(dirname "$recipe")"; n="$(basename "$dir")"
+  pgrep -f "[s]ft_train.py --experiment $n" >/dev/null && continue
+  if [ -f "$dir/run-manifest.json" ] && [ "$(jq -r '.status // "unknown"' "$dir/run-manifest.json" 2>/dev/null)" = completed ]; then
+    continue
+  fi
+  echo "  resume needed           $n (no trainer, manifest not completed): bash training/environment/resume-series.sh $n"
+done
+tail -2 training/checkpoints/watchdog.log 2>/dev/null | sed 's/^/  watchdog: /'
