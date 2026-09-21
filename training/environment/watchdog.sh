@@ -61,6 +61,13 @@ pass() {
 
     case "$status" in
       completed|stopped)
+        # Training is done: make sure its evaluation chain left the holdout report.
+        # The chain normally runs inside the detached wrapper; if that wrapper died,
+        # the registry has no report and nothing is running, so restart the chain.
+        if [ ! -f "$root/evaluation/registry/$name/report.md" ] && ! pgrep -f "[r]un-series.sh $name" >/dev/null; then
+          note "CHAIN $name has no holdout report and no chain running — starting the evaluation chain"
+          ( cd "$root" && bash evaluation/run-series.sh "$name" >> "$root/evaluation/registry/$name/series.log" 2>&1 & )
+        fi
         continue ;;
     esac
 
