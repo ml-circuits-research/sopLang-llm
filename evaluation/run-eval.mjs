@@ -403,7 +403,8 @@ export function renderReport({ manifest, metrics }) {
     `| base url | ${manifest.base} |`,
     `| chat profile | ${manifest.chatProfile.id} |`,
     `| system prompt sha256 | ${manifest.chatProfile.systemPromptSha256} |`,
-    `| dataset snapshot | ${manifest.dataset.snapshot ?? 'not recorded'} |`,
+    `| dataset snapshot (trainer export at scoring time) | ${manifest.dataset.snapshot ?? 'not recorded'} |`,
+    `| slice items sha256 | ${manifest.slice.itemsSha256 ?? 'not recorded'} |`,
     `| started at | ${manifest.startedAt} |`,
     `| decoding | temperature ${manifest.decoding.temperature}, max_tokens ${manifest.decoding.maxTokens}, concurrency ${manifest.decoding.concurrency}; one generation attempt per item plus the client's single transport retry |`,
     '',
@@ -592,6 +593,28 @@ export function resolveSlice({
   items.sort((left, right) => (left.id < right.id ? -1 : left.id > right.id ? 1 : 0));
   if (limit !== null && limit !== undefined) items = items.slice(0, limit);
   return { sliceName, source, items };
+}
+
+/**
+ * The identity of a resolved slice: one SHA-256 over the items the run scores.
+ *
+ * The score of an evaluation is a statement about a concrete set of prompts and
+ * expected answers, so a manifest that names only the trainer view can name a
+ * dataset no scored item came from: the export under `training/data/` is a file
+ * that any later regeneration rewrites. This hash covers the scored set itself
+ * (book, folder, plan, expected answer, statement), so a report can be checked
+ * against the tree it measured. `exp-007-sft-wires` is the run that exposed the
+ * gap: its report named the 7575-row export that was regenerated while the
+ * holdout was running, not the 7335-row export its checkpoint was trained on.
+ */
+export function sliceIdentityOf(items) {
+  const lines = items.map((item) =>
+    [item.book, item.folder, item.plan, item.oracle, item.statement].join('\u0000')
+  );
+  // The scored set is a set: the identity is computed over sorted lines, so a
+  // resolver that changes its ordering does not change the identity of a slice,
+  // while adding, dropping, or altering an item does.
+  return sha256OfText(lines.slice().sort().join('\n'));
 }
 
 class UsageError extends Error {}
@@ -787,7 +810,7 @@ async function main(argv) {
   const exportManifest = existsSync(EXPORT_MANIFEST) ? JSON.parse(readFileSync(EXPORT_MANIFEST, 'utf8')) : null;
   const manifest = {
     experiment: options.experiment,
-    slice: { name: resolved.sliceName, spec: options.slice, source: resolved.source, count: records.length, books: options.books, limit: options.limit },
+    slice: { name: resolved.sliceName, spec: options.slice, source: resolved.source, count: records.length, books: options.books, limit: options.limit, itemsSha256: sliceIdentityOf(resolved.items) },
     checkpoint: { gguf: options.gguf },
     model: options.model,
     base: options.base,

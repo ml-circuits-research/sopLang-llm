@@ -5,7 +5,7 @@
  * Reads the shipped book trees under `training-data/` and writes the immutable
  * trainer view under `training/data/`: one JSONL file per book plus one
  * combined file, every row carrying the exact role-separated messages of the
- * recorded chat profile `compiled-plan-chat-1` and the manifest metadata that
+ * recorded chat profile `compiled-plan-chat-2` and the manifest metadata that
  * travels beside the messages, never inside them. The exporter also writes the
  * export manifest with the per-file SHA-256 hashes and the content-addressed
  * dataset snapshot id, the distribution report that DS009 requires before
@@ -37,15 +37,26 @@ const GENERATED_SOURCES = new Map(SOURCES.filter((source) => source.kind === 'ge
 const GENERATED_SOURCE_IDS = new Set(GENERATED_SOURCES.keys());
 
 export const EXPORTER_VERSION = '1.0.0';
-export const CHAT_PROFILE_ID = 'compiled-plan-chat-1';
+export const CHAT_PROFILE_ID = 'compiled-plan-chat-2';
 
-/** The fixed system prompt of the profile: hashing it pins the exact text. */
+/**
+ * The fixed system prompt of the profile: hashing it pins the exact text.
+ *
+ * The prompt names every shape the targets of this export may carry, because
+ * `DS008-training-data.md` requires the profile to match the suite it
+ * describes: a profile that promises one shape while the targets carry another
+ * teaches the student to emit declared-but-absent structure. `compiled-plan-chat-1`
+ * named the `slots`-plus-`answer` shape; the widened suite teaches plans with
+ * named intermediate wires, so `compiled-plan-chat-2` names them too.
+ */
 export const SYSTEM_PROMPT = [
   'You compile problems into SOP Lang circuits.',
   'Read the problem and emit exactly one SOP Lang program, the compiled plan of this instance:',
   'a @slots literal wire that carries the values you extracted from the statement,',
   'an optional @facts literal wire that carries external knowledge the computation reads,',
+  'zero or more intermediate wires that publish the named stages of the plan for the later wires to read through $name,',
   'and a @answer jsEval wire that computes the answer deterministically from those values.',
+  'Every jsEval wire computes deterministic work from the values it reads and asserts its inputs and its output with probe(...) calls.',
   'The program carries no input wire and no model call.',
   'Output only the program.',
 ].join(' ');

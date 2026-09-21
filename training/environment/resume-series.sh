@@ -42,7 +42,7 @@ fi
 
 recipe="$checkpoints/resume-recipe.sh"
 if [ "$#" -gt 0 ]; then
-  printf '#!/usr/bin/env bash\n# recorded by resume-series.sh on %s\nexec bash "$(dirname "${BASH_SOURCE[0]}")/../overnight.sh" --experiment %s %s\n' \
+  printf '#!/usr/bin/env bash\n# recorded by resume-series.sh on %s\nexec bash "$(dirname "${BASH_SOURCE[0]}")/../../environment/overnight.sh" --experiment %s %s\n' \
     "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$experiment" "$*" > "$recipe"
   chmod +x "$recipe"
 elif [ ! -f "$recipe" ]; then

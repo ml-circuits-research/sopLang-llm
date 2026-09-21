@@ -6,7 +6,7 @@
 2. The comparison crosses the quantities instead of rounding the two rates, so the verdict never depends on a rounded middle value.
 3. Aldea is the cheaper offer, by 1.66 units per metre.
 
-**Generator provenance.** arithmetic.mjs 1.0.0, family cheaper-rate-per-unit, instance 16, sampled with seed 20260921 from the latent plan `cheaper-rate-per-unit`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.1.0, family cheaper-rate-per-unit, instance 16, sampled with seed 20260921 from the latent plan `cheaper-rate-per-unit`; this example carries no source span because its statement was generated.
 
 ## Result
 

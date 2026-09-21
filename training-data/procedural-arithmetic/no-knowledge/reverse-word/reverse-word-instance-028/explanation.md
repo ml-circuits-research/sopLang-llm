@@ -6,7 +6,7 @@
 2. Reversing exchanges the first and last character, the second and the second to last, and so on.
 3. The reversed word is "tneidarg".
 
-**Generator provenance.** arithmetic.mjs 1.0.0, family reverse-word, instance 28, sampled with seed 20260921 from the latent plan `reverse-word`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.1.0, family reverse-word, instance 28, sampled with seed 20260921 from the latent plan `reverse-word`; this example carries no source span because its statement was generated.
 
 ## Result
 

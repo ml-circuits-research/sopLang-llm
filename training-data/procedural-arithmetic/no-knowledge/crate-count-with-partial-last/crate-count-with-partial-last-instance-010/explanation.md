@@ -6,7 +6,7 @@
 2. Filling whole crates leaves a partial one, so the count is the smallest number of crates that holds the shift: 10.
 3. The last crate carries the remainder: 2 units.
 
-**Generator provenance.** arithmetic.mjs 1.0.0, family crate-count-with-partial-last, instance 10, sampled with seed 20260921 from the latent plan `crate-count-with-partial-last`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.1.0, family crate-count-with-partial-last, instance 10, sampled with seed 20260921 from the latent plan `crate-count-with-partial-last`; this example carries no source span because its statement was generated.
 
 ## Result
 

@@ -1,69 +1,66 @@
 # Training session state
 
-Updated 2026-09-21 (GB10 fine-tuning pipeline). This file is the handoff: it says where the pipeline stopped, what runs next, and how to watch a run. `training/PLAN.md` is the plan of record and carries the measured state table; the numbers here are the short version.
+Updated 2026-09-21 night (GB10 fine-tuning pipeline). This file is the handoff: it says where the pipeline stopped, what runs next, and how to watch a run. `training/PLAN.md` is the plan of record and carries the measured state table; the numbers here are the short version.
 
 ## Where we are
 
-- The first supervised series has produced its full-fine-tuning verdict. `exp-002-sft-lr2e-5` and `exp-003-sft-lr1e-4` each completed 606 of 606 steps (3 epochs over 6436 rows), with checkpoint selection and one holdout run in `evaluation/registry/<experiment>/`.
-- The headline measurement: validation oracle match 53.7% (lr 2e-5) and 94.7% (lr 1e-4), holdout oracle match **0.0%** for both, with 100% parse validity and 100% graph validity in the lr 1e-4 run. The validation slice is mostly plan-reused, so the honest ladder is 98.8% on rows whose plan the trainer saw (319/323), 12.5% on rows whose plan occurs nowhere else (2/16), and 0/225 on the holdout families, which are absent from the export entirely.
-- `evaluation/registry/phase4-analysis.md` is the T9 failure analysis: 80 of 225 holdout programs splice two memorized bodies and do not compile, 77 compile wrong inputs and trip the dataset's own probes, 62 execute and answer a different question, 0 match. It records the DS009 verdicts and the decisions: widen the training plan set before any further recipe or student-size arm (D-A), keep the capability-preservation mixture at `none` until the probes are scored on a fresh checkpoint (D-B), defer the 1.5B student to the widened suite (D-C), and run `exp-004-lora` as the last recipe arm (D-D).
-- `evaluation/registry/phase4-first-series.md` compares every completed arm, the baseline included. `evaluation/analyze-holdout.mjs` reproduces every number in the analysis from the per-item records.
-- `exp-004-lora` (LoRA r16 alpha32, lr 1e-4, same 606-step recipe, launched under `nice -n 10`) is training; `evaluation/run-series.sh` is waiting for it and then converts, serves, selects, and scores automatically.
-- Documentation is current: `README.md`, `docs/index.html`, `docs/fine-tuning.html`, and `DS009` carry the first-series results and the new rule that the selection table reports plan-seen and plan-unseen rows separately.
-- The tree is committed; `npm test` (266 tests) and `node training-data/verify.mjs` are green at this state.
+- Seven arms are measured end to end, each with a run manifest, a selection table that splits plan-seen from plan-unseen rows, one holdout run of its winner, and a capability-probe score from the same served artifact. The full table is `evaluation/registry/phase4-first-series.md`; the failure analysis and the decisions are `evaluation/registry/phase4-analysis.md`.
+- The headline measurement has not moved: validation oracle 94.4-94.7% on plan-seen rows (317-319 of 323), 12.5-18.8% on the 16 plan-unseen validation rows, and **1 of 265 on the holdout** whose families are absent from every export — 1 of 225 for `exp-002`/`exp-003`, 1 of 265 for `exp-005` (compare-two-groups-by-percentage-not-absolute-count) and for `exp-007` (plant-growth-rate-as-change-per-day). Parse validity 100.0% and graph validity 100.0% from step 180 on in every full-fine-tuning arm.
+- The structure run `exp-007-sft-wires` (7335 rows, multi-wire targets with the probe harness on every `jsEval` stage) completed 657 of 657 steps, final loss 0.00115, peak 17.494 GiB, and its winner checkpoint-540 reaches 98.1% plan-seen / 18.8% plan-unseen on validation. Its holdout failure mix moved toward run-time failure: 231 execution errors and 33 answer mismatches against `exp-005`'s 217 and 47.
+- The capability probes are the second finding: the untuned base passes 4 of 10, the fine-tuned arms pass 0 or 1 (`exp-003` 1/10, `exp-004` 0/10, `exp-005` 1/10, `exp-007` 0/10), all as `answer_mismatch` with prose answers. The narrow SOP Lang mixture costs the instruction and JavaScript substrate, so preservation data is the next recipe variable (D-B now has its measurement).
+- The suite was widened on the night of 2026-09-21: the procedural source declares 21 families, six of them new with two named intermediate stages each (`teacher/procedural/grouping.mjs`, `aggregation.mjs`, `textshapes.mjs`), the deepest taught chain is `slots → stage 1 → stage 2 → answer`, `node training-data/verify.mjs` reports `verify: OK` over the whole tree (840 procedural circuits, all reproduced and all reactive), `npm test` passes 282 of 282, the export holds 7575 rows under the new chat profile `compiled-plan-chat-2`, and the tokenizer gate reports no row above 4096 tokens (worst 2015).
+- `exp-008-sft-shapes` trains on that export with the series recipe (3 epochs, lr 1e-4, batch 4 × accumulation 8, gradient checkpointing, checkpoint every 90 steps), started detached at 19:21Z after three memory-guard refusals: another user's benchmark (a 35B Q8 server under `/home/daniel/work/local-llms`) held the shared pool down to 3.1 GiB free at times.
+- Guards are in place and were exercised tonight: `training/environment/watchdog.sh` (restarts a trainer whose manifest is not completed and a chain whose wrapper died), `training/environment/exp-008-queue.sh` (starts the next arm only when the export actually changed — the hand queue it replaced would have retrained the identical export), and `training/environment/start-detached.sh`. A real defect was found and fixed on the way: both `start-detached.sh` and `resume-series.sh` wrote a recipe whose relative path resolved to `training/checkpoints/environment/overnight.sh`, so the first `exp-008` launch died at once; the path is now `../../environment/overnight.sh` and both scripts are corrected.
 
 ## Resume point
 
-`exp-005-sft-widened` is queued: it waits for the deployment measurement of `exp-003` (Q8_0 and Q4_K_M artifacts) to free the GPU, then trains the same recipe as `exp-003` (full fine-tuning, lr 1e-4, 3 epochs, batch 4 x accumulation 8, gradient checkpointing, checkpoint every 90 steps) on the WIDENED export (7135 rows: the seven books plus the synthetic source with ten families and nine training plan shapes), and runs its selection and holdout automatically. The tokenizer gate was refreshed on that export: no row exceeds the 4096-token sequence length (`training/data/token-stats.json`).
-
-The earlier state, for reference: nothing else to restart: the machine is idle apart from the running `exp-004-lora` trainer and its waiting evaluation chain. Check them, then start the next work item.
+`exp-008-sft-shapes` is training; `evaluation/run-series.sh` waits for it and then converts, serves, selects, and scores without attention, so the morning work starts by reading its registry folder.
 
 ```bash
 # what is running and how far it has come
-bash training/environment/train-status.sh
-tail -3 training/checkpoints/exp-004-lora/train-log.jsonl
-tail -20 evaluation/registry/exp-004-lora/series.log
+bash training/environment/work-status.sh
+tail -3 training/checkpoints/exp-008-sft-shapes/train-log.jsonl
+tail -20 evaluation/registry/exp-008-sft-shapes/series.log
 
-# when the run is done: update the first-series table with its row
-node evaluation/analyze-holdout.mjs --experiment exp-004-lora
+# when the chain is done: reproduce the analysis numbers and fold them in
+node evaluation/analyze-holdout.mjs --experiment exp-008-sft-shapes
 ```
 
-Order of the next work items (from the analysis decisions):
+Order of the next work items:
 
-1. Score the capability probes (and direct-answer mode) on the `exp-004-lora` winner and record the preservation verdict (D-B) — `evaluation/run-holdout.sh` now passes `--probes`, so this happens with the holdout run itself. The deployment measurement (T10) is queued behind the series: `node evaluation/run-deployment.mjs --experiment exp-003-sft-lr1e-4` quantizes the winning checkpoint to Q8_0/Q4_K_M and scores each artifact's accuracy, throughput, and peak memory in one session.
-2. Implement the data revision that `docs/specs/DS008-training-data.md` now specifies: register the first procedural source (a generator family with several plan shapes and a constructed oracle), extend `training-data/verify.mjs` to the extended plan fingerprint and the new circuit shapes, compile a small suite, re-export.
-3. Retrain on the widened suite and read the plan-unseen column of the selection table as the headline metric; only after that does the 1.5B student (D-C) or a further mixture arm become informative.
+1. Read `exp-008`'s selection table with the plan-unseen column as the headline, then its holdout and probes; write the row into `evaluation/registry/phase4-first-series.md` and the section into `phase4-analysis.md`. The question this arm answers: does teaching deeper structure (two published stages per plan, twenty plan shapes) move a family the suite never taught?
+2. A capability-preservation arm. The probes read 4/10 for the base and 0-1/10 for every fine-tuned arm, so the next series varies the mixture with a recorded size and source, and re-scores the same probe suite on the same served artifact.
+3. The container and definition-read shapes (D-G): the four gates are the family validator (`teacher/procedural/index.mjs` accepts only `jsEval`/`literal` intermediate wires), the program builder (`teacher/families/index.mjs`, no container wire path), the provenance battery (`training-data/provenance.mjs` judges reactivity from `slots`/`facts` references only), and the missing manifest column for the structural read set that DS008 requires.
+4. Split `evaluation/run-eval.mjs` to the DS001 size rule (848 lines, the only `.mjs` over it) and finish T11's generalization probes.
 
 ## Owner directive (2026-09-21)
 
 No larger student: the milestone is decided on `Qwen2.5-Coder-0.5B-Instruct`, and a 1.5B download/training was stopped and its partial weights deleted. The work is to exhaust what the 0.5B can do — data breadth, decomposition supervision, prompt-side capability catalog, and inference-time adaptation from demonstrated plans — before any capacity claim is entertained.
 
-## Current stage (2026-09-21, evening)
+## Current stage (2026-09-21, night)
 
-**Working on: can the 0.5B compile with context?** `evaluation/run-adaptation.mjs` measures the same holdout statements with 0, 1, and 3 compiled examples placed in the prompt (demonstrations drawn from the training rows, never from the target book). Runs `adapt-holdout-{0,1,3}` are executing; the smoke over twelve items with three demonstrations showed 0 matches and 83.3% execution errors, so an early read is that demonstrations alone have not yet moved the unseen-family result. Estimate for this stage: about one hour of unattended GPU time.
+**Working on: teach structure and widen the plan set.** The student compiles taught shapes at 98% oracle on rows whose plan it saw and cannot compile a family it never saw (1 of 265), so the night's change is in the data and the target shape: six more generator families whose plans publish two named intermediate values each, twenty taught plan shapes in total, and a chat profile whose system prompt names the intermediate-wire shape its targets carry. `exp-008-sft-shapes` measures whether that moves the plan-unseen column and the holdout.
 
-**Next stage: teach structure, not just answers (estimated 4 hours).** The student compiles taught shapes at 95.7% oracle on its own training rows and cannot compile an unseen family (0.4% on the holdout), so the next change is in the data and the target shape, not the model: (1) implement multi-wire targets in the pipeline (`buildProgram`, the writer, and `verify.mjs` accept intermediate wires with the probe harness on every `jsEval` stage, per `DS008-training-data.md` "Additional circuit shapes"); (2) author families whose plans decompose (filter, group, aggregate as named stages) plus more arithmetic and text shapes; (3) retrain the same 0.5B with the same recipe on the widened suite; (4) score the same instruments (selection plan-unseen, holdout, text probes direct and compiled). Split of the estimate: 1.5 h implementation and data, 1.5 h training, 1 h evaluation.
+**Measured tonight, on the way:** the untuned base passes 4 of 10 capability probes and the fine-tuned arms pass 0-1, so the substrate loss is reproduced on a full-fine-tuning arm and the mixture is the next variable; the adaptation measurement (0, 1, and 3 solved examples in the prompt) answered 0 of 265 holdout problems in every arm, so demonstrations alone do not move an unseen family.
 
-**Not doing:** a larger student. The owner directive stands: the milestone is answered on `Qwen2.5-Coder-0.5B-Instruct`, and a bigger model is a decision the owner takes only if the evidence demands it.
+**Not doing:** a larger student (owner directive above), containers and definition reads until their four gates move together (D-G), and any truncation of an SOP Lang target to fit the sequence length (the gate refuses instead).
 
 ## How to watch
 
-- `bash training/environment/start-detached.sh train <experiment> [flags]` — the way every long job is started now: `setsid nohup`, own session, survives the desktop, the SSH session, and any agent session; then `work-status.sh` reports it. Owner directive (2026-09-21): always detached.
-
-- `bash training/environment/resume-series.sh <experiment>` — restart an interrupted run and its evaluation chain with one command. The supervisor resumes from the last checkpoint (`--save-steps` interval, 90 steps here), so an interruption costs at most that much compute; the recipe is read from `training/checkpoints/<experiment>/resume-recipe.sh`, written on first use or recorded by hand.
-- Long runs are started **detached** from this session (`hub start ... detached: true`): they survive the SSH session ending and the harness broker shutting down. A run started only `persist` (the earlier default here) dies with the broker, i.e. with the session — the training of `exp-007-sft-wires` was moved to detached for that reason at 2026-09-21 17:0x UTC.
-
-- `bash training/environment/work-status.sh` — one screen with what is running right now, how far each training and evaluation has come, the latest scored runs, and the device margin. This is the command to run when it is unclear whether work is in flight.
-
-- `bash training/environment/train-status.sh` — one screen: status, steps, loss curve, device margin, checkpoints, episodes, whether the process is alive.
+- `bash training/environment/start-detached.sh train <experiment> [flags]` — the way every long job is started: `setsid nohup`, its own session, survives the desktop, the SSH session, and any agent session; then `work-status.sh` reports it. The recipe is written into `training/checkpoints/<experiment>/resume-recipe.sh`, which is what `resume-series.sh` and the watchdog replay.
+- `bash training/environment/resume-series.sh <experiment>` — restart an interrupted run and its evaluation chain with one command, from the last checkpoint (`--save-steps` interval, 90 steps here).
+- `bash training/environment/exp-008-queue.sh` — the shape of every queued arm: wait for the running chain, wait for the export snapshot to change, wait for the GPU to be idle, then start detached. It never launches an arm on an export a previous arm already trained.
+- `bash training/environment/watchdog.sh` — every five minutes: resume a trainer that stopped before its manifest completed, restart an evaluation chain whose wrapper died, warn when a running trainer's step log has not moved for thirty minutes. Its log is `training/checkpoints/watchdog.log`.
+- `bash training/environment/work-status.sh` — one screen with what is running, how far each training and evaluation has come, the latest scored runs, the device margin, and the guard state.
+- `bash training/environment/train-status.sh` — one experiment: status, steps, loss curve, device margin, checkpoints, episodes, whether the process is alive.
 - `tail -f training/checkpoints/<experiment>/train-log.jsonl` — per-step records (loss, learning rate, tokens, memory).
-- `cat training/checkpoints/<experiment>/overnight-state.jsonl` — the episode history written by the supervisor.
-- `cat training/checkpoints/<experiment>/memory-stops.jsonl` — when and why the memory guard stopped a run.
+- `cat training/checkpoints/<experiment>/overnight-state.jsonl` and `memory-stops.jsonl` — the episode history and every memory-guard stop with its reason.
 - `tail -f evaluation/registry/<experiment>/series.log` — checkpoint selection and the holdout run of the winner.
+- `evaluation/registry/overnight-supervisor.log` and `evaluation/registry/exp-008-queue.log` — the unattended record of the night: one line per check, every action taken, every refusal and why.
 
 ## Machine sharing
 
-The trainer budget keeps the workstation usable for other work: `--memory-fraction 0.75` caps the process allocator at 89.7 GiB of the 119.6 GiB unified pool against a 16 GiB floor, the realized peak of a full run is 17.5 GiB (14.3 GiB so far for LoRA), the guard stops at a step boundary with a checkpoint instead of letting the kernel OOM killer shoot host services, runs are serialized because a selection server and a trainer on one GPU double both wall times, and the trainer runs at `nice -n 10`.
+The trainer declares `--memory-fraction 0.75` (a ceiling of 89.7 GiB of the 119.6 GiB GB10 pool) against a 16 GiB floor and stops at a step boundary, after writing a checkpoint, when the floor cannot be cleared; the realized peak of a full run is 17.494 GiB, and the trainer runs under `nice -n 10`. Runs are serialized among themselves (a selection server and a trainer on one GPU double both wall times). The pool is shared with other users of this host, and on the night of 2026-09-21 a 35B Q8 benchmark under `/home/daniel/work/local-llms` drove free device memory as low as 3.1 GiB, so `exp-008` needed three start attempts before a window with 52.6 GiB free; the guard's refusals are recorded in `training/checkpoints/exp-008-sft-shapes/memory-stops.jsonl` and the run resumed by itself.
 
 ## Morning check (answer without reading logs)
 
@@ -71,22 +68,11 @@ One command answers "is the night still working?":
 
     bash training/environment/work-status.sh
 
-Read it as follows. RUNNING PROCESSES must list a `supervisor` and a `training` line for the
-active experiment; TRAINING PROGRESS must show a step count that grows between two runs of the
-command; EVALUATION CHAINS must show `selection` and `holdout` lines for finished runs;
-BACKGROUND GUARDS must show `watchdog running` and no `resume needed` line. A missing trainer
-line plus a non-completed `run-manifest.json` is the one bad case, and the guard section prints
-the exact resume command for it:
+Read it as follows. RUNNING PROCESSES should list a `training` line for `exp-008-sft-shapes` and a `served model` line while a chain is scoring; TRAINING PROGRESS must show a step count that grows between two runs of the command; EVALUATION CHAINS must show the selection and holdout lines once the chain is running; BACKGROUND GUARDS must show `watchdog running` and no `resume needed` line. A missing trainer line plus a non-completed `run-manifest.json` is the one bad case, and the guard section prints the exact resume command for it:
 
-    bash training/environment/resume-series.sh <experiment>
+    bash training/environment/resume-series.sh exp-008-sft-shapes
 
-Watchdog: `training/checkpoints/watchdog.log` records every pass, every restart it performed,
-and every warning about a stale step log. The queue that starts exp-008 after exp-007 has its
-decisions in `evaluation/registry/exp-008-queue.log`.
-
-An agent supervisor cannot be started detached from inside a session: `omp` exits at once with
-code 129 in that situation, so unattended supervision is the shell watchdog above, and the
-interactive `omp -c` session is what reads and acts on its log.
+A run that the memory guard stopped shows `stopped` in its manifest with the reason in `memory-stops.jsonl`; the supervisor restarts it by itself, and `overnight-state.jsonl` records every episode.
 
 ## How to restart this session
 

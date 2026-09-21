@@ -1,0 +1,77 @@
+@slots literal
+{
+  "labels": [
+    "south",
+    "west",
+    "west",
+    "meadow"
+  ],
+  "amounts": [
+    25,
+    8,
+    29,
+    40
+  ]
+}
+
+@totals jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.labels) && Array.isArray(slots.amounts), "the labels and the recorded amounts must be two lists");
+probe(slots.labels.length === slots.amounts.length && slots.labels.length > 0, "every listed site must carry exactly one recorded amount");
+probe(slots.amounts.every((amount) => Number.isInteger(amount) && amount > 0), "every recorded amount must be a positive whole number");
+const totals = {};
+for (let index = 0; index < slots.labels.length; index += 1) {
+  const label = slots.labels[index];
+  totals[label] = (totals[label] ?? 0) + slots.amounts[index];
+}
+probe(Object.keys(totals).length > 0, "the totals must cover at least one site");
+probe(Object.values(totals).every((total) => Number.isInteger(total) && total > 0), "every published total must be a positive whole number");
+return totals;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+
+@ranked jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const totals = $totals;
+probe(totals !== null && typeof totals === "object" && !Array.isArray(totals), "the totals stage must publish an object");
+probe(Object.keys(totals).length > 0, "the totals stage must publish at least one site");
+const entries = Object.entries(totals).map(([label, total], order) => ({ label, total, order }));
+entries.sort((left, right) => (right.total - left.total) || (left.order - right.order));
+const ranked = entries.map((entry) => [entry.label, entry.total]);
+probe(ranked.length === Object.keys(totals).length, "the ranking must keep every published site");
+probe(ranked.every((pair) => Array.isArray(pair) && pair.length === 2), "every published pair must name a site and its total");
+probe(ranked.every((pair, index) => index === 0 || ranked[index - 1][1] >= pair[1]), "the ranking must run from the largest total down");
+return ranked;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+const totals = $totals;
+const ranked = $ranked;
+probe(Array.isArray(slots.labels) && slots.labels.length === slots.amounts.length, "every listed site must carry exactly one recorded amount");
+probe(totals !== null && typeof totals === "object" && !Array.isArray(totals), "the totals stage must publish an object");
+probe(Array.isArray(ranked) && ranked.length === Object.keys(totals).length, "the ranking stage must publish one pair per recorded site");
+probe(ranked.length > 1 && ranked[0][1] > ranked[1][1], "exactly one site must hold the strict maximum total");
+const winner = ranked[0][0];
+const total = ranked[0][1];
+probe(totals[winner] === total, "the leading pair must repeat the total the totals stage published for that site");
+probe(Object.values(totals).filter((value) => value === total).length === 1, "the leading total must belong to exactly one site");
+return "The " + winner + " site leads with " + total + " units.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

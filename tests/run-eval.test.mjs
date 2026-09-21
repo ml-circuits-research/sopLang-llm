@@ -5,7 +5,7 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 
-import { CLASSES, aggregate, classifyItem, resolveSlice, runSlice } from '../evaluation/run-eval.mjs';
+import { CLASSES, aggregate, classifyItem, resolveSlice, runSlice, sliceIdentityOf } from '../evaluation/run-eval.mjs';
 import { createRuntime } from '../runtime/kernel.mjs';
 import { answerBody } from '../teacher/families/probes.mjs';
 
@@ -300,6 +300,32 @@ test('the aggregate reports the four rates separately, macro tables per book and
     tokensPerSecond: 1000,
     costPerCorrect: 1870
   });
+});
+
+test('the slice identity covers the scored items and their order does not matter', () => {
+  const items = [
+    { book: 'b', folder: 'eval/no-knowledge/one', plan: 'p1', oracle: '7.', statement: 'How many are left?' },
+    { book: 'b', folder: 'eval/no-knowledge/two', plan: 'p2', oracle: '8.', statement: 'How many are left now?' }
+  ];
+  const identity = sliceIdentityOf(items);
+  assert.match(identity, /^[0-9a-f]{64}$/);
+  assert.equal(sliceIdentityOf([...items].reverse()), identity, 'the scored set is a set, not a sequence');
+  assert.equal(
+    sliceIdentityOf(items.map((item) => ({ ...item, class: 'answer_match', completion: 'x' }))),
+    identity,
+    'the outcome fields are written after scoring, so they are not part of the slice identity'
+  );
+  assert.notEqual(
+    sliceIdentityOf(items.map((item) => (item.folder === 'eval/no-knowledge/two' ? { ...item, oracle: '9.' } : item))),
+    identity,
+    'a different expected answer is a different slice'
+  );
+  assert.notEqual(
+    sliceIdentityOf(items.map((item) => (item.folder === 'eval/no-knowledge/two' ? { ...item, statement: 'How many remain?' } : item))),
+    identity,
+    'a different prompt is a different slice'
+  );
+  assert.notEqual(sliceIdentityOf(items.slice(0, 1)), identity, 'dropping an item is a different slice');
 });
 
 test('an empty record set aggregates to zero items and null rates', () => {

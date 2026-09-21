@@ -6,7 +6,7 @@
 2. The product is divided by one hundred exactly, so no rounding rule is involved.
 3. 42 units are checked.
 
-**Generator provenance.** arithmetic.mjs 1.0.0, family percent-of-total, instance 10, sampled with seed 20260921 from the latent plan `percent-of-total`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.1.0, family percent-of-total, instance 10, sampled with seed 20260921 from the latent plan `percent-of-total`; this example carries no source span because its statement was generated.
 
 ## Result
 

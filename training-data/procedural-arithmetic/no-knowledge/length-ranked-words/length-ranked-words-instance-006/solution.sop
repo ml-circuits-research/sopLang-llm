@@ -1,0 +1,76 @@
+@slots literal
+{
+  "words": [
+    "hospital",
+    "kiwi",
+    "ant",
+    "bungalow",
+    "mint"
+  ]
+}
+
+@ordered jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.words) && slots.words.length === 5, "the label must list exactly five words");
+probe(slots.words.every((word) => typeof word === "string" && word.length >= 2 && word.length <= 8 && [...word].every((character) => character >= "a" && character <= "z")), "every listed word must be a lowercase word of two to eight letters");
+const decorated = slots.words.map((word, index) => ({ word, length: word.length, index }));
+for (let position = 0; position < decorated.length; position += 1) {
+  let first = position;
+  for (let scan = position + 1; scan < decorated.length; scan += 1) {
+    const earlier = decorated[first];
+    const candidate = decorated[scan];
+    if (candidate.length < earlier.length || (candidate.length === earlier.length && candidate.index < earlier.index)) {
+      first = scan;
+    }
+  }
+  const held = decorated[position];
+  decorated[position] = decorated[first];
+  decorated[first] = held;
+}
+const ordered = decorated.map((entry) => entry.word);
+probe(ordered.length === slots.words.length, "the ordering must keep every listed word");
+probe(ordered.every((word) => slots.words.includes(word)), "every ordered word must be a word the label shows");
+probe(ordered.every((word, index) => index === 0 || ordered[index - 1].length <= word.length), "no word may come before a shorter one");
+probe(ordered.every((word, index) => index === 0 || ordered[index - 1].length < word.length || slots.words.indexOf(ordered[index - 1]) < slots.words.indexOf(word)), "words of equal length must keep the order the label shows");
+return ordered;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+
+@extremes jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const ordered = $ordered;
+probe(Array.isArray(ordered) && ordered.length === 5, "the ordering stage must publish the five words");
+probe(ordered.every((word) => typeof word === "string" && word.length > 0), "every ordered entry must be a word of at least one letter");
+const extremes = { shortest: ordered[0].length, longest: ordered[ordered.length - 1].length };
+probe(Number.isInteger(extremes.shortest) && Number.isInteger(extremes.longest), "both extremes must be whole numbers of letters");
+probe(extremes.shortest <= extremes.longest, "the first ordered word cannot be longer than the last");
+probe(ordered.every((word) => word.length >= extremes.shortest && word.length <= extremes.longest), "every word must lie between the two extremes");
+return extremes;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray($ordered) && $ordered.length === slots.words.length, "the ordering stage must publish every listed word");
+probe($ordered.every((word) => slots.words.includes(word)), "every ordered word must be a word the label shows");
+probe(typeof $extremes === "object" && $extremes !== null && Number.isInteger($extremes.shortest) && Number.isInteger($extremes.longest), "the extremes stage must publish both lengths");
+probe($extremes.shortest === $ordered[0].length, "the shortest length must belong to the first ordered word");
+probe($extremes.longest === $ordered[$ordered.length - 1].length, "the longest length must belong to the last ordered word");
+return "From shortest to longest: " + $ordered.join(", ") + "; the longest word has " + $extremes.longest + " letters.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

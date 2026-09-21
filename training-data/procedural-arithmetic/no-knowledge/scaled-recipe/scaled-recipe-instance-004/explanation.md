@@ -6,7 +6,7 @@
 2. 4 servings need that amount multiplied by 4.
 3. The answer is 20 units.
 
-**Generator provenance.** arithmetic.mjs 1.0.0, family scaled-recipe, instance 4, sampled with seed 20260921 from the latent plan `scaled-recipe`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.1.0, family scaled-recipe, instance 4, sampled with seed 20260921 from the latent plan `scaled-recipe`; this example carries no source span because its statement was generated.
 
 ## Result
 

@@ -6,7 +6,7 @@
 2. 3 reams fall beyond the 24-unit threshold and are charged 17 units each.
 3. The two blocks add up to 747 units.
 
-**Generator provenance.** arithmetic.mjs 1.0.0, family two-tier-price, instance 22, sampled with seed 20260921 from the latent plan `two-tier-price`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.1.0, family two-tier-price, instance 22, sampled with seed 20260921 from the latent plan `two-tier-price`; this example carries no source span because its statement was generated.
 
 ## Result
 

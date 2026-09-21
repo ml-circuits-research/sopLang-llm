@@ -6,7 +6,7 @@
 2. The window is 561 minutes, counted inside one day.
 3. Clock arithmetic has no rounding: the answer is exact.
 
-**Generator provenance.** arithmetic.mjs 1.0.0, family elapsed-minutes, instance 37, sampled with seed 20260921 from the latent plan `elapsed-minutes`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.1.0, family elapsed-minutes, instance 37, sampled with seed 20260921 from the latent plan `elapsed-minutes`; this example carries no source span because its statement was generated.
 
 ## Result
 

@@ -27,6 +27,8 @@
           <tr><td><code>exp-003-sft-lr1e-4</code></td><td>full fine-tuning, learning rate 1e-4</td><td>6436 rows (books)</td><td>606 / 0.00125</td></tr>
           <tr><td><code>exp-004-lora</code></td><td>LoRA r16 alpha32, learning rate 1e-4</td><td>6436 rows (books)</td><td>606 / 0.027862</td></tr>
           <tr><td><code>exp-005-sft-widened</code></td><td>full fine-tuning, learning rate 1e-4, widened suite</td><td>6796 rows (books + synthetic)</td><td>639 / 0.001135</td></tr>
+          <tr><td><code>exp-007-sft-wires</code></td><td>full fine-tuning, learning rate 1e-4, multi-wire targets</td><td>6996 rows (books + synthetic, ten extra shapes)</td><td>657 / 0.00115</td></tr>
+          <tr><td><code>exp-008-sft-shapes</code></td><td>full fine-tuning, learning rate 1e-4, twenty taught plan shapes, chat profile <code>compiled-plan-chat-2</code></td><td>7236 rows (books + synthetic)</td><td>in flight (started 2026-09-21 19:21Z)</td></tr>
         </tbody>
       </table>
 
@@ -40,6 +42,7 @@
           <tr><td><code>exp-003</code> checkpoint-540</td><td>94.7%</td><td>98.8% (319/323)</td><td>12.5% (2/16)</td><td>100.0%</td><td>100.0%</td><td>99.1%</td></tr>
           <tr><td><code>exp-004</code> checkpoint-540</td><td>52.5%</td><td>54.2% (175/323)</td><td>18.8% (3/16)</td><td>100.0%</td><td>100.0%</td><td>74.6%</td></tr>
           <tr><td><code>exp-005</code> checkpoint-360</td><td>94.4%</td><td>98.5% (318/323)</td><td>12.5% (2/16)</td><td>100.0%</td><td>100.0%</td><td>98.2%</td></tr>
+          <tr><td><code>exp-007</code> checkpoint-540</td><td>94.4%</td><td>98.1% (317/323)</td><td>18.8% (3/16)</td><td>100.0%</td><td>100.0%</td><td>98.5%</td></tr>
         </tbody>
       </table>
       <p>Source: <code>evaluation/registry/&lt;experiment&gt;/selection.md</code> and <code>selection/items/&lt;checkpoint&gt;.jsonl</code>. The columns <em>plan seen</em> and <em>plan unseen</em> split the slice by whether the row's plan fingerprint also occurs in the rows the trainer trains on.</p>
@@ -55,6 +58,7 @@
           <tr><td><code>exp-003</code> checkpoint-540</td><td>225</td><td>100.0%</td><td>100.0%</td><td>27.6%</td><td>0.0%</td></tr>
           <tr><td><code>exp-004</code> checkpoint-540</td><td>265</td><td>99.6%</td><td>99.6%</td><td>12.5%</td><td>0.0%</td></tr>
           <tr><td><code>exp-005</code> checkpoint-360</td><td>265</td><td>100.0%</td><td>100.0%</td><td>18.1%</td><td>0.4% (1/265)</td></tr>
+          <tr><td><code>exp-007</code> checkpoint-540</td><td>265</td><td>100.0%</td><td>100.0%</td><td>12.8%</td><td>0.4% (1/265)</td></tr>
           <tr><td><code>exp-000-baseline</code></td><td>265</td><td>0.4%</td><td>0.4%</td><td>0.0%</td><td>0.0%</td></tr>
         </tbody>
       </table>
@@ -70,6 +74,7 @@
           <tr><td><code>exp-003</code> Q8_0 and Q4_K_M</td><td>1/10</td><td>—</td></tr>
           <tr><td><code>exp-004</code> checkpoint-540</td><td>0/10</td><td>instruction 0/4, javascript 0/6</td></tr>
           <tr><td><code>exp-005</code> checkpoint-360</td><td>1/10</td><td>—</td></tr>
+          <tr><td><code>exp-007</code> checkpoint-540</td><td>0/10</td><td>instruction 0/4, javascript 0/6 (all prose answers, class <code>answer_mismatch</code>)</td></tr>
         </tbody>
       </table>
       <p>Source: <code>evaluation/registry/&lt;experiment&gt;/probes.md</code> and <code>items/capability-probes.jsonl</code>. In every fine-tuned row the probes were scored inside the same server session as that row's holdout run.</p>

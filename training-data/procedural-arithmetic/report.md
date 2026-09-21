@@ -1,8 +1,8 @@
 # Dataset report
 
-Source: `teacher/procedural/arithmetic.mjs` (generator arithmetic.mjs 1.0.0, seed 20260921, 40 instances per family).
+Source: `teacher/procedural/arithmetic.mjs` (generator arithmetic.mjs 1.1.0, seed 20260921, 40 instances per family).
 
-Accepted examples: 600. Rejected candidates: 0. Evaluation holdout: 40 (6.7%). Distinct plans: 15. Distinct compiled circuits: 600 (a circuit embeds the values it was compiled from, so the count equals the accepted set unless two problems compile to identical text).
+Accepted examples: 840. Rejected candidates: 0. Evaluation holdout: 40 (4.8%). Distinct plans: 21. Distinct compiled circuits: 840 (a circuit embeds the values it was compiled from, so the count equals the accepted set unless two problems compile to identical text).
 
 Acceptance class: every accepted example is `constructed_verified` as defined by `DS008-training-data`: the executed circuit produced the answer of the recorded latent plan, and the family oracle computed that answer by an independent route. The printed-answer signal of a book source does not exist for a generated instance, so the manifest rows record the generator, the family, the instance index, and the sampling seed instead of a source span.
 
@@ -10,31 +10,38 @@ Probes: every assembled circuit carries the probe harness of `teacher/families/p
 
 ## Accepted by category
 
-- no-knowledge: 600
+- no-knowledge: 840
 
 ## Accepted by problem type
 
-no-knowledge/cheaper-rate-per-unit (40), no-knowledge/count-letter-in-word (40), no-knowledge/crate-count-with-partial-last (40), no-knowledge/depletion-days-and-lead-time (40),
-no-knowledge/elapsed-minutes (40), no-knowledge/filtered-total (40), no-knowledge/higher-best-of-two (40), no-knowledge/net-balance-with-withdrawals (40),
-no-knowledge/parallel-join-deadline (40), no-knowledge/percent-of-total (40), no-knowledge/reverse-word (40), no-knowledge/scaled-recipe (40), no-knowledge/two-tier-price (40),
-no-knowledge/whole-units-under-a-budget (40), no-knowledge/words-containing-letter (40)
+no-knowledge/average-of-qualifying (40), no-knowledge/cheaper-rate-per-unit (40), no-knowledge/conversion-chain-leftover (40), no-knowledge/count-letter-in-word (40),
+no-knowledge/crate-count-with-partial-last (40), no-knowledge/depletion-days-and-lead-time (40), no-knowledge/elapsed-minutes (40), no-knowledge/filtered-total (40),
+no-knowledge/grouped-label-totals (40), no-knowledge/higher-best-of-two (40), no-knowledge/length-ranked-words (40), no-knowledge/net-balance-with-withdrawals (40),
+no-knowledge/parallel-join-deadline (40), no-knowledge/percent-of-total (40), no-knowledge/reverse-word (40), no-knowledge/scaled-recipe (40), no-knowledge/top-k-among-list (40),
+no-knowledge/two-tier-price (40), no-knowledge/vowel-richest-word (40), no-knowledge/whole-units-under-a-budget (40), no-knowledge/words-containing-letter (40)
 
 
 ## Accepted by family
 
+- family average-of-qualifying: 40
 - family cheaper-rate-per-unit: 40
+- family conversion-chain-leftover: 40
 - family count-letter-in-word: 40
 - family crate-count-with-partial-last: 40
 - family depletion-days-and-lead-time: 40
 - family elapsed-minutes: 40
 - family filtered-total: 40
+- family grouped-label-totals: 40
 - family higher-best-of-two: 40
+- family length-ranked-words: 40
 - family net-balance-with-withdrawals: 40
 - family parallel-join-deadline: 40
 - family percent-of-total: 40
 - family reverse-word: 40
 - family scaled-recipe: 40
+- family top-k-among-list: 40
 - family two-tier-price: 40
+- family vowel-richest-word: 40
 - family whole-units-under-a-budget: 40
 - family words-containing-letter: 40
 
@@ -47,7 +54,7 @@ Every accepted example ships the answer its source prints.
 
 ## Family integrity checks
 
-Templates covered: 15, of which 15 have several variants and 15 of those print several distinct answers, which is what shows that the computation reacts to its input.
+Templates covered: 21, of which 21 have several variants and 21 of those print several distinct answers, which is what shows that the computation reacts to its input.
 
 No template with several variants prints one answer for every variant.
 

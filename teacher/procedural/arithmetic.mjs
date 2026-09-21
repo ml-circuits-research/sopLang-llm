@@ -25,9 +25,12 @@ import { planningFamilies } from './planning.mjs';
 import { textFamilies } from './text.mjs';
 import { decompositionFamilies } from './decompose.mjs';
 import { mixedFamilies } from './mixed.mjs';
+import { groupingFamilies } from './grouping.mjs';
+import { aggregationFamilies } from './aggregation.mjs';
+import { textShapeFamilies } from './textshapes.mjs';
 
 export const sourceId = 'procedural-arithmetic';
-export const generatorVersion = '1.0.0';
+export const generatorVersion = '1.1.0';
 
 const HOLDERS = ['Priya', 'Mara', 'Daria', 'Luca', 'Ines', 'Tomas', 'Nadia', 'Ravi'];
 const WORKSHOPS = ['printing workshop', 'bicycle workshop', 'bakery', 'locksmith', 'upholstery workshop'];
@@ -273,4 +276,15 @@ const cheaperRate = {
   }
 };
 
-export const families = [netBalance, wholeUnits, cheaperRate, ...planningFamilies, ...textFamilies, ...decompositionFamilies, ...mixedFamilies];
+export const families = [
+  netBalance,
+  wholeUnits,
+  cheaperRate,
+  ...planningFamilies,
+  ...textFamilies,
+  ...decompositionFamilies,
+  ...mixedFamilies,
+  ...groupingFamilies,
+  ...aggregationFamilies,
+  ...textShapeFamilies
+];

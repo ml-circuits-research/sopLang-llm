@@ -29,7 +29,7 @@ case "$mode" in
     checkpoints="$root/training/checkpoints/$experiment"
     mkdir -p "$checkpoints"
     recipe="$checkpoints/resume-recipe.sh"
-    printf '#!/usr/bin/env bash\n# recorded by start-detached.sh on %s\nexec bash "$(dirname "${BASH_SOURCE[0]}")/../environment/overnight.sh" --experiment %s %s\n' \
+    printf '#!/usr/bin/env bash\n# recorded by start-detached.sh on %s\nexec bash "$(dirname "${BASH_SOURCE[0]}")/../../environment/overnight.sh" --experiment %s %s\n' \
       "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$experiment" "$*" > "$recipe"
     chmod +x "$recipe"
     setsid nohup bash -c "bash '$recipe' >> '$checkpoints/overnight.log' 2>&1; bash '$root/evaluation/run-series.sh' '$experiment' >> '$root/evaluation/registry/$experiment/series.log' 2>&1" \

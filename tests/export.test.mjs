@@ -19,7 +19,7 @@ import { bookRoots, expectedAnswersOf, statementBodyOf } from '../training-data/
 const DATASET_ROOT = fileURLToPath(new URL('../training-data/', import.meta.url));
 const DATA_DIR = fileURLToPath(new URL('../training/data/', import.meta.url));
 const HOLD_ROW_COUNTS = {
-  'procedural-arithmetic': 560,
+  'procedural-arithmetic': 800,
   'adult-reasoning': 990,
   'common-sense': 950,
   'decompose-to-solve': 900,
@@ -32,7 +32,7 @@ const HOLD_ROW_COUNTS = {
 const rows = collectRows({ datasetRoot: DATASET_ROOT });
 
 test('the export holds every training row and no holdout row', () => {
-  assert.equal(rows.length, 7335);
+  assert.equal(rows.length, 7575);
   const perBook = new Map();
   for (const row of rows) {
     perBook.set(row.book, (perBook.get(row.book) ?? 0) + 1);
@@ -75,14 +75,16 @@ test('every row carries the recorded chat shape and its manifest metadata', () =
 });
 
 test('the chat profile is pinned by its text and hash', () => {
-  assert.equal(CHAT_PROFILE_ID, 'compiled-plan-chat-1');
+  assert.equal(CHAT_PROFILE_ID, 'compiled-plan-chat-2');
   assert.equal(
     SYSTEM_PROMPT,
     'You compile problems into SOP Lang circuits. Read the problem and emit exactly one SOP Lang program, '
       + 'the compiled plan of this instance: a @slots literal wire that carries the values you extracted from '
       + 'the statement, an optional @facts literal wire that carries external knowledge the computation reads, '
-      + 'and a @answer jsEval wire that computes the answer deterministically from those values. The program '
-      + 'carries no input wire and no model call. Output only the program.',
+      + 'zero or more intermediate wires that publish the named stages of the plan for the later wires to read '
+      + 'through $name, and a @answer jsEval wire that computes the answer deterministically from those values. '
+      + 'Every jsEval wire computes deterministic work from the values it reads and asserts its inputs and its '
+      + 'output with probe(...) calls. The program carries no input wire and no model call. Output only the program.',
   );
   assert.equal(SYSTEM_PROMPT_SHA256, buildTrainerView({ datasetRoot: DATASET_ROOT }).manifest.profile.systemPromptSha256);
 });
@@ -108,7 +110,7 @@ test('the export is deterministic and the committed artifacts are current', () =
       );
     }
     const manifest = JSON.parse(readFileSync(join(first, 'export-manifest.json'), 'utf8'));
-    assert.equal(manifest.rows, 7335);
+    assert.equal(manifest.rows, 7575);
     assert.equal(manifest.snapshot, JSON.parse(readFileSync(join(DATA_DIR, 'export-manifest.json'), 'utf8')).snapshot);
   } finally {
     rmSync(first, { recursive: true, force: true });

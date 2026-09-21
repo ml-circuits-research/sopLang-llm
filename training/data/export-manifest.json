@@ -1,11 +1,11 @@
 {
   "exporter": "training/export.mjs 1.0.0",
   "profile": {
-    "id": "compiled-plan-chat-1",
-    "systemPromptSha256": "67655b81e61a7025442d5d9db6f47566350b4f3d045d48083089ff05608caae2"
+    "id": "compiled-plan-chat-2",
+    "systemPromptSha256": "dfe015ee9f325f0f859383073b93ddda440d00d64ab0b0e9e7de7c1c1cef3a03"
   },
-  "snapshot": "390211ea6a9bb711750b128b414ce9f5d4fc093db42d545f9eca01cd22d7495e",
-  "rows": 7335,
+  "snapshot": "5ffd341ef13dcda876fe51c15569553dc7af9f4cd0adf6773fcdf7dc64842e12",
+  "rows": 7575,
   "books": {
     "adult-reasoning": {
       "rows": 990,
@@ -53,13 +53,13 @@
       "plans": 579
     },
     "procedural-arithmetic": {
-      "rows": 560,
+      "rows": 800,
       "categories": {
-        "no-knowledge": 560,
+        "no-knowledge": 800,
         "knowledge": 0
       },
-      "templates": 14,
-      "plans": 14
+      "templates": 20,
+      "plans": 20
     },
     "scientific-reasoning": {
       "rows": 975,
@@ -82,54 +82,54 @@
   },
   "files": {
     "adult-reasoning.jsonl": {
-      "sha256": "a74d3babe89e16cd62fbc678cb0a0adf282c6622b8431779e922cdd1ff5440ed",
-      "bytes": 4338517,
+      "sha256": "051c7533f8cfe67713ca25c5ad1082087c2134fac4bb8296b20760d8608e0779",
+      "bytes": 4585027,
       "rows": 990
     },
     "common-sense.jsonl": {
-      "sha256": "87888a283e9614c930fa75bfb10e39e0fbe72b20776ac354b7413bb9ef53cd56",
-      "bytes": 4541184,
+      "sha256": "3919450e0a1f0f692391518654b52a969172d2a7597ec6b89b6532ac7dd14b11",
+      "bytes": 4777734,
       "rows": 950
     },
     "decompose-to-solve.jsonl": {
-      "sha256": "79aa2ba89cdc1a381f275410379041946634bcf8c87f930f9bb20124bb214425",
-      "bytes": 4820383,
+      "sha256": "4969ccb50cbaa57978c8bc8d233522cb8b1f93109b01b645ef8748592b125219",
+      "bytes": 5044483,
       "rows": 900
     },
     "logical-reasoning.jsonl": {
-      "sha256": "f13107029a671fb866f3ba859cf303e6f354f21af22353b55f4786815cd8f8a4",
-      "bytes": 3855339,
+      "sha256": "2c65aaf8569b972db3f21510277841d3af83c193abd8e5a1c1d3c4b4eb1bf6c0",
+      "bytes": 4101849,
       "rows": 990
     },
     "mathematical-thinking.jsonl": {
-      "sha256": "4082a1a13379afd765524a7cbba0104d6670cef6cffb53598a2b52b025a8c5c8",
-      "bytes": 2728425,
+      "sha256": "255222c6207bbbcf4c3d62bd34677e3b4423137023fc09c9c49f222e6a6eeb28",
+      "bytes": 2974935,
       "rows": 990
     },
     "procedural-arithmetic.jsonl": {
-      "sha256": "f1eac7d5afad34cec5da0d857f993eaf7a31a47a94d004a4a197c5930c482e7c",
-      "bytes": 1880951,
-      "rows": 560
+      "sha256": "05d092da0c564c62751dd4e2c27a70c2b4dc82a8c263d4e83523494c81da7d85",
+      "bytes": 3532040,
+      "rows": 800
     },
     "scientific-reasoning.jsonl": {
-      "sha256": "b22464cb58e696b9a1ff476c40d2acf0c8e87963f3203f0b6e0c15502b7278ce",
-      "bytes": 5319884,
+      "sha256": "874bdb4c28ef51c014672974ddabf5353f12312bbfe6652aed8e25e5df45d5da",
+      "bytes": 5562659,
       "rows": 975
     },
     "world-as-a-system.jsonl": {
-      "sha256": "3c8d6bc664bf5a82050f3838cb418d4bddb0bd070c32d32c6cb89b8b2abb5b9d",
-      "bytes": 5789833,
+      "sha256": "25c38184c0ba114f5b97a54c64e818929225324ac265dc161a8a77273ad9514b",
+      "bytes": 6033853,
       "rows": 980
     },
     "all-books.jsonl": {
-      "sha256": "6dbfb1ebd12c6e4ca17f65c47970ebaa6f358eb9881ac1788607f9f4ec9e9d37",
-      "bytes": 33274516,
-      "rows": 7335
+      "sha256": "7d27d6ae70c977416b5c1e4e4f6a75b163b960dfda9de43732352c49cfd5f471",
+      "bytes": 36612580,
+      "rows": 7575
     }
   },
   "dataset": {
     "root": "training-data",
-    "sourcesSha256": "17f4bb36250a5b2fb0e77e5d57063190453c9e86e3c22630fbec0325e777506f"
+    "sourcesSha256": "263a211120bd089f91b1f3cccfb73feb96d357194ece98e3da17c0f10dd33569"
   },
   "validationSlice": {
     "seed": 3407,

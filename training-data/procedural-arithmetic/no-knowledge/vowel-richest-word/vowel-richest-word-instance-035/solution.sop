@@ -1,0 +1,63 @@
+@slots literal
+{
+  "words": [
+    "pencil",
+    "lilac",
+    "cactus",
+    "apricot"
+  ]
+}
+
+@perWord jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.words) && slots.words.length === 4, "the chalkboard must list exactly four words");
+probe(slots.words.every((word) => typeof word === "string" && word.length >= 3 && word.length <= 9 && [...word].every((character) => character >= "a" && character <= "z")), "every listed word must be a lowercase word of three to nine letters");
+const vowels = "aeiou";
+const counted = slots.words.map((word) => ({ word, vowels: [...word].filter((character) => vowels.includes(character)).length }));
+probe(counted.length === slots.words.length, "every listed word must be counted once");
+probe(counted.every((record, index) => record.word === slots.words[index] && Number.isInteger(record.vowels) && record.vowels >= 0), "the counts must keep the order the chalkboard shows");
+return counted;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+
+@ranked jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const counted = $perWord;
+probe(Array.isArray(counted) && counted.length === 4, "the counting stage must publish the four records");
+probe(counted.every((record) => typeof record.word === "string" && Number.isInteger(record.vowels) && record.vowels >= 0), "every record must carry a word and a whole vowel count");
+const ranked = counted.map((record, index) => ({ record, index }))
+  .sort((left, right) => (right.record.vowels - left.record.vowels) || (left.index - right.index))
+  .map((entry) => entry.record);
+probe(ranked.length === counted.length, "the ranking must keep every record");
+probe(ranked.every((record, index) => index === 0 || ranked[index - 1].vowels >= record.vowels), "the ranking must fall from the richest word");
+probe(ranked.every((record, index) => index === 0 || ranked[index - 1].vowels > record.vowels || counted.findIndex((candidate) => candidate.word === ranked[index - 1].word) < counted.findIndex((candidate) => candidate.word === ranked[index].word)), "words with equal counts must keep the order the chalkboard shows");
+return ranked;
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray($ranked) && $ranked.length === slots.words.length, "the ranking stage must publish every listed word");
+probe($ranked.every((record) => slots.words.includes(record.word)), "every ranked word must be a word the chalkboard shows");
+probe($ranked.every((record) => Number.isInteger(record.vowels) && record.vowels >= 0), "every ranked record must carry a whole vowel count");
+const best = $ranked[0];
+probe(best.vowels === Math.max(...$ranked.map((record) => record.vowels)), "the first ranked word must carry the most vowels");
+probe($ranked.filter((record) => record.vowels === best.vowels).length === 1, "exactly one word may carry the most vowels");
+return "The word " + JSON.stringify(best.word) + " carries " + best.vowels + " vowels.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

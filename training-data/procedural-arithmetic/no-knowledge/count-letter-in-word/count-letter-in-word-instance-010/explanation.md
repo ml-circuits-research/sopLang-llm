@@ -6,7 +6,7 @@
 2. The count is a property of the characters, not of the meaning of the word, so it is delegated to deterministic work.
 3. Counting the characters gives 0.
 
-**Generator provenance.** arithmetic.mjs 1.0.0, family count-letter-in-word, instance 10, sampled with seed 20260921 from the latent plan `count-letter-in-word`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.1.0, family count-letter-in-word, instance 10, sampled with seed 20260921 from the latent plan `count-letter-in-word`; this example carries no source span because its statement was generated.
 
 ## Result
 

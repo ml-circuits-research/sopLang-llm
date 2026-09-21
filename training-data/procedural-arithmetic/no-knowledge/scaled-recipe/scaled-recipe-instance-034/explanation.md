@@ -6,7 +6,7 @@
 2. 50 servings need that amount multiplied by 50.
 3. The answer is 600 units.
 
-**Generator provenance.** arithmetic.mjs 1.0.0, family scaled-recipe, instance 34, sampled with seed 20260921 from the latent plan `scaled-recipe`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.1.0, family scaled-recipe, instance 34, sampled with seed 20260921 from the latent plan `scaled-recipe`; this example carries no source span because its statement was generated.
 
 ## Result
 

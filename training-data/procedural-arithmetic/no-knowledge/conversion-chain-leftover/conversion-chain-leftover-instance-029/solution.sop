@@ -1,0 +1,71 @@
+@slots literal
+{
+  "parts": 902,
+  "perCrate": 29,
+  "perBox": 2
+}
+
+@crates jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.parts) && slots.parts > 0, "the parts must be a positive whole number");
+probe(Number.isInteger(slots.perCrate) && slots.perCrate > 0, "the crate size must be a positive whole number");
+let crates = 0;
+let rest = slots.parts;
+while (rest >= slots.perCrate) {
+  rest -= slots.perCrate;
+  crates += 1;
+}
+probe(crates >= 1, "at least one full crate must be packed");
+probe(rest < slots.perCrate, "the parts beyond the crates must be fewer than a full crate");
+probe(crates * slots.perCrate + rest === slots.parts, "the crates and the parts beyond them must rebuild the stated parts");
+return { crates, rest };
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+
+@boxes jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.perBox) && slots.perBox > 0 && slots.perBox < slots.perCrate, "the box size must be a whole number below the crate size");
+probe(typeof $crates === "object" && $crates !== null, "the crates stage must publish an object");
+probe(Number.isInteger($crates.crates) && $crates.crates >= 1, "at least one full crate must be packed");
+probe(Number.isInteger($crates.rest) && $crates.rest >= 0 && $crates.rest < slots.perCrate, "the parts beyond the crates must be fewer than a full crate");
+let boxes = 0;
+let leftover = $crates.rest;
+while (leftover >= slots.perBox) {
+  leftover -= slots.perBox;
+  boxes += 1;
+}
+probe(boxes >= 1, "at least one full box must be packed from the parts beyond the crates");
+probe(leftover > 0, "a whole count of parts must be left over");
+probe(leftover < slots.perBox, "the leftover parts must be fewer than a full box");
+return { boxes, leftover };
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof $crates === "object" && $crates !== null, "the crates stage must publish an object");
+probe(Number.isInteger($crates.crates) && $crates.crates >= 1, "the plan must fill at least one crate");
+probe(typeof $boxes === "object" && $boxes !== null, "the boxes stage must publish an object");
+probe(Number.isInteger($boxes.boxes) && $boxes.boxes >= 1, "the plan must fill at least one box");
+probe(Number.isInteger($boxes.leftover) && $boxes.leftover > 0, "the plan must leave a whole positive count of parts");
+const packed = $crates.crates * slots.perCrate + $boxes.boxes * slots.perBox + $boxes.leftover;
+probe(packed === slots.parts, "the crates, the boxes, and the leftover must rebuild the stated parts");
+return slots.parts + " parts fill " + $crates.crates + " crates and " + $boxes.boxes + " boxes, with " + $boxes.leftover + " parts left over.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

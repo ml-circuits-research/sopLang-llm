@@ -5,84 +5,84 @@
     "class": "Qwen2Tokenizer",
     "revision": "ea3f2471cf1b1f0db85067f1ef93848e38e88c25"
   },
-  "rows": 7135,
-  "rows_in_file": 7135,
+  "rows": 7575,
+  "rows_in_file": 7575,
   "sampling": null,
   "max_seq_len": 4096,
-  "export_manifest_sha256": "d3fb26baa73dbb0a5821d6abcaef7670f50aa2c7321e8ae75ca0608caa7aed08",
+  "export_manifest_sha256": "43ebf710cc32a7bd42afedc074c6b3a8760b51fce4e6fc5c0fdf4b1785f42e87",
   "total_tokens": {
     "combined": {
-      "min": 278,
-      "p50": 780,
-      "p90": 1173,
-      "p99": 1456,
-      "max": 1968
+      "min": 325,
+      "p50": 835,
+      "p90": 1250,
+      "p99": 1501,
+      "max": 2015
     },
     "per_book": {
       "adult-reasoning": {
-        "min": 488,
-        "p50": 791,
-        "p90": 1030,
-        "p99": 1147,
-        "max": 1197
+        "min": 535,
+        "p50": 838,
+        "p90": 1077,
+        "p99": 1194,
+        "max": 1244
       },
       "common-sense": {
-        "min": 593,
-        "p50": 818,
-        "p90": 1123,
-        "p99": 1192,
-        "max": 1192
+        "min": 640,
+        "p50": 865,
+        "p90": 1170,
+        "p99": 1239,
+        "max": 1239
       },
       "decompose-to-solve": {
-        "min": 622,
-        "p50": 1014,
-        "p90": 1425,
-        "p99": 1434,
-        "max": 1441
+        "min": 669,
+        "p50": 1062,
+        "p90": 1472,
+        "p99": 1481,
+        "max": 1488
       },
       "logical-reasoning": {
-        "min": 470,
-        "p50": 603,
-        "p90": 756,
-        "p99": 1181,
-        "max": 1238
+        "min": 517,
+        "p50": 650,
+        "p90": 803,
+        "p99": 1228,
+        "max": 1285
       },
       "mathematical-thinking": {
-        "min": 278,
-        "p50": 367,
-        "p90": 508,
-        "p99": 772,
-        "max": 942
+        "min": 325,
+        "p50": 414,
+        "p90": 555,
+        "p99": 819,
+        "max": 989
       },
       "procedural-arithmetic": {
-        "min": 362,
-        "p50": 519,
-        "p90": 702,
-        "p99": 705,
-        "max": 705
+        "min": 409,
+        "p50": 667,
+        "p90": 1276,
+        "p99": 1374,
+        "max": 1380
       },
       "scientific-reasoning": {
-        "min": 603,
-        "p50": 926,
-        "p90": 1325,
-        "p99": 1454,
-        "max": 1462
+        "min": 650,
+        "p50": 973,
+        "p90": 1372,
+        "p99": 1501,
+        "max": 1509
       },
       "world-as-a-system": {
-        "min": 597,
-        "p50": 1080,
-        "p90": 1378,
-        "p99": 1878,
-        "max": 1968
+        "min": 644,
+        "p50": 1127,
+        "p90": 1425,
+        "p99": 1925,
+        "max": 2015
       }
     }
   },
   "target_tokens": {
     "combined": {
       "min": 155,
-      "p50": 557,
-      "p90": 898,
-      "p99": 1199,
+      "p50": 562,
+      "p90": 952,
+      "p99": 1197,
       "max": 1613
     },
     "per_book": {
@@ -123,10 +123,10 @@
       },
       "procedural-arithmetic": {
         "min": 245,
-        "p50": 377,
-        "p90": 537,
-        "p99": 538,
-        "max": 538
+        "p50": 466,
+        "p90": 1068,
+        "p99": 1156,
+        "max": 1159
       },
       "scientific-reasoning": {
         "min": 357,

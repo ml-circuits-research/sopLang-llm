@@ -6,7 +6,7 @@
 2. A word counts when it contains the letter "l", whatever its position inside the word.
 3. The number of such words is 0.
 
-**Generator provenance.** arithmetic.mjs 1.0.0, family words-containing-letter, instance 27, sampled with seed 20260921 from the latent plan `words-containing-letter`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.1.0, family words-containing-letter, instance 27, sampled with seed 20260921 from the latent plan `words-containing-letter`; this example carries no source span because its statement was generated.
 
 ## Result
 
