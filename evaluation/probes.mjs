@@ -11,7 +11,9 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { normalizeAnswer } from '../teacher/naming.mjs';
+import { answerMatches, normalizeAnswer } from '../teacher/naming.mjs';
+import { parseCircuit } from '../runtime/parser.mjs';
+import { buildMessages, extractProgram } from './client.mjs';
 import { generate } from './client.mjs';
 
 const REPOSITORY_ROOT = fileURLToPath(new URL('..', import.meta.url));

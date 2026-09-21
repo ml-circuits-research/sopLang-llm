@@ -20,11 +20,12 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { bestWinner } from './artifacts.mjs';
-import { renderProbesReport, scoreProbes } from './probes.mjs';
+import { renderProbesReport, scoreProbes, scoreProbesCompiled } from './probes.mjs';
+import { createRuntime } from '../runtime/kernel.mjs';
 import { REPOSITORY_ROOT, resolveArtifactPath, withServer } from './server.mjs';
 
 function parseArguments(argv) {
-  const options = { suite: null, experiment: null, gguf: null, best: false, base: null, port: 8083, concurrency: 1, threads: null, help: false };
+  const options = { suite: null, experiment: null, gguf: null, best: false, base: null, port: 8083, concurrency: 1, threads: null, compiled: false, maxTokens: 1024, help: false };
   for (let index = 0; index < argv.length; index += 1) {
     const flag = argv[index];
     const value = () => {
@@ -41,6 +42,8 @@ function parseArguments(argv) {
     else if (flag === '--port') options.port = Number(value());
     else if (flag === '--concurrency') options.concurrency = Number(value());
     else if (flag === '--threads') options.threads = Number(value());
+    else if (flag === '--compiled') options.compiled = true;
+    else if (flag === '--max-tokens') options.maxTokens = Number(value());
     else if (flag === '--help' || flag === '-h') options.help = true;
     else throw new Error(`unknown argument: ${flag}`);
   }
@@ -61,6 +64,9 @@ Options:
   --port N              port for the managed server (default 8083)
   --concurrency N       probes generated in parallel (default 1)
   --threads N           CPU threads for the managed server
+  --compiled            compiled-plan mode: the model must emit a circuit, the runtime executes
+                        it, and the executed answer is compared with the expected value
+  --max-tokens N        generation budget in compiled mode (default 1024)
   --help                print this help
 `;
 
@@ -93,13 +99,23 @@ if (options.gguf !== null) {
 const registryDir = join(REPOSITORY_ROOT, 'evaluation/registry', options.experiment);
 mkdirSync(join(registryDir, 'items'), { recursive: true });
 
-const run = async (base) => scoreProbes({
-  suite,
-  base,
-  model: 'student',
-  concurrency: options.concurrency,
-  timeoutMs: 600_000,
-});
+const run = async (base) => (options.compiled
+  ? scoreProbesCompiled({
+      suite,
+      base,
+      model: 'student',
+      concurrency: options.concurrency,
+      maxTokens: options.maxTokens,
+      timeoutMs: 600_000,
+      runtime: createRuntime(),
+    })
+  : scoreProbes({
+      suite,
+      base,
+      model: 'student',
+      concurrency: options.concurrency,
+      timeoutMs: 600_000,
+    }));
 
 const scored = options.base !== null
   ? await run(options.base)
@@ -108,7 +124,7 @@ const scored = options.base !== null
       ({ port }) => run(`http://127.0.0.1:${port}`),
     );
 
-const slug = suite.profile.replace(/[^a-z0-9.-]+/gi, '-');
+const slug = suite.profile.replace(/[^a-z0-9.-]+/gi, '-') + (options.compiled ? '.compiled' : '');
 writeFileSync(join(registryDir, 'items', `${slug}.jsonl`), `${scored.records.map((record) => JSON.stringify(record)).join('\n')}\n`);
 const artifactLabel = options.base !== null ? `attached server ${options.base}` : artifact.replace(`${REPOSITORY_ROOT}/`, '');
 writeFileSync(
@@ -131,7 +147,8 @@ writeFileSync(
       experiment: options.experiment,
       suite: { path: suitePath.replace(`${REPOSITORY_ROOT}/`, ''), profile: suite.profile, items: suite.probes.length, systemPromptSha256: scored.systemPromptSha256 },
       artifact: artifactLabel,
-      decoding: { temperature: 0, maxTokens: 256, concurrency: options.concurrency, attemptsPerItem: 1, transportRetries: 1 },
+      mode: options.compiled ? 'compiled-plan (the model must emit a circuit; the executed answer is compared)' : 'direct answer',
+      decoding: { temperature: 0, maxTokens: options.compiled ? options.maxTokens : 256, concurrency: options.concurrency, attemptsPerItem: 1, transportRetries: 1 },
       startedAt: new Date().toISOString(),
     },
     null,
