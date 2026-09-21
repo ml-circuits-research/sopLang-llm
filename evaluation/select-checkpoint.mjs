@@ -22,10 +22,10 @@ import { fileURLToPath } from 'node:url';
 import { createRuntime } from '../runtime/kernel.mjs';
 import { generate } from './client.mjs';
 import { aggregate, resolveSlice, runSlice } from './run-eval.mjs';
+import { withServer } from './server.mjs';
 
 const REPOSITORY_ROOT = fileURLToPath(new URL('..', import.meta.url));
 const DEFAULT_REGISTRY = join(REPOSITORY_ROOT, 'evaluation/registry');
-const LLAMA_SERVER = join(REPOSITORY_ROOT, 'tools/llamacpp/build/bin/llama-server');
 const CONVERTER = join(REPOSITORY_ROOT, 'tools/llamacpp/convert_hf_to_gguf.py');
 
 function parseArguments(argv) {
@@ -87,43 +87,6 @@ async function convertCheckpoint(checkpointDir, ggufPath, logPath) {
   const result = await run('bash', ['training/environment/train.sh', 'python', CONVERTER, checkpointDir, '--outfile', ggufPath, '--outtype', 'f16'], { logPath });
   if (result.code !== 0) {
     throw new Error(`GGUF conversion failed for ${checkpointDir}; see ${logPath}`);
-  }
-}
-
-async function waitForServer(port, timeoutMs = 300_000) {
-  const deadline = Date.now() + timeoutMs;
-  while (Date.now() < deadline) {
-    try {
-      const response = await fetch(`http://127.0.0.1:${port}/health`);
-      if (response.ok) {
-        return;
-      }
-    } catch {
-      // not listening yet
-    }
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-  }
-  throw new Error(`llama-server on port ${port} was not ready within ${timeoutMs} ms`);
-}
-
-async function withServer({ ggufPath, port, logPath }, body) {
-  const logFd = openSync(logPath, 'a');
-  const child = spawn(
-    LLAMA_SERVER,
-    ['-m', ggufPath, '--port', String(port), '--ctx-size', '16384', '--n-gpu-layers', '99', '--jinja', '--parallel', '4', '--alias', 'student'],
-    { cwd: REPOSITORY_ROOT, detached: true, stdio: ['ignore', logFd, logFd] },
-  );
-  closeSync(logFd);
-  try {
-    await waitForServer(port);
-    return await body();
-  } finally {
-    try {
-      process.kill(-child.pid, 'SIGTERM');
-    } catch {
-      child.kill('SIGTERM');
-    }
-    await new Promise((resolve) => setTimeout(resolve, 2000));
   }
 }
 
