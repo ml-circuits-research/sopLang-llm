@@ -28,10 +28,9 @@ node evaluation/analyze-holdout.mjs --experiment exp-004-lora
 
 Order of the next work items (from the analysis decisions):
 
-1. Score the capability probes (and direct-answer mode) on the `exp-004-lora` winner and record the preservation verdict (D-B).
-2. Widen the training plan set: new families under `teacher/families/<book>/` with several plan shapes each, all passing `node training-data/verify.mjs`, the 225-item holdout frozen and its families withheld (D-A).
-3. Re-export, retrain on the widened suite, and read the plan-unseen column as the headline metric.
-4. Then the deployment measurement (quantize, serve, holdout on the quantized artifact) and the 1.5B student (D-C).
+1. Score the capability probes (and direct-answer mode) on the `exp-004-lora` winner and record the preservation verdict (D-B) — `evaluation/run-holdout.sh` now passes `--probes`, so this happens with the holdout run itself. The deployment measurement (T10) is queued behind the series: `node evaluation/run-deployment.mjs --experiment exp-003-sft-lr1e-4` quantizes the winning checkpoint to Q8_0/Q4_K_M and scores each artifact's accuracy, throughput, and peak memory in one session.
+2. Implement the data revision that `docs/specs/DS008-training-data.md` now specifies: register the first procedural source (a generator family with several plan shapes and a constructed oracle), extend `training-data/verify.mjs` to the extended plan fingerprint and the new circuit shapes, compile a small suite, re-export.
+3. Retrain on the widened suite and read the plan-unseen column of the selection table as the headline metric; only after that does the 1.5B student (D-C) or a further mixture arm become informative.
 
 ## How to watch
 
