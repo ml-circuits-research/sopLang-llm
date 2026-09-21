@@ -5,11 +5,14 @@
  * The loop is split into a classification core (`classifyItem`), a slice runner
  * (`runSlice`), an aggregate builder (`aggregate`), and a markdown renderer
  * (`renderReport`), so every metric is unit-testable without a served model.
- * The command line wires those to the HTTP client of `evaluation/client.mjs`,
- * resolves the two data views of the repository (the export for the validation
- * slice, the shipped `training-data/` trees for the holdout), and writes the
- * evidence registry with the per-item records first and the aggregates after,
- * because DS009 lets a report read only records that already exist.
+ * Slice resolution and its identity live in `evaluation/slices.mjs` and the
+ * command-line surface in `evaluation/cli.mjs`, so this module stays inside the
+ * DS001 module size rule. `main` wires the three to the HTTP client of
+ * `evaluation/client.mjs`, resolves the two data views of the repository (the
+ * export for the validation slice, the shipped `training-data/` trees for the
+ * holdout), and writes the evidence registry with the per-item records first
+ * and the aggregates after, because DS009 lets a report read only records that
+ * already exist.
  *
  * Every item lands in exactly one class:
  *
@@ -30,7 +33,7 @@
 
 import { createHash } from 'node:crypto';
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { basename, dirname, join, relative, sep } from 'node:path';
+import { join, relative, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { appendItemLog, buildMessages, extractProgram, generate } from './client.mjs';
@@ -39,7 +42,10 @@ import { parseCircuit } from '../runtime/parser.mjs';
 import { createRuntime } from '../runtime/kernel.mjs';
 import { answerMatches } from '../teacher/naming.mjs';
 import { renderProbesReport, scoreProbes, summaryOf } from './probes.mjs';
-import { bookRoots, expectedAnswersOf, solutionFilesOf, statementBodyOf } from '../training-data/dataset-manifest.mjs';
+import { parseArgs, UsageError } from './cli.mjs';
+import { resolveSlice, sliceIdentityOf } from './slices.mjs';
+
+export { resolveSlice, sliceIdentityOf } from './slices.mjs';
 
 const REPO_ROOT = fileURLToPath(new URL('..', import.meta.url));
 
@@ -440,303 +446,24 @@ export function renderReport({ manifest, metrics }) {
   return `${lines.join('\n')}`;
 }
 
-function sliceNameOf(slice) {
-  if (slice === 'holdout' || slice === 'validation') return slice;
-  if (typeof slice === 'string' && slice.startsWith('file:')) {
-    const filePath = slice.slice('file:'.length);
-    if (filePath === '') throw new Error('--slice file: needs a path');
-    return basename(filePath).replace(/\.jsonl$/i, '') || 'slice';
-  }
-  throw new Error(`unknown slice "${slice}": use holdout, validation, or file:<path>`);
-}
+/** The usage text of the loop entry: flags are parsed by `evaluation/cli.mjs`. */
+const USAGE = [
+  "Usage: node evaluation/run-eval.mjs --experiment <id> --slice <holdout|validation|file:<path>> [options]",
+  "",
+  "  --gguf <path>        artifact label recorded in the run manifest and the report",
+  "  --books a,b          limit a holdout run to these book ids",
+  "  --limit N            score only the first N resolved items",
+  "  --base <url>         llama-server base URL (default http://127.0.0.1:8080)",
+  "  --model <alias>      model alias served by that base",
+  "  --max-tokens N       generation budget per item (default 2048)",
+  "  --concurrency N      parallel items (default 1)",
+  "  --out <dir>          registry root (default evaluation/registry)",
+  "  --log                also append the raw requests to run-log.jsonl",
+  "  --probes             score the capability probes on the same served artifact",
+].join("\n");
 
-function readJsonl(filePath) {
-  const rows = [];
-  for (const line of readFileSync(filePath, 'utf8').split('\n')) {
-    if (line.trim() === '') continue;
-    rows.push(JSON.parse(line));
-  }
-  return rows;
-}
-
-/** One resolved item: the identity, the statement body, and the oracle answer. */
-function itemOf({ book, folder, plan, unit, template, category, statement, oracle }) {
-  return {
-    id: `${book}/${folder}`,
-    book,
-    folder,
-    plan: plan ?? null,
-    unit: unit ?? null,
-    template: template ?? null,
-    category: category ?? null,
-    statement,
-    oracle: oracle ?? null
-  };
-}
-
-function categoryOf(folder) {
-  for (const part of String(folder).split('/')) {
-    if (part === 'knowledge' || part === 'no-knowledge') return part;
-  }
-  return null;
-}
-
-function statementOf(dataRoot, book, folder) {
-  const path = join(dataRoot, book, ...String(folder).split('/'), 'problem.md');
-  return statementBodyOf(readFileSync(path, 'utf8'));
-}
-
-function oracleTable(book, root, cache) {
-  if (!cache.has(book)) cache.set(book, expectedAnswersOf(root));
-  return cache.get(book);
-}
-
-function itemsFromExportRows({ rows, wanted, dataRoot, books, label }) {
-  const cache = new Map();
-  const items = [];
-  for (const row of rows) {
-    const meta = row?.meta ?? {};
-    if (typeof meta.book !== 'string' || typeof meta.folder !== 'string') {
-      throw new Error(`${label}: every row must carry meta.book and meta.folder`);
-    }
-    const id = `${meta.book}/${meta.folder}`;
-    if (wanted !== null && !wanted.has(id)) continue;
-    if (books !== null && !books.includes(meta.book)) continue;
-    const expected = oracleTable(meta.book, join(dataRoot, meta.book), cache).get(meta.folder);
-    if (expected === undefined) throw new Error(`${label}: no manifest row for ${id}, so the item has no oracle answer`);
-    items.push(
-      itemOf({
-        book: meta.book,
-        folder: meta.folder,
-        plan: expected.plan ?? meta.plan,
-        unit: meta.unit,
-        template: meta.template,
-        category: meta.category ?? categoryOf(meta.folder),
-        statement: statementOf(dataRoot, meta.book, meta.folder),
-        oracle: expected.answer
-      })
-    );
-  }
-  if (wanted === null || books !== null) return items;
-  const seen = new Set(items.map((item) => item.id));
-  const missing = [...wanted].filter((id) => !seen.has(id)).sort();
-  if (missing.length > 0) {
-    throw new Error(`${label}: ${missing.length} folder(s) are absent from the export, e.g. ${missing[0]}`);
-  }
-  return items;
-}
-
-/**
- * The items of one slice, sorted by id and cut to `limit`:
- *
- * - `holdout`    the 225 `eval/` examples of `training-data/<book>`, with the
- *                statement from `problem.md` and the oracle from the manifest
- * - `validation` the export rows whose `<book>/<folder>` id is listed in
- *                `validation-slice.json`
- * - `file:<path>` a JSONL file in export row shape (the same rows the export
- *                writes), for a pinned subset or the baseline sample of T4
- *
- * Items whose folder has no manifest row are a dataset defect, not an item
- * outcome, so resolution fails loudly instead of scoring without an oracle.
- */
-export function resolveSlice({
-  slice,
-  dataRoot = DEFAULT_DATA_ROOT,
-  exportPath = DEFAULT_EXPORT,
-  validationPath = DEFAULT_VALIDATION_SLICE,
-  books = null,
-  limit = null
-}) {
-  const sliceName = sliceNameOf(slice);
-  let items;
-  let source;
-
-  if (slice === 'holdout') {
-    const known = bookRoots({ root: dataRoot });
-    if (books !== null) {
-      const unknown = books.filter((book) => !known.includes(book));
-      if (unknown.length > 0) throw new Error(`unknown book(s): ${unknown.join(', ')}`);
-    }
-    const selected = known.filter((book) => books === null || books.includes(book));
-    items = [];
-    for (const book of selected) {
-      const root = join(dataRoot, book);
-      const oracles = expectedAnswersOf(root);
-      for (const file of solutionFilesOf(root)) {
-        const folder = relative(root, dirname(file)).split(sep).join('/');
-        if (!folder.startsWith('eval/')) continue;
-        const expected = oracles.get(folder);
-        if (expected === undefined) throw new Error(`holdout: no manifest row for ${book}/${folder}`);
-        items.push(
-          itemOf({
-            book,
-            folder,
-            plan: expected.plan,
-            category: categoryOf(folder),
-            statement: statementBodyOf(readFileSync(join(dirname(file), 'problem.md'), 'utf8')),
-            oracle: expected.answer
-          })
-        );
-      }
-    }
-    source = `${dataRoot}/<book>/eval/**/solution.sop`;
-  } else if (slice === 'validation') {
-    const wanted = new Set(JSON.parse(readFileSync(validationPath, 'utf8')).folders);
-    items = itemsFromExportRows({ rows: readJsonl(exportPath), wanted, dataRoot, books, label: 'validation' });
-    source = `${exportPath} filtered by ${validationPath}`;
-  } else {
-    const filePath = slice.slice('file:'.length);
-    items = itemsFromExportRows({ rows: readJsonl(filePath), wanted: null, dataRoot, books, label: `file:${filePath}` });
-    source = filePath;
-  }
-
-  items.sort((left, right) => (left.id < right.id ? -1 : left.id > right.id ? 1 : 0));
-  if (limit !== null && limit !== undefined) items = items.slice(0, limit);
-  return { sliceName, source, items };
-}
-
-/**
- * The identity of a resolved slice: one SHA-256 over the items the run scores.
- *
- * The score of an evaluation is a statement about a concrete set of prompts and
- * expected answers, so a manifest that names only the trainer view can name a
- * dataset no scored item came from: the export under `training/data/` is a file
- * that any later regeneration rewrites. This hash covers the scored set itself
- * (book, folder, plan, expected answer, statement), so a report can be checked
- * against the tree it measured. `exp-007-sft-wires` is the run that exposed the
- * gap: its report named the 7575-row export that was regenerated while the
- * holdout was running, not the 7335-row export its checkpoint was trained on.
- */
-export function sliceIdentityOf(items) {
-  const lines = items.map((item) =>
-    [item.book, item.folder, item.plan, item.oracle, item.statement].join('\u0000')
-  );
-  // The scored set is a set: the identity is computed over sorted lines, so a
-  // resolver that changes its ordering does not change the identity of a slice,
-  // while adding, dropping, or altering an item does.
-  return sha256OfText(lines.slice().sort().join('\n'));
-}
-
-class UsageError extends Error {}
-
-function positiveInt(text, flag) {
-  const value = Number(text);
-  if (!Number.isInteger(value) || value < 1) throw new UsageError(`${flag} needs a positive integer, got "${text}"`);
-  return value;
-}
-
-function parseArgs(argv) {
-  const options = {
-    experiment: null,
-    slice: null,
-    gguf: null,
-    books: null,
-    limit: null,
-    base: DEFAULT_BASE,
-    model: null,
-    maxTokens: DEFAULT_MAX_TOKENS,
-    concurrency: 1,
-    out: DEFAULT_REGISTRY,
-    log: false,
-    probes: false,
-    help: false
-  };
-  for (let index = 0; index < argv.length; index += 1) {
-    const flag = argv[index];
-    const value = () => {
-      const next = argv[index + 1];
-      if (next === undefined) throw new UsageError(`${flag} needs a value`);
-      index += 1;
-      return next;
-    };
-    switch (flag) {
-      case '--experiment':
-        options.experiment = value();
-        break;
-      case '--slice': {
-        const spec = value();
-        if (spec !== 'holdout' && spec !== 'validation' && !(spec.startsWith('file:') && spec.length > 'file:'.length)) {
-          throw new UsageError(`--slice must be holdout, validation, or file:<path>, got "${spec}"`);
-        }
-        options.slice = spec;
-        break;
-      }
-      case '--gguf':
-        options.gguf = value();
-        break;
-      case '--books': {
-        const list = value().split(',').map((book) => book.trim()).filter((book) => book !== '');
-        options.books = list.length > 0 ? list : null;
-        break;
-      }
-      case '--limit':
-        options.limit = positiveInt(value(), flag);
-        break;
-      case '--base':
-        options.base = value();
-        break;
-      case '--model':
-        options.model = value();
-        break;
-      case '--max-tokens':
-        options.maxTokens = positiveInt(value(), flag);
-        break;
-      case '--concurrency':
-        options.concurrency = positiveInt(value(), flag);
-        break;
-      case '--out':
-        options.out = value();
-        break;
-      case '--log':
-        options.log = true;
-        break;
-      case '--probes':
-        options.probes = true;
-        break;
-      case '--help':
-      case '-h':
-        options.help = true;
-        break;
-      default:
-        throw new UsageError(`unknown argument "${flag}"`);
-    }
-  }
-  return options;
-}
-
-const USAGE = `Usage: node evaluation/run-eval.mjs --experiment <id> --slice <holdout|validation|file:<path>> [options]
-
-Runs the D9 evaluation loop over one slice of the dataset and writes the
-evidence registry under <out>/<experiment>/: items/<slice>.jsonl (per-item
-records, written first), metrics.json, report.md, and run-manifest.json.
-
-Arguments:
-  --experiment <id>     experiment id; it names the registry folder (required)
-  --slice <spec>        holdout             the 225 training-data/<book>/eval/ examples
-                        validation          the 339 export rows of validation-slice.json
-                        file:<path>         a JSONL file in export row shape (messages + meta)
-  --books a,b           restrict the slice to those books (default: every book)
-  --limit N             keep the first N items after sorting by item id
-  --base <url>          llama-server base url (default ${DEFAULT_BASE})
-  --model <name>        model name recorded in the manifest; llama-server ignores it
-                        when a single model is served (default: not sent)
-  --max-tokens N        max_tokens of every request (default ${DEFAULT_MAX_TOKENS}; D9 ceiling)
-  --concurrency N       items generated in parallel (default 1, one request at a time)
-  --gguf <path>         checkpoint artifact the run scores, recorded in the manifest
-  --out <dir>           registry root (default ${DEFAULT_REGISTRY})
-  --log                 also append every per-item record to <experiment>/run-log.jsonl
-  --probes              also score the capability-probe suite on the same served
-                        artifact: items/capability-probes.jsonl, probes.md, and a
-                        capabilityProbes block in metrics.json (DS009, the loss
-                        detector the preservation decision reads)
-  --help, -h            print this help and exit
-
-Decoding is greedy (temperature 0) with one attempt per item, per D9: the only
-retry is the client's single retry on a transport failure. The four reported
-rates are never combined into one score.`;
-
-async function main(argv) {
-  const options = parseArgs(argv);
+export async function main(argv) {
+  const options = parseArgs(argv, { base: DEFAULT_BASE, maxTokens: DEFAULT_MAX_TOKENS });
   if (options.help) {
     process.stdout.write(`${USAGE}\n`);
     return;
