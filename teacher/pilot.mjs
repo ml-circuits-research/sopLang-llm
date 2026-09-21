@@ -30,10 +30,46 @@ import { createRuntime } from '../runtime/kernel.mjs';
 import { registerDocxSource } from '../context/sources/docx.mjs';
 import { DEFAULT_SOURCE_ID, getSource } from './sources/index.mjs';
 import { loadFamilies, buildProgram } from './families/index.mjs';
+import { loadProceduralFamilies } from './procedural/index.mjs';
+import { sampleInstances } from './procedural/random.mjs';
 import { orderHash, planHashOf } from './hashing.mjs';
 import { answerMatches, normalizeAnswer } from './naming.mjs';
 import { OUTPUT_ROOT, writeDataset } from './dataset.mjs';
 import { referencesExternalContext, hasDeclaredPremise, solverText } from './statements.mjs';
+
+/**
+ * The problems of a procedural source: one instance per sampled draw, shaped
+ * exactly like a parsed book problem so the rest of the pipeline — the family
+ * lookup, the verifier, the writer, and the export — treats it identically.
+ *
+ * The provenance a generated instance carries in place of a source span is its
+ * family, its instance index, the sampling seed of the source, and the latent
+ * plan record, all of which the manifest row and the report keep.
+ */
+export function generatedProblems({ source, families }) {
+  const problems = [];
+  families.forEach((family, familyIndex) => {
+    const instances = sampleInstances({ family, seed: source.seed, count: source.instancesPerFamily });
+    instances.forEach((instance) => {
+      problems.push({
+        id: `${family.id}-${instance.index + 1}`,
+        order: familyIndex * 1000 + instance.index,
+        title: family.name,
+        folder: `${family.id}-instance-${String(instance.index + 1).padStart(3, '0')}`,
+        type: family.type,
+        templateKey: family.name,
+        category: family.category,
+        statement: instance.statement,
+        printedAnswer: family.render(family.solve(instance.slots)),
+        familyId: family.id,
+        instanceIndex: instance.index,
+        latentPlan: family.id,
+        difficulty: family.difficulty
+      });
+    });
+  });
+  return problems;
+}
 
 export async function runPilot({
   book = DEFAULT_SOURCE_ID,
@@ -44,10 +80,24 @@ export async function runPilot({
   outputRoot = OUTPUT_ROOT
 } = {}) {
   const source = getSource(book);
-  const registration = registerDocxSource(source.path);
-  const parsed = source.parse(registration.paragraphs);
-  const { families } = await loadFamilies({ book, only: units === null ? null : new Set(units) });
-  let problems = units === null ? parsed.problems : parsed.problems.filter((problem) => units.includes(source.unitOf(problem)));
+  const generatedSource = source.kind === 'generated';
+  const registration = generatedSource ? null : registerDocxSource(source.path);
+  const only = units === null ? null : new Set(units);
+  let families;
+  let problems;
+  if (generatedSource) {
+    // A procedural source produces its own problems: the generator family fixes
+    // the latent plan, the recorded seed draws the instances, and the oracle of
+    // that plan is the printed answer of the instance (DS008, "Procedural
+    // source families").
+    const loaded = await loadProceduralFamilies({ source, only });
+    families = loaded.families;
+    problems = generatedProblems({ source, families: loaded.ordered });
+  } else {
+    const parsed = source.parse(registration.paragraphs);
+    families = (await loadFamilies({ book, only })).families;
+    problems = units === null ? parsed.problems : parsed.problems.filter((problem) => units.includes(source.unitOf(problem)));
+  }
   if (limit !== null) {
     problems = problems.slice(0, limit);
   }

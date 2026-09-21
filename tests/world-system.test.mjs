@@ -107,8 +107,12 @@ test('the source registry resolves every registered book and its units', () => {
     'logical-reasoning',
     'scientific-reasoning',
     'adult-reasoning',
-    'decompose-to-solve'
+    'decompose-to-solve',
+    'procedural-arithmetic'
   ]);
+  assert.equal(getSource('procedural-arithmetic').kind, 'generated');
+  assert.equal(getSource('procedural-arithmetic').unitLabel, 'family');
+  assert.equal(getSource('procedural-arithmetic').unitOf({ familyId: 'whole-units-under-a-budget' }), 'whole-units-under-a-budget');
   assert.equal(getSource('world-as-a-system').unitKind, 'code');
   assert.equal(getSource('world-as-a-system').unitOf({ familyCode: 'H7' }), 'H7');
   assert.equal(getSource('common-sense').unitOf({ templateOrdinal: 3 }), 3);

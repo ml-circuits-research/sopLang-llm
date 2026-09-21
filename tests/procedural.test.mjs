@@ -67,10 +67,10 @@ test('the reference parse recovers the sampled values and the statement is Engli
     for (const instance of sampleInstances({ family, seed: SEED, count: PER_FAMILY })) {
       assert.deepEqual(family.parse(instance.statement), instance.slots, `${family.id} instance ${instance.index} does not round-trip`);
       assert.doesNotThrow(() => assertEnglishContent(instance.statement, `${family.id} instance ${instance.index}`));
-      const answer = family.oracle(instance.slots);
+      const answer = family.render(family.solve(instance.slots));
       assert.ok(answer.length > 0);
       assert.ok(!instance.statement.includes(answer), `${family.id} instance ${instance.index} prints its own answer`);
-      assert.ok(family.explain(instance.slots, answer).length >= 2);
+      assert.ok(family.explain(instance.slots, family.solve(instance.slots)).length >= 2);
     }
   }
 });
@@ -81,8 +81,9 @@ test('every instance executes on the runtime and agrees with the independent ora
     for (const instance of sampleInstances({ family, seed: SEED, count: PER_FAMILY })) {
       const result = await runtime.run(programFor(instance.slots, family.compute), { outputs: ['answer'] });
       assert.equal(result.status, 'completed', `${family.id} instance ${instance.index} ended ${result.status}:${result.code} (${result.error?.message ?? ''})`);
-      assert.ok(answerMatches(family.oracle(instance.slots), String(result.outputs.answer)),
-        `${family.id} instance ${instance.index}: oracle "${family.oracle(instance.slots)}" against circuit "${result.outputs.answer}"`);
+      const expected = family.render(family.solve(instance.slots));
+      assert.ok(answerMatches(expected, String(result.outputs.answer)),
+        `${family.id} instance ${instance.index}: oracle "${expected}" against circuit "${result.outputs.answer}"`);
     }
   }
 });
@@ -136,6 +137,6 @@ test('family validation and the load-time smoke check reject defective families'
   assert.throws(() => validateProceduralFamily({ ...good, explain: undefined }, 'no-explain'), /must declare explain as a function/);
   assert.throws(() => validateProceduralFamily({ ...good, difficulty: { subproblems: 1 } }, 'thin-difficulty'), /difficulty vector is missing/);
   assert.throws(() => smokeFamily({ ...good, parse: () => ({ wrong: true }) }, { seed: SEED }), /does not recover the sampled values/);
-  assert.throws(() => smokeFamily({ ...good, oracle: () => '' }, { seed: SEED }), /oracle returned an empty answer/);
+  assert.throws(() => smokeFamily({ ...good, render: () => '' }, { seed: SEED }), /oracle returned an empty answer/);
 });
 

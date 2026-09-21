@@ -70,10 +70,13 @@ const netBalance = {
     };
   },
   /** Independent oracle: the ledger summed as a whole, in one expression per side. */
-  oracle(slots) {
+  solve(slots) {
     const credited = slots.openingBalance + slots.deposits.reduce((total, amount) => total + amount, 0);
     const debited = slots.withdrawals.reduce((total, amount) => total + amount, 0) + slots.withdrawalFee * slots.withdrawals.length;
-    return `The closing balance is ${credited - debited} units after ${slots.withdrawals.length} withdrawals.`;
+    return { closingBalance: credited - debited, withdrawals: slots.withdrawals.length };
+  },
+  render(solution) {
+    return `The closing balance is ${solution.closingBalance} units after ${solution.withdrawals} withdrawals.`;
   },
   compute: [
     'const slots = $slots;',
@@ -98,11 +101,11 @@ const netBalance = {
     'const withdrawals = ledger.filter((entry) => entry.kind === "withdrawal").length;',
     'return "The closing balance is " + balance + " units after " + withdrawals + " withdrawals.";'
   ].join('\n'),
-  explain(slots, answer) {
+  explain(slots, solution) {
     return [
       `The account opens with ${slots.openingBalance} units.`,
       `Deposits add ${slots.deposits.join(' + ')} units and withdrawals remove ${slots.withdrawals.join(' + ')} units plus ${slots.withdrawalFee} units of fee each.`,
-      `Summing the ledger gives the answer: ${answer}`
+      `Summing the ledger gives a closing balance of ${solution.closingBalance} units after ${solution.withdrawals} withdrawals.`
     ];
   }
 };
@@ -146,10 +149,13 @@ const wholeUnits = {
     };
   },
   /** Independent oracle: the affordable count from the money after the fee, by division. */
-  oracle(slots) {
+  solve(slots) {
     const afterFee = slots.budget - slots.setupFee;
     const count = Math.floor(afterFee / slots.unitPrice);
-    return `The workshop can order ${count} whole crates and has ${afterFee - count * slots.unitPrice} units left.`;
+    return { count, leftover: afterFee - count * slots.unitPrice };
+  },
+  render(solution) {
+    return `The workshop can order ${solution.count} whole crates and has ${solution.leftover} units left.`;
   },
   compute: [
     'const slots = $slots;',
@@ -166,11 +172,11 @@ const wholeUnits = {
     'probe(count === 0 || spent + slots.unitPrice > slots.budget, "the order must use the largest affordable number of crates");',
     'return "The workshop can order " + count + " whole crates and has " + (slots.budget - spent) + " units left.";'
   ].join('\n'),
-  explain(slots, answer) {
+  explain(slots, solution) {
     return [
       `The delivery fee of ${slots.setupFee} units is charged once, so ${slots.budget - slots.setupFee} units stay for the crates.`,
       `At ${slots.unitPrice} units per crate, the largest whole number of crates that fits is the answer to the stated limit.`,
-      `The order is the largest affordable one: ${answer}`
+      `The largest affordable order is ${solution.count} crates with ${solution.leftover} units left.`
     ];
   }
 };
@@ -227,11 +233,14 @@ const cheaperRate = {
     };
   },
   /** Independent oracle: the two rates as numbers, compared directly. */
-  oracle(slots) {
+  solve(slots) {
     const rateA = slots.optionA.price / slots.optionA.quantity;
     const rateB = slots.optionB.price / slots.optionB.quantity;
     const cheaper = rateA < rateB ? slots.optionA : slots.optionB;
-    return `${cheaper.label} is cheaper per metre by ${Math.abs(rateA - rateB).toFixed(2)} units per metre.`;
+    return { label: cheaper.label, margin: Math.abs(rateA - rateB).toFixed(2) };
+  },
+  render(solution) {
+    return `${solution.label} is cheaper per metre by ${solution.margin} units per metre.`;
   },
   compute: [
     'const slots = $slots;',
@@ -250,11 +259,11 @@ const cheaperRate = {
     'const margin = Math.abs(crossedA - crossedB) / (optionA.quantity * optionB.quantity);',
     'return cheaper.label + " is cheaper per metre by " + margin.toFixed(2) + " units per metre.";'
   ].join('\n'),
-  explain(slots, answer) {
+  explain(slots, solution) {
     return [
       `${slots.optionA.label} charges ${slots.optionA.price} units for ${slots.optionA.quantity} metres, and ${slots.optionB.label} charges ${slots.optionB.price} units for ${slots.optionB.quantity} metres.`,
       'The comparison crosses the quantities instead of rounding the two rates, so the verdict never depends on a rounded middle value.',
-      `The cheaper offer and the margin are: ${answer}`
+      `${solution.label} is the cheaper offer, by ${solution.margin} units per metre.`
     ];
   }
 };

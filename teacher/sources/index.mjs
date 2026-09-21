@@ -60,6 +60,7 @@ import {
   BOOK_QUARANTINE_RULES as DECOMPOSE_QUARANTINE_RULES,
   parseDecomposeToSolve
 } from './decompose-to-solve.mjs';
+import { PROCEDURAL_SOURCES } from './procedural.mjs';
 
 export const SOURCES = Object.freeze([
   Object.freeze({
@@ -166,7 +167,8 @@ export const SOURCES = Object.freeze([
     secondary: null,
     rights: 'project-owned seed book, research use',
     permittedUse: 'internal training and evaluation; no public redistribution of source text'
-  })
+  }),
+  ...PROCEDURAL_SOURCES
 ]);
 
 export const DEFAULT_SOURCE_ID = MATH_BOOK_ID;

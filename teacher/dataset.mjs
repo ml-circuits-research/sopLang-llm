@@ -54,7 +54,9 @@ export function writeDataset({ source, registration, accepted, rejected, split, 
       type: item.problem.type,
       category,
       split: inEval ? 'eval' : 'train',
-      paragraphs: `${item.problem.paragraphSpan.from}-${item.problem.paragraphSpan.to}`,
+      ...(source.kind === 'generated'
+        ? { instance: String(item.problem.instanceIndex + 1), seed: String(source.seed) }
+        : { paragraphs: `${item.problem.paragraphSpan.from}-${item.problem.paragraphSpan.to}` }),
       answer: item.shippedAnswer ?? item.problem.printedAnswer,
       answerStatus,
       planHash: planHashOf(item),
@@ -166,7 +168,7 @@ function explanationFile(item, source, status = 'match') {
     ...steps.map((step, index) => `${index + 1}. ${step}`),
     ''
   ];
-  if (Array.isArray(problem.steps) && problem.steps.length > 0) {
+  if (Array.isArray(problem.steps) && problem.steps.length > 0 && source.kind !== 'generated') {
     const sourceSteps = problem.steps.map((step, index) => `${index + 1}. ${step}`);
     lines.push(
       `Reference solution as printed in the source (${source.unitLabel} ${source.unitOf(problem)}, ${problem.steps.length} steps):`,
@@ -175,15 +177,21 @@ function explanationFile(item, source, status = 'match') {
       ''
     );
   }
-  if (typeof problem.explanation === 'string' && problem.explanation !== '') {
+  if (typeof problem.explanation === 'string' && problem.explanation !== '' && source.kind !== 'generated') {
     lines.push('Reference material as printed in the source:', '', problem.explanation, '');
+  }
+  if (source.kind === 'generated') {
+    lines.push(
+      `**Generator provenance.** ${source.generator} ${source.generatorVersion}, family ${problem.familyId}, instance ${problem.instanceIndex + 1}, sampled with seed ${source.seed} from the latent plan \`${problem.latentPlan}\`; this example carries no source span because its statement was generated.`,
+      ''
+    );
   }
   lines.push(
     '## Result',
     '',
     `**Answer.** ${item.shippedAnswer ?? problem.printedAnswer}`,
     '',
-    `**Verification.** ${verification.verification.class}: the executed circuit produced this answer, and the family computation reproduced it from the statement. The independence limitation of this class is stated in \`report.md\`.`,
+    `**Verification.** ${source.assuranceClass ?? verification.verification.class}: the executed circuit produced this answer, and the family computation reproduced it from the statement. The independence limitation of this class is stated in \`report.md\`.`,
     '',
     '**Program.** `solution.sop` (compiled values in `slots`, computation in `jsEval`).',
     ''
@@ -227,6 +235,9 @@ function escapeCell(value) {
 }
 
 function manifestRow(row, columnLabels) {
+  // A generated example has no source span: its provenance is the instance it
+  // was sampled as and the seed it was sampled from, in the same column slot.
+  const identity = row.paragraphs === undefined ? [row.instance, row.seed] : [row.paragraphs];
   const values = ([
     row.relative,
     row.problem,
@@ -236,7 +247,7 @@ function manifestRow(row, columnLabels) {
     row.type,
     row.category,
     row.split,
-    row.paragraphs,
+    ...identity,
     row.answer,
     row.answerStatus,
     row.planHash,
@@ -273,7 +284,7 @@ function buildManifestFiles({ rows, source }) {
     'type',
     'category',
     'split',
-    'paragraphs',
+    ...(source.kind === 'generated' ? ['instance', 'seed'] : ['paragraphs']),
     'answer',
     'status',
     'plan',
@@ -322,25 +333,57 @@ function registeredSources(outputRoot, currentSource, currentRegistration) {
   return SOURCES.filter((candidate) => candidate.id === currentSource.id || existsSync(join(outputRoot, candidate.id, 'manifest'))).map(
     (candidate) => ({
       source: candidate,
-      registration: candidate.id === currentSource.id ? currentRegistration : registerDocxSource(candidate.path)
+      // A generated source has no document to register: it is identified by its
+      // generator module and the seed its instances were sampled from.
+      registration: candidate.kind === 'generated'
+        ? null
+        : candidate.id === currentSource.id
+          ? currentRegistration
+          : registerDocxSource(candidate.path)
     })
   );
 }
 
+/** The locator sentence of a report: a book shows its extraction, a generated source its generator. */
+function sourceLineOf(source, registration) {
+  if (source.kind === 'generated') {
+    return `\`${source.path}\` (generator ${source.generator} ${source.generatorVersion}, seed ${source.seed}, ${source.instancesPerFamily} instances per family)`;
+  }
+  return `\`${source.path}\` (raw ${registration.rawHash.slice(0, 16)}, canonical ${registration.canonicalHash.slice(0, 16)}, extractor ${registration.extractor})`;
+}
+
 function sourcesFile(entries) {
-  return [
+  const books = entries.filter(({ source }) => source.kind !== 'generated');
+  const generated = entries.filter(({ source }) => source.kind === 'generated');
+  const lines = [
     '# Sources',
     '',
     'Source inventory of the pilot pipeline. Rights status is recorded per source and determines whether a derivative may appear in a released artifact.',
     '',
     '| source | path | role | raw hash | canonical hash | extractor | paragraphs | rights | permitted use |',
     '| --- | --- | --- | --- | --- | --- | --- | --- | --- |',
-    ...entries.map(
+    ...books.map(
       ({ source, registration }) =>
         `| ${source.id} | ${source.path} | seed book | ${registration.rawHash} | ${registration.canonicalHash} | ${registration.extractor} | ${registration.paragraphs.length} | ${source.rights} | ${source.permittedUse} |`
     ),
     ''
-  ].join('\n');
+  ];
+  if (generated.length > 0) {
+    lines.push(
+      '## Generated sources',
+      '',
+      'A generated source has no document parser, no paragraph spans, and no extracted text: its statements come from the generator named below, and every accepted example records the generator version, the family, the instance index, and the sampling seed in place of a source span (DS008, "Procedural source families").',
+      '',
+      '| source | generator | version | seed | instances per family | rights | permitted use |',
+      '| --- | --- | --- | --- | --- | --- | --- |',
+      ...generated.map(
+        ({ source }) =>
+          `| ${source.id} | ${source.path} | ${source.generatorVersion} | ${source.seed} | ${source.instancesPerFamily} | ${source.rights} | ${source.permittedUse} |`
+      ),
+      ''
+    );
+  }
+  return lines.join('\n');
 }
 
 /**
@@ -416,11 +459,13 @@ function reportFile({ source, registration, accepted, rejected, split, rows, ble
   const lines = [
     '# Dataset report',
     '',
-    `Source: \`${source.path}\` (raw ${registration.rawHash.slice(0, 16)}, canonical ${registration.canonicalHash.slice(0, 16)}, extractor ${registration.extractor}).`,
+    `Source: ${sourceLineOf(source, registration)}.`,
     '',
     `Accepted examples: ${accepted.length}. Rejected candidates: ${rejected.length}. Evaluation holdout: ${evaluated} (${((evaluated / Math.max(1, accepted.length)) * 100).toFixed(1)}%). Distinct plans: ${distinctPlans.size}. Distinct compiled circuits: ${distinctCircuits.size} (a circuit embeds the values it was compiled from, so the count equals the accepted set unless two problems compile to identical text).`,
     '',
-    'Acceptance class: every accepted example is `exact_verified` in the qualified sense defined by `DS008-training-data`: the executed circuit produced the printed answer, and the family computation reproduced it from the same reference parse. The independence that qualifies is stated under Limitations. An example whose printed answer the statement does not determine ships the computed answer instead and is `computed_verified`; it is listed under "Answers not shipped as printed".',
+    source.kind === 'generated'
+      ? `Acceptance class: every accepted example is \`${source.assuranceClass}\` as defined by \`DS008-training-data\`: the executed circuit produced the answer of the recorded latent plan, and the family oracle computed that answer by an independent route. The printed-answer signal of a book source does not exist for a generated instance, so the manifest rows record the generator, the family, the instance index, and the sampling seed instead of a source span.`
+      : 'Acceptance class: every accepted example is `exact_verified` in the qualified sense defined by `DS008-training-data`: the executed circuit produced the printed answer, and the family computation reproduced it from the same reference parse. The independence that qualifies is stated under Limitations. An example whose printed answer the statement does not determine ships the computed answer instead and is `computed_verified`; it is listed under "Answers not shipped as printed".',
     '',
     'Probes: every assembled circuit carries the probe harness of `teacher/families/probes.mjs` inside its `jsEval` answer stage — two assertions on the compiled `slots` wire and one assertion on the computed answer — so a malformed input or an empty result ends the run with a structured `execution_error` instead of publishing a wrong value.',
     '',

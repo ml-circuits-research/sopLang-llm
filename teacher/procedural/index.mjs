@@ -23,7 +23,7 @@ import { sampleInstances } from './random.mjs';
 export const PROCEDURAL_DIRECTORY = fileURLToPath(new URL('.', import.meta.url));
 
 const DIFFICULTY_AXES = Object.freeze(['subproblems', 'dependencyDepth', 'branching', 'irrelevantInformation', 'symbolicShare']);
-const FAMILY_FUNCTIONS = Object.freeze(['sample', 'statement', 'parse', 'oracle', 'explain']);
+const FAMILY_FUNCTIONS = Object.freeze(['sample', 'statement', 'parse', 'solve', 'render', 'explain']);
 
 /** One validated family, with the plan shape it fixes. */
 export function validateProceduralFamily(family, where) {
@@ -70,7 +70,7 @@ export function smokeFamily(family, { seed }) {
   if (JSON.stringify(reparsed) !== JSON.stringify(instance.slots)) {
     throw new Error(`${family.id}: the reference parse does not recover the sampled values`);
   }
-  const answer = family.oracle(instance.slots);
+  const answer = family.render(family.solve(instance.slots));
   if (typeof answer !== 'string' || answer.trim() === '') {
     throw new Error(`${family.id}: the oracle returned an empty answer`);
   }
