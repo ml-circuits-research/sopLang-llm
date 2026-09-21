@@ -1,0 +1,19 @@
+{
+  "experiment": "adapt-smoke-3",
+  "artifact": "/home/salboaie/work/sopLang-llm/evaluation/registry/exp-003-sft-lr1e-4/gguf/checkpoint-540.gguf (exp-003-sft-lr1e-4 checkpoint-540)",
+  "slice": {
+    "name": "holdout",
+    "spec": "holdout",
+    "items": 12
+  },
+  "demonstrations": 3,
+  "demonstrationRule": "training rows in export order, never the target book, distinct templates",
+  "decoding": {
+    "temperature": 0,
+    "maxTokens": 2048,
+    "concurrency": 4,
+    "attemptsPerItem": 1,
+    "transportRetries": 1
+  },
+  "startedAt": "2026-09-21T16:30:19.626Z"
+}

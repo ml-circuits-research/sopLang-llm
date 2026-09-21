@@ -38,6 +38,14 @@ Order of the next work items (from the analysis decisions):
 
 No larger student: the milestone is decided on `Qwen2.5-Coder-0.5B-Instruct`, and a 1.5B download/training was stopped and its partial weights deleted. The work is to exhaust what the 0.5B can do — data breadth, decomposition supervision, prompt-side capability catalog, and inference-time adaptation from demonstrated plans — before any capacity claim is entertained.
 
+## Current stage (2026-09-21, evening)
+
+**Working on: can the 0.5B compile with context?** `evaluation/run-adaptation.mjs` measures the same holdout statements with 0, 1, and 3 compiled examples placed in the prompt (demonstrations drawn from the training rows, never from the target book). Runs `adapt-holdout-{0,1,3}` are executing; the smoke over twelve items with three demonstrations showed 0 matches and 83.3% execution errors, so an early read is that demonstrations alone have not yet moved the unseen-family result. Estimate for this stage: about one hour of unattended GPU time.
+
+**Next stage: teach structure, not just answers (estimated 4 hours).** The student compiles taught shapes at 95.7% oracle on its own training rows and cannot compile an unseen family (0.4% on the holdout), so the next change is in the data and the target shape, not the model: (1) implement multi-wire targets in the pipeline (`buildProgram`, the writer, and `verify.mjs` accept intermediate wires with the probe harness on every `jsEval` stage, per `DS008-training-data.md` "Additional circuit shapes"); (2) author families whose plans decompose (filter, group, aggregate as named stages) plus more arithmetic and text shapes; (3) retrain the same 0.5B with the same recipe on the widened suite; (4) score the same instruments (selection plan-unseen, holdout, text probes direct and compiled). Split of the estimate: 1.5 h implementation and data, 1.5 h training, 1 h evaluation.
+
+**Not doing:** a larger student. The owner directive stands: the milestone is answered on `Qwen2.5-Coder-0.5B-Instruct`, and a bigger model is a decision the owner takes only if the evidence demands it.
+
 ## How to watch
 
 - `bash training/environment/train-status.sh` — one screen: status, steps, loss curve, device margin, checkpoints, episodes, whether the process is alive.
