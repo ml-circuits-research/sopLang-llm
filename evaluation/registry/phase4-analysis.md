@@ -63,6 +63,10 @@ Groups of related assertions repeat across items — `at least one group must re
 
 `common-sense`/`units-and-rates` is the whole of one shape: 50 items whose reference asks for a count of useful cases (oracle `20.9 useful cases.`), while the completion answers with a memorized rate sentence: `The useful output is 125400 undefined in undefined minutes.` Six of the 62 mismatches carry an unfilled template placeholder (`undefined`) in the answer text, and others append a unit-conversion step that the statement did not ask for (`… 35s. Convert the minutes to hours with 35 × 60 = 126000 hours.`). The program is syntactically valid, executes, and computes a quantity the statement does not request.
 
+## Surface comparison
+
+The holdout is not harder by surface. Statement lengths overlap the training distribution (median 634 characters against 491, p90 708 against 873), and target lengths are comparable at the median (1922 characters against 2211); the holdout's long tail is heavier (p90 8256 and maximum 8371 against 3509 and 6054), and the 100-item `dependency-chain-and-join` family is the family responsible for most of that tail and for 74 of the 80 compile failures. The reproduction command above prints the table (`Surface comparison`) from the shipped `problem.md` and `solution.sop` files. The heavy tail is worth noting for the next series — the widened plan set should keep solutions inside the length band the student trains on, or the sequence budget and the example design must grow with it — but it explains at most the compile-failure cluster, not the 0% oracle match across families whose statements and targets sit inside the training distribution.
+
 ## Verdicts on the DS009 diagnostic questions
 
 **"Syntax high but semantic success low — the student has learned the language but not the task."** Confirmed, and this is the primary finding. Parse validity 100.0%, graph validity 100.0%, and 225/225 completions in the correct program shape, against runtime completion 27.6% and oracle match 0.0%. The student emits legal SOP Lang for every statement and legal, executable JavaScript for two thirds of them; it does not compile the statement.

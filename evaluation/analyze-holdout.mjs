@@ -81,6 +81,26 @@ function slices() {
   };
 }
 
+// --- surface comparison ---------------------------------------------------
+function statementStats(paths) {
+  const statements = [];
+  const targets = [];
+  for (const path of paths) {
+    const problemPath = join(root, 'training-data', path, 'problem.md');
+    const solutionPath = join(root, 'training-data', path, 'solution.sop');
+    if (!existsSync(problemPath) || !existsSync(solutionPath)) continue;
+    const problem = readFileSync(problemPath, 'utf8').replace(/^#[^\n]*\n+/, '').trim();
+    statements.push(problem.length);
+    targets.push(readFileSync(solutionPath, 'utf8').length);
+  }
+  const summary = (values) => {
+    const sorted = [...values].sort((left, right) => left - right);
+    const at = (fraction) => sorted[Math.min(sorted.length - 1, Math.floor(fraction * sorted.length))];
+    return { n: sorted.length, median: at(0.5), p90: at(0.9), max: sorted.at(-1) };
+  };
+  return { statements: summary(statements), targets: summary(targets) };
+}
+
 // --- slots comparison -----------------------------------------------------
 function referenceSlots(book, folder) {
   const path = join(root, 'training-data', book, folder, 'solution.sop');
@@ -168,7 +188,17 @@ table(Object.entries(tally(items.map((item) =>
   [...(item.completion ?? '').matchAll(/^@(\w+)\s+(\w+)$/gm)].map((m) => m[2]).join(' + ') || '(no wire)'))),
   ['wires', 'items']);
 
+section('Surface comparison');
+table([
+  ['training split', statementStats(data.training.map((row) => `${row.meta.book}/${row.meta.folder}`))],
+  ['validation slice', statementStats(data.validation.map((row) => `${row.meta.book}/${row.meta.folder}`))],
+  ['holdout', statementStats(items.map((item) => `${item.book}/${item.folder}`))],
+].map(([label, stats]) => [label, stats.statements.n, stats.statements.median, stats.statements.p90, stats.statements.max,
+  stats.targets.n, stats.targets.median, stats.targets.p90, stats.targets.max]),
+['slice', 'items', 'statement median', 'statement p90', 'statement max', 'targets', 'target median', 'target p90', 'target max']);
+
 section('Question: does training on seen plans transfer to unseen plans?');
+
 if (checkpoint !== null) {
   const selectionPath = join(registry, `selection/items/checkpoint-${checkpoint}.jsonl`);
   if (existsSync(selectionPath)) {
