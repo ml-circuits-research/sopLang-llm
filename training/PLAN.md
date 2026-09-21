@@ -238,7 +238,7 @@ Quantize the selected checkpoint (`llama-quantize` to Q8_0 and Q4_K_M), rerun th
 
 ### T11 — Later series (4.7.3, 4.7.5, 4.7.6)
 
-Second student size (`Qwen2.5-Coder-1.5B-Instruct`, identical recipe and seeds, exp-005+), knowledge enrichment, and the generalization probes (unseen compositions, renamed vocabulary, greater depths — evaluation-only material from generated families) run only after T9 records their justification.
+Knowledge enrichment and the generalization probes (unseen compositions, renamed vocabulary, greater depths — evaluation-only material from generated families) run only after T9 records their justification. The second student size is dropped by owner directive (2026-09-21): the milestone is answered on the 0.5B student, so a scaling arm is out of scope.
 
 ## Definition of done for the first milestone
 

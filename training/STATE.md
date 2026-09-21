@@ -34,6 +34,10 @@ Order of the next work items (from the analysis decisions):
 2. Implement the data revision that `docs/specs/DS008-training-data.md` now specifies: register the first procedural source (a generator family with several plan shapes and a constructed oracle), extend `training-data/verify.mjs` to the extended plan fingerprint and the new circuit shapes, compile a small suite, re-export.
 3. Retrain on the widened suite and read the plan-unseen column of the selection table as the headline metric; only after that does the 1.5B student (D-C) or a further mixture arm become informative.
 
+## Owner directive (2026-09-21)
+
+No larger student: the milestone is decided on `Qwen2.5-Coder-0.5B-Instruct`, and a 1.5B download/training was stopped and its partial weights deleted. The work is to exhaust what the 0.5B can do — data breadth, decomposition supervision, prompt-side capability catalog, and inference-time adaptation from demonstrated plans — before any capacity claim is entertained.
+
 ## How to watch
 
 - `bash training/environment/train-status.sh` — one screen: status, steps, loss curve, device margin, checkpoints, episodes, whether the process is alive.

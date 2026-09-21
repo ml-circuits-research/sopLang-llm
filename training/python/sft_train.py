@@ -224,6 +224,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="experiment id (D12); names the default output directory and the run manifest",
     )
     parser.add_argument("--base-model", default=DEFAULT_BASE_MODEL, help="local base model directory")
+    parser.add_argument(
+        "--model-manifest",
+        default=DEFAULT_MODEL_MANIFEST,
+        help="pinned base-model record the run manifest embeds (one file per student size)",
+    )
     parser.add_argument("--data", default=DEFAULT_DATA, help="trainer-view JSONL export")
     parser.add_argument(
         "--validation-slice",
@@ -922,7 +927,7 @@ def main(argv: list[str] | None = None) -> int:
         "train_log": train_log_path,
         "run_manifest": run_manifest_path,
         "token_counts_out": token_counts_out,
-        "model_manifest": repo_path(DEFAULT_MODEL_MANIFEST),
+        "model_manifest": repo_path(args.model_manifest),
         "export_manifest": repo_path(DEFAULT_EXPORT_MANIFEST),
         "environment_manifest": repo_path(DEFAULT_ENVIRONMENT_MANIFEST),
     }
