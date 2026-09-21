@@ -14,7 +14,9 @@ Updated 2026-09-21 (GB10 fine-tuning pipeline). This file is the handoff: it say
 
 ## Resume point
 
-Nothing to restart: the machine is idle apart from the running `exp-004-lora` trainer and its waiting evaluation chain. Check them, then start the next work item.
+`exp-005-sft-widened` is queued: it waits for the deployment measurement of `exp-003` (Q8_0 and Q4_K_M artifacts) to free the GPU, then trains the same recipe as `exp-003` (full fine-tuning, lr 1e-4, 3 epochs, batch 4 x accumulation 8, gradient checkpointing, checkpoint every 90 steps) on the WIDENED export (7135 rows: the seven books plus the synthetic source with ten families and nine training plan shapes), and runs its selection and holdout automatically. The tokenizer gate was refreshed on that export: no row exceeds the 4096-token sequence length (`training/data/token-stats.json`).
+
+The earlier state, for reference: nothing else to restart: the machine is idle apart from the running `exp-004-lora` trainer and its waiting evaluation chain. Check them, then start the next work item.
 
 ```bash
 # what is running and how far it has come

@@ -5,17 +5,17 @@
     "class": "Qwen2Tokenizer",
     "revision": "ea3f2471cf1b1f0db85067f1ef93848e38e88c25"
   },
-  "rows": 6775,
-  "rows_in_file": 6775,
+  "rows": 7135,
+  "rows_in_file": 7135,
   "sampling": null,
   "max_seq_len": 4096,
-  "export_manifest_sha256": "11a862b3aa1d99c9d05f930bf434e320bf750fc82f2866a5e69b01d74758c308",
+  "export_manifest_sha256": "d3fb26baa73dbb0a5821d6abcaef7670f50aa2c7321e8ae75ca0608caa7aed08",
   "total_tokens": {
     "combined": {
       "min": 278,
-      "p50": 800,
-      "p90": 1192,
-      "p99": 1457,
+      "p50": 780,
+      "p90": 1173,
+      "p99": 1456,
       "max": 1968
     },
     "per_book": {
@@ -54,6 +54,13 @@
         "p99": 772,
         "max": 942
       },
+      "procedural-arithmetic": {
+        "min": 362,
+        "p50": 519,
+        "p90": 702,
+        "p99": 705,
+        "max": 705
+      },
       "scientific-reasoning": {
         "min": 603,
         "p50": 926,
@@ -73,8 +80,8 @@
   "target_tokens": {
     "combined": {
       "min": 155,
-      "p50": 570,
-      "p90": 906,
+      "p50": 557,
+      "p90": 898,
       "p99": 1199,
       "max": 1613
     },
@@ -113,6 +120,13 @@
         "p90": 356,
         "p99": 630,
         "max": 780
+      },
+      "procedural-arithmetic": {
+        "min": 245,
+        "p50": 377,
+        "p90": 537,
+        "p99": 538,
+        "max": 538
       },
       "scientific-reasoning": {
         "min": 357,
