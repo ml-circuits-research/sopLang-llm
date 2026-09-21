@@ -305,7 +305,7 @@ const USAGE = [
 ].join("\n");
 
 export async function main(argv) {
-  const options = parseArgs(argv, { base: DEFAULT_BASE, maxTokens: DEFAULT_MAX_TOKENS });
+  const options = parseArgs(argv, { base: DEFAULT_BASE, maxTokens: DEFAULT_MAX_TOKENS, out: DEFAULT_REGISTRY });
   if (options.help) {
     process.stdout.write(`${USAGE}\n`);
     return;

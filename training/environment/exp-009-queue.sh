@@ -53,6 +53,13 @@ while :; do
     note "exp-009-mix10 launched; the evaluation chain follows automatically"
     exit 0
   fi
+  # A chain that is running is the normal case here: start-chain.sh decides
+  # whether exp-008 still needs one, and never starts a second chain beside a
+  # live one (the gap that produced duplicate selections on the night of
+  # 2026-09-21).
+  if [ -f "$PRESERVATION" ]; then
+    bash "$root/evaluation/start-chain.sh" exp-008-sft-shapes >> "$LOG" 2>&1 || true
+  fi
   if [ "$(date +%s)" -gt "$deadline" ]; then
     note "timed out waiting for $PRESERVATION or the exp-008 holdout report; nothing started"
     exit 0

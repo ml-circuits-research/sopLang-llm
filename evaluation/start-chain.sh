@@ -38,6 +38,17 @@ if [ -f "$registry/report.md" ]; then
   echo "start-chain: $experiment already has a holdout report; nothing to do"
   exit 0
 fi
+# A selection table with a winner is evidence of a completed selection, so a
+# chain started after it belongs at the holdout step, not at the top: on the
+# night of 2026-09-21 a chain restarted from scratch and re-scored the eight
+# checkpoints while the holdout it was meant to run waited behind it.
+if [ -f "$registry/selection.md" ] && [ -f "$registry/selection.json" ]; then
+  echo "start-chain: $experiment already has a completed selection; starting the holdout of its winner"
+  setsid nohup bash "$root/evaluation/run-holdout.sh" "$experiment" --concurrency 4 >> "$log" 2>&1 < /dev/null &
+  sleep 3
+  echo "start-chain: holdout pid $(pgrep -f "[r]un-holdout.sh $experiment" | head -1)"
+  exit 0
+fi
 if pgrep -f "[r]un-series.sh $experiment" >/dev/null \
   || pgrep -f "[s]elect-checkpoint.mjs --experiment $experiment" >/dev/null \
   || pgrep -f "[r]un-eval.mjs --experiment $experiment" >/dev/null; then

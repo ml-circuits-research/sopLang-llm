@@ -33,7 +33,7 @@ function positiveInt(text, flag) {
   return value;
 }
 
-export function parseArgs(argv, { base, maxTokens }) {
+export function parseArgs(argv, { base, maxTokens, out = 'evaluation/registry' }) {
   const options = {
     experiment: null,
     slice: null,
@@ -44,7 +44,7 @@ export function parseArgs(argv, { base, maxTokens }) {
     model: null,
     maxTokens,
     concurrency: 1,
-    out: null,
+    out,
     log: false,
     probes: false,
     help: false
