@@ -252,6 +252,13 @@ export function buildProgram(entry, slots) {
     wires.push('@facts literal', facts, '');
   }
   wires.push('@slots literal', JSON.stringify(slots, null, 2), '');
+  // Intermediate wires of a decomposition plan (DS008, "Additional circuit
+  // shapes"): each one publishes a named value the answer wire reads through
+  // `$name`, and a `jsEval` stage carries the same probe harness as the answer
+  // wire, so no stage can publish an unchecked value.
+  for (const wire of entry.wires ?? []) {
+    wires.push(`@${wire.name} ${wire.command}`, wire.command === 'jsEval' ? answerBody(wire.body) : String(wire.body), '');
+  }
   wires.push('@answer jsEval', answerBody(entry.compute));
   return `${wires.join('\n')}\n`;
 }
@@ -282,5 +289,15 @@ function factsBody(entry) {
  */
 export function planFingerprint(entry) {
   const facts = factsBody(entry);
-  return `${facts === null ? '' : facts}\n===\n${entry.compute}`;
+  // The fingerprint is the plan identity: the fact body, every intermediate wire
+  // (name, command, body, in order), and the compute body, without the instance
+  // values. A family with no intermediate wires produces exactly the two-section
+  // string it produced before, so widening the shape does not renumber the
+  // fingerprints of the shipped suite.
+  const parts = [facts === null ? '' : facts];
+  for (const wire of entry.wires ?? []) {
+    parts.push(`${wire.name}\u0000${wire.command}\u0000${wire.body}`);
+  }
+  parts.push(entry.compute);
+  return parts.join('\n===\n');
 }

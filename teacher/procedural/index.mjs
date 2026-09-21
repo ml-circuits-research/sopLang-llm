@@ -52,6 +52,30 @@ export function validateProceduralFamily(family, where) {
   if (typeof family.compute !== 'string' || family.compute.trim() === '') {
     throw new Error(`${where}: compute must be a non-empty circuit body`);
   }
+  if (family.wires !== undefined) {
+    if (!Array.isArray(family.wires) || family.wires.length === 0) {
+      throw new Error(`${where}: wires must be a non-empty array when declared`);
+    }
+    const names = new Set();
+    for (const wire of family.wires) {
+      if (typeof wire?.name !== "string" || !/^[a-z][a-zA-Z0-9]*$/.test(wire.name)) {
+        throw new Error(`${where}: every intermediate wire name must start lowercase and continue with letters or digits`);
+      }
+      if (["answer", "slots", "facts"].includes(wire.name)) {
+        throw new Error(`${where}: the name ${wire.name} is reserved`);
+      }
+      if (names.has(wire.name)) {
+        throw new Error(`${where}: the intermediate wire ${wire.name} is declared twice`);
+      }
+      names.add(wire.name);
+      if (!["jsEval", "literal"].includes(wire.command)) {
+        throw new Error(`${where}: the intermediate wire ${wire.name} must be jsEval or literal`);
+      }
+      if (typeof wire.body !== "string" || wire.body.trim() === "") {
+        throw new Error(`${where}: the intermediate wire ${wire.name} needs a body`);
+      }
+    }
+  }
   for (const axis of DIFFICULTY_AXES) {
     if (typeof family.difficulty[axis] !== 'number') {
       throw new Error(`${where}: the difficulty vector is missing the numeric axis ${axis}`);

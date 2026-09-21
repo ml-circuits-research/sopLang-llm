@@ -16,7 +16,7 @@ import { createHash } from 'node:crypto';
 
 import { families, sourceId, generatorVersion } from '../teacher/procedural/arithmetic.mjs';
 import { sampleInstances } from '../teacher/procedural/random.mjs';
-import { answerBody } from '../teacher/families/probes.mjs';
+import { buildProgram } from '../teacher/families/index.mjs';
 import { assertEnglishContent } from '../teacher/language.mjs';
 import { answerMatches, slugify } from '../teacher/naming.mjs';
 import { createRuntime } from '../runtime/kernel.mjs';
@@ -25,8 +25,8 @@ import { canonicalJson } from '../teacher/procedural/index.mjs';
 const SEED = 20260921;
 const PER_FAMILY = 25;
 
-function programFor(slots, compute) {
-  return `@slots literal\n${JSON.stringify(slots, null, 2)}\n\n@answer jsEval\n${answerBody(compute)}\n`;
+function programFor(family, slots) {
+  return buildProgram({ compute: family.compute, wires: family.wires }, slots);
 }
 
 test('the procedural source is identified and its families are slugged and unique', () => {
@@ -80,7 +80,7 @@ test('every instance executes on the runtime and agrees with the independent ora
   const runtime = createRuntime();
   for (const family of families) {
     for (const instance of sampleInstances({ family, seed: SEED, count: PER_FAMILY })) {
-      const result = await runtime.run(programFor(instance.slots, family.compute), { outputs: ['answer'] });
+      const result = await runtime.run(programFor(family, instance.slots), { outputs: ['answer'] });
       assert.equal(result.status, 'completed', `${family.id} instance ${instance.index} ended ${result.status}:${result.code} (${result.error?.message ?? ''})`);
       const expected = family.render(family.solve(instance.slots));
       assert.ok(answerMatches(expected, String(result.outputs.answer)),
@@ -94,7 +94,7 @@ test('a statement whose values changed is rejected by the circuit guards', async
   const family = families[1];
   const [instance] = sampleInstances({ family, seed: SEED, count: 1 });
   const broken = { ...instance.slots, unitPrice: 0 };
-  const result = await runtime.run(programFor(broken, family.compute), { outputs: ['answer'] });
+  const result = await runtime.run(programFor(family, broken), { outputs: ['answer'] });
   assert.equal(result.status, 'failed');
   assert.match(String(result.error?.message ?? ''), /probe failed/);
 });
