@@ -598,5 +598,6 @@
         "op": "stated"
       }
     }
-  ]
+  ],
+  "measuredIn": "Direct-answer mode: the suite asks the model for the value with its own system prompt, so it measures what a small model can do WITHOUT compiling a plan. The project thesis is that these tasks become solvable by compiling them into a circuit that delegates the counting to jsEval, which is why the text example families exist in the training data; the compiled-plan comparison uses the same tasks through the compiled-plan profile plus execution."
 }
