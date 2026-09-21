@@ -59,7 +59,7 @@ sleep 5
 echo "resume-series: supervisor pid $!"
 
 echo "resume-series: evaluation chain after the trainer stops"
-nohup bash "$root/evaluation/run-series.sh" "$experiment" >> "$root/evaluation/registry/$experiment/series.log" 2>&1 &
+nohup bash "$root/evaluation/start-chain.sh" "$experiment" >> "$root/evaluation/registry/$experiment/series.log" 2>&1 &
 sleep 2
 echo "resume-series: chain pid $!"
 echo "resume-series: watch with bash training/environment/work-status.sh"

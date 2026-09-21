@@ -75,7 +75,7 @@ pass() {
           # the GPU by itself. When another experiment holds it, the pass after
           # that one finishes starts this chain instead, and the note says so.
           note "CHAIN $name has no holdout report and no chain running — starting the evaluation chain"
-          ( cd "$root" && bash evaluation/run-series.sh "$name" >> "$root/evaluation/registry/$name/series.log" 2>&1 & )
+          bash "$root/evaluation/start-chain.sh" "$name" >> "$root/evaluation/registry/$name/series.log" 2>&1
         elif [ ! -f "$root/evaluation/registry/$name/report.md" ]; then
           if pgrep -f "sft_train.py --experiment" >/dev/null; then
             note "CHAIN $name still needs its evaluation chain; waiting for the running trainer to free the GPU"
