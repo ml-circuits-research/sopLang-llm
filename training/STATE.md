@@ -29,9 +29,10 @@ node evaluation/analyze-holdout.mjs --experiment exp-008-sft-shapes
 Order of the next work items:
 
 1. Read `exp-008`'s selection table with the plan-unseen column as the headline, then its holdout and probes; write the row into `evaluation/registry/phase4-first-series.md` and the section into `phase4-analysis.md`. The question this arm answers: does teaching deeper structure (two published stages per plan, twenty plan shapes) move a family the suite never taught?
-2. A capability-preservation arm. The probes read 4/10 for the base and 0-1/10 for every fine-tuned arm, so the next series varies the mixture with a recorded size and source, and re-scores the same probe suite on the same served artifact.
-3. The container and definition-read shapes (D-G): the four gates are the family validator (`teacher/procedural/index.mjs` accepts only `jsEval`/`literal` intermediate wires), the program builder (`teacher/families/index.mjs`, no container wire path), the provenance battery (`training-data/provenance.mjs` judges reactivity from `slots`/`facts` references only), and the missing manifest column for the structural read set that DS008 requires.
-4. Split `evaluation/run-eval.mjs` to the DS001 size rule (848 lines, the only `.mjs` over it) and finish T11's generalization probes.
+2. `exp-009-mix10` is queued behind that chain (`training/environment/exp-009-queue.sh`): the same recipe and export plus the capability-preservation view `training/data/preservation-10.jsonl`, which repeats every tenth statement with the derived standalone JavaScript that prints the same answer (`training/preservation.mjs`, profile `js-preservation-1`, ratio 0.1 recorded in the export manifest, trainer flag `--extra-data`). Its probe score on the same served artifact is the mixture verdict, measured against the base's 4 of 10 and the SOP-only arms' 0 or 1.
+3. A capability-preservation arm at another ratio, or a SOP-only control at the same step count, only if the probe score of `exp-009` leaves the question open.
+4. The container and definition-read shapes (D-G): the four gates are the family validator (`teacher/procedural/index.mjs` accepts only `jsEval`/`literal` intermediate wires), the program builder (`teacher/families/index.mjs`, no container wire path), the provenance battery (`training-data/provenance.mjs` judges reactivity from `slots`/`facts` references only), and the missing manifest column for the structural read set that DS008 requires.
+5. Split `evaluation/run-eval.mjs` to the DS001 size rule (866 lines, the only `.mjs` over it) and finish T11's generalization probes.
 
 ## Owner directive (2026-09-21)
 

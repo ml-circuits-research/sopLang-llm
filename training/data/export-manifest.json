@@ -125,6 +125,11 @@
       "sha256": "7d27d6ae70c977416b5c1e4e4f6a75b163b960dfda9de43732352c49cfd5f471",
       "bytes": 36612580,
       "rows": 7575
+    },
+    "preservation-10.jsonl": {
+      "sha256": "855465ef5a1d3f5c16fc469cd043f6c9681ebdff5c059c73b4d46c940ef822a7",
+      "bytes": 3447601,
+      "rows": 758
     }
   },
   "dataset": {
@@ -134,5 +139,19 @@
   "validationSlice": {
     "seed": 3407,
     "count": 339
+  },
+  "preservation": {
+    "profile": {
+      "id": "js-preservation-1",
+      "systemPromptSha256": "5ca63f1bbde6094ac3f95f30cc3460ba981a21a4c694f716188576f09abbfe99"
+    },
+    "ratio": 0.1,
+    "stride": 10,
+    "rows": 758,
+    "sourceSnapshot": "5ffd341ef13dcda876fe51c15569553dc7af9f4cd0adf6773fcdf7dc64842e12",
+    "derivation": "training/preservation.mjs 1.0.0: each sampled circuit is re-emitted as standalone JavaScript with the same wires bound as constants and the answer printed by console.log",
+    "file": "preservation-10.jsonl",
+    "sha256": "855465ef5a1d3f5c16fc469cd043f6c9681ebdff5c059c73b4d46c940ef822a7",
+    "bytes": 3447601
   }
 }

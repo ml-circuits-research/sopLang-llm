@@ -31,6 +31,11 @@ import {
   statementBodyOf,
 } from '../training-data/dataset-manifest.mjs';
 import { SOURCES } from '../teacher/sources/index.mjs';
+import {
+  preservationFileName,
+  preservationManifestOf,
+  preservationRowsOf,
+} from './preservation.mjs';
 
 /** Registered sources whose statements come from a generator, not a document, keyed by id. */
 const GENERATED_SOURCES = new Map(SOURCES.filter((source) => source.kind === 'generated').map((source) => [source.id, source]));
@@ -455,6 +460,17 @@ export function buildTrainerView({ datasetRoot = DEFAULT_DATASET_ROOT } = {}) {
   for (const [name, text] of files) {
     fileRecords[name] = { sha256: sha256(text), bytes: Buffer.byteLength(text), rows: text.split('\n').length - 1 };
   }
+  // The capability-preservation view (DS009): the same statements with the
+  // derived JavaScript target, so a mixture arm can repeat 10% of the export in
+  // the other output language without importing a second corpus.
+  const preservationRows = preservationRowsOf(rows);
+  const preservationName = preservationFileName();
+  const preservationFile = jsonlOf(preservationRows, serialized);
+  fileRecords[preservationName] = {
+    sha256: sha256(preservationFile),
+    bytes: Buffer.byteLength(preservationFile),
+    rows: preservationRows.length,
+  };
   const bookRecords = {};
   for (const book of books) {
     const selected = rows.filter((row) => row.book === book);
@@ -479,8 +495,14 @@ export function buildTrainerView({ datasetRoot = DEFAULT_DATASET_ROOT } = {}) {
       sourcesSha256: sha256(readFileSync(join(datasetRoot, 'sources.md'), 'utf8')),
     },
     validationSlice: { seed: validation.seed, count: validation.count },
+    preservation: {
+      ...preservationManifestOf(preservationRows, { sourceSnapshot: snapshot }),
+      file: preservationName,
+      sha256: fileRecords[preservationName].sha256,
+      bytes: fileRecords[preservationName].bytes,
+    },
   };
-  return { rows, files, manifest, report, validation };
+  return { rows, files, manifest, report, validation, preservationFile, preservationName };
 }
 
 /** Writes the trainer view and returns its manifest. `book` limits the JSONL files written. */
@@ -498,6 +520,9 @@ export function writeTrainerView({ datasetRoot = DEFAULT_DATASET_ROOT, outDir = 
       continue;
     }
     writeFileSync(join(outDir, name), text);
+  }
+  if (book === null) {
+    writeFileSync(join(outDir, view.preservationName), view.preservationFile);
   }
   writeFileSync(join(outDir, 'export-manifest.json'), JSON.stringify(view.manifest, null, 2) + '\n');
   writeFileSync(join(outDir, 'report.md'), view.report);
@@ -536,4 +561,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   for (const [name, record] of Object.entries(manifest.files)) {
     console.log(`  ${name}: ${record.rows} rows, ${record.bytes} bytes, sha256 ${record.sha256.slice(0, 16)}`);
   }
+  console.log(
+    `  ${manifest.preservation.file}: ${manifest.preservation.rows} rows, profile ${manifest.preservation.profile.id}, ratio ${manifest.preservation.ratio} (1 in ${manifest.preservation.stride}), sha256 ${manifest.preservation.sha256.slice(0, 16)}`,
+  );
 }

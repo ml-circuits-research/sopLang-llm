@@ -231,6 +231,15 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument("--data", default=DEFAULT_DATA, help="trainer-view JSONL export")
     parser.add_argument(
+        "--extra-data",
+        default=None,
+        help=(
+            "a second trainer view appended to the selected training rows (the capability-preservation "
+            "view of training/export.mjs, DS009 'Capability preservation'); the same validation-slice and "
+            "subset filtering applies to it, and the run manifest records its path and hash"
+        ),
+    )
+    parser.add_argument(
         "--validation-slice",
         default=DEFAULT_VALIDATION_SLICE,
         help="D11 slice whose folder ids are excluded from training",
@@ -720,6 +729,12 @@ def build_manifest(
         "tokenizer_file_hashes": file_hashes(paths["base_model"], TOKENIZER_FILES),
         "dataset_path": str(paths["data"]),
         "dataset_sha256": sha256_file(paths["data"]),
+        "dataset_extra_path": str(extra_path) if extra_path is not None else None,
+        "dataset_extra_sha256": (
+            sha256_file(extra_path) if extra_path is not None and extra_path.is_file() else None
+        ),
+        "dataset_extra_rows": len(extra_rows),
+        "dataset_preservation": export_manifest.get("preservation"),
         "dataset_snapshot": export_manifest.get("snapshot"),
         "dataset_file_hashes": {
             name: entry.get("sha256")
@@ -939,16 +954,36 @@ def main(argv: list[str] | None = None) -> int:
         raise SystemExit(f"{base_model}: the base model directory does not exist")
 
     rows = load_rows(data_path)
-    kept_rows, excluded_rows, missing_subset_folders = select_rows(
-        rows,
-        read_folder_ids(validation_slice_path),
-        read_folder_ids(subset_path) if subset_path is not None else None,
-    )
+    validation_folders = read_folder_ids(validation_slice_path)
+    subset_folders = read_folder_ids(subset_path) if subset_path is not None else None
+    kept_rows, excluded_rows, missing_subset_folders = select_rows(rows, validation_folders, subset_folders)
+    # The capability-preservation view: the same filtering applies (it keeps the
+    # folder identity of the row each preservation example came from), so a
+    # preservation example of a validation row is excluded exactly like its
+    # source, and a subset run cannot leak a slice row through this file.
+    extra_path = repo_path(args.extra_data) if args.extra_data else None
+    extra_rows: list[dict] = []
+    extra_excluded_rows = 0
+    if extra_path is not None:
+        if not extra_path.is_file():
+            raise SystemExit(f"{extra_path}: the extra trainer view does not exist")
+        extra_kept, extra_excluded, _ = select_rows(
+            load_rows(extra_path), validation_folders, subset_folders
+        )
+        extra_rows = extra_kept
+        extra_excluded_rows = len(extra_excluded)
+        kept_rows = kept_rows + extra_rows
     if missing_subset_folders:
         log(f"warning: {len(missing_subset_folders)} subset folder ids matched no training row")
     log(
         f"data: {len(rows)} rows, {len(excluded_rows)} excluded by the validation slice, "
-        f"{len(kept_rows)} selected for training"
+        f"{len(kept_rows) - len(extra_rows)} selected for training"
+        + (
+            f", plus {len(extra_rows)} preservation rows from {extra_path.name} "
+            f"({extra_excluded_rows} of them excluded by the validation slice)"
+            if extra_path is not None
+            else ""
+        )
     )
 
     tokenizer = load_tokenizer(base_model)
