@@ -1,0 +1,45 @@
+{
+  "environment": {
+    "CPATH": "/home/salboaie/work/sopLang-llm/tools/python-headers/usr/include:/home/salboaie/work/sopLang-llm/tools/python-headers/usr/include/python3.12",
+    "TRITON_PTXAS_PATH": "/usr/local/cuda/bin/ptxas",
+    "venv": "/home/salboaie/work/sopLang-llm/training/.venv"
+  },
+  "facts": {
+    "cpu_count": 20,
+    "cpu_model": "0xd87",
+    "cuda_runtime": "13.0",
+    "driver": "580.159.03",
+    "machine": "aarch64",
+    "memory_total": "125441424 kB",
+    "node": "v22.23.2",
+    "nvcc": "Build cuda_13.0.r13.0/compiler.36424714_0",
+    "python": "3.12.3",
+    "system": "Linux"
+  },
+  "probe_version": "1.1.0",
+  "python_packages": {
+    "lock_lines": 61
+  },
+  "torch": {
+    "capability": "12.1",
+    "cudnn": 92400,
+    "device": "NVIDIA GB10",
+    "device_count": 1,
+    "gradient_sum": 6.589609146118164,
+    "loss": 516.5369873046875,
+    "max_memory_allocated_bytes": 71304192,
+    "torch": "2.14.0+cu130",
+    "torch_cuda": "13.0"
+  },
+  "trainer": {
+    "accelerate": "1.15.0",
+    "huggingface_hub": "1.32.0",
+    "peft": "0.21.0",
+    "transformers": "5.17.0"
+  },
+  "triton": {
+    "helper": "CudaUtils",
+    "target": "GPUTarget(backend='cuda', arch=121, warp_size=32)",
+    "triton": "3.8.0"
+  }
+}

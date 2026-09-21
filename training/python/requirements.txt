@@ -1,0 +1,20 @@
+# Trainer-side dependency intent (the sanctioned non-Node surface of
+# training/PLAN.md D13). Resolved versions are recorded in requirements.lock
+# by training/environment/setup.sh.
+#
+# PyTorch must come from the cu130 index; the setup script installs it first
+# with `--index-url https://download.pytorch.org/whl/cu130` so no later
+# resolution can substitute a cu12 or CPU wheel. The packages below are the
+# minimal supervised-fine-tuning stack: transformers Trainer for the training
+# loop, accelerate for device placement, peft for the LoRA comparison, and
+# huggingface_hub plus gguf for the pinned base model and the GGUF export.
+--extra-index-url https://download.pytorch.org/whl/cu130
+torch
+transformers
+accelerate
+peft
+huggingface_hub
+gguf
+# The llama.cpp GGUF converter imports SentencePieceProcessor for the Qwen2
+# vocabulary path; transformers 5 no longer pulls it in.
+sentencepiece

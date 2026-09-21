@@ -1,0 +1,124 @@
+{
+  "exporter": "training/export.mjs 1.0.0",
+  "profile": {
+    "id": "compiled-plan-chat-1",
+    "systemPromptSha256": "67655b81e61a7025442d5d9db6f47566350b4f3d045d48083089ff05608caae2"
+  },
+  "snapshot": "82d3dedb8f4c296f09969ca154ae62d9139c01215cea1cf51a86680132bf3289",
+  "rows": 6775,
+  "books": {
+    "adult-reasoning": {
+      "rows": 990,
+      "categories": {
+        "no-knowledge": 990,
+        "knowledge": 0
+      },
+      "templates": 99,
+      "plans": 99
+    },
+    "common-sense": {
+      "rows": 950,
+      "categories": {
+        "no-knowledge": 950,
+        "knowledge": 0
+      },
+      "templates": 19,
+      "plans": 19
+    },
+    "decompose-to-solve": {
+      "rows": 900,
+      "categories": {
+        "no-knowledge": 900,
+        "knowledge": 0
+      },
+      "templates": 9,
+      "plans": 9
+    },
+    "logical-reasoning": {
+      "rows": 990,
+      "categories": {
+        "no-knowledge": 990,
+        "knowledge": 0
+      },
+      "templates": 99,
+      "plans": 99
+    },
+    "mathematical-thinking": {
+      "rows": 990,
+      "categories": {
+        "no-knowledge": 935,
+        "knowledge": 55
+      },
+      "templates": 600,
+      "plans": 579
+    },
+    "scientific-reasoning": {
+      "rows": 975,
+      "categories": {
+        "no-knowledge": 950,
+        "knowledge": 25
+      },
+      "templates": 39,
+      "plans": 39
+    },
+    "world-as-a-system": {
+      "rows": 980,
+      "categories": {
+        "no-knowledge": 980,
+        "knowledge": 0
+      },
+      "templates": 196,
+      "plans": 49
+    }
+  },
+  "files": {
+    "adult-reasoning.jsonl": {
+      "sha256": "a74d3babe89e16cd62fbc678cb0a0adf282c6622b8431779e922cdd1ff5440ed",
+      "bytes": 4338517,
+      "rows": 990
+    },
+    "common-sense.jsonl": {
+      "sha256": "87888a283e9614c930fa75bfb10e39e0fbe72b20776ac354b7413bb9ef53cd56",
+      "bytes": 4541184,
+      "rows": 950
+    },
+    "decompose-to-solve.jsonl": {
+      "sha256": "79aa2ba89cdc1a381f275410379041946634bcf8c87f930f9bb20124bb214425",
+      "bytes": 4820383,
+      "rows": 900
+    },
+    "logical-reasoning.jsonl": {
+      "sha256": "f13107029a671fb866f3ba859cf303e6f354f21af22353b55f4786815cd8f8a4",
+      "bytes": 3855339,
+      "rows": 990
+    },
+    "mathematical-thinking.jsonl": {
+      "sha256": "4082a1a13379afd765524a7cbba0104d6670cef6cffb53598a2b52b025a8c5c8",
+      "bytes": 2728425,
+      "rows": 990
+    },
+    "scientific-reasoning.jsonl": {
+      "sha256": "b22464cb58e696b9a1ff476c40d2acf0c8e87963f3203f0b6e0c15502b7278ce",
+      "bytes": 5319884,
+      "rows": 975
+    },
+    "world-as-a-system.jsonl": {
+      "sha256": "3c8d6bc664bf5a82050f3838cb418d4bddb0bd070c32d32c6cb89b8b2abb5b9d",
+      "bytes": 5789833,
+      "rows": 980
+    },
+    "all-books.jsonl": {
+      "sha256": "219b10077021cded3f2a27741a40c3c973f74565a420d2b68c80abbec2dcd8ec",
+      "bytes": 31393565,
+      "rows": 6775
+    }
+  },
+  "dataset": {
+    "root": "training-data",
+    "sourcesSha256": "1043875dc91f11bb1ce0a4acbf08a62499088c7eaa1eea74950f1af3242c4f74"
+  },
+  "validationSlice": {
+    "seed": 3407,
+    "count": 339
+  }
+}

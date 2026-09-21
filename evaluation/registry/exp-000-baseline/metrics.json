@@ -1,0 +1,368 @@
+{
+  "experiment": "exp-000-baseline",
+  "checkpoint": {
+    "model": "base",
+    "base": "http://127.0.0.1:8080",
+    "artifact": "training/checkpoints/base-f16.gguf",
+    "quantization": "F16"
+  },
+  "sample": {
+    "size": 50,
+    "seed": 20260918,
+    "source": "/home/salboaie/work/sopLang-llm/training-data/<book>/eval/**/solution.sop"
+  },
+  "direct": {
+    "classes": {
+      "answer_mismatch": 50
+    },
+    "answerMatchRate": 0,
+    "efficiency": {
+      "generatedTokens": 25576,
+      "promptTokens": 6883,
+      "calls": 50,
+      "wallClockMs": 212614,
+      "tokensPerSecond": 120.29,
+      "costPerCorrect": null
+    }
+  },
+  "compiled": {
+    "items": 50,
+    "classes": {
+      "generation_transport_error": 0,
+      "wrapper_rejected": 1,
+      "parse_invalid": 49,
+      "graph_invalid": 0,
+      "execution_error": 0,
+      "answer_mismatch": 0,
+      "answer_match": 0
+    },
+    "rates": {
+      "parse_validity": 0,
+      "graph_validity": 0,
+      "runtime_completion": 0,
+      "oracle_match": 0
+    },
+    "byBook": {
+      "adult-reasoning": {
+        "items": 4,
+        "classes": {
+          "generation_transport_error": 0,
+          "wrapper_rejected": 0,
+          "parse_invalid": 4,
+          "graph_invalid": 0,
+          "execution_error": 0,
+          "answer_mismatch": 0,
+          "answer_match": 0
+        },
+        "rates": {
+          "parse_validity": 0,
+          "graph_validity": 0,
+          "runtime_completion": 0,
+          "oracle_match": 0
+        }
+      },
+      "common-sense": {
+        "items": 10,
+        "classes": {
+          "generation_transport_error": 0,
+          "wrapper_rejected": 1,
+          "parse_invalid": 9,
+          "graph_invalid": 0,
+          "execution_error": 0,
+          "answer_mismatch": 0,
+          "answer_match": 0
+        },
+        "rates": {
+          "parse_validity": 0,
+          "graph_validity": 0,
+          "runtime_completion": 0,
+          "oracle_match": 0
+        }
+      },
+      "decompose-to-solve": {
+        "items": 18,
+        "classes": {
+          "generation_transport_error": 0,
+          "wrapper_rejected": 0,
+          "parse_invalid": 18,
+          "graph_invalid": 0,
+          "execution_error": 0,
+          "answer_mismatch": 0,
+          "answer_match": 0
+        },
+        "rates": {
+          "parse_validity": 0,
+          "graph_validity": 0,
+          "runtime_completion": 0,
+          "oracle_match": 0
+        }
+      },
+      "logical-reasoning": {
+        "items": 2,
+        "classes": {
+          "generation_transport_error": 0,
+          "wrapper_rejected": 0,
+          "parse_invalid": 2,
+          "graph_invalid": 0,
+          "execution_error": 0,
+          "answer_mismatch": 0,
+          "answer_match": 0
+        },
+        "rates": {
+          "parse_validity": 0,
+          "graph_validity": 0,
+          "runtime_completion": 0,
+          "oracle_match": 0
+        }
+      },
+      "mathematical-thinking": {
+        "items": 3,
+        "classes": {
+          "generation_transport_error": 0,
+          "wrapper_rejected": 0,
+          "parse_invalid": 3,
+          "graph_invalid": 0,
+          "execution_error": 0,
+          "answer_mismatch": 0,
+          "answer_match": 0
+        },
+        "rates": {
+          "parse_validity": 0,
+          "graph_validity": 0,
+          "runtime_completion": 0,
+          "oracle_match": 0
+        }
+      },
+      "scientific-reasoning": {
+        "items": 5,
+        "classes": {
+          "generation_transport_error": 0,
+          "wrapper_rejected": 0,
+          "parse_invalid": 5,
+          "graph_invalid": 0,
+          "execution_error": 0,
+          "answer_mismatch": 0,
+          "answer_match": 0
+        },
+        "rates": {
+          "parse_validity": 0,
+          "graph_validity": 0,
+          "runtime_completion": 0,
+          "oracle_match": 0
+        }
+      },
+      "world-as-a-system": {
+        "items": 8,
+        "classes": {
+          "generation_transport_error": 0,
+          "wrapper_rejected": 0,
+          "parse_invalid": 8,
+          "graph_invalid": 0,
+          "execution_error": 0,
+          "answer_mismatch": 0,
+          "answer_match": 0
+        },
+        "rates": {
+          "parse_validity": 0,
+          "graph_validity": 0,
+          "runtime_completion": 0,
+          "oracle_match": 0
+        }
+      }
+    },
+    "byPlanCluster": {
+      "465567a44bfc": {
+        "items": 1,
+        "classes": {
+          "generation_transport_error": 0,
+          "wrapper_rejected": 0,
+          "parse_invalid": 1,
+          "graph_invalid": 0,
+          "execution_error": 0,
+          "answer_mismatch": 0,
+          "answer_match": 0
+        },
+        "rates": {
+          "parse_validity": 0,
+          "graph_validity": 0,
+          "runtime_completion": 0,
+          "oracle_match": 0
+        }
+      },
+      "b6067c846929": {
+        "items": 10,
+        "classes": {
+          "generation_transport_error": 0,
+          "wrapper_rejected": 1,
+          "parse_invalid": 9,
+          "graph_invalid": 0,
+          "execution_error": 0,
+          "answer_mismatch": 0,
+          "answer_match": 0
+        },
+        "rates": {
+          "parse_validity": 0,
+          "graph_validity": 0,
+          "runtime_completion": 0,
+          "oracle_match": 0
+        }
+      },
+      "c40e0cf7b406": {
+        "items": 18,
+        "classes": {
+          "generation_transport_error": 0,
+          "wrapper_rejected": 0,
+          "parse_invalid": 18,
+          "graph_invalid": 0,
+          "execution_error": 0,
+          "answer_mismatch": 0,
+          "answer_match": 0
+        },
+        "rates": {
+          "parse_validity": 0,
+          "graph_validity": 0,
+          "runtime_completion": 0,
+          "oracle_match": 0
+        }
+      },
+      "d02e23018985": {
+        "items": 5,
+        "classes": {
+          "generation_transport_error": 0,
+          "wrapper_rejected": 0,
+          "parse_invalid": 5,
+          "graph_invalid": 0,
+          "execution_error": 0,
+          "answer_mismatch": 0,
+          "answer_match": 0
+        },
+        "rates": {
+          "parse_validity": 0,
+          "graph_validity": 0,
+          "runtime_completion": 0,
+          "oracle_match": 0
+        }
+      },
+      "d7443e28a4d0": {
+        "items": 2,
+        "classes": {
+          "generation_transport_error": 0,
+          "wrapper_rejected": 0,
+          "parse_invalid": 2,
+          "graph_invalid": 0,
+          "execution_error": 0,
+          "answer_mismatch": 0,
+          "answer_match": 0
+        },
+        "rates": {
+          "parse_validity": 0,
+          "graph_validity": 0,
+          "runtime_completion": 0,
+          "oracle_match": 0
+        }
+      },
+      "d7bf7b42f6e3": {
+        "items": 1,
+        "classes": {
+          "generation_transport_error": 0,
+          "wrapper_rejected": 0,
+          "parse_invalid": 1,
+          "graph_invalid": 0,
+          "execution_error": 0,
+          "answer_mismatch": 0,
+          "answer_match": 0
+        },
+        "rates": {
+          "parse_validity": 0,
+          "graph_validity": 0,
+          "runtime_completion": 0,
+          "oracle_match": 0
+        }
+      },
+      "e4162dccf502": {
+        "items": 4,
+        "classes": {
+          "generation_transport_error": 0,
+          "wrapper_rejected": 0,
+          "parse_invalid": 4,
+          "graph_invalid": 0,
+          "execution_error": 0,
+          "answer_mismatch": 0,
+          "answer_match": 0
+        },
+        "rates": {
+          "parse_validity": 0,
+          "graph_validity": 0,
+          "runtime_completion": 0,
+          "oracle_match": 0
+        }
+      },
+      "e576d1c206a0": {
+        "items": 1,
+        "classes": {
+          "generation_transport_error": 0,
+          "wrapper_rejected": 0,
+          "parse_invalid": 1,
+          "graph_invalid": 0,
+          "execution_error": 0,
+          "answer_mismatch": 0,
+          "answer_match": 0
+        },
+        "rates": {
+          "parse_validity": 0,
+          "graph_validity": 0,
+          "runtime_completion": 0,
+          "oracle_match": 0
+        }
+      },
+      "f24876b91e96": {
+        "items": 8,
+        "classes": {
+          "generation_transport_error": 0,
+          "wrapper_rejected": 0,
+          "parse_invalid": 8,
+          "graph_invalid": 0,
+          "execution_error": 0,
+          "answer_mismatch": 0,
+          "answer_match": 0
+        },
+        "rates": {
+          "parse_validity": 0,
+          "graph_validity": 0,
+          "runtime_completion": 0,
+          "oracle_match": 0
+        }
+      }
+    },
+    "efficiency": {
+      "generatedTokens": 4646,
+      "promptTokens": 10783,
+      "calls": 50,
+      "wallClockMs": 34796,
+      "tokensPerSecond": 133.52,
+      "costPerCorrect": null
+    }
+  },
+  "probes": {
+    "profile": "capability-probes-1.0.0",
+    "items": 10,
+    "passed": 4,
+    "rate": 0.4,
+    "byKind": {
+      "instruction": {
+        "items": 4,
+        "passed": 2
+      },
+      "javascript": {
+        "items": 6,
+        "passed": 2
+      }
+    }
+  },
+  "efficiency": {
+    "generatedTokens": 30256,
+    "promptTokens": 18278,
+    "calls": 110,
+    "wallClockMs": 248077
+  }
+}

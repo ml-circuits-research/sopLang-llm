@@ -1,0 +1,76 @@
+{
+  "profile": "capability-probes-1.0.0",
+  "systemPrompt": "You are a careful engineer. Answer with only what the instruction asks for, in the fewest characters that satisfy it.",
+  "probes": [
+    {
+      "id": "js-array-filter-length",
+      "kind": "javascript",
+      "prompt": "What does the JavaScript expression `[1, 2, 3, 4].filter((value) => value % 2 === 0).length` evaluate to? Reply with only the value.",
+      "expected": "2",
+      "comparison": "normalized"
+    },
+    {
+      "id": "js-string-slice",
+      "kind": "javascript",
+      "prompt": "What does `\"sopLang\".slice(0, 3)` evaluate to? Reply with only the result.",
+      "expected": "sop",
+      "comparison": "normalized"
+    },
+    {
+      "id": "js-object-keys-join",
+      "kind": "javascript",
+      "prompt": "What does `Object.keys({ first: 1, second: 2 }).join(\"-\")` evaluate to? Reply with only the result.",
+      "expected": "first-second",
+      "comparison": "normalized"
+    },
+    {
+      "id": "js-nullish",
+      "kind": "javascript",
+      "prompt": "Given `const value = null;`, what does `value ?? 7` evaluate to? Reply with only the value.",
+      "expected": "7",
+      "comparison": "normalized"
+    },
+    {
+      "id": "js-reduce-sum",
+      "kind": "javascript",
+      "prompt": "What does `[1, 2, 3, 4].reduce((sum, value) => sum + value, 0)` evaluate to? Reply with only the value.",
+      "expected": "10",
+      "comparison": "normalized"
+    },
+    {
+      "id": "js-typeof-nan",
+      "kind": "javascript",
+      "prompt": "What does `typeof NaN` evaluate to? Reply with only the value.",
+      "expected": "number",
+      "comparison": "normalized"
+    },
+    {
+      "id": "ins-exact-word",
+      "kind": "instruction",
+      "prompt": "Reply with exactly the word ready and nothing else.",
+      "expected": "ready",
+      "comparison": "exact"
+    },
+    {
+      "id": "ins-label-and-number",
+      "kind": "instruction",
+      "prompt": "Reply with only the uppercase label OK, then a colon, then the number 3, with no spaces.",
+      "expected": "OK:3",
+      "comparison": "exact"
+    },
+    {
+      "id": "ins-repeat-three",
+      "kind": "instruction",
+      "prompt": "Write the word sop exactly three times, separated by single spaces, and nothing else.",
+      "expected": "sop sop sop",
+      "comparison": "exact"
+    },
+    {
+      "id": "ins-ordered-digits",
+      "kind": "instruction",
+      "prompt": "Reply with the digits 7, 5 and 9 in increasing order, separated by commas with no spaces.",
+      "expected": "5,7,9",
+      "comparison": "exact"
+    }
+  ]
+}

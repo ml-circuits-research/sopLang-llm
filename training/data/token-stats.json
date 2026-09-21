@@ -1,0 +1,139 @@
+{
+  "tokenizer": {
+    "path": "training/models/qwen2.5-coder-0.5b-instruct",
+    "name_or_path": "training/models/qwen2.5-coder-0.5b-instruct",
+    "class": "Qwen2Tokenizer",
+    "revision": "ea3f2471cf1b1f0db85067f1ef93848e38e88c25"
+  },
+  "rows": 6775,
+  "rows_in_file": 6775,
+  "sampling": null,
+  "max_seq_len": 4096,
+  "export_manifest_sha256": "11a862b3aa1d99c9d05f930bf434e320bf750fc82f2866a5e69b01d74758c308",
+  "total_tokens": {
+    "combined": {
+      "min": 278,
+      "p50": 800,
+      "p90": 1192,
+      "p99": 1457,
+      "max": 1968
+    },
+    "per_book": {
+      "adult-reasoning": {
+        "min": 488,
+        "p50": 791,
+        "p90": 1030,
+        "p99": 1147,
+        "max": 1197
+      },
+      "common-sense": {
+        "min": 593,
+        "p50": 818,
+        "p90": 1123,
+        "p99": 1192,
+        "max": 1192
+      },
+      "decompose-to-solve": {
+        "min": 622,
+        "p50": 1014,
+        "p90": 1425,
+        "p99": 1434,
+        "max": 1441
+      },
+      "logical-reasoning": {
+        "min": 470,
+        "p50": 603,
+        "p90": 756,
+        "p99": 1181,
+        "max": 1238
+      },
+      "mathematical-thinking": {
+        "min": 278,
+        "p50": 367,
+        "p90": 508,
+        "p99": 772,
+        "max": 942
+      },
+      "scientific-reasoning": {
+        "min": 603,
+        "p50": 926,
+        "p90": 1325,
+        "p99": 1454,
+        "max": 1462
+      },
+      "world-as-a-system": {
+        "min": 597,
+        "p50": 1080,
+        "p90": 1378,
+        "p99": 1878,
+        "max": 1968
+      }
+    }
+  },
+  "target_tokens": {
+    "combined": {
+      "min": 155,
+      "p50": 570,
+      "p90": 906,
+      "p99": 1199,
+      "max": 1613
+    },
+    "per_book": {
+      "adult-reasoning": {
+        "min": 349,
+        "p50": 592,
+        "p90": 769,
+        "p99": 900,
+        "max": 917
+      },
+      "common-sense": {
+        "min": 403,
+        "p50": 610,
+        "p90": 877,
+        "p99": 952,
+        "max": 952
+      },
+      "decompose-to-solve": {
+        "min": 411,
+        "p50": 738,
+        "p90": 1149,
+        "p99": 1153,
+        "max": 1155
+      },
+      "logical-reasoning": {
+        "min": 280,
+        "p50": 425,
+        "p90": 573,
+        "p99": 978,
+        "max": 1015
+      },
+      "mathematical-thinking": {
+        "min": 155,
+        "p50": 218,
+        "p90": 356,
+        "p99": 630,
+        "max": 780
+      },
+      "scientific-reasoning": {
+        "min": 357,
+        "p50": 608,
+        "p90": 1025,
+        "p99": 1200,
+        "max": 1204
+      },
+      "world-as-a-system": {
+        "min": 369,
+        "p50": 847,
+        "p90": 1129,
+        "p99": 1576,
+        "max": 1613
+      }
+    }
+  },
+  "rows_with_token_count_mismatch": 0,
+  "over_limit": {
+    "count": 0,
+    "listed": 0,
+    "entries": []
+  }
+}

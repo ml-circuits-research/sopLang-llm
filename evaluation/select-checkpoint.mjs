@@ -1,0 +1,206 @@
+#!/usr/bin/env node
+/**
+ * Checkpoint selection (training/PLAN.md T7; DS009 "Checkpoint selection").
+ *
+ * For every checkpoint directory of an experiment: convert the HF checkpoint to
+ * an F16 GGUF (no quantization during selection), serve it locally, run the
+ * evaluation loop on the fixed validation slice, and tabulate oracle match and
+ * parse validity. The winner is chosen by oracle match with parse validity as
+ * the tiebreaker, never by training loss, and `selection.md` records the table,
+ * the winner, and why.
+ *
+ * Usage:
+ *   node evaluation/select-checkpoint.mjs --experiment exp-002-sft-lr2e-5 [--concurrency 4] [--port 8090] [--extra-args "--ctx-size 16384"]
+ */
+
+import { spawn } from 'node:child_process';
+import { closeSync, mkdirSync, openSync, readdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { createRuntime } from '../runtime/kernel.mjs';
+import { generate } from './client.mjs';
+import { aggregate, resolveSlice, runSlice } from './run-eval.mjs';
+
+const REPOSITORY_ROOT = fileURLToPath(new URL('..', import.meta.url));
+const DEFAULT_REGISTRY = join(REPOSITORY_ROOT, 'evaluation/registry');
+const LLAMA_SERVER = join(REPOSITORY_ROOT, 'tools/llamacpp/build/bin/llama-server');
+const CONVERTER = join(REPOSITORY_ROOT, 'tools/llamacpp/convert_hf_to_gguf.py');
+
+function parseArguments(argv) {
+  const options = {
+    experiment: null,
+    checkpoints: null,
+    registry: DEFAULT_REGISTRY,
+    port: 8090,
+    concurrency: 4,
+    maxTokens: 2048,
+    slice: 'validation',
+    limit: null,
+  };
+  for (let index = 0; index < argv.length; index += 1) {
+    const argument = argv[index];
+    if (argument === '--experiment') { options.experiment = argv[index + 1]; index += 1; }
+    else if (argument === '--checkpoints') { options.checkpoints = argv[index + 1]; index += 1; }
+    else if (argument === '--registry') { options.registry = argv[index + 1]; index += 1; }
+    else if (argument === '--port') { options.port = Number(argv[index + 1]); index += 1; }
+    else if (argument === '--concurrency') { options.concurrency = Number(argv[index + 1]); index += 1; }
+    else if (argument === '--max-tokens') { options.maxTokens = Number(argv[index + 1]); index += 1; }
+    else if (argument === '--slice') { options.slice = argv[index + 1]; index += 1; }
+    else if (argument === '--limit') { options.limit = Number(argv[index + 1]); index += 1; }
+    else throw new Error(`unknown argument: ${argument}`);
+  }
+  if (options.experiment === null) {
+    throw new Error('--experiment is required');
+  }
+  return options;
+}
+
+function run(command, args, { logPath = null } = {}) {
+  return new Promise((resolve, reject) => {
+    // `stdio` takes pipes or file descriptors, never the string 'append': open
+    // the log in append mode and hand its descriptor to the child, the way
+    // `withServer` does. The string made every conversion fail with
+    // ERR_INVALID_SYNC_FORK_INPUT before the first checkpoint was scored.
+    let logFd = null;
+    let stdio = ['ignore', 'pipe', 'pipe'];
+    if (logPath !== null) {
+      logFd = openSync(logPath, 'a');
+      stdio = ['ignore', logFd, logFd];
+    }
+    const child = spawn(command, args, { cwd: REPOSITORY_ROOT, stdio });
+    if (logFd !== null) {
+      closeSync(logFd);
+    }
+    let output = '';
+    if (child.stdout !== null) {
+      child.stdout.on('data', (chunk) => { output += chunk; });
+      child.stderr.on('data', (chunk) => { output += chunk; });
+    }
+    child.on('error', reject);
+    child.on('close', (code) => resolve({ code, output }));
+  });
+}
+
+async function convertCheckpoint(checkpointDir, ggufPath, logPath) {
+  const result = await run('bash', ['training/environment/train.sh', 'python', CONVERTER, checkpointDir, '--outfile', ggufPath, '--outtype', 'f16'], { logPath });
+  if (result.code !== 0) {
+    throw new Error(`GGUF conversion failed for ${checkpointDir}; see ${logPath}`);
+  }
+}
+
+async function waitForServer(port, timeoutMs = 300_000) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    try {
+      const response = await fetch(`http://127.0.0.1:${port}/health`);
+      if (response.ok) {
+        return;
+      }
+    } catch {
+      // not listening yet
+    }
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+  throw new Error(`llama-server on port ${port} was not ready within ${timeoutMs} ms`);
+}
+
+async function withServer({ ggufPath, port, logPath }, body) {
+  const logFd = openSync(logPath, 'a');
+  const child = spawn(
+    LLAMA_SERVER,
+    ['-m', ggufPath, '--port', String(port), '--ctx-size', '16384', '--n-gpu-layers', '99', '--jinja', '--parallel', '4', '--alias', 'student'],
+    { cwd: REPOSITORY_ROOT, detached: true, stdio: ['ignore', logFd, logFd] },
+  );
+  closeSync(logFd);
+  try {
+    await waitForServer(port);
+    return await body();
+  } finally {
+    try {
+      process.kill(-child.pid, 'SIGTERM');
+    } catch {
+      child.kill('SIGTERM');
+    }
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+  }
+}
+
+function checkpointDirectories(root) {
+  return readdirSync(root, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && /^checkpoint-\d+$/.test(entry.name))
+    .map((entry) => ({ name: entry.name, step: Number(entry.name.slice('checkpoint-'.length)), path: join(root, entry.name) }))
+    .sort((left, right) => left.step - right.step);
+}
+
+const options = parseArguments(process.argv.slice(2));
+const checkpointsRoot = options.checkpoints ?? join(REPOSITORY_ROOT, 'training/checkpoints', options.experiment);
+const registryDir = join(options.registry, options.experiment);
+const ggufDir = join(registryDir, 'gguf');
+mkdirSync(ggufDir, { recursive: true });
+
+const checkpoints = checkpointDirectories(checkpointsRoot);
+if (checkpoints.length === 0) {
+  throw new Error(`no checkpoint-<step> directories under ${checkpointsRoot}`);
+}
+console.log(`selection: ${checkpoints.length} checkpoint(s) of ${options.experiment} on the ${options.slice} slice`);
+
+const items = options.limit === null ? resolveSlice({ slice: options.slice }).items : resolveSlice({ slice: options.slice, limit: options.limit }).items;
+const runtime = createRuntime();
+const rows = [];
+
+for (const checkpoint of checkpoints) {
+  const ggufPath = join(ggufDir, `${checkpoint.name}.gguf`);
+  console.log(`\n=== ${checkpoint.name} (${items.length} validation items)`);
+  await convertCheckpoint(checkpoint.path, ggufPath, join(ggufDir, `${checkpoint.name}-convert.log`));
+  const records = await withServer({ ggufPath, port: options.port, logPath: join(ggufDir, `${checkpoint.name}-server.log`) }, () =>
+    runSlice({
+      items,
+      generateItem: (messages) => generate({ base: `http://127.0.0.1:${options.port}`, model: 'student', messages, temperature: 0, maxTokens: options.maxTokens }),
+      runtime,
+      outDir: join(registryDir, 'selection'),
+      experimentId: options.experiment,
+      sliceName: checkpoint.name,
+      concurrency: options.concurrency,
+    }),
+  );
+  const metrics = aggregate(records.records);
+  rows.push({ checkpoint: checkpoint.name, step: checkpoint.step, gguf: ggufPath.replace(`${REPOSITORY_ROOT}/`, ''), metrics });
+  console.log(
+    `${checkpoint.name}: oracle ${(metrics.rates.oracle_match * 100).toFixed(1)}%, parse ${(metrics.rates.parse_validity * 100).toFixed(1)}%, graph ${(metrics.rates.graph_validity * 100).toFixed(1)}%`,
+  );
+}
+
+const ranked = [...rows].sort((left, right) => {
+  const oracle = (right.metrics.rates.oracle_match ?? 0) - (left.metrics.rates.oracle_match ?? 0);
+  if (oracle !== 0) return oracle;
+  return (right.metrics.rates.parse_validity ?? 0) - (left.metrics.rates.parse_validity ?? 0);
+});
+const winner = ranked[0];
+
+const lines = [];
+lines.push(`# Checkpoint selection, ${options.experiment}`);
+lines.push('');
+lines.push(`Validation slice: ${items.length} rows, selected by the D11 slice of \`training/data/validation-slice.json\`.`);
+lines.push('Every checkpoint is converted to an F16 GGUF (no quantization during selection) and scored with the full evaluation loop:');
+lines.push('greedy decoding, one attempt, the recorded post-processing contract, then parse, graph, execution, and oracle comparison.');
+lines.push('');
+lines.push('| checkpoint | step | oracle match | parse validity | graph validity | runtime completion | items |');
+lines.push('| --- | --- | --- | --- | --- | --- | --- |');
+for (const row of ranked) {
+  const rate = (name) => (row.metrics.rates[name] === null ? 'n/a' : `${(row.metrics.rates[name] * 100).toFixed(1)}%`);
+  lines.push(`| ${row.checkpoint} | ${row.step} | ${rate('oracle_match')} | ${rate('parse_validity')} | ${rate('graph_validity')} | ${rate('runtime_completion')} | ${row.metrics.items} |`);
+}
+lines.push('');
+lines.push(`Selected: **${winner.checkpoint}** (highest oracle match, parse validity as the tiebreaker; training loss is never used for selection).`);
+lines.push('');
+lines.push('| class | items (selected checkpoint) |');
+lines.push('| --- | --- |');
+for (const [className, count] of Object.entries(winner.metrics.classes)) {
+  lines.push(`| ${className} | ${count} |`);
+}
+lines.push('');
+lines.push('Per-item records: `selection/<checkpoint>.jsonl`.');
+lines.push('');
+writeFileSync(join(registryDir, 'selection.md'), lines.join('\n'));
+writeFileSync(join(registryDir, 'selection.json'), JSON.stringify({ experiment: options.experiment, slice: options.slice, items: items.length, winner: winner.checkpoint, rows }, null, 2) + '\n');
+console.log(`\nselected ${winner.checkpoint}; wrote ${join(registryDir, 'selection.md')}`);

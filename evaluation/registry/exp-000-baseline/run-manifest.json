@@ -1,0 +1,44 @@
+{
+  "experiment": "exp-000-baseline",
+  "kind": "baseline",
+  "checkpoint": {
+    "model": "base",
+    "base": "http://127.0.0.1:8080",
+    "artifact": "training/checkpoints/base-f16.gguf",
+    "quantization": "F16"
+  },
+  "base": "http://127.0.0.1:8080",
+  "model": "base",
+  "decoding": {
+    "temperature": 0,
+    "maxTokens": 2048,
+    "attempts": "one retry on transport failure"
+  },
+  "prompts": {
+    "compiledPlanProfile": {
+      "id": "compiled-plan-chat-1",
+      "systemPromptSha256": "67655b81e61a7025442d5d9db6f47566350b4f3d045d48083089ff05608caae2"
+    },
+    "directSystemPrompt": "Answer the problem directly with the final answer only.",
+    "probeProfile": "capability-probes-1.0.0"
+  },
+  "sample": {
+    "size": 50,
+    "seed": 20260918,
+    "source": "/home/salboaie/work/sopLang-llm/training-data/<book>/eval/**/solution.sop"
+  },
+  "items": {
+    "direct": 50,
+    "compiled": 50,
+    "probes": 10
+  },
+  "dataset": {
+    "snapshot": "82d3dedb8f4c296f09969ca154ae62d9139c01215cea1cf51a86680132bf3289",
+    "holdoutSource": "/home/salboaie/work/sopLang-llm/training-data/<book>/eval/**/solution.sop"
+  },
+  "runtime": {
+    "kernel": "runtime/kernel.mjs",
+    "modelBindings": "none"
+  },
+  "startedAt": "2026-09-18T11:51:14.156Z"
+}
