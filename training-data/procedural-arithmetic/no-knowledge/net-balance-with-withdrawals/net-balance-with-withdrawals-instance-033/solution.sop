@@ -1,0 +1,46 @@
+@slots literal
+{
+  "holder": "Ravi",
+  "openingBalance": 92,
+  "deposits": [
+    93,
+    34,
+    39
+  ],
+  "withdrawals": [
+    32,
+    22
+  ],
+  "withdrawalFee": 2
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.openingBalance) && slots.openingBalance >= 0, "the opening balance must be a whole number of units");
+probe(Array.isArray(slots.deposits) && slots.deposits.length > 0, "the deposits must be a list of at least one amount");
+probe(Array.isArray(slots.withdrawals) && slots.withdrawals.length > 0, "the withdrawals must be a list of at least one amount");
+probe(Number.isInteger(slots.withdrawalFee) && slots.withdrawalFee > 0, "the withdrawal fee must be a positive whole number of units");
+const ledger = [{ kind: "opening", amount: slots.openingBalance }];
+for (const amount of slots.deposits) {
+  probe(Number.isInteger(amount) && amount > 0, "every deposit must be a positive whole number of units");
+  ledger.push({ kind: "deposit", amount });
+}
+for (const amount of slots.withdrawals) {
+  probe(Number.isInteger(amount) && amount > 0, "every withdrawal must be a positive whole number of units");
+  ledger.push({ kind: "withdrawal", amount });
+}
+let balance = 0;
+for (const entry of ledger) {
+  balance += entry.kind === "withdrawal" ? -entry.amount - slots.withdrawalFee : entry.amount;
+}
+probe(balance >= 0, "the account must not close below zero");
+const withdrawals = ledger.filter((entry) => entry.kind === "withdrawal").length;
+return "The closing balance is " + balance + " units after " + withdrawals + " withdrawals.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

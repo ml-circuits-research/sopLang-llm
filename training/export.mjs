@@ -30,6 +30,11 @@ import {
   splitCells,
   statementBodyOf,
 } from '../training-data/dataset-manifest.mjs';
+import { SOURCES } from '../teacher/sources/index.mjs';
+
+/** Registered sources whose statements come from a generator, not a document, keyed by id. */
+const GENERATED_SOURCES = new Map(SOURCES.filter((source) => source.kind === 'generated').map((source) => [source.id, source]));
+const GENERATED_SOURCE_IDS = new Set(GENERATED_SOURCES.keys());
 
 export const EXPORTER_VERSION = '1.0.0';
 export const CHAT_PROFILE_ID = 'compiled-plan-chat-1';
@@ -170,11 +175,20 @@ export function collectRows({ datasetRoot = DEFAULT_DATASET_ROOT, book = null } 
           plan: values.plan ?? '',
           status: values.status ?? '',
           hashes: { problem: values.problem ?? '', solution: values.solution ?? '', explanation: values.explanation ?? '' },
-          source: {
-            raw: source.rawHash ?? '',
-            canonical: source.canonicalHash ?? '',
-            extractor: source.extractor ?? '',
-          },
+          // A generated row records its generator in place of a document identity:
+          // there are no source bytes and no extractor to name (DS008, procedural
+          // source families).
+          source: GENERATED_SOURCES.has(bookName)
+            ? {
+                generator: GENERATED_SOURCES.get(bookName).generator,
+                generatorVersion: GENERATED_SOURCES.get(bookName).generatorVersion,
+                seed: GENERATED_SOURCES.get(bookName).seed,
+              }
+            : {
+                raw: source.rawHash ?? '',
+                canonical: source.canonicalHash ?? '',
+                extractor: source.extractor ?? '',
+              },
           manifest: values,
         },
       });
@@ -229,6 +243,12 @@ export function validationSliceOf(rows, { seed = VALIDATION_SEED, size = VALIDAT
   const random = seededRandom(seed);
   const perBook = new Map();
   for (const row of rows) {
+    // A procedural source holds out whole families in its own `eval/` tree, so
+    // the D11 row slice stays a book-only instrument: adding a generator must
+    // not move the slice the earlier experiments were measured against.
+    if (GENERATED_SOURCE_IDS.has(row.book)) {
+      continue;
+    }
     perBook.set(row.book, [...(perBook.get(row.book) ?? []), row]);
   }
   const selection = [];

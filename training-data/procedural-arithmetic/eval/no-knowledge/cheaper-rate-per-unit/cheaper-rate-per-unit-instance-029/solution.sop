@@ -1,0 +1,39 @@
+@slots literal
+{
+  "product": "timber batten",
+  "optionA": {
+    "label": "Aldea",
+    "price": 52,
+    "quantity": 5
+  },
+  "optionB": {
+    "label": "Farkas",
+    "price": 92,
+    "quantity": 19
+  }
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(typeof slots.optionA === "object" && slots.optionA !== null, "the first offer must carry a label, a price and a quantity");
+probe(typeof slots.optionB === "object" && slots.optionB !== null, "the second offer must carry a label, a price and a quantity");
+const optionA = slots.optionA;
+const optionB = slots.optionB;
+probe(Number.isInteger(optionA.price) && optionA.price > 0, "the first price must be a positive whole number of units");
+probe(Number.isInteger(optionB.price) && optionB.price > 0, "the second price must be a positive whole number of units");
+probe(Number.isInteger(optionA.quantity) && optionA.quantity > 0, "the first quantity must be a positive whole number of metres");
+probe(Number.isInteger(optionB.quantity) && optionB.quantity > 0, "the second quantity must be a positive whole number of metres");
+const crossedA = optionA.price * optionB.quantity;
+const crossedB = optionB.price * optionA.quantity;
+probe(crossedA !== crossedB, "the two offers must not have the same price per metre");
+const cheaper = crossedA < crossedB ? optionA : optionB;
+const margin = Math.abs(crossedA - crossedB) / (optionA.quantity * optionB.quantity);
+return cheaper.label + " is cheaper per metre by " + margin.toFixed(2) + " units per metre.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

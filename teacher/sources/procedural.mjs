@@ -10,12 +10,10 @@
  * place where generator wiring accumulates.
  */
 
-import { fileURLToPath } from 'node:url';
-
 export const PROCEDURAL_ARITHMETIC_ID = 'procedural-arithmetic';
 
-/** The generator module path, used as the source locator in the inventory. */
-export const PROCEDURAL_ARITHMETIC_PATH = fileURLToPath(new URL('../procedural/arithmetic.mjs', import.meta.url));
+/** The generator module path, relative to the repository root, used as the source locator in the inventory. */
+export const PROCEDURAL_ARITHMETIC_PATH = 'teacher/procedural/arithmetic.mjs';
 
 export const PROCEDURAL_SOURCES = Object.freeze([
   Object.freeze({

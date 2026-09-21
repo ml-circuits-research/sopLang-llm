@@ -19,6 +19,7 @@ import { bookRoots, expectedAnswersOf, statementBodyOf } from '../training-data/
 const DATASET_ROOT = fileURLToPath(new URL('../training-data/', import.meta.url));
 const DATA_DIR = fileURLToPath(new URL('../training/data/', import.meta.url));
 const HOLD_ROW_COUNTS = {
+  'procedural-arithmetic': 80,
   'adult-reasoning': 990,
   'common-sense': 950,
   'decompose-to-solve': 900,
@@ -31,7 +32,7 @@ const HOLD_ROW_COUNTS = {
 const rows = collectRows({ datasetRoot: DATASET_ROOT });
 
 test('the export holds every training row and no holdout row', () => {
-  assert.equal(rows.length, 6775);
+  assert.equal(rows.length, 6855);
   const perBook = new Map();
   for (const row of rows) {
     perBook.set(row.book, (perBook.get(row.book) ?? 0) + 1);
@@ -60,8 +61,16 @@ test('every row carries the recorded chat shape and its manifest metadata', () =
     assert.ok(row.meta.unit.length > 0);
     assert.equal(row.meta.plan, expected.get(row.book).get(row.meta.folder).plan);
     assert.match(row.meta.hashes.solution, /^[0-9a-f]{12}$/);
-    assert.match(row.meta.source.raw, /^[0-9a-f]{64}$/);
-    assert.equal(row.meta.source.extractor, 'docx-canvas-text 1.1.0');
+    if (row.meta.source.generator === undefined) {
+      assert.match(row.meta.source.raw, /^[0-9a-f]{64}$/);
+      assert.equal(row.meta.source.extractor, 'docx-canvas-text 1.1.0');
+    } else {
+      // A generated row names its generator, its version, and the seed its
+      // instance was sampled from instead of a document identity.
+      assert.equal(row.meta.source.generator, 'arithmetic.mjs');
+      assert.match(row.meta.source.generatorVersion, /^\d+\.\d+\.\d+$/);
+      assert.equal(typeof row.meta.source.seed, 'number');
+    }
   }
 });
 
@@ -99,7 +108,7 @@ test('the export is deterministic and the committed artifacts are current', () =
       );
     }
     const manifest = JSON.parse(readFileSync(join(first, 'export-manifest.json'), 'utf8'));
-    assert.equal(manifest.rows, 6775);
+    assert.equal(manifest.rows, 6855);
     assert.equal(manifest.snapshot, JSON.parse(readFileSync(join(DATA_DIR, 'export-manifest.json'), 'utf8')).snapshot);
   } finally {
     rmSync(first, { recursive: true, force: true });
@@ -165,6 +174,6 @@ test('the overfit subset excludes the D11 validation slice when the slice is pas
 test('an unknown book id is refused with the implemented list', () => {
   assert.throws(
     () => writeTrainerView({ datasetRoot: DATASET_ROOT, book: 'no-such-book' }),
-    /unknown book id: no-such-book; the implemented books are adult-reasoning, common-sense, decompose-to-solve, logical-reasoning, mathematical-thinking, scientific-reasoning, world-as-a-system/,
+    /unknown book id: no-such-book; the implemented books are adult-reasoning, common-sense, decompose-to-solve, logical-reasoning, mathematical-thinking, procedural-arithmetic, scientific-reasoning, world-as-a-system/,
   );
 });

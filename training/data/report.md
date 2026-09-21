@@ -1,7 +1,7 @@
 # Trainer-view export report
 
 Derived by `training/export.mjs` from the shipped trees under `training-data/`;
-dataset snapshot `82d3dedb8f4c296f09969ca154ae62d9139c01215cea1cf51a86680132bf3289`. The report is deterministic and carries no timestamp.
+dataset snapshot `0097ab18d4adf45c75375c7190fb4f0514becd6f2648f72cdd5c9d0b076a82ad`. The report is deterministic and carries no timestamp.
 
 | book | rows | no-knowledge | knowledge | templates | plans |
 | --- | --- | --- | --- | --- | --- |
@@ -10,9 +10,10 @@ dataset snapshot `82d3dedb8f4c296f09969ca154ae62d9139c01215cea1cf51a86680132bf32
 | decompose-to-solve | 900 | 900 | 0 | 9 | 9 |
 | logical-reasoning | 990 | 990 | 0 | 99 | 99 |
 | mathematical-thinking | 990 | 935 | 55 | 600 | 579 |
+| procedural-arithmetic | 80 | 80 | 0 | 2 | 2 |
 | scientific-reasoning | 975 | 950 | 25 | 39 | 39 |
 | world-as-a-system | 980 | 980 | 0 | 196 | 49 |
-| all books | 6775 | 6695 | 80 | 1061 | 893 |
+| all books | 6855 | 6775 | 80 | 1063 | 895 |
 
 ## Distributions
 
@@ -48,6 +49,11 @@ of the solution, `jsEval body lines` the non-empty lines after the `jsEval` decl
 | mathematical-thinking | wire declarations | 2 | 2 | 2 | 3 | 3 |
 | mathematical-thinking | jsEval body lines | 9 | 13 | 22 | 37 | 47 |
 | mathematical-thinking | $ dependencies | 1 | 1 | 1 | 2 | 2 |
+| procedural-arithmetic | statement characters | 187 | 200 | 224 | 224 | 224 |
+| procedural-arithmetic | target characters | 1586 | 1599 | 2067 | 2067 | 2067 |
+| procedural-arithmetic | wire declarations | 2 | 2 | 2 | 2 | 2 |
+| procedural-arithmetic | jsEval body lines | 20 | 20 | 28 | 28 | 28 |
+| procedural-arithmetic | $ dependencies | 1 | 1 | 1 | 1 | 1 |
 | scientific-reasoning | statement characters | 578 | 869 | 1149 | 1361 | 1545 |
 | scientific-reasoning | target characters | 1445 | 2467 | 3933 | 5413 | 5449 |
 | scientific-reasoning | wire declarations | 2 | 2 | 2 | 3 | 3 |
@@ -58,8 +64,8 @@ of the solution, `jsEval body lines` the non-empty lines after the `jsEval` decl
 | world-as-a-system | wire declarations | 2 | 2 | 2 | 2 | 2 |
 | world-as-a-system | jsEval body lines | 16 | 54 | 77 | 105 | 105 |
 | world-as-a-system | $ dependencies | 1 | 1 | 1 | 1 | 1 |
-| all books | statement characters | 57 | 493 | 874 | 1253 | 1545 |
-| all books | target characters | 608 | 2208 | 3509 | 4654 | 6054 |
+| all books | statement characters | 57 | 485 | 871 | 1253 | 1545 |
+| all books | target characters | 608 | 2185 | 3509 | 4642 | 6054 |
 | all books | wire declarations | 2 | 2 | 2 | 3 | 3 |
 | all books | jsEval body lines | 9 | 23 | 53 | 91 | 105 |
 | all books | $ dependencies | 1 | 1 | 1 | 2 | 2 |
