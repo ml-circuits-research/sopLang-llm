@@ -62,11 +62,24 @@ pass() {
     case "$status" in
       completed|stopped)
         # Training is done: make sure its evaluation chain left the holdout report.
-        # The chain normally runs inside the detached wrapper; if that wrapper died,
-        # the registry has no report and nothing is running, so restart the chain.
-        if [ ! -f "$root/evaluation/registry/$name/report.md" ] && ! pgrep -f "[r]un-series.sh $name" >/dev/null; then
+        # The chain normally runs inside the detached wrapper; when that wrapper is
+        # gone (a relaunch, a lost session, a fixed recipe path), the registry has
+        # no report and nothing is running, so restart the chain here — that is the
+        # gap that let exp-008-sft-shapes finish with nothing scoring it.
+        if [ ! -f "$root/evaluation/registry/$name/report.md" ] \
+          && ! pgrep -f "[r]un-series.sh $name" >/dev/null \
+          && ! pgrep -f "[s]elect-checkpoint.mjs --experiment $name" >/dev/null \
+          && ! pgrep -f "[r]un-eval.mjs --experiment $name" >/dev/null \
+          && ! pgrep -f "[l]lama-server -m .*$name" >/dev/null; then
+          # Nothing of this experiment is running, so the chain starts and takes
+          # the GPU by itself. When another experiment holds it, the pass after
+          # that one finishes starts this chain instead, and the note says so.
           note "CHAIN $name has no holdout report and no chain running — starting the evaluation chain"
           ( cd "$root" && bash evaluation/run-series.sh "$name" >> "$root/evaluation/registry/$name/series.log" 2>&1 & )
+        elif [ ! -f "$root/evaluation/registry/$name/report.md" ]; then
+          if pgrep -f "sft_train.py --experiment" >/dev/null; then
+            note "CHAIN $name still needs its evaluation chain; waiting for the running trainer to free the GPU"
+          fi
         fi
         continue ;;
     esac
