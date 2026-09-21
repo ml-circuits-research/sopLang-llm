@@ -34,10 +34,11 @@ import { bestWinner } from './artifacts.mjs';
 import { resolveSlice } from './run-eval.mjs';
 
 const EXPORT = join(REPOSITORY_ROOT, 'training/data/all-books.jsonl');
+const DATA_ROOT = join(REPOSITORY_ROOT, 'training-data');
 const VALIDATION_SLICE = join(REPOSITORY_ROOT, 'training/data/validation-slice.json');
 
 function parseArguments(argv) {
-  const options = { experiment: null, slice: 'holdout', demos: 0, gguf: null, best: false, base: null, port: 8087, concurrency: 4, maxTokens: 2048, limit: null, threads: null, help: false };
+  const options = { experiment: null, slice: 'holdout', demos: 0, demoMode: 'distinct', dryRun: false, gguf: null, best: false, base: null, port: 8087, concurrency: 4, maxTokens: 2048, limit: null, threads: null, help: false };
   for (let index = 0; index < argv.length; index += 1) {
     const flag = argv[index];
     const value = () => {
@@ -49,6 +50,8 @@ function parseArguments(argv) {
     if (flag === '--experiment') options.experiment = value();
     else if (flag === '--slice') options.slice = value();
     else if (flag === '--demos') options.demos = Number(value());
+    else if (flag === '--demo-mode') options.demoMode = value();
+    else if (flag === '--dry-run') options.dryRun = true;
     else if (flag === '--gguf') options.gguf = value();
     else if (flag === '--best') options.best = true;
     else if (flag === '--base') options.base = value();
@@ -67,6 +70,8 @@ const USAGE = `Usage: node evaluation/run-adaptation.mjs --experiment <id> --dem
 
 Options:
   --demos N        demonstrated compiled examples placed in the prompt (0 = the recorded profile alone)
+  --demo-mode M    distinct (default) or shapes: shapes prefers demonstrations whose plan has the same wire count as the target
+  --dry-run        resolve the slice and the demonstrations of every item, write nothing, and exit
   --slice <spec>   holdout (default) | validation | file:<path>
   --limit N        score the first N items after sorting
   --concurrency N  items generated in parallel (default 4)
@@ -78,21 +83,61 @@ Options:
 /**
  * The demonstrations: training rows in export order, never a row of the target's
  * own family, so a demonstration teaches the protocol rather than the answer.
+ *
+ * `mode` chooses which training rows are eligible:
+ *
+ * - `distinct` (the recorded behaviour) takes the first rows of templates not
+ *   seen yet, so every demonstration is a different problem type;
+ * - `shapes` prefers rows whose plan declares the same number of wires as the
+ *   target's own plan, so the demonstrations teach the shape the target needs
+ *   (a two-stage plan shown a two-stage plan) rather than an unrelated one. The
+ *   target's own book stays excluded either way.
  */
-export function demonstrationRows(rows, { demos, targetBook, targetTemplate }) {
+export function demonstrationRows(rows, { demos, targetBook, targetTemplate, mode = 'distinct', targetWires = null }) {
   if (demos <= 0) return [];
+  const eligible = rows.filter(
+    (row) => row.book !== targetBook && `${row.book}|${row.template}` !== `${targetBook}|${targetTemplate}`
+  );
   const picked = [];
-  const seenTemplates = new Set();
-  for (const row of rows) {
+  if (mode === 'shapes' && targetWires !== null) {
+    // First pass: same wire count, one per template; then the general rule fills
+    // the rest, so a request for more demonstrations than the shape affords still
+    // returns the requested number.
+    for (const row of eligible) {
+      if (picked.length === demos) break;
+      const wires = wireCountOf(row.solution);
+      if (wires !== targetWires) continue;
+      if (picked.some((chosen) => chosen.template === row.template)) continue;
+      picked.push(row);
+    }
+  }
+  const seenTemplates = new Set(picked.map((row) => `${row.book}|${row.template}`));
+  for (const row of eligible) {
     if (picked.length === demos) break;
     const template = `${row.book}|${row.template}`;
-    if (row.book === targetBook) continue;
-    if (seenTemplates.has(template) || template === `${targetBook}|${targetTemplate}`) continue;
+    if (seenTemplates.has(template)) continue;
     seenTemplates.add(template);
     picked.push(row);
   }
   if (picked.length < demos) throw new Error(`only ${picked.length} demonstrations available; the export is smaller than the request`);
   return picked;
+}
+
+/** The wire declarations of a program: what "the same shape" is measured on. */
+function wireCountOf(solution) {
+  return String(solution ?? '').split('\n').filter((line) => line.startsWith('@')).length;
+}
+
+/**
+ * The reference solution of a sliced item. A slice item carries the identity,
+ * the statement, and the oracle, not the program (an evaluation must not read
+ * the answer's shape into its own prompt), so the shape-matched demonstration
+ * rule reads it from the shipped tree by folder. A missing file is a dataset
+ * defect rather than a scoring outcome, so it throws.
+ */
+function targetSolutionOf(item) {
+  const path = join(DATA_ROOT, item.book, ...String(item.folder).split('/'), 'solution.sop');
+  return readFileSync(path, 'utf8');
 }
 
 function composeStatement({ statement, demos }) {
@@ -135,6 +180,29 @@ const trainingRows = allRows
 
 const resolved = resolveSlice({ slice: options.slice, limit: options.limit });
 const registryDir = join(REPOSITORY_ROOT, 'evaluation/registry', options.experiment);
+
+/**
+ * `--dry-run` resolves the slice and the demonstrations of every item and
+ * writes nothing: it is how the demonstration rule is inspected without a
+ * served model (which shapes the prompts carry, and which problems stand as
+ * examples), and it keeps the rule testable in the suite.
+ */
+if (options.dryRun) {
+  const lines = resolved.items.map((item) => {
+    const demos = demonstrationRows(trainingRows, {
+      demos: options.demos,
+      targetBook: item.book,
+      targetTemplate: item.template,
+      mode: options.demoMode,
+      targetWires: wireCountOf(targetSolutionOf(item))
+    });
+    return `${item.book}/${item.folder}: ${demos.length} demo(s) [${demos.map((row) => `${row.book}/${row.template} (${wireCountOf(row.solution)} wires)`).join(', ')}]`;
+  });
+  process.stdout.write(`${lines.join('\n')}\n`);
+  process.stdout.write(`${resolved.items.length} item(s), demos ${options.demos}, mode ${options.demoMode}\n`);
+  process.exit(0);
+}
+
 mkdirSync(join(registryDir, 'items'), { recursive: true });
 
 let artifact = null;
@@ -153,7 +221,13 @@ if (options.gguf !== null) {
 
 const runtime = createRuntime();
 const run = async (baseUrl) => mapWithConcurrency(resolved.items, options.concurrency, async (item) => {
-  const demos = demonstrationRows(trainingRows, { demos: options.demos, targetBook: item.book, targetTemplate: item.template });
+  const demos = demonstrationRows(trainingRows, {
+    demos: options.demos,
+    targetBook: item.book,
+    targetTemplate: item.template,
+    mode: options.demoMode,
+    targetWires: wireCountOf(targetSolutionOf(item))
+  });
   const statement = composeStatement({ statement: item.statement, demos });
   const result = await generate({ base: baseUrl, model: 'student', messages: buildMessages(statement), temperature: 0, maxTokens: options.maxTokens, timeoutMs: 600_000 });
   const record = {
