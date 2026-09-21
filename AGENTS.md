@@ -17,6 +17,17 @@ This repository is the sopLang-llm project. It fine-tunes a small code-capable l
 
 The repository does not distribute skills as product artifacts. The agent skills available under `.agents/skills/` are imported tooling used while working in this repository; they are not part of the project's documented surface, and their guidance and dependency records stay inside their own folders. The product surfaces of this repository are the language runtime, the wire registry, the context adapter, the teaching pipeline, and the training data suite described by the design specifications.
 
+## Writing to the owner
+
+Report concretely. Name the thing, the run, and the number in the same sentence; never use a shorthand the owner has not seen defined.
+
+- Bad: "the demonstrations did not move the result on the unseen family".
+- Good: "with 3 compiled examples in the prompt, the model answered 0 of 12 holdout problems correctly (evaluation/registry/adapt-smoke-3), the same as with no examples".
+- Say which problems: instead of "the unseen family", write "the holdout problems, for example the counter-opening-hours and units-and-rates problems, which no training row uses".
+- Say what changed between two numbers: which file, which parameter, which data.
+- Percentages always carry their counts: "0.4% (1 of 265)", never "near zero".
+- When comparing, name both sides: "the untuned student parsed 39 of 1000 rows, the fine-tuned student parsed 1000 of 1000".
+
 ## Repository Rules
 
 - Everything written to disk is in English: documentation, specifications, code comments, identifiers, commit messages, test prose, and every generated artifact under `training-data/`, `teacher/`, `context/`, `runtime/`, and `docs/` — problem statements, solution circuits, explanations, prompts, manifests, reports, traces, and rejection records. Romanian is reserved for spoken communication with the repository owner only. The only permitted non-English text on disk is verbatim source material quoted for provenance (for example, a seed-book passage reproduced inside a rejection record) and deliberately non-linguistic payload in tests that exercise Unicode handling; any non-English content in a source that would flow into generated data must be quarantined from the accepted dataset.
