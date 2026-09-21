@@ -21,6 +21,8 @@
  * split unit: a holdout family is never trained on.
  */
 
+import { planningFamilies } from './planning.mjs';
+
 export const sourceId = 'procedural-arithmetic';
 export const generatorVersion = '1.0.0';
 
@@ -268,4 +270,4 @@ const cheaperRate = {
   }
 };
 
-export const families = [netBalance, wholeUnits, cheaperRate];
+export const families = [netBalance, wholeUnits, cheaperRate, ...planningFamilies];

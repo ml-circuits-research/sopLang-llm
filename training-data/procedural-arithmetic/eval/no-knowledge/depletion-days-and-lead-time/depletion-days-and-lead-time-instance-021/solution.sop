@@ -1,0 +1,31 @@
+@slots literal
+{
+  "depot": "warehouse",
+  "good": "ballast",
+  "stockUnits": 303,
+  "dailyUse": 15,
+  "leadDays": 8
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.stockUnits) && slots.stockUnits > 0, "the stock must be a positive whole number of units");
+probe(Number.isInteger(slots.dailyUse) && slots.dailyUse > 0, "the daily use must be a positive whole number of units");
+probe(Number.isInteger(slots.leadDays) && slots.leadDays > 0, "the lead time must be a positive whole number of days");
+let remaining = slots.stockUnits;
+let days = 0;
+while (remaining >= slots.dailyUse) {
+  remaining -= slots.dailyUse;
+  days += 1;
+}
+probe(remaining >= 0 && remaining < slots.dailyUse, "the covered days must be the largest whole number that the stock supports");
+const orderToday = slots.leadDays >= days;
+return "The stock covers " + days + " whole days, so the order " + (orderToday ? "must be placed today" : "can wait") + ".";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

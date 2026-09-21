@@ -1,0 +1,30 @@
+@slots literal
+{
+  "plant": "workshop",
+  "material": "bearings",
+  "totalUnits": 383,
+  "unitsPerCrate": 15
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.totalUnits) && slots.totalUnits > 0, "the produced units must be a positive whole number");
+probe(Number.isInteger(slots.unitsPerCrate) && slots.unitsPerCrate > 1, "the crate capacity must be a whole number greater than one");
+let crates = 0;
+let packed = 0;
+while (packed < slots.totalUnits) {
+  crates += 1;
+  packed += slots.unitsPerCrate;
+}
+const lastCrate = slots.totalUnits - (crates - 1) * slots.unitsPerCrate;
+probe(lastCrate > 0 && lastCrate <= slots.unitsPerCrate, "the last crate must hold between one unit and its capacity");
+probe((crates - 1) * slots.unitsPerCrate < slots.totalUnits, "one crate fewer must not hold the whole shift");
+return crates + " crates are needed, and the last crate holds " + lastCrate + " units.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

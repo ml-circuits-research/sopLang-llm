@@ -4,8 +4,8 @@
     "id": "compiled-plan-chat-1",
     "systemPromptSha256": "67655b81e61a7025442d5d9db6f47566350b4f3d045d48083089ff05608caae2"
   },
-  "snapshot": "0097ab18d4adf45c75375c7190fb4f0514becd6f2648f72cdd5c9d0b076a82ad",
-  "rows": 6855,
+  "snapshot": "ed993d39e4f8b8ed8ca13856cd96ecc3cbb1e36aa7fb92efa239ea698689b57c",
+  "rows": 7015,
   "books": {
     "adult-reasoning": {
       "rows": 990,
@@ -53,13 +53,13 @@
       "plans": 579
     },
     "procedural-arithmetic": {
-      "rows": 80,
+      "rows": 240,
       "categories": {
-        "no-knowledge": 80,
+        "no-knowledge": 240,
         "knowledge": 0
       },
-      "templates": 2,
-      "plans": 2
+      "templates": 6,
+      "plans": 6
     },
     "scientific-reasoning": {
       "rows": 975,
@@ -107,9 +107,9 @@
       "rows": 990
     },
     "procedural-arithmetic.jsonl": {
-      "sha256": "aae02cb8b363ba920b486bbaeb217cef272a146f81fa7de186f164d1ba7e47e7",
-      "bytes": 295141,
-      "rows": 80
+      "sha256": "29232c7755ac93d535e5c8b9b0924b65fadec28e74b2531d243ec9ba7a1a3615",
+      "bytes": 841794,
+      "rows": 240
     },
     "scientific-reasoning.jsonl": {
       "sha256": "b22464cb58e696b9a1ff476c40d2acf0c8e87963f3203f0b6e0c15502b7278ce",
@@ -122,9 +122,9 @@
       "rows": 980
     },
     "all-books.jsonl": {
-      "sha256": "67bc0ba432bb2793c720b023a790af2d1dc34256e4ed1177b2a17ef842e71d92",
-      "bytes": 31688706,
-      "rows": 6855
+      "sha256": "63cbbd9cb0c89e6d3e8e240baa371f51b7ef78667ca5d0bec28af99a83b2014b",
+      "bytes": 32235359,
+      "rows": 7015
     }
   },
   "dataset": {

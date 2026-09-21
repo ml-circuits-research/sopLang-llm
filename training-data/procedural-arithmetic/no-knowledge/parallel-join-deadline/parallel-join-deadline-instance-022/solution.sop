@@ -1,0 +1,31 @@
+@slots literal
+{
+  "workName": "rollout",
+  "firstTrack": "draft",
+  "firstMinutes": 55,
+  "secondTrack": "review",
+  "secondMinutes": 37,
+  "serialTrack": "review",
+  "serialMinutes": 6,
+  "limitMinutes": 38
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.firstMinutes) && slots.firstMinutes > 0, "the first track must take a positive whole number of minutes");
+probe(Number.isInteger(slots.secondMinutes) && slots.secondMinutes > 0, "the second track must take a positive whole number of minutes");
+probe(Number.isInteger(slots.serialMinutes) && slots.serialMinutes > 0, "the serial step must take a positive whole number of minutes");
+probe(Number.isInteger(slots.limitMinutes) && slots.limitMinutes > 0, "the window must be a positive whole number of minutes");
+const tracks = [slots.firstMinutes, slots.secondMinutes].sort((left, right) => right - left);
+const joinMinutes = tracks[0];
+probe(joinMinutes >= tracks[1], "the join must wait for the slower parallel track");
+const elapsed = joinMinutes + slots.serialMinutes;
+return "The earliest elapsed time is " + elapsed + " minutes, so the plan " + (elapsed <= slots.limitMinutes ? "fits" : "does not fit") + " the window.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

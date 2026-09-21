@@ -60,6 +60,17 @@ export function validateProceduralFamily(family, where) {
   return family;
 }
 
+/** Stable serialization for value comparison: a parse that returns the same values in another key order is correct. */
+export function canonicalJson(value) {
+  if (Array.isArray(value)) {
+    return `[${value.map(canonicalJson).join(',')}]`;
+  }
+  if (value !== null && typeof value === 'object') {
+    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`).join(',')}}`;
+  }
+  return JSON.stringify(value);
+}
+
 /** A family whose own smoke instance fails to round-trip is a generator defect, not a data defect. */
 export function smokeFamily(family, { seed }) {
   const [instance] = sampleInstances({ family, seed, count: 1 });
@@ -67,7 +78,7 @@ export function smokeFamily(family, { seed }) {
     throw new Error(`${family.id}: the sampler produced no instance`);
   }
   const reparsed = family.parse(instance.statement);
-  if (JSON.stringify(reparsed) !== JSON.stringify(instance.slots)) {
+  if (canonicalJson(reparsed) !== canonicalJson(instance.slots)) {
     throw new Error(`${family.id}: the reference parse does not recover the sampled values`);
   }
   const answer = family.render(family.solve(instance.slots));

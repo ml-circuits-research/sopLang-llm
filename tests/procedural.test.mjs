@@ -20,6 +20,7 @@ import { answerBody } from '../teacher/families/probes.mjs';
 import { assertEnglishContent } from '../teacher/language.mjs';
 import { answerMatches, slugify } from '../teacher/naming.mjs';
 import { createRuntime } from '../runtime/kernel.mjs';
+import { canonicalJson } from '../teacher/procedural/index.mjs';
 
 const SEED = 20260921;
 const PER_FAMILY = 25;
@@ -65,7 +66,7 @@ test('instances reproduce from the recorded seed and are unique per family', () 
 test('the reference parse recovers the sampled values and the statement is English and answer-free', () => {
   for (const family of families) {
     for (const instance of sampleInstances({ family, seed: SEED, count: PER_FAMILY })) {
-      assert.deepEqual(family.parse(instance.statement), instance.slots, `${family.id} instance ${instance.index} does not round-trip`);
+      assert.equal(canonicalJson(family.parse(instance.statement)), canonicalJson(instance.slots), `${family.id} instance ${instance.index} does not round-trip`);
       assert.doesNotThrow(() => assertEnglishContent(instance.statement, `${family.id} instance ${instance.index}`));
       const answer = family.render(family.solve(instance.slots));
       assert.ok(answer.length > 0);
