@@ -65,6 +65,29 @@ No larger student: the milestone is decided on `Qwen2.5-Coder-0.5B-Instruct`, an
 
 The trainer budget keeps the workstation usable for other work: `--memory-fraction 0.75` caps the process allocator at 89.7 GiB of the 119.6 GiB unified pool against a 16 GiB floor, the realized peak of a full run is 17.5 GiB (14.3 GiB so far for LoRA), the guard stops at a step boundary with a checkpoint instead of letting the kernel OOM killer shoot host services, runs are serialized because a selection server and a trainer on one GPU double both wall times, and the trainer runs at `nice -n 10`.
 
+## Morning check (answer without reading logs)
+
+One command answers "is the night still working?":
+
+    bash training/environment/work-status.sh
+
+Read it as follows. RUNNING PROCESSES must list a `supervisor` and a `training` line for the
+active experiment; TRAINING PROGRESS must show a step count that grows between two runs of the
+command; EVALUATION CHAINS must show `selection` and `holdout` lines for finished runs;
+BACKGROUND GUARDS must show `watchdog running` and no `resume needed` line. A missing trainer
+line plus a non-completed `run-manifest.json` is the one bad case, and the guard section prints
+the exact resume command for it:
+
+    bash training/environment/resume-series.sh <experiment>
+
+Watchdog: `training/checkpoints/watchdog.log` records every pass, every restart it performed,
+and every warning about a stale step log. The queue that starts exp-008 after exp-007 has its
+decisions in `evaluation/registry/exp-008-queue.log`.
+
+An agent supervisor cannot be started detached from inside a session: `omp` exits at once with
+code 129 in that situation, so unattended supervision is the shell watchdog above, and the
+interactive `omp -c` session is what reads and acts on its log.
+
 ## How to restart this session
 
 Start a new agent session in the repository and say:
