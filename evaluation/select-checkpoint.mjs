@@ -9,15 +9,18 @@
  * the tiebreaker, never by training loss, and `selection.md` records the table,
  * the winner, and why. Because most slice rows sit on a plan fingerprint the
  * trainer also trains on, the table reports oracle match separately for
- * plan-seen and plan-unseen rows (DS009 "Checkpoint selection").
+ * plan-seen and plan-unseen rows (DS009 "Checkpoint selection"). A LoRA
+ * checkpoint (adapter files only) is merged into its base model with
+ * `training/python/merge_adapter.py` before conversion, because the converter
+ * reads full model directories.
  *
  * Usage:
  *   node evaluation/select-checkpoint.mjs --experiment exp-002-sft-lr2e-5 [--concurrency 4] [--port 8090] [--extra-args "--ctx-size 16384"]
  */
 
 import { spawn } from 'node:child_process';
-import { closeSync, mkdirSync, openSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { closeSync, existsSync, mkdirSync, openSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRuntime } from '../runtime/kernel.mjs';
 import { generate } from './client.mjs';
@@ -90,6 +93,29 @@ async function convertCheckpoint(checkpointDir, ggufPath, logPath) {
   }
 }
 
+/**
+ * A LoRA checkpoint holds adapter files, which the converter cannot read, so it
+ * is merged into its base model first (once; the merged directory is reused).
+ * Full fine-tuning checkpoints are returned unchanged.
+ */
+async function servableCheckpoint(checkpoint, logPath) {
+  if (!existsSync(join(checkpoint.path, 'adapter_config.json'))) {
+    return checkpoint.path;
+  }
+  const merged = join(dirname(checkpoint.path), `merged-${checkpoint.name}`);
+  if (!existsSync(join(merged, 'config.json'))) {
+    const result = await run('bash', [
+      'training/environment/train.sh', 'python', join(REPOSITORY_ROOT, 'training/python/merge_adapter.py'),
+      '--checkpoint', checkpoint.path, '--out', merged,
+    ], { logPath });
+    if (result.code !== 0) {
+      throw new Error(`LoRA merge failed for ${checkpoint.path}; see ${logPath}`);
+    }
+  }
+  console.log(`  merged adapter: ${merged}`);
+  return merged;
+}
+
 function checkpointDirectories(root) {
   return readdirSync(root, { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && /^checkpoint-\d+$/.test(entry.name))
@@ -147,7 +173,8 @@ const rows = [];
 for (const checkpoint of checkpoints) {
   const ggufPath = join(ggufDir, `${checkpoint.name}.gguf`);
   console.log(`\n=== ${checkpoint.name} (${items.length} validation items)`);
-  await convertCheckpoint(checkpoint.path, ggufPath, join(ggufDir, `${checkpoint.name}-convert.log`));
+  const convertSource = await servableCheckpoint(checkpoint, join(ggufDir, `${checkpoint.name}-merge.log`));
+  await convertCheckpoint(convertSource, ggufPath, join(ggufDir, `${checkpoint.name}-convert.log`));
   const records = await withServer({ ggufPath, port: options.port, logPath: join(ggufDir, `${checkpoint.name}-server.log`) }, () =>
     runSlice({
       items,
