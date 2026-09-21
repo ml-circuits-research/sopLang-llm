@@ -48,6 +48,9 @@ No larger student: the milestone is decided on `Qwen2.5-Coder-0.5B-Instruct`, an
 
 ## How to watch
 
+- `bash training/environment/resume-series.sh <experiment>` — restart an interrupted run and its evaluation chain with one command. The supervisor resumes from the last checkpoint (`--save-steps` interval, 90 steps here), so an interruption costs at most that much compute; the recipe is read from `training/checkpoints/<experiment>/resume-recipe.sh`, written on first use or recorded by hand.
+- Long runs are started **detached** from this session (`hub start ... detached: true`): they survive the SSH session ending and the harness broker shutting down. A run started only `persist` (the earlier default here) dies with the broker, i.e. with the session — the training of `exp-007-sft-wires` was moved to detached for that reason at 2026-09-21 17:0x UTC.
+
 - `bash training/environment/work-status.sh` — one screen with what is running right now, how far each training and evaluation has come, the latest scored runs, and the device margin. This is the command to run when it is unclear whether work is in flight.
 
 - `bash training/environment/train-status.sh` — one screen: status, steps, loss curve, device margin, checkpoints, episodes, whether the process is alive.
