@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sopLang-llm Documentation</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div data-include="partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel">
+      <p class="breadcrumbs"><a href="index.html">Home</a></p>
+      <p class="kicker">Teaching</p>
+      <h1>Student comparison</h1>
+      <p class="lede">The same measurements on the untuned student and on every fine-tuned arm of the first series, side by side. The page reports numbers and the artifact each one came from; it draws no conclusion. The interpretation, the failure mechanisms, and the decisions live in <code>evaluation/registry/phase4-analysis.md</code>, and every row below traces back to the per-item records named in its section.</p>
+
+      <h2>The arms</h2>
+      <table>
+        <thead>
+          <tr><th>Experiment</th><th>What it is</th><th>Data</th><th>Steps / loss</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>exp-000-baseline</code></td><td>the untuned student, served as F16 GGUF</td><td>—</td><td>—</td></tr>
+          <tr><td><code>exp-001-overfit-lr1e-4</code></td><td>memorization gate on 284 examples (all three gates pass)</td><td>284 rows</td><td>271 / 0.00032</td></tr>
+          <tr><td><code>exp-002-sft-lr2e-5</code></td><td>full fine-tuning, learning rate 2e-5</td><td>6436 rows (books)</td><td>606 / 0.023594</td></tr>
+          <tr><td><code>exp-003-sft-lr1e-4</code></td><td>full fine-tuning, learning rate 1e-4</td><td>6436 rows (books)</td><td>606 / 0.00125</td></tr>
+          <tr><td><code>exp-004-lora</code></td><td>LoRA r16 alpha32, learning rate 1e-4</td><td>6436 rows (books)</td><td>606 / 0.027862</td></tr>
+          <tr><td><code>exp-005-sft-widened</code></td><td>full fine-tuning, learning rate 1e-4, widened suite</td><td>6796 rows (books + synthetic)</td><td>639 / 0.001135</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Validation slice: 339 rows, 323 on a plan the trainer saw, 16 on a plan it did not</h2>
+      <table>
+        <thead>
+          <tr><th>Artifact</th><th>oracle match</th><th>plan seen</th><th>plan unseen</th><th>parse</th><th>graph</th><th>completion</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>exp-002</code> checkpoint-450</td><td>53.7%</td><td>56.0% (181/323)</td><td>6.3% (1/16)</td><td>100.0%</td><td>99.6%</td><td>—</td></tr>
+          <tr><td><code>exp-003</code> checkpoint-540</td><td>94.7%</td><td>98.8% (319/323)</td><td>12.5% (2/16)</td><td>100.0%</td><td>100.0%</td><td>99.1%</td></tr>
+          <tr><td><code>exp-004</code> checkpoint-540</td><td>52.5%</td><td>54.2% (175/323)</td><td>18.8% (3/16)</td><td>100.0%</td><td>100.0%</td><td>74.6%</td></tr>
+          <tr><td><code>exp-005</code> checkpoint-360</td><td>94.4%</td><td>98.5% (318/323)</td><td>12.5% (2/16)</td><td>100.0%</td><td>100.0%</td><td>98.2%</td></tr>
+        </tbody>
+      </table>
+      <p>Source: <code>evaluation/registry/&lt;experiment&gt;/selection.md</code> and <code>selection/items/&lt;checkpoint&gt;.jsonl</code>. The columns <em>plan seen</em> and <em>plan unseen</em> split the slice by whether the row's plan fingerprint also occurs in the rows the trainer trains on.</p>
+
+      <h2>Holdout: rows whose plan and family the trainer never saw</h2>
+      <table>
+        <thead>
+          <tr><th>Artifact</th><th>items</th><th>parse</th><th>graph</th><th>completion</th><th>oracle match</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>exp-000-baseline</code> (sampled 50)</td><td>50</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td></tr>
+          <tr><td><code>exp-002</code> checkpoint-450</td><td>225</td><td>100.0%</td><td>99.6%</td><td>12.4%</td><td>0.0%</td></tr>
+          <tr><td><code>exp-003</code> checkpoint-540</td><td>225</td><td>100.0%</td><td>100.0%</td><td>27.6%</td><td>0.0%</td></tr>
+          <tr><td><code>exp-004</code> checkpoint-540</td><td>265</td><td>99.6%</td><td>99.6%</td><td>12.5%</td><td>0.0%</td></tr>
+          <tr><td><code>exp-005</code> checkpoint-360</td><td>265</td><td>100.0%</td><td>100.0%</td><td>18.1%</td><td>0.4% (1/265)</td></tr>
+          <tr><td>running: <code>exp-000-baseline</code> on the same holdout</td><td>265</td><td colspan="4">in flight (<code>evaluation/registry/cmp-base-holdout/</code>)</td></tr>
+        </tbody>
+      </table>
+      <p>Source: <code>evaluation/registry/&lt;experiment&gt;/report.md</code> and <code>items/holdout.jsonl</code>. The holdout holds 225 book rows; the widened runs score 265 because the synthetic source contributes the 40 instances of the family it withholds.</p>
+
+      <h2>Capability probes (10 hand-written JavaScript and instruction microtasks)</h2>
+      <table>
+        <thead>
+          <tr><th>Artifact</th><th>passed</th><th>by kind</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>exp-000-baseline</code></td><td>4/10</td><td>instruction 2/4, javascript 2/6</td></tr>
+          <tr><td><code>exp-003</code> Q8_0 and Q4_K_M</td><td>1/10</td><td>—</td></tr>
+          <tr><td><code>exp-004</code> checkpoint-540</td><td>0/10</td><td>instruction 0/4, javascript 0/6</td></tr>
+          <tr><td><code>exp-005</code> checkpoint-360</td><td>1/10</td><td>—</td></tr>
+        </tbody>
+      </table>
+      <p>Source: <code>evaluation/registry/&lt;experiment&gt;/probes.md</code> and <code>items/capability-probes.jsonl</code>. In every fine-tuned row the probes were scored inside the same server session as that row's holdout run.</p>
+
+      <h2>Text-reasoning probes (49 tasks small models fail: letter counting, reversal, word counts, ordering, situation traps)</h2>
+      <table>
+        <thead>
+          <tr><th>Artifact</th><th>mode</th><th>passed</th><th>character count</th><th>word count</th><th>transform</th><th>ordering</th><th>trap</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>exp-000-baseline</code></td><td>direct answer</td><td>5/49</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td><code>exp-003</code> checkpoint-540</td><td>direct answer</td><td>1/49</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td><code>exp-005</code> checkpoint-360</td><td>direct answer</td><td>0/49</td><td>0/16</td><td>0/9</td><td>0/8</td><td>0/6</td><td>0/10</td></tr>
+          <tr><td><code>exp-005</code> checkpoint-360</td><td>compiled plan, executed, value compared</td><td>30/49</td><td>16/16</td><td>9/9</td><td>4/8</td><td>0/6</td><td>1/10</td></tr>
+        </tbody>
+      </table>
+      <p>Source: <code>evaluation/registry/text-probes-*/</code>. The suites are evaluation-only material and never enter training; every derivable expected value is recomputed by <code>tests/text-probes.test.mjs</code>. Compiled mode compares values under a declared tolerance (<code>statesValue</code>: a numeric expectation must equal the first number the answer states).</p>
+
+      <h2>The trained student's own training rows (1000-row stratified slice)</h2>
+      <table>
+        <thead>
+          <tr><th>Artifact</th><th>items</th><th>parse</th><th>graph</th><th>completion</th><th>oracle match</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>exp-000-baseline</code></td><td>1000</td><td colspan="4">in flight (<code>evaluation/registry/cmp-base-train/</code>)</td></tr>
+          <tr><td><code>exp-005</code> checkpoint-360</td><td>1000</td><td colspan="4">in flight (<code>evaluation/registry/cmp-exp005-train/</code>)</td></tr>
+        </tbody>
+      </table>
+      <p>Source: <code>evaluation/registry/cmp-*/report.md</code>, produced by <code>node evaluation/run-slice.mjs --experiment &lt;id&gt; --slice file:training/data/comparison-slice.jsonl --gguf &lt;artifact&gt;</code>. The slice holds 1000 training rows, 125 from each of the eight sources, sampled with a fixed stride over each source in export order.</p>
+
+      <h2>Cost of the deployed artifact (<code>exp-003</code> checkpoint-540)</h2>
+      <table>
+        <thead>
+          <tr><th>Format</th><th>size</th><th>parse</th><th>completion</th><th>oracle</th><th>generated tokens/s</th><th>prompt tokens/s</th><th>first token</th><th>peak RSS</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>F16</td><td>948 MB</td><td>100.0%</td><td>27.6%</td><td>0.0%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td>Q8_0</td><td>531 MB</td><td>100.0%</td><td>40.4%</td><td>0.0%</td><td>160.9</td><td>4613</td><td>19 ms</td><td>2.69 GiB</td></tr>
+          <tr><td>Q4_K_M</td><td>~300 MB</td><td>100.0%</td><td>40.4%</td><td>0.0%</td><td>176.2</td><td>2483</td><td>36 ms</td><td>2.75 GiB</td></tr>
+        </tbody>
+      </table>
+      <p>Source: <code>evaluation/registry/exp-003-sft-lr1e-4/deployment.md</code>. Each row comes from its own served file in one session on an aarch64 host with twenty cores, eight threads, greedy decoding, 265 holdout items. The F16 column is the selection table of the same checkpoint, measured on the 339-row validation slice, so it is not row-for-row comparable.</p>
+
+      <h2>How to read this page</h2>
+      <p>Each table states one question and the artifact that answered it. Rows marked <em>in flight</em> are measured by a run that was still writing when this page was last updated; their registry folders are named next to them. Nothing here ranks the arms or explains them: the failure mechanisms, the diagnoses of <a href="specsLoader.html?spec=DS009-fine-tuning-and-evaluation.md">DS009-fine-tuning-and-evaluation</a>, and the decisions that follow from them are recorded in <code>evaluation/registry/phase4-analysis.md</code>, and the per-arm recipes in <code>evaluation/registry/phase4-first-series.md</code>.</p>
+    </div>
+  </main>
+  <div data-include="partials/footer.html"></div>
+  <script src="partials-loader.js"></script>
+</body>
+</html>
