@@ -694,6 +694,8 @@ def build_manifest(
     planned_steps: int,
     steps_per_epoch: int,
     tokens_seen_seeded: int,
+    extra_path=None,
+    extra_rows: int = 0,
 ) -> dict:
     """The DS009 run manifest of the experiment."""
     export_manifest = read_json(paths["export_manifest"]) if paths["export_manifest"].is_file() else {}
@@ -733,7 +735,7 @@ def build_manifest(
         "dataset_extra_sha256": (
             sha256_file(extra_path) if extra_path is not None and extra_path.is_file() else None
         ),
-        "dataset_extra_rows": len(extra_rows),
+        "dataset_extra_rows": extra_rows,
         "dataset_preservation": export_manifest.get("preservation"),
         "dataset_snapshot": export_manifest.get("snapshot"),
         "dataset_file_hashes": {
@@ -1097,6 +1099,8 @@ def main(argv: list[str] | None = None) -> int:
         planned_steps=planned_steps,
         steps_per_epoch=steps_per_epoch,
         tokens_seen_seeded=seeded_tokens,
+        extra_path=extra_path,
+        extra_rows=len(extra_rows),
     )
 
     model = load_model(args, base_model)
