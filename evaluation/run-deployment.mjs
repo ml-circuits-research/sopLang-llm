@@ -24,7 +24,7 @@ import { spawn } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { cpus } from 'node:os';
+import { cpus, machine } from 'node:os';
 import { createRuntime } from '../runtime/kernel.mjs';
 import { generate } from './client.mjs';
 import { renderProbesReport, scoreProbes, summaryOf } from './probes.mjs';
@@ -42,6 +42,7 @@ function parseArguments(argv) {
     port: 8081,
     maxTokens: 2048,
     limit: null,
+    force: false,
     registry: DEFAULT_REGISTRY,
   };
   for (let index = 0; index < argv.length; index += 1) {
@@ -59,6 +60,7 @@ function parseArguments(argv) {
     else if (flag === '--port') options.port = Number(value());
     else if (flag === '--max-tokens') options.maxTokens = Number(value());
     else if (flag === '--limit') options.limit = Number(value());
+    else if (flag === '--force') options.force = true;
     else if (flag === '--registry') options.registry = value();
     else throw new Error(`unknown argument: ${flag}`);
   }
@@ -111,6 +113,12 @@ async function measureThroughput({ port, prompt }) {
   };
 }
 
+/** A usable host label: some ARM kernels report the CPU model as 'unknown'. */
+function cpuLabel() {
+  const model = cpus()[0]?.model ?? 'unknown';
+  return model === 'unknown' ? `${machine()} host, ${cpus().length} cores` : model;
+}
+
 const options = parseArguments(process.argv.slice(2));
 const registryDir = join(options.registry, options.experiment);
 if (!existsSync(join(registryDir, 'selection.json'))) {
@@ -130,6 +138,15 @@ for (const quant of options.quants) {
   const artifactDir = join(options.registry, experimentId);
   mkdirSync(join(artifactDir, 'items'), { recursive: true });
   console.log(`\n=== ${quant}: ${basename(quantizedPath)}`);
+  const storedPath = join(artifactDir, 'metrics.json');
+  if (!options.force && existsSync(storedPath)) {
+    // A measured artifact is reused: quantization and scoring cost GPU minutes, and
+    // the per-artifact records are already the evidence this report summarizes.
+    const stored = JSON.parse(readFileSync(storedPath, 'utf8'));
+    console.log(`${quant}: reusing the recorded measurement (${stored.deployment.artifact})`);
+    rows.push({ quant, slug, artifact: stored.deployment.artifact, experimentId, items: stored.items, rates: stored.rates, efficiency: stored.efficiency, probes: stored.capabilityProbes, throughput: stored.deployment.throughput, peakResidentGib: stored.deployment.peakResidentGib });
+    continue;
+  }
   await quantize(winner.gguf, quantizedPath, quant, join(ggufDir, `${winner.checkpoint}-${slug}-quantize.log`));
 
   const measurement = await withServer(
@@ -182,13 +199,12 @@ for (const quant of options.quants) {
   );
 }
 
-const reference = JSON.parse(readFileSync(join(artifactDir, 'metrics.json'), 'utf8'));
 const lines = [];
 const percent = (rate) => (rate === null || rate === undefined ? 'n/a' : `${(rate * 100).toFixed(1)}%`);
 lines.push(`# Deployment measurement, ${options.experiment}`);
 lines.push('');
 lines.push(`Winner \`${winner.checkpoint}\` of the selection table, quantized from \`${winner.gguf.replace(`${REPOSITORY_ROOT}/`, '')}\` (F16).`);
-lines.push(`Every row below — accuracy, throughput, and memory — was measured on that row's own artifact in one server session on this host (\`${cpus()[0].model}\`, ${options.threads} threads, greedy decoding, ${items.length} holdout items, one generated attempt per item).`);
+lines.push(`Every row below — accuracy, throughput, and memory — was measured on that row's own artifact in one server session on this host (\`${cpuLabel()}\`, ${options.threads} threads, greedy decoding, ${items.length} holdout items, one generated attempt per item).`);
 lines.push('');
 lines.push('| quant | artifact | items | parse | graph | completion | oracle | probes | generated tok/s | prompt tok/s | first token ms | peak RSS GiB |');
 lines.push('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |');
@@ -196,7 +212,7 @@ for (const row of rows) {
   lines.push(
     `| ${row.quant} | \`${row.artifact}\` | ${row.items} | ${percent(row.rates.parse_validity)} | ${percent(row.rates.graph_validity)} | ` +
     `${percent(row.rates.runtime_completion)} | ${percent(row.rates.oracle_match)} | ${row.probes.passed}/${row.probes.items} | ` +
-    `${row.efficiency.generatedTokensPerSecond?.toFixed(1) ?? 'n/a'} | ${row.throughput.promptTokensPerSecond?.toFixed(0) ?? 'n/a'} | ` +
+    `${row.efficiency.tokensPerSecond?.toFixed(1) ?? 'n/a'} | ${row.throughput.promptTokensPerSecond?.toFixed(0) ?? 'n/a'} | ` +
     `${row.throughput.firstTokenMs?.toFixed(0) ?? 'n/a'} | ${row.peakResidentGib?.toFixed(2) ?? 'n/a'} |`,
   );
 }

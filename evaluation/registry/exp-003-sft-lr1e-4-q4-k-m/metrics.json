@@ -1,0 +1,506 @@
+{
+  "items": 265,
+  "classes": {
+    "generation_transport_error": 0,
+    "wrapper_rejected": 0,
+    "parse_invalid": 0,
+    "graph_invalid": 0,
+    "execution_error": 158,
+    "answer_mismatch": 107,
+    "answer_match": 0
+  },
+  "rates": {
+    "parse_validity": 1,
+    "graph_validity": 1,
+    "runtime_completion": 0.403774,
+    "oracle_match": 0
+  },
+  "byBook": {
+    "adult-reasoning": {
+      "items": 10,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 9,
+        "answer_mismatch": 1,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.1,
+        "oracle_match": 0
+      }
+    },
+    "common-sense": {
+      "items": 50,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 9,
+        "answer_mismatch": 41,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.82,
+        "oracle_match": 0
+      }
+    },
+    "decompose-to-solve": {
+      "items": 100,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 91,
+        "answer_mismatch": 9,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.09,
+        "oracle_match": 0
+      }
+    },
+    "logical-reasoning": {
+      "items": 10,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 9,
+        "answer_mismatch": 1,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.1,
+        "oracle_match": 0
+      }
+    },
+    "mathematical-thinking": {
+      "items": 10,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 1,
+        "answer_mismatch": 9,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.9,
+        "oracle_match": 0
+      }
+    },
+    "procedural-arithmetic": {
+      "items": 40,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 0,
+        "answer_mismatch": 40,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 1,
+        "oracle_match": 0
+      }
+    },
+    "scientific-reasoning": {
+      "items": 25,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 24,
+        "answer_mismatch": 1,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.04,
+        "oracle_match": 0
+      }
+    },
+    "world-as-a-system": {
+      "items": 20,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 15,
+        "answer_mismatch": 5,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.25,
+        "oracle_match": 0
+      }
+    }
+  },
+  "byPlanCluster": {
+    "2f1f09a7ecc9": {
+      "items": 1,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 1,
+        "answer_mismatch": 0,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0,
+        "oracle_match": 0
+      }
+    },
+    "465567a44bfc": {
+      "items": 1,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 0,
+        "answer_mismatch": 1,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 1,
+        "oracle_match": 0
+      }
+    },
+    "4c5c90587868": {
+      "items": 1,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 0,
+        "answer_mismatch": 1,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 1,
+        "oracle_match": 0
+      }
+    },
+    "949ce9735467": {
+      "items": 1,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 0,
+        "answer_mismatch": 1,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 1,
+        "oracle_match": 0
+      }
+    },
+    "9cf19a47caf8": {
+      "items": 1,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 0,
+        "answer_mismatch": 1,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 1,
+        "oracle_match": 0
+      }
+    },
+    "b6067c846929": {
+      "items": 50,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 9,
+        "answer_mismatch": 41,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.82,
+        "oracle_match": 0
+      }
+    },
+    "bb7868b44786": {
+      "items": 40,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 0,
+        "answer_mismatch": 40,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 1,
+        "oracle_match": 0
+      }
+    },
+    "c40e0cf7b406": {
+      "items": 100,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 91,
+        "answer_mismatch": 9,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.09,
+        "oracle_match": 0
+      }
+    },
+    "ce3d2c7f3848": {
+      "items": 1,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 0,
+        "answer_mismatch": 1,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 1,
+        "oracle_match": 0
+      }
+    },
+    "d02e23018985": {
+      "items": 25,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 24,
+        "answer_mismatch": 1,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.04,
+        "oracle_match": 0
+      }
+    },
+    "d7443e28a4d0": {
+      "items": 10,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 9,
+        "answer_mismatch": 1,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.1,
+        "oracle_match": 0
+      }
+    },
+    "d7bf7b42f6e3": {
+      "items": 1,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 0,
+        "answer_mismatch": 1,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 1,
+        "oracle_match": 0
+      }
+    },
+    "df7d891093d1": {
+      "items": 1,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 0,
+        "answer_mismatch": 1,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 1,
+        "oracle_match": 0
+      }
+    },
+    "e4162dccf502": {
+      "items": 10,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 9,
+        "answer_mismatch": 1,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.1,
+        "oracle_match": 0
+      }
+    },
+    "e576d1c206a0": {
+      "items": 1,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 0,
+        "answer_mismatch": 1,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 1,
+        "oracle_match": 0
+      }
+    },
+    "f24876b91e96": {
+      "items": 20,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 15,
+        "answer_mismatch": 5,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.25,
+        "oracle_match": 0
+      }
+    },
+    "f55973c01b53": {
+      "items": 1,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 0,
+        "answer_mismatch": 1,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 1,
+        "oracle_match": 0
+      }
+    }
+  },
+  "efficiency": {
+    "generatedTokens": 140067,
+    "promptTokens": 55905,
+    "calls": 265,
+    "wallClockMs": 794938,
+    "tokensPerSecond": 176.2,
+    "costPerCorrect": null
+  },
+  "capabilityProbes": {
+    "profile": null,
+    "items": 10,
+    "passed": 1,
+    "byKind": {
+      "instruction": {
+        "items": 4,
+        "passed": 1
+      },
+      "javascript": {
+        "items": 6,
+        "passed": 0
+      }
+    }
+  },
+  "deployment": {
+    "quant": "Q4_K_M",
+    "artifact": "/home/salboaie/work/sopLang-llm/evaluation/registry/exp-003-sft-lr1e-4/gguf/checkpoint-540-q4-k-m.gguf",
+    "throughput": {
+      "promptTokens": 89,
+      "promptMs": 35.839,
+      "promptTokensPerSecond": 2483.328217863222,
+      "firstTokenMs": 35.839999999999996
+    },
+    "peakResidentGib": 2.75067138671875
+  }
+}
