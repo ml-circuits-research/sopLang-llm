@@ -1,0 +1,29 @@
+@slots literal
+{
+  "subject": "a counter session",
+  "startHour": 12,
+  "startMinute": 5,
+  "endHour": 20,
+  "endMinute": 4
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.startHour) && slots.startHour >= 0 && slots.startHour < 24, "the start hour must be a clock hour");
+probe(Number.isInteger(slots.endHour) && slots.endHour >= 0 && slots.endHour < 24, "the end hour must be a clock hour");
+probe(Number.isInteger(slots.startMinute) && slots.startMinute >= 0 && slots.startMinute < 60, "the start minute must be a clock minute");
+probe(Number.isInteger(slots.endMinute) && slots.endMinute >= 0 && slots.endMinute < 60, "the end minute must be a clock minute");
+const startTotal = slots.startHour * 60 + slots.startMinute;
+const endTotal = slots.endHour * 60 + slots.endMinute;
+probe(endTotal > startTotal, "the end time must be later than the start time on the same day");
+const total = endTotal - startTotal;
+probe(total <= 24 * 60, "the window cannot exceed one day");
+return total + " minutes.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

@@ -1,0 +1,25 @@
+@slots literal
+{
+  "subject": "a shipment",
+  "actor": "the checker",
+  "units": 520,
+  "percent": 10
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.units) && slots.units > 0, "the total must be a positive whole number of units");
+probe(Number.isInteger(slots.percent) && slots.percent > 0 && slots.percent < 100, "the percentage must be a whole number between 0 and 100");
+const product = slots.units * slots.percent;
+probe(product % 100 === 0, "the percentage must divide the total into whole units");
+const checked = product / 100;
+probe(checked <= slots.units, "the checked part cannot exceed the whole shipment");
+return checked + " units are checked.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

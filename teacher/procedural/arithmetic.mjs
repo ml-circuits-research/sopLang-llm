@@ -24,6 +24,7 @@
 import { planningFamilies } from './planning.mjs';
 import { textFamilies } from './text.mjs';
 import { decompositionFamilies } from './decompose.mjs';
+import { mixedFamilies } from './mixed.mjs';
 
 export const sourceId = 'procedural-arithmetic';
 export const generatorVersion = '1.0.0';
@@ -272,4 +273,4 @@ const cheaperRate = {
   }
 };
 
-export const families = [netBalance, wholeUnits, cheaperRate, ...planningFamilies, ...textFamilies, ...decompositionFamilies];
+export const families = [netBalance, wholeUnits, cheaperRate, ...planningFamilies, ...textFamilies, ...decompositionFamilies, ...mixedFamilies];

@@ -1,0 +1,28 @@
+@slots literal
+{
+  "subject": "a paint batch",
+  "baseServings": 5,
+  "baseAmount": 50,
+  "item": "resin",
+  "wanted": 25
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Number.isInteger(slots.baseServings) && slots.baseServings > 0, "the base servings must be a positive whole number");
+probe(Number.isInteger(slots.wanted) && slots.wanted > 0, "the wanted servings must be a positive whole number");
+probe(Number.isInteger(slots.baseAmount) && slots.baseAmount > 0, "the stated amount must be a positive whole number of units");
+probe(slots.baseAmount % slots.baseServings === 0, "the stated amount must divide into whole units per serving");
+const perServing = slots.baseAmount / slots.baseServings;
+const needed = perServing * slots.wanted;
+probe(needed % 1 === 0, "the scaled amount must be a whole number of units");
+probe(needed >= perServing, "the scaled amount must cover at least one serving");
+return needed + " units are needed.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+
