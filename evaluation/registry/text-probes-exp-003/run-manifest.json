@@ -1,0 +1,18 @@
+{
+  "experiment": "text-probes-exp-003",
+  "suite": {
+    "path": "/home/salboaie/work/sopLang-llm/evaluation/probes/text-reasoning-probes.json",
+    "profile": "text-reasoning-probes-1.0.0",
+    "items": 49,
+    "systemPromptSha256": "3f0ff0bee57e51871d4c09dcf8e3e6ffb0ab414c41100199873dfd0fc5c69fe9"
+  },
+  "artifact": "/home/salboaie/work/sopLang-llm/evaluation/registry/exp-003-sft-lr1e-4/gguf/checkpoint-540.gguf",
+  "decoding": {
+    "temperature": 0,
+    "maxTokens": 256,
+    "concurrency": 4,
+    "attemptsPerItem": 1,
+    "transportRetries": 1
+  },
+  "startedAt": "2026-09-21T12:00:24.063Z"
+}

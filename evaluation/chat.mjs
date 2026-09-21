@@ -26,114 +26,13 @@ import { spawn } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { createInterface } from 'node:readline';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { buildMessages, extractProgram, generate } from './client.mjs';
-import { LLAMA_SERVER, REPOSITORY_ROOT, resolveArtifactPath, serverArguments, waitForServer } from './server.mjs';
+import { LLAMA_SERVER, REPOSITORY_ROOT, serverArguments, waitForServer } from './server.mjs';
+import { artifactFor } from './artifacts.mjs';
 import { parseCircuit } from '../runtime/parser.mjs';
 import { createRuntime } from '../runtime/kernel.mjs';
-
-const REGISTRY = join(REPOSITORY_ROOT, 'evaluation/registry');
-const BASE_GGUF = join(REPOSITORY_ROOT, 'training/checkpoints/base-f16.gguf');
-const DEFAULT_PORT = 8080;
-
-const HELP = `Usage: node evaluation/chat.mjs [options] [question]
-
-Options:
-  --once <question>   answer one question and exit (no interactive prompt)
-  --show-plan         also print the generated SOP Lang circuit
-  --gguf <path>       checkpoint artifact to serve (default: the best measured winner)
-  --experiment <id>   use the winner of that experiment's selection run
-  --base <url>        attach to a server that is already running instead of starting one
-  --port N            port for the managed server (default ${DEFAULT_PORT})
-  --max-tokens N      generation budget (default 1024)
-  --threads N         CPU threads for the managed server
-  --help              print this help
-
-The answer you see is the value the executed circuit returned. When the model
-emits prose instead of a plan, or the plan fails its own probes, the CLI says so
-explicitly instead of pretending the reply was an answer.
-`;
-
-function parseArguments(argv) {
-  const options = { once: null, showPlan: false, gguf: null, experiment: null, base: null, port: DEFAULT_PORT, maxTokens: 1024, threads: null, help: false };
-  const positional = [];
-  for (let index = 0; index < argv.length; index += 1) {
-    const flag = argv[index];
-    const value = () => {
-      const next = argv[index + 1];
-      if (next === undefined) throw new Error(`${flag} needs a value`);
-      index += 1;
-      return next;
-    };
-    if (flag === '--once') options.once = value();
-    else if (flag === '--show-plan') options.showPlan = true;
-    else if (flag === '--gguf') options.gguf = value();
-    else if (flag === '--experiment') options.experiment = value();
-    else if (flag === '--base') options.base = value();
-    else if (flag === '--port') options.port = Number(value());
-    else if (flag === '--max-tokens') options.maxTokens = Number(value());
-    else if (flag === '--threads') options.threads = Number(value());
-    else if (flag === '--help' || flag === '-h') options.help = true;
-    else if (flag.startsWith('--')) throw new Error(`unknown argument: ${flag}`);
-    else positional.push(flag);
-  }
-  if (options.once === null && positional.length > 0) options.once = positional.join(' ');
-  return options;
-}
-
-/**
- * The best measured checkpoint: among every experiment with a selection run, the
- * winner with the highest oracle match on the (shared) validation slice, ties
- * broken by parse validity and then by recency. Recency alone would hand the
- * session a weaker arm, because the arm that ran last is not the arm that scored
- * best; --experiment and --gguf override the choice.
- */
-export function bestWinner() {
-  if (!existsSync(REGISTRY)) return null;
-  const candidates = readdirSync(REGISTRY)
-    .map((name) => join(REGISTRY, name, 'selection.json'))
-    .filter((path) => existsSync(path))
-    .map((path) => ({ path, mtime: statSync(path).mtimeMs }));
-  const ranked = [];
-  for (const candidate of candidates) {
-    const selection = JSON.parse(readFileSync(candidate.path, 'utf8'));
-    const row = selection.rows.find((entry) => entry.checkpoint === selection.winner);
-    if (row === undefined) continue;
-    const gguf = resolveArtifactPath(row.gguf);
-    if (!existsSync(gguf)) continue;
-    ranked.push({
-      experiment: selection.experiment,
-      winner: selection.winner,
-      gguf,
-      oracle: row.metrics?.rates?.oracle_match ?? -1,
-      parse: row.metrics?.rates?.parse_validity ?? -1,
-      mtime: candidate.mtime,
-    });
-  }
-  ranked.sort((left, right) => (right.oracle - left.oracle) || (right.parse - left.parse) || (right.mtime - left.mtime));
-  return ranked[0] ?? null;
-}
-
-function resolveArtifact(options) {
-  if (options.gguf !== null) {
-    const gguf = resolveArtifactPath(options.gguf);
-    if (!existsSync(gguf)) throw new Error(`the artifact ${gguf} does not exist`);
-    return { experiment: 'explicit --gguf', winner: null, gguf };
-  }
-  if (options.experiment !== null) {
-    const selectionPath = join(REGISTRY, options.experiment, 'selection.json');
-    if (!existsSync(selectionPath)) throw new Error(`${selectionPath} does not exist`);
-    const selection = JSON.parse(readFileSync(selectionPath, 'utf8'));
-    const row = selection.rows.find((entry) => entry.checkpoint === selection.winner);
-    if (row === undefined) throw new Error(`selection.json of ${options.experiment} has no row for its winner`);
-    return { experiment: selection.experiment, winner: selection.winner, gguf: resolveArtifactPath(row.gguf) };
-  }
-  const best = bestWinner();
-  if (best !== null) return best;
-  if (existsSync(BASE_GGUF)) return { experiment: 'base model (no fine-tuned selection found)', winner: 'base', gguf: BASE_GGUF };
-  throw new Error('no artifact found: pass --gguf, or run an evaluation that writes a selection.json');
-}
 
 async function serverIsUp(base) {
   try {
@@ -192,61 +91,67 @@ async function ask({ question, base, options, runtime }) {
   return renderExchange({ question, completion: result.completion, extracted, outcome, options });
 }
 
-const options = parseArguments(process.argv.slice(2));
-if (options.help) {
-  process.stdout.write(HELP);
-  process.exit(0);
-}
-
-const artifact = resolveArtifact(options);
-const base = options.base ?? `http://127.0.0.1:${options.port}`;
-let managed = null;
-if (!(await serverIsUp(base))) {
-  if (options.base !== null) {
-    throw new Error(`no server answers at ${base}; start one or drop --base so the CLI can start its own`);
+async function main() {
+  const options = parseArguments(process.argv.slice(2));
+  if (options.help) {
+    process.stdout.write(HELP);
+    process.exit(0);
   }
-  process.stdout.write(`starting llama-server with ${artifact.gguf.replace(`${REPOSITORY_ROOT}/`, '')} on port ${options.port} …\n`);
-  managed = await startServer({ gguf: artifact.gguf, port: options.port, threads: options.threads });
-}
-process.stdout.write(`model: ${artifact.experiment}${artifact.winner === null ? '' : ` (${artifact.winner})`}\n`);
-process.stdout.write('questions are answered by executing the circuit the model compiles; --show-plan prints the circuit.\n');
 
-const stopServer = () => {
-  if (managed !== null) {
-    try {
-      process.kill(-managed.pid, 'SIGTERM');
-    } catch {
-      managed.kill('SIGTERM');
+  const artifact = artifactFor({ gguf: options.gguf, experiment: options.experiment });
+  const base = options.base ?? `http://127.0.0.1:${options.port}`;
+  let managed = null;
+  if (!(await serverIsUp(base))) {
+    if (options.base !== null) {
+      throw new Error(`no server answers at ${base}; start one or drop --base so the CLI can start its own`);
     }
+    process.stdout.write(`starting llama-server with ${artifact.gguf.replace(`${REPOSITORY_ROOT}/`, '')} on port ${options.port} …\n`);
+    managed = await startServer({ gguf: artifact.gguf, port: options.port, threads: options.threads });
   }
-};
-process.on('SIGINT', () => {
-  stopServer();
-  process.stdout.write('\n');
-  process.exit(0);
-});
-process.on('exit', stopServer);
+  process.stdout.write(`model: ${artifact.experiment}${artifact.winner === null ? '' : ` (${artifact.winner})`}\n`);
+  process.stdout.write('questions are answered by executing the circuit the model compiles; --show-plan prints the circuit.\n');
 
-const runtime = createRuntime();
+  const stopServer = () => {
+    if (managed !== null) {
+      try {
+        process.kill(-managed.pid, 'SIGTERM');
+      } catch {
+        managed.kill('SIGTERM');
+      }
+    }
+  };
+  process.on('SIGINT', () => {
+    stopServer();
+    process.stdout.write('\n');
+    process.exit(0);
+  });
+  process.on('exit', stopServer);
 
-if (options.once !== null) {
-  process.stdout.write(`\n? ${options.once}\n${await ask({ question: options.once, base, options, runtime })}\n`);
-  stopServer();
-  process.exit(0);
-}
+  const runtime = createRuntime();
 
-const reader = createInterface({ input: process.stdin, output: process.stdout, prompt: '? ' });
-reader.prompt();
-for await (const line of reader) {
-  const question = line.trim();
-  if (question === '' || question === 'exit' || question === 'quit') {
-    if (question !== '') break;
-    reader.prompt();
-    continue;
+  if (options.once !== null) {
+    process.stdout.write(`\n? ${options.once}\n${await ask({ question: options.once, base, options, runtime })}\n`);
+    stopServer();
+    process.exit(0);
   }
-  const answer = await ask({ question, base, options, runtime });
-  process.stdout.write(`\n${answer}\n\n`);
+
+  const reader = createInterface({ input: process.stdin, output: process.stdout, prompt: '? ' });
   reader.prompt();
+  for await (const line of reader) {
+    const question = line.trim();
+    if (question === '' || question === 'exit' || question === 'quit') {
+      if (question !== '') break;
+      reader.prompt();
+      continue;
+    }
+    const answer = await ask({ question, base, options, runtime });
+    process.stdout.write(`\n${answer}\n\n`);
+    reader.prompt();
+  }
+  reader.close();
+  stopServer();
 }
-reader.close();
-stopServer();
+
+if (process.argv[1] !== undefined && pathToFileURL(process.argv[1]).href === import.meta.url) {
+  await main();
+}

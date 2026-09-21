@@ -22,6 +22,7 @@
  */
 
 import { planningFamilies } from './planning.mjs';
+import { textFamilies } from './text.mjs';
 
 export const sourceId = 'procedural-arithmetic';
 export const generatorVersion = '1.0.0';
@@ -270,4 +271,4 @@ const cheaperRate = {
   }
 };
 
-export const families = [netBalance, wholeUnits, cheaperRate, ...planningFamilies];
+export const families = [netBalance, wholeUnits, cheaperRate, ...planningFamilies, ...textFamilies];

@@ -1,0 +1,602 @@
+{
+  "profile": "text-reasoning-probes-1.0.0",
+  "description": "Text and situation probes: the tasks small models are known to fail because the answer needs deterministic counting, transforming, or ordering over characters and words rather than language modelling (the \"how many r in raspberry\" class). Every derivable expectation is computed from the source material declared in `derivation`, and tests/text-probes.test.mjs re-derives them. Evaluation-only material: it never enters training.",
+  "source": "Authored for this repository after the reported small-model failure modes for letter counting, word sorting, and single-step situation traps (see e.g. arxiv 2412.18626 on letter counting).",
+  "systemPrompt": "You are a careful engineer. Answer with only what the instruction asks for, in the fewest characters that satisfy it.",
+  "probes": [
+    {
+      "id": "count-raspberry-r",
+      "kind": "character-count",
+      "prompt": "How many times does the letter \"r\" appear in the word \"raspberry\"? Reply with only the number.",
+      "expected": "3",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "count-letter",
+        "text": "raspberry",
+        "letter": "r",
+        "caseInsensitive": false
+      }
+    },
+    {
+      "id": "count-strawberry-r",
+      "kind": "character-count",
+      "prompt": "How many times does the letter \"r\" appear in the word \"strawberry\"? Reply with only the number.",
+      "expected": "3",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "count-letter",
+        "text": "strawberry",
+        "letter": "r",
+        "caseInsensitive": false
+      }
+    },
+    {
+      "id": "count-congratulations-r",
+      "kind": "character-count",
+      "prompt": "How many times does the letter \"r\" appear in the word \"congratulations\"? Reply with only the number.",
+      "expected": "1",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "count-letter",
+        "text": "congratulations",
+        "letter": "r",
+        "caseInsensitive": false
+      }
+    },
+    {
+      "id": "count-mississippi-s",
+      "kind": "character-count",
+      "prompt": "How many times does the letter \"s\" appear in the word \"mississippi\"? Reply with only the number.",
+      "expected": "4",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "count-letter",
+        "text": "mississippi",
+        "letter": "s",
+        "caseInsensitive": false
+      }
+    },
+    {
+      "id": "count-bookkeeper-o",
+      "kind": "character-count",
+      "prompt": "How many times does the letter \"o\" appear in the word \"bookkeeper\"? Reply with only the number.",
+      "expected": "2",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "count-letter",
+        "text": "bookkeeper",
+        "letter": "o",
+        "caseInsensitive": false
+      }
+    },
+    {
+      "id": "count-assessment-s",
+      "kind": "character-count",
+      "prompt": "How many times does the letter \"s\" appear in the word \"assessment\"? Reply with only the number.",
+      "expected": "4",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "count-letter",
+        "text": "assessment",
+        "letter": "s",
+        "caseInsensitive": false
+      }
+    },
+    {
+      "id": "count-committee-t",
+      "kind": "character-count",
+      "prompt": "How many times does the letter \"t\" appear in the word \"committee\"? Reply with only the number.",
+      "expected": "2",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "count-letter",
+        "text": "committee",
+        "letter": "t",
+        "caseInsensitive": false
+      }
+    },
+    {
+      "id": "count-necessary-e",
+      "kind": "character-count",
+      "prompt": "How many times does the letter \"e\" appear in the word \"necessary\"? Reply with only the number.",
+      "expected": "2",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "count-letter",
+        "text": "necessary",
+        "letter": "e",
+        "caseInsensitive": false
+      }
+    },
+    {
+      "id": "count-receive-e",
+      "kind": "character-count",
+      "prompt": "How many times does the letter \"e\" appear in the word \"receive\"? Reply with only the number.",
+      "expected": "3",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "count-letter",
+        "text": "receive",
+        "letter": "e",
+        "caseInsensitive": false
+      }
+    },
+    {
+      "id": "count-parallel-l",
+      "kind": "character-count",
+      "prompt": "How many times does the letter \"l\" appear in the word \"parallel\"? Reply with only the number.",
+      "expected": "3",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "count-letter",
+        "text": "parallel",
+        "letter": "l",
+        "caseInsensitive": false
+      }
+    },
+    {
+      "id": "count-banana-a",
+      "kind": "character-count",
+      "prompt": "How many times does the letter \"a\" appear in the word \"banana\"? Reply with only the number.",
+      "expected": "3",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "count-letter",
+        "text": "banana",
+        "letter": "a",
+        "caseInsensitive": false
+      }
+    },
+    {
+      "id": "count-refrigerator-r",
+      "kind": "character-count",
+      "prompt": "How many times does the letter \"r\" appear in the word \"refrigerator\"? Reply with only the number.",
+      "expected": "4",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "count-letter",
+        "text": "refrigerator",
+        "letter": "r",
+        "caseInsensitive": false
+      }
+    },
+    {
+      "id": "count-text-raspberry-raisins-are-r",
+      "kind": "character-count",
+      "prompt": "In the sentence \"Raspberry Raisins are really red\", how many times does the letter \"r\" appear, ignoring case? Reply with only the number.",
+      "expected": "7",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "count-letter",
+        "text": "Raspberry Raisins are really red",
+        "letter": "r",
+        "caseInsensitive": true
+      }
+    },
+    {
+      "id": "count-text-she-sells-sea-s",
+      "kind": "character-count",
+      "prompt": "In the sentence \"She sells sea shells by the sea shore\", how many times does the letter \"s\" appear, ignoring case? Reply with only the number.",
+      "expected": "8",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "count-letter",
+        "text": "She sells sea shells by the sea shore",
+        "letter": "s",
+        "caseInsensitive": true
+      }
+    },
+    {
+      "id": "count-text-the-quick-brown-o",
+      "kind": "character-count",
+      "prompt": "In the sentence \"The quick brown fox jumps over the lazy dog\", how many times does the letter \"o\" appear, ignoring case? Reply with only the number.",
+      "expected": "4",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "count-letter",
+        "text": "The quick brown fox jumps over the lazy dog",
+        "letter": "o",
+        "caseInsensitive": true
+      }
+    },
+    {
+      "id": "count-text-a-man-a-a",
+      "kind": "character-count",
+      "prompt": "In the sentence \"A man, a plan, a canal, panama\", how many times does the letter \"a\" appear, ignoring case? Reply with only the number.",
+      "expected": "10",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "count-letter",
+        "text": "A man, a plan, a canal, panama",
+        "letter": "a",
+        "caseInsensitive": true
+      }
+    },
+    {
+      "id": "reverse-strawberry",
+      "kind": "string-transform",
+      "prompt": "Write the word \"strawberry\" backwards. Reply with only the reversed word.",
+      "expected": "yrrebwarts",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "reverse",
+        "text": "strawberry"
+      }
+    },
+    {
+      "id": "every-second-strawberry",
+      "kind": "string-transform",
+      "prompt": "Take every second letter of the word \"strawberry\", starting with the first letter. Reply with only the result.",
+      "expected": "srwer",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "every-second",
+        "text": "strawberry"
+      }
+    },
+    {
+      "id": "reverse-banana",
+      "kind": "string-transform",
+      "prompt": "Write the word \"banana\" backwards. Reply with only the reversed word.",
+      "expected": "ananab",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "reverse",
+        "text": "banana"
+      }
+    },
+    {
+      "id": "every-second-banana",
+      "kind": "string-transform",
+      "prompt": "Take every second letter of the word \"banana\", starting with the first letter. Reply with only the result.",
+      "expected": "bnn",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "every-second",
+        "text": "banana"
+      }
+    },
+    {
+      "id": "reverse-deterministic",
+      "kind": "string-transform",
+      "prompt": "Write the word \"deterministic\" backwards. Reply with only the reversed word.",
+      "expected": "citsinimreted",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "reverse",
+        "text": "deterministic"
+      }
+    },
+    {
+      "id": "every-second-deterministic",
+      "kind": "string-transform",
+      "prompt": "Take every second letter of the word \"deterministic\", starting with the first letter. Reply with only the result.",
+      "expected": "dtriitc",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "every-second",
+        "text": "deterministic"
+      }
+    },
+    {
+      "id": "reverse-compiler",
+      "kind": "string-transform",
+      "prompt": "Write the word \"compiler\" backwards. Reply with only the reversed word.",
+      "expected": "relipmoc",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "reverse",
+        "text": "compiler"
+      }
+    },
+    {
+      "id": "every-second-compiler",
+      "kind": "string-transform",
+      "prompt": "Take every second letter of the word \"compiler\", starting with the first letter. Reply with only the result.",
+      "expected": "cmie",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "every-second",
+        "text": "compiler"
+      }
+    },
+    {
+      "id": "word-count-11-small",
+      "kind": "word-count",
+      "prompt": "How many words does this sentence contain: \"The small model compiles a plan instead of guessing the answer\"? Reply with only the number.",
+      "expected": "11",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "word-count",
+        "text": "The small model compiles a plan instead of guessing the answer"
+      }
+    },
+    {
+      "id": "longest-word-small",
+      "kind": "word-count",
+      "prompt": "In the sentence \"The small model compiles a plan instead of guessing the answer\", which word is the longest? Reply with only the word.",
+      "expected": "compiles",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "longest-word",
+        "text": "The small model compiles a plan instead of guessing the answer"
+      }
+    },
+    {
+      "id": "words-with-r-small",
+      "kind": "word-count",
+      "prompt": "In the sentence \"The small model compiles a plan instead of guessing the answer\", how many words contain the letter \"r\"? Reply with only the number.",
+      "expected": "1",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "words-containing",
+        "text": "The small model compiles a plan instead of guessing the answer",
+        "letter": "r"
+      }
+    },
+    {
+      "id": "word-count-12-the",
+      "kind": "word-count",
+      "prompt": "How many words does this sentence contain: \"Count the words in this sentence carefully and reply with the number\"? Reply with only the number.",
+      "expected": "12",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "word-count",
+        "text": "Count the words in this sentence carefully and reply with the number"
+      }
+    },
+    {
+      "id": "longest-word-the",
+      "kind": "word-count",
+      "prompt": "In the sentence \"Count the words in this sentence carefully and reply with the number\", which word is the longest? Reply with only the word.",
+      "expected": "carefully",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "longest-word",
+        "text": "Count the words in this sentence carefully and reply with the number"
+      }
+    },
+    {
+      "id": "words-with-r-the",
+      "kind": "word-count",
+      "prompt": "In the sentence \"Count the words in this sentence carefully and reply with the number\", how many words contain the letter \"r\"? Reply with only the number.",
+      "expected": "4",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "words-containing",
+        "text": "Count the words in this sentence carefully and reply with the number",
+        "letter": "r"
+      }
+    },
+    {
+      "id": "word-count-13-plan",
+      "kind": "word-count",
+      "prompt": "How many words does this sentence contain: \"A plan is executed by the runtime and its result is the answer\"? Reply with only the number.",
+      "expected": "13",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "word-count",
+        "text": "A plan is executed by the runtime and its result is the answer"
+      }
+    },
+    {
+      "id": "longest-word-plan",
+      "kind": "word-count",
+      "prompt": "In the sentence \"A plan is executed by the runtime and its result is the answer\", which word is the longest? Reply with only the word.",
+      "expected": "executed",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "longest-word",
+        "text": "A plan is executed by the runtime and its result is the answer"
+      }
+    },
+    {
+      "id": "words-with-r-plan",
+      "kind": "word-count",
+      "prompt": "In the sentence \"A plan is executed by the runtime and its result is the answer\", how many words contain the letter \"r\"? Reply with only the number.",
+      "expected": "3",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "words-containing",
+        "text": "A plan is executed by the runtime and its result is the answer",
+        "letter": "r"
+      }
+    },
+    {
+      "id": "sort-pear",
+      "kind": "ordering",
+      "prompt": "Sort these words alphabetically and reply with the sorted list, comma separated with no spaces: pear, apple, fig, banana.",
+      "expected": "apple,banana,fig,pear",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "sort",
+        "words": [
+          "pear",
+          "apple",
+          "fig",
+          "banana"
+        ]
+      }
+    },
+    {
+      "id": "sort-length-pear",
+      "kind": "ordering",
+      "prompt": "Sort these words by length, shortest first, breaking ties alphabetically, and reply with the list, comma separated with no spaces: pear, apple, fig, banana.",
+      "expected": "fig,pear,apple,banana",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "sort-length",
+        "words": [
+          "pear",
+          "apple",
+          "fig",
+          "banana"
+        ]
+      }
+    },
+    {
+      "id": "sort-three",
+      "kind": "ordering",
+      "prompt": "Sort these words alphabetically and reply with the sorted list, comma separated with no spaces: three, one, four, two.",
+      "expected": "four,one,three,two",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "sort",
+        "words": [
+          "three",
+          "one",
+          "four",
+          "two"
+        ]
+      }
+    },
+    {
+      "id": "sort-length-three",
+      "kind": "ordering",
+      "prompt": "Sort these words by length, shortest first, breaking ties alphabetically, and reply with the list, comma separated with no spaces: three, one, four, two.",
+      "expected": "one,two,four,three",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "sort-length",
+        "words": [
+          "three",
+          "one",
+          "four",
+          "two"
+        ]
+      }
+    },
+    {
+      "id": "sort-crate",
+      "kind": "ordering",
+      "prompt": "Sort these words alphabetically and reply with the sorted list, comma separated with no spaces: crate, crane, crank, craze.",
+      "expected": "crane,crank,crate,craze",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "sort",
+        "words": [
+          "crate",
+          "crane",
+          "crank",
+          "craze"
+        ]
+      }
+    },
+    {
+      "id": "sort-length-crate",
+      "kind": "ordering",
+      "prompt": "Sort these words by length, shortest first, breaking ties alphabetically, and reply with the list, comma separated with no spaces: crate, crane, crank, craze.",
+      "expected": "crane,crank,crate,craze",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "sort-length",
+        "words": [
+          "crate",
+          "crane",
+          "crank",
+          "craze"
+        ]
+      }
+    },
+    {
+      "id": "situation-kg-feathers-iron",
+      "kind": "situation-trick",
+      "prompt": "Which is heavier: one kilogram of feathers or one kilogram of iron? Reply with only \"feathers\", \"iron\", or \"the same\".",
+      "expected": "the same",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "stated"
+      }
+    },
+    {
+      "id": "situation-months-28-days",
+      "kind": "situation-trick",
+      "prompt": "How many months of the year have at least 28 days? Reply with only the number.",
+      "expected": "12",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "stated"
+      }
+    },
+    {
+      "id": "situation-bat-and-ball",
+      "kind": "situation-trick",
+      "prompt": "A bat and a ball cost 1.10 units together. The bat costs 1.00 units more than the ball. How much does the ball cost, in units? Reply with only the number.",
+      "expected": "0.05",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "stated"
+      }
+    },
+    {
+      "id": "situation-two-fathers",
+      "kind": "situation-trick",
+      "prompt": "Two fathers and two sons share three apples, and each person eats exactly one apple. How many people are there? Reply with only the number.",
+      "expected": "3",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "stated"
+      }
+    },
+    {
+      "id": "situation-race-overtake",
+      "kind": "situation-trick",
+      "prompt": "You are running a race and you overtake the runner in second place. What position are you in now? Reply with only the number.",
+      "expected": "2",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "stated"
+      }
+    },
+    {
+      "id": "situation-sheep-alive",
+      "kind": "situation-trick",
+      "prompt": "A farmer has 17 sheep. All but 9 run away. How many sheep are left with the farmer? Reply with only the number.",
+      "expected": "9",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "stated"
+      }
+    },
+    {
+      "id": "situation-water-litre-mass",
+      "kind": "situation-trick",
+      "prompt": "Which has more mass: one litre of water or one kilogram of water (at room temperature)? Reply with only \"the litre\", \"the kilogram\", or \"the same\".",
+      "expected": "the same",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "stated"
+      }
+    },
+    {
+      "id": "situation-half-double",
+      "kind": "situation-trick",
+      "prompt": "Take the number 8, double it, then halve the result. What number do you get? Reply with only the number.",
+      "expected": "8",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "stated"
+      }
+    },
+    {
+      "id": "situation-clock-quarter",
+      "kind": "situation-trick",
+      "prompt": "How many minutes are there between 11:45 and 12:15 on the same day? Reply with only the number.",
+      "expected": "30",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "stated"
+      }
+    },
+    {
+      "id": "situation-palindrome-word",
+      "kind": "situation-trick",
+      "prompt": "Which of these words is a palindrome: level, lever, loved, liver? Reply with only the word.",
+      "expected": "level",
+      "comparison": "normalized",
+      "derivation": {
+        "op": "stated"
+      }
+    }
+  ]
+}

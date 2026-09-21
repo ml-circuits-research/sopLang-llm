@@ -1,0 +1,3 @@
+# reverse-word-10 — Reverse Word
+
+Write the word "furniture" backwards. Reply with only the reversed word.
