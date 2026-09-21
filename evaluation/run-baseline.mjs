@@ -29,10 +29,10 @@ import { answerMatches, normalizeAnswer } from '../teacher/naming.mjs';
 import { seededRandom, SYSTEM_PROMPT, SYSTEM_PROMPT_SHA256, CHAT_PROFILE_ID } from '../training/export.mjs';
 import { generate } from './client.mjs';
 import { aggregate, resolveSlice, runSlice } from './run-eval.mjs';
+import { scoreProbes } from './probes.mjs';
 
 const REPOSITORY_ROOT = fileURLToPath(new URL('..', import.meta.url));
 const DEFAULT_REGISTRY = join(REPOSITORY_ROOT, 'evaluation/registry');
-const PROBES_PATH = join(REPOSITORY_ROOT, 'evaluation/probes/capability-probes.json');
 const DIRECT_SYSTEM_PROMPT = 'Answer the problem directly with the final answer only.';
 
 function parseArguments(argv) {
@@ -145,51 +145,15 @@ function appendLines(path, records) {
 
 /** Capability probes: one generation per probe, exact or normalized comparison. */
 async function runProbes({ options, logPath }) {
-  const suite = JSON.parse(readFileSync(PROBES_PATH, 'utf8'));
-  const records = await mapWithConcurrency(suite.probes, options.concurrency, async (probe) => {
-    const result = await generate({
-      base: options.base,
-      model: options.model,
-      messages: [
-        { role: 'system', content: suite.systemPrompt },
-        { role: 'user', content: probe.prompt },
-      ],
-      temperature: 0,
-      maxTokens: 256,
-    });
-    const completion = result.completion;
-    const text = completion === null ? '' : completion.trim();
-    // A quoted result is a formatting deviation, not a capability loss, so the
-    // normalized comparison strips one layer of wrapping quotes; the exact
-    // instruction probes stay strict.
-    const bare = text.replace(/^["'`]+/, '').replace(/["'`]+$/, '');
-    const matched =
-      text !== '' &&
-      (probe.comparison === 'exact' ? text === probe.expected : normalizeAnswer(bare) === normalizeAnswer(probe.expected));
-    return {
-      item: `probe/${probe.id}`,
-      kind: probe.kind,
-      class: completion === null ? 'generation_transport_error' : matched ? 'answer_match' : 'answer_mismatch',
-      expected: probe.expected,
-      comparison: probe.comparison,
-      answer: text === '' ? null : text,
-      generated: {
-        tokens: result.usage?.completion_tokens ?? null,
-        promptTokens: result.usage?.prompt_tokens ?? null,
-        attempts: result.attempts,
-        latencyMs: result.latencyMs,
-      },
-      completion,
-    };
-  });
-  records.sort((left, right) => (left.item < right.item ? -1 : 1));
+  const scored = await scoreProbes({ base: options.base, model: options.model, concurrency: options.concurrency });
+  const records = scored.records;
   mkdirSync(join(options.out, options.experiment, 'items'), { recursive: true });
   const path = join(options.out, options.experiment, 'items', 'capability-probes.jsonl');
   writeFileSync(path, records.map((record) => JSON.stringify(record)).join('\n') + '\n');
   if (logPath !== null) {
     appendLines(logPath, records);
   }
-  return { records, path, profile: suite.profile };
+  return { records, path, profile: scored.profile };
 }
 
 function efficiencyOf(records) {

@@ -70,4 +70,4 @@ if [ "$ready" != yes ]; then
 fi
 
 node "$repository_root/evaluation/run-eval.mjs" --experiment "$experiment" --slice holdout \
-  --gguf "${gguf#"$repository_root"/}" --base "http://127.0.0.1:$port" --concurrency "$concurrency"
+  --gguf "${gguf#"$repository_root"/}" --base "http://127.0.0.1:$port" --concurrency "$concurrency" --probes

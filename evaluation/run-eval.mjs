@@ -29,7 +29,7 @@
  */
 
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, relative, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -38,6 +38,7 @@ import { CHAT_PROFILE_ID, SYSTEM_PROMPT_SHA256 } from '../training/export.mjs';
 import { parseCircuit } from '../runtime/parser.mjs';
 import { createRuntime } from '../runtime/kernel.mjs';
 import { answerMatches } from '../teacher/naming.mjs';
+import { renderProbesReport, scoreProbes, summaryOf } from './probes.mjs';
 import { bookRoots, expectedAnswersOf, solutionFilesOf, statementBodyOf } from '../training-data/dataset-manifest.mjs';
 
 const REPO_ROOT = fileURLToPath(new URL('..', import.meta.url));
@@ -614,6 +615,7 @@ function parseArgs(argv) {
     concurrency: 1,
     out: DEFAULT_REGISTRY,
     log: false,
+    probes: false,
     help: false
   };
   for (let index = 0; index < argv.length; index += 1) {
@@ -665,6 +667,9 @@ function parseArgs(argv) {
       case '--log':
         options.log = true;
         break;
+      case '--probes':
+        options.probes = true;
+        break;
       case '--help':
       case '-h':
         options.help = true;
@@ -697,6 +702,10 @@ Arguments:
   --gguf <path>         checkpoint artifact the run scores, recorded in the manifest
   --out <dir>           registry root (default ${DEFAULT_REGISTRY})
   --log                 also append every per-item record to <experiment>/run-log.jsonl
+  --probes              also score the capability-probe suite on the same served
+                        artifact: items/capability-probes.jsonl, probes.md, and a
+                        capabilityProbes block in metrics.json (DS009, the loss
+                        detector the preservation decision reads)
   --help, -h            print this help and exit
 
 Decoding is greedy (temperature 0) with one attempt per item, per D9: the only
@@ -738,6 +747,43 @@ async function main(argv) {
   });
   const metrics = aggregate(records);
 
+  // Capability probes (DS009 "Capability preservation"): the same served
+  // artifact answers the JavaScript and instruction microtasks the untuned base
+  // was scored with, so a substrate loss is measured rather than noticed late.
+  let capabilityProbes = null;
+  if (options.probes) {
+    const scored = await scoreProbes({
+      base: options.base,
+      model: options.model ?? undefined,
+      concurrency: options.concurrency,
+      timeoutMs: DEFAULT_TIMEOUT_MS
+    });
+    writeFileSync(
+      join(experimentDirectory, 'items/capability-probes.jsonl'),
+      `${scored.records.map((record) => JSON.stringify(record)).join('\n')}\n`
+    );
+    writeFileSync(
+      join(experimentDirectory, 'probes.md'),
+      renderProbesReport({
+        experiment: options.experiment,
+        artifact: options.gguf,
+        profile: scored.profile,
+        records: scored.records
+      })
+    );
+    const summary = summaryOf(scored.records);
+    capabilityProbes = {
+      profile: scored.profile,
+      systemPromptSha256: scored.systemPromptSha256,
+      items: summary.items,
+      passed: summary.passed,
+      byKind: summary.byKind
+    };
+    if (options.log) {
+      appendFileSync(join(experimentDirectory, 'run-log.jsonl'), `${scored.records.map((record) => JSON.stringify(record)).join('\n')}\n`);
+    }
+  }
+
   const exportManifest = existsSync(EXPORT_MANIFEST) ? JSON.parse(readFileSync(EXPORT_MANIFEST, 'utf8')) : null;
   const manifest = {
     experiment: options.experiment,
@@ -755,6 +801,9 @@ async function main(argv) {
       transportRetries: 1
     },
     chatProfile: { id: CHAT_PROFILE_ID, systemPromptSha256: SYSTEM_PROMPT_SHA256 },
+    capabilityProbes: capabilityProbes === null
+      ? null
+      : { profile: capabilityProbes.profile, systemPromptSha256: capabilityProbes.systemPromptSha256, items: capabilityProbes.items, passed: capabilityProbes.passed },
     dataset: {
       exportManifest: relative(REPO_ROOT, EXPORT_MANIFEST).split(sep).join('/'),
       snapshot: exportManifest?.snapshot ?? null,
@@ -770,7 +819,10 @@ async function main(argv) {
   };
 
   mkdirSync(experimentDirectory, { recursive: true });
-  writeFileSync(join(experimentDirectory, 'metrics.json'), `${JSON.stringify(metrics, null, 2)}\n`);
+  writeFileSync(
+    join(experimentDirectory, 'metrics.json'),
+    `${JSON.stringify(capabilityProbes === null ? metrics : { ...metrics, capabilityProbes }, null, 2)}\n`
+  );
   writeFileSync(join(experimentDirectory, 'run-manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
   writeFileSync(join(experimentDirectory, 'report.md'), renderReport({ manifest, metrics }));
 
@@ -779,7 +831,8 @@ async function main(argv) {
     [
       `${options.experiment} / ${resolved.sliceName}: ${metrics.items} items`,
       `parse validity ${percent(rates.parse_validity)}, graph validity ${percent(rates.graph_validity)}, runtime completion ${percent(rates.runtime_completion)}, oracle match ${percent(rates.oracle_match)}`,
-      `wrote ${experimentDirectory}/{items/${resolved.sliceName}.jsonl,metrics.json,report.md,run-manifest.json}`,
+      ...(capabilityProbes === null ? [] : [`capability probes ${capabilityProbes.passed}/${capabilityProbes.items} (${capabilityProbes.profile})`]),
+      `wrote ${experimentDirectory}/{items/${resolved.sliceName}.jsonl,metrics.json,report.md,run-manifest.json${capabilityProbes === null ? '' : ',items/capability-probes.jsonl,probes.md'}}`,
       ''
     ].join('\n')
   );

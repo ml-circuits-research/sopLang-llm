@@ -49,7 +49,7 @@ The most important training budget is token exposure. Reporting "three epochs" i
 
 A narrow SOP Lang dataset can overfit the student. The model may become excellent at emitting `@wire jsEval` while getting worse at understanding natural language, writing JavaScript, or following ordinary instructions. The training mixture therefore includes a controlled amount of capability-preservation data, preferably from sources compatible with the base model license. The proportion is an experimental variable, and the goal is to retain the linguistic and coding substrate that SOP Lang compilation depends on rather than to preserve chat personality.
 
-Evaluation checkpoints include general JavaScript microtasks, basic instruction-following tests, and SOP Lang tasks. If code ability collapses while SOP Lang syntax improves, the recipe is changed: full fine-tuning may need a lower learning rate or more mixed data, and LoRA may preserve base behavior better in some settings. The decision is made from measurements.
+Evaluation checkpoints include general JavaScript microtasks, basic instruction-following tests, and SOP Lang tasks. If code ability collapses while SOP Lang syntax improves, the recipe is changed: full fine-tuning may need a lower learning rate or more mixed data, and LoRA may preserve base behavior better in some settings. The decision is made from measurements. The holdout run of a selected checkpoint scores the probe suite on the same served artifact, and the run manifest records the probe profile, its system-prompt hash, and the result, so a comparison with the untuned base reads one file for both numbers.
 
 ### Checkpoint selection
 
