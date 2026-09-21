@@ -48,6 +48,8 @@ No larger student: the milestone is decided on `Qwen2.5-Coder-0.5B-Instruct`, an
 
 ## How to watch
 
+- `bash training/environment/start-detached.sh train <experiment> [flags]` — the way every long job is started now: `setsid nohup`, own session, survives the desktop, the SSH session, and any agent session; then `work-status.sh` reports it. Owner directive (2026-09-21): always detached.
+
 - `bash training/environment/resume-series.sh <experiment>` — restart an interrupted run and its evaluation chain with one command. The supervisor resumes from the last checkpoint (`--save-steps` interval, 90 steps here), so an interruption costs at most that much compute; the recipe is read from `training/checkpoints/<experiment>/resume-recipe.sh`, written on first use or recorded by hand.
 - Long runs are started **detached** from this session (`hub start ... detached: true`): they survive the SSH session ending and the harness broker shutting down. A run started only `persist` (the earlier default here) dies with the broker, i.e. with the session — the training of `exp-007-sft-wires` was moved to detached for that reason at 2026-09-21 17:0x UTC.
 

@@ -17,6 +17,10 @@ This repository is the sopLang-llm project. It fine-tunes a small code-capable l
 
 The repository does not distribute skills as product artifacts. The agent skills available under `.agents/skills/` are imported tooling used while working in this repository; they are not part of the project's documented surface, and their guidance and dependency records stay inside their own folders. The product surfaces of this repository are the language runtime, the wire registry, the context adapter, the teaching pipeline, and the training data suite described by the design specifications.
 
+## Long-running work
+
+Every long-running job (training, evaluation chains, sweep runs) is started **detached** from the terminal and from the agent session, so the owner can close the desktop and leave the machine working: use `bash training/environment/start-detached.sh train <experiment> [flags]` (or `cmd <name> "<command>"`), which runs the work with `setsid nohup` in its own session and logs it where `bash training/environment/work-status.sh` reports it. A job started only under the session (or only `persist`) dies with the session and wastes the compute.
+
 ## Writing to the owner
 
 Report concretely. Name the thing, the run, and the number in the same sentence; never use a shorthand the owner has not seen defined.
