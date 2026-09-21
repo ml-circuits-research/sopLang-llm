@@ -48,6 +48,8 @@ No larger student: the milestone is decided on `Qwen2.5-Coder-0.5B-Instruct`, an
 
 ## How to watch
 
+- `bash training/environment/work-status.sh` — one screen with what is running right now, how far each training and evaluation has come, the latest scored runs, and the device margin. This is the command to run when it is unclear whether work is in flight.
+
 - `bash training/environment/train-status.sh` — one screen: status, steps, loss curve, device margin, checkpoints, episodes, whether the process is alive.
 - `tail -f training/checkpoints/<experiment>/train-log.jsonl` — per-step records (loss, learning rate, tokens, memory).
 - `cat training/checkpoints/<experiment>/overnight-state.jsonl` — the episode history written by the supervisor.
