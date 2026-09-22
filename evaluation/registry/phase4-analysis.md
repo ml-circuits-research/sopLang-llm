@@ -254,6 +254,52 @@ pairs, add many more direction pairs (the cheapest diagnostics of operand select
 rate pair's five one-correct cases fail on the same member every time — if they do, the failure is a memorized
 default for one of the two operations, which is a data-balance problem rather than a phrasing problem.
 
+### Why the boundary pair works and the direction pair does not: the plan inventory (`diag-plan-inventory`, 2026-09-22 19:25Z)
+
+The pair accuracy separated the three kinds (7 of 8 boundary, 0 of 8 direction, 1 of 8 rate) and the first
+explanation I reached for — that the failing shapes are simply rarer — is wrong. Counted over the 8015
+exported rows:
+
+| what the circuit does | rows |
+| --- | --- |
+| compares against a threshold | 404 |
+| takes an extreme (`Math.max`/`Math.min`) | 801 |
+| computes a percentage | 1232 |
+
+The two shapes that fail are the *more* common ones, so frequency does not explain the failure. What does
+explain it is the distribution of **decisions per plan**. The export holds **941 distinct plans** in 8015 rows,
+distributed very unevenly:
+
+| book | distinct plans | rows | rows per plan |
+| --- | --- | --- | --- |
+| mathematical-thinking | **589** | 1000 | 1.7 |
+| adult-reasoning | 100 | 1000 | 10 |
+| logical-reasoning | 100 | 1000 | 10 |
+| world-as-a-system | 50 | 1000 | 20 |
+| scientific-reasoning | 40 | 1000 | 25 |
+| procedural-arithmetic | 32 | 1280 | 40 |
+| common-sense | 20 | 1000 | 50 |
+| decompose-to-solve | 10 | 1000 | **100** |
+
+Two facts sit together here and they are the whole story of the series:
+
+1. **Only 589 of the 941 plans have more than a handful of examples, and the arithmetic books carry 32 plans
+   at 40 rows each.** A model trained on this learns 32 arithmetic *templates* very well and 589
+   mathematical-thinking plans once each. That is the measured profile: 98.1% on plans it has seen and 18.8% on
+   plans it has not.
+2. **The decisive phrase is only decisive if the two siblings appear together.** Counting the rendered
+   statements: 370 rows say "above" and 605 say "at least"; 112 say "largest" and 143 say "smallest". The words
+   are all present. What the contrastive families added was the *pair* — the same statement with only that word
+   changed — and the boundary pair, whose difference is two adjacent words over an otherwise identical
+   sentence, is the one that took.
+
+So the next arm is not "more pairs" and not "more data". It is a **declared inventory of compositions with
+structural splits**, as astra_review I5 proposed before any of this was measured: name the operator
+compositions, generate enough instances of each to be learnable, hold out whole compositions, and report
+accuracy per composition rather than one aggregate. The three contrastive kinds say which compositions to put
+first: the ones that require choosing between siblings (an operand, an operation on the same operand), because
+those are the ones the model has never been asked to decide.
+
 ## Decisions taken on the night of 2026-09-21
 
 **D-G — Containers and registry reads are not in the structure arm; six more multi-wire plan shapes are.** `DS008-training-data.md` specifies container plans and registry-reading plans, and the reconnaissance of this repository found four coupled gates that none of tonight's time could move together: the family validator accepts only `jsEval` and `literal` as an intermediate wire (`teacher/procedural/index.mjs`), the program builder has no container wire path (`teacher/families/index.mjs`, `buildProgram`), the provenance battery judges reactivity from `slots`/`facts` references in the answer wire (`training-data/provenance.mjs`), and no manifest column records the structural read set a definition-reading plan must publish (`DS008`, "Additional circuit shapes"). Each of those is a runtime-contract change that needs its own acceptance evidence, and a half-implemented shape would ship circuits the verifier cannot judge. The lever both shapes serve — plan coverage — is served tonight by six more generator families with two named intermediate stages each (`Teacher/families` equivalent: `teacher/procedural/grouping.mjs`, `aggregation.mjs`, `textshapes.mjs`), which deepens the dependency chain the suite teaches to three stages without touching the runtime contract. The container and registry items stay open with their four gates named above.
