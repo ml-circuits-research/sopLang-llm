@@ -169,6 +169,57 @@ The stage classification agrees: 20 problems stop after the filter, 18 lose the 
 
 **What the next arm must therefore change.** Not more plan shapes, and not more statements to read: supervision that forces the *operation* to come from the statement rather than from the nearest memorized family. The two candidates the diagnosis supports, in order: (a) contrastive pairs inside one structure — the same statement with one decisive word changed, and its two different programs, so the model cannot answer by family recall (astra_review I3, which the paired-structure data above now justifies with counts rather than intuition); (b) training rows whose *wording* varies while the structure is held fixed, so the phrasing of the taught return statements stops acting as the plan selector. The efficiency question of I4 (how many tokens the assertion scaffolding consumes) is measurable from these records as a secondary axis, and the two-call wrapper of I6 is the fallback if neither moves the paired accuracy.
 
+## Contrastive-pair arm (`exp-010-contrastive`, closed 2026-09-22 17:11Z)
+
+The arm D-L called for: `teacher/procedural/contrastive.mjs` added six families in three pairs, each pair
+rendering the same wording, numbers and entities and differing only where the decisive phrase changes the
+required operation, plus five self-referential families (count the letter a word names, its length, its first
+and last letter, its distinct count, which of two words is longer). The recipe is exp-009's exactly (3 epochs,
+lr 1e-4, batch 4, grad-accum 8, gradient checkpointing, save-steps 90, preservation-10), so the arm changed the
+data and nothing else: 8221 examples, 771 steps, from the enlarged export.
+
+**Selection (339 validation rows, winner `checkpoint-450`):**
+
+| checkpoint | oracle match | plan seen | plan unseen |
+| --- | --- | --- | --- |
+| 90 | 35.7% | 37.2% | 6.3% (1/16) |
+| 180 | 70.8% | 73.4% | 18.8% (3/16) |
+| 270 | 89.4% | 92.9% | 18.8% (3/16) |
+| 360 | 93.2% | 96.9% | 18.8% (3/16) |
+| **450** | **94.4%** | **98.1%** | **18.8% (3/16)** |
+| 540 | 94.4% | 98.1% | 18.8% (3/16) |
+| 630–771 | 94.4% | 98.5% | 12.5% (2/16) |
+
+**Holdout (265 items) and probes, against exp-009-mix10:**
+
+| metric | exp-009-mix10 | exp-010-contrastive |
+| --- | --- | --- |
+| holdout oracle match | 0.0% (0/265) | 0.4% (1/265) |
+| runtime completion | 19.2% | 20.8% |
+| capability probes | 1/10 | 2/10 |
+| plan-unseen, best checkpoint | 25.0% (4/16) | 18.8% (3/16) |
+
+**Verdict: the arm did not move the deployed number, and the honest reading is that it is a null result with one
+weak positive.** The holdout went from 0 of 265 to 1 of 265 executed answers — a single item, which is not
+evidence of anything. The capability probes went from 1 of 10 to 2 of 10, also one item. On the selection slice
+the best plan-unseen score is *lower* than exp-009's best (18.8% against 25.0%), although the contrastive arm
+reaches a comparable oracle match (94.4% against 95.3%) at an earlier step (450 against 728), so it is not
+slower to learn the trained plans; it simply does not generalize better to unseen ones.
+
+What this rules out. D-L said the model completes the nearest memorized family instead of applying the asked-for
+operation, and the arm was built so that shortcut is observably wrong on one member of every pair. If that
+diagnosis were the whole story, the pairs should have taught the model to read the decisive phrase. They did
+not: the model still answers 0.4% of unseen holdout problems. So either the dose was too small — six pair
+families among twenty-seven, 240 of 7935 exported rows, one training pass — or the failure is not "does not
+attend to the decisive phrase" but "cannot produce a plan it has not been shown", which contrastive *phrasing*
+cannot fix because the unseen plans themselves are what is missing.
+
+The second reading is the one the plan-unseen column supports. Every checkpoint of every arm sits between 12.5%
+and 25.0% on the sixteen unseen-plan rows, regardless of the mixture, the recipe, the target length or the
+phrasing: the number does not respond to any lever tried so far. The next arm should attack plan coverage
+directly (astra_review I5: structural splits over a declared inventory of compositions, and the retrieval
+baseline over statements), not the phrasing of the plans that are already covered.
+
 ## Decisions taken on the night of 2026-09-21
 
 **D-G — Containers and registry reads are not in the structure arm; six more multi-wire plan shapes are.** `DS008-training-data.md` specifies container plans and registry-reading plans, and the reconnaissance of this repository found four coupled gates that none of tonight's time could move together: the family validator accepts only `jsEval` and `literal` as an intermediate wire (`teacher/procedural/index.mjs`), the program builder has no container wire path (`teacher/families/index.mjs`, `buildProgram`), the provenance battery judges reactivity from `slots`/`facts` references in the answer wire (`training-data/provenance.mjs`), and no manifest column records the structural read set a definition-reading plan must publish (`DS008`, "Additional circuit shapes"). Each of those is a runtime-contract change that needs its own acceptance evidence, and a half-implemented shape would ship circuits the verifier cannot judge. The lever both shapes serve — plan coverage — is served tonight by six more generator families with two named intermediate stages each (`Teacher/families` equivalent: `teacher/procedural/grouping.mjs`, `aggregation.mjs`, `textshapes.mjs`), which deepens the dependency chain the suite teaches to three stages without touching the runtime contract. The container and registry items stay open with their four gates named above.
