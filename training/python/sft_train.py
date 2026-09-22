@@ -923,6 +923,41 @@ def resolve_resume(args: argparse.Namespace, output_dir: Path) -> str | None:
     return checkpoint
 
 
+# The immutable fields of a run: what a resume must not silently change. A
+# regenerated export, another validation slice, a different chat profile, or a
+# different mixture would make the resumed run a second, differently-shaped
+# curriculum under the first run's name, which is exactly what happened to the
+# comparison between exp-007 (7335 rows) and the export that replaced it.
+IMMUTABLE_RESUME_FIELDS = (
+    "dataset_sha256",
+    "dataset_snapshot",
+    "dataset_extra_sha256",
+    "dataset_export_manifest_sha256",
+    "chat_profile_id",
+    "system_prompt_sha256",
+    "validation_slice",
+)
+
+
+def check_resume_inputs(previous_manifest: dict, current: dict) -> None:
+    """Refuse a resume whose recorded inputs no longer match, and say which."""
+    changed = []
+    for field in IMMUTABLE_RESUME_FIELDS:
+        before = previous_manifest.get(field)
+        after = current.get(field)
+        if field == "validation_slice":
+            before = (before or {}).get("sha256")
+            after = (after or {}).get("sha256")
+        if before is not None and after is not None and before != after:
+            changed.append(f"{field}: {before} -> {after}")
+    if changed:
+        raise SystemExit(
+            "the inputs of this experiment changed since the recorded manifest, so a resume would continue "
+            "into a different curriculum. Start a new experiment name, or restore the recorded inputs:\n  "
+            + "\n  ".join(changed)
+        )
+
+
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     started = time.time()
@@ -1087,6 +1122,13 @@ def main(argv: list[str] | None = None) -> int:
         dataloader_num_workers=0,
     )
 
+    # A resume must not silently continue into different inputs: compare the
+    # immutable fields against the manifest the interrupted run recorded, before
+    # anything is overwritten (DS009 requires a run's manifest to describe the
+    # data it actually trained on). The comparison happens after the manifest is
+    # built and before it is written.
+    previous_manifest = read_json(run_manifest_path) if (resume_from is not None and run_manifest_path.is_file()) else None
+
     manifest = build_manifest(
         args,
         training_args,
@@ -1102,6 +1144,9 @@ def main(argv: list[str] | None = None) -> int:
         extra_path=extra_path,
         extra_rows=len(extra_rows),
     )
+
+    if previous_manifest is not None:
+        check_resume_inputs(previous_manifest, manifest)
 
     model = load_model(args, base_model)
     # On resume the target counter is seeded with the dataset's target share of the
