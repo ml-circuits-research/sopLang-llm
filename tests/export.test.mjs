@@ -75,7 +75,7 @@ test('every row carries the recorded chat shape and its manifest metadata', () =
 });
 
 test('the chat profile is pinned by its text and hash', () => {
-  assert.equal(CHAT_PROFILE_ID, 'compiled-plan-chat-2');
+  assert.equal(CHAT_PROFILE_ID, 'compiled-plan-chat-3');
   assert.equal(
     SYSTEM_PROMPT,
     'You compile problems into SOP Lang circuits. Read the problem and emit exactly one SOP Lang program, '
@@ -83,8 +83,11 @@ test('the chat profile is pinned by its text and hash', () => {
       + 'the statement, an optional @facts literal wire that carries external knowledge the computation reads, '
       + 'zero or more intermediate wires that publish the named stages of the plan for the later wires to read '
       + 'through $name, and a @answer jsEval wire that computes the answer deterministically from those values. '
-      + 'Every jsEval wire computes deterministic work from the values it reads and asserts its inputs and its '
-      + 'output with probe(...) calls. The program carries no input wire and no model call. Output only the program.',
+      + 'Every jsEval wire computes deterministic work from the values it reads. The runtime asserts the generic '
+      + 'input and output contract for you: a dependency is defined, a slots record is a non-empty object, and the '
+      + 'result is not empty. Write a probe(condition, message) assertion only where your own plan has a domain '
+      + 'condition worth checking, and define the probe helper in that wire when you use it. The program carries '
+      + 'no input wire and no model call. Output only the program.',
   );
   assert.equal(SYSTEM_PROMPT_SHA256, buildTrainerView({ datasetRoot: DATASET_ROOT }).manifest.profile.systemPromptSha256);
 });
