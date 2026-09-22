@@ -1,0 +1,49 @@
+{
+  "experiment": "diag-009",
+  "artifact": "/home/salboaie/work/sopLang-llm/evaluation/registry/exp-009-mix10/gguf/checkpoint-728.gguf",
+  "suite": {
+    "profile": "diagnostic-suite-1.0.0",
+    "seed": 20260922,
+    "perStructure": 10,
+    "structures": [
+      "filter-total",
+      "filter-count",
+      "filter-largest-double",
+      "filter-total-add-rate",
+      "filter-count-per-unit",
+      "filter-largest-add-rate"
+    ],
+    "items": 60
+  },
+  "conditions": [
+    "normal",
+    "values",
+    "plan",
+    "both"
+  ],
+  "oracleAssisted": [
+    "values",
+    "plan",
+    "both"
+  ],
+  "structureSplit": {
+    "development": [
+      "filter-total",
+      "filter-count",
+      "filter-largest-double",
+      "filter-largest-add-rate"
+    ],
+    "held": [
+      "filter-total-add-rate",
+      "filter-count-per-unit"
+    ]
+  },
+  "decoding": {
+    "temperature": 0,
+    "maxTokens": 2048,
+    "concurrency": 4,
+    "attemptsPerItem": 1,
+    "transportRetries": 1
+  },
+  "startedAt": "2026-09-22T08:07:12.490Z"
+}
