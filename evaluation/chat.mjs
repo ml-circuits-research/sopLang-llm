@@ -28,7 +28,7 @@
  */
 
 import { spawn, spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { createInterface } from 'node:readline';
 import { pathToFileURL } from 'node:url';
@@ -39,6 +39,25 @@ import { artifactFor } from './artifacts.mjs';
 import { CHAT_PROFILE_ID } from '../training/export.mjs';
 import { parseCircuit } from '../runtime/parser.mjs';
 import { createRuntime } from '../runtime/kernel.mjs';
+
+/**
+ * The most recently evaluated experiment with a recorded winner.
+ *
+ * Recency, not the validation oracle: the chat is the owner's playground for the
+ * latest work, while the diagnostic runners keep the best-by-oracle choice of
+ * `bestWinner()`. A named --gguf or --experiment always overrides this.
+ */
+function latestExperiment() {
+  const registry = `${REPOSITORY_ROOT}/evaluation/registry`;
+  const entries = [];
+  for (const name of readdirSync(registry)) {
+    const selection = join(registry, name, 'selection.json');
+    if (!existsSync(selection)) continue;
+    entries.push({ name, mtime: statSync(selection).mtimeMs });
+  }
+  entries.sort((left, right) => right.mtime - left.mtime);
+  return entries[0]?.name ?? null;
+}
 
 async function serverIsUp(base) {
   try {
@@ -80,9 +99,6 @@ function parseArguments(argv) {
     else throw new Error(`unknown argument: ${flag}`);
   }
   if (options.help) return options;
-  if (options.gguf === null && options.experiment === null) {
-    options.experiment = 'exp-008-sft-shapes';
-  }
   return options;
 }
 
@@ -172,7 +188,8 @@ Ask a question; the student compiles it into a SOP Lang circuit and the runtime
 executes that circuit, so the printed answer is the one the circuit computed.
 
 Options:
-  --experiment <id>   serve the selected checkpoint of this experiment (default exp-008-sft-shapes)
+  --experiment <id>   serve the selected checkpoint of this experiment
+                      (default: the winner of the most recently evaluated experiment)
   --gguf <path>       serve this artifact instead
   --base <url>        use an already running server instead of starting one
   --use-both          start with the base-model comparison on: every question is
@@ -607,7 +624,10 @@ async function main() {
     process.exit(0);
   }
 
-  const artifact = artifactFor({ gguf: options.gguf, experiment: options.experiment });
+  // No --gguf and no --experiment: the winner of the most recently evaluated
+  // experiment, because the owner wants to play with the latest work, and a frozen
+  // default would hand them an old checkpoint the day after every new arm.
+  const artifact = artifactFor({ gguf: options.gguf, experiment: options.experiment ?? latestExperiment() });
   const base = options.base ?? `http://127.0.0.1:${options.port}`;
   let managed = null;
   // The alias this session must talk to: the one its own launch serves, or the
