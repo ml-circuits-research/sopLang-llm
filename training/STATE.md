@@ -28,6 +28,32 @@ The two verdicts that matter, both written in `evaluation/registry/phase4-analys
 
 Nothing is training. The GPU is idle and the machine is safe to use. Two queues are armed and detached: `exp-008-queue.sh` waits for a *new* export before starting another arm, and `exp-009-queue.sh` is spent (its arm completed).
 
+## The target lost its scaffolding (2026-09-22 18:00Z)
+
+The fixed probe preamble left the trained target. Measured cost before the change: 18.96% of the target
+tokens (875,160 of 4,616,945), identical in all 8415 `jsEval` stages. The three generic clauses are now the
+input and output contract of the `jsEval` command (version 2.0.0): a dependency is defined, a compiled
+`slots` record is a non-empty object, and the result is not `null`, `undefined`, or the empty string, each a
+structured `execution_error` naming the wire and the clause. A body that staged a structural transaction is
+exempt, because `circuit.commit` publishes through the transaction and returns nothing by design. Domain
+assertions a family writes about its own values stay, and the loader no longer requires any.
+
+Targets: 18,010,872 characters to 14,622,102, a reduction of 3,388,770 (-18.8%). Chat profile
+`compiled-plan-chat-2` becomes `compiled-plan-chat-3`, whose system prompt asks for the computation and states
+that the runtime asserts the generic contract. `verify: OK` over 8,540 circuits, 317 of 317 tests.
+
+Five self-referential families were added to `teacher/procedural/text.mjs` for the shapes a language model
+fails by recall rather than by reading: count the letter the word itself names, the length of a word, its
+first and last letter, its distinct-letter count, and which of two words is longer. The famous pair
+`raspberry`/`strawberry` is evaluation-only (`EVAL_ONLY_WORDS`, 0 of 8015 training rows), and the training
+vocabulary is over a hundred other words, so a checkpoint that memorized the demo words cannot pass as one
+that counts.
+
+Two defects were found and fixed on the way: the provenance probe could not change what a string contains
+(appending a character is absorbed by a character-set computation, and substituting one rare letter for
+another leaves a distinct count unchanged), so a correct distinct-letters circuit was reported as a stored
+answer; and the shared word list leaked the demo pair into training rows.
+
 ## Running now: `exp-010-contrastive` (started 2026-09-22 14:35Z)
 
 The first arm built on the diagnosis. `teacher/procedural/contrastive.mjs` adds six families in three contrastive pairs to the procedural source, and the export grew from 7575 to 7815 rows (`procedural-arithmetic` 800 to 1040); the run uses exp-009's exact recipe (3 epochs, lr 1e-4, batch 4, grad-accum 8, gradient checkpointing, save-steps 90, preservation-10 extra data), so the arm changes the data and nothing else. Watch it with `bash training/environment/work-status.sh`, live log at `training/checkpoints/exp-010-contrastive/overnight.log`, and its chain writes `evaluation/registry/exp-010-contrastive/{selection.md,report.md,probes.md}`. The guards are running again beside it.
