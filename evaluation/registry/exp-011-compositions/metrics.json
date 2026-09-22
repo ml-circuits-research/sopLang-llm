@@ -1,0 +1,568 @@
+{
+  "items": 425,
+  "classes": {
+    "generation_transport_error": 0,
+    "wrapper_rejected": 0,
+    "parse_invalid": 0,
+    "graph_invalid": 0,
+    "execution_error": 210,
+    "answer_mismatch": 54,
+    "answer_match": 161
+  },
+  "rates": {
+    "parse_validity": 1,
+    "graph_validity": 1,
+    "runtime_completion": 0.505882,
+    "oracle_match": 0.378824
+  },
+  "byBook": {
+    "adult-reasoning": {
+      "items": 10,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 10,
+        "answer_mismatch": 0,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0,
+        "oracle_match": 0
+      }
+    },
+    "common-sense": {
+      "items": 50,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 48,
+        "answer_mismatch": 2,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.04,
+        "oracle_match": 0
+      }
+    },
+    "decompose-to-solve": {
+      "items": 100,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 84,
+        "answer_mismatch": 16,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.16,
+        "oracle_match": 0
+      }
+    },
+    "logical-reasoning": {
+      "items": 10,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 7,
+        "answer_mismatch": 3,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.3,
+        "oracle_match": 0
+      }
+    },
+    "mathematical-thinking": {
+      "items": 10,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 5,
+        "answer_mismatch": 4,
+        "answer_match": 1
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.5,
+        "oracle_match": 0.1
+      }
+    },
+    "procedural-arithmetic": {
+      "items": 200,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 11,
+        "answer_mismatch": 29,
+        "answer_match": 160
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.945,
+        "oracle_match": 0.8
+      }
+    },
+    "scientific-reasoning": {
+      "items": 25,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 25,
+        "answer_mismatch": 0,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0,
+        "oracle_match": 0
+      }
+    },
+    "world-as-a-system": {
+      "items": 20,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 20,
+        "answer_mismatch": 0,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0,
+        "oracle_match": 0
+      }
+    }
+  },
+  "byPlanCluster": {
+    "2f1f09a7ecc9": {
+      "items": 1,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 1,
+        "answer_mismatch": 0,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0,
+        "oracle_match": 0
+      }
+    },
+    "2f5feec45f96": {
+      "items": 40,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 0,
+        "answer_mismatch": 0,
+        "answer_match": 40
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 1,
+        "oracle_match": 1
+      }
+    },
+    "465567a44bfc": {
+      "items": 1,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 0,
+        "answer_mismatch": 1,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 1,
+        "oracle_match": 0
+      }
+    },
+    "4c5c90587868": {
+      "items": 1,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 0,
+        "answer_mismatch": 0,
+        "answer_match": 1
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 1,
+        "oracle_match": 1
+      }
+    },
+    "6badfbe67551": {
+      "items": 40,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 0,
+        "answer_mismatch": 0,
+        "answer_match": 40
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 1,
+        "oracle_match": 1
+      }
+    },
+    "949ce9735467": {
+      "items": 1,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 1,
+        "answer_mismatch": 0,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0,
+        "oracle_match": 0
+      }
+    },
+    "9cf19a47caf8": {
+      "items": 1,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 0,
+        "answer_mismatch": 1,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 1,
+        "oracle_match": 0
+      }
+    },
+    "a2cc6df855e0": {
+      "items": 40,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 0,
+        "answer_mismatch": 0,
+        "answer_match": 40
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 1,
+        "oracle_match": 1
+      }
+    },
+    "b6067c846929": {
+      "items": 50,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 48,
+        "answer_mismatch": 2,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.04,
+        "oracle_match": 0
+      }
+    },
+    "bb7868b44786": {
+      "items": 40,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 11,
+        "answer_mismatch": 29,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.725,
+        "oracle_match": 0
+      }
+    },
+    "bde96495399a": {
+      "items": 40,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 0,
+        "answer_mismatch": 0,
+        "answer_match": 40
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 1,
+        "oracle_match": 1
+      }
+    },
+    "c40e0cf7b406": {
+      "items": 100,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 84,
+        "answer_mismatch": 16,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.16,
+        "oracle_match": 0
+      }
+    },
+    "ce3d2c7f3848": {
+      "items": 1,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 0,
+        "answer_mismatch": 1,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 1,
+        "oracle_match": 0
+      }
+    },
+    "d02e23018985": {
+      "items": 25,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 25,
+        "answer_mismatch": 0,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0,
+        "oracle_match": 0
+      }
+    },
+    "d7443e28a4d0": {
+      "items": 10,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 7,
+        "answer_mismatch": 3,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0.3,
+        "oracle_match": 0
+      }
+    },
+    "d7bf7b42f6e3": {
+      "items": 1,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 1,
+        "answer_mismatch": 0,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0,
+        "oracle_match": 0
+      }
+    },
+    "df7d891093d1": {
+      "items": 1,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 1,
+        "answer_mismatch": 0,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0,
+        "oracle_match": 0
+      }
+    },
+    "e4162dccf502": {
+      "items": 10,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 10,
+        "answer_mismatch": 0,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0,
+        "oracle_match": 0
+      }
+    },
+    "e576d1c206a0": {
+      "items": 1,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 1,
+        "answer_mismatch": 0,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0,
+        "oracle_match": 0
+      }
+    },
+    "f24876b91e96": {
+      "items": 20,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 20,
+        "answer_mismatch": 0,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 0,
+        "oracle_match": 0
+      }
+    },
+    "f55973c01b53": {
+      "items": 1,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 0,
+        "answer_mismatch": 1,
+        "answer_match": 0
+      },
+      "rates": {
+        "parse_validity": 1,
+        "graph_validity": 1,
+        "runtime_completion": 1,
+        "oracle_match": 0
+      }
+    }
+  },
+  "efficiency": {
+    "generatedTokens": 166906,
+    "promptTokens": 124945,
+    "calls": 425,
+    "wallClockMs": 1438321,
+    "tokensPerSecond": 116.04,
+    "costPerCorrect": 1036.68
+  },
+  "capabilityProbes": {
+    "profile": "capability-probes-1.0.0",
+    "systemPromptSha256": "3f0ff0bee57e51871d4c09dcf8e3e6ffb0ab414c41100199873dfd0fc5c69fe9",
+    "items": 10,
+    "passed": 1,
+    "byKind": {
+      "instruction": {
+        "items": 4,
+        "passed": 1
+      },
+      "javascript": {
+        "items": 6,
+        "passed": 0
+      }
+    }
+  }
+}

@@ -350,6 +350,44 @@ taught to read. Until such a pair exists and is shown to keep the emitted plan s
 the only measurement these reports may be cited for, and every assisted number in `diag-009`, `diag-pairs-010`
 and `diag-pairs-fixed` must be read as "response to an unfamiliar prompt", never as a stage diagnosis.
 
+## Composition-inventory arm (`exp-011-compositions`, closed 2026-09-22 20:39Z)
+
+The arm the plan-inventory finding called for, with the target form completed at the same time: 0 of 8735
+targets carry the probe preamble or the probe helper (jsEval 2.1.0 provides the helper in the sandbox; profile
+`compiled-plan-chat-4`), and 22 declared compositions — 18 trained, 4 reserved whole — each a family derived
+from its chain. Same recipe as exp-009/exp-010 (3 epochs, lr 1e-4, batch 4, grad-accum 8, gradient
+checkpointing, save-steps 90, preservation-10); 867 steps.
+
+**Selection (winner `checkpoint-630`):** oracle 94.7%, plan-seen 98.5%, plan-unseen 18.8% (3 of 16) — the
+plateau of every previous arm, reproduced on the clean targets. Nothing was lost by removing the scaffolding.
+
+**The holdout, decomposed honestly (the headline number is 37.9%, but it is not one number):**
+
+| slice of the holdout | items | correct | |
+| --- | --- | --- | --- |
+| the 4 reserved compositions (never trained, at any depth) | 160 | **160** | **100.0%** |
+| the old procedural eval family | 40 | 0 | 0.0% |
+| the book-derived holdout (the original 225 items) | 225 | 1 | 0.4% |
+
+**The arm proved its thesis and measured the thesis's limit.** A declared inventory with a learnable number of
+instances per composition teaches the model to compose the operators it knows: on compositions whose chains it
+never saw, in any form, at depths three through five, it answers 160 of 160. That is the first clean positive
+result of the whole series — every earlier lever (widening, mixtures, wires, contrastive phrasing) left the
+deployed number at 0.0–0.4%, and this one moves a whole class of unseen plans to 100%.
+
+**But the book-derived holdout did not move** (0.4%, one item, the same as exp-010). The two halves of the
+holdout differ in exactly one way, and that difference is now measured rather than guessed: the reserved
+compositions reuse the eleven operators the trained compositions share, while the book problems' plans use
+shapes outside that operator vocabulary. Compositional generalization works within a shared vocabulary and
+does not transfer across it. So the next question the series must answer is not "teach the model to compose"
+(that is solved, within a vocabulary) but **"widen the operator vocabulary toward what the books use"**: name
+the operations the book families perform, build procedural families that exercise those operations, and keep
+holding out whole compositions. The retrieval baseline of astra_review I5 remains the control that should have
+been run first, and it is still worth running before another arm.
+
+Capability probes stayed 1 of 10: the preservation view was regenerated with the helper-free targets, and the
+fine-tuned student still fails the same probes the base fails, which is its own open problem (DS009).
+
 ## Decisions taken on the night of 2026-09-21
 
 **D-G — Containers and registry reads are not in the structure arm; six more multi-wire plan shapes are.** `DS008-training-data.md` specifies container plans and registry-reading plans, and the reconnaissance of this repository found four coupled gates that none of tonight's time could move together: the family validator accepts only `jsEval` and `literal` as an intermediate wire (`teacher/procedural/index.mjs`), the program builder has no container wire path (`teacher/families/index.mjs`, `buildProgram`), the provenance battery judges reactivity from `slots`/`facts` references in the answer wire (`training-data/provenance.mjs`), and no manifest column records the structural read set a definition-reading plan must publish (`DS008`, "Additional circuit shapes"). Each of those is a runtime-contract change that needs its own acceptance evidence, and a half-implemented shape would ship circuits the verifier cannot judge. The lever both shapes serve — plan coverage — is served tonight by six more generator families with two named intermediate stages each (`Teacher/families` equivalent: `teacher/procedural/grouping.mjs`, `aggregation.mjs`, `textshapes.mjs`), which deepens the dependency chain the suite teaches to three stages without touching the runtime contract. The container and registry items stay open with their four gates named above.
