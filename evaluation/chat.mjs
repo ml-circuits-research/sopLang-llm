@@ -273,8 +273,14 @@ async function servedAlias(base) {
       return null;
     }
     const payload = await response.json();
-    const first = Array.isArray(payload?.data) ? payload.data[0] : null;
-    return typeof first?.id === 'string' && first.id !== '' ? first.id : null;
+    // llama-server answers `{"models": [{"name": ...}]}`; an OpenAI-compatible
+    // endpoint answers `{"data": [{"id": ...}]}`. Both shapes are read, because the
+    // comparison port may hold either, and the alias is what decides whether the
+    // server holds the base model.
+    const entries = Array.isArray(payload?.models) ? payload.models : Array.isArray(payload?.data) ? payload.data : [];
+    const first = entries[0] ?? null;
+    const name = typeof first?.name === 'string' ? first.name : typeof first?.id === 'string' ? first.id : null;
+    return name === null || name === '' ? null : name;
   } catch {
     return null;
   }
