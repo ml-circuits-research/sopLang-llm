@@ -220,6 +220,40 @@ phrasing: the number does not respond to any lever tried so far. The next arm sh
 directly (astra_review I5: structural splits over a declared inventory of compositions, and the retrieval
 baseline over statements), not the phrasing of the plans that are already covered.
 
+### Pair accuracy on the winner (`diag-pairs-010`, 2026-09-22 19:18Z)
+
+The measurement the arm was built for, run on `checkpoint-450` with 24 pairs (8 per kind):
+
+| pair kind | both correct | one correct | neither | paired accuracy |
+| --- | --- | --- | --- | --- |
+| boundary-inclusion (`above` against `at least`) | 7 | 1 | 0 | 87.5% |
+| direction (the largest record against the smallest) | 0 | 1 | 7 | 0.0% |
+| rate-vs-absolute (a fixed amount against a percentage) | 1 | 5 | 2 | 12.5% |
+| **all** | **8** | **7** | **9** | **33.3%** |
+
+**This is more informative than the holdout number and it changes the reading of the arm.** The deployed
+holdout gave 0.4% and said nothing about why; the pairs separate the three shapes and show the failure is not
+uniform:
+
+- **The boundary pair works.** Seven of eight pairs answer `above` and `at least` differently and both
+  correctly, which is the skill the pair was built to teach and the one a memorized family cannot supply: the
+  two statements differ by two words and only the comparison changes. This is a genuine, if narrow, positive
+  result.
+- **The direction pair fails completely.** Zero of eight: the model answers both members alike, which is
+  exactly the pattern-completion failure D-L described, and the pair did not cure it.
+- **The rate pair is half-learned.** One pair fully correct and five with only one member right, so the model
+  distinguishes a fixed amount from a percentage in some cases but not reliably.
+
+So the arm taught the sharpest, most local distinction (a word that flips a comparison) and did not teach the
+two that require the model to select a different operand or a different operation on the same operand. That is
+consistent with the null holdout result: the pairs that worked are the ones whose difference is *lexical and
+adjacent*, and the ones that failed need the plan to change shape.
+
+The next arm should therefore treat these three kinds separately rather than as one lever: keep the boundary
+pairs, add many more direction pairs (the cheapest diagnostics of operand selection), and check whether the
+rate pair's five one-correct cases fail on the same member every time — if they do, the failure is a memorized
+default for one of the two operations, which is a data-balance problem rather than a phrasing problem.
+
 ## Decisions taken on the night of 2026-09-21
 
 **D-G — Containers and registry reads are not in the structure arm; six more multi-wire plan shapes are.** `DS008-training-data.md` specifies container plans and registry-reading plans, and the reconnaissance of this repository found four coupled gates that none of tonight's time could move together: the family validator accepts only `jsEval` and `literal` as an intermediate wire (`teacher/procedural/index.mjs`), the program builder has no container wire path (`teacher/families/index.mjs`, `buildProgram`), the provenance battery judges reactivity from `slots`/`facts` references in the answer wire (`training-data/provenance.mjs`), and no manifest column records the structural read set a definition-reading plan must publish (`DS008`, "Additional circuit shapes"). Each of those is a runtime-contract change that needs its own acceptance evidence, and a half-implemented shape would ship circuits the verifier cannot judge. The lever both shapes serve — plan coverage — is served tonight by six more generator families with two named intermediate stages each (`Teacher/families` equivalent: `teacher/procedural/grouping.mjs`, `aggregation.mjs`, `textshapes.mjs`), which deepens the dependency chain the suite teaches to three stages without touching the runtime contract. The container and registry items stay open with their four gates named above.

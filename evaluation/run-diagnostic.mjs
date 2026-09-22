@@ -159,12 +159,28 @@ export function divergenceOf({ className, program, answer, problem, oracleOfStag
   return 'wrong_values_or_operation';
 }
 
-/** The answers every intermediate stage of the latent chain would produce. */
+/**
+ * The answers every intermediate stage of the latent chain would produce.
+ *
+ * Only the structure suite has a chain to walk: a contrastive pair member runs a
+ * fixed chain of its own and its outcome is read from the pair, so it reports no
+ * stages. Returning an empty list instead of throwing keeps the divergence
+ * classifier usable for any problem the runner is given, which is what the crash
+ * on the first pair run showed it was not.
+ */
 export function stageAnswers(problem) {
+  const structure = STRUCTURE_OF(problem);
+  if (structure === undefined) {
+    return [];
+  }
   let current = problem.kept;
   const answers = [];
-  for (const name of STRUCTURE_OF(problem).chain.slice(1)) {
-    current = OPERATOR_OF(name)(current, problem.parameters);
+  for (const name of structure.chain.slice(1)) {
+    const operator = OPERATORS_TABLE[name];
+    if (operator === undefined) {
+      break;
+    }
+    current = operator.steps(current, problem.parameters);
     answers.push(current);
   }
   return answers;
@@ -172,6 +188,8 @@ export function stageAnswers(problem) {
 
 // Small local aliases so the divergence heuristic reads clearly above.
 import { OPERATORS as OPERATORS_TABLE, STRUCTURES as STRUCTURES_TABLE } from './diagnostics/suite.mjs';
+
+/** The structure a problem runs, or undefined for a problem no structure declares. */
 const STRUCTURE_OF = (problem) => STRUCTURES_TABLE.find((structure) => structure.id === problem.structure);
 const OPERATOR_OF = (name) => OPERATORS_TABLE[name].steps;
 
@@ -318,7 +336,12 @@ const OPERATOR_OF = (name) => OPERATORS_TABLE[name].steps;
   const lines = [
     `# Four-condition diagnostic — ${options.experiment}`,
     '',
-    `Artifact: \`${artifactLabel}\`. Suite: ${suite.profile}, seed ${suite.seed}, ${suite.problems.length} problems (${suite.perStructure} per structure).`,
+    // The header describes whichever suite this run used: the structure suite carries
+    // `problems` and `perStructure`, the pair suite carries `pairs` and `perPair`, and
+    // reading the wrong one here crashed the first pair run before it wrote anything.
+    options.pairs
+      ? `Artifact: \`${artifactLabel}\`. Suite: ${suite.profile}, seed ${suite.seed}, ${suite.pairs.length} pairs (${suite.perPair} per kind, ${suite.kinds.length} kinds).`
+      : `Artifact: \`${artifactLabel}\`. Suite: ${suite.profile}, seed ${suite.seed}, ${suite.problems.length} problems (${suite.perStructure} per structure).`,
     '',
     'The **normal** condition is the statement alone through the recorded compiled-plan profile: it is the only deployable score here.',
     'The **values**, **plan**, and **both** conditions are oracle-assisted diagnostics — they supply input the deployed system would not have — and their numbers must never be quoted as task performance.',
