@@ -6,7 +6,7 @@
 2. Keeping the records strictly above the threshold keeps 5 of them.
 3. The kept records total 128 crates.
 
-**Generator provenance.** arithmetic.mjs 1.2.0, family filtered-records-above-a-threshold, instance 10, sampled with seed 20260921 from the latent plan `filtered-records-above-a-threshold`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.3.0, family filtered-records-above-a-threshold, instance 10, sampled with seed 20260921 from the latent plan `filtered-records-above-a-threshold`; this example carries no source span because its statement was generated.
 
 ## Result
 

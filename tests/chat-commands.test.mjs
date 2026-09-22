@@ -8,7 +8,8 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { COMMANDS, decodeLine, divergenceOf, runCommand } from '../evaluation/chat.mjs';
+import { BASE_GGUF, COMMANDS, decodeLine, divergenceOf, runCommand } from '../evaluation/chat.mjs';
+import { aliasFor } from '../evaluation/server.mjs';
 import { answerBody } from '../teacher/families/probes.mjs';
 
 const REPOSITORY_ROOT = fileURLToPath(new URL('..', import.meta.url));
@@ -176,7 +177,7 @@ test('the interactive loop answers commands locally and sends only questions to 
     assert.equal(code, 0);
     assert.equal(completions, 1, 'only the question is sent to the model');
     for (const command of COMMANDS) assert.ok(stdout.includes(command.usage), `${command.usage} is missing from the printed /help`);
-    assert.ok(stdout.includes('✔ answer (executed circuit): 7'));
+    assert.ok(stdout.includes('✔ answer: 7'), `the answer line must state the executed answer: ${stdout.slice(-300)}`);
     assert.ok(stdout.includes('wires: @slots literal, @answer jsEval'));
     assert.ok(stdout.includes('executed: yes'));
     assert.match(stdout, /turns: 1/, 'six command lines and one question must count as one turn');
@@ -241,4 +242,64 @@ test('/use-both reports the base model state instead of promising a comparison i
   // Failed: the reason is reported, so a broken base artifact is visible at once.
   const failed = makeSession('failed', 'the base artifact is missing at training/checkpoints/base-f16.gguf');
   assert.match(runCommand({ name: 'use-both', argument: 'true' }, failed).text, /base artifact is missing/);
+});
+
+test('each model is asked in the mode it was trained for', () => {
+  // The defect this pins: sending the recorded compilation profile to the untuned base
+  // model asks a model that never saw SOP Lang to emit SOP Lang, and it answers by
+  // imitating the profile's vocabulary with an invented grammar. The two models answer
+  // the same question their own way, and each request must say which way that is.
+  const requests = [];
+  const server = createServer((request, response) => {
+    if (request.method === 'GET' && (request.url === '/health' || request.url === '/v1/models')) {
+      response.writeHead(200, { 'content-type': 'application/json' });
+      response.end(request.url === '/health' ? '{"status":"ok"}' : `{"models":[{"name":"${aliasFor(BASE_GGUF)}"}]}`);
+      return;
+    }
+    if (request.method === 'POST' && request.url === '/v1/chat/completions') {
+      let body = '';
+      request.on('data', (chunk) => { body += String(chunk); });
+      request.on('end', () => {
+        requests.push(JSON.parse(body));
+        response.writeHead(200, { 'content-type': 'application/json' });
+        response.end(JSON.stringify({ choices: [{ message: { role: 'assistant', content: '7' } }], usage: { completion_tokens: 1, prompt_tokens: 10 } }));
+      });
+      return;
+    }
+    response.writeHead(404);
+    response.end();
+  });
+  return new Promise((resolve) => {
+    server.listen(0, '127.0.0.1', () => {
+      const { port } = server.address();
+      // The comparison looks for the base model on `--port + 1`, so this session names
+      // the fake server's port as the base and one below it as its own, and both roles
+      // are answered by the same fake.
+      const child = spawn(process.execPath, [
+        'evaluation/chat.mjs',
+        '--base', `http://127.0.0.1:${port}`,
+        '--port', String(port - 1),
+        '--once', 'How many cookies are left?'
+      ], { encoding: 'utf8' });
+      let stdout = '';
+      child.stdout.on('data', (chunk) => { stdout += String(chunk); });
+      child.on('close', () => {
+        server.close();
+        // The student's request carries the recorded profile; the base model's carries a
+        // plain instruction to answer. Both ask the same question.
+        const student = requests.find((r) => String(r.messages[0].content).includes('SOP Lang'));
+        const base = requests.find((r) => !String(r.messages[0].content).includes('SOP Lang'));
+        assert.ok(student !== undefined, 'the fine-tuned model must be asked with the SOP Lang profile');
+        assert.ok(base !== undefined, 'the base model must be asked to answer, not to compile');
+        assert.match(String(base.messages[0].content), /answer/i);
+        for (const request of requests) {
+          assert.equal(request.messages.at(-1).content, 'How many cookies are left?');
+        }
+        // And the output must say which answer came from which model.
+        assert.ok(stdout.includes('BASE MODEL') && stdout.includes('FINE-TUNED STUDENT'),
+          `both blocks must be labelled: ${stdout.slice(-400)}`);
+        resolve();
+      });
+    });
+  });
 });

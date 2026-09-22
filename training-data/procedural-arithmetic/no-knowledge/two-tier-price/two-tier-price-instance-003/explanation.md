@@ -6,7 +6,7 @@
 2. 0 quires fall beyond the 18-unit threshold and are charged 3 units each.
 3. The two blocks add up to 392 units.
 
-**Generator provenance.** arithmetic.mjs 1.2.0, family two-tier-price, instance 3, sampled with seed 20260921 from the latent plan `two-tier-price`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.3.0, family two-tier-price, instance 3, sampled with seed 20260921 from the latent plan `two-tier-price`; this example carries no source span because its statement was generated.
 
 ## Result
 

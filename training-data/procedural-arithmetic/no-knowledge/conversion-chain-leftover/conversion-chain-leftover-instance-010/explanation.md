@@ -6,7 +6,7 @@
 2. The crates stage removes one crate at a time and publishes 11 full crates with 27 parts beyond them.
 3. The boxes stage packs those parts one box at a time: 3 boxes, with 6 parts left over.
 
-**Generator provenance.** arithmetic.mjs 1.2.0, family conversion-chain-leftover, instance 10, sampled with seed 20260921 from the latent plan `conversion-chain-leftover`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.3.0, family conversion-chain-leftover, instance 10, sampled with seed 20260921 from the latent plan `conversion-chain-leftover`; this example carries no source span because its statement was generated.
 
 ## Result
 

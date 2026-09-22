@@ -36,6 +36,7 @@ import { pathToFileURL } from 'node:url';
 import { buildMessages, extractProgram, generate } from './client.mjs';
 import { LLAMA_SERVER, REPOSITORY_ROOT, aliasFor, serverArguments, waitForServer } from './server.mjs';
 import { artifactFor } from './artifacts.mjs';
+import { CHAT_PROFILE_ID } from '../training/export.mjs';
 import { parseCircuit } from '../runtime/parser.mjs';
 import { createRuntime } from '../runtime/kernel.mjs';
 
@@ -56,7 +57,7 @@ async function startServer({ gguf, port, threads }) {
 }
 
 function parseArguments(argv) {
-  const options = { gguf: null, experiment: null, base: null, port: 8087, maxTokens: 1024, threads: null, showPlan: false, once: null, useBoth: false, help: false };
+  const options = { gguf: null, experiment: null, base: null, port: 8087, maxTokens: 1024, threads: null, showPlan: false, once: null, useBoth: true, single: false, help: false };
   for (let index = 0; index < argv.length; index += 1) {
     const flag = argv[index];
     const value = () => {
@@ -69,6 +70,7 @@ function parseArguments(argv) {
     else if (flag === '--experiment') options.experiment = value();
     else if (flag === '--base') options.base = value();
     else if (flag === '--use-both') options.useBoth = true;
+    else if (flag === '--single') options.single = true;
     else if (flag === '--port') options.port = Number(value());
     else if (flag === '--max-tokens') options.maxTokens = Number(value());
     else if (flag === '--threads') options.threads = Number(value());
@@ -186,18 +188,48 @@ ${COMMANDS.map((command) => `  ${command.usage.padEnd(COMMAND_WIDTH)}  ${command
  * the comparison is exactly that difference and reformatting it would hide it.
  */
 function renderComparison(base) {
-  const lines = ['--- untuned base model (own weights, no circuit) ---'];
+  const lines = [
+    `=== 1. BASE MODEL (untuned) — answers from its own weights, nothing is validated ===`,
+    'It is not asked to compile and it was never trained on SOP Lang, so its text is prose:',
+    'no parser accepted it and no runtime executed it. Its number is read by you, not checked.',
+    ''
+  ];
   if (base.error !== null) {
     lines.push(`✗ the base model did not answer: ${base.error}`);
     return lines;
   }
   const text = base.text === null || base.text === '' ? '(empty completion)' : base.text;
   lines.push(text);
+  // The base model was never trained on SOP Lang, so what it writes is prose that
+  // imitates the profile's vocabulary. Saying "raw text" is not enough on its own: a
+  // reader sees `@slots literal` and reads a circuit, so the parser is run on it here
+  // and its verdict is printed. Nothing is executed, because there is nothing valid to
+  // execute, and the point of the comparison is exactly that difference.
+  lines.push(parseVerdictOf(text));
   const measured = [base.tokens === null ? null : `${base.tokens} tokens`, base.latencyMs === null ? null : `${(base.latencyMs / 1000).toFixed(1)}s`]
     .filter((part) => part !== null)
     .join(', ');
   if (measured !== '') lines.push(`(${measured})`);
   return lines;
+}
+
+/**
+ * Whether the base model's text is a SOP Lang program, said in one line.
+ *
+ * Extracting a wrapped program is attempted first, because a reply that happens to
+ * carry a valid program in a fence should be reported as valid; otherwise the
+ * parser's own refusal is quoted, which is the honest description of an invented
+ * syntax that borrows the profile's words.
+ */
+function parseVerdictOf(text) {
+  const extracted = extractProgram(text);
+  const candidate = extracted.ok ? extracted.program : text;
+  try {
+    const parsed = parseCircuit(candidate, { sourceName: 'base-model' });
+    return `  (incidentally, the parser reads this text as SOP Lang: ${parsed.wires.map((wire) => `${wire.name} ${wire.command}`).join(', ')}; it is still not executed here)`;
+  } catch (error) {
+    return `  (the parser rejects it as SOP Lang — expected, since it is not one: ${String(error.message).split('\n')[0].slice(0, 120)})`;
+  }
 }
 
 function renderExchange(turn, options) {
@@ -207,9 +239,20 @@ function renderExchange(turn, options) {
     // their provenance, so a difference is read as "compiled" against "own weights"
     // rather than as two anonymous completions.
     lines.push(...renderComparison(turn.baseComparison), '');
+    lines.push(
+      `=== 2. FINE-TUNED STUDENT (${turn.experiment ?? 'selected checkpoint'}) ===`,
+      `Asked with the recorded profile ${CHAT_PROFILE_ID}: it must emit one SOP Lang program,`,
+      'which the runtime then parses and executes. Whatever follows is the result of that pipeline.',
+      ''
+    );
   }
   if (turn.program !== null && options.showPlan) {
-    lines.push('--- generated plan ---', turn.program.trimEnd(), '--- end of plan ---', '');
+    if (turn.baseComparison !== undefined) {
+      lines.push(`=== 2. FINE-TUNED STUDENT (${turn.experiment ?? 'selected checkpoint'}) ===`);
+      lines.push(`Asked with the recorded profile ${CHAT_PROFILE_ID}: emit one SOP Lang program.`);
+      lines.push('');
+    }
+    lines.push('--- the SOP Lang plan it emitted ---', turn.program.trimEnd(), '--- end of plan ---', '');
   }
   if (turn.className === 'generation_transport_error') {
     lines.push(`✗ generation failed after ${turn.attempts} attempt(s): ${turn.error?.message ?? 'no reply'}`);
@@ -228,7 +271,8 @@ function renderExchange(turn, options) {
   }
   if (turn.className === 'executed') {
     const answer = turn.answer;
-    lines.push(`✔ answer (executed circuit): ${typeof answer === 'string' ? answer : JSON.stringify(answer)}`);
+    lines.push('--- what the runtime returned from executing that plan ---');
+    lines.push(`✔ answer: ${typeof answer === 'string' ? answer : JSON.stringify(answer)}`);
     return lines.join('\n');
   }
   lines.push(`✗ the plan did not execute: ${turn.outcome?.status ?? 'failed'}${turn.outcome?.code ? `:${turn.outcome.code}` : ''}`);
@@ -336,10 +380,19 @@ async function ensureBaseServer(session, options) {
  * exactly what the comparison is meant to show next to the compiled result.
  */
 async function askBase({ question, compare, options }) {
+  // The base model is asked to SOLVE the problem, not to compile it. Sending it the
+  // recorded compilation profile would ask a model that was never trained on SOP Lang
+  // to emit SOP Lang, and it answers by imitating the profile's vocabulary with an
+  // invented grammar — text that reads like a circuit and is not one. The comparison
+  // is only meaningful between two models answering the same question their own way:
+  // the student compiles and the runtime executes, the base model just answers.
   const result = await generate({
     base: compare.base,
     model: compare.alias,
-    messages: buildMessages(question),
+    messages: [
+      { role: 'system', content: 'Answer the problem directly and briefly.' },
+      { role: 'user', content: question }
+    ],
     temperature: 0,
     maxTokens: options.maxTokens,
     timeoutMs: 600_000
@@ -587,12 +640,26 @@ async function main() {
     // The `/use-both` comparison: `state` tracks whether the base model has been
     // started, so a question never pays for starting it twice and a failure is
     // reported rather than retried silently.
-    compare: { enabled: options.useBoth, state: 'idle', base: null, alias: null, managed: null, detail: null }
+    // Comparing is the default now, because the question the CLI exists to answer is
+    // what the fine-tuning bought; `--single` turns it off for a fast loop.
+    compare: { enabled: options.useBoth && !options.single, state: 'idle', base: null, alias: null, managed: null, detail: null }
   };
 
   if (options.once !== null) {
-    const turn = await ask({ question: options.once, base, alias, options, runtime });
-    process.stdout.write(`\n? ${options.once}\n${renderExchange(turn, options)}\n`);
+    // `--once` honours the same default as the interactive loop: both models answer,
+    // the plan is shown, and `--single` restores the one-model form for a fast check.
+    let compare = null;
+    if (session.compare.enabled) {
+      compare = await ensureBaseServer(session, options);
+    }
+    const turn = compare !== null && compare.state === 'ready'
+      ? await askBoth({ question: options.once, base, alias, compare, options, runtime })
+      : await ask({ question: options.once, base, alias, options, runtime });
+    const turnOptions = compare !== null && compare.state === 'ready' ? { ...options, showPlan: true } : options;
+    process.stdout.write(`\n? ${options.once}\n${renderExchange(turn, turnOptions)}\n`);
+    if (compare !== null && compare.state !== 'ready') {
+      process.stdout.write(`✗ the comparison could not run: ${compare.detail}\n`);
+    }
     stopServer();
     process.exit(0);
   }
@@ -621,11 +688,15 @@ async function main() {
     if (session.compare.enabled) {
       compare = await ensureBaseServer(session, options);
     }
+    // The compiled plan is always shown when the comparison runs: the whole point is to
+    // compare what each model produced, and for the student the produced thing IS the
+    // plan. Showing only the answer would hide the object under comparison.
+    const turnOptions = compare !== null && compare.state === 'ready' ? { ...options, showPlan: true } : options;
     const turn = compare !== null && compare.state === 'ready'
       ? await askBoth({ question: decision.text, base, alias, compare, options, runtime })
       : await ask({ question: decision.text, base, alias, options, runtime });
     session.turns.push(turn);
-    process.stdout.write(`\n${renderExchange(turn, options)}\n\n`);
+    process.stdout.write(`\n${renderExchange(turn, turnOptions)}\n\n`);
     if (compare !== null && compare.state !== 'ready') {
       process.stdout.write(`✗ the comparison could not run: ${compare.detail}\n`);
     }

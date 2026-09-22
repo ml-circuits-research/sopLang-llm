@@ -1,0 +1,45 @@
+@slots literal
+{
+  "depot": "north depot",
+  "unit": "litres",
+  "values": [
+    5,
+    37,
+    35,
+    42,
+    28,
+    38,
+    16,
+    6
+  ],
+  "threshold": 23,
+  "rate": 4,
+  "perUnit": 3,
+  "multiplier": 3
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+const slots = $slots;
+const values = slots.values;
+probe(Array.isArray(values) && values.length > 0, "the records must be a non-empty list");
+let current = values;
+// stage 1: keepBelow
+const kept0 = values.filter((value) => value < slots.threshold);
+probe(kept0.length > 0 && kept0.length < values.length, "the threshold must keep some records and drop some");
+current = kept0;
+// stage 2: largest
+const extreme1 = Math.max(...current);
+current = extreme1;
+// stage 3: perUnit
+const scaled2 = current * slots.perUnit;
+current = scaled2;
+// stage 4: double
+const scaled3 = current * slots.multiplier;
+current = scaled3;
+// stage 5: addRate
+const adjusted4 = current + slots.rate;
+current = adjusted4;
+probe(Number.isInteger(current) && current >= 0, "the answer must be a whole number that is not negative");
+return current + " units.";
+

@@ -6,7 +6,7 @@
 2. The extra stock is the fixed 25 sheets.
 3. Ordering both is 101 sheets.
 
-**Generator provenance.** arithmetic.mjs 1.2.0, family total-plus-a-fixed-amount, instance 16, sampled with seed 20260921 from the latent plan `total-plus-a-fixed-amount`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.3.0, family total-plus-a-fixed-amount, instance 16, sampled with seed 20260921 from the latent plan `total-plus-a-fixed-amount`; this example carries no source span because its statement was generated.
 
 ## Result
 

@@ -29,9 +29,15 @@ import { groupingFamilies } from './grouping.mjs';
 import { aggregationFamilies } from './aggregation.mjs';
 import { textShapeFamilies } from './textshapes.mjs';
 import { families as contrastiveFamilies } from './contrastive.mjs';
+import { compositionFamilies } from './composition-families.mjs';
+import { assertInventoryIsWellFormed } from './compositions.mjs';
 
 export const sourceId = 'procedural-arithmetic';
-export const generatorVersion = '1.2.0';
+export const generatorVersion = '1.3.0';
+
+// The composition inventory is checked when the generator loads, so a chain that is
+// ill-typed, duplicated, or ends on a list fails the build rather than writing rows.
+assertInventoryIsWellFormed();
 
 const HOLDERS = ['Priya', 'Mara', 'Daria', 'Luca', 'Ines', 'Tomas', 'Nadia', 'Ravi'];
 const WORKSHOPS = ['printing workshop', 'bicycle workshop', 'bakery', 'locksmith', 'upholstery workshop'];
@@ -288,5 +294,6 @@ export const families = [
   ...groupingFamilies,
   ...aggregationFamilies,
   ...textShapeFamilies,
-  ...contrastiveFamilies
+  ...contrastiveFamilies,
+  ...compositionFamilies
 ];

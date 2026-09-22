@@ -6,7 +6,7 @@
 2. The distinct count is a property of the characters, so it is computed rather than recalled.
 3. The word holds 6 distinct letters.
 
-**Generator provenance.** arithmetic.mjs 1.2.0, family distinct-letters-in-word, instance 6, sampled with seed 20260921 from the latent plan `distinct-letters-in-word`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.3.0, family distinct-letters-in-word, instance 6, sampled with seed 20260921 from the latent plan `distinct-letters-in-word`; this example carries no source span because its statement was generated.
 
 ## Result
 

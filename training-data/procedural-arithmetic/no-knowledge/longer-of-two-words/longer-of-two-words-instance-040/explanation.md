@@ -6,7 +6,7 @@
 2. Their lengths are counted from the characters, so recognizing either word is not enough.
 3. "organizational" is longer, with 14 letters.
 
-**Generator provenance.** arithmetic.mjs 1.2.0, family longer-of-two-words, instance 40, sampled with seed 20260921 from the latent plan `longer-of-two-words`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.3.0, family longer-of-two-words, instance 40, sampled with seed 20260921 from the latent plan `longer-of-two-words`; this example carries no source span because its statement was generated.
 
 ## Result
 

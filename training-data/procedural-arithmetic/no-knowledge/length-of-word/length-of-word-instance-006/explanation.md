@@ -6,7 +6,7 @@
 2. Its length is a property of its characters, so it is counted rather than recalled.
 3. Counting the characters gives 14.
 
-**Generator provenance.** arithmetic.mjs 1.2.0, family length-of-word, instance 6, sampled with seed 20260921 from the latent plan `length-of-word`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.3.0, family length-of-word, instance 6, sampled with seed 20260921 from the latent plan `length-of-word`; this example carries no source span because its statement was generated.
 
 ## Result
 

@@ -6,7 +6,7 @@
 2. The totals stage groups the recorded amounts by site, and the ranked stage sorts those totals from the largest down.
 3. The answer reads the leading pair: the delta site with 59 units.
 
-**Generator provenance.** arithmetic.mjs 1.2.0, family grouped-label-totals, instance 30, sampled with seed 20260921 from the latent plan `grouped-label-totals`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.3.0, family grouped-label-totals, instance 30, sampled with seed 20260921 from the latent plan `grouped-label-totals`; this example carries no source span because its statement was generated.
 
 ## Result
 

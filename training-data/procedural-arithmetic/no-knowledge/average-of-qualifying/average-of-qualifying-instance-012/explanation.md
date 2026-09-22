@@ -6,7 +6,7 @@
 2. The qualifying stage keeps the 6 scores at or above the minimum, and the summary stage reduces that list to a count and a total of 258.
 3. The printed average is the published total over the published count, 43.
 
-**Generator provenance.** arithmetic.mjs 1.2.0, family average-of-qualifying, instance 12, sampled with seed 20260921 from the latent plan `average-of-qualifying`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.3.0, family average-of-qualifying, instance 12, sampled with seed 20260921 from the latent plan `average-of-qualifying`; this example carries no source span because its statement was generated.
 
 ## Result
 

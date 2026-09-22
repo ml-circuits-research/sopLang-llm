@@ -1,8 +1,8 @@
 # Dataset report
 
-Source: `teacher/procedural/arithmetic.mjs` (generator arithmetic.mjs 1.2.0, seed 20260921, 40 instances per family).
+Source: `teacher/procedural/arithmetic.mjs` (generator arithmetic.mjs 1.3.0, seed 20260921, 40 instances per family).
 
-Accepted examples: 1280. Rejected candidates: 0. Evaluation holdout: 40 (3.1%). Distinct plans: 32. Distinct compiled circuits: 1280 (a circuit embeds the values it was compiled from, so the count equals the accepted set unless two problems compile to identical text).
+Accepted examples: 2160. Rejected candidates: 0. Evaluation holdout: 200 (9.3%). Distinct plans: 54. Distinct compiled circuits: 2160 (a circuit embeds the values it was compiled from, so the count equals the accepted set unless two problems compile to identical text).
 
 Acceptance class: every accepted example is `constructed_verified` as defined by `DS008-training-data`: the executed circuit produced the answer of the recorded latent plan, and the family oracle computed that answer by an independent route. The printed-answer signal of a book source does not exist for a generated instance, so the manifest rows record the generator, the family, the instance index, and the sampling seed instead of a source span.
 
@@ -10,11 +10,17 @@ Probes: every assembled circuit carries the probe harness of `teacher/families/p
 
 ## Accepted by category
 
-- no-knowledge: 1280
+- no-knowledge: 2160
 
 ## Accepted by problem type
 
-no-knowledge/average-of-qualifying (40), no-knowledge/cheaper-rate-per-unit (40), no-knowledge/conversion-chain-leftover (40), no-knowledge/count-letter-in-word (40),
+no-knowledge/above-count (40), no-knowledge/above-count-double (40), no-knowledge/above-count-per-unit-add-rate (40), no-knowledge/above-largest-add-rate (40),
+no-knowledge/above-largest-double (40), no-knowledge/above-largest-per-unit-subtract-rate (40), no-knowledge/above-smallest-double (40),
+no-knowledge/above-smallest-per-unit-add-rate (40), no-knowledge/above-total (40), no-knowledge/above-total-add-rate (40), no-knowledge/above-total-double-per-unit-add-rate (40),
+no-knowledge/above-total-per-unit-add-rate (40), no-knowledge/above-total-subtract-rate (40), no-knowledge/average-of-qualifying (40), no-knowledge/below-count (40),
+no-knowledge/below-count-per-unit-add-rate (40), no-knowledge/below-largest-add-rate (40), no-knowledge/below-largest-double (40),
+no-knowledge/below-largest-per-unit-double-add-rate (40), no-knowledge/below-total (40), no-knowledge/below-total-add-rate (40), no-knowledge/below-total-double-subtract-rate (40),
+no-knowledge/below-total-per-unit-subtract-rate (40), no-knowledge/cheaper-rate-per-unit (40), no-knowledge/conversion-chain-leftover (40), no-knowledge/count-letter-in-word (40),
 no-knowledge/count-self-referential-letter (40), no-knowledge/crate-count-with-partial-last (40), no-knowledge/depletion-days-and-lead-time (40),
 no-knowledge/distinct-letters-in-word (40), no-knowledge/elapsed-minutes (40), no-knowledge/filtered-records-above-a-threshold (40),
 no-knowledge/filtered-records-at-least-a-threshold (40), no-knowledge/filtered-total (40), no-knowledge/first-and-last-letter (40), no-knowledge/grouped-label-totals (40),
@@ -27,7 +33,29 @@ no-knowledge/whole-units-under-a-budget (40), no-knowledge/words-containing-lett
 
 ## Accepted by family
 
+- family above-count: 40
+- family above-count-double: 40
+- family above-count-per-unit-add-rate: 40
+- family above-largest-add-rate: 40
+- family above-largest-double: 40
+- family above-largest-per-unit-subtract-rate: 40
+- family above-smallest-double: 40
+- family above-smallest-per-unit-add-rate: 40
+- family above-total: 40
+- family above-total-add-rate: 40
+- family above-total-double-per-unit-add-rate: 40
+- family above-total-per-unit-add-rate: 40
+- family above-total-subtract-rate: 40
 - family average-of-qualifying: 40
+- family below-count: 40
+- family below-count-per-unit-add-rate: 40
+- family below-largest-add-rate: 40
+- family below-largest-double: 40
+- family below-largest-per-unit-double-add-rate: 40
+- family below-total: 40
+- family below-total-add-rate: 40
+- family below-total-double-subtract-rate: 40
+- family below-total-per-unit-subtract-rate: 40
 - family cheaper-rate-per-unit: 40
 - family conversion-chain-leftover: 40
 - family count-letter-in-word: 40
@@ -69,7 +97,7 @@ Every accepted example ships the answer its source prints.
 
 ## Family integrity checks
 
-Templates covered: 32, of which 32 have several variants and 32 of those print several distinct answers, which is what shows that the computation reacts to its input.
+Templates covered: 54, of which 54 have several variants and 54 of those print several distinct answers, which is what shows that the computation reacts to its input.
 
 No template with several variants prints one answer for every variant.
 

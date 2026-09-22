@@ -6,7 +6,7 @@
 2. The largest of them is 54 shipments, and it is raised by 20.
 3. Every record added up is 140 shipments before the raise and 160 afterwards.
 
-**Generator provenance.** arithmetic.mjs 1.2.0, family raised-largest-record, instance 6, sampled with seed 20260921 from the latent plan `raised-largest-record`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.3.0, family raised-largest-record, instance 6, sampled with seed 20260921 from the latent plan `raised-largest-record`; this example carries no source span because its statement was generated.
 
 ## Result
 

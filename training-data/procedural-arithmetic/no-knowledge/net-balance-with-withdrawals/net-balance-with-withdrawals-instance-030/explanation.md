@@ -6,7 +6,7 @@
 2. Deposits add 26 + 18 + 31 units and withdrawals remove 31 + 49 units plus 5 units of fee each.
 3. Summing the ledger gives a closing balance of 43 units after 2 withdrawals.
 
-**Generator provenance.** arithmetic.mjs 1.2.0, family net-balance-with-withdrawals, instance 30, sampled with seed 20260921 from the latent plan `net-balance-with-withdrawals`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.3.0, family net-balance-with-withdrawals, instance 30, sampled with seed 20260921 from the latent plan `net-balance-with-withdrawals`; this example carries no source span because its statement was generated.
 
 ## Result
 

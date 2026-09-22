@@ -1,0 +1,40 @@
+@slots literal
+{
+  "depot": "hill depot",
+  "unit": "crates",
+  "values": [
+    13,
+    8,
+    15,
+    14,
+    24,
+    25,
+    14
+  ],
+  "threshold": 10,
+  "rate": 2,
+  "perUnit": 5
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+const slots = $slots;
+const values = slots.values;
+probe(Array.isArray(values) && values.length > 0, "the records must be a non-empty list");
+let current = values;
+// stage 1: keepBelow
+const kept0 = values.filter((value) => value < slots.threshold);
+probe(kept0.length > 0 && kept0.length < values.length, "the threshold must keep some records and drop some");
+current = kept0;
+// stage 2: total
+const total1 = current.reduce((sum, value) => sum + value, 0);
+current = total1;
+// stage 3: perUnit
+const scaled2 = current * slots.perUnit;
+current = scaled2;
+// stage 4: subtractRate
+const adjusted3 = current - slots.rate;
+current = adjusted3;
+probe(Number.isInteger(current) && current >= 0, "the answer must be a whole number that is not negative");
+return current + " units.";
+

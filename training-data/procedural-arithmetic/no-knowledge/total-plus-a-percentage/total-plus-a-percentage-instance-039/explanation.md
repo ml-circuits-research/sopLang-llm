@@ -6,7 +6,7 @@
 2. 10 percent of 50 sheets is 5 sheets, and that is the extra stock.
 3. Ordering both is 55 sheets.
 
-**Generator provenance.** arithmetic.mjs 1.2.0, family total-plus-a-percentage, instance 39, sampled with seed 20260921 from the latent plan `total-plus-a-percentage`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.3.0, family total-plus-a-percentage, instance 39, sampled with seed 20260921 from the latent plan `total-plus-a-percentage`; this example carries no source span because its statement was generated.
 
 ## Result
 

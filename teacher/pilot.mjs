@@ -32,6 +32,7 @@ import { DEFAULT_SOURCE_ID, getSource } from './sources/index.mjs';
 import { loadFamilies, buildProgram } from './families/index.mjs';
 import { loadProceduralFamilies } from './procedural/index.mjs';
 import { sampleInstances } from './procedural/random.mjs';
+import { HELD_OUT } from './procedural/compositions.mjs';
 import { orderHash, planHashOf } from './hashing.mjs';
 import { answerMatches, normalizeAnswer } from './naming.mjs';
 import { OUTPUT_ROOT, writeDataset } from './dataset.mjs';
@@ -365,6 +366,9 @@ async function factDependencyCheck({ runtime, entry, parsedSlots, computed }) {
  * remaining budget; the first non-fitting cluster is still taken whole when
  * nothing fits, so the holdout never collapses to empty.
  */
+/** The compositions the inventory reserves for evaluation. */
+const HELD_OUT_COMPOSITION_IDS = new Set(HELD_OUT);
+
 export function selectEvalSplit(accepted) {
   const groups = new Map();
   for (const item of accepted) {
@@ -380,6 +384,21 @@ export function selectEvalSplit(accepted) {
     group.items.push(item);
     group.hashes.add(planHashOf(item));
     groups.set(key, group);
+  }
+
+  // A family whose composition the inventory reserves is held out whole. The
+  // declaration lives in `teacher/procedural/compositions.mjs` and is the authority:
+  // every instance of a reserved composition belongs to the holdout, at every depth,
+  // so the evaluation rows are compositions the trainer never saw in any form. This
+  // runs before the hash walk below, and those groups are removed from it, because a
+  // hash walk that happened to keep a reserved composition in training would defeat
+  // the split the inventory declares (`phase4-analysis.md`, the plan-inventory finding).
+  const declaredEval = new Map();
+  for (const [key, group] of groups) {
+    if (group.items.every((item) => HELD_OUT_COMPOSITION_IDS.has(item.problem.familyId))) {
+      declaredEval.set(key, group);
+      groups.delete(key);
+    }
   }
 
   // Union template groups that share at least one circuit hash.
@@ -468,6 +487,14 @@ export function selectEvalSplit(accepted) {
     }
     if (!progressed) {
       break;
+    }
+  }
+  // The reserved compositions join the chosen set whatever the hash walk decided, so a
+  // reserved composition is held out even when the walk would have kept it, and the
+  // one-percent target below is applied to the remaining families only.
+  for (const group of declaredEval.values()) {
+    for (const item of group.items) {
+      chosen.add(item.problem.id);
     }
   }
   return chosen;

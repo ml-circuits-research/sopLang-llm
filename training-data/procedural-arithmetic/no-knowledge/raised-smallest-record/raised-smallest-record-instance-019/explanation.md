@@ -6,7 +6,7 @@
 2. The smallest of them is 30 shipments, and it is raised by 3.
 3. Every record added up is 252 shipments before the raise and 255 afterwards.
 
-**Generator provenance.** arithmetic.mjs 1.2.0, family raised-smallest-record, instance 19, sampled with seed 20260921 from the latent plan `raised-smallest-record`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.3.0, family raised-smallest-record, instance 19, sampled with seed 20260921 from the latent plan `raised-smallest-record`; this example carries no source span because its statement was generated.
 
 ## Result
 

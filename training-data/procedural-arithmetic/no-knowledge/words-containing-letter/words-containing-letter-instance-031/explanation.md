@@ -6,7 +6,7 @@
 2. A word counts when it contains the letter "t", whatever its position inside the word.
 3. The number of such words is 5.
 
-**Generator provenance.** arithmetic.mjs 1.2.0, family words-containing-letter, instance 31, sampled with seed 20260921 from the latent plan `words-containing-letter`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.3.0, family words-containing-letter, instance 31, sampled with seed 20260921 from the latent plan `words-containing-letter`; this example carries no source span because its statement was generated.
 
 ## Result
 

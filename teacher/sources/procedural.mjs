@@ -21,7 +21,7 @@ export const PROCEDURAL_SOURCES = Object.freeze([
     kind: 'generated',
     path: PROCEDURAL_ARITHMETIC_PATH,
     generator: 'arithmetic.mjs',
-    generatorVersion: '1.2.0',
+    generatorVersion: '1.3.0',
     // A generated instance has no source text to quarantine: the defects a
     // generator can have (a parse that does not round-trip, an empty oracle, a
     // statement that prints its own answer) are refused when the generator is

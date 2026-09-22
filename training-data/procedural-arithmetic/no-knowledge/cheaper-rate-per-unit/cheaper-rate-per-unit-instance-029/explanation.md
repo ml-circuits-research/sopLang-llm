@@ -6,7 +6,7 @@
 2. The comparison crosses the quantities instead of rounding the two rates, so the verdict never depends on a rounded middle value.
 3. Farkas is the cheaper offer, by 5.56 units per metre.
 
-**Generator provenance.** arithmetic.mjs 1.2.0, family cheaper-rate-per-unit, instance 29, sampled with seed 20260921 from the latent plan `cheaper-rate-per-unit`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.3.0, family cheaper-rate-per-unit, instance 29, sampled with seed 20260921 from the latent plan `cheaper-rate-per-unit`; this example carries no source span because its statement was generated.
 
 ## Result
 

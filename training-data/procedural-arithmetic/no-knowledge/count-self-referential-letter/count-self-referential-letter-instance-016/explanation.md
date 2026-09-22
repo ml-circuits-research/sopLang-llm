@@ -6,7 +6,7 @@
 2. The count is a property of the characters, so it is delegated to deterministic work and never recalled from the word itself.
 3. Counting the characters gives 3.
 
-**Generator provenance.** arithmetic.mjs 1.2.0, family count-self-referential-letter, instance 16, sampled with seed 20260921 from the latent plan `count-self-referential-letter`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.3.0, family count-self-referential-letter, instance 16, sampled with seed 20260921 from the latent plan `count-self-referential-letter`; this example carries no source span because its statement was generated.
 
 ## Result
 
