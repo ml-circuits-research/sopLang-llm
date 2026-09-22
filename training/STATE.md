@@ -57,6 +57,11 @@ Order of the next work items, from the reviewed plan (`astra_review.md`) and the
 - `bash training/environment/watchdog.sh` — every five minutes: restarts a trainer that stopped before its manifest completed, restarts a chain that left no report, warns on a stalled step log (`training/checkpoints/watchdog.log`).
 - `node evaluation/chat.mjs --once "..."` — ask the student a question; the printed answer comes from executing the circuit it compiles.
 
+The two background guards are **stopped** (2026-09-22 08:16Z, at the owner's request to reduce load while nothing was queued). Start them again only when a run is queued:
+
+    bash training/environment/start-detached.sh cmd watchdog "bash training/environment/watchdog.sh"
+    bash training/environment/start-detached.sh cmd night-watch "bash training/environment/night-watch.sh"
+
 Long jobs are started only detached: `bash training/environment/start-detached.sh train <experiment> [flags]` (owner directive), which records the recipe so a resume needs no flags.
 
 ## Owner directives
