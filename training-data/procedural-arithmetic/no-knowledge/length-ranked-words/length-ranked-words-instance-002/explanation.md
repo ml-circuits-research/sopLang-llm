@@ -6,7 +6,7 @@
 2. The ordered stage sorts them by length and keeps the order shown for equal lengths, and the extremes stage reads the length of its first and last entry: 3 and 6.
 3. The answer prints the ordered words, emu, ivy, orbit, guitar, salmon, and the longest length, 6.
 
-**Generator provenance.** arithmetic.mjs 1.1.0, family length-ranked-words, instance 2, sampled with seed 20260921 from the latent plan `length-ranked-words`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.2.0, family length-ranked-words, instance 2, sampled with seed 20260921 from the latent plan `length-ranked-words`; this example carries no source span because its statement was generated.
 
 ## Result
 

@@ -69,6 +69,22 @@ The provenance record of a generated instance replaces the source span. Its mani
 
 Generated material does not displace the books. The report of a procedural source states its share of the accepted suite, and the curriculum keeps the book families present, because the books carry the semantic complexity that generators do not invent. A procedural family is measured like any other: its difficulty vector records the parameters it varies, and a family whose instances all collapse onto one wording or one numeric range is a degenerate family rather than a cheap source of volume.
 
+#### Contrastive pairs
+
+A family may declare that it is one member of a contrastive pair by carrying `pairKind`, `pairRole`, and `pairPartner`. The pair joins two families that render the same wording, the same numbers, and the same entities, and differ only where a decisive phrase changes the required operation: the threshold word `above` against `at least`, the adjective choosing the operand, or the unit of an added amount (`50 units` against `50 percent`). The problem a family produces carries that membership in its `pair` field, which is `null` for a family that declares no pairing.
+
+A pair exists so that a model cannot answer from the nearest memorized family. Supplying the correct values or the correct operator graph changed almost nothing on the trained checkpoint, and the programs the model emitted applied a learned family's plan and copied its return phrasing rather than the operation the statement asked for (`evaluation/registry/phase4-analysis.md`, finding D-L); a pair makes that shortcut observably wrong on one of its two members, because the decisive phrase is the only difference between them.
+
+Three properties are required of every pair, and the generator refuses a sampler that cannot guarantee them:
+
+- **Observable.** The two members must require different answers for the same drawn values. A sampler that admits a draw where both members answer alike is refused, so a family whose percentage happens to equal the percentage's own value in units resamples instead of emitting an unobservable pair.
+- **Decisive.** Each member's `parse` must reject the other member's statement rather than compute the wrong operation from it, so the decisive phrase is what selects the family.
+- **Symmetric.** Both members draw the same slots shape, so the pair can be rendered from one draw and the difference between the two statements is the decisive phrase alone.
+
+A pair is one selection unit for every split. The clustering of `### Deduplication and leakage prevention` groups by the pair kind rather than by the template when a problem carries pair membership, so both members and all their paraphrases land on the same side of the training/holdout boundary; a split that trained on one member would teach the answer to its partner. The train/holdout split of the shipped suite currently places all three pairs on the training side, which the dataset report states rather than leaves to inference.
+
+The pair's own quality gate is separate from the per-instance gates: a pair is rejected when its members are not observable, when either member accepts the other's statement, or when a member's instances collapse onto one wording. The diagnostic suite of `evaluation/diagnostics/` and the holdout both read pair membership, so a future arm can report paired accuracy — the number of pairs whose two answers are both correct — instead of single-answer accuracy alone.
+
 ### The competence coverage matrix
 
 The dataset needs a competence matrix before large-scale generation begins. Without it, volume becomes a distraction.

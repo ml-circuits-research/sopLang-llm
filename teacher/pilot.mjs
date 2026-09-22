@@ -64,6 +64,14 @@ export function generatedProblems({ source, families }) {
         familyId: family.id,
         instanceIndex: instance.index,
         latentPlan: family.id,
+        // Contrastive membership: the family that states the other side of this
+        // problem's decisive distinction, and the role this problem plays in the
+        // pair. Both members of a pair must stay on the same side of every split
+        // (DS008, "Contrastive pairs"): a split that trains on one side teaches
+        // the answer to its partner.
+        pair: family.pairKind === undefined
+          ? null
+          : { kind: family.pairKind, role: family.pairRole, partnerFamily: family.pairPartner },
         difficulty: family.difficulty
       });
     });
@@ -360,7 +368,14 @@ async function factDependencyCheck({ runtime, entry, parsedSlots, computed }) {
 export function selectEvalSplit(accepted) {
   const groups = new Map();
   for (const item of accepted) {
-    const key = `${item.entry.category}|${item.problem.type}|${item.problem.templateKey}`;
+    // A contrastive pair is one selection group, whichever families it spans: the
+    // cluster key names the pair rather than the template, so the union below
+    // carries both members to the same side. `pair.kind` is stable across the two
+    // members, which is what makes the key identical for both.
+    const pair = item.problem.pair;
+    const key = pair === null || pair === undefined
+      ? `${item.entry.category}|${item.problem.type}|${item.problem.templateKey}`
+      : `pair|${pair.kind}`;
     const group = groups.get(key) ?? { category: item.entry.category, keys: [key], items: [], hashes: new Set() };
     group.items.push(item);
     group.hashes.add(planHashOf(item));

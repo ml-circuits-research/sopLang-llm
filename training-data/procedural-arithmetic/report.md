@@ -1,8 +1,8 @@
 # Dataset report
 
-Source: `teacher/procedural/arithmetic.mjs` (generator arithmetic.mjs 1.1.0, seed 20260921, 40 instances per family).
+Source: `teacher/procedural/arithmetic.mjs` (generator arithmetic.mjs 1.2.0, seed 20260921, 40 instances per family).
 
-Accepted examples: 840. Rejected candidates: 0. Evaluation holdout: 40 (4.8%). Distinct plans: 21. Distinct compiled circuits: 840 (a circuit embeds the values it was compiled from, so the count equals the accepted set unless two problems compile to identical text).
+Accepted examples: 1080. Rejected candidates: 0. Evaluation holdout: 40 (3.7%). Distinct plans: 27. Distinct compiled circuits: 1080 (a circuit embeds the values it was compiled from, so the count equals the accepted set unless two problems compile to identical text).
 
 Acceptance class: every accepted example is `constructed_verified` as defined by `DS008-training-data`: the executed circuit produced the answer of the recorded latent plan, and the family oracle computed that answer by an independent route. The printed-answer signal of a book source does not exist for a generated instance, so the manifest rows record the generator, the family, the instance index, and the sampling seed instead of a source span.
 
@@ -10,15 +10,18 @@ Probes: every assembled circuit carries the probe harness of `teacher/families/p
 
 ## Accepted by category
 
-- no-knowledge: 840
+- no-knowledge: 1080
 
 ## Accepted by problem type
 
 no-knowledge/average-of-qualifying (40), no-knowledge/cheaper-rate-per-unit (40), no-knowledge/conversion-chain-leftover (40), no-knowledge/count-letter-in-word (40),
-no-knowledge/crate-count-with-partial-last (40), no-knowledge/depletion-days-and-lead-time (40), no-knowledge/elapsed-minutes (40), no-knowledge/filtered-total (40),
+no-knowledge/crate-count-with-partial-last (40), no-knowledge/depletion-days-and-lead-time (40), no-knowledge/elapsed-minutes (40),
+no-knowledge/filtered-records-above-a-threshold (40), no-knowledge/filtered-records-at-least-a-threshold (40), no-knowledge/filtered-total (40),
 no-knowledge/grouped-label-totals (40), no-knowledge/higher-best-of-two (40), no-knowledge/length-ranked-words (40), no-knowledge/net-balance-with-withdrawals (40),
-no-knowledge/parallel-join-deadline (40), no-knowledge/percent-of-total (40), no-knowledge/reverse-word (40), no-knowledge/scaled-recipe (40), no-knowledge/top-k-among-list (40),
-no-knowledge/two-tier-price (40), no-knowledge/vowel-richest-word (40), no-knowledge/whole-units-under-a-budget (40), no-knowledge/words-containing-letter (40)
+no-knowledge/parallel-join-deadline (40), no-knowledge/percent-of-total (40), no-knowledge/raised-largest-record (40), no-knowledge/raised-smallest-record (40),
+no-knowledge/reverse-word (40), no-knowledge/scaled-recipe (40), no-knowledge/top-k-among-list (40), no-knowledge/total-plus-a-fixed-amount (40),
+no-knowledge/total-plus-a-percentage (40), no-knowledge/two-tier-price (40), no-knowledge/vowel-richest-word (40), no-knowledge/whole-units-under-a-budget (40),
+no-knowledge/words-containing-letter (40)
 
 
 ## Accepted by family
@@ -30,6 +33,8 @@ no-knowledge/two-tier-price (40), no-knowledge/vowel-richest-word (40), no-knowl
 - family crate-count-with-partial-last: 40
 - family depletion-days-and-lead-time: 40
 - family elapsed-minutes: 40
+- family filtered-records-above-a-threshold: 40
+- family filtered-records-at-least-a-threshold: 40
 - family filtered-total: 40
 - family grouped-label-totals: 40
 - family higher-best-of-two: 40
@@ -37,9 +42,13 @@ no-knowledge/two-tier-price (40), no-knowledge/vowel-richest-word (40), no-knowl
 - family net-balance-with-withdrawals: 40
 - family parallel-join-deadline: 40
 - family percent-of-total: 40
+- family raised-largest-record: 40
+- family raised-smallest-record: 40
 - family reverse-word: 40
 - family scaled-recipe: 40
 - family top-k-among-list: 40
+- family total-plus-a-fixed-amount: 40
+- family total-plus-a-percentage: 40
 - family two-tier-price: 40
 - family vowel-richest-word: 40
 - family whole-units-under-a-budget: 40
@@ -54,7 +63,7 @@ Every accepted example ships the answer its source prints.
 
 ## Family integrity checks
 
-Templates covered: 21, of which 21 have several variants and 21 of those print several distinct answers, which is what shows that the computation reacts to its input.
+Templates covered: 27, of which 27 have several variants and 27 of those print several distinct answers, which is what shows that the computation reacts to its input.
 
 No template with several variants prints one answer for every variant.
 

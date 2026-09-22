@@ -1,0 +1,36 @@
+@slots literal
+{
+  "workshop": "printing workshop",
+  "unit": "sheets",
+  "values": [
+    26,
+    10,
+    21,
+    33
+  ],
+  "rate": 20
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.values) && slots.values.length > 0, "the records must be a non-empty list");
+const values = slots.values;
+for (const value of values) {
+  probe(Number.isInteger(value) && value > 0, "every record must be a positive whole number of sheets");
+}
+probe(Number.isInteger(slots.rate) && slots.rate > 0, "the extra stock must be a positive whole number");
+let consumed = 0;
+for (const value of values) {
+  consumed += value;
+}
+const extra = slots.rate;
+probe(true, "the percentage of the total must be a whole number of sheets");
+return (consumed + extra) + " sheets must be ordered, which is " + consumed + " consumed plus " + extra + " extra.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+

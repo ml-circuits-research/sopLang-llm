@@ -6,7 +6,7 @@
 2. The review step adds 42 minutes after the join.
 3. The elapsed time is compared with the 83-minute window: 85 minutes, which does not fit.
 
-**Generator provenance.** arithmetic.mjs 1.1.0, family parallel-join-deadline, instance 5, sampled with seed 20260921 from the latent plan `parallel-join-deadline`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.2.0, family parallel-join-deadline, instance 5, sampled with seed 20260921 from the latent plan `parallel-join-deadline`; this example carries no source span because its statement was generated.
 
 ## Result
 

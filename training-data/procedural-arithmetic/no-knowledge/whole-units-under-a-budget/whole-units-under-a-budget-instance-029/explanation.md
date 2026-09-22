@@ -6,7 +6,7 @@
 2. At 87 units per crate, the largest whole number of crates that fits is the answer to the stated limit.
 3. The largest affordable order is 6 crates with 8 units left.
 
-**Generator provenance.** arithmetic.mjs 1.1.0, family whole-units-under-a-budget, instance 29, sampled with seed 20260921 from the latent plan `whole-units-under-a-budget`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.2.0, family whole-units-under-a-budget, instance 29, sampled with seed 20260921 from the latent plan `whole-units-under-a-budget`; this example carries no source span because its statement was generated.
 
 ## Result
 

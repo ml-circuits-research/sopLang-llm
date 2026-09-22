@@ -28,9 +28,10 @@ import { mixedFamilies } from './mixed.mjs';
 import { groupingFamilies } from './grouping.mjs';
 import { aggregationFamilies } from './aggregation.mjs';
 import { textShapeFamilies } from './textshapes.mjs';
+import { families as contrastiveFamilies } from './contrastive.mjs';
 
 export const sourceId = 'procedural-arithmetic';
-export const generatorVersion = '1.1.0';
+export const generatorVersion = '1.2.0';
 
 const HOLDERS = ['Priya', 'Mara', 'Daria', 'Luca', 'Ines', 'Tomas', 'Nadia', 'Ravi'];
 const WORKSHOPS = ['printing workshop', 'bicycle workshop', 'bakery', 'locksmith', 'upholstery workshop'];
@@ -286,5 +287,6 @@ export const families = [
   ...mixedFamilies,
   ...groupingFamilies,
   ...aggregationFamilies,
-  ...textShapeFamilies
+  ...textShapeFamilies,
+  ...contrastiveFamilies
 ];

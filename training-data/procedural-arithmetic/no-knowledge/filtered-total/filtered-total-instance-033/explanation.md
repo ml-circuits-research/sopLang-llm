@@ -6,7 +6,7 @@
 2. The first stage keeps the values above the threshold: 14, 25, 25, 14.
 3. The second stage totals what the first published: 78.
 
-**Generator provenance.** arithmetic.mjs 1.1.0, family filtered-total, instance 33, sampled with seed 20260921 from the latent plan `filtered-total`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.2.0, family filtered-total, instance 33, sampled with seed 20260921 from the latent plan `filtered-total`; this example carries no source span because its statement was generated.
 
 ## Result
 

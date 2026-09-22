@@ -6,7 +6,7 @@
 2. The ordered stage sorts them by length and keeps the order shown for equal lengths, and the extremes stage reads the length of its first and last entry: 4 and 8.
 3. The answer prints the ordered words, iris, mint, cactus, bamboo, hospital, and the longest length, 8.
 
-**Generator provenance.** arithmetic.mjs 1.1.0, family length-ranked-words, instance 24, sampled with seed 20260921 from the latent plan `length-ranked-words`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.2.0, family length-ranked-words, instance 24, sampled with seed 20260921 from the latent plan `length-ranked-words`; this example carries no source span because its statement was generated.
 
 ## Result
 

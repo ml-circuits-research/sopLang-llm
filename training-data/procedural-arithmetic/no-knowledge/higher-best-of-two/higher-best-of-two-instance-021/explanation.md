@@ -6,7 +6,7 @@
 2. Comparing the two published values is the whole answer, so no side is rescored in the final stage.
 3. team North wins by 2 points.
 
-**Generator provenance.** arithmetic.mjs 1.1.0, family higher-best-of-two, instance 21, sampled with seed 20260921 from the latent plan `higher-best-of-two`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.2.0, family higher-best-of-two, instance 21, sampled with seed 20260921 from the latent plan `higher-best-of-two`; this example carries no source span because its statement was generated.
 
 ## Result
 

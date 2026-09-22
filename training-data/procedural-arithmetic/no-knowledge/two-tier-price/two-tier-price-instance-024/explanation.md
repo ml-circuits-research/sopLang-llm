@@ -6,7 +6,7 @@
 2. 4 bundles fall beyond the 16-unit threshold and are charged 16 units each.
 3. The two blocks add up to 656 units.
 
-**Generator provenance.** arithmetic.mjs 1.1.0, family two-tier-price, instance 24, sampled with seed 20260921 from the latent plan `two-tier-price`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.2.0, family two-tier-price, instance 24, sampled with seed 20260921 from the latent plan `two-tier-price`; this example carries no source span because its statement was generated.
 
 ## Result
 

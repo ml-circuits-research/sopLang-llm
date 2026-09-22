@@ -6,7 +6,7 @@
 2. The comparison crosses the quantities instead of rounding the two rates, so the verdict never depends on a rounded middle value.
 3. Dragomir is the cheaper offer, by 6.36 units per metre.
 
-**Generator provenance.** arithmetic.mjs 1.1.0, family cheaper-rate-per-unit, instance 34, sampled with seed 20260921 from the latent plan `cheaper-rate-per-unit`; this example carries no source span because its statement was generated.
+**Generator provenance.** arithmetic.mjs 1.2.0, family cheaper-rate-per-unit, instance 34, sampled with seed 20260921 from the latent plan `cheaper-rate-per-unit`; this example carries no source span because its statement was generated.
 
 ## Result
 

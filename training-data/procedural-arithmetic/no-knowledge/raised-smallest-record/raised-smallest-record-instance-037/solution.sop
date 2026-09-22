@@ -1,0 +1,42 @@
+@slots literal
+{
+  "holder": "Ines",
+  "unit": "shipments",
+  "values": [
+    16,
+    36,
+    70,
+    79,
+    80
+  ],
+  "bonus": 13
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
+probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
+const answer = await (async () => {
+const slots = $slots;
+probe(Array.isArray(slots.values) && slots.values.length > 0, "the records must be a non-empty list");
+const values = slots.values;
+for (const value of values) {
+  probe(Number.isInteger(value) && value > 0, "every record must be a positive whole number of shipments");
+}
+probe(Number.isInteger(slots.bonus) && slots.bonus > 0, "the raise must be a positive whole number of shipments");
+let target = values[0];
+for (const value of values) {
+  if (value < target) {
+    target = value;
+  }
+}
+let total = 0;
+for (const value of values) {
+  total += value;
+}
+probe(values.filter((value) => value === target).length === 1, "the extreme record must be unique");
+return "The smallest record becomes " + (target + slots.bonus) + " shipments, so the total is " + (total + slots.bonus) + " shipments.";
+})();
+probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
+return answer;
+
