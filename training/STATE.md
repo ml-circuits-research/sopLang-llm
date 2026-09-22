@@ -28,10 +28,16 @@ The two verdicts that matter, both written in `evaluation/registry/phase4-analys
 
 Nothing is training. The GPU is idle and the machine is safe to use. Two queues are armed and detached: `exp-008-queue.sh` waits for a *new* export before starting another arm, and `exp-009-queue.sh` is spent (its arm completed).
 
+## The diagnosis is done (`diag-009`, 2026-09-22 08:07Z)
+
+The four-condition diagnostic ran on `exp-009-mix10`'s winner `checkpoint-728`: **normal 8 of 60 (13.3%)**, values supplied 9 of 60, plan supplied 8 of 60, both 10 of 60, all with 100% parse validity. Read it in `evaluation/registry/diag-009/report.md`, `items/diagnostic.jsonl`, and the analysis section **D-L**.
+
+The finding: supplying the correct values or the correct operator graph buys almost nothing, so reading the statement, choosing operators, and writing JavaScript are **not** the bottleneck. All 60 programs carry the same shape (slots, an intermediate wire named `kept`, answer), and on `filter-total-001` the answer states the correct kept-total followed by the copied return statement of the `Filtered Total` training family, with a dangling `and` where the fixed charge belonged. The model completes a memorized family instead of applying the operation the statement asks for. Held-out structures score 0 of 10 each; the structure whose output shape the suite already teaches reaches 7 of 10.
+
 Order of the next work items, from the reviewed plan (`astra_review.md`) and the analysis:
 
-1. **A diagnostic suite before more training** (astra_review I1): one compact procedural development suite, then the same checkpoint evaluated under four conditions — normal compilation, correct values supplied, correct plan supplied, both supplied — so the failing stage is identified rather than assumed. The oracle-assisted conditions must be labelled as such. This needs no GPU training.
-2. **Evidence discipline from here on** (astra_review I2/I3): generate operator-composition graphs with structural splits declared before rendering, keep paired problems where one decisive word changes the answer, and reserve a sealed final suite; the shipped 265-item holdout is a development benchmark now and must stop being treated as untouched evidence.
+1. ~~A diagnostic suite before more training.~~ **Done** (`diag-009`, above): the failing stage is identified, and it is neither extraction nor operator choice nor code emission.
+2. **Supervision that makes the operation come from the statement** (astra_review I3, justified by D-L with counts): contrastive pairs inside one structure — the same statement with one decisive word changed and its two different programs — plus training rows whose wording varies while the structure is held fixed, so the phrasing of the taught return statements stops acting as the plan selector. The sealed final suite and the structural splits of I2 stay a prerequisite of any headline claim.
 3. **Compare the paths once the diagnosis exists**: standalone JavaScript emission on the same suite, a compact-target variant with the assertions kept, statement-only retrieval instead of fixed demonstrations, or a two-call compile — one main factor at a time with a matched control.
 4. **Later milestones, explicitly deferred:** containers and definition reads (the four gates named in D-G), the compiled-context document task, repair trajectories.
 
