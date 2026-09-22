@@ -28,6 +28,22 @@ The two verdicts that matter, both written in `evaluation/registry/phase4-analys
 
 Nothing is training. The GPU is idle and the machine is safe to use. Two queues are armed and detached: `exp-008-queue.sh` waits for a *new* export before starting another arm, and `exp-009-queue.sh` is spent (its arm completed).
 
+## Running now: `exp-011-compositions` (started 2026-09-22 ~20:00Z)
+
+The arm the plan-inventory finding called for. `teacher/procedural/compositions.mjs` declares 22 operator
+compositions (18 trained, 4 reserved whole for evaluation: `below-largest-add-rate`, `above-count-double`,
+`below-total-per-unit-subtract-rate`, `above-largest-add-rate`), and `teacher/procedural/composition-families.mjs`
+derives one family per composition from its chain, so the statement, the oracle, and the circuit are three
+readings of one chain. The run uses exp-009/exp-010's exact recipe (3 epochs, lr 1e-4, batch 4, grad-accum 8,
+gradient checkpointing, save-steps 90, preservation-10), so the arm changes the plan coverage and nothing else.
+Watch with `bash training/environment/work-status.sh`; its chain writes
+`evaluation/registry/exp-011-compositions/{selection.md,report.md,probes.md}`.
+
+What it measures: every held-out row is a composition the trainer never saw at any depth, because
+`selectEvalSplit` now honours the declared reservation (previously the hash-only walk silently put reserved
+compositions in training; that defect was found and fixed before this run). The number to compare against is
+exp-010's 0.4% holdout (1 of 265) and its plan-unseen plateau of 12.5–25.0%.
+
 ## The target lost its scaffolding (2026-09-22 18:00Z)
 
 The fixed probe preamble left the trained target. Measured cost before the change: 18.96% of the target
