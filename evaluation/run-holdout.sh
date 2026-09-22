@@ -41,6 +41,20 @@ if [ ! -f "$selection" ]; then
   exit 2
 fi
 
+# The experiment lock covers the whole holdout, not only the decision to start
+# it: two holdout workers writing one registry folder would mix their per-item
+# records. `run-series.sh` already holds the same lock for its whole lifetime and
+# calls this script, so the lock is taken only when the caller does not hold it —
+# a nested flock on a fresh descriptor would wait for the parent and deadlock.
+mkdir -p "$registry"
+if [ "${CHAIN_LOCK_HELD_BY_PARENT:-no}" != yes ]; then
+  exec 7>"$registry/.chain.lock"
+  if ! flock -w 5 7; then
+    echo "run-holdout: another evaluation step of $experiment holds the lock; this one exits" >&2
+    exit 0
+  fi
+fi
+
 gguf="$(python3 -c '
 import json, sys
 document = json.load(open(sys.argv[1], encoding="utf-8"))

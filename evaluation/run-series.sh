@@ -55,7 +55,7 @@ for experiment in "$@"; do
   fi
 
   echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] $experiment: holdout run of the selected checkpoint" >> "$log"
-  bash "$repository_root/evaluation/run-holdout.sh" "$experiment" --concurrency 4 >> "$log" 2>&1
+  CHAIN_LOCK_HELD_BY_PARENT=yes bash "$repository_root/evaluation/run-holdout.sh" "$experiment" --concurrency 4 >> "$log" 2>&1
 done
 
 echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] series done" >> "$log"

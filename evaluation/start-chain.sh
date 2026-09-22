@@ -58,7 +58,8 @@ if [ -f "$registry/selection.md" ] && [ -f "$registry/selection.json" ]; then
 fi
 if pgrep -f "[r]un-series.sh $experiment" >/dev/null \
   || pgrep -f "[s]elect-checkpoint.mjs --experiment $experiment" >/dev/null \
-  || pgrep -f "[r]un-eval.mjs --experiment $experiment" >/dev/null; then
+  || pgrep -f "[r]un-eval.mjs --experiment $experiment" >/dev/null \
+  || pgrep -f "[r]un-holdout.sh $experiment" >/dev/null; then
   echo "start-chain: $experiment is already being evaluated; nothing to do"
   exit 0
 fi
