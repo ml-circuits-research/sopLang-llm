@@ -295,3 +295,54 @@ Totul comis, `verify: OK` pe 8540 de circuite, 320 din 320 teste trec. `exp-010`
 `selection.md`, `report.md`, `probes.md` in `evaluation/registry/exp-010-contrastive/`. Cistigatorul e
 `checkpoint-450`, iar `evaluation/chat.mjs` iti permite sa-l incerci cu `/use-both` (modelul finetuned si cel
 initial in paralel) pe intrebarile-capcana: `raspberry` (3 r-uri) si `mississippi` (4 s-uri).
+
+---
+
+## 2026-09-22, 19:35Z — Am gasit un defect in propriul instrument de diagnostic (si l-am reparat partial)
+
+**Cum am ajuns aici:** raportul pe perechi a venit de doua ori (din watcher), si a doua oara am observat ceva ce
+mi-a scapat prima data: conditiile asistate *scad* scorul fata de enuntul simplu.
+
+| conditie | corecte | executate |
+| --- | --- | --- |
+| normal | 23/48 | 91,7% |
+| valori date | **3/48** | 81,3% |
+| plan dat | 16/48 | 89,6% |
+| ambele | **6/48** | 72,9% |
+
+La `diag-009` conditiile asistate dadeau acelasi scor; aici dau **mai prost**. Asta nu se putea citi ca
+„valorile corecte strica" — era ceva in neregula cu instrumentul.
+
+**Ce era:** prompturile asistate lipeau proza in engleza peste enunt („The values extracted from this statement,
+with their roles: … Compile the plan that computes the answer."), iar profilul antrenat **nu contine niciodata**
+asa ceva: in toate cele 8015 rinduri, mesajul de user este **enuntul gol, nimic altceva**. Modelul raspundea la
+un text pe care nu-l vazuse niciodata, cu alta forma de raspuns.
+
+**Dovada:** in **0 din 24** de perechi programul emis sub o conditie asistata era identic cu cel din conditia
+normala. Deci conditiile asistate nu masurau „ce ar face modelul daca extragerea ar fi gratis", ci „cum raspunde
+la un prompt necunoscut" — cu totul alta intrebare.
+
+**Ce am reparat:** am scos proza inventata. Acum `promptOf` pune enuntul ca prim bloc si inregistrarea de
+diagnostic ca bloc suplimentar, in notatia pe care profilul o cara deja intr-un literal `@slots` — fara nicio
+propozitie proprie. Masurat:
+
+| | inainte | dupa |
+| --- | --- | --- |
+| valori date | 3/48 (6,3%) | 8/24 (33,3%) |
+| plan dat | 16/48 (33,3%) | 11/24 (45,8%) |
+
+Deci wrapper-ul conta; scoaterea lui a recuperat mare parte din diferenta.
+
+**Dar nu e destul, si o spun clar:** programele asistate tot difera de cel normal in aproape fiecare caz
+(2 din 12 la „plan", 0 la „valori"). Deci instrumentul are nevoie de o **schimbare de design, nu de formulare**.
+Ca sa izolezi extragerea, trebuie comparate doua prompturi pe care profilul le acopera, si trebuie aratat ca
+planul emis ramane stabil intre ele.
+
+**Consecinta practica pentru cifrele din rapoarte:** coloana `normal` este singura pe care rapoartele o pot cita
+ca masuratoare. Numerele asistate din `diag-009`, `diag-pairs-010` si `diag-pairs-fixed` sunt dovezi despre
+raspunsul la prompturi nefamiliare, **nu** diagnostice de etapa. Concluzia de baza a lui `diag-009` ramane
+valida (8/60 fata de 9/60 — valorile corecte nu ajutau oricum), dar afirmatia ca asistarea izoleaza o etapa nu.
+
+**De ce am facut asta si nu m-am oprit:** pentru ca urmatorul arm se bazeaza pe diagnostic ca sa stie unde sa
+investeasca, iar eu tocmai construisem planul urmator (inventar de compozitii) pe o masuratoare pe care nu o
+puteam cita cu incredere. Mai bine descopar acum ca instrumentul e slab decat dupa inca un arm.
