@@ -122,3 +122,64 @@ care nu sunt numarate ca ture de evaluare:
 
 Testat: `tests/chat-commands.test.mjs`, 11 teste care fixeaza decodorul (fiecare comanda listata este
 recunoscuta, un cuvint cu slash necunoscut este refuzat in loc sa fie trimis, o comanda nu este forwardata).
+
+---
+
+## 2026-09-22, 18:00Z — Am scos "minunile" alea din datele de antrenare (verificarile cu 3 `probe`)
+
+**Ce ai zis:** ca verificarea aia cu 3 probe e bloat, facuta doar ca sa fie, nu aduce valoare, si ca
+codul ala pot sa-l injectez eu automat. Ai avut dreptate, si am masurat cat costa inainte sa-l scot.
+
+**Cat costa:** 18,96% din tokenii de tinta (875.160 din 4.616.945), identic in toate cele 8415 fire
+`jsEval`. Deci o cincime din ce invata modelul sa scrie era text fix, acelasi in fiecare exemplu.
+
+**Ce am facut.** Cele trei verificari generice au devenit contractul comenzii `jsEval` (versiune 2.0.0,
+increment de versiune cum cere regula din AGENTS.md pentru o schimbare de runtime):
+
+- o dependinta citita de corp trebuie sa aiba valoare definita;
+- un `slots` compilat trebuie sa fie obiect ne-gol;
+- rezultatul nu are voie sa fie `null`, `undefined` sau sir gol.
+
+Fiecare incalcare se termina cu `execution_error` structurat, cu numele firului si clauza incalcata.
+Un corp care a facut `circuit.commit(...)` e exceptat, pentru ca acolo publicarea se face prin tranzactie
+si corpul nu returneaza nimic prin constructie.
+
+**Ce a ramas.** Asertiunile de domeniu pe care le scriu familiile („scorul nu poate fi negativ", „restul
+e mai mic decat impartitorul") raman in corp, pentru ca acolo modelul chiar judeca ceva specific problemei.
+Ale tale cuvinte: „daca sunt asertii custom, utile ramin, ce e doar de fatada, generic trebuie sa dispara".
+Exact asa e acum: 24,89% din liniile cu `probe(` sunt de domeniu si raman, scheletul generic a disparut.
+
+**Rezultat masurat:**
+
+| | inainte | acum |
+| --- | --- | --- |
+| caractere de tinta | 18.010.872 | 14.622.102 |
+| reducere | | **-3.388.770 (-18,8%)** |
+| schelet generic in circuite | 8.540 din 8.540 | **0 din 8.540** |
+| `verify` pe date | OK | OK |
+
+Suita de teste: 317 din 317 trec. Profilul de chat devine `compiled-plan-chat-3`, cu un system prompt care
+nu mai cere scheletul si spune explicit ca runtime-ul verifica el contractul generic.
+
+**Doua defecte gasite pe drum, ambele pentru ca au tipat tare in loc sa treaca silentios:**
+
+1. sonda de provenienta nu putea schimba *continutul* unui sir (lipirea unui caracter e absorbita de un
+   calcul pe multimea de caractere, iar inlocuirea unei litere rare cu alta lasa numarul de litere distincte
+   neschimbat), deci un circuit corect de numarat litere distincte era raportat ca „raspuns stocat"; acum
+   sterge un caracter care apare o singura data, ceea ce schimba demonstrabil numarul distinct;
+2. instructiunea ta de a nu pune cuvintele de demo in antrenare era incalcata de lista comuna de cuvinte:
+   `raspberry` si `strawberry` sunt acum **doar pentru evaluare** (`EVAL_ONLY_WORDS`), iar **0 din 8015**
+   rânduri de antrenare le mai mentioneaza.
+
+**Despre intrebarea cu raspberry.** Da, aveai dreptate: versiunea anterioara esua sa numere r-urile.
+Inainte, `raspberry` aparea doar ca un cuvant oarecare in 40 de cazuri, iar litera ceruta era aleasa
+independent — deci capcana nu era niciodata pusa intentionat. Am adaugat **cinci familii auto-referentiale**:
+numaratul literei pe care cuvantul insusi o numeste (unde `raspberry` are **3** r-uri, nu 2 cate isi
+aminteste lumea), lungimea cuvantului, prima si ultima litera, numarul de litere distincte, si comparatia
+a doua cuvinte. Cuvintele celebre sunt tinute pentru evaluare, antrenarea foloseste alte 100+ cuvinte,
+deci un checkpoint care le-a memorat nu poate trece drept unul care numara.
+
+**Cum testezi cat e de inteligent modelul:** ruleaza `node evaluation/chat.mjs`, apoi `/help` pentru comenzi.
+Da-i exact intrebarile-capcana: „How many times does the letter \"r\" appear in the word \"raspberry\"?"
+(raspuns corect 3) si „How many times does the letter \"s\" appear in the word \"mississippi\"?" (4).
+Cu `/show-plan` vezi planul pe care l-a emis, iar `/stats` iti da numarul de ture si tokenii.
