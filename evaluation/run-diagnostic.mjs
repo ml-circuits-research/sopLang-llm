@@ -38,7 +38,8 @@ import { parseCircuit } from '../runtime/parser.mjs';
 import { createRuntime } from '../runtime/kernel.mjs';
 import { REPOSITORY_ROOT, resolveArtifactPath, withServer } from './server.mjs';
 import { bestWinner } from './artifacts.mjs';
-import { buildContrastiveSuite, buildDiagnosticSuite, structureFingerprint } from './diagnostics/suite.mjs';
+import { buildContrastiveSuite } from './diagnostics/pairs.mjs';
+import { buildDiagnosticSuite, structureFingerprint } from './diagnostics/suite.mjs';
 import { statesValue } from './probes.mjs';
 
 const CONDITIONS = ['normal', 'values', 'plan', 'both'];

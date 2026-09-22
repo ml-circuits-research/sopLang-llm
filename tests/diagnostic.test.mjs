@@ -9,7 +9,7 @@ import {
   structureFingerprint
 } from '../evaluation/diagnostics/suite.mjs';
 import { divergenceOf, promptOf, stageAnswers } from '../evaluation/run-diagnostic.mjs';
-import { CONTRASTIVE_PAIRS, buildContrastiveSuite } from '../evaluation/diagnostics/suite.mjs';
+import { CONTRASTIVE_PAIRS, buildContrastiveSuite } from '../evaluation/diagnostics/pairs.mjs';
 
 const suite = buildDiagnosticSuite({ perStructure: 2 });
 
