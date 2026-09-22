@@ -388,6 +388,33 @@ been run first, and it is still worth running before another arm.
 Capability probes stayed 1 of 10: the preservation view was regenerated with the helper-free targets, and the
 fine-tuned student still fails the same probes the base fails, which is its own open problem (DS009).
 
+### The book operation census: what the next generator must cover (`evaluation/census.mjs`, 2026-09-22 22:30Z)
+
+The plan-inventory result left one question open — which operations the books use that the procedural
+vocabulary lacks — and the census answers it with counts. 771 of the 941 book plans were scanned (both the
+`compute: [...]` and the shared `COMPUTE` forms), and the operations the book families actually perform are:
+
+| operation | bodies | books | in the procedural vocabulary? |
+| --- | --- | --- | --- |
+| string operations (split/join/replace/length/includes) | 477 | 7 | partial (three text families) |
+| list operations (filter/map/reduce/max/min) | 202 | 7 | yes (11 operators) |
+| divisibility / remainder | 142 | 7 | **no** |
+| set operations (Set/unique/distinct/every/some) | 139 | 7 | **no** |
+| money (price/cost/discount/change) | 115 | 7 | **no** |
+| time arithmetic (hours/minutes/elapsed/days) | 85 | 6 | **no** |
+| sorting / ranking / positions | 81 | 7 | **no** (only largest/smallest) |
+| geometry (area/perimeter/angles/sides) | 80 | 7 | **no** |
+| graph traversal (neighbours/edges/paths/borders) | 64 | 6 | **no** |
+| ratio / per-unit | 57 | 7 | partial (perUnit multiplies; no division) |
+| percentage | 44 | 5 | partial (one pair family, not composable) |
+| probability (outcomes/chances) | 24 | 6 | **no** |
+| running balance / ledger | 17 | 5 | yes (net-balance) |
+
+The next generator therefore adds the missing operations as declared, composable operators — divisibility,
+sets, money, time, sorting, geometry, ratio-as-division, percentage, probability, and graph steps — each with
+a learnable dose of compositions and whole-composition structural splits, exactly as the inventory did for its
+eleven. The census script is `evaluation/census.mjs`, so the list stays reproducible when the families grow.
+
 ## Decisions taken on the night of 2026-09-21
 
 **D-G — Containers and registry reads are not in the structure arm; six more multi-wire plan shapes are.** `DS008-training-data.md` specifies container plans and registry-reading plans, and the reconnaissance of this repository found four coupled gates that none of tonight's time could move together: the family validator accepts only `jsEval` and `literal` as an intermediate wire (`teacher/procedural/index.mjs`), the program builder has no container wire path (`teacher/families/index.mjs`, `buildProgram`), the provenance battery judges reactivity from `slots`/`facts` references in the answer wire (`training-data/provenance.mjs`), and no manifest column records the structural read set a definition-reading plan must publish (`DS008`, "Additional circuit shapes"). Each of those is a runtime-contract change that needs its own acceptance evidence, and a half-implemented shape would ship circuits the verifier cannot judge. The lever both shapes serve — plan coverage — is served tonight by six more generator families with two named intermediate stages each (`Teacher/families` equivalent: `teacher/procedural/grouping.mjs`, `aggregation.mjs`, `textshapes.mjs`), which deepens the dependency chain the suite teaches to three stages without touching the runtime contract. The container and registry items stay open with their four gates named above.
