@@ -303,3 +303,49 @@ test('each model is asked in the mode it was trained for', () => {
     });
   });
 });
+
+test('a port occupied by a different model is never silently reused', () => {
+  // The defect this pins: running --gguf <new> on the default port while a leftover
+  // server held the OLD model answered with the old model, and the owner had no way to
+  // see it. The contract now: the CLI reports the mismatch and either reclaims the port
+  // (a real leftover llama-server) or fails loudly, never answers from the wrong model.
+  const server = createServer((request, response) => {
+    if (request.method === 'GET' && request.url === '/health') {
+      response.writeHead(200, { 'content-type': 'application/json' });
+      response.end('{"status":"ok"}');
+      return;
+    }
+    if (request.method === 'GET' && request.url === '/v1/models') {
+      response.writeHead(200, { 'content-type': 'application/json' });
+      // A model the caller did not ask for.
+      response.end('{"models":[{"name":"student-other"}]}');
+      return;
+    }
+    response.writeHead(404);
+    response.end();
+  });
+  return new Promise((resolve) => {
+    server.listen(0, '127.0.0.1', () => {
+      const { port } = server.address();
+      const child = spawn(process.execPath, [
+        'evaluation/chat.mjs',
+        '--gguf', 'evaluation/registry/exp-011-compositions/gguf/checkpoint-630.gguf',
+        '--port', String(port),
+        '--single',
+        '--once', 'How many r in raspberry?'
+      ], { encoding: 'utf8' });
+      let stdout = '';
+      child.stdout.on('data', (chunk) => { stdout += String(chunk); });
+      child.stderr.on('data', (chunk) => { stdout += String(chunk); });
+      child.on('close', () => {
+        server.close();
+        // This fake is not a llama-server process, so the reclaim cannot stop it and the
+        // CLI must fail loudly rather than answer from "student-other".
+        assert.ok(stdout.includes('serves "student-other"'), `the mismatch must be named: ${stdout.slice(-400)}`);
+        assert.ok(stdout.includes('still occupied') || stdout.includes('stopping the leftover'),
+          `the CLI must not answer from the wrong model: ${stdout.slice(-400)}`);
+        resolve();
+      });
+    });
+  });
+});

@@ -27,7 +27,7 @@
  * See `evaluation/chat.md` for how to test it and what output to expect.
  */
 
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { createInterface } from 'node:readline';
@@ -295,6 +295,36 @@ function renderExchange(turn, options) {
  * holds: the port alone says nothing, because a previous session may have started
  * a checkpoint there.
  */
+/**
+ * Stop a leftover llama-server that holds this CLI's managed port.
+ *
+ * A server started with `detached: true` survives its parent, which is what lets the
+ * chat survive a terminal; the cost is that a parent killed with SIGKILL cannot run
+ * its cleanup, and its server keeps the port. When the owner asks for a different
+ * artifact on that port, the leftover must go. Only a process whose command line is
+ * a llama-server on exactly this port is touched, so a server someone else owns on
+ * the same port gets the same treatment, which is what the owner asked for.
+ */
+function stopLeftoverOnPort(port) {
+  const listing = spawnSync('pgrep', ['-f', `llama-server.*--port ${port}`], { encoding: 'utf8' });
+  const pids = (listing.stdout ?? '').trim().split('\n').filter((line) => line !== '');
+  for (const pid of pids) {
+    try {
+      process.kill(Number(pid), 'SIGTERM');
+    } catch {
+      // Already gone.
+    }
+  }
+  // Give the process a moment to release the port before the caller rechecks.
+  const deadline = Date.now() + 10_000;
+  while (Date.now() < deadline && pids.some((pid) => {
+    try { process.kill(Number(pid), 0); return true; } catch { return false; }
+  })) {
+    const started = Date.now();
+    while (Date.now() - started < 200) { /* busy-wait is fine for a 10s bound */ }
+  }
+}
+
 async function servedAlias(base) {
   try {
     const response = await fetch(`${base}/v1/models`);
@@ -590,6 +620,23 @@ async function main() {
     process.stdout.write(`starting llama-server with ${artifact.gguf.replace(`${REPOSITORY_ROOT}/`, '')} on port ${options.port} …\n`);
     managed = await startServer({ gguf: artifact.gguf, port: options.port, threads: options.threads });
     alias = aliasFor(artifact.gguf);
+  } else if (options.base === null) {
+    // The port is occupied. If the occupier serves the requested artifact, reuse it;
+    // if it serves a different one, it is a leftover from an earlier session that was
+    // killed hard (SIGKILL cannot run cleanup), and the owner asked for this artifact.
+    // Reusing the wrong model silently was the trap that made `--gguf <new>` appear to
+    // answer with an old checkpoint, so the occupier is stopped and the requested
+    // artifact is served instead.
+    const served = await servedAlias(base);
+    if (served !== null && served !== alias) {
+      process.stdout.write(`port ${options.port} serves "${served}", not the requested ${alias}; stopping the leftover server and starting the requested model …\n`);
+      stopLeftoverOnPort(options.port);
+      if (await serverIsUp(base)) {
+        throw new Error(`port ${options.port} is still occupied after stopping the leftover server; pass --port to use another`);
+      }
+      managed = await startServer({ gguf: artifact.gguf, port: options.port, threads: options.threads });
+      alias = aliasFor(artifact.gguf);
+    }
   }
   process.stdout.write(`model: ${artifact.experiment}${artifact.winner === null ? '' : ` (${artifact.winner})`}\n`);
   process.stdout.write('questions are answered by executing the circuit the model compiles; --show-plan prints the circuit.\n');
