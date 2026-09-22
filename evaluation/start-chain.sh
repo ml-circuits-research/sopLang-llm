@@ -28,9 +28,16 @@ mkdir -p "$registry"
 
 # The lock makes "is a chain running?" and "start it" one decision: without it,
 # two callers can both look, both see nothing, and both start a chain.
+#
+# A lock is only ever held for the few lines below, never for the chain's whole
+# lifetime: `flock -w` waits briefly instead of failing on a transient overlap,
+# and a holder that died leaves no lock behind (the kernel releases it with the
+# process). What must not happen is the opposite case — an open descriptor
+# inherited by a backgrounded child that outlives the decision — so the chain is
+# started with `setsid nohup` plus an explicit descriptor close.
 exec 9>"$registry/.chain.lock"
-if ! flock -n 9; then
-  echo "start-chain: another start-chain call holds the lock for $experiment; nothing to do"
+if ! flock -w 30 9; then
+  echo "start-chain: another start-chain call holds the lock for $experiment after waiting 30s; nothing to do"
   exit 0
 fi
 
@@ -44,7 +51,7 @@ fi
 # checkpoints while the holdout it was meant to run waited behind it.
 if [ -f "$registry/selection.md" ] && [ -f "$registry/selection.json" ]; then
   echo "start-chain: $experiment already has a completed selection; starting the holdout of its winner"
-  setsid nohup bash "$root/evaluation/run-holdout.sh" "$experiment" --concurrency 4 >> "$log" 2>&1 < /dev/null &
+  setsid nohup bash "$root/evaluation/run-holdout.sh" "$experiment" --concurrency 4 >> "$log" 2>&1 < /dev/null 9>&- &
   sleep 3
   echo "start-chain: holdout pid $(pgrep -f "[r]un-holdout.sh $experiment" | head -1)"
   exit 0
@@ -61,6 +68,11 @@ if pgrep -f "[s]ft_train.py --experiment $experiment" >/dev/null; then
 fi
 
 echo "start-chain: starting the evaluation chain of $experiment"
-setsid nohup bash "$root/evaluation/run-series.sh" "$experiment" >> "$log" 2>&1 < /dev/null &
+# The lock protects the decision above, not the run: it is released before the
+# chain starts, and `run-series.sh` takes it for its own lifetime, so two chains
+# of one experiment still cannot run together while this script stays callable
+# during a live chain.
+flock -u 9
+setsid nohup bash "$root/evaluation/run-series.sh" "$experiment" >> "$log" 2>&1 < /dev/null 9>&- &
 sleep 3
 echo "start-chain: chain pid $(pgrep -f "[r]un-series.sh $experiment" | head -1)"
