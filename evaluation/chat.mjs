@@ -258,6 +258,28 @@ function renderExchange(turn, options) {
  * the server and records the outcome on the session, so a second question reuses
  * it, and a failure is reported once instead of being retried on every turn.
  */
+/**
+ * The alias a running server reports, or `null` when it names none.
+ *
+ * `/v1/models` is what `serverIsUp` already relies on for reachability, and the
+ * served alias is the only trustworthy statement about which artifact a server
+ * holds: the port alone says nothing, because a previous session may have started
+ * a checkpoint there.
+ */
+async function servedAlias(base) {
+  try {
+    const response = await fetch(`${base}/v1/models`);
+    if (!response.ok) {
+      return null;
+    }
+    const payload = await response.json();
+    const first = Array.isArray(payload?.data) ? payload.data[0] : null;
+    return typeof first?.id === 'string' && first.id !== '' ? first.id : null;
+  } catch {
+    return null;
+  }
+}
+
 async function ensureBaseServer(session, options) {
   const compare = session.compare;
   if (compare.state === 'ready' || compare.state === 'failed') {
@@ -266,10 +288,22 @@ async function ensureBaseServer(session, options) {
   const port = options.port + 1;
   const base = `http://127.0.0.1:${port}`;
   if (await serverIsUp(base)) {
-    compare.state = 'ready';
-    compare.base = base;
-    compare.alias = aliasFor(BASE_GGUF);
-    compare.managed = null;
+    // Something already answers on the comparison port. It is not necessarily the
+    // base artifact — another session may serve a checkpoint there — so the alias is
+    // read from the server itself rather than assumed, and a server serving a student
+    // is refused. Comparing a student against a student would produce two compiled
+    // answers and call the comparison a success.
+    const served = await servedAlias(base);
+    if (served === null || served === aliasFor(BASE_GGUF)) {
+      compare.state = 'ready';
+      compare.base = base;
+      compare.alias = served ?? aliasFor(BASE_GGUF);
+      compare.managed = null;
+      compare.detail = served === null ? 'an unnamed server on the comparison port is assumed to serve the base model' : null;
+      return compare;
+    }
+    compare.state = 'failed';
+    compare.detail = `port ${port} serves "${served}", not the untuned base model; stop it or pass a different --port`;
     return compare;
   }
   if (!existsSync(BASE_GGUF)) {
