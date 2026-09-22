@@ -16,7 +16,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Number.isInteger(slots.threshold) && slots.threshold > 0, "the card must state a positive threshold reading");
 probe(Number.isInteger(slots.reading) && slots.reading > 0, "the case must record a positive reading");

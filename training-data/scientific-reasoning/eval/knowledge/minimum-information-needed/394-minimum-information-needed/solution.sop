@@ -9,7 +9,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 const facts = (typeof $facts === "object" && $facts !== null) ? $facts : JSON.parse(String($facts));
 const key = (text) => String(text).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().split(" ").filter((word) => word !== "" && word !== "the" && word !== "a" && word !== "an").sort().join(" ");

@@ -9,7 +9,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.destination === "string" && slots.destination.length > 0, "the courier journey must name a destination");
 probe(typeof slots.departureHour === "number" && Number.isFinite(slots.departureHour), "the courier must depart at a stated hour");

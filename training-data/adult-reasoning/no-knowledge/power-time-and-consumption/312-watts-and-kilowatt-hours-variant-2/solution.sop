@@ -9,7 +9,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.name === "string" && slots.name.length > 0, "the case must name the person leaving the bulb on");
 probe(Number.isInteger(slots.watts) && slots.watts > 0, "the bulb power must be a positive whole number of watts");

@@ -16,7 +16,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.runner === "string" && slots.runner.length > 0, "the statement must name the person working the boards");
 probe(typeof slots.helper === "string" && slots.helper.length > 0, "the statement must name the person rinsing the meat");

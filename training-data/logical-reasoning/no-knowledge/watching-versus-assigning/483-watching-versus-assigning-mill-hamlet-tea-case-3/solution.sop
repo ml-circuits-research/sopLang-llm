@@ -20,7 +20,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.place === "string" && slots.place.length > 0, "the two pages must name their place");
 probe(typeof slots.observedPage === "string" && slots.observedPage.length > 0, "the watching page must carry a label");

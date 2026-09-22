@@ -9,7 +9,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Number.isInteger(slots.lowerBound) && slots.lowerBound > 0, "the lower bound must be a positive whole number");
 probe(Number.isInteger(slots.upperBound) && slots.upperBound >= slots.lowerBound, "the stated upper bound must not fall below the lower bound");

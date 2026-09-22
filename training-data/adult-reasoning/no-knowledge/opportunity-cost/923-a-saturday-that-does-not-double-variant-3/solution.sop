@@ -22,7 +22,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots === "object" && slots !== null, "the opportunity-cost case must carry its parsed values");
 probe(typeof slots.person === "string" && slots.person.length > 0, "the person facing the choice must be named");

@@ -4,25 +4,25 @@ The manifest is split by template so a long table stays reviewable. Each templat
 
 | template | examples | train | eval | knowledge | no-knowledge | distinct plans | file | hash |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-01.md | 2f7b5bd006e2 |
-| 2 | 50 | 0 | 50 | 0 | 50 | 1 | manifest/template-02.md | 0a900161f70d |
-| 3 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-03.md | 94d0df4b411c |
-| 4 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-04.md | d3413b479799 |
-| 5 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-05.md | 5b158c03d56b |
-| 6 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-06.md | f808260c3ace |
-| 7 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-07.md | b8d1cb2ad260 |
-| 8 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-08.md | 2fd95676cf38 |
-| 9 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-09.md | ce91bfc3bce0 |
-| 10 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-10.md | 5fce44da651b |
-| 11 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-11.md | 6e060fd37349 |
-| 12 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-12.md | 240d126ca1bb |
-| 13 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-13.md | 0c007a858c5f |
-| 14 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-14.md | fac6e60e3e45 |
-| 15 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-15.md | 9ad7b52a499a |
-| 16 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-16.md | 720b752e67c0 |
-| 17 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-17.md | 827427d7a7be |
-| 18 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-18.md | fb0363f66edd |
-| 19 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-19.md | 0f00e4003691 |
-| 20 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-20.md | 91fb349a6727 |
+| 1 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-01.md | 7b4828c73882 |
+| 2 | 50 | 0 | 50 | 0 | 50 | 1 | manifest/template-02.md | 85907b621b3a |
+| 3 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-03.md | 001091720ce8 |
+| 4 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-04.md | e491935d6b14 |
+| 5 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-05.md | 36727ad29a45 |
+| 6 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-06.md | 82444e824947 |
+| 7 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-07.md | aec731da4e5d |
+| 8 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-08.md | f908db3dc6dc |
+| 9 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-09.md | 57a96421250f |
+| 10 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-10.md | d2e182ef7f00 |
+| 11 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-11.md | f7aaf8efe311 |
+| 12 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-12.md | 4a20cd6508a2 |
+| 13 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-13.md | 30f78daf0f57 |
+| 14 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-14.md | 5c816c2f77e5 |
+| 15 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-15.md | e6f628fa21d0 |
+| 16 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-16.md | c7244d365189 |
+| 17 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-17.md | f4845c989312 |
+| 18 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-18.md | 3003388e7eb6 |
+| 19 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-19.md | 6ffa6b96bbef |
+| 20 | 50 | 50 | 0 | 0 | 50 | 1 | manifest/template-20.md | 903d83994a7b |
 
 Total accepted examples: 1000.

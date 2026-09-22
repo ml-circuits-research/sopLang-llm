@@ -26,7 +26,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.guest === "object" && slots.guest !== null, "the case must describe the guest and the declaration");
 probe(typeof slots.guest.name === "string" && slots.guest.name.length > 0, "the guest must be named");

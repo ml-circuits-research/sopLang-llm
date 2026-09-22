@@ -12,7 +12,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(slots.conclusion !== null && typeof slots.conclusion === "object", "the case data must quote the student conclusion");
 probe(typeof slots.conclusion.label === "string" && slots.conclusion.label.length > 0, "the conclusion must name the case it claims to satisfy");

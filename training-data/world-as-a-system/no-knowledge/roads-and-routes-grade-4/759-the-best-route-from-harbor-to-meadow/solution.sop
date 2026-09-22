@@ -49,7 +49,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Array.isArray(slots.routes) && slots.routes.length > 0, "the statement must list at least one candidate route");
 probe(Array.isArray(slots.closed), "the closed-road list must be an array");

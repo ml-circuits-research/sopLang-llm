@@ -20,7 +20,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person who reaches the stop");
 probe(typeof slots.origin === "string" && slots.origin.length > 0, "the timetable must name where the service starts");

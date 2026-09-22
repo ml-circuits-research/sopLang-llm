@@ -38,18 +38,13 @@ export const PROBE_HELPER =
  * example.
  */
 export function answerBody(compute) {
-  const body = String(compute);
-  // A family that writes domain assertions calls `probe`, and the helper is part
-  // of the family's own contract now. It is added here, once, only for a body that
-  // actually calls it: a body without assertions stays exactly as the family wrote
-  // it, so no text that is identical across examples is injected into a target that
-  // does not need it. The generic clauses (a defined dependency, a non-empty
-  // `slots`, a non-empty result) are NOT here — they belong to the `jsEval`
-  // command, so they are asserted for every circuit without being taught.
-  if (!/\bprobe\s*\(/.test(body)) {
-    return body;
-  }
-  return `${PROBE_HELPER}\n${body}`;
+  // The computation, unchanged. The sandbox provides `probe(condition, message)` to
+  // every jsEval body (jsEval command version 2.1), so a family that writes domain
+  // assertions calls it without carrying the helper's definition — that text was
+  // identical in 7745 of 8735 targets and is not taught any more. `PROBE_HELPER`
+  // stays exported for the preservation view, whose derived JavaScript runs outside
+  // the sandbox and must carry its own helper.
+  return String(compute);
 }
 
 /**

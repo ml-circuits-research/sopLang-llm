@@ -22,7 +22,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.change === "string" && slots.change.length > 0, "the statement must name the activated change");
 probe(Array.isArray(slots.rules) && slots.rules.length > 0, "the statement must list at least one causal rule");

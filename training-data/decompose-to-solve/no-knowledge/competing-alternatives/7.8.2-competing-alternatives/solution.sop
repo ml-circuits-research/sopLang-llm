@@ -20,7 +20,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Number.isInteger(slots.items) && slots.items > 0, "the workload must be a positive whole number of items");
 const optionFields = ["A", "B"];

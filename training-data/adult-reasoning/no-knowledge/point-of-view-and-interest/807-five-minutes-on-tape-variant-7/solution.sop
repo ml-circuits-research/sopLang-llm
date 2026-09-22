@@ -15,7 +15,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.driverName === "string" && slots.driverName.length > 0, "the case must name the driver");
 probe(typeof slots.neighbourName === "string" && slots.neighbourName.length > 0, "the case must name the neighbour");

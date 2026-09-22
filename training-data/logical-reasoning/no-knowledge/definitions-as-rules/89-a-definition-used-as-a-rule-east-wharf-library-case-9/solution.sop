@@ -10,7 +10,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Number.isInteger(slots.threshold) && slots.threshold > 0, "the charter must state a positive number of months");
 probe(Number.isInteger(slots.actual) && slots.actual >= 0, "the case must state the borrower's listing in whole months");

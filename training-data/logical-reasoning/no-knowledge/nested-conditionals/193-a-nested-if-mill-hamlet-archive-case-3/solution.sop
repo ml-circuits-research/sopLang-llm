@@ -25,7 +25,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.passColour === "string" && slots.passColour.length > 0, "the slip must name the pass colour");
 probe(Number.isInteger(slots.threshold) && slots.threshold > 0 && slots.threshold < 1440, "the slip must state a clock threshold within the day");

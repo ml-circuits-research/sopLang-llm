@@ -5,7 +5,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Number.isInteger(slots.start) && Number.isInteger(slots.end), "the two events must be dated with whole years");
 probe(slots.start >= 1 && slots.start < slots.end, "the later event must follow the earlier one");

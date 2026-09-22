@@ -24,7 +24,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 const key = (text) => String(text).toLowerCase().replace(/\s+/g, " ").trim();
 probe(Array.isArray(slots.hypotheses) && slots.hypotheses.length === 2, "the statement must state exactly two competing hypotheses");

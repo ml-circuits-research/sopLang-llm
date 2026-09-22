@@ -20,7 +20,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person keeping the notebook");
 probe(Number.isInteger(slots.lightsOut) && Number.isInteger(slots.rise), "the protocol clocks must be whole minutes");

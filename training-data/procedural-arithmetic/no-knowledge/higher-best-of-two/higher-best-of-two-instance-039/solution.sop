@@ -15,7 +15,6 @@
 }
 
 @bestLeft jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Array.isArray(slots.first) && slots.first.length > 0, "the first side must have at least one score");
 probe(slots.first.every((score) => Number.isInteger(score)), "every first-side score must be a whole number");
@@ -24,7 +23,6 @@ probe(slots.first.includes(best), "the published best must be one of the stated 
 return best;
 
 @bestRight jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Array.isArray(slots.second) && slots.second.length > 0, "the second side must have at least one score");
 probe(slots.second.every((score) => Number.isInteger(score)), "every second-side score must be a whole number");
@@ -33,7 +31,6 @@ probe(slots.second.includes(best), "the published best must be one of the stated
 return best;
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Number.isInteger($bestLeft) && Number.isInteger($bestRight), "both stages must publish a whole number");
 probe($bestLeft !== $bestRight, "the two sides must not share their best score");

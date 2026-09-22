@@ -22,7 +22,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 const nodeKey = (text) => String(text).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().split(" ").filter((word) => word !== "").sort().join(" ");
 probe(Array.isArray(slots.arrows) && slots.arrows.length > 0, "the statement must state at least one dependency arrow");

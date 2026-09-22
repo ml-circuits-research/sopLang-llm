@@ -27,7 +27,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 const VECTORS = { north: [0, 1], south: [0, -1], east: [1, 0], west: [-1, 0], northeast: [1, 1], northwest: [-1, 1], southeast: [1, -1], southwest: [-1, -1] };
 const COMPASS = new Map(Object.entries(VECTORS).map(([word, step]) => [step[0] + "," + step[1], word]));

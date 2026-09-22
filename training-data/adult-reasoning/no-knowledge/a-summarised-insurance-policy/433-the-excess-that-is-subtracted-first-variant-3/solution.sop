@@ -23,7 +23,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.holder === "string" && slots.holder.length > 0, "the case must name the policy holder");
 probe(Array.isArray(slots.coveredPerils) && slots.coveredPerils.length > 0, "the policy must list what it covers");

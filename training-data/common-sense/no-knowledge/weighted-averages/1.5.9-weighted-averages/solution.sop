@@ -7,7 +7,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Number.isInteger(slots.countA) && slots.countA > 0 && Number.isInteger(slots.countB) && slots.countB > 0, "both groups must have a positive case count");
 probe(Number.isInteger(slots.meanA) && slots.meanA > 0 && Number.isInteger(slots.meanB) && slots.meanB > 0, "both group means must be positive integers");

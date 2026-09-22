@@ -9,7 +9,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Number.isInteger(slots.workload) && slots.workload > 0, "the workload must be a positive whole number");
 probe(Number.isInteger(slots.blockCapacity) && slots.blockCapacity > 0, "the block capacity must be a positive whole number");

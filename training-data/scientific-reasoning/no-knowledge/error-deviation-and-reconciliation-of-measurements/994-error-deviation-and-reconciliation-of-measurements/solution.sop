@@ -13,7 +13,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.quantity === "string" && slots.quantity.length > 0, "the series must name the measured quantity");
 probe(Array.isArray(slots.values) && slots.values.length >= 4, "the series must list at least four repeated measurements");

@@ -9,7 +9,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.unit === "string" && slots.unit.length > 0, "the tracked quantity must carry a unit");
 probe(Number.isInteger(slots.start) && slots.start >= 0, "the tracked quantity must start from a whole non-negative value");

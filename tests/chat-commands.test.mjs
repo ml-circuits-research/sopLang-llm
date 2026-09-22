@@ -177,7 +177,7 @@ test('the interactive loop answers commands locally and sends only questions to 
     assert.equal(code, 0);
     assert.equal(completions, 1, 'only the question is sent to the model');
     for (const command of COMMANDS) assert.ok(stdout.includes(command.usage), `${command.usage} is missing from the printed /help`);
-    assert.ok(stdout.includes('✔ answer: 7'), `the answer line must state the executed answer: ${stdout.slice(-300)}`);
+    assert.ok(stdout.includes('✔ 7'), `the answer line must state the executed answer: ${stdout.slice(-300)}`);
     assert.ok(stdout.includes('wires: @slots literal, @answer jsEval'));
     assert.ok(stdout.includes('executed: yes'));
     assert.match(stdout, /turns: 1/, 'six command lines and one question must count as one turn');
@@ -296,7 +296,7 @@ test('each model is asked in the mode it was trained for', () => {
           assert.equal(request.messages.at(-1).content, 'How many cookies are left?');
         }
         // And the output must say which answer came from which model.
-        assert.ok(stdout.includes('BASE MODEL') && stdout.includes('FINE-TUNED STUDENT'),
+        assert.ok(stdout.includes('ORIGINAL MODEL (untrained)') && stdout.includes('FINE-TUNED MODEL'),
           `both blocks must be labelled: ${stdout.slice(-400)}`);
         resolve();
       });

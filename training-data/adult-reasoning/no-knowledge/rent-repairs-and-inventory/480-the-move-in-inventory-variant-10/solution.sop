@@ -15,7 +15,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.landlord === "string" && slots.landlord.length > 0, "the lease must name the landlord");
 probe(typeof slots.tenant === "string" && slots.tenant.length > 0, "the lease must name the tenant");

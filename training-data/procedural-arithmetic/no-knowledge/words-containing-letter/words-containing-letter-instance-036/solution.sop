@@ -5,7 +5,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.sentence === "string" && slots.sentence.length > 0, "the sentence must be a non-empty string");
 probe(typeof slots.letter === "string" && slots.letter.length === 1, "the letter must be a single character");

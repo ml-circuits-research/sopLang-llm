@@ -22,7 +22,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Number.isInteger(slots.fee) && slots.fee > 0, "the fee must be a positive whole number");
 probe(Array.isArray(slots.applicants) && slots.applicants.length === 3, "the case must record exactly three applicants");

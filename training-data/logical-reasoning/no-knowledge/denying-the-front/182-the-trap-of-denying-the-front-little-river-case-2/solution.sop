@@ -17,7 +17,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Array.isArray(slots.claims) && slots.claims.length === 3, "the case must record the three speakers on the dry gauge");
 probe(slots.claims.every((claim) => typeof claim.name === "string" && claim.name.length > 0), "every speaker must have a name");

@@ -15,7 +15,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person taking the course");
 probe(Number.isInteger(slots.adultDoseMl) && slots.adultDoseMl > 0, "the adult dose must be a positive whole number of millilitres");

@@ -15,7 +15,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.name1 === "string" && slots.name1.length > 0, "the first hypothesis must carry its name");
 probe(Array.isArray(slots.predictions1) && slots.predictions1.length > 0, "the first hypothesis must state its predictions");

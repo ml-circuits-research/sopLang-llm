@@ -43,7 +43,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Array.isArray(slots.edges) && slots.edges.length > 1, "the statement must state at least two edges of the network");
 for (const edge of slots.edges) {

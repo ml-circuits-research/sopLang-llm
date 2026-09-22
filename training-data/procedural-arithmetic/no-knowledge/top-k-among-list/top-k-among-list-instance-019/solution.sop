@@ -13,7 +13,6 @@
 }
 
 @ranked jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Array.isArray(slots.values) && slots.values.length > 0, "the values must be a non-empty list");
 probe(slots.values.every((value) => Number.isInteger(value) && value > 0), "every value must be a positive whole number");
@@ -23,7 +22,6 @@ probe(ranked.every((value, index) => index === 0 || ranked[index - 1] > value), 
 return ranked;
 
 @keptTop jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 const ranked = $ranked;
 probe(Array.isArray(ranked) && ranked.length > 0, "the ranking stage must publish a non-empty list");
@@ -34,7 +32,6 @@ probe(keptTop.every((value, index) => value === ranked[index]), "the kept values
 return keptTop;
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 const ranked = $ranked;
 const keptTop = $keptTop;

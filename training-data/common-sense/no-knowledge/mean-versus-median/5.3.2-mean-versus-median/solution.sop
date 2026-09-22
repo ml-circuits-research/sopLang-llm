@@ -15,7 +15,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Array.isArray(slots.values) && slots.values.length === 9, "the statement must list nine observations");
 probe(slots.values.every((value) => Number.isInteger(value) && value >= 0), "every observation must be a whole non-negative number");

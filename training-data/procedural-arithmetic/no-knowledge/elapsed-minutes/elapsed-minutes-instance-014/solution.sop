@@ -8,7 +8,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Number.isInteger(slots.startHour) && slots.startHour >= 0 && slots.startHour < 24, "the start hour must be a clock hour");
 probe(Number.isInteger(slots.endHour) && slots.endHour >= 0 && slots.endHour < 24, "the end hour must be a clock hour");

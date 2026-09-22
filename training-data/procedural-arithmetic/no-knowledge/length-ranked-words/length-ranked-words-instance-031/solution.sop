@@ -10,7 +10,6 @@
 }
 
 @ordered jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Array.isArray(slots.words) && slots.words.length === 5, "the label must list exactly five words");
 probe(slots.words.every((word) => typeof word === "string" && word.length >= 2 && word.length <= 8 && [...word].every((character) => character >= "a" && character <= "z")), "every listed word must be a lowercase word of two to eight letters");
@@ -36,7 +35,6 @@ probe(ordered.every((word, index) => index === 0 || ordered[index - 1].length < 
 return ordered;
 
 @extremes jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const ordered = $ordered;
 probe(Array.isArray(ordered) && ordered.length === 5, "the ordering stage must publish the five words");
 probe(ordered.every((word) => typeof word === "string" && word.length > 0), "every ordered entry must be a word of at least one letter");
@@ -47,7 +45,6 @@ probe(ordered.every((word) => word.length >= extremes.shortest && word.length <=
 return extremes;
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Array.isArray($ordered) && $ordered.length === slots.words.length, "the ordering stage must publish every listed word");
 probe($ordered.every((word) => slots.words.includes(word)), "every ordered word must be a word the label shows");

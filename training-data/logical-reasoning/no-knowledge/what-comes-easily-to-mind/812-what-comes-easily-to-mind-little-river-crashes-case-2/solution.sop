@@ -9,7 +9,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Number.isInteger(slots.picturedCrashes) && slots.picturedCrashes > 0, "the week must picture at least one crash");
 probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place where the pictured crashes dominate talk");

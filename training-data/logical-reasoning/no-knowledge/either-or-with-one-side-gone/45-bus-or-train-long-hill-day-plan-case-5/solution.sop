@@ -16,7 +16,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.place === "string" && slots.place.length > 0, "the plan must name the place it is printed in");
 probe(Array.isArray(slots.listedMeans) && slots.listedMeans.length === 2, "the plan must list exactly two means");

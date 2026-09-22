@@ -14,7 +14,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.hiker === "string" && slots.hiker.length > 0, "the case must name the hiker");
 probe(Number.isInteger(slots.massKg) && slots.massKg > 0, "the body mass must be a positive whole number of kilograms");

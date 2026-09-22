@@ -27,7 +27,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots === "object" && slots !== null, "the grid case must carry the parsed cells and chores");
 probe(Array.isArray(slots.items) && slots.items.length === 4, "the grid case must carry four tagged chores");

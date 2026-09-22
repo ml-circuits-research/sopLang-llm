@@ -20,7 +20,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Array.isArray(slots.messages) && slots.messages.length === 2, "the case must print exactly two numbered messages");
 const actionable = slots.messages.find((message) => message.missing.length === 0);

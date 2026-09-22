@@ -7,7 +7,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Number.isInteger(slots.demand) && slots.demand > 0, "the statement must state a positive whole demand");
 probe(Number.isInteger(slots.capacity) && slots.capacity > 0, "the module supply must be a positive whole quantity");

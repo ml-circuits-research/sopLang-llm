@@ -26,7 +26,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.origin === "string" && slots.origin.length > 0, "the origin of the relation chain must be named");
 probe(typeof slots.target === "string" && slots.target.length > 0, "the target of the relation chain must be named");

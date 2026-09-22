@@ -8,7 +8,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the café");
 probe(Number.isInteger(slots.notes) && slots.notes >= 2, "the review book must carry a sample of glowing notes");

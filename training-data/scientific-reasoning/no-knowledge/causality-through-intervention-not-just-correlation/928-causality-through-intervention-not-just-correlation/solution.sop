@@ -20,7 +20,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.quantity === "string" && slots.quantity.length > 0, "the subexperiment must name the quantity that increases");
 probe(Array.isArray(slots.factors) && slots.factors.length === 2, "the subexperiment must name exactly two factors");

@@ -14,7 +14,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.optionA === "object" && slots.optionA !== null, "the first offer must carry a label, a price and a quantity");
 probe(typeof slots.optionB === "object" && slots.optionB !== null, "the second offer must carry a label, a price and a quantity");

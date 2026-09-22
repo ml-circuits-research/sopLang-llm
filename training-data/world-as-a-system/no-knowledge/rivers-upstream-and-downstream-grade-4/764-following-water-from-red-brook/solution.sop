@@ -20,7 +20,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Array.isArray(slots.flows) && slots.flows.length > 0, "the statement must state at least one flow between rivers");
 probe(typeof slots.source === "string" && slots.source.length > 0, "the upstream river of the question must be named");

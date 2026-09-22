@@ -7,7 +7,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Number.isInteger(slots.units) && slots.units > 0, "the total must be a positive whole number of units");
 probe(Number.isInteger(slots.percent) && slots.percent > 0 && slots.percent < 100, "the percentage must be a whole number between 0 and 100");

@@ -15,7 +15,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Number.isInteger(slots.openingBalance) && slots.openingBalance >= 0, "the opening balance must be a whole number of units");
 probe(Array.isArray(slots.deposits) && slots.deposits.length > 0, "the deposits must be a list of at least one amount");

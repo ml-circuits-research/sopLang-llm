@@ -7,7 +7,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 const repairer = slots.repairer;
 probe(typeof repairer === "string" && repairer.length > 0, "the case must name the person who writes the opposite headline");

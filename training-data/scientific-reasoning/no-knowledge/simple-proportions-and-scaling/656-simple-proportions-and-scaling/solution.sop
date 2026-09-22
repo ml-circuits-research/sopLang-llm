@@ -9,7 +9,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 const printedTails = [2, 3, 4];
 probe(Number.isInteger(slots.perUnit) && slots.perUnit > 0, "one unit of effort must yield a positive whole number of units of output");

@@ -30,6 +30,7 @@
 
 import { createHash } from 'node:crypto';
 import { parseCircuit } from '../runtime/parser.mjs';
+import { PROBE_HELPER } from '../teacher/families/probes.mjs';
 
 /** The share of the export repeated as preservation rows, recorded in the manifest. */
 export const PRESERVATION_RATIO = 0.1;
@@ -84,7 +85,15 @@ export function standaloneJavaScriptOf(solution) {
     const binding = `${BINDING_PREFIX}${wire.name}`;
     if (wire.command === 'jsEval') {
       lines.push(`  const ${binding} = await (async () => {`);
-      lines.push(substituteWireReferences(wire.body, names));
+      // The derived program is plain JavaScript that runs outside the sandbox, so a
+      // body that writes domain assertions must carry the helper it calls. It is
+      // injected only for a body that uses it, which is the same rule the sandbox
+      // applies, so a preservation target stays as short as its circuit.
+      const body = substituteWireReferences(wire.body, names);
+      if (/\bprobe\s*\(/.test(body)) {
+        lines.push(PROBE_HELPER);
+      }
+      lines.push(body);
       lines.push('  })();');
       continue;
     }

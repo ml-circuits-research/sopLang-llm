@@ -7,7 +7,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Number.isInteger(slots.throughput) && slots.throughput > 0, "the nominal throughput must be a positive integer");
 probe(typeof slots.unit === "string" && slots.unit.length > 0, "the statement must name the unit of the throughput");

@@ -8,7 +8,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.owner === "string" && slots.owner.length > 0, "the room must belong to a named person");
 probe(typeof slots.length === "number" && slots.length > 0, "the first side of the room must be a positive length");

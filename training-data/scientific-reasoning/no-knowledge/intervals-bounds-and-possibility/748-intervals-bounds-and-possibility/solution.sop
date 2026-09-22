@@ -30,7 +30,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(slots.zone !== null && typeof slots.zone === "object", "the statement must state an accepted zone");
 probe(Number.isInteger(slots.zone.low) && Number.isInteger(slots.zone.high) && slots.zone.low <= slots.zone.high, "the accepted zone must be an increasing closed interval");

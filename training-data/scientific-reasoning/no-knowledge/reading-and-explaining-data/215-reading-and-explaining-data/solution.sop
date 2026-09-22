@@ -18,7 +18,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.factor === "string" && slots.factor.length > 0, "the statement must name the factor that was changed");
 probe(Array.isArray(slots.points) && slots.points.length >= 2, "the statement must report at least two tested levels");

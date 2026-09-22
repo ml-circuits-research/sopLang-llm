@@ -24,7 +24,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person opening the pack");
 probe(Number.isInteger(slots.sealed.day) && Number.isInteger(slots.opened.day) && Number.isInteger(slots.target.day), "the dates must be whole day numbers");

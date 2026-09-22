@@ -41,7 +41,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Array.isArray(slots.observations) && slots.observations.length > 0, "the statement must list at least one observation");
 for (const observation of slots.observations) {

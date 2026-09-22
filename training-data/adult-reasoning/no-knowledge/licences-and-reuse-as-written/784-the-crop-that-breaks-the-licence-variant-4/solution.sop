@@ -12,7 +12,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.name === "string" && slots.name.length > 0, "the case must name the person who reuses the photo");
 probe(slots.changed === true, "the reuse changes the photo");

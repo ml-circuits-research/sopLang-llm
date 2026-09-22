@@ -51,7 +51,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Array.isArray(slots.criteria) && slots.criteria.length > 0, "the problem must score its options on at least one criterion");
 probe(slots.criteria.every((criterion) => typeof criterion.name === "string" && criterion.name.length > 0), "every criterion must be named");

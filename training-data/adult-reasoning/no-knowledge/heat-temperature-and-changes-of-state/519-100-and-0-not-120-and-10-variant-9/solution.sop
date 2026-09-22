@@ -14,7 +14,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.boilC === "number" && Number.isInteger(slots.boilC), "the sheet must state a whole boiling temperature");
 probe(typeof slots.meltC === "number" && Number.isInteger(slots.meltC), "the sheet must state a whole melting temperature");

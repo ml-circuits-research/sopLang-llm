@@ -10,7 +10,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 const minutesOf = (hhmm) => { const parts = String(hhmm).split(":"); return Number(parts[0]) * 60 + Number(parts[1]); };
 probe(typeof slots.place === "string" && slots.place.length > 0, "the notes must name the place of the bus");

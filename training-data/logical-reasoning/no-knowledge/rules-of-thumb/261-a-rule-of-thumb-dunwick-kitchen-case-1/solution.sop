@@ -9,7 +9,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.kitchen === "string" && slots.kitchen.length > 0, "the case must name the kitchen");
 probe(Number.isInteger(slots.cardMinutes) && slots.cardMinutes > 0, "the card must state a positive cooking time in minutes");

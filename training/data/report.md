@@ -1,7 +1,7 @@
 # Trainer-view export report
 
 Derived by `training/export.mjs` from the shipped trees under `training-data/`;
-dataset snapshot `423800be9ba8d08663c245c29f6a498928335eb26e97431154eaff7bd45e20fb`. The report is deterministic and carries no timestamp.
+dataset snapshot `a4b1a534db1049828654782722696e32d0b90d436df7bb3d17bd6e4bb58ebc37`. The report is deterministic and carries no timestamp.
 
 | book | rows | no-knowledge | knowledge | templates | plans |
 | --- | --- | --- | --- | --- | --- |
@@ -25,24 +25,24 @@ of the solution, `jsEval body lines` the non-empty lines after the `jsEval` decl
 | book | measure | min | p50 | p90 | p99 | max |
 | --- | --- | --- | --- | --- | --- | --- |
 | adult-reasoning | statement characters | 119 | 329 | 511 | 1075 | 1084 |
-| adult-reasoning | target characters | 1019 | 1825 | 2416 | 3101 | 3107 |
+| adult-reasoning | target characters | 911 | 1717 | 2308 | 2993 | 2999 |
 | adult-reasoning | wire declarations | 2 | 2 | 2 | 2 | 2 |
-| adult-reasoning | jsEval body lines | 9 | 17 | 25 | 37 | 37 |
+| adult-reasoning | jsEval body lines | 8 | 16 | 24 | 36 | 36 |
 | adult-reasoning | $ dependencies | 1 | 1 | 1 | 1 | 1 |
 | common-sense | statement characters | 408 | 507 | 633 | 641 | 641 |
-| common-sense | target characters | 1239 | 2059 | 3118 | 3338 | 3338 |
+| common-sense | target characters | 1131 | 1951 | 3010 | 3230 | 3230 |
 | common-sense | wire declarations | 2 | 2 | 2 | 2 | 2 |
-| common-sense | jsEval body lines | 13 | 24 | 40 | 40 | 40 |
+| common-sense | jsEval body lines | 12 | 23 | 39 | 39 | 39 |
 | common-sense | $ dependencies | 1 | 1 | 1 | 1 | 1 |
 | decompose-to-solve | statement characters | 522 | 679 | 790 | 812 | 838 |
-| decompose-to-solve | target characters | 1311 | 2257 | 3923 | 3927 | 3929 |
+| decompose-to-solve | target characters | 1203 | 2149 | 3815 | 3819 | 3821 |
 | decompose-to-solve | wire declarations | 2 | 2 | 2 | 2 | 2 |
-| decompose-to-solve | jsEval body lines | 10 | 24 | 47 | 47 | 47 |
+| decompose-to-solve | jsEval body lines | 9 | 23 | 46 | 46 | 46 |
 | decompose-to-solve | $ dependencies | 1 | 1 | 1 | 1 | 1 |
 | logical-reasoning | statement characters | 221 | 352 | 419 | 510 | 519 |
-| logical-reasoning | target characters | 735 | 1256 | 1826 | 3697 | 3706 |
+| logical-reasoning | target characters | 627 | 1148 | 1718 | 3589 | 3598 |
 | logical-reasoning | wire declarations | 2 | 2 | 2 | 2 | 2 |
-| logical-reasoning | jsEval body lines | 6 | 9 | 13 | 26 | 26 |
+| logical-reasoning | jsEval body lines | 5 | 8 | 12 | 25 | 25 |
 | logical-reasoning | $ dependencies | 1 | 1 | 1 | 1 | 1 |
 | mathematical-thinking | statement characters | 57 | 176 | 243 | 351 | 356 |
 | mathematical-thinking | target characters | 110 | 339 | 800 | 1814 | 2450 |
@@ -50,40 +50,40 @@ of the solution, `jsEval body lines` the non-empty lines after the `jsEval` decl
 | mathematical-thinking | jsEval body lines | 2 | 6 | 15 | 30 | 40 |
 | mathematical-thinking | $ dependencies | 1 | 1 | 1 | 2 | 2 |
 | procedural-arithmetic | statement characters | 70 | 168 | 246 | 280 | 285 |
-| procedural-arithmetic | target characters | 449 | 1038 | 2702 | 3647 | 3654 |
+| procedural-arithmetic | target characters | 341 | 930 | 2378 | 3323 | 3330 |
 | procedural-arithmetic | wire declarations | 2 | 2 | 4 | 4 | 4 |
-| procedural-arithmetic | jsEval body lines | 6 | 17 | 31 | 43 | 43 |
+| procedural-arithmetic | jsEval body lines | 5 | 16 | 28 | 40 | 40 |
 | procedural-arithmetic | $ dependencies | 1 | 1 | 3 | 3 | 3 |
 | scientific-reasoning | statement characters | 578 | 869 | 1149 | 1361 | 1545 |
-| scientific-reasoning | target characters | 1055 | 2077 | 3543 | 5023 | 5059 |
+| scientific-reasoning | target characters | 947 | 1969 | 3435 | 4915 | 4951 |
 | scientific-reasoning | wire declarations | 2 | 2 | 2 | 3 | 3 |
-| scientific-reasoning | jsEval body lines | 8 | 19 | 35 | 53 | 53 |
+| scientific-reasoning | jsEval body lines | 7 | 18 | 34 | 52 | 52 |
 | scientific-reasoning | $ dependencies | 1 | 1 | 1 | 2 | 2 |
 | world-as-a-system | statement characters | 395 | 644 | 974 | 1306 | 1403 |
-| world-as-a-system | target characters | 1094 | 2861 | 3933 | 5593 | 5664 |
+| world-as-a-system | target characters | 986 | 2753 | 3825 | 5485 | 5556 |
 | world-as-a-system | wire declarations | 2 | 2 | 2 | 2 | 2 |
-| world-as-a-system | jsEval body lines | 10 | 48 | 71 | 99 | 99 |
+| world-as-a-system | jsEval body lines | 9 | 47 | 70 | 98 | 98 |
 | world-as-a-system | $ dependencies | 1 | 1 | 1 | 1 | 1 |
 | all books | statement characters | 57 | 385 | 821 | 1231 | 1545 |
-| all books | target characters | 110 | 1661 | 3057 | 4162 | 5664 |
+| all books | target characters | 110 | 1554 | 2859 | 4054 | 5556 |
 | all books | wire declarations | 2 | 2 | 2 | 4 | 4 |
-| all books | jsEval body lines | 2 | 17 | 43 | 71 | 99 |
+| all books | jsEval body lines | 2 | 16 | 42 | 70 | 98 |
 | all books | $ dependencies | 1 | 1 | 1 | 3 | 3 |
 
 ## Longest targets
 
 | folder | target characters |
 | --- | --- |
-| world-as-a-system/no-knowledge/meta-reasoning-robustness-information-causality-grade-3/746-meta-reasoning-case-1 | 5664 |
-| world-as-a-system/no-knowledge/meta-reasoning-robustness-information-causality-grade-2/496-meta-reasoning-case-1 | 5662 |
-| world-as-a-system/no-knowledge/meta-reasoning-robustness-information-causality-grade-4/996-meta-reasoning-case-1 | 5662 |
-| world-as-a-system/no-knowledge/causes-conditions-and-consequences-grade-4/823-cause-and-consequence-chain-case-3 | 5656 |
-| world-as-a-system/no-knowledge/meta-reasoning-robustness-information-causality-grade-3/750-meta-reasoning-case-5 | 5625 |
-| world-as-a-system/no-knowledge/meta-reasoning-robustness-information-causality-grade-2/500-meta-reasoning-case-5 | 5623 |
-| world-as-a-system/no-knowledge/meta-reasoning-robustness-information-causality-grade-4/1000-meta-reasoning-case-5 | 5623 |
-| world-as-a-system/no-knowledge/causes-conditions-and-consequences-grade-3/573-cause-and-consequence-chain-case-3 | 5601 |
-| world-as-a-system/no-knowledge/meta-reasoning-robustness-information-causality-grade-2/498-meta-reasoning-case-3 | 5593 |
-| world-as-a-system/no-knowledge/meta-reasoning-robustness-information-causality-grade-4/998-meta-reasoning-case-3 | 5593 |
+| world-as-a-system/no-knowledge/meta-reasoning-robustness-information-causality-grade-3/746-meta-reasoning-case-1 | 5556 |
+| world-as-a-system/no-knowledge/meta-reasoning-robustness-information-causality-grade-2/496-meta-reasoning-case-1 | 5554 |
+| world-as-a-system/no-knowledge/meta-reasoning-robustness-information-causality-grade-4/996-meta-reasoning-case-1 | 5554 |
+| world-as-a-system/no-knowledge/causes-conditions-and-consequences-grade-4/823-cause-and-consequence-chain-case-3 | 5548 |
+| world-as-a-system/no-knowledge/meta-reasoning-robustness-information-causality-grade-3/750-meta-reasoning-case-5 | 5517 |
+| world-as-a-system/no-knowledge/meta-reasoning-robustness-information-causality-grade-2/500-meta-reasoning-case-5 | 5515 |
+| world-as-a-system/no-knowledge/meta-reasoning-robustness-information-causality-grade-4/1000-meta-reasoning-case-5 | 5515 |
+| world-as-a-system/no-knowledge/causes-conditions-and-consequences-grade-3/573-cause-and-consequence-chain-case-3 | 5493 |
+| world-as-a-system/no-knowledge/meta-reasoning-robustness-information-causality-grade-2/498-meta-reasoning-case-3 | 5485 |
+| world-as-a-system/no-knowledge/meta-reasoning-robustness-information-causality-grade-4/998-meta-reasoning-case-3 | 5485 |
 
 ## Longest statements
 

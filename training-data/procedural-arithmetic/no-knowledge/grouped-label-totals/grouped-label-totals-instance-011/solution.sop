@@ -19,7 +19,6 @@
 }
 
 @totals jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Array.isArray(slots.labels) && Array.isArray(slots.amounts), "the labels and the recorded amounts must be two lists");
 probe(slots.labels.length === slots.amounts.length && slots.labels.length > 0, "every listed site must carry exactly one recorded amount");
@@ -34,7 +33,6 @@ probe(Object.values(totals).every((total) => Number.isInteger(total) && total > 
 return totals;
 
 @ranked jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const totals = $totals;
 probe(totals !== null && typeof totals === "object" && !Array.isArray(totals), "the totals stage must publish an object");
 probe(Object.keys(totals).length > 0, "the totals stage must publish at least one site");
@@ -47,7 +45,6 @@ probe(ranked.every((pair, index) => index === 0 || ranked[index - 1][1] >= pair[
 return ranked;
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 const totals = $totals;
 const ranked = $ranked;

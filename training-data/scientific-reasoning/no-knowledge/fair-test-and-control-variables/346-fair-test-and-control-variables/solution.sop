@@ -11,7 +11,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.factor === "string" && slots.factor.length > 0, "the statement must name the factor to test");
 probe(Number.isFinite(slots.levelA) && Number.isFinite(slots.levelB), "both groups must receive a stated level of the factor");

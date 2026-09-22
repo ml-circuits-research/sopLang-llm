@@ -146,6 +146,22 @@ export function divergenceOf(className) {
  * pinned base of `training/environment/base-model.json` converted to gguf, and
  * the alias comes from its file name, exactly as for a checkpoint.
  */
+/**
+ * Terminal colours of the comparison display. Exactly two blocks are printed, each
+ * headed by a bold, coloured title so the two models can never be confused: the
+ * untrained base model in yellow, the fine-tuned student in cyan. The plan is dimmed,
+ * because the answer is the headline and the plan is the supporting evidence.
+ */
+const ANSI = Object.freeze({
+  reset: '\x1b[0m',
+  bold: '\x1b[1m',
+  dim: '\x1b[2m',
+  yellow: '\x1b[33m',
+  cyan: '\x1b[36m',
+  green: '\x1b[32m',
+  red: '\x1b[31m'
+});
+
 export const BASE_GGUF = `${REPOSITORY_ROOT}/training/checkpoints/base-f16.gguf`;
 
 const COMMAND_WIDTH = Math.max(...COMMANDS.map((command) => command.usage.length));
@@ -188,31 +204,19 @@ ${COMMANDS.map((command) => `  ${command.usage.padEnd(COMMAND_WIDTH)}  ${command
  * the comparison is exactly that difference and reformatting it would hide it.
  */
 function renderComparison(base) {
-  const lines = [
-    `=== 1. BASE MODEL (untuned) — answers from its own weights, nothing is validated ===`,
-    'It is not asked to compile and it was never trained on SOP Lang, so its text is prose:',
-    'no parser accepted it and no runtime executed it. Its number is read by you, not checked.',
-    ''
-  ];
+  const lines = [`${ANSI.bold}${ANSI.yellow}── ORIGINAL MODEL (untrained) ──${ANSI.reset}`];
   if (base.error !== null) {
-    lines.push(`✗ the base model did not answer: ${base.error}`);
+    lines.push(`${ANSI.red}✗ no answer: ${base.error}${ANSI.reset}`);
     return lines;
   }
-  const text = base.text === null || base.text === '' ? '(empty completion)' : base.text;
+  const text = base.text === null || base.text === '' ? '(empty answer)' : base.text;
   lines.push(text);
-  // The base model was never trained on SOP Lang, so what it writes is prose that
-  // imitates the profile's vocabulary. Saying "raw text" is not enough on its own: a
-  // reader sees `@slots literal` and reads a circuit, so the parser is run on it here
-  // and its verdict is printed. Nothing is executed, because there is nothing valid to
-  // execute, and the point of the comparison is exactly that difference.
-  lines.push(parseVerdictOf(text));
   const measured = [base.tokens === null ? null : `${base.tokens} tokens`, base.latencyMs === null ? null : `${(base.latencyMs / 1000).toFixed(1)}s`]
     .filter((part) => part !== null)
     .join(', ');
-  if (measured !== '') lines.push(`(${measured})`);
+  if (measured !== '') lines.push(`${ANSI.dim}(${measured})${ANSI.reset}`);
   return lines;
 }
-
 /**
  * Whether the base model's text is a SOP Lang program, said in one line.
  *
@@ -235,53 +239,34 @@ function parseVerdictOf(text) {
 function renderExchange(turn, options) {
   const lines = [];
   if (turn.baseComparison !== undefined) {
-    // With the comparison on, the two answers are shown in a fixed order and with
-    // their provenance, so a difference is read as "compiled" against "own weights"
-    // rather than as two anonymous completions.
     lines.push(...renderComparison(turn.baseComparison), '');
-    lines.push(
-      `=== 2. FINE-TUNED STUDENT (${turn.experiment ?? 'selected checkpoint'}) ===`,
-      `Asked with the recorded profile ${CHAT_PROFILE_ID}: it must emit one SOP Lang program,`,
-      'which the runtime then parses and executes. Whatever follows is the result of that pipeline.',
-      ''
-    );
+    lines.push(`${ANSI.bold}${ANSI.cyan}── FINE-TUNED MODEL ──${ANSI.reset}`);
   }
   if (turn.program !== null && options.showPlan) {
-    if (turn.baseComparison !== undefined) {
-      lines.push(`=== 2. FINE-TUNED STUDENT (${turn.experiment ?? 'selected checkpoint'}) ===`);
-      lines.push(`Asked with the recorded profile ${CHAT_PROFILE_ID}: emit one SOP Lang program.`);
-      lines.push('');
-    }
-    lines.push('--- the SOP Lang plan it emitted ---', turn.program.trimEnd(), '--- end of plan ---', '');
+    lines.push(`${ANSI.dim}${turn.program.trimEnd()}${ANSI.reset}`, '');
   }
   if (turn.className === 'generation_transport_error') {
-    lines.push(`✗ generation failed after ${turn.attempts} attempt(s): ${turn.error?.message ?? 'no reply'}`);
+    lines.push(`${ANSI.red}✗ generation failed after ${turn.attempts} attempt(s): ${turn.error?.message ?? 'no reply'}${ANSI.reset}`);
     return lines.join('\n');
   }
   if (turn.className === 'wrapper_rejected') {
-    lines.push(`✗ the model did not emit a plan (${turn.detail}).`);
-    lines.push('  A student trained on the compiled-plan profile answers with a circuit; prose means the question sits');
-    lines.push('  outside what it learned. The raw completion was:', '', `  ${String(turn.completion ?? '').trim().slice(0, 500)}`);
+    lines.push(`${ANSI.red}✗ no plan emitted (${turn.detail})${ANSI.reset}`);
+    lines.push(`${ANSI.dim}${String(turn.completion ?? '').trim().slice(0, 400)}${ANSI.reset}`);
     return lines.join('\n');
   }
   if (turn.className === 'parse_invalid') {
-    lines.push(`✗ the plan did not parse: ${turn.detail}`);
-    lines.push('  Re-run the same question with --show-plan to read the text the model emitted.');
+    lines.push(`${ANSI.red}✗ the plan did not parse: ${turn.detail}${ANSI.reset}`);
     return lines.join('\n');
   }
   if (turn.className === 'executed') {
     const answer = turn.answer;
-    lines.push('--- what the runtime returned from executing that plan ---');
-    lines.push(`✔ answer: ${typeof answer === 'string' ? answer : JSON.stringify(answer)}`);
+    lines.push(`${ANSI.green}✔ ${typeof answer === 'string' ? answer : JSON.stringify(answer)}${ANSI.reset}`);
     return lines.join('\n');
   }
-  lines.push(`✗ the plan did not execute: ${turn.outcome?.status ?? 'failed'}${turn.outcome?.code ? `:${turn.outcome.code}` : ''}`);
-  if (turn.detail) lines.push(`  ${turn.detail}`);
-  lines.push('  The circuit failed its own guards, which means the compiled values or the computation were wrong');
-  lines.push('  for this statement. Use /show-plan (or re-run with --show-plan) to read the circuit it produced.');
+  lines.push(`${ANSI.red}✗ the plan did not execute: ${turn.outcome?.status ?? 'failed'}${turn.outcome?.code ? ':' + turn.outcome.code : ''}${ANSI.reset}`);
+  if (turn.detail) lines.push(`${ANSI.dim}${turn.detail}${ANSI.reset}`);
   return lines.join('\n');
 }
-
 /**
  * One question through the model and the runtime, kept as a record instead of
  * as text: the answer is rendered from the record, and `/show-plan`, `/stats`,

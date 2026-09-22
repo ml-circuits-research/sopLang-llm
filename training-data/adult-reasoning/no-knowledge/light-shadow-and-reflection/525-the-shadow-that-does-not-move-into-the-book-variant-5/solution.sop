@@ -10,7 +10,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.actor === "string" && slots.actor.length > 0, "the case must name the actor");
 probe(/^[A-Z][a-z]+$/.test(slots.actor), "the actor must be a plain capitalised name");

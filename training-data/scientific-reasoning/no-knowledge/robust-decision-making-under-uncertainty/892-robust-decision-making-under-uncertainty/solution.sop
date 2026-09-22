@@ -54,7 +54,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Array.isArray(slots.conditions) && slots.conditions.length > 0, "the statement must name the possible faulty conditions");
 probe(Array.isArray(slots.labels) && slots.labels.length > 0, "the statement must state which labels the possible faults carry");

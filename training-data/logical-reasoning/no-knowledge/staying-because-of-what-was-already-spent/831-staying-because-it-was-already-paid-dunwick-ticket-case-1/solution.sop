@@ -9,7 +9,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.payer === "string" && slots.payer.length > 0, "the case must name the person who already paid");
 probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the lecture");

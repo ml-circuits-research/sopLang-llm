@@ -15,7 +15,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(slots.values !== null && typeof slots.values === "object", "the statement must state the three disjoint categories");
 probe(["A", "B", "C"].every((name) => Number.isInteger(slots.values[name]) && slots.values[name] >= 0), "every category must carry a whole non-negative count");

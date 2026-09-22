@@ -20,7 +20,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place whose bins are used");
 probe(typeof slots.holder === "string" && slots.holder.length > 0, "the case must name the person sorting the objects");

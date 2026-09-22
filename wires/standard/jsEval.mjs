@@ -12,6 +12,12 @@ import { applyCircuitResult } from '../../runtime/metaprogramming.mjs';
  * access to the transactional graph API without exposing a hidden value read.
  *
  * The command owns its input contract, so a compiled plan does not restate it.
+ * Version 2.1 adds the probe helper: the sandbox defines
+ * `probe(condition, message)` in the guest scope, so a body writes its own domain
+ * assertions as bare `probe(...)` calls and never carries the helper's definition —
+ * that text was identical in 7745 of 8735 targets and belonged to the command, not
+ * to the plan. A body that still declares its own helper (an artifact trained before
+ * this change) shadows the sandbox binding and runs unchanged.
  * `version 2` asserts, before the body runs, that every dependency value is
  * defined, that a dependency carrying a compiled `slots` record is a non-empty
  * object, and after the body runs that it produced a value that is not `null`,
@@ -35,13 +41,13 @@ const CIRCUIT_API_PATTERN = /(^|[^.\w$])circuit\b/;
 
 export const jsEvalCommand = {
   name: 'jsEval',
-  version: '2.0.0',
+  version: '2.1.0',
   effectClass: 'pure',
   mayStage: ['structural_transaction', 'container_patch'],
   determinism: 'deterministic',
   manifest: {
     name: 'jsEval',
-    version: '2.0.0',
+    version: '2.1.0',
     summary: 'Execute JavaScript over declared $wire dependencies; may stage graph or container transactions through the runtime API.',
     whenToUse: 'Use whenever the remaining subproblem is mechanical: arithmetic, sorting, joins, filters, aggregation, validation, serialization.',
     whenNotToUse: 'Do not use to make semantic judgments about text; use modelCall for those.',

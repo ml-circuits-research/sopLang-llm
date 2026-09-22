@@ -1,10 +1,10 @@
 {
   "exporter": "training/export.mjs 1.0.0",
   "profile": {
-    "id": "compiled-plan-chat-3",
-    "systemPromptSha256": "d611e1dfe9e26d00009a68e3acd9022e5cf0913315647ea0fe9fdf7e3413c0e1"
+    "id": "compiled-plan-chat-4",
+    "systemPromptSha256": "c2967d80d31eeb8a8f1605e75ece90edd16a0f0338a7b24bf15442bbf9287a74"
   },
-  "snapshot": "423800be9ba8d08663c245c29f6a498928335eb26e97431154eaff7bd45e20fb",
+  "snapshot": "a4b1a534db1049828654782722696e32d0b90d436df7bb3d17bd6e4bb58ebc37",
   "rows": 8735,
   "books": {
     "adult-reasoning": {
@@ -82,52 +82,52 @@
   },
   "files": {
     "adult-reasoning.jsonl": {
-      "sha256": "920edaf17ab452e3f40e56c798948bc0ec06f21918da162cc636ecbddf7f7c2c",
-      "bytes": 4447417,
+      "sha256": "ba92eaa62e756492962d06fac1a9d00277c07e93a81fcd34ad748d144549ed56",
+      "bytes": 4320697,
       "rows": 990
     },
     "common-sense.jsonl": {
-      "sha256": "a012f6d68736c4041e976551c3e3bc4852a937441b1c569377e9c54792484e4f",
-      "bytes": 4645684,
+      "sha256": "f25364933aaba965336452335135b16710c1d6d58674d6c4818a2a8c13a4cd72",
+      "bytes": 4524084,
       "rows": 950
     },
     "decompose-to-solve.jsonl": {
-      "sha256": "7a2fbc343042f17456fc5307dc259a6c7bfa086af15ecd870d7c6f4f95a53000",
-      "bytes": 4919383,
+      "sha256": "1e0630eb10749508cb33dce4e7085255296f40aa29a19b507bdf8527076e6c5b",
+      "bytes": 4804183,
       "rows": 900
     },
     "logical-reasoning.jsonl": {
-      "sha256": "d44c1ea45c0363902940ad57d027e692d6ddd3892698a1c9c893ab2e1e615e0e",
-      "bytes": 3964239,
+      "sha256": "1193464c996dd34c568dfd425f15b70f97e953ac82f5a6cb4277015d45505bb9",
+      "bytes": 3837519,
       "rows": 990
     },
     "mathematical-thinking.jsonl": {
-      "sha256": "b3ae987a77b8df17e2fb126603ad43f92cf7ca27a827767675bb533e66740bdd",
-      "bytes": 2727435,
+      "sha256": "eaed89fc5fdbaa289279a022c0acebae94ab9de07ec9b1863cc0ab6659d90c51",
+      "bytes": 2710605,
       "rows": 990
     },
     "procedural-arithmetic.jsonl": {
-      "sha256": "f151e6117b8fb87513109a1bfbb6a8589cccdf20bbbd89beb14cfb884ce0349a",
-      "bytes": 6889890,
+      "sha256": "aefb07be4ffdd3b6e24daedf2e24a53f25daaf7ac4a6a0d7940b1a8499807f2b",
+      "bytes": 6572410,
       "rows": 1960
     },
     "scientific-reasoning.jsonl": {
-      "sha256": "bba6cc64426f8a7224b51492a77e2e5c1c6b0552b96125e588264c8a52e60351",
-      "bytes": 5427134,
+      "sha256": "680ff6353fa1f36a1c08e65155118183fc2b361e3822fb84604d394befe7e758",
+      "bytes": 5302334,
       "rows": 975
     },
     "world-as-a-system.jsonl": {
-      "sha256": "f3e07351429c391e8a9136c7406b273a894968c9a2e72f3f7606dd624cdfd822",
-      "bytes": 5897633,
+      "sha256": "23ed38428840f8309dd09e65b09984e00c2a04806d8fe9bbfa450e1cdbc99ac4",
+      "bytes": 5772193,
       "rows": 980
     },
     "all-books.jsonl": {
-      "sha256": "f6f0e63b3db57bc98c49665013b3fb0fc0c75eb71ee90882fab0c08aba946e1c",
-      "bytes": 38918815,
+      "sha256": "6a9bb1fa65fc372d36af32abae40e8439493f370b42c5ef4ff4e7847ac992c1e",
+      "bytes": 37844025,
       "rows": 8735
     },
     "preservation-10.jsonl": {
-      "sha256": "ae921ba086ba5e9a29b368ba234bbed6c98d5665901bc3fb46ef5777474777de",
+      "sha256": "a2f44c87cf8b5d7b071fd6b3e3286a20bda9d12b5e6ebbe804692dccfa80fe6b",
       "bytes": 3408534,
       "rows": 874
     }
@@ -148,10 +148,10 @@
     "ratio": 0.1,
     "stride": 10,
     "rows": 874,
-    "sourceSnapshot": "423800be9ba8d08663c245c29f6a498928335eb26e97431154eaff7bd45e20fb",
+    "sourceSnapshot": "a4b1a534db1049828654782722696e32d0b90d436df7bb3d17bd6e4bb58ebc37",
     "derivation": "training/preservation.mjs 1.0.0: each sampled circuit is re-emitted as standalone JavaScript with the same wires bound as constants and the answer printed by console.log",
     "file": "preservation-10.jsonl",
-    "sha256": "ae921ba086ba5e9a29b368ba234bbed6c98d5665901bc3fb46ef5777474777de",
+    "sha256": "a2f44c87cf8b5d7b071fd6b3e3286a20bda9d12b5e6ebbe804692dccfa80fe6b",
     "bytes": 3408534
   }
 }

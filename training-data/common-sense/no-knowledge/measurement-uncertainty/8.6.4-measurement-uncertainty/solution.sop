@@ -13,7 +13,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 const measurements = slots.measurements;
 probe(measurements !== null && typeof measurements === "object", "the statement must report two measurements");

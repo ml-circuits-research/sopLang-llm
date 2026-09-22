@@ -48,7 +48,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 const INTERSECTION = String.fromCharCode(8745);
 const UNION = String.fromCharCode(8746);

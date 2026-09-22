@@ -12,7 +12,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.village === "string" && slots.village.trim().length > 0, "the case must name the village of the guide");
 probe(typeof slots.painter === "string" && /^[A-Z][a-z]+$/.test(slots.painter), "the case must name the painter");

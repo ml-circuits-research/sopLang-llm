@@ -22,7 +22,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.known === "string" && slots.known.length > 0, "the statement must name the observation known so far");
 probe(Array.isArray(slots.hypotheses) && slots.hypotheses.length === 2, "the statement must state exactly two hypotheses");

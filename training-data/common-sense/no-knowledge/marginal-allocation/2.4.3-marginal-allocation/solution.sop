@@ -25,7 +25,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 const names = ["A", "B", "C"];
 probe(slots.programs !== null && typeof slots.programs === "object", "the statement must state the marginal benefits of three programs");

@@ -31,6 +31,18 @@ export const DEFAULT_JS_TIMEOUT_MS = 2000;
 const DEFAULT_MAX_OPERATIONS = 5000;
 
 const GUEST_BOOTSTRAP_SOURCE = `
+// The probe helper is provided by the sandbox, not by the circuit body. A body that
+// writes its own domain assertions calls probe(...) directly; a body that declares
+// its own helper (an artifact trained before the compact-target change) shadows this
+// binding inside its own function scope, so both forms run. The helper is identical
+// text in every target, so it belongs here, exactly like the input and output
+// contract of the jsEval command.
+const probe = (condition, message) => {
+  if (!condition) {
+    throw new Error("probe failed: " + message);
+  }
+};
+
 ${TRANSFER_CODEC_SOURCE}
 
 function budgetFailure(message, details) {

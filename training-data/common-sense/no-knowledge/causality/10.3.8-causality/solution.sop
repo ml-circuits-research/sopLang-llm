@@ -16,7 +16,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(slots.randomized === true, "the statement must state a randomized comparison");
 probe(typeof slots.confounder === "string" && slots.confounder.length > 0, "the statement must name the factor that travels with X in the observational phase");

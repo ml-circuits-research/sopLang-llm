@@ -11,7 +11,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots === "object" && slots !== null, "the plan must carry the parsed steps");
 probe(typeof slots.cook === "string" && slots.cook.length > 0, "the reordered plan must name the cook");

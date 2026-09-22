@@ -22,7 +22,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
 probe(Number.isInteger(slots.firstCount) && slots.firstCount > 0, "the first group must be listed with a positive count");

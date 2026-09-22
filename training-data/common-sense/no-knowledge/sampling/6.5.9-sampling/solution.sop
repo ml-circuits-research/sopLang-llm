@@ -22,7 +22,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Number.isInteger(slots.population) && slots.population > 0, "the target population must be a positive integer");
 probe(Number.isInteger(slots.areas) && slots.areas > 1, "the population must be divided among several areas");

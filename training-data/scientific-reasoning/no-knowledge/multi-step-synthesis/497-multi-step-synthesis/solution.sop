@@ -22,7 +22,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 const links = 3;
 probe(typeof slots.label === "string" && slots.label.length > 0, "the statement must name its case");

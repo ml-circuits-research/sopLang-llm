@@ -48,7 +48,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Array.isArray(slots.weights) && slots.weights.length > 0, "the statement must state the criterion weights");
 probe(Array.isArray(slots.options) && slots.options.length > 0, "the statement must state the option scores");

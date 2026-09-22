@@ -47,7 +47,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 const printedName = (name) => {
   const key = String(name).toLowerCase();

@@ -8,7 +8,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place with the two stalls");
 probe(typeof slots.joiner === "string" && slots.joiner.length > 0, "the case must name the person who joins the queue");

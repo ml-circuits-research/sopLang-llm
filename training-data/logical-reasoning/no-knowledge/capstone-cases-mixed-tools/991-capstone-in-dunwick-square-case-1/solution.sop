@@ -7,7 +7,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 const readers = [slots.headlineReader, slots.separator, slots.loudnessReader];
 probe(typeof slots.place === "string" && slots.place.length > 0, "the square must name its place");

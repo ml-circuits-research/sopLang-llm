@@ -10,7 +10,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.keeper === "string" && slots.keeper.length > 0, "the sheet must name the keeper of the pot");
 probe(slots.actor === slots.keeper, "the cupboard episode must be about the keeper of the pot");

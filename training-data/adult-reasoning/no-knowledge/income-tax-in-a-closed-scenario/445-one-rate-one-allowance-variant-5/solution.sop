@@ -7,7 +7,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person the gross belongs to");
 probe(Number.isInteger(slots.allowance) && slots.allowance > 0, "the scenario must print a positive allowance");

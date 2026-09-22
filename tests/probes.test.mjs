@@ -16,15 +16,17 @@ test('an assembled dataset circuit teaches the computation and not the generic c
   assert.ok(!plainAnswer.body.includes(PROBE_HELPER), 'the preamble must not be injected');
   assert.deepEqual(probeFindings(plain), [{ wire: 'answer', probes: 0, assertions: 0 }]);
 
-  // A family that asserts something about its own domain keeps its assertion, and
-  // gets the helper it calls: that text is the family's, not a fixed preamble.
+  // A family that asserts something about its own domain keeps its assertion as a
+  // bare probe(...) call: the helper is provided by the sandbox (jsEval command
+  // version 2.1), so the target carries no helper definition, and the runtime
+  // resolves the call.
   const asserting = buildProgram(
     { compute: 'probe($slots.value > 0, "the value must be positive");\nreturn "answer";' },
     { value: 1 }
   );
   const assertingAnswer = parseCircuit(asserting, { sourceName: 'probe-fixture' }).wires
     .find((wire) => wire.name === 'answer');
-  assert.ok(assertingAnswer.body.startsWith(PROBE_HELPER));
+  assert.ok(!assertingAnswer.body.includes(PROBE_HELPER), 'the helper is the sandbox\'s, not the target\'s');
   assert.equal(probeCount(assertingAnswer.body), 1);
   assert.deepEqual(probeFindings(asserting), [{ wire: 'answer', probes: 1, assertions: 1 }]);
 });

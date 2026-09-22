@@ -11,7 +11,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Number.isInteger(slots.firstMinutes) && slots.firstMinutes > 0, "the first track must take a positive whole number of minutes");
 probe(Number.isInteger(slots.secondMinutes) && slots.secondMinutes > 0, "the second track must take a positive whole number of minutes");

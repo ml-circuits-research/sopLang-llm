@@ -73,7 +73,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Array.isArray(slots.cases) && slots.cases.length > 0, "the data block must list at least one case");
 probe(Array.isArray(slots.statements) && slots.statements.length > 0, "the question must state at least one quantified statement");

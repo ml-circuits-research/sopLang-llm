@@ -42,7 +42,7 @@ const GENERATED_SOURCES = new Map(SOURCES.filter((source) => source.kind === 'ge
 const GENERATED_SOURCE_IDS = new Set(GENERATED_SOURCES.keys());
 
 export const EXPORTER_VERSION = '1.0.0';
-export const CHAT_PROFILE_ID = 'compiled-plan-chat-3';
+export const CHAT_PROFILE_ID = 'compiled-plan-chat-4';
 
 /**
  * The fixed system prompt of the profile: hashing it pins the exact text.
@@ -52,12 +52,13 @@ export const CHAT_PROFILE_ID = 'compiled-plan-chat-3';
  * describes: a profile that promises one shape while the targets carry another
  * teaches the student to emit declared-but-absent structure. `compiled-plan-chat-1`
  * named the `slots`-plus-`answer` shape; the widened suite taught plans with named
- * intermediate wires, so `compiled-plan-chat-2` named them too; and
- * `compiled-plan-chat-3` stops asking for the fixed probe preamble, because the
- * generic input and output assertions moved into the `jsEval` command (version 2)
- * and the trained targets no longer carry them. The prompt asks for the computation
- * and for the assertions that are the plan's own, and it says when an assertion is
- * worth writing, so the student is not told to emit a preamble the targets lack.
+ * intermediate wires, so `compiled-plan-chat-2` named them too;
+ * `compiled-plan-chat-3` stopped asking for the fixed probe preamble, because the
+ * generic input and output assertions moved into the `jsEval` command (version 2);
+ * and `compiled-plan-chat-4` stops telling the student to define the probe helper,
+ * because version 2.1 of the command provides it in the sandbox: a plan writes its
+ * own domain assertions as bare `probe(...)` calls and never carries the helper's
+ * definition. The prompt names exactly what the targets carry and nothing more.
  */
 export const SYSTEM_PROMPT = [
   'You compile problems into SOP Lang circuits.',
@@ -68,7 +69,7 @@ export const SYSTEM_PROMPT = [
   'and a @answer jsEval wire that computes the answer deterministically from those values.',
   'Every jsEval wire computes deterministic work from the values it reads.',
   'The runtime asserts the generic input and output contract for you: a dependency is defined, a slots record is a non-empty object, and the result is not empty.',
-  'Write a probe(condition, message) assertion only where your own plan has a domain condition worth checking, and define the probe helper in that wire when you use it.',
+  'The runtime also provides a probe(condition, message) helper inside every jsEval wire: call it for your own domain assertions, and do not define it.',
   'The program carries no input wire and no model call.',
   'Output only the program.',
 ].join(' ');

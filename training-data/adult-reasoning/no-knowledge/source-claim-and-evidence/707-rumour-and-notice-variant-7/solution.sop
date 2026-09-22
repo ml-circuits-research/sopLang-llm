@@ -12,7 +12,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.town === "string" && slots.town.length > 0, "the case must name the town of the well");
 probe(typeof slots.neighbourClaim === "string" && slots.neighbourClaim.length > 0, "the case must carry the neighbour claim");

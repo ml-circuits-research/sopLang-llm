@@ -13,7 +13,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof slots.person === "string" && slots.person.length > 0, "the statement must name the person whose tray it is");
 probe(Number.isInteger(slots.sideStandard) && slots.sideStandard > 0, "the guide side weight must be a positive whole number of grams");

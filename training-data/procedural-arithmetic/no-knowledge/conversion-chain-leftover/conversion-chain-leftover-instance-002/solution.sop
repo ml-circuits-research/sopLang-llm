@@ -6,7 +6,6 @@
 }
 
 @crates jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Number.isInteger(slots.parts) && slots.parts > 0, "the parts must be a positive whole number");
 probe(Number.isInteger(slots.perCrate) && slots.perCrate > 0, "the crate size must be a positive whole number");
@@ -22,7 +21,6 @@ probe(crates * slots.perCrate + rest === slots.parts, "the crates and the parts 
 return { crates, rest };
 
 @boxes jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Number.isInteger(slots.perBox) && slots.perBox > 0 && slots.perBox < slots.perCrate, "the box size must be a whole number below the crate size");
 probe(typeof $crates === "object" && $crates !== null, "the crates stage must publish an object");
@@ -40,7 +38,6 @@ probe(leftover < slots.perBox, "the leftover parts must be fewer than a full box
 return { boxes, leftover };
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(typeof $crates === "object" && $crates !== null, "the crates stage must publish an object");
 probe(Number.isInteger($crates.crates) && $crates.crates >= 1, "the plan must fill at least one crate");

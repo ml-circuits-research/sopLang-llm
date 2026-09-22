@@ -42,7 +42,7 @@ function completionResponse(content, { ok = true, status = 200 } = {}) {
 
 test('the client re-exports the recorded chat profile', () => {
   assert.equal(CHAT_PROFILE_ID, EXPORT_PROFILE_ID);
-  assert.equal(CHAT_PROFILE_ID, 'compiled-plan-chat-3');
+  assert.equal(CHAT_PROFILE_ID, 'compiled-plan-chat-4');
   assert.equal(SYSTEM_PROMPT, EXPORT_SYSTEM_PROMPT);
   assert.equal(SYSTEM_PROMPT_SHA256, EXPORT_SYSTEM_PROMPT_SHA256);
   assert.match(SYSTEM_PROMPT_SHA256, /^[0-9a-f]{64}$/);

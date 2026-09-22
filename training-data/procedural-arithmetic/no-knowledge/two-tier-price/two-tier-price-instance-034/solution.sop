@@ -9,7 +9,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Number.isInteger(slots.basePrice) && slots.basePrice > 0, "the first price must be a positive whole number of units");
 probe(Number.isInteger(slots.discountedPrice) && slots.discountedPrice > 0, "the discounted price must be a positive whole number of units");

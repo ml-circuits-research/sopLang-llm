@@ -12,7 +12,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
 const slots = $slots;
 probe(Number.isInteger(slots.white) && slots.white > 0, "the urn must hold a positive whole number of white balls");
 probe(Number.isInteger(slots.red) && slots.red > 0, "the urn must hold a positive whole number of red balls");
