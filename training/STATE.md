@@ -28,6 +28,21 @@ The two verdicts that matter, both written in `evaluation/registry/phase4-analys
 
 Nothing is training. The GPU is idle and the machine is safe to use. Two queues are armed and detached: `exp-008-queue.sh` waits for a *new* export before starting another arm, and `exp-009-queue.sh` is spent (its arm completed).
 
+## Night supervision (2026-09-22, ~21:00Z)
+
+Disk cleanup done before the night: the intermediate `checkpoint-*` directories of the ten finished experiments
+were pruned (the winner GGUF of each remains under `evaluation/registry/<experiment>/gguf/`, and every log,
+manifest, recipe and analysis stays), freeing 256G: the disk went from 38G free to 288G free. The night run
+needs roughly 40G (ten 2.8G checkpoints plus the selection conversions), so the run cannot fail on space, and a
+disk guard prunes exp-011's oldest checkpoint only if free space ever collapses below 15G.
+
+What is watching the night:
+
+- the trainer itself (detached, setsid nohup via `start-detached.sh`);
+- the watchdog, which resumes the trainer or the chain if either dies;
+- the chain watcher that reports the selection, holdout, and probes when the series ends;
+- this session lives in tmux `sup`, so it survives the owner's detach.
+
 ## Running now: `exp-011-compositions` (started 2026-09-22 ~20:00Z)
 
 The arm the plan-inventory finding called for. Restarted from zero on 2026-09-22 ~20:40Z after the probe helper also left the targets (jsEval 2.1.0 provides it in the sandbox; profile compiled-plan-chat-4; 0 of 8735 targets carry the helper line). `teacher/procedural/compositions.mjs` declares 22 operator
