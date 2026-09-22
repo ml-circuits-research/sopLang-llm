@@ -9,6 +9,7 @@ import {
   structureFingerprint
 } from '../evaluation/diagnostics/suite.mjs';
 import { divergenceOf, promptOf, stageAnswers } from '../evaluation/run-diagnostic.mjs';
+import { CONTRASTIVE_PAIRS, buildContrastiveSuite } from '../evaluation/diagnostics/suite.mjs';
 
 const suite = buildDiagnosticSuite({ perStructure: 2 });
 
@@ -108,4 +109,52 @@ test('a structure fingerprint covers the composition and its constants, not the 
     const clone = { ...problem, values: sibling.values };
     assert.equal(structureFingerprint(clone), structureFingerprint(problem), 'instance values stay out of the fingerprint');
   }
+});
+
+test('a contrastive pair is observable, decisive and scored as a pair', () => {
+  const suite = buildContrastiveSuite({ seed: 20260922, perPair: 5 });
+  assert.equal(suite.pairs.length, CONTRASTIVE_PAIRS.length * 5);
+  for (const pair of suite.pairs) {
+    const [left, right] = pair.members;
+    // Observable: both statements share the draw, and the members require different
+    // answers. A pair that answered alike would score as a pair while teaching nothing.
+    assert.notEqual(left.oracle, right.oracle, `${pair.id}: the two members require the same answer`);
+    assert.deepEqual(left.values, right.values);
+    assert.deepEqual(left.parameters, right.parameters);
+    // Decisive: the statements differ in the decisive phrase and are otherwise the
+    // same wording over the same numbers.
+    assert.notEqual(left.statement, right.statement);
+    // The two statements are the same wording over the same numbers: removing this
+    // pair kind's decisive phrase must leave the same text on both sides, so a pair
+    // cannot differ by an extra clause that changes more than the operation.
+    const decisive = pair.kind === 'boundary-inclusion-pair'
+      ? [/\babove \d+\b/g, /\bat least \d+\b/g]
+      : pair.kind === 'direction-pair'
+        ? [/\blargest\b/g, /\bsmallest\b/g]
+        : [/\d+ percent of the total/g, /a fixed \d+ [a-z]+/g];
+    const stripped = (statement, pattern) => statement.replace(pattern, 'X').replace(/\s+/g, ' ').trim();
+    assert.equal(stripped(left.statement, decisive[0]), stripped(right.statement, decisive[1]),
+      `${pair.id}: the members differ by more than the decisive phrase`);
+    // Each member's oracle is the member's own chain, recomputed here for the
+    // inclusion pair, whose difference is exactly the record equal to the threshold.
+    if (pair.kind === 'boundary-inclusion-pair') {
+      assert.equal(right.oracle, left.oracle + 1, `${pair.id}: the threshold record joins one side only`);
+      assert.equal(pair.shared.values.filter((value) => value === pair.shared.parameters.threshold).length, 1);
+    }
+  }
+});
+
+test('the pair suite is reproducible from its seed and per-kind independent', () => {
+  // Each pair kind draws from its own stream, so one kind's rejection rate cannot
+  // starve the next, and the whole suite reproduces from the seed alone.
+  const first = buildContrastiveSuite({ seed: 20260922, perPair: 4 });
+  const again = buildContrastiveSuite({ seed: 20260922, perPair: 4 });
+  assert.deepEqual(
+    again.pairs.map((pair) => pair.members.map((member) => member.oracle)),
+    first.pairs.map((pair) => pair.members.map((member) => member.oracle))
+  );
+  assert.deepEqual(again.pairs.map((pair) => pair.members.map((member) => member.statement)),
+    first.pairs.map((pair) => pair.members.map((member) => member.statement)));
+  const different = buildContrastiveSuite({ seed: 7, perPair: 4 });
+  assert.notDeepEqual(different.pairs.map((pair) => pair.members[0].values), first.pairs.map((pair) => pair.members[0].values));
 });

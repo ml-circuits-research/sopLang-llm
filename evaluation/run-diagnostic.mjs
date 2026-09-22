@@ -38,7 +38,7 @@ import { parseCircuit } from '../runtime/parser.mjs';
 import { createRuntime } from '../runtime/kernel.mjs';
 import { REPOSITORY_ROOT, resolveArtifactPath, withServer } from './server.mjs';
 import { bestWinner } from './artifacts.mjs';
-import { buildDiagnosticSuite, structureFingerprint } from './diagnostics/suite.mjs';
+import { buildContrastiveSuite, buildDiagnosticSuite, structureFingerprint } from './diagnostics/suite.mjs';
 import { statesValue } from './probes.mjs';
 
 const CONDITIONS = ['normal', 'values', 'plan', 'both'];
@@ -53,6 +53,8 @@ function parseArguments(argv) {
     concurrency: 4,
     maxTokens: 2048,
     perStructure: 10,
+    pairs: false,
+    perPair: 8,
     seed: 20260922,
     structures: null,
     threads: null,
@@ -74,6 +76,8 @@ function parseArguments(argv) {
     else if (flag === '--concurrency') options.concurrency = Number(value());
     else if (flag === '--max-tokens') options.maxTokens = Number(value());
     else if (flag === '--per-structure') options.perStructure = Number(value());
+    else if (flag === '--pairs') options.pairs = true;
+    else if (flag === '--per-pair') options.perPair = Number(value());
     else if (flag === '--seed') options.seed = Number(value());
     else if (flag === '--structures') options.structures = value().split(',').map((name) => name.trim());
     else if (flag === '--threads') options.threads = Number(value());
@@ -92,6 +96,10 @@ oracle-assisted diagnostics and are labelled as such in the manifest.
 
 Options:
   --per-structure N   problems per operator structure (default 10)
+  --pairs             contrastive-pair mode: score both members of each pair and
+                      report paired accuracy, the count of pairs whose two answers
+                      are both correct (astra_review I3)
+  --per-pair N        pairs per contrastive kind (default 8)
   --seed N            suite seed (default 20260922)
   --structures a,b    only these structures
   --port N            port for the managed server (default 8087)
@@ -180,7 +188,16 @@ const OPERATOR_OF = (name) => OPERATORS_TABLE[name].steps;
   const structures = options.structures === null
     ? undefined
     : STRUCTURES_TABLE.filter((structure) => options.structures.includes(structure.id));
-  const suite = buildDiagnosticSuite({ seed: options.seed, perStructure: options.perStructure, structures });
+  // Two suites share this runner. The structure suite asks one question per problem and
+  // counts single answers; the pair suite asks both members of a contrastive pair and
+  // counts a pair only when its two answers are both correct, which is the measurement
+  // the contrastive arm is built for (astra_review I3).
+  const suite = options.pairs
+    ? buildContrastiveSuite({ seed: options.seed, perPair: options.perPair })
+    : buildDiagnosticSuite({ seed: options.seed, perStructure: options.perStructure, structures });
+  const problems = options.pairs
+    ? suite.pairs.flatMap((pair) => pair.members.map((member) => ({ ...member, pairId: pair.id })))
+    : suite.problems;
   const registryDir = join(REPOSITORY_ROOT, 'evaluation/registry', options.experiment);
   mkdirSync(join(registryDir, 'items'), { recursive: true });
 
@@ -212,7 +229,8 @@ const OPERATOR_OF = (name) => OPERATORS_TABLE[name].steps;
       item: `${problem.id}/${condition}`,
       problem: problem.id,
       structure: problem.structure,
-      split: problem.split,
+      split: problem.split ?? 'development',
+      pair: problem.pairKind === undefined ? null : { id: problem.pairId, kind: problem.pairKind, role: problem.role },
       fingerprint: structureFingerprint(problem),
       condition,
       oracle: problem.oracle,
@@ -273,7 +291,7 @@ const OPERATOR_OF = (name) => OPERATORS_TABLE[name].steps;
   }
 
   const work = [];
-  for (const problem of suite.problems) {
+  for (const problem of problems) {
     for (const condition of CONDITIONS) work.push({ problem, condition });
   }
 
@@ -314,6 +332,74 @@ const OPERATOR_OF = (name) => OPERATORS_TABLE[name].steps;
     lines.push(
       `| ${condition} | ${condition === 'normal' ? 'no' : 'yes'} | ${matched.hit} | ${matched.total} | ${matched.percent.toFixed(1)}% | ${((parsed / matched.total) * 100).toFixed(1)}% | ${((executed / matched.total) * 100).toFixed(1)}% |`
     );
+  }
+
+  if (options.pairs) {
+    // The contrastive report: a pair passes only when BOTH members answer correctly on
+    // the deployable condition, because a model that completes the nearest memorized
+    // family can answer one member and not its partner, and two identical wrong answers
+    // must never pass.
+    const classOf = (pairId, role, condition) =>
+      records.find((record) => record.pair === null ? false : record.pair.id === pairId && record.pair.role === role && record.condition === condition)?.class;
+    lines.push('', '## Paired accuracy (normal condition: the statement alone)', '',
+      'A pair counts only when both of its members answer correctly.', '',
+      '| pair kind | pairs | both correct | one correct | neither | paired accuracy |', '| --- | --- | --- | --- | --- | --- |');
+    for (const kind of suite.kinds) {
+      const kindPairs = suite.pairs.filter((pair) => pair.kind === kind);
+      let both = 0;
+      let one = 0;
+      let neither = 0;
+      for (const pair of kindPairs) {
+        const hits = pair.members.map((member) => classOf(pair.id, member.role, 'normal') === 'answer_match').filter(Boolean).length;
+        if (hits === 2) both += 1;
+        else if (hits === 1) one += 1;
+        else neither += 1;
+      }
+      const share = kindPairs.length === 0 ? 0 : (both / kindPairs.length) * 100;
+      lines.push(`| ${kind} | ${kindPairs.length} | ${both} | ${one} | ${neither} | ${share.toFixed(1)}% |`);
+    }
+    const allPairs = suite.pairs.length;
+    const allBoth = suite.pairs.filter((pair) => pair.members.every((member) => classOf(pair.id, member.role, 'normal') === 'answer_match')).length;
+    lines.push(`| **all** | **${allPairs}** | **${allBoth}** | | | **${((allBoth / Math.max(1, allPairs)) * 100).toFixed(1)}%** |`);
+    lines.push('', '## Each pair, both members', '', '| pair | values | oracle | above/left answer | right answer | outcome |', '| --- | --- | --- | --- | --- | --- |');
+    for (const pair of suite.pairs) {
+      const [left, right] = pair.members;
+      const leftRecord = records.find((record) => record.pair?.id === pair.id && record.pair.role === left.role && record.condition === 'normal');
+      const rightRecord = records.find((record) => record.pair?.id === pair.id && record.pair.role === right.role && record.condition === 'normal');
+      const outcome = leftRecord?.class === 'answer_match' && rightRecord?.class === 'answer_match' ? 'both correct'
+        : leftRecord?.class === 'answer_match' || rightRecord?.class === 'answer_match' ? 'one correct' : 'neither';
+      const shown = (record) => record === undefined ? '—' : `${record.class === 'answer_match' ? 'correct' : record.class}`;
+      lines.push(`| ${pair.id} | ${pair.shared.values.join(', ')} | ${left.oracle} / ${right.oracle} | ${shown(leftRecord)} | ${shown(rightRecord)} | ${outcome} |`);
+    }
+    lines.push('', '## First divergence (normal condition)', '', '| divergence | items |', '| --- | --- |');
+    const pairDivergences = new Map();
+    for (const record of records.filter((record) => record.condition === 'normal')) {
+      pairDivergences.set(record.divergence, (pairDivergences.get(record.divergence) ?? 0) + 1);
+    }
+    for (const [divergence, count] of [...pairDivergences.entries()].sort((left, right) => right[1] - left[1])) {
+      lines.push(`| ${divergence} | ${count} |`);
+    }
+    writeFileSync(join(registryDir, 'report.md'), `${lines.join('\n')}\n`);
+    writeFileSync(
+      join(registryDir, 'run-manifest.json'),
+      `${JSON.stringify({
+        experiment: options.experiment,
+        artifact: artifactLabel,
+        suite: { profile: suite.profile, seed: suite.seed, pairs: suite.pairs.length, perPair: suite.perPair, kinds: suite.kinds },
+        conditions: CONDITIONS,
+        oracleAssisted: CONDITIONS.filter((condition) => condition !== 'normal'),
+        pairedAccuracy: { pairs: allPairs, bothCorrect: allBoth },
+        generatedAt: new Date().toISOString()
+      }, null, 2)}\n`
+    );
+    process.stdout.write(`paired accuracy (normal): ${allBoth}/${allPairs} pairs with both answers correct\n`);
+    process.stdout.write(`${CONDITIONS.map((condition) => {
+      const matched = rate(condition, 'answer_match');
+      return `${condition}: ${matched.hit}/${matched.total} (${matched.percent.toFixed(1)}%)`;
+    }).join('  ')}\n`);
+    writeFileSync(join(registryDir, 'items', 'diagnostic.jsonl'), `${records.map((record) => JSON.stringify(record)).join('\n')}\n`);
+    process.stdout.write(`wrote ${registryDir}/{items/diagnostic.jsonl,report.md,run-manifest.json}\n`);
+    return;
   }
 
   lines.push('', '## Paired outcome against the normal condition', '', '| structure | problems | normal ok | rescued by values | rescued by plan | rescued by both | still failing |', '| --- | --- | --- | --- | --- | --- | --- |');
