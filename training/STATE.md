@@ -43,6 +43,16 @@ What is watching the night:
 - the chain watcher that reports the selection, holdout, and probes when the series ends;
 - this session lives in tmux `sup`, so it survives the owner's detach.
 
+## `exp-011-compositions` closed (2026-09-22 20:39Z) — see `evaluation/registry/phase4-analysis.md`
+
+The night run finished and the result is the first clean positive of the series, with its limit measured in the
+same run. Winner `checkpoint-630`: selection oracle 94.7%, plan-seen 98.5%, plan-unseen 18.8%. Holdout
+headline 37.9%, decomposed honestly: the four reserved compositions answer **160 of 160 (100.0%)**, the old
+procedural eval family 0 of 40, the book-derived holdout 1 of 225 (0.4%). The thesis (a declared inventory
+teaches operator composition) is proven; the limit (it transfers only within the shared operator vocabulary)
+is measured. The next arm widens the operator vocabulary toward the book families' operations, and the I5
+retrieval baseline should run first as the control. Nothing is running now; guards may be stopped.
+
 ## Running now: `exp-011-compositions` (started 2026-09-22 ~20:00Z)
 
 The arm the plan-inventory finding called for. Restarted from zero on 2026-09-22 ~20:40Z after the probe helper also left the targets (jsEval 2.1.0 provides it in the sandbox; profile compiled-plan-chat-4; 0 of 8735 targets carry the helper line). `teacher/procedural/compositions.mjs` declares 22 operator

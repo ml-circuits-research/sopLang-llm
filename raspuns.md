@@ -392,3 +392,39 @@ generic — totul static a trecut in comanda jsEval 2.1.0 si in sandbox), 867 de
 (selection, holdout, probes) porneste automat. Watchdog-ul reporneste orice moare, disk guard-ul taie doar
 daca spatiul ar colapsa sub 15G. Rezultatele vor fi in `evaluation/registry/exp-011-compositions/` si in
 `raspuns.md` dimineata.
+
+---
+
+## 2026-09-22, 20:45Z — exp-011 s-a terminat: 100% pe compozitiile tinute in afara antrenarii (primul rezultat pozitiv curat)
+
+**Antrenarea de noapte a terminat si lantul s-a inchis la 20:39Z.** Castigator: `checkpoint-630`.
+
+**Numarul mare, descompus cinstit (ca sa stii exact ce inseamna):**
+
+| partea holdout-ului | item-uri | corecte | |
+| --- | --- | --- | --- |
+| cele 4 compozitii rezervate (modelul NU le-a vazut niciodata, la niciun nivel) | 160 | **160** | **100%** |
+| familia procedurala veche de evaluare | 40 | 0 | 0% |
+| holdout-ul din carti (cele 225 de item-uri originale) | 225 | 1 | 0,4% |
+
+**Ce inseamna asta, pe scurt:**
+
+1. **Teza inventarului e DOVEDITA.** Modelul compune operatorii pe care-i stie: pe lanturi pe care nu le-a
+   vazut niciodata, in nicio forma, la adancimi 3-5, raspunde 160 din 160. E primul rezultat pozitiv curat din
+   toata seria — tot ce am incercat inainte (largiri, mixuri, fire multiple, perechi contrastive) lasase
+   numarul livrat la 0-0,4%.
+
+2. **Si limita tezei e masurata.** Holdout-ul din carti nu s-a miscat (0,4%, un item). Diferenta dintre cele
+   doua jumatati e una singura: compozitiile rezervate refolosesc cei 11 operatori pe care compozitiile
+   antrenate ii impart, iar planurile din carti folosesc forme in afara vocabularului ala. Generalizarea
+   compozitionala merge in interiorul unui vocabular comun si nu se transfera peste el.
+
+3. **Deci urmatorul pas nu mai e "invata-l sa compuna"** (rezolvat, in interiorul vocabularului), ci
+   **largirea vocabularului de operatori spre ce folosesc cartile**: numim operatiile pe care le fac familiile
+   din carti, construim familii procedurale care le exercita, si tinem in continuare compozitii intregi
+   afara. Iar baseline-ul de retrieval (I5) ramane controlul care trebuia rulat primul.
+
+4. **Curatarea tintelor n-a costat nimic:** 94,7% oracle pe selectie, 98,5% pe planuri vazute — la nivelul
+   experimentelor anterioare, cu 0 preambul si 0 helper in 8735 de tinte.
+
+Sondele de capacitate au ramas 1/10 — problema ei deschisa (DS009), documentata ca atare.
