@@ -69,12 +69,21 @@ export async function scoreProbes({
     // normalized comparison strips one layer of wrapping quotes; the exact
     // instruction probes stay strict.
     const bare = text.replace(/^["'`]+/, '').replace(/["'`]+$/, '');
-    const matched = text !== '' &&
+    const strictly = text !== '' &&
       (probe.comparison === 'exact' ? text === probe.expected : normalizeAnswer(bare) === normalizeAnswer(probe.expected));
+    // The strict verdict is the headline, but a wrong format is not a missing
+    // capability: astra_review R6 records three of six JavaScript probes stating
+    // the correct value and still scoring as mismatches ("... = 2"). The record
+    // therefore carries a second, separately reported verdict: does the answer
+    // state the expected value anywhere under the declared tolerance? Reporting
+    // the two apart keeps a format failure from being read as a lost substrate.
+    const semantic = !strictly && text !== '' && statesValue(probe.expected, text);
     return {
       item: `probe/${probe.id}`,
       kind: probe.kind,
-      class: completion === null ? 'generation_transport_error' : matched ? 'answer_match' : 'answer_mismatch',
+      class: completion === null ? 'generation_transport_error' : strictly ? 'answer_match' : 'answer_mismatch',
+      strictCompliance: strictly,
+      semanticValue: strictly || semantic,
       expected: probe.expected,
       comparison: probe.comparison,
       answer: text === '' ? null : text,
@@ -161,18 +170,29 @@ export async function scoreProbesCompiled({
  * Value comparison for compiled-plan mode. An executed circuit phrases its result
  * in the words of its plan ("3 times.", "The workshop can order 10 whole crates and
  * has 7 units left."), so the declared tolerance is: a numeric expectation must
- * equal the FIRST number the answer states, and any other expectation must appear
- * as a standalone token or under the shared answer normalization. The rule is
- * declared here, stated in every compiled-mode run manifest, and covered by
- * tests/text-probes.test.mjs, so a tolerance can never be widened silently.
+ * equal the LAST number the answer states — the result, not an operand echoed
+ * from the question — and any other expectation must appear as a standalone
+ * token or under the shared answer normalization.
+ *
+ * astra_review R9 is why the rule reads every number the text states: `statesValue('2',
+ * '2 + 2 = 4')` used to return true because it took the first number anywhere in the
+ * text, so an answer that states a different result could pass. An answer passes only
+ * when it states the expected value and states no other numeric value, so an echoed
+ * operand, a candidate list, or a contradictory trailing value is a mismatch. The rule
+ * is declared here, stated in every compiled-mode run manifest, and covered by tests,
+ * so a tolerance can never be widened silently.
  */
 export function statesValue(expected, answer) {
   const wanted = String(expected ?? '').trim();
   if (answer === null || wanted === '') return false;
   const text = String(answer);
   if (/^-?\d+(?:\.\d+)?$/.test(wanted)) {
-    const first = text.match(/-?\d+(?:\.\d+)?/);
-    return first !== null && Math.abs(Number(first[0]) - Number(wanted)) < 1e-9;
+    const numbers = text.match(/-?\d+(?:\.\d+)?/g) ?? [];
+    if (numbers.length === 0) return false;
+    const value = Number(wanted);
+    // Every number the answer states must be the expected value. A single other
+    // number means the text reports an operand, a candidate, or a different result.
+    return numbers.every((number) => Math.abs(Number(number) - value) < 1e-9);
   }
   const tokens = text.toLowerCase().match(/[a-z0-9.,+-]+/g) ?? [];
   return tokens.includes(wanted.toLowerCase()) || answerMatches(wanted, text);

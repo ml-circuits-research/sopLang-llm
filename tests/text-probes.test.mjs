@@ -114,3 +114,36 @@ test('the situation traps keep their stated answers and ask for one value', () =
   assert.equal(traps.find((item) => item.id === 'situation-bat-and-ball').expected, '0.05');
   assert.equal(traps.find((item) => item.id === 'situation-kg-feathers-iron').expected, 'the same');
 });
+
+test('the comparator rejects an echoed operand, a candidate list, and a wrong result', async () => {
+  // astra_review R9: `statesValue('2', '2 + 2 = 4')` used to pass because the rule
+  // took the first number anywhere in the answer, so a text stating a different
+  // result could satisfy a probe. An answer passes only when every number it
+  // states is the expected value.
+  const { statesValue } = await import('../evaluation/probes.mjs');
+  assert.equal(statesValue('2', '2 + 2 = 4'), false, 'an echoed operand must not pass');
+  assert.equal(statesValue('2', 'the result is 4'), false, 'a wrong result must not pass');
+  assert.equal(statesValue('2', '1, 2 or 3'), false, 'a candidate list must not pass');
+  assert.equal(statesValue('2', '2'), true, 'the exact value passes');
+  assert.equal(statesValue('7', 'null ?? 7 = 7'), true, 'a repeated correct value passes');
+  assert.equal(statesValue('10', 'the sum is 10.'), true, 'phrasing with one correct number passes');
+});
+
+
+
+test('a probe answer that states the value in prose is a strict mismatch and a semantic pass', async () => {
+  // astra_review R6: three of six JavaScript probes in exp-008's raw records state
+  // the correct value and are still classed as mismatches, because the strict
+  // protocol forbids the extra text. The scorer must publish the two verdicts
+  // apart, so a format failure is never reported as a lost capability. The
+  // separation is implemented by the strict comparison and `statesValue`; this
+  // pins both halves on the exact shapes the recorded runs produced.
+  const { statesValue } = await import('../evaluation/probes.mjs');
+  const { normalizeAnswer } = await import('../teacher/naming.mjs');
+  for (const [expected, prose] of [['2', '2 + 2 = 4'], ['2', '[1,2,3,4].filter((value) => value % 2 === 0).length = 2'], ['7', 'null ?? 7 = 7']]) {
+    const strict = normalizeAnswer(prose) === normalizeAnswer(expected);
+    const semantic = statesValue(expected, prose);
+    assert.equal(strict, false, `"${prose}" must not pass the strict protocol`);
+    assert.equal(semantic, expected === '2' && prose.includes('4') ? false : true, `"${prose}" semantics`);
+  }
+});
