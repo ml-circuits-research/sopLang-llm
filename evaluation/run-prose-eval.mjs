@@ -33,15 +33,21 @@ const PROSE_PROMPT = [
 
 function parseArguments(argv) {
   const options = { experiment: null, gguf: null, port: 8131, concurrency: 4, maxTokens: 512, help: false };
-  const value = (index) => { index += 1; if (index >= argv.length) throw new Error(`missing value for ${argv[index - 1]}`); return argv[index]; };
-  for (let index = 0; index < argv.length; index += 1) {
+  let index = 0;
+  while (index < argv.length) {
     const flag = argv[index];
-    if (flag === '--experiment') options.experiment = value(index);
-    else if (flag === '--gguf') options.gguf = value(index);
-    else if (flag === '--port') options.port = Number(value(index));
-    else if (flag === '--concurrency') options.concurrency = Number(value(index));
+    const value = () => {
+      index += 1;
+      if (index >= argv.length) throw new Error(`missing value for ${flag}`);
+      return argv[index];
+    };
+    if (flag === '--experiment') options.experiment = value();
+    else if (flag === '--gguf') options.gguf = value();
+    else if (flag === '--port') options.port = Number(value());
+    else if (flag === '--concurrency') options.concurrency = Number(value());
     else if (flag === '--help' || flag === '-h') options.help = true;
     else throw new Error(`unknown argument: ${flag}`);
+    index += 1;
   }
   if (options.experiment === null || options.gguf === null) {
     process.stderr.write('usage: node evaluation/run-prose-eval.mjs --experiment <id> --gguf <path> [--port N]\n');
