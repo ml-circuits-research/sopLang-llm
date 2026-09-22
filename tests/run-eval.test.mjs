@@ -417,3 +417,34 @@ test('holdout, export-file, and validation slices resolve the statement and the 
     cleanup(root);
   }
 });
+
+test('the readiness probe refuses a server that is not the artifact under test', async () => {
+  // The defect this pins: a leftover llama-server holds the port, our own child
+  // fails to bind, and a plain /health probe would accept the stranger — every
+  // checkpoint of a selection then scores the first model (exp-009, 2026-09-22).
+  const { createServer } = await import('node:http');
+  const { waitForServer } = await import('../evaluation/server.mjs');
+  const server = createServer((request, response) => {
+    response.writeHead(200, { 'content-type': 'application/json' });
+    response.end(
+      request.url === '/v1/models'
+        ? JSON.stringify({ data: [{ id: 'checkpoint-90' }] })
+        : '{}'
+    );
+  });
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const { port } = server.address();
+  try {
+    await assert.rejects(
+      waitForServer(port, 3000, { expectedModel: 'student' }),
+      /answers with checkpoint-90, not "student"/,
+      'a foreign model on the port must be reported, never accepted'
+    );
+    await assert.doesNotReject(
+      waitForServer(port, 3000, { expectedModel: 'checkpoint-90' }),
+      'the same server is accepted once it is the expected artifact'
+    );
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+  }
+});

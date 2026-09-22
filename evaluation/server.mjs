@@ -33,20 +33,44 @@ export function serverArguments(ggufPath, port, { threads = null } = {}) {
   ];
 }
 
-export async function waitForServer(port, timeoutMs = 300_000) {
+/**
+ * Waits for *our* server, not for any server.
+ *
+ * `/health` alone is not enough: a server of a previous run that still holds the
+ * port answers it, our own child fails to bind, and every checkpoint of a whole
+ * selection is then scored by the first model — which is what happened to
+ * `exp-009-mix10` on the night of 2026-09-21, where eight checkpoints reported
+ * the identical 36.3%. The readiness check therefore asks for the model list and
+ * requires the artifact we launched, and it fails as soon as our child is gone.
+ */
+export async function waitForServer(port, timeoutMs = 300_000, { expectedModel = null, child = null } = {}) {
   const deadline = Date.now() + timeoutMs;
+  let lastReason = 'not listening yet';
   while (Date.now() < deadline) {
+    if (child !== null && child.exitCode !== null) {
+      throw new Error(`llama-server exited with code ${child.exitCode} before it was ready (port ${port})`);
+    }
     try {
-      const response = await fetch(`http://127.0.0.1:${port}/health`);
+      const response = await fetch(`http://127.0.0.1:${port}/v1/models`);
       if (response.ok) {
-        return;
+        if (expectedModel === null) {
+          return;
+        }
+        const payload = await response.json();
+        const ids = (payload?.data ?? []).map((entry) => entry?.id).filter((id) => typeof id === 'string');
+        if (ids.includes(expectedModel)) {
+          return;
+        }
+        lastReason = `port ${port} answers with ${ids.join(', ') || 'no model'}, not "${expectedModel}": another server holds the port`;
+      } else {
+        lastReason = `port ${port} answered ${response.status}`;
       }
-    } catch {
-      // not listening yet
+    } catch (failure) {
+      lastReason = `port ${port} is not listening (${failure.message})`;
     }
     await new Promise((resolve) => setTimeout(resolve, 1000));
   }
-  throw new Error(`llama-server on port ${port} was not ready within ${timeoutMs} ms`);
+  throw new Error(`llama-server on port ${port} was not ready within ${timeoutMs} ms (${lastReason})`);
 }
 
 /** Peak resident set of a live process, in GiB, from VmHWM (null when unreadable). */
@@ -74,7 +98,7 @@ export async function withServer({ ggufPath, port, logPath, threads = null, extr
   });
   closeSync(logFd);
   try {
-    await waitForServer(port);
+    await waitForServer(port, 300_000, { expectedModel: 'student', child });
     return await body({
       port,
       pid: child.pid,

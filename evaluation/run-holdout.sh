@@ -57,15 +57,26 @@ echo "run-holdout: $experiment winner $(python3 -c 'import json,sys; print(json.
 "$server" -m "$gguf" --port "$port" --ctx-size 16384 --n-gpu-layers 99 --jinja --parallel 4 \
   --alias student > "$registry/holdout-server.log" 2>&1 &
 server_pid=$!
-trap 'kill "$server_pid" 2>/dev/null' EXIT
+# Stop the server on every exit path, including the readiness failure below: a
+# server left running holds the port and the next run scores its model instead
+# of its own (the exp-009 selection failure of 2026-09-22).
+cleanup() { kill "$server_pid" 2>/dev/null; }
+trap cleanup EXIT INT TERM
 
+# Readiness means *this* model answers, not merely that the port is occupied. A
+# leftover server of an earlier run would pass a /health probe and every item
+# would then be scored by the wrong artifact.
 ready=no
 for _ in $(seq 1 120); do
-  if curl -sf "http://127.0.0.1:$port/health" > /dev/null; then ready=yes; break; fi
+  if ! kill -0 "$server_pid" 2>/dev/null; then
+    echo "run-holdout: the server for $gguf exited before it was ready; see $registry/holdout-server.log" >&2
+    exit 1
+  fi
+  if curl -sf "http://127.0.0.1:$port/v1/models" 2>/dev/null | grep -q '"student"'; then ready=yes; break; fi
   sleep 1
 done
 if [ "$ready" != yes ]; then
-  echo "run-holdout: llama-server on port $port was not ready; see $registry/holdout-server.log" >&2
+  echo "run-holdout: llama-server on port $port is not serving this artifact after 120s (its log is $registry/holdout-server.log; another process may hold the port)" >&2
   exit 1
 fi
 

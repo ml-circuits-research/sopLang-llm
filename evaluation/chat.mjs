@@ -46,7 +46,7 @@ async function serverIsUp(base) {
 async function startServer({ gguf, port, threads }) {
   const child = spawn(LLAMA_SERVER, serverArguments(gguf, port, { threads }), { cwd: REPOSITORY_ROOT, detached: true, stdio: 'ignore' });
   child.unref();
-  await waitForServer(port);
+  await waitForServer(port, 300_000, { expectedModel: 'student', child });
   return child;
 }
 
