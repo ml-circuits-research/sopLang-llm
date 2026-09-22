@@ -34,7 +34,6 @@ import { bestWinner } from './artifacts.mjs';
 import { resolveSlice } from './run-eval.mjs';
 
 const EXPORT = join(REPOSITORY_ROOT, 'training/data/all-books.jsonl');
-const DATA_ROOT = join(REPOSITORY_ROOT, 'training-data');
 const VALIDATION_SLICE = join(REPOSITORY_ROOT, 'training/data/validation-slice.json');
 
 function parseArguments(argv) {
@@ -70,7 +69,7 @@ const USAGE = `Usage: node evaluation/run-adaptation.mjs --experiment <id> --dem
 
 Options:
   --demos N        demonstrated compiled examples placed in the prompt (0 = the recorded profile alone)
-  --demo-mode M    distinct (default) or shapes: shapes prefers demonstrations whose plan has the same wire count as the target
+  --demo-mode M    distinct (default) or statement: statement ranks demonstrations by lexical overlap with the incoming statement (the only signal a deployment has)
   --dry-run        resolve the slice and the demonstrations of every item, write nothing, and exit
   --slice <spec>   holdout (default) | validation | file:<path>
   --limit N        score the first N items after sorting
@@ -86,29 +85,43 @@ Options:
  *
  * `mode` chooses which training rows are eligible:
  *
- * - `distinct` (the recorded behaviour) takes the first rows of templates not
- *   seen yet, so every demonstration is a different problem type;
- * - `shapes` prefers rows whose plan declares the same number of wires as the
- *   target's own plan, so the demonstrations teach the shape the target needs
- *   (a two-stage plan shown a two-stage plan) rather than an unrelated one. The
- *   target's own book stays excluded either way.
+ * - `distinct` takes the first rows of templates not seen yet, so every
+ *   demonstration is a different problem type;
+ * - `statement` ranks the training rows by lexical overlap with the incoming
+ *   statement (content words, and a bonus for a shared unit or currency token),
+ *   which is all a deployment can do: it sees the statement and nothing else.
+ *
+ * A previous `shapes` mode ranked the rows by the wire count of the *evaluated
+ * item's own reference solution*. That is evaluation leakage — a deployment
+ * cannot look up the correct circuit before compiling — so it was removed; the
+ * selector now reads only the statement under test and the training corpus.
+ * The target's own book stays excluded either way.
  */
-export function demonstrationRows(rows, { demos, targetBook, targetTemplate, mode = 'distinct', targetWires = null }) {
+export function demonstrationRows(rows, { demos, targetBook, targetTemplate, mode = 'distinct', statement = '' }) {
   if (demos <= 0) return [];
   const eligible = rows.filter(
     (row) => row.book !== targetBook && `${row.book}|${row.template}` !== `${targetBook}|${targetTemplate}`
   );
   const picked = [];
-  if (mode === 'shapes' && targetWires !== null) {
-    // First pass: same wire count, one per template; then the general rule fills
-    // the rest, so a request for more demonstrations than the shape affords still
-    // returns the requested number.
-    for (const row of eligible) {
+  if (mode === 'statement') {
+    const wanted = contentWords(statement);
+    const units = unitTokens(statement);
+    const scored = eligible
+      .map((row) => {
+        const candidate = contentWords(row.statement);
+        const overlap = [...candidate].filter((word) => wanted.has(word)).length;
+        const unitOverlap = [...unitTokens(row.statement)].filter((unit) => units.has(unit)).length;
+        return { row, score: overlap + 2 * unitOverlap };
+      })
+      .filter((entry) => entry.score > 0)
+      .sort((left, right) => right.score - left.score);
+    const seen = new Set();
+    for (const entry of scored) {
       if (picked.length === demos) break;
-      const wires = wireCountOf(row.solution);
-      if (wires !== targetWires) continue;
-      if (picked.some((chosen) => chosen.template === row.template)) continue;
-      picked.push(row);
+      const template = `${entry.row.book}|${entry.row.template}`;
+      if (seen.has(template)) continue;
+      seen.add(template);
+      picked.push(entry.row);
     }
   }
   const seenTemplates = new Set(picked.map((row) => `${row.book}|${row.template}`));
@@ -123,21 +136,24 @@ export function demonstrationRows(rows, { demos, targetBook, targetTemplate, mod
   return picked;
 }
 
-/** The wire declarations of a program: what "the same shape" is measured on. */
-function wireCountOf(solution) {
-  return String(solution ?? '').split('\n').filter((line) => line.startsWith('@')).length;
+/** Content words of a statement: lowercase, no punctuation, no short glue words. */
+function contentWords(text) {
+  const stop = new Set(['the', 'a', 'an', 'and', 'or', 'of', 'to', 'in', 'is', 'are', 'was', 'how', 'many', 'what', 'which', 'that', 'this', 'it', 'for', 'with', 'on', 'by', 'as', 'at', 'from', 'then', 'than', 'does', 'do', 'if', 'not']);
+  const words = new Set(
+    String(text ?? '')
+      .toLowerCase()
+      .replace(/[^a-z0-9 ]+/g, ' ')
+      .split(/\s+/)
+      .filter((word) => word.length > 2 && !stop.has(word))
+  );
+  return words;
 }
 
-/**
- * The reference solution of a sliced item. A slice item carries the identity,
- * the statement, and the oracle, not the program (an evaluation must not read
- * the answer's shape into its own prompt), so the shape-matched demonstration
- * rule reads it from the shipped tree by folder. A missing file is a dataset
- * defect rather than a scoring outcome, so it throws.
- */
-function targetSolutionOf(item) {
-  const path = join(DATA_ROOT, item.book, ...String(item.folder).split('/'), 'solution.sop');
-  return readFileSync(path, 'utf8');
+/** Unit and currency tokens of a statement: the deployment-visible signal that two problems share a domain. */
+function unitTokens(text) {
+  const known = ['units', 'minutes', 'hours', 'days', 'weeks', 'metres', 'meters', 'litres', 'liters', 'kg', 'percent', 'words', 'letters', 'crates', 'boxes', 'scores', 'parts', 'servings', 'euros', 'lei', 'dollars'];
+  const words = new Set(contentWords(text));
+  return new Set(known.filter((unit) => words.has(unit)));
 }
 
 function composeStatement({ statement, demos }) {
@@ -194,9 +210,9 @@ if (options.dryRun) {
       targetBook: item.book,
       targetTemplate: item.template,
       mode: options.demoMode,
-      targetWires: wireCountOf(targetSolutionOf(item))
+      statement: item.statement
     });
-    return `${item.book}/${item.folder}: ${demos.length} demo(s) [${demos.map((row) => `${row.book}/${row.template} (${wireCountOf(row.solution)} wires)`).join(', ')}]`;
+    return `${item.book}/${item.folder}: ${demos.length} demo(s) [${demos.map((row) => `${row.book}/${row.template}`).join(', ')}]`;
   });
   process.stdout.write(`${lines.join('\n')}\n`);
   process.stdout.write(`${resolved.items.length} item(s), demos ${options.demos}, mode ${options.demoMode}\n`);
@@ -220,16 +236,16 @@ if (options.gguf !== null) {
 }
 
 const runtime = createRuntime();
-const run = async (baseUrl) => mapWithConcurrency(resolved.items, options.concurrency, async (item) => {
+const run = async (baseUrl, alias) => mapWithConcurrency(resolved.items, options.concurrency, async (item) => {
   const demos = demonstrationRows(trainingRows, {
     demos: options.demos,
     targetBook: item.book,
     targetTemplate: item.template,
     mode: options.demoMode,
-    targetWires: wireCountOf(targetSolutionOf(item))
+    statement: item.statement
   });
   const statement = composeStatement({ statement: item.statement, demos });
-  const result = await generate({ base: baseUrl, model: 'student', messages: buildMessages(statement), temperature: 0, maxTokens: options.maxTokens, timeoutMs: 600_000 });
+  const result = await generate({ base: baseUrl, model: alias, messages: buildMessages(statement), temperature: 0, maxTokens: options.maxTokens, timeoutMs: 600_000 });
   const record = {
     item: `${item.book}/${item.folder}`,
     book: item.book,
@@ -267,7 +283,7 @@ const records = options.base !== null
   ? await run(options.base)
   : (await withServer(
       { ggufPath: artifact, port: options.port, logPath: join(registryDir, 'server.log'), threads: options.threads },
-      ({ port }) => run(`http://127.0.0.1:${port}`),
+      ({ port, alias }) => run(`http://127.0.0.1:${port}`, alias),
     ));
 
 const count = (name) => records.filter((record) => record.class === name).length;
@@ -298,7 +314,7 @@ writeFileSync(
 );
 writeFileSync(
   join(registryDir, 'run-manifest.json'),
-  `${JSON.stringify({ experiment: options.experiment, artifact: artifactLabel, slice: { name: resolved.sliceName, spec: options.slice, items: records.length }, demonstrations: options.demos, demonstrationMode: options.demoMode, demonstrationRule: options.demoMode === 'shapes' ? 'training rows whose plan declares the same wire count as the target first, never the target book, one per template, the remainder filled by distinct templates' : 'training rows in export order, never the target book, distinct templates', decoding: { temperature: 0, maxTokens: options.maxTokens, concurrency: options.concurrency, attemptsPerItem: 1, transportRetries: 1 }, startedAt: new Date().toISOString() }, null, 2)}\n`,
+  `${JSON.stringify({ experiment: options.experiment, artifact: artifactLabel, slice: { name: resolved.sliceName, spec: options.slice, items: records.length }, demonstrations: options.demos, demonstrationMode: options.demoMode, demonstrationRule: options.demoMode === 'statement' ? 'training rows ranked by lexical overlap and shared unit tokens with the incoming statement, never the target book, one per template, the remainder filled by export order' : 'training rows in export order, never the target book, distinct templates', decoding: { temperature: 0, maxTokens: options.maxTokens, concurrency: options.concurrency, attemptsPerItem: 1, transportRetries: 1 }, startedAt: new Date().toISOString() }, null, 2)}\n`,
 );
 
 process.stdout.write(

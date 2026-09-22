@@ -99,11 +99,11 @@ if (options.gguf !== null) {
 const registryDir = join(REPOSITORY_ROOT, 'evaluation/registry', options.experiment);
 mkdirSync(join(registryDir, 'items'), { recursive: true });
 
-const run = async (base) => (options.compiled
+const run = async (base, alias) => (options.compiled
   ? scoreProbesCompiled({
       suite,
       base,
-      model: 'student',
+      model: alias,
       concurrency: options.concurrency,
       maxTokens: options.maxTokens,
       timeoutMs: 600_000,
@@ -112,7 +112,7 @@ const run = async (base) => (options.compiled
   : scoreProbes({
       suite,
       base,
-      model: 'student',
+      model: alias,
       concurrency: options.concurrency,
       timeoutMs: 600_000,
     }));
@@ -121,7 +121,7 @@ const scored = options.base !== null
   ? await run(options.base)
   : await withServer(
       { ggufPath: artifact, port: options.port, logPath: join(registryDir, 'server.log'), threads: options.threads },
-      ({ port }) => run(`http://127.0.0.1:${port}`),
+      ({ port, alias }) => run(`http://127.0.0.1:${port}`, alias),
     );
 
 const slug = suite.profile.replace(/[^a-z0-9.-]+/gi, '-') + (options.compiled ? '.compiled' : '');

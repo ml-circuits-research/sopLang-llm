@@ -175,10 +175,10 @@ for (const checkpoint of checkpoints) {
   console.log(`\n=== ${checkpoint.name} (${items.length} validation items)`);
   const convertSource = await servableCheckpoint(checkpoint, join(ggufDir, `${checkpoint.name}-merge.log`));
   await convertCheckpoint(convertSource, ggufPath, join(ggufDir, `${checkpoint.name}-convert.log`));
-  const records = await withServer({ ggufPath, port: options.port, logPath: join(ggufDir, `${checkpoint.name}-server.log`) }, () =>
+  const records = await withServer({ ggufPath, port: options.port, logPath: join(ggufDir, `${checkpoint.name}-server.log`) }, ({ alias }) =>
     runSlice({
       items,
-      generateItem: (messages) => generate({ base: `http://127.0.0.1:${options.port}`, model: 'student', messages, temperature: 0, maxTokens: options.maxTokens }),
+      generateItem: (messages) => generate({ base: `http://127.0.0.1:${options.port}`, model: alias, messages, temperature: 0, maxTokens: options.maxTokens }),
       runtime,
       outDir: join(registryDir, 'selection'),
       experimentId: options.experiment,

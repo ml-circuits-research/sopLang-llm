@@ -3,6 +3,7 @@
 // a selected checkpoint, and the deployment measurement.
 
 import { spawn } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { closeSync, openSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -19,8 +20,24 @@ export function resolveArtifactPath(pathLike) {
 export const LLAMA_SERVER = join(REPOSITORY_ROOT, 'tools/llamacpp/build/bin/llama-server');
 export const LLAMA_QUANTIZE = join(REPOSITORY_ROOT, 'tools/llamacpp/build/bin/llama-quantize');
 
+/**
+ * The alias of a managed server: unique per launch, so the readiness check can
+ * tell *this* launch from any other.
+ *
+ * Every managed server used to answer as `student`. A server of a previous run
+ * that still held the port then satisfied the readiness check of a new launch,
+ * and a whole checkpoint selection was scored by the wrong model (exp-009,
+ * 2026-09-21). The alias is derived from the artifact it serves, and the
+ * readiness check requires exactly it, so a stranger can never be mistaken for
+ * the artifact under test.
+ */
+export function aliasFor(ggufPath) {
+  const digest = createHash('sha256').update(String(ggufPath)).digest('hex').slice(0, 12);
+  return `student-${digest}`;
+}
+
 /** Server arguments of every measured run: full offload, the model's own template, four slots. */
-export function serverArguments(ggufPath, port, { threads = null } = {}) {
+export function serverArguments(ggufPath, port, { threads = null, alias = null } = {}) {
   return [
     '-m', ggufPath,
     '--port', String(port),
@@ -28,7 +45,7 @@ export function serverArguments(ggufPath, port, { threads = null } = {}) {
     '--n-gpu-layers', '99',
     '--jinja',
     '--parallel', '4',
-    '--alias', 'student',
+    '--alias', alias ?? aliasFor(ggufPath),
     ...(threads === null ? [] : ['--threads', String(threads), '--threads-batch', String(threads)]),
   ];
 }
@@ -98,10 +115,11 @@ export async function withServer({ ggufPath, port, logPath, threads = null, extr
   });
   closeSync(logFd);
   try {
-    await waitForServer(port, 300_000, { expectedModel: 'student', child });
+    await waitForServer(port, 300_000, { expectedModel: aliasFor(ggufPath), child });
     return await body({
       port,
       pid: child.pid,
+      alias: aliasFor(ggufPath),
       peakResidentGib: () => peakResidentGib(child.pid),
     });
   } finally {

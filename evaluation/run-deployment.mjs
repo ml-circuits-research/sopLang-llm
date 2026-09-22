@@ -151,18 +151,18 @@ for (const quant of options.quants) {
 
   const measurement = await withServer(
     { ggufPath: quantizedPath, port: options.port, logPath: join(artifactDir, 'server.log'), threads: options.threads },
-    async ({ port, peakResidentGib }) => {
+    async ({ port, alias, peakResidentGib }) => {
       const throughput = await measureThroughput({ port, prompt: items[0].statement });
       const { records } = await runSlice({
         items,
-        generateItem: (messages) => generate({ base: `http://127.0.0.1:${port}`, model: 'student', messages, temperature: 0, maxTokens: options.maxTokens }),
+        generateItem: (messages) => generate({ base: `http://127.0.0.1:${port}`, model: alias, messages, temperature: 0, maxTokens: options.maxTokens }),
         runtime,
         outDir: artifactDir,
         experimentId,
         sliceName: 'holdout',
         concurrency: options.concurrency,
       });
-      const probes = await scoreProbes({ base: `http://127.0.0.1:${port}`, model: 'student', concurrency: options.concurrency });
+      const probes = await scoreProbes({ base: `http://127.0.0.1:${port}`, model: alias, concurrency: options.concurrency });
       writeFileSync(join(artifactDir, 'items/capability-probes.jsonl'), `${probes.records.map((record) => JSON.stringify(record)).join('\n')}\n`);
       writeFileSync(join(artifactDir, 'probes.md'), renderProbesReport({
         experiment: experimentId,

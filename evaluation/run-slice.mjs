@@ -94,9 +94,9 @@ const registryDir = join(REPOSITORY_ROOT, 'evaluation/registry', options.experim
 mkdirSync(join(registryDir, 'items'), { recursive: true });
 const runtime = createRuntime();
 
-const run = async (baseUrl) => runSlice({
+const run = async (baseUrl, alias) => runSlice({
   items: resolved.items,
-  generateItem: (messages) => generate({ base: baseUrl, model: 'student', messages, temperature: 0, maxTokens: options.maxTokens, timeoutMs: 600_000 }),
+  generateItem: (messages) => generate({ base: baseUrl, model: alias, messages, temperature: 0, maxTokens: options.maxTokens, timeoutMs: 600_000 }),
   runtime,
   outDir: registryDir,
   experimentId: options.experiment,
@@ -108,7 +108,7 @@ const records = options.base !== null
   ? (await run(options.base)).records
   : (await withServer(
       { ggufPath: artifact, port: options.port, logPath: join(registryDir, 'server.log'), threads: options.threads },
-      ({ port }) => run(`http://127.0.0.1:${port}`),
+      ({ port, alias }) => run(`http://127.0.0.1:${port}`, alias),
     )).records;
 
 const metrics = aggregate(records);

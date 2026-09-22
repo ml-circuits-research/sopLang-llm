@@ -53,9 +53,13 @@ if [ ! -f "$gguf" ]; then
 fi
 
 server="$repository_root/tools/llamacpp/build/bin/llama-server"
-echo "run-holdout: $experiment winner $(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["winner"])' "$selection"), artifact $gguf"
+# The alias is derived from the artifact path exactly as `aliasFor` in
+# evaluation/server.mjs does it, so a selection, a holdout, and the CLI can all
+# speak to the same launch and can never be served by a different one.
+alias="student-$(printf '%s' "$gguf" | sha256sum | cut -c1-12)"
+echo "run-holdout: $experiment winner $(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["winner"])' "$selection"), artifact $gguf, alias $alias"
 "$server" -m "$gguf" --port "$port" --ctx-size 16384 --n-gpu-layers 99 --jinja --parallel 4 \
-  --alias student > "$registry/holdout-server.log" 2>&1 &
+  --alias "$alias" > "$registry/holdout-server.log" 2>&1 &
 server_pid=$!
 # Stop the server on every exit path, including the readiness failure below: a
 # server left running holds the port and the next run scores its model instead
@@ -72,7 +76,7 @@ for _ in $(seq 1 120); do
     echo "run-holdout: the server for $gguf exited before it was ready; see $registry/holdout-server.log" >&2
     exit 1
   fi
-  if curl -sf "http://127.0.0.1:$port/v1/models" 2>/dev/null | grep -q '"student"'; then ready=yes; break; fi
+  if curl -sf "http://127.0.0.1:$port/v1/models" 2>/dev/null | grep -q "\"$alias\""; then ready=yes; break; fi
   sleep 1
 done
 if [ "$ready" != yes ]; then

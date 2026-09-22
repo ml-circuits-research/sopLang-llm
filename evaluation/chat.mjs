@@ -29,7 +29,7 @@ import { createInterface } from 'node:readline';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { buildMessages, extractProgram, generate } from './client.mjs';
-import { LLAMA_SERVER, REPOSITORY_ROOT, serverArguments, waitForServer } from './server.mjs';
+import { LLAMA_SERVER, REPOSITORY_ROOT, aliasFor, serverArguments, waitForServer } from './server.mjs';
 import { artifactFor } from './artifacts.mjs';
 import { parseCircuit } from '../runtime/parser.mjs';
 import { createRuntime } from '../runtime/kernel.mjs';
@@ -46,9 +46,54 @@ async function serverIsUp(base) {
 async function startServer({ gguf, port, threads }) {
   const child = spawn(LLAMA_SERVER, serverArguments(gguf, port, { threads }), { cwd: REPOSITORY_ROOT, detached: true, stdio: 'ignore' });
   child.unref();
-  await waitForServer(port, 300_000, { expectedModel: 'student', child });
+  await waitForServer(port, 300_000, { expectedModel: aliasFor(gguf), child });
   return child;
 }
+
+function parseArguments(argv) {
+  const options = { gguf: null, experiment: null, base: null, port: 8087, maxTokens: 1024, threads: null, showPlan: false, once: null, help: false };
+  for (let index = 0; index < argv.length; index += 1) {
+    const flag = argv[index];
+    const value = () => {
+      const next = argv[index + 1];
+      if (next === undefined) throw new Error(`${flag} needs a value`);
+      index += 1;
+      return next;
+    };
+    if (flag === '--gguf') options.gguf = value();
+    else if (flag === '--experiment') options.experiment = value();
+    else if (flag === '--base') options.base = value();
+    else if (flag === '--port') options.port = Number(value());
+    else if (flag === '--max-tokens') options.maxTokens = Number(value());
+    else if (flag === '--threads') options.threads = Number(value());
+    else if (flag === '--show-plan') options.showPlan = true;
+    else if (flag === '--once') options.once = value();
+    else if (flag === '--help' || flag === '-h') options.help = true;
+    else throw new Error(`unknown argument: ${flag}`);
+  }
+  if (options.help) return options;
+  if (options.gguf === null && options.experiment === null) {
+    options.experiment = 'exp-008-sft-shapes';
+  }
+  return options;
+}
+
+const HELP = `Usage: node evaluation/chat.mjs [--experiment <id> | --gguf <path>] [options]
+
+Ask a question; the student compiles it into a SOP Lang circuit and the runtime
+executes that circuit, so the printed answer is the one the circuit computed.
+
+Options:
+  --experiment <id>   serve the selected checkpoint of this experiment (default exp-008-sft-shapes)
+  --gguf <path>       serve this artifact instead
+  --base <url>        use an already running server instead of starting one
+  --port N            port for the managed server (default 8087)
+  --max-tokens N      generation budget per question (default 1024)
+  --threads N         CPU threads for llama-server
+  --show-plan         print the generated circuit before the answer
+  --once "<question>" ask one question, print the answer, and exit
+  --help              print this help
+`;
 
 function renderExchange({ question, completion, extracted, outcome, options }) {
   const lines = [];
@@ -73,8 +118,8 @@ function renderExchange({ question, completion, extracted, outcome, options }) {
   return lines.join('\n');
 }
 
-async function ask({ question, base, options, runtime }) {
-  const result = await generate({ base, model: 'student', messages: buildMessages(question), temperature: 0, maxTokens: options.maxTokens, timeoutMs: 600000 });
+async function ask({ question, base, alias, options, runtime }) {
+  const result = await generate({ base, model: alias, messages: buildMessages(question), temperature: 0, maxTokens: options.maxTokens, timeoutMs: 600000 });
   if (result.error !== null) {
     return `✗ generation failed after ${result.attempts} attempt(s): ${result.error.message}`;
   }
@@ -101,12 +146,16 @@ async function main() {
   const artifact = artifactFor({ gguf: options.gguf, experiment: options.experiment });
   const base = options.base ?? `http://127.0.0.1:${options.port}`;
   let managed = null;
+  // The alias this session must talk to: the one its own launch serves, or the
+  // recorded alias when it reuses a server it did not start.
+  let alias = aliasFor(artifact.gguf);
   if (!(await serverIsUp(base))) {
     if (options.base !== null) {
       throw new Error(`no server answers at ${base}; start one or drop --base so the CLI can start its own`);
     }
     process.stdout.write(`starting llama-server with ${artifact.gguf.replace(`${REPOSITORY_ROOT}/`, '')} on port ${options.port} …\n`);
     managed = await startServer({ gguf: artifact.gguf, port: options.port, threads: options.threads });
+    alias = aliasFor(artifact.gguf);
   }
   process.stdout.write(`model: ${artifact.experiment}${artifact.winner === null ? '' : ` (${artifact.winner})`}\n`);
   process.stdout.write('questions are answered by executing the circuit the model compiles; --show-plan prints the circuit.\n');
@@ -130,7 +179,7 @@ async function main() {
   const runtime = createRuntime();
 
   if (options.once !== null) {
-    process.stdout.write(`\n? ${options.once}\n${await ask({ question: options.once, base, options, runtime })}\n`);
+    process.stdout.write(`\n? ${options.once}\n${await ask({ question: options.once, base, alias, options, runtime })}\n`);
     stopServer();
     process.exit(0);
   }
@@ -144,7 +193,7 @@ async function main() {
       reader.prompt();
       continue;
     }
-    const answer = await ask({ question, base, options, runtime });
+    const answer = await ask({ question, base, alias, options, runtime });
     process.stdout.write(`\n${answer}\n\n`);
     reader.prompt();
   }
