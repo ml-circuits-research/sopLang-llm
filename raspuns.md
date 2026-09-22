@@ -183,3 +183,48 @@ deci un checkpoint care le-a memorat nu poate trece drept unul care numara.
 Da-i exact intrebarile-capcana: „How many times does the letter \"r\" appear in the word \"raspberry\"?"
 (raspuns corect 3) si „How many times does the letter \"s\" appear in the word \"mississippi\"?" (4).
 Cu `/show-plan` vezi planul pe care l-a emis, iar `/stats` iti da numarul de ture si tokenii.
+
+---
+
+## 2026-09-22, 18:10Z — Comanda noua `/use-both`: modelul finetuned si cel initial, in paralel
+
+**Ce ai cerut:** o comanda `/use-both true|false` care face toggle, iar cind e activata, la orice intrebare sa
+raspunda si modelul finetuned si modelul initial.
+
+**Cum se foloseste:**
+
+| Ce scrii | Ce face |
+| --- | --- |
+| `/use-both` | inverseaza starea (fara argument) |
+| `/use-both true` | porneste comparatia |
+| `/use-both false` | opreste comparatia |
+| `--use-both` la pornire | sesiunea incepe direct cu comparatia activa |
+| `/model` | iti spune daca comparatia e pornita si in ce stare e serverul de baza |
+
+**Rezultatul, testat pe intrebarea cu raspberry:**
+
+```
+? How many times does the letter "r" appear in the word "raspberry"? Reply with only the number.
+--- untuned base model (own weights, no circuit) ---
+1
+(2 tokens, 0.2s)
+
+✔ answer (executed circuit): 3 times.
+```
+
+Modelul initial raspunde **1** (greșit — cuvintul are 3 r-uri). Calea compilata raspunde **3 times.** Exact
+diferenta pe care o arata proiectul: modelul mic nu numara, el isi aminteste; circuitul compileaza si ruleaza.
+
+**Cum e facut:** modelul de baza e cel fixat in `training/environment/base-model.json`
+(`training/checkpoints/base-f16.gguf`), servit pe portul urmator (`--port` + 1), pornit la prima folosire si
+oprit cu sesiunea. Ambele intrebari pornesc **inainte** de a astepta vreun raspuns, deci astepti maximul
+dintre cele doua, nu suma. Comanda iti spune adevarul despre ce poate livra: „starting" (se incarca), „ready",
+sau „unavailable" cu motivul — nu promite o comparatie pe care nu o poate rula.
+
+**Cost:** 319 din 319 teste trec (inclusiv semantica toggle-ului: un „true" repetat nu stinge comparatia, un
+cuvint greșit nu schimba nimic, comanda e prinsa inainte sa ajunga la model). Documentat in
+`evaluation/chat.md`.
+
+**Antrenarea nu a fost deranjata.** Feature-ul asta a folosit porturi separate, iar fine-tuningul a rămas
+prioritatea: lantul `exp-010-contrastive` scoreaza acum cele 9 checkpoint-uri pe slice-ul de validare
+(339 de itemi fiecare), dupa care ruleaza holdout-ul si sondele.
