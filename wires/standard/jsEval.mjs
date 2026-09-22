@@ -119,15 +119,21 @@ export function assertInputContract({ values, wire }) {
         contract: 'dependency_defined'
       });
     }
-    if (name !== 'slots' || value === null || typeof value !== 'object' || Array.isArray(value)) {
+    // A compiled record is an object with at least one field. An array or a
+    // primitive under the name `slots` is not a compiled record, so carrying one is
+    // the same defect as carrying an empty object: the check applies whenever the
+    // name is declared, not only when the body happens to read it, which is what a
+    // reader of the circuit expects and what the preamble this contract replaces did.
+    if (name !== 'slots') {
       continue;
     }
-    if (Object.keys(value).length === 0) {
-      throw new SopError('execution_error', `Wire "${wire}" reads "$slots", which must carry the compiled record`, {
-        wire,
-        contract: 'slots_not_empty'
-      });
+    if (value !== null && typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length > 0) {
+      continue;
     }
+    throw new SopError('execution_error', `Wire "${wire}" reads "$slots", which must carry the compiled record as a non-empty object`, {
+      wire,
+      contract: 'slots_not_empty'
+    });
   }
 }
 

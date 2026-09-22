@@ -61,3 +61,29 @@ test('the probe harness does not change the plan fingerprint', () => {
   assert.equal(planFingerprint(entry), '\n===\nreturn "answer";');
   assert.equal(answerBody(entry.compute).includes(entry.compute), true);
 });
+
+test('the jsEval command owns the input and output contract the targets no longer restate', async () => {
+  // This contract is what replaced the fixed preamble inside every generated target,
+  // so it is the load-bearing part of that change: if a clause stops firing, the
+  // dataset loses a guarantee it used to get from text the model had to emit.
+  const runtime = createRuntime();
+  const run = (source, output = 'answer') => runtime.run(source, { outputs: [output] });
+  const code = (result) => (result.status === 'completed' ? 'completed' : result.code);
+
+  // The input clause: a compiled record must be a non-empty object.
+  assert.equal(code(await run('@slots literal\n{}\n\n@answer jsEval\nreturn Object.keys($slots).length;')), 'execution_error');
+  assert.equal(code(await run('@slots literal\n[1, 2]\n\n@answer jsEval\nreturn $slots.length;')), 'execution_error');
+  assert.equal(code(await run('@slots literal\nnull\n\n@answer jsEval\nreturn $slots === null ? "n" : "y";')), 'execution_error');
+  assert.equal(code(await run('@slots literal\n{"v": 3}\n\n@answer jsEval\nreturn $slots.v;')), 'completed');
+
+  // The output clause: absence is not a value and ends the run, while zero, false,
+  // and an empty list are values and pass. A body that published its result through
+  // a staged transaction returns nothing by design and is exempt.
+  assert.equal(code(await run('@slots literal\n{"v": 1}\n\n@answer jsEval\nreturn null;')), 'execution_error');
+  assert.equal(code(await run('@slots literal\n{"v": 1}\n\n@answer jsEval\nreturn undefined;')), 'execution_error');
+  assert.equal(code(await run('@slots literal\n{"v": 1}\n\n@answer jsEval\nreturn "";')), 'execution_error');
+  assert.equal(code(await run('@slots literal\n{"v": 1}\n\n@answer jsEval\nreturn 0;')), 'completed');
+  assert.equal(code(await run('@slots literal\n{"v": 1}\n\n@answer jsEval\nreturn false;')), 'completed');
+  assert.equal(code(await run('@slots literal\n{"v": 1}\n\n@answer jsEval\nreturn [];')), 'completed');
+  assert.equal(code(await run('@p jsEval\nreturn circuit.commit({ k: "v", result: 7 });', 'p')), 'completed');
+});
