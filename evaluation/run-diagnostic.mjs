@@ -111,14 +111,37 @@ Options:
 
 /** The prompt of one condition: what the model receives, and nothing more. */
 export function promptOf(problem, condition) {
-  if (condition === 'normal') return problem.statement;
-  if (condition === 'values') {
-    return `${problem.statement}\n\nThe values extracted from this statement, with their roles:\n${problem.valueRecord}\n\nCompile the plan that computes the answer.`;
+  return diagnosticPrompt(problem, condition).join('\n\n');
+}
+
+/**
+ * The user message of a condition, as a list of blocks.
+ *
+ * The first block is the statement, which is what every training row carries: the
+ * recorded profile showed the model a bare statement as the whole user turn and
+ * nothing else. An earlier version of this function appended prose instructions
+ * ("The values extracted from this statement, with their roles: … Compile the
+ * plan …"), which appears nowhere in the 8015 training rows, and the model
+ * answered the unfamiliar wrapper with a different output shape — measured on the
+ * pair suite, 0 of 24 pairs produced the same program under an assisted condition
+ * as under the plain statement, and the assisted columns scored *worse* than the
+ * plain one. The assisted input is therefore written as a record in the same
+ * notation the profile already carries in a `@slots` literal, with no wrapper
+ * sentence of its own, so a difference between conditions is a difference in the
+ * input rather than in the genre of the prompt.
+ */
+export function diagnosticPrompt(problem, condition) {
+  if (condition === 'normal') {
+    return [problem.statement];
   }
-  if (condition === 'plan') {
-    return `${problem.statement}\n\nThe plan this statement calls for, in order:\n${problem.planRecord}\n\nCompile this plan for the values of the statement.`;
+  const blocks = [problem.statement];
+  if (condition === 'values' || condition === 'both') {
+    blocks.push(problem.valueRecord);
   }
-  return `${problem.statement}\n\nThe values extracted from this statement, with their roles:\n${problem.valueRecord}\n\nThe plan this statement calls for, in order:\n${problem.planRecord}\n\nCompile this plan with these values.`;
+  if (condition === 'plan' || condition === 'both') {
+    blocks.push(problem.planRecord);
+  }
+  return blocks;
 }
 
 function messageOf(failure) {

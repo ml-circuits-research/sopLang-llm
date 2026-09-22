@@ -1,0 +1,31 @@
+{
+  "experiment": "diag-pairs-fixed",
+  "artifact": "/home/salboaie/work/sopLang-llm/evaluation/registry/exp-010-contrastive/gguf/checkpoint-450.gguf",
+  "suite": {
+    "profile": "diagnostic-pairs-1.0.0",
+    "seed": 20260922,
+    "pairs": 12,
+    "perPair": 4,
+    "kinds": [
+      "boundary-inclusion-pair",
+      "direction-pair",
+      "rate-vs-absolute-pair"
+    ]
+  },
+  "conditions": [
+    "normal",
+    "values",
+    "plan",
+    "both"
+  ],
+  "oracleAssisted": [
+    "values",
+    "plan",
+    "both"
+  ],
+  "pairedAccuracy": {
+    "pairs": 12,
+    "bothCorrect": 4
+  },
+  "generatedAt": "2026-09-22T17:26:07.681Z"
+}

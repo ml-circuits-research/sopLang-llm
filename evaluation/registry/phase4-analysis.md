@@ -331,11 +331,24 @@ against 9 of 60 — but the claim that the assisted numbers isolate a *stage* do
 must not be quoted as evidence about extraction or operator choice until the appended text is itself in the
 profile.
 
-The repair is cheap and must happen before the next diagnostic claims anything from these columns: render the
-assisted input in the recorded profile's own vocabulary (a second `slots` literal, or an instruction the
-profile's system prompt already names), and re-check that the plain and assisted prompts at least produce
-programs of the same shape for a majority of items. Until then the `normal` column is the only deployable
-measurement, which is what the report already says.
+The first repair attempt, measured (`diag-pairs-fixed`, 12 pairs). The invented prose wrapper is gone:
+`promptOf` now emits the statement as the first block and the diagnostic record as a further block in the
+notation the profile already carries inside a `@slots` literal, with no sentence of its own. The effect:
+
+| | before (`diag-pairs-010`) | after (`diag-pairs-fixed`) |
+| --- | --- | --- |
+| `values` matched | 3 of 48 (6.3%) | 8 of 24 (33.3%) |
+| `plan` matched | 16 of 48 (33.3%) | 11 of 24 (45.8%) |
+| programs identical to `normal` | 0 of 24 | 2 of 12 under `plan`, 0 under `values` |
+
+So the wrapper was part of the damage and removing it recovered most of the gap — but the assisted programs
+still differ from the plain one in nearly every case, which means the assisted columns are still measuring a
+different act rather than the same act with one input made free. **The instrument's design, not its wording, is
+what needs to change**: to isolate extraction, the compared pair must be two prompts the profile covers, for
+instance the plain statement against the statement plus an explicit values block that the training profile is
+taught to read. Until such a pair exists and is shown to keep the emitted plan stable, the `normal` column is
+the only measurement these reports may be cited for, and every assisted number in `diag-009`, `diag-pairs-010`
+and `diag-pairs-fixed` must be read as "response to an unfamiliar prompt", never as a stage diagnosis.
 
 ## Decisions taken on the night of 2026-09-21
 
