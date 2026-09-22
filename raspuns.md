@@ -346,3 +346,34 @@ valida (8/60 fata de 9/60 — valorile corecte nu ajutau oricum), dar afirmatia 
 **De ce am facut asta si nu m-am oprit:** pentru ca urmatorul arm se bazeaza pe diagnostic ca sa stie unde sa
 investeasca, iar eu tocmai construisem planul urmator (inventar de compozitii) pe o masuratoare pe care nu o
 puteam cita cu incredere. Mai bine descopar acum ca instrumentul e slab decat dupa inca un arm.
+
+---
+
+## 2026-09-22, 20:40Z — Am terminat curatarea tintelor: si linia helper a disparut (sandbox-ul o ofera)
+
+**Observatia ta (corecta):** demo-ul arata preambulul cu `const probe = ...` pentru ca testam `checkpoint-450`
+din exp-010, antrenat **inainte** de curatarea tintelor. Primul model pe tinte curate e exp-011, care se
+antreneaza acum.
+
+**Dar mai era un rest:** dupa prima curatare, cele 3 verificari generice disparusera, insa **linia helper**
+(`const probe = (condition, message) => ...`) ramasese in **7745 din 8735** tinte — text identic peste tot,
+exact genul de schelet pe care mi-ai zis sa-l scot si sa-l injectez in comanda `jsEval`.
+
+**Ce am facut (terminand directiva ta pana la capat):**
+
+1. Sandbox-ul (`runtime/sandbox.mjs`) defineste acum `probe` in contextul guest. Un corp scrie asertiunile
+   de domeniu ca apeluri simple `probe(...)` — fara definitie. Un corp vechi care isi declara propriul helper
+   (checkpoint-urile anterioare) il umbreste legal si ruleaza neschimbat. Verificat: toate cele 3 forme ruleaza.
+2. `jsEval` 2.0.0 -> **2.1.0** (versiune incrementata, cum cere regula).
+3. `answerBody` returneaza calculul neatins.
+4. Preservation view (JS-ul standalone care nu trece prin sandbox) injecteaza helper-ul **doar** unde corpul
+   chiar apeleaza `probe`.
+5. Profilul devine `compiled-plan-chat-4`: modelul e instiintat ca runtime-ul ofera helper-ul.
+6. Rezultat masurat: **0 din 8735** tinte mai contin linia helper. `verify: OK`, **321/321 teste**, DS008/DS009/wiki actualizate.
+
+**Antrenarea:** exp-011-compositions a fost repornita de la zero pe tintele curate (867 de pasi, ~1,5 ore),
+apoi lantul de evaluare ruleaza automat. Cand se termina, iti raportez numerele fata de 0,4% al lui exp-010.
+
+**Chat-ul (fix-ul pe care l-ai cerut):** exact doua blocuri, bold, culori: galben = modelul original
+(neantrenat, raspunde direct), cyan = modelul antrenat (planul afisat estompat, raspunsul verde). Comparatia
+e default; `--single` o opreste.

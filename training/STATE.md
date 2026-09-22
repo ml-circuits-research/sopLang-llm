@@ -30,7 +30,7 @@ Nothing is training. The GPU is idle and the machine is safe to use. Two queues 
 
 ## Running now: `exp-011-compositions` (started 2026-09-22 ~20:00Z)
 
-The arm the plan-inventory finding called for. `teacher/procedural/compositions.mjs` declares 22 operator
+The arm the plan-inventory finding called for. Restarted from zero on 2026-09-22 ~20:40Z after the probe helper also left the targets (jsEval 2.1.0 provides it in the sandbox; profile compiled-plan-chat-4; 0 of 8735 targets carry the helper line). `teacher/procedural/compositions.mjs` declares 22 operator
 compositions (18 trained, 4 reserved whole for evaluation: `below-largest-add-rate`, `above-count-double`,
 `below-total-per-unit-subtract-rate`, `above-largest-add-rate`), and `teacher/procedural/composition-families.mjs`
 derives one family per composition from its chain, so the statement, the oracle, and the circuit are three
