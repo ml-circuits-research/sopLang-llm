@@ -28,6 +28,28 @@ The two verdicts that matter, both written in `evaluation/registry/phase4-analys
 
 Nothing is training. The GPU is idle and the machine is safe to use. Two queues are armed and detached: `exp-008-queue.sh` waits for a *new* export before starting another arm, and `exp-009-queue.sh` is spent (its arm completed).
 
+## The four-model night (2026-09-22, ~23:15Z)
+
+The owner's overnight directive, running unattended:
+
+1. **Census generator** (done): 8 new operators (divisibility, sets, percentage, ratio-division, discount,
+   ranking, square geometry) and 15 new compositions (11 trained, 4 reserved), 37 declared compositions total;
+   dataset 9175 rows (procedural 2400), verify OK, 322 tests.
+2. **exp-012-census** (running): the 0.5B student on the expanded data, exp-011's recipe; its chain runs after.
+3. **Prose baselines** (queued after exp-012's chain): `run-prose-eval.mjs` asks each UNTRAINED base to answer
+   the 585 eval statements directly in prose, scored against the printed answers — the fair comparison the
+   owner asked for (the compiled-plan holdout asks the base for a skill it never had). Runs for both the 0.5B
+   and the 1.5B base.
+4. **exp-013-1.5b** (queued after the prose runs): Qwen2.5-Coder-1.5B-Instruct (downloaded, revision
+   2e1fd39, pinned in `training/environment/base-model-1.5b.json`, GGUF at
+   `training/checkpoints/base-1.5b-f16.gguf`), same recipe, `--model-manifest` naming the 1.5B pin.
+5. **Chat shows four models** (done): ORIGINAL MODEL 0.5B, FINE-TUNED MODEL 0.5B, BASE MODEL 1.5B,
+   FINE-TUNED MODEL 1.5B — the 1.5B pair appears automatically once exp-013 has a winner.
+
+The sequence is driven by one orchestrator that logs every stage to
+`evaluation/registry/overnight-supervisor.log` and writes `/tmp/night_final.txt` at the end. The watchdog and
+the disk guard are running; the disk holds ~300G free.
+
 ## Night supervision (2026-09-22, ~21:00Z)
 
 Disk cleanup done before the night: the intermediate `checkpoint-*` directories of the ten finished experiments
