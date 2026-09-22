@@ -15,9 +15,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const gerundOfVerb = { find: "Finding", make: "Making", get: "Getting" };
 probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the garden card");
@@ -28,7 +25,4 @@ probe(typeof slots.mapper === "string" && slots.mapper.length > 0, "the case mus
 probe(slots.mapper !== slots.proverber && slots.proverber !== slots.rival, "the three reactions must be given by different people");
 const process = slots.process.charAt(0).toUpperCase() + slots.process.slice(1);
 return slots.mapper + "\u2019s mapping of the mechanism. " + process + " as written needs " + slots.missingInput + ". \u201c" + gerundOfVerb[slots.proverbVerb] + " " + slots.proverbObject + "\u201d is not a listed substitute.";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

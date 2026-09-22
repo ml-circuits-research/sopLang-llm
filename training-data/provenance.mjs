@@ -65,6 +65,38 @@ function writeAtPath(root, path, value) {
   cursor[path[path.length - 1]] = value;
 }
 
+/**
+ * The value with one character replaced by one it does not hold, chosen from the
+ * lowercase alphabet. The length is preserved and the content provably differs,
+ * so a computation over the characters of the value cannot return the same answer
+ * unless it ignores the value entirely.
+ */
+function contentChanged(value) {
+  const characters = [...String(value)];
+  if (characters.length === 0) {
+    return 'a';
+  }
+  // Deleting a character that occurs exactly once changes the *number* of distinct
+  // characters, which is what a computation over the character set must react to. A
+  // substitution alone does not: replacing one single-occurrence letter with another
+  // leaves the count at the same value ("experimentation" holding "x" once becomes
+  // "experimentation" holding "z" once), so a computing circuit would look stored.
+  const counts = new Map();
+  for (const character of characters) {
+    counts.set(character, (counts.get(character) ?? 0) + 1);
+  }
+  const uniqueAt = characters.findIndex((character) => counts.get(character) === 1 && character !== ' ');
+  if (uniqueAt === -1) {
+    // Every character repeats, so the string is a run of repeated letters: adding a
+    // new one raises the distinct count and is never absorbed.
+    const held = new Set(characters);
+    const fresh = 'zqxjvkwypbfgmhduconraltsie'.split('').find((letter) => !held.has(letter));
+    return fresh === undefined ? `${value}x` : `${value}${fresh}`;
+  }
+  characters.splice(uniqueAt, 1);
+  return characters.join('');
+}
+
 function mirroredString(value) {
   return value + [...value].reverse().join('');
 }
@@ -230,6 +262,14 @@ export function perturbedSlotBodies(source, { maxCandidates = 16 } = {}) {
     add(withEdits(booleans, (value) => !value));
   }
   if (strings.length > 0) {
+    // A probe must be able to change what a string *contains*, not only what it is
+    // concatenated with: appending a character can be absorbed by a computation over
+    // the character set (appending "x" to a word already holding an "x" leaves its
+    // distinct-letter count unchanged), so a computing circuit would look stored.
+    // Replacing one character with one the value does not already hold changes the
+    // content at the same length, which a character-level computation must react to.
+    // It goes first because the candidate list is bounded.
+    add(withEdits(strings, (value) => contentChanged(value)));
     add(withEdits(strings, mirroredString));
   }
   if (numbers.length > 0 && strings.length > 0) {

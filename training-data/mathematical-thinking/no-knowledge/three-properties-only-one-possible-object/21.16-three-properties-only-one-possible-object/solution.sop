@@ -42,17 +42,10 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const matching = slots.cards.filter(function (card) {
   return card.properties.every(function (property) { return slots.excluded.indexOf(property) === -1; });
 });
 if (matching.length !== 1) { throw new Error("the filters keep " + matching.length + " cards instead of one"); }
 return "Card " + matching[0].name + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

@@ -1,3 +1,3 @@
 # reverse-word-1 — Reverse Word
 
-Write the word "parallel" backwards. Reply with only the reversed word.
+Write the word "banana" backwards. Reply with only the reversed word.

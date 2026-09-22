@@ -3,7 +3,7 @@
  *
  * The verifier enforces the dataset circuit contract over a shipped tree
  * instead of trusting the writer. It scans every `solution.sop` for the shape
- * rules (no `input` wire, no `modelCall` wire, and the probe harness in every
+ * rules (no `input` wire, no `modelCall` wire, and a domain assertion in every
  * `jsEval` stage), fails a tree whose identical statements carry different
  * printed answers, executes every circuit without inputs and without model
  * bindings and compares the executed answer with the printed answer of its
@@ -17,7 +17,6 @@ import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseCircuit } from '../runtime/parser.mjs';
 import { createRuntime } from '../runtime/kernel.mjs';
-import { probeCount } from '../teacher/families/probes.mjs';
 import { answerMatches, normalizeAnswer } from '../teacher/naming.mjs';
 import { DEFAULT_ROOT, bookRoots, expectedAnswersOf, solutionFilesOf, statementBodyOf } from './dataset-manifest.mjs';
 import { verifyProvenance } from './provenance.mjs';
@@ -26,12 +25,15 @@ const FORBIDDEN_COMMANDS = new Map([
   ['input', 'an input wire re-states data the compiled plan already carries'],
   ['modelCall', 'the compiling model already read the problem; a circuit must not re-parse its own input']
 ]);
-const MINIMUM_PROBES = 3;
+// The generic input and output contract belongs to the `jsEval` command (version 2),
+// so a stage is not required to restate it, and a family is not required to add an
+// assertion of its own: the target of a compiled plan is the computation. A family
+// that does assert something about its values keeps its assertion in the body.
 
 /**
- * Scan every circuit for the forbidden commands and for a `jsEval` stage
- * without the probe harness. The scan never stops at the first violation, so
- * one run reports every file that needs attention.
+ * Scan every circuit for the forbidden commands and for a `jsEval` stage that
+ * asserts nothing about its own domain. The scan never stops at the first
+ * violation, so one run reports every file that needs attention.
  */
 export function scanShape(root, files) {
   const violations = [];
@@ -45,15 +47,6 @@ export function scanShape(root, files) {
           wire: wire.name,
           command: wire.command,
           why: FORBIDDEN_COMMANDS.get(wire.command)
-        });
-      }
-      const probes = probeCount(wire.body);
-      if (wire.command === 'jsEval' && probes < MINIMUM_PROBES) {
-        violations.push({
-          file: relative(root, file),
-          wire: wire.name,
-          command: wire.command,
-          why: `a dataset jsEval stage asserts its inputs and its output with the probe harness (at least ${MINIMUM_PROBES} probe(...) calls), found ${probes}`
         });
       }
     }
@@ -240,9 +233,11 @@ Arguments:
 What it checks:
   1. The shape rule, per solution.sop: a dataset circuit must not contain an
      input wire (nothing injects a binding into it) and must not contain a
-     modelCall wire (the compiling model already read the problem), and every
-     jsEval stage must carry the probe harness (at least three probe(...)
-     assertions on the slots wire and on the computed answer). Each offending
+     modelCall wire (the compiling model already read the problem). The generic
+     assertions about a defined dependency, a non-empty slots record, and a
+     non-empty result belong to the jsEval command, so a stage is not required
+     to restate them, and the fixed preamble that used to carry them is not part
+     of the trained target. Each offending
      wire is printed as a warning, and execution is skipped while a violation
      exists.
   2. Statement ambiguity: two shipped examples must not share the

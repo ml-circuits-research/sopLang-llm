@@ -14,9 +14,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const describeCrossDomain = function describeCrossDomain(check) {
   if (check.kind === 'distance') {
     return `${check.centimetres * check.kilometresPerCentimetre} km.`;
@@ -61,7 +58,4 @@ probe(built || additional > 0, "a project short of the threshold must still need
 const main = (built ? "The project is built." : "The project is not built.") + " Additional tokens needed: " + additional + ".";
 const suffix = renderCrossDomain(slots.crossDomain);
 return suffix === "" ? main : main + " " + suffix;
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

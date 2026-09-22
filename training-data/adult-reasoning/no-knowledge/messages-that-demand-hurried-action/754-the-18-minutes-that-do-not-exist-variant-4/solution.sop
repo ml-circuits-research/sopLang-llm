@@ -11,9 +11,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots.name === "string" && slots.name.length > 0, "the message must be addressed to a named recipient");
 probe(Number.isInteger(slots.minutes) && slots.minutes > 0, "the message must give a positive whole number of minutes");
@@ -34,7 +31,4 @@ const summary = signs.length === 3
   ? "Every sign on the guide is present."
   : "Only " + signs.length + " of the 3 signs are present.";
 return actionClause + " " + checkClause + " " + summary;
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

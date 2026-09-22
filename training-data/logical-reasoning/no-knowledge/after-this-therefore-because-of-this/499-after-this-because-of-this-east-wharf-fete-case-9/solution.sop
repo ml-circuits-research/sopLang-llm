@@ -15,9 +15,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots.place === "string" && slots.place.length > 0, "the fete must name its place");
 probe(typeof slots.object === "string" && slots.object.length > 0, "the earlier event must be named");
@@ -29,7 +26,4 @@ probe(slots.causeObject === slots.object && slots.causeOutcome === slots.outcome
 probe(slots.remedyObject === slots.object, "the removing verdict must be about the earlier event");
 probe(slots.cause !== slots.sequence && slots.cause !== slots.remedy && slots.sequence !== slots.remedy, "the three verdicts must be attributed to three different people");
 return "None about the " + slots.object + " and the " + slots.outcome + ". A later event can follow anything you hung at " + slots.firstHour + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

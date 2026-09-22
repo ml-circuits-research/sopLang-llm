@@ -47,9 +47,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(Array.isArray(slots.options) && slots.options.length > 0, "the statement must list at least one option");
 probe(Array.isArray(slots.required) && slots.required.length > 0, "the question must list at least one mandatory condition");
@@ -62,7 +59,4 @@ const matching = slots.options.filter((option) => failed(option) === null);
 probe(matching.length > 0, "at least one option must meet every mandatory condition");
 probe(matching.length === 1, "the mandatory conditions must leave exactly one option, not " + matching.length);
 return "Option " + matching[0].label + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

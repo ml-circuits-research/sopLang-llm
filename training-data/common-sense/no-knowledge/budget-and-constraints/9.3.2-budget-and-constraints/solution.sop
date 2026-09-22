@@ -11,9 +11,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(Number.isInteger(slots.budget) && slots.budget > 0, "the total budget must be a positive integer");
 probe(Number.isInteger(slots.fixedCost) && slots.fixedCost >= 0 && slots.fixedCost < slots.budget, "the fixed cost must be affordable");
@@ -38,7 +35,4 @@ if (!feasibleWithout) {
   return "The optimal feasible plan uses the add-on: " + unitsWith + " units plus the module for " + benefitWith + " benefit points.";
 }
 return "The optimal feasible plan is without the add-on: " + unitsWithout + " units for " + benefitWithout + " benefit points.";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

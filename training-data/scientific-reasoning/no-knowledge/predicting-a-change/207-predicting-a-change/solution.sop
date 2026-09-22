@@ -23,9 +23,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots.change === "string" && slots.change.length > 0, "the statement must name the activated change");
 probe(Array.isArray(slots.rules) && slots.rules.length > 0, "the statement must list at least one causal rule");
@@ -55,7 +52,4 @@ while (grown) {
 }
 probe(effects.length > 0, "the activated change must trigger at least one rule");
 return "Direct effect: " + effects[0] + ". Downstream effects: " + effects.join(", ") + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

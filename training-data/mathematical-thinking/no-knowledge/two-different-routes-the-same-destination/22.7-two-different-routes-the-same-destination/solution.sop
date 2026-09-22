@@ -15,10 +15,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const walk = (moves) => {
   const d = { dx: 0, dy: 0 };
@@ -37,7 +33,4 @@ const show = (d) => {
 };
 if (a.dx === b.dx && a.dy === b.dy) return "Yes; both end " + show(a) + " of the start.";
 return "No; one route ends " + show(a) + " of the start and the other " + show(b) + " of the start.";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

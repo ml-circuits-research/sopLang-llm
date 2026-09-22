@@ -2,7 +2,7 @@
 
 ## Explanation
 
-1. The word is "bookkeeper" and the letter is "a".
+1. The word is "committee" and the letter is "a".
 2. The count is a property of the characters, not of the meaning of the word, so it is delegated to deterministic work.
 3. Counting the characters gives 0.
 

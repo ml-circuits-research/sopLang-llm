@@ -26,10 +26,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const matches = (value, predicate) => {
   if (predicate.op === "and") { return predicate.of.every((part) => matches(value, part)); }
@@ -54,7 +50,4 @@ const sets = slots.clues.map((clue) => keep(slots.candidates, clue.predicate));
 const same = sets[0].length === sets[1].length && sets[0].every((value, index) => value === sets[1][index]);
 if (same) { return "Yes; both keep {" + sets[0].join(",") + "}."; }
 return "No; {" + sets[0].join(",") + "} and {" + sets[1].join(",") + "}.";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

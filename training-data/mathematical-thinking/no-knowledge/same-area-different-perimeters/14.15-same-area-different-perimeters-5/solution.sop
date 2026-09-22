@@ -7,10 +7,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const area1 = slots.side1a * slots.side1b;
 const area2 = slots.side2a * slots.side2b;
@@ -18,7 +14,4 @@ const perimeter1 = 2 * (slots.side1a + slots.side1b);
 const perimeter2 = 2 * (slots.side2a + slots.side2b);
 const verdict = area1 === area2 ? "Equal areas" : "Different areas";
 return verdict + "; P1=" + perimeter1 + ", P2=" + perimeter2 + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

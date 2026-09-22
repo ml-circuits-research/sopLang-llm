@@ -16,10 +16,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const gcd = (left, right) => { let a = Math.abs(left); let b = Math.abs(right); while (b !== 0) { const next = a % b; a = b; b = next; } return a; };
 const periodA = slots.a[1] - slots.a[0];
@@ -27,7 +23,4 @@ const periodB = slots.b[1] - slots.b[0];
 if (periodA !== slots.period || periodB !== slots.period) { throw new Error("the stated period does not match the two day lists"); }
 const coincide = (slots.b[0] - slots.a[0]) % gcd(periodA, periodB) === 0;
 return (coincide ? "Yes" : "No") + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

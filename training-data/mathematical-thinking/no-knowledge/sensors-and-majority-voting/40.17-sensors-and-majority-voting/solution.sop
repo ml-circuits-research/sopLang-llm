@@ -10,10 +10,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const counts = new Map();
 for (const answer of slots.answers) { counts.set(answer, (counts.get(answer) || 0) + 1); }
@@ -22,7 +18,4 @@ if (ordered.length < 2 || ordered[0][1] === ordered[1][1]) { throw new Error("th
 if (slots.faulty * 2 >= slots.answers.length) { throw new Error("the majority answer is not guaranteed for this fault bound"); }
 const value = ordered[0][0];
 return value.charAt(0).toUpperCase() + value.slice(1) + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

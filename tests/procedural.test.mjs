@@ -70,7 +70,14 @@ test('the reference parse recovers the sampled values and the statement is Engli
       assert.doesNotThrow(() => assertEnglishContent(instance.statement, `${family.id} instance ${instance.index}`));
       const answer = family.render(family.solve(instance.slots));
       assert.ok(answer.length > 0);
-      assert.ok(!instance.statement.includes(answer), `${family.id} instance ${instance.index} prints its own answer`);
+      // A statement must not print its own answer, except for a family that declares
+      // it answers about the characters of its own text: there the answer is a
+      // character of the word the statement quotes, so it is necessarily a substring.
+      if (family.answerIsSubstringOfStatement !== true) {
+        assert.ok(!instance.statement.includes(answer), `${family.id} instance ${instance.index} prints its own answer`);
+      } else {
+        assert.ok(instance.statement.includes(answer), `${family.id} instance ${instance.index} is not self-referential`);
+      }
       assert.ok(family.explain(instance.slots, family.solve(instance.slots)).length >= 2);
     }
   }

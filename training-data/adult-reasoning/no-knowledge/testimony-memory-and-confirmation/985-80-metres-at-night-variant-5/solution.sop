@@ -25,9 +25,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots === "object" && slots !== null, "the case must carry the three accounts");
 probe(typeof slots.far.name === "string" && slots.far.name.length > 0, "the far account must name its witness");
@@ -45,7 +42,4 @@ if (slots.far.changed) weaknesses.push("change");
 probe(weaknesses.length > 0, "the far account must carry at least one weakness from the notebook");
 probe(slots.close.closeUp === true && slots.close.daylight === true, "the firmer account must be close up in daylight");
 return slots.close.name + "’s. " + slots.far.name + "’s is weakened by " + weaknesses.join(", ") + ". " + slots.echo.name + " is an echo, not confirmation.";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

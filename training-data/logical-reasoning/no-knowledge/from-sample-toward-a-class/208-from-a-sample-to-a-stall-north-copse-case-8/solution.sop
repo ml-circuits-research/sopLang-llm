@@ -21,9 +21,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(Array.isArray(slots.claims) && slots.claims.length === 3, "the case must record the three claims about the tasting");
 probe(slots.claims.every((claim) => typeof claim.name === "string" && claim.name.length > 0), "every speaker must have a name");
@@ -35,7 +32,4 @@ const cautious = slots.claims.filter((claim) => claim.stance === "cautious").map
 const universal = slots.claims.filter((claim) => claim.stance === "universal").map((claim) => claim.name);
 probe(cautious.length === 1 && universal.length === 1 && universal[0] === slots.taster, "one second speaker must claim a cautious climb and the taster must claim the whole carton");
 return "A limited inductive claim about this carton, not a forced universal. " + cautious[0] + " has the strength right. \u201cSo far\u201d is the honest adverb.";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

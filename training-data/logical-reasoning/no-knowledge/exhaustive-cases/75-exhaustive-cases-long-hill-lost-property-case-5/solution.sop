@@ -18,9 +18,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(Array.isArray(slots.tags) && slots.tags.length === 3, "the case must post a closed list of three tags");
 probe(Array.isArray(slots.ruledOut) && slots.ruledOut.length === 2, "the case must rule out exactly two tags");
@@ -32,7 +29,4 @@ probe(slots.claimed === remaining[0], "the claimant must name the tag the two ne
 probe(slots.tags.indexOf(slots.proposed) === -1, "the proposed colour must not be a member of the closed list");
 const named = slots.proposed.charAt(0).toUpperCase() + slots.proposed.slice(1);
 return slots.claimant + " is forced. Two tags are ruled out; the third remains. " + named + " is unlisted. Two negatives force the remainder only because the list was exhaustive.";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

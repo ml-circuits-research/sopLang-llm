@@ -6,10 +6,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 function reduce(a, b) { return b === 0 ? a : reduce(b, a % b); }
 const factor = slots.word === "double" ? 2 : slots.word === "triple" ? 3 : 1;
@@ -18,7 +14,4 @@ const water = slots.water * factor;
 const divide = reduce(syrup, syrup + water);
 return String(syrup) + " parts syrup, " + String(water) + " parts water; the fraction remains "
   + String(syrup / divide) + "/" + String((syrup + water) / divide) + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

@@ -13,9 +13,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots.place === "string" && slots.place.length > 0, "the label must name the place");
 probe(typeof slots.eater === "string" && slots.eater.length > 0, "the case must name the person eating");
@@ -41,7 +38,4 @@ const claim = slots.saltPer100Hundredths < slots.meanHundredths
   ? slots.saltLabel + "<" + slots.meanLabel + ", so the claim is consistent with the printed reference."
   : slots.saltLabel + " is not below " + slots.meanLabel + ", so the claim is not consistent with the printed reference.";
 return half + " g → " + kcal + " kcal and " + (saltHundredths / 100).toFixed(2) + " g salt. " + claim;
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

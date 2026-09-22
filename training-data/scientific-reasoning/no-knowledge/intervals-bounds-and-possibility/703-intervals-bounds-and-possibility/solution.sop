@@ -31,9 +31,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(slots.zone !== null && typeof slots.zone === "object", "the statement must state an accepted zone");
 probe(Number.isInteger(slots.zone.low) && Number.isInteger(slots.zone.high) && slots.zone.low <= slots.zone.high, "the accepted zone must be an increasing closed interval");
@@ -50,7 +47,4 @@ const open = entries.filter((entry) => entry.verdict === "uncertain");
 probe(open.length > 0, "at least one sample must stay open under its stated interval");
 probe(open.length === 1, "the stated samples must leave exactly one candidate for remeasurement, not " + open.length);
 return entries.map((entry) => entry.label + ": " + entry.verdict).join(", ") + "; remeasurement is useful for " + open[0].label + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

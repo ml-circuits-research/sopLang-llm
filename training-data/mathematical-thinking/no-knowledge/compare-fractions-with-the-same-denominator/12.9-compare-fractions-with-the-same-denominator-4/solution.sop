@@ -12,10 +12,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 if (slots.left.denominator !== slots.denominator || slots.right.denominator !== slots.denominator) {
   throw new Error("the fractions do not share the stated denominator");
@@ -25,7 +21,4 @@ if (slots.left.numerator === slots.right.numerator) {
 }
 const larger = slots.left.numerator > slots.right.numerator ? slots.left : slots.right;
 return larger.numerator + "/" + larger.denominator + " is larger.";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

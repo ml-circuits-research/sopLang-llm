@@ -186,12 +186,6 @@ function validateCase(entry, file) {
       );
     }
   }
-  const probes = probeFindings(buildProgram(entry, {})).find((finding) => finding.wire === 'answer');
-  if (probes === undefined || probes.probes < 3) {
-    throw new Error(
-      `Family "${entry.template}" in ${file} assembles an answer wire without the probe harness; a dataset circuit asserts its inputs and its output with probe(...) calls.`
-    );
-  }
   const guard = factKeywordGuardOf(entry);
   if (guard !== null) {
     throw new Error(

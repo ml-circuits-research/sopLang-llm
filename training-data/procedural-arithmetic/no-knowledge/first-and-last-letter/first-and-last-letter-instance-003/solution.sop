@@ -1,0 +1,16 @@
+@slots literal
+{
+  "word": "fundamental",
+  "position": "last"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+const slots = $slots;
+probe(typeof slots.word === "string" && slots.word.length > 0, "the word must be a non-empty string");
+probe(slots.position === "first" || slots.position === "last", "the position must be first or last");
+const characters = [...slots.word];
+const letter = slots.position === "first" ? characters[0] : characters[characters.length - 1];
+probe(typeof letter === "string" && letter.length === 1, "the chosen position must hold exactly one letter");
+return letter;
+

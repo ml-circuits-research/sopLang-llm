@@ -2,7 +2,7 @@
 
 ## Explanation
 
-1. The word is "refrigerator" and the letter is "o".
+1. The word is "compiler" and the letter is "o".
 2. The count is a property of the characters, not of the meaning of the word, so it is delegated to deterministic work.
 3. Counting the characters gives 1.
 

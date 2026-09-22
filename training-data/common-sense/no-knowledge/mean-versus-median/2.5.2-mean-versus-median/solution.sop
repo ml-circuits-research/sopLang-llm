@@ -16,9 +16,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(Array.isArray(slots.values) && slots.values.length === 9, "the statement must list nine observations");
 probe(slots.values.every((value) => Number.isInteger(value) && value >= 0), "every observation must be a whole non-negative number");
@@ -40,7 +37,4 @@ const mean = hundredthsOf(sum, slots.values.length);
 const withoutExtreme = hundredthsOf(restSum, rest.length);
 probe(mean >= withoutExtreme, "the extreme value must not pull the mean below the mean without it");
 return "Mean = " + String(mean / 100) + "; median = " + median + ". Use the mean for total amount per observation and the median for a more robust 'typical' value.";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

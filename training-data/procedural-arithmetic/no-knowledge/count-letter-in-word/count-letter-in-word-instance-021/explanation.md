@@ -2,7 +2,7 @@
 
 ## Explanation
 
-1. The word is "strawberry" and the letter is "l".
+1. The word is "mississippi" and the letter is "l".
 2. The count is a property of the characters, not of the meaning of the word, so it is delegated to deterministic work.
 3. Counting the characters gives 0.
 

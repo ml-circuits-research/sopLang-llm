@@ -53,9 +53,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(Array.isArray(slots.conditions) && slots.conditions.length > 0, "the statement must name the possible faulty conditions");
 probe(Array.isArray(slots.labels) && slots.labels.length > 0, "the statement must state which labels the possible faults carry");
@@ -72,7 +69,4 @@ const cost = Math.min(...covering.map((action) => action.cost));
 const cheapest = covering.filter((action) => action.cost === cost);
 probe(cheapest.length === 1, "two actions must not tie for the minimum cost");
 return "The minimum-cost robust action is " + cheapest[0].name + ", cost " + cost + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

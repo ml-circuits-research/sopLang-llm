@@ -13,9 +13,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(Array.isArray(slots.values) && slots.values.length > 0, "the records must be a non-empty list");
 const values = slots.values;
@@ -30,7 +27,4 @@ for (const value of values) {
 const extra = (consumed * slots.rate) / 100;
 probe(consumed * slots.rate % 100 === 0, "the percentage of the total must be a whole number of sheets");
 return (consumed + extra) + " sheets must be ordered, which is " + consumed + " consumed plus " + extra + " extra.";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

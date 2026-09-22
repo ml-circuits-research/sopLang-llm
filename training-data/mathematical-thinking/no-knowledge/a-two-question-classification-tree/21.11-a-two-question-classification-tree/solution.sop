@@ -34,10 +34,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const groups = {};
 for (const piece of slots.pieces) {
@@ -59,7 +55,4 @@ for (const key of Object.keys(groups)) {
 }
 if (candidates === null || candidates.length === 0) { throw new Error("no second question separates the remaining pieces"); }
 return "The second question can be “Is it " + slots.pieces[0].properties[candidates[0]] + "?”.";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

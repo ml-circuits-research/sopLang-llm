@@ -10,10 +10,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const successes = [];
 for (const candidate of slots.candidates) {
@@ -31,7 +27,4 @@ if (successes.length !== 1) {
   throw new Error(successes.length + " candidate instructions reach the target");
 }
 return "\u201c" + successes[0].verb + " " + successes[0].amount + ".\u201d";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

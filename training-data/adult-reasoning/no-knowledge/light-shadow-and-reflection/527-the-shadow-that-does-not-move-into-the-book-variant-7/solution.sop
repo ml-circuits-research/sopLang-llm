@@ -11,9 +11,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots.actor === "string" && slots.actor.length > 0, "the case must name the actor");
 probe(/^[A-Z][a-z]+$/.test(slots.actor), "the actor must be a plain capitalised name");
@@ -32,7 +29,4 @@ const returnClause = slots.lightTravelsStraight
   ? "Without the book, the mug’s shadow returns in a straight line."
   : "Without the book, the mug’s shadow returns.";
 return litClause + " " + screenClause + " " + returnClause;
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

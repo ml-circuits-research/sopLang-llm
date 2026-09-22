@@ -1,0 +1,17 @@
+@slots literal
+{
+  "first": "governmental",
+  "second": "differentiate"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+const slots = $slots;
+probe(typeof slots.first === "string" && slots.first.length > 0, "the first word must be a non-empty string");
+probe(typeof slots.second === "string" && slots.second.length > 0, "the second word must be a non-empty string");
+const firstLength = [...slots.first].length;
+const secondLength = [...slots.second].length;
+probe(firstLength !== secondLength, "the two words must differ in length");
+const longer = firstLength > secondLength ? slots.first : slots.second;
+return longer + " (" + Math.max(firstLength, secondLength) + " letters).";
+

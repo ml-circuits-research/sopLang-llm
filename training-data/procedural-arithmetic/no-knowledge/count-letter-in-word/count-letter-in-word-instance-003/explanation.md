@@ -2,7 +2,7 @@
 
 ## Explanation
 
-1. The word is "alphabet" and the letter is "c".
+1. The word is "rhythm" and the letter is "c".
 2. The count is a property of the characters, not of the meaning of the word, so it is delegated to deterministic work.
 3. Counting the characters gives 0.
 

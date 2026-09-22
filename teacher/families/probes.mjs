@@ -1,45 +1,55 @@
 /**
- * Probe harness for dataset circuits.
+ * Domain assertions for dataset circuits.
  *
- * Every dataset circuit carries assertions in its `jsEval` stage. The harness
- * below is emitted by `buildProgram` around the family computation, so a probe
- * failure is a structured `execution_error` instead of a silently wrong answer:
+ * The generic part of what used to be a probe preamble is now the input and
+ * output contract of the `jsEval` command itself (`wires/standard/jsEval.mjs`,
+ * version 2): a dependency must be defined, a `slots` record must be a non-empty
+ * object, and the body must not publish `null`, `undefined`, or the empty
+ * string. Those three clauses were previously re-emitted as fixed text inside
+ * every generated target — 18.96% of the target tokens of the shipped suite —
+ * although they are identical in all 8415 `jsEval` stages; the command asserts
+ * them once, so the target no longer teaches the model to write them.
  *
- * - two input probes assert that the compiled `slots` wire carries a non-empty
- *   object, because every computation reads its instance data from there;
- * - the family computation runs inside an async closure, so its `return` is a
- *   value the harness can inspect before publishing it;
- * - one output probe asserts that the computation produced a non-empty answer.
+ * What remains here is the part that is NOT generic: a family's own assertions
+ * about its domain (a value must be a member of the stated list, a score must be
+ * a non-negative integer, a remainder must be smaller than the divisor). Those
+ * are judgements only the family can make, they vary per family, and they stay in
+ * the body where the model writes them. `answerBody` therefore returns the
+ * computation unchanged, and this module keeps the helpers the loader, the
+ * verifier, and the provenance probe need to read a body that carries domain
+ * assertions:
  *
- * A family body may call `probe(condition, message)` itself for domain
- * assertions (a value must be a known member of the stated list, a score must
- * be a non-negative integer, and so on). The helper is defined before the
- * closure, so those calls are in scope, and the loader rejects a family whose
- * assembled answer wire lacks the harness.
+ * - `probeCount` counts the `probe(` calls of a body;
+ * - `stripProbeStatements` removes the assertion statements, so the provenance
+ *   probe can ask whether the *computation* reads an input value;
+ * - `probeFindings` reports the per-wire counts of an assembled program.
  */
 
 export const PROBE_HELPER =
   'const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };';
 
-const INPUT_PROBES = Object.freeze([
-  'probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");',
-  'probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");'
-]);
-
-const OUTPUT_PROBE =
-  'probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");';
-
-/** The `answer` wire body of a dataset circuit: probes around the computation. */
+/**
+ * The `answer` wire body of a dataset circuit: the family computation.
+ *
+ * A family that writes domain assertions declares the `probe` helper itself,
+ * because it is the family's own text now: the code emitted for a family either
+ * defines the helper it calls or does not call one. `buildProgram` never injects
+ * a preamble, so the trained form carries no statement that is the same in every
+ * example.
+ */
 export function answerBody(compute) {
-  return [
-    PROBE_HELPER,
-    ...INPUT_PROBES,
-    'const answer = await (async () => {',
-    String(compute),
-    '})();',
-    OUTPUT_PROBE,
-    'return answer;'
-  ].join('\n');
+  const body = String(compute);
+  // A family that writes domain assertions calls `probe`, and the helper is part
+  // of the family's own contract now. It is added here, once, only for a body that
+  // actually calls it: a body without assertions stays exactly as the family wrote
+  // it, so no text that is identical across examples is injected into a target that
+  // does not need it. The generic clauses (a defined dependency, a non-empty
+  // `slots`, a non-empty result) are NOT here — they belong to the `jsEval`
+  // command, so they are asserted for every circuit without being taught.
+  if (!/\bprobe\s*\(/.test(body)) {
+    return body;
+  }
+  return `${PROBE_HELPER}\n${body}`;
 }
 
 /**
@@ -81,7 +91,25 @@ export function probeFindings(source) {
     if (match === null) {
       continue;
     }
-    findings.push({ wire: match[1], probes: probeCount(match[2]) });
+    findings.push({ wire: match[1], probes: probeCount(match[2]), assertions: assertionCount(match[2]) });
   }
   return findings;
+}
+
+/**
+ * The domain assertions of a circuit body: a `probe(...)` call, or a plain
+ * `throw` a family writes when a probe helper would not express the condition.
+ * Both are assertions about the family's own values and both end the run as a
+ * structured `execution_error`. The generic clauses about a defined dependency,
+ * a non-empty `slots`, and a non-empty result are not counted here: the `jsEval`
+ * command asserts them, so restating them adds nothing.
+ */
+export function assertionCount(source) {
+  const text = String(source ?? '');
+  const probes = probeCount(text);
+  // The probe helper's own `throw` is not an assertion a family made about its
+  // values: it is the mechanism behind every `probe(...)` call, so counting both
+  // would report one domain assertion as two.
+  const helperThrows = text.includes(PROBE_HELPER) ? 1 : 0;
+  return probes + [...text.matchAll(/\bthrow\b/g)].length - helperThrows;
 }

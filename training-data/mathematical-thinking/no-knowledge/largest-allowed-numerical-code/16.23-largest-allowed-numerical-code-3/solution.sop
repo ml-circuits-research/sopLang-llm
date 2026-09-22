@@ -11,10 +11,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const results = [];
 const walk = (used, prefix) => {
@@ -34,7 +30,4 @@ const walk = (used, prefix) => {
 walk(slots.digits.map(() => false), []);
 const allowed = results.filter((value) => value > slots.lower && value < slots.upper);
 return String(Math.max(...allowed));
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

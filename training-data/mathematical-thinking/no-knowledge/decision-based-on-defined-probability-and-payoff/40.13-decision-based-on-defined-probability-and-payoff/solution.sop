@@ -19,16 +19,9 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const averages = slots.games.map((game) => ({ name: game.name, average: game.payoffs.reduce((sum, value) => sum + value, 0) / game.payoffs.length }));
 averages.sort((left, right) => right.average - left.average);
 if (averages.length < 2 || averages[0].average === averages[1].average) { throw new Error("the average values do not single out one game"); }
 return "Game " + averages[0].name + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

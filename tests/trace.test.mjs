@@ -147,7 +147,7 @@ test('a successful trace identifies the command version and the graph state', as
   const result = await createRuntime().run('@a literal\n1\n\n@output jsEval\nreturn $a;');
   const entry = result.trace.entries.find((candidate) => candidate.wire === 'output');
   assert.equal(entry.command, 'jsEval');
-  assert.equal(entry.commandVersion, '1.1.0');
+  assert.equal(entry.commandVersion, '2.0.0');
   assert.equal(entry.circuitRevision, 1);
   assert.equal(entry.dependencies.length, 1);
   assert.equal(entry.dependencies[0].name, 'a');

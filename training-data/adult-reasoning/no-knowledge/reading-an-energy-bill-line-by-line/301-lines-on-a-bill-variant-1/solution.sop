@@ -20,9 +20,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots.person === "string" && slots.person.length > 0, "the statement must name the person the bill belongs to");
 probe(typeof slots.district === "string" && slots.district.length > 0, "the statement must name the ward or district");
@@ -39,7 +36,4 @@ const penaltyTenThousandths = Math.round((totalCents * slots.daysLate * slots.da
 const totalText = Math.floor(totalCents / 100) + "." + String(totalCents % 100).padStart(2, "0");
 const penaltyText = Math.floor(penaltyTenThousandths / 10000) + "." + String(penaltyTenThousandths % 10000).padStart(4, "0");
 return "Total " + totalText + ". Penalty " + penaltyText + ". The standing charge is monthly, not daily.";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

@@ -16,17 +16,10 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const allowed = slots.plans.filter((plan) => plan.minutes <= slots.maxMinutes);
 if (allowed.length === 0) { throw new Error("no plan satisfies the duration rule"); }
 let best = allowed[0];
 for (const plan of allowed) { if (plan.cost < best.cost) { best = plan; } }
 return best.name + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

@@ -1,4 +1,5 @@
 import { findValueReferences } from '../../runtime/dependencies.mjs';
+import { SopError } from '../../runtime/errors.mjs';
 import { applyCircuitResult } from '../../runtime/metaprogramming.mjs';
 
 /**
@@ -9,6 +10,19 @@ import { applyCircuitResult } from '../../runtime/metaprogramming.mjs';
  * remaining subproblem is mechanical. The body runs as an async function body
  * with the declared dependencies as parameters, and a `circuit` parameter gives
  * access to the transactional graph API without exposing a hidden value read.
+ *
+ * The command owns its input contract, so a compiled plan does not restate it.
+ * `version 2` asserts, before the body runs, that every dependency value is
+ * defined, that a dependency carrying a compiled `slots` record is a non-empty
+ * object, and after the body runs that it produced a value that is not `null`,
+ * `undefined`, or the empty string. Both failures are structured
+ * `execution_error`s naming the wire and the contract clause, which is what the
+ * dataset previously obtained from a probe preamble repeated inside every
+ * generated target: 18.96% of the target tokens of the shipped suite were that
+ * fixed preamble, and a preamble the model must emit token by token is work the
+ * command can do once for every circuit (DS004, DS008 "Compiled plan profile").
+ * The contract covers the fixable, generic cases only; a family that must assert
+ * something about its own domain still writes its own assertion in the body.
  *
  * Execution happens in an isolated guest realm, so dependency values arrive as
  * copies and the body cannot reach the host process, the module system, or a
@@ -21,13 +35,13 @@ const CIRCUIT_API_PATTERN = /(^|[^.\w$])circuit\b/;
 
 export const jsEvalCommand = {
   name: 'jsEval',
-  version: '1.1.0',
+  version: '2.0.0',
   effectClass: 'pure',
   mayStage: ['structural_transaction', 'container_patch'],
   determinism: 'deterministic',
   manifest: {
     name: 'jsEval',
-    version: '1.1.0',
+    version: '2.0.0',
     summary: 'Execute JavaScript over declared $wire dependencies; may stage graph or container transactions through the runtime API.',
     whenToUse: 'Use whenever the remaining subproblem is mechanical: arithmetic, sorting, joins, filters, aggregation, validation, serialization.',
     whenNotToUse: 'Do not use to make semantic judgments about text; use modelCall for those.',
@@ -65,6 +79,7 @@ export const jsEvalCommand = {
     return { ok: true };
   },
   async execute(ctx) {
+    assertInputContract({ values: ctx.values, wire: ctx.wire });
     const result = await ctx.javascript.sandbox.invoke({
       body: ctx.body,
       values: ctx.values,
@@ -81,9 +96,65 @@ export const jsEvalCommand = {
         recordStructuralReads: ctx.recordStructuralReads ?? null
       });
     }
+    assertOutputContract({ value: result.value, wire: ctx.wire, committed: result.committed === true });
     return result.value;
   }
 };
+
+/**
+ * The input contract of `jsEval`, checked before the body runs.
+ *
+ * A dependency the body declares must carry a defined value, and a dependency
+ * that is a compiled `slots` record must be a non-empty object. Both are
+ * properties of every dataset circuit, so asserting them here rather than inside
+ * every generated target removes a fixed preamble from the trained form without
+ * losing the guarantee: a malformed input still ends the run as a structured
+ * `execution_error` instead of letting the body compute on it.
+ */
+export function assertInputContract({ values, wire }) {
+  for (const [name, value] of Object.entries(values ?? {})) {
+    if (value === undefined) {
+      throw new SopError('execution_error', `Wire "${wire}" reads "$${name}", which has no value`, {
+        wire,
+        contract: 'dependency_defined'
+      });
+    }
+    if (name !== 'slots' || value === null || typeof value !== 'object' || Array.isArray(value)) {
+      continue;
+    }
+    if (Object.keys(value).length === 0) {
+      throw new SopError('execution_error', `Wire "${wire}" reads "$slots", which must carry the compiled record`, {
+        wire,
+        contract: 'slots_not_empty'
+      });
+    }
+  }
+}
+
+/**
+ * The output contract of `jsEval`, checked after the body runs.
+ *
+ * `null`, `undefined`, and the empty string are the values a downstream wire
+ * reads as "nothing was computed"; publishing one turns a computation failure
+ * into a wrong answer that looks like a value, so they end the run instead.
+ * `0` and `false` are values, not absences, and pass.
+ *
+ * A wire that staged a structural transaction is exempt: a body may end in
+ * `circuit.commit(...)`, which publishes through the transaction and returns
+ * nothing at all, so an absent return is that shape rather than a failed
+ * computation.
+ */
+export function assertOutputContract({ value, wire, committed = false }) {
+  if (committed) {
+    return;
+  }
+  if (value === undefined || value === null || value === '') {
+    throw new SopError('execution_error', `Wire "${wire}" produced an empty value`, {
+      wire,
+      contract: 'non_empty_result'
+    });
+  }
+}
 
 export function mentionsCircuitApi(body) {
   return CIRCUIT_API_PATTERN.test(String(body ?? ''));

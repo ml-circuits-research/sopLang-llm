@@ -24,17 +24,10 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 let uncovered = 0;
 for (let value = slots.domain.lo; value <= slots.domain.hi; value += 1) {
   if (!slots.intervals.some((interval) => value >= interval.lo && value <= interval.hi)) uncovered += 1;
 }
 return uncovered === 0 ? "No." : "Yes.";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

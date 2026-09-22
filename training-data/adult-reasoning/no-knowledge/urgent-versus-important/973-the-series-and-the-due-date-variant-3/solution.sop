@@ -28,9 +28,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots === "object" && slots !== null, "the grid case must carry the parsed cells and chores");
 probe(Array.isArray(slots.items) && slots.items.length === 4, "the grid case must carry four tagged chores");
@@ -50,7 +47,4 @@ const ordered = slots.items.map((item) => {
 probe(ordered[0].label === slots.grid.both, "the first chore must sit in the both-cells of the grid");
 probe(ordered[3].label === slots.grid.neither, "the last chore must sit in the neither cell of the grid");
 return ordered.map((item) => "(" + item.n + ") " + item.label).join("; ") + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

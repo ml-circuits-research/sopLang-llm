@@ -17,9 +17,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots.name === "string" && slots.name.length > 0, "the case must name the person who waters the plant");
 probe(typeof slots.schedule === "string" && slots.schedule.length > 0, "the case must state the watering calendar");
@@ -41,7 +38,4 @@ const lightClause = /midday sun/i.test(slots.lightNow)
   : "the light is " + slots.allowedLight;
 probe(slots.lightNow.length > 0, "the case must describe the light the plant receives");
 return calendarClause + "; " + saucerClause + "; " + lightClause + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

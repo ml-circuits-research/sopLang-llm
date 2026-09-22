@@ -1,0 +1,22 @@
+@slots literal
+{
+  "word": "congratulations",
+  "letter": "t"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+const slots = $slots;
+probe(typeof slots.word === "string" && slots.word.length > 0, "the word must be a non-empty string");
+probe(typeof slots.letter === "string" && slots.letter.length === 1, "the letter must be a single character");
+probe(slots.word.includes(slots.letter), "the word must contain the letter it asks about");
+const characters = [...slots.word];
+let occurrences = 0;
+for (const character of characters) {
+  if (character === slots.letter) {
+    occurrences += 1;
+  }
+}
+probe(occurrences >= 1, "a self-referential word must contain the letter it names at least once");
+return occurrences + " times.";
+

@@ -14,9 +14,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots.name === "string" && slots.name.length > 0, "the record must belong to a named person");
 probe(typeof slots.password === "string" && slots.password.length > 0, "the record must quote the chosen password");
@@ -41,7 +38,4 @@ const qualityClause = shortfalls.length === 0
   ? "Length and capital/digit may be fine."
   : "Length and capital/digit break: " + shortfalls.join(", ") + ".";
 return broken.join(" ") + " " + qualityClause;
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

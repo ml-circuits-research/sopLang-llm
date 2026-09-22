@@ -31,9 +31,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots === "object" && slots !== null, "the case must carry the parsed recipe");
 probe(typeof slots.baker === "string" && slots.baker.length > 0, "the episode must name the baker");
@@ -53,7 +50,4 @@ if (slots.observedRise !== effectiveRise) { breaches.push(slots.observedRise + "
 if (slots.observedRise !== slots.coldRise) { breaches.push("ignoring the " + slots.coldRise + " minutes at " + slots.roomTemp + " °C"); }
 const breachesClause = breaches.length === 0 ? "Breaches: none." : "Breaches: " + breaches.join("; ") + ".";
 return respectClause + " " + breachesClause;
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

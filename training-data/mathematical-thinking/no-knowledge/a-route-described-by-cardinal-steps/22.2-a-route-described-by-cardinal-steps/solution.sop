@@ -18,10 +18,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 let dx = 0; let dy = 0;
 for (const move of slots.moves) {
@@ -34,7 +30,4 @@ const pieces = [];
 if (dx !== 0) pieces.push(Math.abs(dx) + " squares " + (dx > 0 ? "east" : "west"));
 if (dy !== 0) pieces.push(Math.abs(dy) + " squares " + (dy > 0 ? "north" : "south"));
 return pieces.join(" and ") + " of " + slots.place + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

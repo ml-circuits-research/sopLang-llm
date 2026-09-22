@@ -80,15 +80,24 @@ test('the shape scan reports input and modelCall wires and accepts the compiled 
   }
 });
 
-test('the shape scan requires the probe harness in every jsEval stage', () => {
-  const fixture = makeFixture({ circuit: '@slots literal\n{}\n\n@answer jsEval\nreturn "7.";\n' });
+test('the shape scan refuses a forbidden wire and accepts a bare computation', () => {
+  // The generic input and output contract belongs to the `jsEval` command, so a
+  // `jsEval` stage that asserts nothing of its own is a valid shape; what the scan
+  // still refuses is a circuit that re-states its own input or re-parses itself.
+  const bare = makeFixture({ circuit: '@slots literal\n{"value": 7}\n\n@answer jsEval\nreturn "7.";\n' });
   try {
-    const violations = scanShape(fixture.book, [join(fixture.problemDirectory, 'solution.sop')]);
-    assert.equal(violations.length, 1);
-    assert.equal(violations[0].command, 'jsEval');
-    assert.match(violations[0].why, /probe harness/);
+    assert.deepEqual(scanShape(bare.book, [join(bare.problemDirectory, 'solution.sop')]), []);
   } finally {
-    cleanup(fixture.root);
+    cleanup(bare.root);
+  }
+  const forbidden = makeFixture({ circuit: '@slots literal\n{"value": 7}\n\n@answer input\nreturn "7.";\n' });
+  try {
+    const violations = scanShape(forbidden.book, [join(forbidden.problemDirectory, 'solution.sop')]);
+    assert.equal(violations.length, 1);
+    assert.equal(violations[0].command, 'input');
+    assert.match(violations[0].why, /re-states data/);
+  } finally {
+    cleanup(forbidden.root);
   }
 });
 
@@ -221,7 +230,11 @@ test('the help flag describes every supported argument and exits zero', () => {
     assert.match(result.stdout, /book-id/);
     assert.match(result.stdout, /--root <dir>/);
     assert.match(result.stdout, /--timings/);
-    assert.match(result.stdout, /probe harness/);
+    // The usage text describes the shape rule as it stands: the generic input and
+    // output assertions belong to the jsEval command, so the help names the forbidden
+    // wires rather than a probe preamble no longer required of a target.
+    assert.match(result.stdout, /must not contain an\s+input wire/);
+    assert.match(result.stdout, /jsEval command/);
     assert.match(result.stdout, /--help, -h/);
     assert.match(result.stdout, /Exit codes:/);
   }

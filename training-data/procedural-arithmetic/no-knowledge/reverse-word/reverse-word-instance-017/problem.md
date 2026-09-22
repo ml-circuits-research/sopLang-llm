@@ -1,3 +1,3 @@
 # reverse-word-17 — Reverse Word
 
-Write the word "necessary" backwards. Reply with only the reversed word.
+Write the word "refrigerator" backwards. Reply with only the reversed word.

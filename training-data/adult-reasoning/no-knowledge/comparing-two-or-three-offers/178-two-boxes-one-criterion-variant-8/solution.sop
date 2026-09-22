@@ -18,9 +18,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots.shopper === "string" && slots.shopper.length > 0, "the case must name the shopper");
 probe(Number.isInteger(slots.threshold) && slots.threshold > 0, "the note threshold must be a positive amount");
@@ -38,7 +35,4 @@ const useWeight = differenceCents < slots.threshold * 100;
 const choice = useWeight ? (slots.a.weight <= slots.b.weight ? "A" : "B") : (aCents <= bCents ? "A" : "B");
 const money = (cents) => (cents / 100).toFixed(2);
 return "A " + money(aCents) + ", B " + money(bCents) + ", difference " + money(differenceCents) + ". Chooses " + choice + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

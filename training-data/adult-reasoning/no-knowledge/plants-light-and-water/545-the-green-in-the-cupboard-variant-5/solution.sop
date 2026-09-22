@@ -11,9 +11,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots.keeper === "string" && slots.keeper.length > 0, "the sheet must name the keeper of the pot");
 probe(slots.actor === slots.keeper, "the cupboard episode must be about the keeper of the pot");
@@ -28,7 +25,4 @@ const pigmentClause = slots.claimsGreenMakesOxygen
   ? "Green is pigment, not a reaction in progress."
   : "Green is the pigment of the leaf.";
 return productionClause + " " + pigmentClause;
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

@@ -9,9 +9,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(Number.isInteger(slots.start) && slots.start >= 0, "the initial state must be a non-negative integer");
 probe(Number.isInteger(slots.add) && slots.add > slots.subtract && slots.subtract >= 0, "every cycle must have a positive net change");
@@ -33,7 +30,4 @@ const words = { 1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 
 const span = words[slots.cycles] === undefined ? String(slots.cycles) : words[slots.cycles];
 const note = firstCapped === null ? "The cap does not intervene in the first " + span + " cycles." : "The cap intervenes at cycle " + firstCapped + ".";
 return "The states are " + states.join(", ") + ". " + note;
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

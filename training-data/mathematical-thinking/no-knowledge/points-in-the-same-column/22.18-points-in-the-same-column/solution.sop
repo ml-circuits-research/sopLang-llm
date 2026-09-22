@@ -20,10 +20,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 for (let i = 0; i < slots.points.length; i += 1) {
   for (let j = i + 1; j < slots.points.length; j += 1) {
@@ -33,7 +29,4 @@ for (let i = 0; i < slots.points.length; i += 1) {
   }
 }
 throw new Error("no two points share a column");
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

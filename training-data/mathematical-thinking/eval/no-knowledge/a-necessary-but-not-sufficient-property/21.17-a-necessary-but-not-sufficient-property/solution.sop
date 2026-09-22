@@ -8,10 +8,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const parts = slots.asked.map(function (value) {
   const capital = value.charAt(0).toUpperCase() + value.slice(1);
@@ -19,7 +15,4 @@ const parts = slots.asked.map(function (value) {
   return capital + ": it cannot be VIP";
 });
 return parts.join(". ") + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

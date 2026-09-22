@@ -6,10 +6,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 if (slots.total % slots.first !== 0 || slots.total % slots.second !== 0) {
   throw new Error("one of the groupings leaves a remainder");
@@ -17,7 +13,4 @@ if (slots.total % slots.first !== 0 || slots.total % slots.second !== 0) {
 const firstGroups = slots.total / slots.first;
 const secondGroups = slots.total / slots.second;
 return firstGroups + " groups of " + slots.first + "; " + secondGroups + " groups of " + slots.second + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

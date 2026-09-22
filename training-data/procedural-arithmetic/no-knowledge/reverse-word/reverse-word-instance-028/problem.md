@@ -1,3 +1,3 @@
 # reverse-word-28 — Reverse Word
 
-Write the word "gradient" backwards. Reply with only the reversed word.
+Write the word "caterpillar" backwards. Reply with only the reversed word.

@@ -227,25 +227,6 @@ Templates whose variants all print one answer, so the variants do not test recom
 
 The statement scan found no missing-space artifacts around digits.
 
-## Invariant-answer plans
-
-The provenance probe perturbs every compiled value and asks whether the executed answer changes. Ten plan fingerprints of this book print one verdict for the whole family, and their `answer` wire returns that verdict as a constant after probing the shape of `slots`; no perturbation of the compiled values can change the answer, so the verifier reports those rows as "could not be proven either way". They are listed here because the invariance is a property of the source family rather than an unresolved defect: every one of these circuits reproduces the printed answer of its manifest row, and every statement of the family carries the same printed verdict.
-
-| plan | family | rows | shipped answer |
-| --- | --- | --- | --- |
-| 39f0525dfec6 | A claim that could be wrong | 10 | One armoured against any observation. That is slogan-strength, not science-strength. Untouchable is not strong; it has left the game. |
-| 7536c4a47b02 | A machine that stops | 10 | Try the reset. It is the listed cheap test that fits the listed signs. A burnt motor is an extra engine. |
-| 29b7f4ac4353 | A new fact reorders the list | 10 | Reorder. The new fact fights “this bulb only” and supports “this socket.” Updating is the method working. |
-| c545a3cbaa3a | A word that changes meaning | 10 | Equivocation: one spelling, two jobs. The floor rule was about weight. The lamp line is about visibility. |
-| e9c42fd56cdf | Capstone cases — mixed tools | 10 | It refuses the headline as costume, notes that iron sinking does not speak about ice, keeps the density mechanism, and sets aside the person-strike. Loudness is not a family of reasoning. |
-| 5a41885e646f | Fewer extra parts | 10 | Prefer the bulb-only story as a start; it adds less unlisted machinery. Ranking is not proof. Then do the cheap test. |
-| 37546e05bb7b | Relevant versus decorative likeness | 10 | The structure: break the path, the working stops. Wetness is decorative. |
-| 146d8e9b6876 | The already-ticked box | 10 | Status quo / default. Nature did not mark the box. Answer as if both boxes started empty. |
-| 8a42dc894a45 | Two families on one page | 10 | Yes. The training sentence is a definitional mechanism on the card. Three tired evenings are a small sample about a side feeling, not a refutation of what the card said a vaccine is. |
-| b31ec981a887 | When two stories still fit | 10 | A tie on present signs. Drama does not break a tie. A method that leaves a tie has told you what to measure next. |
-
-Consequence for training: these rows teach a constant-verdict plan — the compiled values are extracted and shape-checked, but the computation does not dispatch on them — which is exactly what the source family prints. Whether such families are extended with cases whose verdict differs is decided by the failure analysis of the first training run, not here.
-
 ## Limitations
 
 - The compiled values of every circuit come from the reference parse of its problem family, because the pilot runs without a teacher model: the shipped circuit is the plan a model would emit after reading the statement. The stage that replaces the reference parse with a real model call keeps the same acceptance checks.

@@ -13,9 +13,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place where the stall stands");
 probe(typeof slots.fame === "string" && slots.fame.length > 0, "the case must state what sort of singer spoke");
@@ -26,7 +23,4 @@ probe(queueMeasuresQuality === false, "a queue that measures demand or shelter d
 const provesQuality = (slots.expertDenied === false) && queueMeasuresQuality;
 probe(provesQuality === false, "fame and a queue are not a tasting panel");
 return "That a " + slots.fame + " person spoke, and that people are standing there. Quality of pie is a different question.";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

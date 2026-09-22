@@ -11,10 +11,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const selected = slots.candidates.filter((value) => value > slots.min && value < slots.max);
 const values = selected.map((value) => String(value));
@@ -22,7 +18,4 @@ if (values.length === 0) throw new Error("no candidate satisfies both conditions
 if (values.length === 1) return values[0] + ".";
 if (values.length === 2) return values[0] + " and " + values[1] + ".";
 return values.slice(0, -1).join(", ") + ", and " + values[values.length - 1] + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

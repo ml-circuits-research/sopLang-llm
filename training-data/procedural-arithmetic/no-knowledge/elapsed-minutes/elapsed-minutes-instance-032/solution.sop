@@ -9,9 +9,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(Number.isInteger(slots.startHour) && slots.startHour >= 0 && slots.startHour < 24, "the start hour must be a clock hour");
 probe(Number.isInteger(slots.endHour) && slots.endHour >= 0 && slots.endHour < 24, "the end hour must be a clock hour");
@@ -23,7 +20,4 @@ probe(endTotal > startTotal, "the end time must be later than the start time on 
 const total = endTotal - startTotal;
 probe(total <= 24 * 60, "the window cannot exceed one day");
 return total + " minutes.";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

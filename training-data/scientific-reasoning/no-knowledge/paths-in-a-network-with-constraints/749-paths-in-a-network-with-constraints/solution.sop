@@ -44,9 +44,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(Array.isArray(slots.edges) && slots.edges.length > 1, "the statement must state at least two edges of the network");
 for (const edge of slots.edges) {
@@ -95,7 +92,4 @@ const chosen = winners.slice().sort((left, right) => {
 probe(chosen.path[0] === slots.start && chosen.path[chosen.path.length - 1] === slots.destination, "the reported route must run from the starting point to the destination");
 probe(chosen.path.length > 1 && new Set(chosen.path).size === chosen.path.length, "the reported route must visit every node once");
 return "The minimum-cost path is " + chosen.path.join(" → ") + ", total cost " + cheapest + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

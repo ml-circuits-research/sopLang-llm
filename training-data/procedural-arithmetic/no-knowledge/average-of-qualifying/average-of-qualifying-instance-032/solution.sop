@@ -12,9 +12,6 @@
 
 @qualifying jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(Array.isArray(slots.scores) && slots.scores.length > 0, "the scores must be a non-empty list");
 probe(slots.scores.every((score) => Number.isInteger(score)), "every score must be a whole number");
@@ -24,15 +21,9 @@ probe(qualifying.every((score) => score >= slots.minimum), "only the scores at o
 probe(qualifying.length >= 2, "at least two scores must qualify");
 probe(qualifying.length < slots.scores.length, "at least one score must fail to qualify");
 return qualifying;
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 
 @summary jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(Array.isArray($qualifying) && $qualifying.length > 0, "the qualifying stage must publish a non-empty list");
 probe($qualifying.every((score) => Number.isInteger(score)), "every published qualifying score must be a whole number");
@@ -41,15 +32,9 @@ const total = $qualifying.reduce((sum, score) => sum + score, 0);
 probe(total >= count * slots.minimum, "the published total must be at least the minimum times the count");
 probe(total % count === 0, "the published total must divide by the count into a whole average");
 return { count, total };
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(Array.isArray($qualifying) && $qualifying.length > 0, "the qualifying stage must publish a non-empty list");
 probe($qualifying.every((score) => score >= slots.minimum), "every published qualifying score must be at least the minimum");
@@ -60,7 +45,4 @@ probe($summary.total % $summary.count === 0, "the published total must divide by
 const average = $summary.total / $summary.count;
 probe(average >= slots.minimum, "the average of the qualifying scores cannot be below the minimum");
 return $summary.count + " scores qualify and their average is " + average + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

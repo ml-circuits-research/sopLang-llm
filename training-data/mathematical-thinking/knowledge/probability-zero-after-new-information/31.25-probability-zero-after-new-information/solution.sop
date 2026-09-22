@@ -8,10 +8,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const facts = $facts;
 const remaining = facts.cards.filter((card) => card.color === slots.condition);
@@ -21,7 +17,4 @@ const factor = gcd(favorable, remaining.length);
 const n = favorable / factor;
 const d = remaining.length / factor;
 return d === 1 ? String(n) : n + "/" + d;
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

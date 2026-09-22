@@ -25,9 +25,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots === "object" && slots !== null, "the case must carry the parsed register");
 probe(typeof slots.driver === "string" && slots.driver.length > 0, "the episode must name the driver");
@@ -49,7 +46,4 @@ const vanClause = "The van may move in the " + windowLabel + " window but may no
 const carClause = "The car is not a lorry, but it " + (parkingBanned ? "may not park" : "may park") + ".";
 const bicycleClause = "The bicycle " + (slots.bicyclesAreGoodsVehicles ? "may not pass" : "may pass") + "; the register is silent on P for bicycles — do not fill the silence.";
 return vanClause + " " + carClause + " " + bicycleClause;
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

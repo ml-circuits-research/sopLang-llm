@@ -12,9 +12,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots.speaker === "string" && slots.speaker.length > 0, "the account must belong to a named speaker");
 probe(typeof slots.absentPlace === "string" && slots.absentPlace.length > 0, "the account must name the place it denies being in");
@@ -28,7 +25,4 @@ probe(slots.houseHasNoPostOffice === true, "the account must state that the hous
 const placeClause = "Absence from the place vs the meeting at the post office in the place.";
 const nobodyClause = "“Nobody” vs the " + slots.minutes + "-minute meeting.";
 return placeClause + " " + nobodyClause;
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

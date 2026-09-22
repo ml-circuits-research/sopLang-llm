@@ -1,3 +1,3 @@
 # reverse-word-24 — Reverse Word
 
-Write the word "fragment" backwards. Reply with only the reversed word.
+Write the word "workshop" backwards. Reply with only the reversed word.

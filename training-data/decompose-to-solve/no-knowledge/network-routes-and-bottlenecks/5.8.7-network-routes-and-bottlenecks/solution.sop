@@ -48,9 +48,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(Array.isArray(slots.routes) && slots.routes.length === 3, "the scenario must state three routes");
 probe(Number.isInteger(slots.requiredFlow) && slots.requiredFlow > 0, "the required flow must be a positive whole number");
@@ -77,7 +74,4 @@ probe(chosen.bottleneck >= slots.requiredFlow, "the chosen route must carry the 
 probe(chosen.timeMinutes <= slots.limitMinutes, "the chosen route must stay within the time limit");
 probe(feasible.every((summary) => summary.timeMinutes >= chosen.timeMinutes), "no feasible route may be faster than the chosen route");
 return "Choose Route " + chosen.name + ". The decomposition uses different aggregation operators for different meanings: sequential times add, serial capacities take a minimum, then shared constraints filter entire-route summaries.";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

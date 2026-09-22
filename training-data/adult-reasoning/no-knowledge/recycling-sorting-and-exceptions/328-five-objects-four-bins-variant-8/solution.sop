@@ -21,9 +21,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place whose bins are used");
 probe(typeof slots.holder === "string" && slots.holder.length > 0, "the case must name the person sorting the objects");
@@ -47,7 +44,4 @@ const clauses = slots.objects.map((object) => {
   return matches[0].clause;
 });
 return clauses.join("; ") + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

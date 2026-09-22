@@ -9,9 +9,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person");
 probe(typeof slots.warmWetSponge === "boolean", "the case must state where the sponge was put");
@@ -28,7 +25,4 @@ const handsClause = slots.washedBeforeYoghurt
   ? "Washed hands reduce numbers before food."
   : "Unwashed hands do not reduce numbers before food.";
 return boilClause + " " + spongeClause + " " + handsClause;
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

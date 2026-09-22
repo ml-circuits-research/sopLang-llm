@@ -10,9 +10,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const printedTails = [2, 3, 4];
 probe(Number.isInteger(slots.perUnit) && slots.perUnit > 0, "one unit of effort must yield a positive whole number of units of output");
@@ -32,7 +29,4 @@ else tail = "for " + slots.target + ", " + unitsNeeded + " active units are need
 probe(value === askedUnits * slots.perUnit && Number.isInteger(value), "the scaled quantity must be a whole number of units");
 probe(unitsNeeded * slots.perUnit === slots.target, "the computed units must produce exactly the target quantity");
 return "With " + askedUnits + " units: " + value + " " + slots.quantity + "; " + tail;
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

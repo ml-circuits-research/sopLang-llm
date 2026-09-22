@@ -6,10 +6,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 if (slots.wallLength !== slots.length && slots.wallLength !== slots.width) {
   throw new Error("the wall side is neither the length nor the width of the garden");
@@ -18,7 +14,4 @@ const fence = slots.wallLength === slots.length
   ? slots.length + 2 * slots.width
   : slots.width + 2 * slots.length;
 return String(fence) + " m";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

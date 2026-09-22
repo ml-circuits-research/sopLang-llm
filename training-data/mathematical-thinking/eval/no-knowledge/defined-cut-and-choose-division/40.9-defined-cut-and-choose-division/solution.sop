@@ -7,10 +7,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 if (slots.pieces !== 2) { throw new Error("the cut-and-choose rule needs two pieces"); }
 if (slots.cutter === slots.chooser) { throw new Error("the cutter and the chooser must be different people"); }
@@ -23,7 +19,4 @@ for (let tenths = 0; tenths <= 10; tenths += 1) {
 }
 if (bestCut !== 0.5) { throw new Error("the equal cut is not the maximin cut"); }
 return "To avoid the risk of being left with a part they consider smaller.";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

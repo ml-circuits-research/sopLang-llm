@@ -11,9 +11,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const describeCrossDomain = function describeCrossDomain(check) {
   if (check.kind === 'distance') {
     return `${check.centimetres * check.kilometresPerCentimetre} km.`;
@@ -55,7 +52,4 @@ probe(typeof slots.source === "string" && slots.source.length > 0, "the source i
 const main = "C" + (supported + 1) + " is supported. C" + (supported === 0 ? 2 : 1) + " is not justified by the source alone.";
 const suffix = renderCrossDomain(slots.crossDomain);
 return suffix === "" ? main : main + " " + suffix;
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

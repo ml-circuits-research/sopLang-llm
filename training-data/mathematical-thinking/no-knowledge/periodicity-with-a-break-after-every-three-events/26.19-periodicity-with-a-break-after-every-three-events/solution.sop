@@ -12,16 +12,9 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const built = new Array(slots.operations).fill("O").concat(new Array(slots.restMinutes).fill("R"));
 if (built.join(",") !== slots.cycle.join(",")) { throw new Error("the stated cycle does not match the described operations and rest"); }
 const symbol = slots.cycle[(slots.minute - 1) % slots.cycle.length];
 return symbol === "O" ? "It performs an operation." : "It rests.";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

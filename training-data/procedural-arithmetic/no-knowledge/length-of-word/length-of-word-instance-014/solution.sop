@@ -1,0 +1,13 @@
+@slots literal
+{
+  "word": "fundamental"
+}
+
+@answer jsEval
+const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
+const slots = $slots;
+probe(typeof slots.word === "string" && slots.word.length > 0, "the word must be a non-empty string");
+const characters = [...slots.word];
+probe(characters.every((character) => /[a-z]/.test(character)), "the word must hold lowercase letters only");
+return characters.length + " letters.";
+

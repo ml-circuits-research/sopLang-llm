@@ -2,7 +2,7 @@
 
 ## Explanation
 
-1. The word is "lighthouse" and the letter is "s".
+1. The word is "mechanism" and the letter is "s".
 2. The count is a property of the characters, not of the meaning of the word, so it is delegated to deterministic work.
 3. Counting the characters gives 1.
 

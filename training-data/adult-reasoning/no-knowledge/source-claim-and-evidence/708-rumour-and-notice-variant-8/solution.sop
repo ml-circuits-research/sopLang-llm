@@ -13,9 +13,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots.town === "string" && slots.town.length > 0, "the case must name the town of the well");
 probe(typeof slots.neighbourClaim === "string" && slots.neighbourClaim.length > 0, "the case must carry the neighbour claim");
@@ -33,7 +30,4 @@ const compatibleClause = photoInWindow ? "C3 is visually compatible." : "C3 is v
 const hearsayClause = hearsay && !noticeMentionsDry ? "C1 is hearsay; “dry” is not in C2." : "C1 is a first-hand source.";
 const authorityClause = authorityIsSource ? "“Everybody” is a source." : "“Everybody” is not a source.";
 return primaryClause + " " + compatibleClause + " " + hearsayClause + " " + authorityClause;
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

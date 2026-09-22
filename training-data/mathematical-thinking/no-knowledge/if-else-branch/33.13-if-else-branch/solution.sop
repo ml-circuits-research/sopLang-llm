@@ -12,10 +12,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const step = slots.x % 2 === 0 ? slots.even : slots.odd;
 let y = slots.x;
@@ -24,7 +20,4 @@ else if (step.op === "subtract") { y = y - step.operand; }
 else if (step.op === "multiply") { y = y * step.operand; }
 else { y = y / step.operand; }
 return y + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

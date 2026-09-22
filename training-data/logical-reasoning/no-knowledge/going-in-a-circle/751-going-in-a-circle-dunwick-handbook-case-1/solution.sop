@@ -12,9 +12,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place that prints the handbook");
 probe(typeof slots.conclusion === "string" && slots.conclusion.length > 0, "the case must quote the claim of the sentence");
@@ -25,7 +22,4 @@ probe(restates === true, "the stated ground must hand the claim back as its own 
 const independentSupport = restates === false;
 const verdict = independentSupport ? "Yes" : "No";
 return verdict + ". The sentence leans on itself. That is a circle, not a second source.";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

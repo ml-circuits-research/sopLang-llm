@@ -9,10 +9,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const facts = $facts;
 const minutesPerHour = facts.minutesPerHour;
@@ -23,7 +19,4 @@ const end = ((start + slots.hours * minutesPerHour) % day + day) % day;
 const endHour = Math.floor(end / minutesPerHour);
 const endMinute = end % minutesPerHour;
 return endHour + ":" + (endMinute < 10 ? "0" + endMinute : String(endMinute));
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

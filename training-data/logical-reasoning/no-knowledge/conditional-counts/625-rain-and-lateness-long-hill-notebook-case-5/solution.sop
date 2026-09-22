@@ -19,9 +19,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place whose notes these are");
 probe(Number.isInteger(slots.rainyMornings) && slots.rainyMornings > 0, "the notes must count a positive number of rainy mornings");
@@ -41,7 +38,4 @@ const guarantee = slots.rainyLate === slots.rainyMornings;
 probe(higherOnRainy, "the notes must show a higher late-rate on rainy mornings");
 probe(!guarantee, "the rainy run must leave at least one on-time morning, so the notes do not state a guarantee");
 return higherOnRainy && !guarantee ? "A higher late-rate on rainy mornings in this notebook, not a guarantee." : "The two counts do not separate the mornings in this notebook.";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

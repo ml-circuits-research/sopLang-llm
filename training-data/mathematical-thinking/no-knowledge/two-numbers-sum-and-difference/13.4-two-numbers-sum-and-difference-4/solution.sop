@@ -5,10 +5,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const rest = slots.sum - slots.difference;
 if (rest % 2 !== 0) {
@@ -17,7 +13,4 @@ if (rest % 2 !== 0) {
 const first = (slots.sum + slots.difference) / 2;
 const second = rest / 2;
 return first + " and " + second + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

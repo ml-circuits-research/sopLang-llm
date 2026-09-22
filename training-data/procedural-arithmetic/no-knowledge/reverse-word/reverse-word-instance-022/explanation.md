@@ -2,15 +2,15 @@
 
 ## Explanation
 
-1. The word is "deterministic", with 13 characters.
+1. The word is "rhythm", with 6 characters.
 2. Reversing exchanges the first and last character, the second and the second to last, and so on.
-3. The reversed word is "citsinimreted".
+3. The reversed word is "mhtyhr".
 
 **Generator provenance.** arithmetic.mjs 1.2.0, family reverse-word, instance 22, sampled with seed 20260921 from the latent plan `reverse-word`; this example carries no source span because its statement was generated.
 
 ## Result
 
-**Answer.** citsinimreted.
+**Answer.** mhtyhr.
 
 **Verification.** constructed_verified: the executed circuit produced this answer, and the family computation reproduced it from the statement. The independence limitation of this class is stated in `report.md`.
 

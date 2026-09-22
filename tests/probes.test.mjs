@@ -5,15 +5,28 @@ import { answerBody, probeCount, probeFindings, PROBE_HELPER } from '../teacher/
 import { createRuntime } from '../runtime/kernel.mjs';
 import { parseCircuit } from '../runtime/parser.mjs';
 
-test('every assembled dataset circuit carries the probe harness in its jsEval stage', () => {
-  const program = buildProgram({ compute: 'return "answer";' }, { value: 1 });
-  const wires = parseCircuit(program, { sourceName: 'probe-fixture' }).wires;
-  const answer = wires.find((wire) => wire.name === 'answer');
-  assert.ok(answer.body.startsWith(PROBE_HELPER));
-  assert.equal(probeCount(answer.body) >= 3, true, 'two input probes and one output probe');
-  assert.deepEqual(probeFindings(program), [{ wire: 'answer', probes: probeCount(answer.body) }]);
-  assert.match(answer.body, /Object\.keys\(\$slots\)\.length > 0/);
-  assert.match(answer.body, /String\(answer\)\.length > 0/);
+test('an assembled dataset circuit teaches the computation and not the generic contract', () => {
+  // The generic input and output contract belongs to the `jsEval` command (version
+  // 2), so the trained form carries no fixed preamble: a family whose computation
+  // asserts nothing of its own assembles exactly its computation.
+  const plain = buildProgram({ compute: 'return "answer";' }, { value: 1 });
+  const plainAnswer = parseCircuit(plain, { sourceName: 'probe-fixture' }).wires
+    .find((wire) => wire.name === 'answer');
+  assert.equal(plainAnswer.body, 'return "answer";');
+  assert.ok(!plainAnswer.body.includes(PROBE_HELPER), 'the preamble must not be injected');
+  assert.deepEqual(probeFindings(plain), [{ wire: 'answer', probes: 0, assertions: 0 }]);
+
+  // A family that asserts something about its own domain keeps its assertion, and
+  // gets the helper it calls: that text is the family's, not a fixed preamble.
+  const asserting = buildProgram(
+    { compute: 'probe($slots.value > 0, "the value must be positive");\nreturn "answer";' },
+    { value: 1 }
+  );
+  const assertingAnswer = parseCircuit(asserting, { sourceName: 'probe-fixture' }).wires
+    .find((wire) => wire.name === 'answer');
+  assert.ok(assertingAnswer.body.startsWith(PROBE_HELPER));
+  assert.equal(probeCount(assertingAnswer.body), 1);
+  assert.deepEqual(probeFindings(asserting), [{ wire: 'answer', probes: 1, assertions: 1 }]);
 });
 
 test('a valid dataset circuit executes and returns the computed answer', async () => {

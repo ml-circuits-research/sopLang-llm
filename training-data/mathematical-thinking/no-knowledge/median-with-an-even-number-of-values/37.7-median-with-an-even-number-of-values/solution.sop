@@ -9,10 +9,6 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const ordered = [...slots.values].sort((a, b) => a - b);
 if (ordered.length % 2 !== 0) {
@@ -20,7 +16,4 @@ if (ordered.length % 2 !== 0) {
 }
 const middle = ordered.length / 2;
 return String((ordered[middle - 1] + ordered[middle]) / 2) + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

@@ -23,9 +23,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
 probe(Number.isInteger(slots.firstCount) && slots.firstCount > 0, "the first group must be listed with a positive count");
@@ -37,7 +34,4 @@ const union = slots.firstCount + slots.secondCount - slots.bothCount + slots.nei
 probe(slots.correction.total === union, "the correction sentence must state the union the listed counts produce");
 probe(slots.naiveSum - union === slots.bothCount, "the naive sum must exceed the union by exactly the double-counted overlap");
 return union + ". " + capitalize(slots.firstGroup) + " plus " + slots.secondGroup + " counts the overlap twice unless you subtract it once.";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

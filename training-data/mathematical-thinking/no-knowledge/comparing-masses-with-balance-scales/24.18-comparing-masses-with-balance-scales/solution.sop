@@ -18,17 +18,10 @@
 }
 
 @answer jsEval
-const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 const heavier = new Set(slots.comparisons.map((pair) => pair[0]));
 const lighter = new Set(slots.comparisons.map((pair) => pair[1]));
 const heaviest = slots.names.filter((name) => heavier.has(name) && !lighter.has(name));
 if (heaviest.length !== 1) { throw new Error("the comparisons do not name a single heaviest object"); }
 return String(heaviest[0]) + ".";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

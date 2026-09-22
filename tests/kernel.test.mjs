@@ -276,7 +276,7 @@ test('a failing wire records its identity and keeps earlier progress in the trac
   const failure = result.trace.entries.find((entry) => entry.type === 'error');
   assert.equal(failure.wire, 'boom');
   assert.equal(failure.command, 'jsEval');
-  assert.equal(failure.commandVersion, '1.1.0');
+  assert.equal(failure.commandVersion, '2.0.0');
   assert.equal(typeof failure.definitionHash, 'string');
   assert.ok(result.trace.entries.some((entry) => entry.wire === 'a' && entry.type === 'value'));
 });

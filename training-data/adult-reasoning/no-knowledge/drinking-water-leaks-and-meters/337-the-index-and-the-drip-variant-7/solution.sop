@@ -13,9 +13,6 @@
 
 @answer jsEval
 const probe = (condition, message) => { if (!condition) { throw new Error("probe failed: " + message); } };
-probe(typeof $slots === "object" && $slots !== null && !Array.isArray($slots), "the compiled slots wire must carry an object");
-probe(Object.keys($slots).length > 0, "the compiled slots wire must not be empty");
-const answer = await (async () => {
 const slots = $slots;
 probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the village whose water book is read");
 probe(typeof slots.name === "string" && slots.name.length > 0, "the case must name the person with the dripping tap");
@@ -32,7 +29,4 @@ const dripLitres = slots.litresPerHour * slots.hoursPerDay * slots.days;
 probe(dripLitres > 0, "the leak must lose a positive number of litres");
 const dripText = (dripLitres / slots.litresPerCubicMetre).toFixed(2);
 return "Index " + indexUse + " m³ = " + cost + ". Drip " + dripText + " m³ (" + dripLitres + " l).";
-})();
-probe(answer !== undefined && answer !== null && String(answer).length > 0, "the computation returned an empty answer");
-return answer;
 

@@ -109,7 +109,12 @@ export function smokeFamily(family, { seed }) {
   if (typeof answer !== 'string' || answer.trim() === '') {
     throw new Error(`${family.id}: the oracle returned an empty answer`);
   }
-  if (instance.statement.includes(answer)) {
+  // A statement must not print its own answer. The check is skipped for a family
+  // that declares its answer is a character of the statement's own text: a
+  // self-referential family asks about the letters of a word it also states, so an
+  // answer of one letter is necessarily a substring of the statement, and refusing
+  // it would refuse the whole shape rather than a defect.
+  if (family.answerIsSubstringOfStatement !== true && instance.statement.includes(answer)) {
     throw new Error(`${family.id}: the statement carries its own answer`);
   }
   return { instance, answer };
