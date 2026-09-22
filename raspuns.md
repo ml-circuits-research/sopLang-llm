@@ -228,3 +228,70 @@ cuvint greșit nu schimba nimic, comanda e prinsa inainte sa ajunga la model). D
 **Antrenarea nu a fost deranjata.** Feature-ul asta a folosit porturi separate, iar fine-tuningul a rămas
 prioritatea: lantul `exp-010-contrastive` scoreaza acum cele 9 checkpoint-uri pe slice-ul de validare
 (339 de itemi fiecare), dupa care ruleaza holdout-ul si sondele.
+
+---
+
+## 2026-09-22, 19:20Z — Antrenarea exp-010 s-a terminat: rezultat nul pe numarul livrat, dar diagnosticul pe perechi spune de ce
+
+**Intrebarea ta de dimineata:** sa supraveghez antrenarea pana e totul corect, cu arm-ul contrastiv.
+
+**Ce s-a antrenat:** `exp-010-contrastive`, exact reteta lui exp-009 (3 epoci, lr 1e-4, batch 4, grad-accum 8,
+gradient checkpointing, save-steps 90, preservation-10), peste setul marit: 8221 exemple, 771 de pasi,
+6 familii contrastive in 3 perechi plus 5 familii auto-referentiale (raspberry si restul). Deci s-a schimbat
+**doar datele**, nimic din reteta.
+
+### Rezultatul pe numarul livrat (holdout, 265 probleme)
+
+| metrica | exp-009-mix10 | exp-010-contrastive |
+| --- | --- | --- |
+| raspuns corect pe holdout | 0,0% (0 din 265) | 0,4% (1 din 265) |
+| executie reusita | 19,2% | 20,8% |
+| sonde de capacitate | 1 din 10 | 2 din 10 |
+| planuri nevazute, cel mai bun checkpoint | 25,0% (4 din 16) | 18,8% (3 din 16) |
+
+**Un element din 265 nu e dovada de nimic.** Onest: arm-ul nu a miscat numarul care conteaza, iar pe planurile
+nevazute e chiar putin mai slab decat exp-009. Antrenarea a invatat la fel de bine planurile predate (94,4%
+fata de 95,3%) si mai repede (pasul 450 fata de 728), dar nu generalizeaza mai bine.
+
+### Dar diagnosticul pe perechi, care e masuratoarea pentru care a fost construit arm-ul, spune mai mult
+
+`diag-pairs-010`, 24 de perechi (8 pe tip), pe castigatorul `checkpoint-450`. O pereche conteaza doar daca
+**ambele** raspunsuri sunt corecte:
+
+| tip de pereche | ambele corecte | una corecta | niciuna |
+| --- | --- | --- | --- |
+| `above` vs `at least` (granita) | **7 din 8 (87,5%)** | 1 | 0 |
+| `largest` vs `smallest` (operandul) | **0 din 8** | 1 | 7 |
+| suma fixa vs procent (operatia) | **1 din 8 (12,5%)** | 5 | 2 |
+| **total** | **8 din 24 (33,3%)** | 7 | 9 |
+
+**Asta e rezultatul cel mai util al zilei, si imi corecteaza concluzia:** esecul nu e uniform.
+
+- **Perechea de granita functioneaza.** 7 din 8: modelul raspunde diferit la `above` si la `at least` si ambele
+  corect. Aia e exact skill-ul pe care perechea trebuia sa-l predea si pe care o familie memorata nu-l poate da
+  — doua cuvinte schimba comparatia. E un rezultat pozitiv, ingust dar real.
+- **Perechea de directie esueaza complet.** 0 din 8: raspunde la fel la ambele, adica exact completarea de tipar
+  pe care D-L o descria, iar perechea nu a vindecat-o.
+- **Perechea de rata e pe jumatate invatata.** 1 pereche corect, 5 cu un singur membru corect: distinge suma
+  fixa de procent uneori, dar nu sigur.
+
+Deci arm-ul a predat distinctia cea mai locala (un cuvant care schimba o comparatie) si nu le-a predat pe cele
+care cer schimbarea operandului sau a operatiei pe acelasi operand. Asta e consistent cu rezultatul nul pe
+holdout: perechile care au mers sunt cele a caror diferenta e **lexicala si adiacenta**; cele care au esuat cer
+planul sa-si schimbe forma.
+
+### Ce urmeaza, concret
+
+Nu inca un val de date despre cum sa citesti enuntul. Urmatorul arm trateaza cele trei tipuri separat:
+pastram perechile de granita, adaugam **multe** perechi de directie (cel mai ieftin diagnostic pentru selectia
+operandului), si verificam daca cele 5 cazuri semi-corecte la rata esueaza mereu pe acelasi membru — daca da,
+esecul e un default memorat pentru una din cele doua operatii, adica o problema de **echilibru de date**, nu de
+formulare. Si, cum arata coloana planurilor nevazute (12,5%-25,0% la **fiecare** checkpoint al **fiecarui** arm),
+trebuie atacata direct **acoperirea de planuri** (astra_review I5), nu formularea planurilor deja acoperite.
+
+### Starea sistemului
+
+Totul comis, `verify: OK` pe 8540 de circuite, 320 din 320 teste trec. `exp-010` si-a scris
+`selection.md`, `report.md`, `probes.md` in `evaluation/registry/exp-010-contrastive/`. Cistigatorul e
+`checkpoint-450`, iar `evaluation/chat.mjs` iti permite sa-l incerci cu `/use-both` (modelul finetuned si cel
+initial in paralel) pe intrebarile-capcana: `raspberry` (3 r-uri) si `mississippi` (4 s-uri).
