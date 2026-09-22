@@ -1,0 +1,192 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { spawn } from 'node:child_process';
+import { once } from 'node:events';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { createServer } from 'node:http';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { COMMANDS, decodeLine, divergenceOf, runCommand } from '../evaluation/chat.mjs';
+import { answerBody } from '../teacher/families/probes.mjs';
+
+const REPOSITORY_ROOT = fileURLToPath(new URL('..', import.meta.url));
+
+/** A compiled plan in the shape the dataset teaches, so the runtime executes it. */
+const PROGRAM = `@slots literal\n{\n  "value": 7\n}\n\n@answer jsEval\n${answerBody('const slots = $slots;\nreturn String(slots.value);')}\n`;
+
+/** One turn record in the shape `ask` returns, so the commands can be read without a model. */
+function turnOf({ className = 'executed', question = 'How many?', program = PROGRAM, wires = [{ name: 'slots', command: 'literal' }, { name: 'answer', command: 'jsEval' }], answer = '7', detail = null, usage = { prompt_tokens: 100, completion_tokens: 50, total_tokens: 150 } } = {}) {
+  return { question, completion: program, usage, latencyMs: 12, attempts: 1, error: null, detail, program, wires, outcome: null, answer, className };
+}
+
+function sessionOf(turns) {
+  return { artifact: { experiment: 'exp-000-fixture', winner: 'checkpoint-0', gguf: join(REPOSITORY_ROOT, 'training/checkpoints/base-f16.gguf') }, base: 'http://127.0.0.1:1', alias: 'student-fixture', turns };
+}
+
+test('a command line is a command and a statement is a question', () => {
+  assert.deepEqual(decodeLine('/help'), { kind: 'command', name: 'help', argument: '' });
+  assert.deepEqual(decodeLine('  /show-plan  '), { kind: 'command', name: 'show-plan', argument: '' });
+  assert.deepEqual(decodeLine('/export out/session.jsonl'), { kind: 'command', name: 'export', argument: 'out/session.jsonl' });
+  assert.deepEqual(decodeLine('exit'), { kind: 'command', name: 'exit', argument: '' });
+  assert.deepEqual(decodeLine('quit'), { kind: 'command', name: 'exit', argument: '' });
+  assert.deepEqual(decodeLine('   '), { kind: 'blank' });
+  assert.deepEqual(
+    decodeLine('Emma bought 3 boxes of cookies. Each box has 12 cookies inside.'),
+    { kind: 'question', text: 'Emma bought 3 boxes of cookies. Each box has 12 cookies inside.' }
+  );
+  // A statement that carries a slash mid-text stays a question: only a leading `/` is a command.
+  assert.equal(decodeLine('Divide 12 by 4 to get the ratio 3/1.').kind, 'question');
+});
+
+test('every interactive command is declared once and listed by /help', () => {
+  const names = COMMANDS.map((command) => command.usage.split(' ')[0]);
+  assert.equal(new Set(names).size, names.length, 'two commands share a name');
+  const { exit, text } = runCommand({ name: 'help', argument: '' }, sessionOf([]));
+  assert.equal(exit, false);
+  const lines = text.split('\n');
+  assert.equal(lines.length, COMMANDS.length + 1, 'the help text has one line per command');
+  for (const command of COMMANDS) {
+    assert.ok(text.includes(command.usage), `${command.usage} is missing from /help`);
+    assert.ok(text.includes(command.summary), `the summary of ${command.usage} is missing from /help`);
+  }
+  // The two commands the owner asked for are part of the list.
+  assert.ok(names.includes('/help') && names.includes('/show-plan'));
+});
+
+test('an unimplemented command is refused and points at the help', () => {
+  const { exit, text } = runCommand({ name: 'nope', argument: '' }, sessionOf([]));
+  assert.equal(exit, false);
+  assert.match(text, /unknown command "\/nope"/);
+  assert.match(text, /\/help lists the commands/);
+});
+
+test('/exit leaves the session and prints nothing', () => {
+  const { exit, text } = runCommand({ name: 'exit', argument: '' }, sessionOf([]));
+  assert.equal(exit, true);
+  assert.equal(text, '');
+});
+
+test('/show-plan reports the program, its wires, and the divergence of the last turn', () => {
+  const failed = runCommand({ name: 'show-plan', argument: '' }, sessionOf([turnOf({ className: 'execution_error', detail: 'Wire "answer" failed: probe failed: the word must be a non-empty string' })]));
+  assert.ok(failed.text.includes(PROGRAM.trimEnd()), 'the full program is printed');
+  assert.ok(failed.text.includes('wires: @slots literal, @answer jsEval'), 'the parsed wire names are printed');
+  assert.ok(failed.text.includes('executed: no'));
+  assert.ok(failed.text.includes('divergence: runtime_failure'));
+  assert.ok(failed.text.includes('detail: Wire "answer" failed'));
+
+  const executed = runCommand({ name: 'show-plan', argument: '' }, sessionOf([turnOf()]));
+  assert.ok(executed.text.includes('executed: yes'));
+  assert.match(executed.text, /divergence: none \(the circuit executed/);
+
+  const rejected = runCommand({ name: 'show-plan', argument: '' }, sessionOf([turnOf({ className: 'wrapper_rejected', program: null, wires: [], detail: 'no_wire_declaration' })]));
+  assert.match(rejected.text, /no program was generated \(wrapper_rejected: no_wire_declaration\)/);
+});
+
+test('/show-plan before the first turn says so instead of printing an empty plan', () => {
+  const { text } = runCommand({ name: 'show-plan', argument: '' }, sessionOf([]));
+  assert.match(text, /no turn to show yet/);
+});
+
+test('/stats counts turns and adds up the usage the server reported', () => {
+  const { text } = runCommand({ name: 'stats', argument: '' }, sessionOf([turnOf(), turnOf({ className: 'execution_error' })]));
+  assert.match(text, /turns: 2/);
+  assert.match(text, /tokens: 200 prompt \+ 100 completion = 300 total/);
+  assert.match(text, /executed: 1 of 2/);
+});
+
+test('/export writes one JSON line per turn', () => {
+  const root = mkdtempSync(join(tmpdir(), 'chat-export-'));
+  const file = join(root, 'nested', 'session.jsonl');
+  try {
+    const { text } = runCommand({ name: 'export', argument: file }, sessionOf([turnOf(), turnOf({ className: 'parse_invalid', detail: 'unexpected token', answer: null })]));
+    assert.match(text, /wrote 2 turn\(s\)/);
+    const lines = readFileSync(file, 'utf8').trimEnd().split('\n').map((line) => JSON.parse(line));
+    assert.equal(lines.length, 2);
+    assert.equal(lines[0].class, 'executed');
+    assert.equal(lines[0].answer, '7');
+    assert.equal(lines[0].program, PROGRAM);
+    assert.equal(lines[1].class, 'parse_invalid');
+    assert.equal(lines[1].divergence, 'invalid_syntax');
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('/export without a path and without turns is refused', () => {
+  assert.match(runCommand({ name: 'export', argument: '' }, sessionOf([])).text, /needs a path/);
+  assert.match(runCommand({ name: 'export', argument: '/tmp/x.jsonl' }, sessionOf([])).text, /no turn to export yet/);
+});
+
+test('the divergence names of the turn classes match the diagnostic vocabulary', () => {
+  assert.equal(divergenceOf('generation_transport_error'), 'no_completion');
+  assert.equal(divergenceOf('wrapper_rejected'), 'wrapper_rejected');
+  assert.equal(divergenceOf('parse_invalid'), 'invalid_syntax');
+  assert.equal(divergenceOf('execution_error'), 'runtime_failure');
+  assert.equal(divergenceOf('executed'), 'none');
+});
+
+test('the interactive loop answers commands locally and sends only questions to the model', async () => {
+  // The defect this pins: a `/command` that reaches the model costs a turn, a
+  // generation, and tokens, and the owner has to guess the command names.
+  let completions = 0;
+  const server = createServer((request, response) => {
+    if (request.method === 'GET' && request.url === '/health') {
+      response.writeHead(200, { 'content-type': 'application/json' });
+      response.end('{"status":"ok"}');
+      return;
+    }
+    if (request.method === 'POST' && request.url === '/v1/chat/completions') {
+      completions += 1;
+      request.resume();
+      response.writeHead(200, { 'content-type': 'application/json' });
+      response.end(JSON.stringify({
+        choices: [{ message: { role: 'assistant', content: PROGRAM }, finish_reason: 'stop' }],
+        usage: { prompt_tokens: 11, completion_tokens: 22, total_tokens: 33 }
+      }));
+      return;
+    }
+    response.writeHead(404).end();
+  });
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const root = mkdtempSync(join(tmpdir(), 'chat-cli-'));
+  const transcript = join(root, 'session.jsonl');
+  try {
+    const child = spawn(process.execPath, ['evaluation/chat.mjs', '--base', `http://127.0.0.1:${server.address().port}`], {
+      cwd: REPOSITORY_ROOT,
+      stdio: ['pipe', 'pipe', 'pipe']
+    });
+    let stdout = '';
+    child.stdout.setEncoding('utf8');
+    child.stdout.on('data', (chunk) => { stdout += chunk; });
+    const exited = once(child, 'exit', { signal: AbortSignal.timeout(30_000) });
+    child.stdin.end([
+      '/help',
+      '/model',
+      'What is 7 equal to?',
+      '/show-plan',
+      '/stats',
+      `/export ${transcript}`,
+      '/exit'
+    ].join('\n') + '\n');
+    const [code] = await exited;
+    child.stdout.destroy();
+
+    assert.equal(code, 0);
+    assert.equal(completions, 1, 'only the question is sent to the model');
+    for (const command of COMMANDS) assert.ok(stdout.includes(command.usage), `${command.usage} is missing from the printed /help`);
+    assert.ok(stdout.includes('✔ answer (executed circuit): 7'));
+    assert.ok(stdout.includes('wires: @slots literal, @answer jsEval'));
+    assert.ok(stdout.includes('executed: yes'));
+    assert.match(stdout, /turns: 1/, 'six command lines and one question must count as one turn');
+    assert.match(stdout, /tokens: 11 prompt \+ 22 completion = 33 total/);
+    const exported = readFileSync(transcript, 'utf8').trimEnd().split('\n').map((line) => JSON.parse(line));
+    assert.equal(exported.length, 1);
+    assert.equal(exported[0].question, 'What is 7 equal to?');
+    assert.equal(exported[0].answer, '7');
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+    rmSync(root, { recursive: true, force: true });
+  }
+});
