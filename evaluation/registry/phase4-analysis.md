@@ -300,6 +300,43 @@ accuracy per composition rather than one aggregate. The three contrastive kinds 
 first: the ones that require choosing between siblings (an operand, an operation on the same operand), because
 those are the ones the model has never been asked to decide.
 
+### The oracle-assisted conditions are not a clean instrument (`diag-pairs-010` follow-up, 2026-09-22 19:30Z)
+
+Reading the pair report again turned up a flaw in my own instrument, and it changes what the assisted columns
+may be used for. On the pair suite the assisted conditions score **worse** than the plain statement, not the
+same as on diag-009:
+
+| condition | matched | of | executed |
+| --- | --- | --- | --- |
+| normal | 23 | 48 | 91.7% |
+| values | 3 | 48 | 81.3% |
+| plan | 16 | 48 | 89.6% |
+| both | 6 | 48 | 72.9% |
+
+By kind, the boundary pair is 15 of 16 under `normal` and 3 of 16 under `values`. The obvious reading — that
+supplying correct values hurts — is wrong. Measured against what the conditions are supposed to isolate:
+
+- The completions still parse as plans (0 of 48 rejected under `values`), so the model is not refusing to answer.
+- **The program is never the same one: 0 of 24 pairs produce an identical program under `values`, `plan`, or
+  `both`.** Appending input to the statement moves the model to a different plan every time.
+- Under `values` the appended text is not a form the recorded profile ever described. The prompt gains lines like
+  `is the threshold included: true` and `fixedCharge: N`, which appear nowhere in the 8015 training rows, and the
+  model responds to the off-distribution wording by emitting a different answer shape (`"5 records are kept;  and
+  5 more"` where the plain statement produced `"6 records were kept."`).
+
+So the assisted conditions do not measure "would the model get this right if extraction were free". They measure
+**how the model responds to a prompt the profile does not cover**, which is a different question and a harder one.
+The diag-009 conclusion that "supplying values buys almost nothing" survives — the numbers there were 8 of 60
+against 9 of 60 — but the claim that the assisted numbers isolate a *stage* does not, and the assisted columns
+must not be quoted as evidence about extraction or operator choice until the appended text is itself in the
+profile.
+
+The repair is cheap and must happen before the next diagnostic claims anything from these columns: render the
+assisted input in the recorded profile's own vocabulary (a second `slots` literal, or an instruction the
+profile's system prompt already names), and re-check that the plain and assisted prompts at least produce
+programs of the same shape for a majority of items. Until then the `normal` column is the only deployable
+measurement, which is what the report already says.
+
 ## Decisions taken on the night of 2026-09-21
 
 **D-G — Containers and registry reads are not in the structure arm; six more multi-wire plan shapes are.** `DS008-training-data.md` specifies container plans and registry-reading plans, and the reconnaissance of this repository found four coupled gates that none of tonight's time could move together: the family validator accepts only `jsEval` and `literal` as an intermediate wire (`teacher/procedural/index.mjs`), the program builder has no container wire path (`teacher/families/index.mjs`, `buildProgram`), the provenance battery judges reactivity from `slots`/`facts` references in the answer wire (`training-data/provenance.mjs`), and no manifest column records the structural read set a definition-reading plan must publish (`DS008`, "Additional circuit shapes"). Each of those is a runtime-contract change that needs its own acceptance evidence, and a half-implemented shape would ship circuits the verifier cannot judge. The lever both shapes serve — plan coverage — is served tonight by six more generator families with two named intermediate stages each (`Teacher/families` equivalent: `teacher/procedural/grouping.mjs`, `aggregation.mjs`, `textshapes.mjs`), which deepens the dependency chain the suite teaches to three stages without touching the runtime contract. The container and registry items stay open with their four gates named above.
