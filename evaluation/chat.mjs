@@ -28,7 +28,7 @@
  */
 
 import { spawn } from 'node:child_process';
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { createInterface } from 'node:readline';
 import { pathToFileURL } from 'node:url';
@@ -56,7 +56,7 @@ async function startServer({ gguf, port, threads }) {
 }
 
 function parseArguments(argv) {
-  const options = { gguf: null, experiment: null, base: null, port: 8087, maxTokens: 1024, threads: null, showPlan: false, once: null, help: false };
+  const options = { gguf: null, experiment: null, base: null, port: 8087, maxTokens: 1024, threads: null, showPlan: false, once: null, useBoth: false, help: false };
   for (let index = 0; index < argv.length; index += 1) {
     const flag = argv[index];
     const value = () => {
@@ -68,6 +68,7 @@ function parseArguments(argv) {
     if (flag === '--gguf') options.gguf = value();
     else if (flag === '--experiment') options.experiment = value();
     else if (flag === '--base') options.base = value();
+    else if (flag === '--use-both') options.useBoth = true;
     else if (flag === '--port') options.port = Number(value());
     else if (flag === '--max-tokens') options.maxTokens = Number(value());
     else if (flag === '--threads') options.threads = Number(value());
@@ -94,6 +95,7 @@ export const COMMANDS = [
   { usage: '/show-plan', summary: 'print the plan of the previous turn, its wire names, whether it executed, and its divergence' },
   { usage: '/stats', summary: 'print the number of turns and the token totals the server reported' },
   { usage: '/model', summary: 'print the served artifact, its alias, and the base URL' },
+  { usage: '/use-both [true|false]', summary: 'toggle comparing the fine-tuned model against the untuned base model; with no argument it flips the current setting' },
   { usage: '/export <path>', summary: 'write the session transcript to a JSONL file (overwrites it)' },
   { usage: '/exit', summary: 'leave the session (bare `exit`, `quit`, and Ctrl-D do the same)' }
 ];
@@ -132,6 +134,18 @@ export function divergenceOf(className) {
   return 'none';
 }
 
+/**
+ * The untuned base model, for the `/use-both` comparison.
+ *
+ * The comparison is the point of the whole project: the fine-tuned student
+ * compiles the statement into a circuit that the runtime executes, while the
+ * base model answers in prose from its own weights, so showing both side by side
+ * is the honest way to see what the fine-tuning bought. The artifact is the
+ * pinned base of `training/environment/base-model.json` converted to gguf, and
+ * the alias comes from its file name, exactly as for a checkpoint.
+ */
+export const BASE_GGUF = `${REPOSITORY_ROOT}/training/checkpoints/base-f16.gguf`;
+
 const COMMAND_WIDTH = Math.max(...COMMANDS.map((command) => command.usage.length));
 
 const HELP = `Usage: node evaluation/chat.mjs [--experiment <id> | --gguf <path>] [options]
@@ -143,6 +157,9 @@ Options:
   --experiment <id>   serve the selected checkpoint of this experiment (default exp-008-sft-shapes)
   --gguf <path>       serve this artifact instead
   --base <url>        use an already running server instead of starting one
+  --use-both          start with the base-model comparison on: every question is
+                      answered by the fine-tuned model and by the untuned base
+                      model, the second on the next port (see /use-both)
   --port N            port for the managed server (default 8087)
   --max-tokens N      generation budget per question (default 1024)
   --threads N         CPU threads for llama-server
@@ -161,8 +178,36 @@ ${COMMANDS.map((command) => `  ${command.usage.padEnd(COMMAND_WIDTH)}  ${command
  * failure text keeps the three documented outcomes apart: no plan, a plan that
  * does not parse, and a plan that ran and failed its own guards.
  */
+/**
+ * The untuned base model's answer, rendered above the compiled one.
+ *
+ * The base model was never trained on the compiled-plan profile, so its reply is
+ * whatever it wrote in prose; that text is shown as it came, because the value of
+ * the comparison is exactly that difference and reformatting it would hide it.
+ */
+function renderComparison(base) {
+  const lines = ['--- untuned base model (own weights, no circuit) ---'];
+  if (base.error !== null) {
+    lines.push(`✗ the base model did not answer: ${base.error}`);
+    return lines;
+  }
+  const text = base.text === null || base.text === '' ? '(empty completion)' : base.text;
+  lines.push(text);
+  const measured = [base.tokens === null ? null : `${base.tokens} tokens`, base.latencyMs === null ? null : `${(base.latencyMs / 1000).toFixed(1)}s`]
+    .filter((part) => part !== null)
+    .join(', ');
+  if (measured !== '') lines.push(`(${measured})`);
+  return lines;
+}
+
 function renderExchange(turn, options) {
   const lines = [];
+  if (turn.baseComparison !== undefined) {
+    // With the comparison on, the two answers are shown in a fixed order and with
+    // their provenance, so a difference is read as "compiled" against "own weights"
+    // rather than as two anonymous completions.
+    lines.push(...renderComparison(turn.baseComparison), '');
+  }
   if (turn.program !== null && options.showPlan) {
     lines.push('--- generated plan ---', turn.program.trimEnd(), '--- end of plan ---', '');
   }
@@ -204,6 +249,87 @@ function renderExchange(turn, options) {
  * `wrapper_rejected`, `parse_invalid`, `execution_error`, and `executed` for a
  * circuit that ran and published an answer.
  */
+/**
+ * Ensure the untuned base model is served, for the `/use-both` comparison.
+ *
+ * The base gets its own port and its own managed server, so the comparison never
+ * disturbs the fine-tuned session: the two are asked at the same time on the same
+ * question, which is what makes the two answers comparable. The first call starts
+ * the server and records the outcome on the session, so a second question reuses
+ * it, and a failure is reported once instead of being retried on every turn.
+ */
+async function ensureBaseServer(session, options) {
+  const compare = session.compare;
+  if (compare.state === 'ready' || compare.state === 'failed') {
+    return compare;
+  }
+  const port = options.port + 1;
+  const base = `http://127.0.0.1:${port}`;
+  if (await serverIsUp(base)) {
+    compare.state = 'ready';
+    compare.base = base;
+    compare.alias = aliasFor(BASE_GGUF);
+    compare.managed = null;
+    return compare;
+  }
+  if (!existsSync(BASE_GGUF)) {
+    compare.state = 'failed';
+    compare.detail = `the base artifact is missing at ${BASE_GGUF.replace(`${REPOSITORY_ROOT}/`, '')}`;
+    return compare;
+  }
+  try {
+    process.stdout.write(`starting the untuned base model on port ${port} for the comparison …\n`);
+    compare.managed = await startServer({ gguf: BASE_GGUF, port, threads: options.threads });
+    compare.state = 'ready';
+    compare.base = base;
+    compare.alias = aliasFor(BASE_GGUF);
+  } catch (error) {
+    compare.state = 'failed';
+    compare.detail = error.message;
+  }
+  return compare;
+}
+
+/**
+ * The untuned base model's own answer to the same question: a prose completion
+ * from the recorded chat profile, with no circuit and no execution, which is
+ * exactly what the comparison is meant to show next to the compiled result.
+ */
+async function askBase({ question, compare, options }) {
+  const result = await generate({
+    base: compare.base,
+    model: compare.alias,
+    messages: buildMessages(question),
+    temperature: 0,
+    maxTokens: options.maxTokens,
+    timeoutMs: 600_000
+  });
+  return {
+    experiment: 'base (untuned)',
+    question,
+    error: result.error === null ? null : result.error.message,
+    text: result.completion === null ? null : String(result.completion).trim(),
+    tokens: result.usage?.completion_tokens ?? null,
+    latencyMs: result.latencyMs ?? null
+  };
+}
+
+/**
+ * The same question to both models at once: the compiled result from the
+ * fine-tuned student, and the untuned base model's own completion.
+ *
+ * Both promises start before either is awaited, so the two servers work at the
+ * same time. The compiled turn is returned as the turn (it is what the session
+ * records, exports, and shows by default), with the base answer attached to it
+ * under `baseComparison` so `/show-plan` and `/export` can read it.
+ */
+async function askBoth({ question, base, alias, compare, options, runtime }) {
+  const compiled = ask({ question, base, alias, options, runtime });
+  const untuned = askBase({ question, compare, options });
+  const [turn, baseTurn] = await Promise.all([compiled, untuned]);
+  return { ...turn, baseComparison: baseTurn };
+}
+
 async function ask({ question, base, alias, options, runtime }) {
   const result = await generate({ base, model: alias, messages: buildMessages(question), temperature: 0, maxTokens: options.maxTokens, timeoutMs: 600000 });
   const turn = {
@@ -294,9 +420,32 @@ export function runCommand({ name, argument }, session) {
         `model: ${artifact.experiment}${artifact.winner === null ? '' : ` (${artifact.winner})`}`,
         `artifact: ${artifact.gguf.replace(`${REPOSITORY_ROOT}/`, '')}`,
         `alias: ${session.alias}`,
-        `base: ${session.base}`
+        `base: ${session.base}`,
+        `compare against the base model: ${session.compare.enabled ? 'on' : 'off'}${
+          session.compare.enabled ? ` (${session.compare.state})` : ''
+        }`
       ].join('\n')
     };
+  }
+  if (name === 'use-both') {
+    // A bare `/use-both` toggles, because that is what the owner reaches for; an
+    // explicit `true` or `false` sets the state, so a script can be unambiguous.
+    const wanted0 = argument.trim().toLowerCase();
+    if (wanted0 !== '' && wanted0 !== 'true' && wanted0 !== 'false') {
+      return { exit: false, text: '✗ /use-both takes true or false, or nothing to toggle.' };
+    }
+    const wanted = wanted0 === '' ? !session.compare.enabled : wanted0 === 'true';
+    session.compare.enabled = wanted;
+    if (!wanted) {
+      return { exit: false, text: '✔ comparison off: only the fine-tuned model answers.' };
+    }
+    if (session.compare.state === 'ready') {
+      return { exit: false, text: '✔ comparison on: every question is answered by the fine-tuned model and by the untuned base model.' };
+    }
+    if (session.compare.state === 'failed') {
+      return { exit: false, text: `✗ comparison on, but the base model is unavailable: ${session.compare.detail}` };
+    }
+    return { exit: false, text: '⏳ comparison on: the base model is starting; the next question waits for it.' };
   }
   if (name === 'stats') {
     const tokens = session.turns.reduce((totals, turn) => ({
@@ -366,14 +515,19 @@ async function main() {
   }
   process.stdout.write(`model: ${artifact.experiment}${artifact.winner === null ? '' : ` (${artifact.winner})`}\n`);
   process.stdout.write('questions are answered by executing the circuit the model compiles; --show-plan prints the circuit.\n');
-  process.stdout.write('type /help for the interactive commands (/show-plan, /stats, /model, /export, /exit).\n');
+  process.stdout.write('type /help for the interactive commands (/show-plan, /stats, /model, /use-both, /export, /exit).\n');
 
   const stopServer = () => {
-    if (managed !== null) {
+    // The comparison's base server is managed by this session too, so it stops with
+    // it: a leaked llama-server would hold both a port and the GPU memory.
+    for (const child of [managed, session.compare.managed]) {
+      if (child === null || child === undefined) {
+        continue;
+      }
       try {
-        process.kill(-managed.pid, 'SIGTERM');
+        process.kill(-child.pid, 'SIGTERM');
       } catch {
-        managed.kill('SIGTERM');
+        child.kill('SIGTERM');
       }
     }
   };
@@ -385,7 +539,16 @@ async function main() {
   process.on('exit', stopServer);
 
   const runtime = createRuntime();
-  const session = { artifact, base, alias, turns: [] };
+  const session = {
+    artifact,
+    base,
+    alias,
+    turns: [],
+    // The `/use-both` comparison: `state` tracks whether the base model has been
+    // started, so a question never pays for starting it twice and a failure is
+    // reported rather than retried silently.
+    compare: { enabled: options.useBoth, state: 'idle', base: null, alias: null, managed: null, detail: null }
+  };
 
   if (options.once !== null) {
     const turn = await ask({ question: options.once, base, alias, options, runtime });
@@ -411,9 +574,21 @@ async function main() {
       reader.prompt();
       continue;
     }
-    const turn = await ask({ question: decision.text, base, alias, options, runtime });
+    // The comparison asks both models at the same time, on the same question, so the
+    // two answers are comparable: awaiting one and then the other would also work,
+    // but two 0.5B models fit side by side and the parallel form halves the wait.
+    let compare = null;
+    if (session.compare.enabled) {
+      compare = await ensureBaseServer(session, options);
+    }
+    const turn = compare !== null && compare.state === 'ready'
+      ? await askBoth({ question: decision.text, base, alias, compare, options, runtime })
+      : await ask({ question: decision.text, base, alias, options, runtime });
     session.turns.push(turn);
     process.stdout.write(`\n${renderExchange(turn, options)}\n\n`);
+    if (compare !== null && compare.state !== 'ready') {
+      process.stdout.write(`✗ the comparison could not run: ${compare.detail}\n`);
+    }
     reader.prompt();
   }
   reader.close();

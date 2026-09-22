@@ -190,3 +190,55 @@ test('the interactive loop answers commands locally and sends only questions to 
     rmSync(root, { recursive: true, force: true });
   }
 });
+
+test('/use-both toggles the comparison, and an explicit argument sets it', () => {
+  // The comparison state lives on the session, so the command must only touch it and
+  // must never be sent to a model: a command that leaked into a question would be
+  // counted as an evaluation turn and would cost the very tokens the toggle is about.
+  const session = {
+    artifact: { experiment: 'exp-x', winner: null, gguf: '/tmp/exp-x.gguf' },
+    base: 'http://127.0.0.1:8087',
+    alias: 'exp-x',
+    turns: [],
+    compare: { enabled: false, state: 'ready', base: 'http://127.0.0.1:8088', alias: 'base-f16', managed: null, detail: null }
+  };
+  const run = (argument) => runCommand({ name: 'use-both', argument }, session);
+
+  // A bare toggle flips, so the owner can reach for one word.
+  assert.equal(session.compare.enabled, false);
+  assert.match(run('').text, /comparison on/);
+  assert.equal(session.compare.enabled, true);
+  assert.match(run('').text, /comparison off/);
+  assert.equal(session.compare.enabled, false);
+
+  // An explicit argument sets the state rather than flipping it.
+  assert.match(run('true').text, /comparison on/);
+  assert.equal(session.compare.enabled, true);
+  assert.match(run('true').text, /comparison on/);
+  assert.equal(session.compare.enabled, true, 'true twice must not turn it off');
+  assert.match(run('false').text, /comparison off/);
+  assert.equal(session.compare.enabled, false);
+
+  // Anything else is refused and changes nothing.
+  assert.match(run('maybe').text, /takes true or false/);
+  assert.equal(session.compare.enabled, false);
+
+  // It is a command, so the decoder must claim it before it can be a question.
+  assert.deepEqual(decodeLine('/use-both true'), { kind: 'command', name: 'use-both', argument: 'true' });
+});
+
+test('/use-both reports the base model state instead of promising a comparison it cannot run', () => {
+  const makeSession = (state, detail) => ({
+    artifact: { experiment: 'exp-x', winner: null, gguf: '/tmp/exp-x.gguf' },
+    base: 'http://127.0.0.1:8087',
+    alias: 'exp-x',
+    turns: [],
+    compare: { enabled: false, state, base: null, alias: null, managed: null, detail }
+  });
+  // Still starting: the next question waits for it, and the command says so.
+  const idle = makeSession('idle', null);
+  assert.match(runCommand({ name: 'use-both', argument: 'true' }, idle).text, /starting/);
+  // Failed: the reason is reported, so a broken base artifact is visible at once.
+  const failed = makeSession('failed', 'the base artifact is missing at training/checkpoints/base-f16.gguf');
+  assert.match(runCommand({ name: 'use-both', argument: 'true' }, failed).text, /base artifact is missing/);
+});

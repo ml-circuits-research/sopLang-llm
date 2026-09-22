@@ -42,9 +42,43 @@ is not counted as an evaluation turn. `/help` prints the same list.
 | `/help` | list the interactive commands |
 | `/show-plan` | print the plan of the previous turn, its wire names, whether it executed, and its divergence |
 | `/stats` | print the number of turns and the token totals the server reported |
-| `/model` | print the served artifact, its alias, and the base URL |
+| `/model` | print the served artifact, its alias, the base URL, and whether the comparison is on |
+| `/use-both [true\|false]` | toggle the base-model comparison; with no argument it flips the current setting |
 | `/export <path>` | write the session transcript to a JSONL file (overwrites it) |
 | `/exit` | leave the session (bare `exit`, `quit`, and Ctrl-D do the same) |
+
+### The base-model comparison
+
+`/use-both` answers every following question twice, on the same statement: once
+through the fine-tuned student, whose compiled circuit the runtime executes, and
+once through the **untuned base model**, which was never trained on the
+compiled-plan profile and therefore replies in prose from its own weights. The
+two are asked at the same time, so the wait is the longer of the two answers
+rather than their sum.
+
+The point is the difference. The pipeline promises "compile, then execute", so
+the honest question about any checkpoint is what the fine-tuning bought over the
+model it started from. With the comparison on, that difference is on screen
+instead of argued about: on `How many times does the letter "r" appear in the
+word "raspberry"?` the untuned base model answered `1` (the word holds three),
+while a student whose plan reads the characters answers `3 times.`.
+
+The base model is served on the next port (`--port` + 1) from the gguf pinned in
+`training/environment/base-model.json`, started on first use and stopped with the
+session. `/use-both` prints whether that server is still starting, ready, or
+unavailable with its reason, so a comparison that cannot run says so rather than
+silently answering once. `--use-both` starts a session with the comparison
+already on.
+
+```
+? /use-both
+✔ comparison on: every question is answered by the fine-tuned model and by the untuned base model.
+? How many times does the letter "r" appear in the word "raspberry"? Reply with only the number.
+--- untuned base model (own weights, no circuit) ---
+1
+(4 tokens, 1.2s)
+✔ answer (executed circuit): 3 times.
+```
 
 `/show-plan` is the command form of `--show-plan`, with the answer to the
 question every failed turn raises. It prints the program the model emitted, the
