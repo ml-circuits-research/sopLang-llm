@@ -1,0 +1,36 @@
+@slots literal
+{
+  "depot": "river depot",
+  "unit": "parts",
+  "values": [
+    31,
+    20,
+    22,
+    17,
+    24,
+    31,
+    16,
+    30
+  ],
+  "threshold": 19,
+  "pct": 60
+}
+
+@answer jsEval
+const slots = $slots;
+const values = slots.values;
+probe(Array.isArray(values) && values.length > 0, "the records must be a non-empty list");
+let current = values;
+// stage 1: keepAbove
+const kept0 = values.filter((value) => value > slots.threshold);
+probe(kept0.length > 0 && kept0.length < values.length, "the filter must keep some records and drop some");
+current = kept0;
+// stage 2: uniqueCount
+const count1 = new Set(current).size;
+current = count1;
+// stage 3: percentOf
+const adjusted2 = (current * slots.pct) / 100;
+current = adjusted2;
+probe(Number.isInteger(current) && current >= 0, "the answer must be a whole number that is not negative");
+return current + " units.";
+

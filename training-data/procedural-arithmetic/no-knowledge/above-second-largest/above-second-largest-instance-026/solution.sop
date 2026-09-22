@@ -1,0 +1,33 @@
+@slots literal
+{
+  "depot": "river depot",
+  "unit": "litres",
+  "values": [
+    19,
+    37,
+    27,
+    36,
+    7,
+    41,
+    20,
+    17
+  ],
+  "threshold": 18,
+  "nth": 2
+}
+
+@answer jsEval
+const slots = $slots;
+const values = slots.values;
+probe(Array.isArray(values) && values.length > 0, "the records must be a non-empty list");
+let current = values;
+// stage 1: keepAbove
+const kept0 = values.filter((value) => value > slots.threshold);
+probe(kept0.length > 0 && kept0.length < values.length, "the filter must keep some records and drop some");
+current = kept0;
+// stage 2: nthLargest
+const extreme1 = [...current].sort((left, right) => right - left)[slots.nth - 1];
+current = extreme1;
+probe(Number.isInteger(current) && current >= 0, "the answer must be a whole number that is not negative");
+return current + " units.";
+

@@ -1,0 +1,31 @@
+@slots literal
+{
+  "depot": "hill depot",
+  "unit": "crates",
+  "values": [
+    34,
+    41,
+    36,
+    7,
+    6,
+    28,
+    37
+  ],
+  "divisor": 3
+}
+
+@answer jsEval
+const slots = $slots;
+const values = slots.values;
+probe(Array.isArray(values) && values.length > 0, "the records must be a non-empty list");
+let current = values;
+// stage 1: keepDivisibleBy
+const kept0 = values.filter((value) => value % slots.divisor === 0);
+probe(kept0.length > 0 && kept0.length < values.length, "the filter must keep some records and drop some");
+current = kept0;
+// stage 2: total
+const total1 = current.reduce((sum, value) => sum + value, 0);
+current = total1;
+probe(Number.isInteger(current) && current >= 0, "the answer must be a whole number that is not negative");
+return current + " units.";
+

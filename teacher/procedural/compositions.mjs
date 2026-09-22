@@ -119,8 +119,73 @@ const OPERATORS = Object.freeze({
     apply: (value, parameters) => value * parameters.perUnit,
     sentence: (parameters) => `multiply it by the ${parameters.perUnit} labels per record`,
     clause: 'the value must be a number'
+  },
+  // The census operators (evaluation/census.mjs): the operations the book families
+  // perform that the original eleven did not cover. Each follows the same contract
+  // and the same draw-parameter discipline as the originals.
+  keepDivisibleBy: {
+    takes: 'list',
+    returns: 'list',
+    apply: (values, parameters) => values.filter((value) => value % parameters.divisor === 0),
+    sentence: (parameters) => `keep only the records divisible by ${parameters.divisor}`,
+    clause: 'the divisor must keep at least one record and drop at least one'
+  },
+  modulo: {
+    takes: 'scalar',
+    returns: 'scalar',
+    apply: (value, parameters) => value % parameters.divisor,
+    sentence: (parameters) => `take the remainder of it divided by ${parameters.divisor}`,
+    clause: 'the value must not be a multiple of the divisor, so the remainder is non-zero'
+  },
+  uniqueCount: {
+    takes: 'list',
+    returns: 'scalar',
+    apply: (values) => new Set(values).size,
+    sentence: () => 'count the distinct records',
+    clause: 'the kept records must contain at least one repeated value, so the distinct count differs from the count'
+  },
+  percentOf: {
+    takes: 'scalar',
+    returns: 'scalar',
+    apply: (value, parameters) => (value * parameters.pct) / 100,
+    sentence: (parameters) => `take ${parameters.pct} percent of it`,
+    clause: 'the percentage must land on a whole number'
+  },
+  ratioPer: {
+    takes: 'scalar',
+    returns: 'scalar',
+    apply: (value, parameters) => value / parameters.divisor,
+    sentence: (parameters) => `split it into ${parameters.divisor} equal parts`,
+    clause: 'the value must divide evenly, so each part is a whole number'
+  },
+  discount: {
+    takes: 'scalar',
+    returns: 'scalar',
+    apply: (value, parameters) => value - (value * parameters.pct) / 100,
+    sentence: (parameters) => `reduce it by the discount of ${parameters.pct} percent`,
+    clause: 'the discounted amount must land on a whole number and stay positive'
+  },
+  nthLargest: {
+    takes: 'list',
+    returns: 'scalar',
+    apply: (values, parameters) => [...values].sort((left, right) => right - left)[parameters.nth - 1],
+    sentence: (parameters) => `take the ${ordinal(parameters.nth)} largest kept record`,
+    clause: 'the kept records must hold at least as many records as the asked rank'
+  },
+  squareArea: {
+    takes: 'scalar',
+    returns: 'scalar',
+    apply: (value) => value * value,
+    sentence: () => 'take the area of a square with that side',
+    clause: 'the side must be a whole number, so the area is whole'
   }
 });
+
+/** The English ordinal of a rank: 1 -> first, 2 -> second, 3 -> third, and so on. */
+function ordinal(n) {
+  const names = { 1: 'first', 2: 'second', 3: 'third', 4: 'fourth', 5: 'fifth' };
+  return names[n] ?? `${n}th`;
+}
 
 /**
  * The declared inventory. Each entry is one composition, and the entry is the
@@ -162,7 +227,25 @@ export const COMPOSITIONS = Object.freeze([
   { id: 'below-largest-add-rate', chain: ['keepBelow', 'largest', 'addRate'], depths: 3 },
   { id: 'above-count-double', chain: ['keepAbove', 'count', 'double'], depths: 3 },
   { id: 'below-total-per-unit-subtract-rate', chain: ['keepBelow', 'total', 'perUnit', 'subtractRate'], depths: 4 },
-  { id: 'above-largest-add-rate', chain: ['keepAbove', 'largest', 'addRate'], depths: 3 }
+  { id: 'above-largest-add-rate', chain: ['keepAbove', 'largest', 'addRate'], depths: 3 },
+  // The census compositions: the operations the books use and the eleven did not
+  // cover, composed by the same declared-inventory discipline (evaluation/census.mjs).
+  { id: 'keep-divisible-total', chain: ['keepDivisibleBy', 'total'], depths: 2 },
+  { id: 'keep-divisible-count', chain: ['keepDivisibleBy', 'count'], depths: 2 },
+  { id: 'above-unique-count', chain: ['keepAbove', 'uniqueCount'], depths: 2 },
+  { id: 'above-total-percent', chain: ['keepAbove', 'total', 'percentOf'], depths: 3 },
+  { id: 'above-total-ratio', chain: ['keepAbove', 'total', 'ratioPer'], depths: 3 },
+  { id: 'above-total-discount', chain: ['keepAbove', 'total', 'discount'], depths: 3 },
+  { id: 'above-second-largest', chain: ['keepAbove', 'nthLargest'], depths: 2, rank: 2 },
+  { id: 'above-largest-square-area', chain: ['keepAbove', 'largest', 'squareArea'], depths: 3 },
+  { id: 'above-total-modulo-add-rate', chain: ['keepAbove', 'total', 'modulo', 'addRate'], depths: 4 },
+  { id: 'keep-divisible-total-percent', chain: ['keepDivisibleBy', 'total', 'percentOf'], depths: 3 },
+  { id: 'above-unique-count-percent', chain: ['keepAbove', 'uniqueCount', 'percentOf'], depths: 3 },
+  // The census compositions the held-out side reserves.
+  { id: 'above-total-modulo', chain: ['keepAbove', 'total', 'modulo'], depths: 3 },
+  { id: 'above-total-percent-discount', chain: ['keepAbove', 'total', 'percentOf', 'discount'], depths: 4 },
+  { id: 'above-third-largest-percent', chain: ['keepAbove', 'nthLargest', 'percentOf'], depths: 3, rank: 3 },
+  { id: 'keep-below-total-ratio', chain: ['keepBelow', 'total', 'ratioPer'], depths: 3 }
 ]);
 
 /**
@@ -178,7 +261,11 @@ export const HELD_OUT = Object.freeze([
   'below-largest-add-rate',
   'above-count-double',
   'below-total-per-unit-subtract-rate',
-  'above-largest-add-rate'
+  'above-largest-add-rate',
+  'above-total-modulo',
+  'above-total-percent-discount',
+  'above-third-largest-percent',
+  'keep-below-total-ratio'
 ]);
 
 /**

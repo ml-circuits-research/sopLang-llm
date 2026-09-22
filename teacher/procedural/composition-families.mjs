@@ -88,6 +88,15 @@ function drawSlots(composition, random) {
     if (names.has('double')) {
       slots.multiplier = 2 + Math.floor(random() * 2);
     }
+    if (names.has('keepDivisibleBy') || names.has('modulo') || names.has('ratioPer')) {
+      slots.divisor = 3 + Math.floor(random() * 6);
+    }
+    if (names.has('percentOf') || names.has('discount')) {
+      slots.pct = 10 * (1 + Math.floor(random() * 9));
+    }
+    if (names.has('nthLargest')) {
+      slots.nth = composition.rank ?? 2;
+    }
     if (walkChain(composition, slots) !== null) {
       return slots;
     }
@@ -121,6 +130,45 @@ function walkChain(composition, slots) {
     }
     if (name === 'subtractRate' && current - slots.rate <= 0) {
       return null;
+    }
+    if (name === 'keepDivisibleBy') {
+      const kept = operator.apply(current, slots);
+      if (kept.length === 0 || kept.length === current.length) {
+        return null;
+      }
+      current = kept;
+      continue;
+    }
+    if (name === 'nthLargest') {
+      if (slots.nth > current.length) {
+        return null;
+      }
+      const ranked = [...current].sort((left, right) => right - left);
+      if (ranked[slots.nth - 1] === ranked[slots.nth]) {
+        return null; // the rank must be unambiguous
+      }
+    }
+    if (name === 'ratioPer') {
+      if (current % slots.divisor !== 0) {
+        return null;
+      }
+    }
+    if (name === 'percentOf' || name === 'discount') {
+      if ((current * slots.pct) % 100 !== 0) {
+        return null;
+      }
+    }
+    if (name === 'discount' && current - (current * slots.pct) / 100 <= 0) {
+      return null;
+    }
+    if (name === 'modulo' && current % slots.divisor === 0) {
+      return null;
+    }
+    if (name === 'uniqueCount') {
+      const kept = [...new Set(current)];
+      if (kept.length === current.length) {
+        return null; // the distinct count must differ from the count
+      }
     }
     current = operator.apply(current, slots);
   }
@@ -167,7 +215,34 @@ function operatorLine(name, index) {
   if (name === 'addRate') {
     return `const adjusted${index} = current + slots.rate;`;
   }
-  return `const adjusted${index} = current - slots.rate;`;
+  if (name === 'subtractRate') {
+    return `const adjusted${index} = current - slots.rate;`;
+  }
+  if (name === 'keepDivisibleBy') {
+    return `const kept${index} = values.filter((value) => value % slots.divisor === 0);`;
+  }
+  if (name === 'modulo') {
+    return `const adjusted${index} = current % slots.divisor;`;
+  }
+  if (name === 'ratioPer') {
+    return `const adjusted${index} = current / slots.divisor;`;
+  }
+  if (name === 'percentOf') {
+    return `const adjusted${index} = (current * slots.pct) / 100;`;
+  }
+  if (name === 'discount') {
+    return `const adjusted${index} = current - (current * slots.pct) / 100;`;
+  }
+  if (name === 'nthLargest') {
+    return `const extreme${index} = [...current].sort((left, right) => right - left)[slots.nth - 1];`;
+  }
+  if (name === 'uniqueCount') {
+    return `const count${index} = new Set(current).size;`;
+  }
+  if (name === 'squareArea') {
+    return `const adjusted${index} = current * current;`;
+  }
+  throw new Error(`no circuit line for the operator ${name}`);
 }
 
 /**
@@ -186,11 +261,11 @@ function chainBody(composition, slots) {
   for (const [index, name] of composition.chain.entries()) {
     lines.push(`// stage ${index + 1}: ${name}`);
     lines.push(operatorLine(name, index));
-    if (name === 'keepAbove' || name === 'keepBelow') {
-      lines.push(`probe(kept${index}.length > 0 && kept${index}.length < values.length, "the threshold must keep some records and drop some");`);
+    if (name === 'keepAbove' || name === 'keepBelow' || name === 'keepDivisibleBy') {
+      lines.push(`probe(kept${index}.length > 0 && kept${index}.length < values.length, "the filter must keep some records and drop some");`);
       lines.push(`current = kept${index};`);
     } else {
-      lines.push(`current = ${['total', 'count', 'largest', 'smallest'].includes(name) ? lineName(name, index) : scaledName(name, index)};`);
+      lines.push(`current = ${['total', 'count', 'uniqueCount', 'largest', 'smallest', 'nthLargest'].includes(name) ? lineName(name, index) : scaledName(name, index)};`);
     }
   }
   lines.push('probe(Number.isInteger(current) && current >= 0, "the answer must be a whole number that is not negative");');
@@ -200,7 +275,7 @@ function chainBody(composition, slots) {
 
 function lineName(name, index) {
   if (name === 'total') return `total${index}`;
-  if (name === 'count') return `count${index}`;
+  if (name === 'count' || name === 'uniqueCount') return `count${index}`;
   return `extreme${index}`;
 }
 
@@ -261,6 +336,9 @@ export function compositionFamily(composition) {
       if (names.has('addRate') || names.has('subtractRate')) slots.rate = 0;
       if (names.has('perUnit')) slots.perUnit = 0;
       if (names.has('double')) slots.multiplier = 0;
+      if (names.has('keepDivisibleBy') || names.has('modulo') || names.has('ratioPer')) slots.divisor = 0;
+      if (names.has('percentOf') || names.has('discount')) slots.pct = 0;
+      if (names.has('nthLargest')) slots.nth = 0;
       // Read each operator's parameter back from its own sentence, in the order the
       // chain declares, and refuse a statement whose sentences are not this chain's.
       const sentences = operationText[1].split(', then ');
@@ -299,6 +377,39 @@ export function compositionFamily(composition) {
             throw new Error(`operation ${index + 1} is not the doubling step of this family`);
           }
           slots.multiplier = Number(multiplier[1]);
+          continue;
+        }
+        if (name === 'keepDivisibleBy') {
+          const divisor = /keep only the records divisible by (\d+)$/.exec(sentence);
+          if (divisor === null) {
+            throw new Error(`operation ${index + 1} is not the divisibility step of this family`);
+          }
+          slots.divisor = Number(divisor[1]);
+          continue;
+        }
+        if (name === 'modulo' || name === 'ratioPer') {
+          const divisor = /(?:remainder of it divided by|split it into) (\d+)(?: equal parts)?$/.exec(sentence);
+          if (divisor === null) {
+            throw new Error(`operation ${index + 1} is not the division step of this family`);
+          }
+          slots.divisor = Number(divisor[1]);
+          continue;
+        }
+        if (name === 'percentOf' || name === 'discount') {
+          const pct = /(?:take|the discount of) (\d+) percent/.exec(sentence);
+          if (pct === null) {
+            throw new Error(`operation ${index + 1} is not the percentage step of this family`);
+          }
+          slots.pct = Number(pct[1]);
+          continue;
+        }
+        if (name === 'nthLargest') {
+          const nth = /take the (first|second|third|fourth|fifth|\d+th) largest/.exec(sentence);
+          if (nth === null) {
+            throw new Error(`operation ${index + 1} is not the rank step of this family`);
+          }
+          const ordinal = { first: 1, second: 2, third: 3, fourth: 4, fifth: 5 };
+          slots.nth = ordinal[nth[1]] ?? Number(nth[1].replace('th', ''));
           continue;
         }
         const expected = OPERATORS[name].sentence(slots);
