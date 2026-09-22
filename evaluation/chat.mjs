@@ -28,7 +28,7 @@
  */
 
 import { spawn, spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { createInterface } from 'node:readline';
 import { pathToFileURL } from 'node:url';
@@ -174,11 +174,13 @@ const ANSI = Object.freeze({
   dim: '\x1b[2m',
   yellow: '\x1b[33m',
   cyan: '\x1b[36m',
+  magenta: '\x1b[35m',
   green: '\x1b[32m',
   red: '\x1b[31m'
 });
 
 export const BASE_GGUF = `${REPOSITORY_ROOT}/training/checkpoints/base-f16.gguf`;
+export const BASE_GGUF_15 = `${REPOSITORY_ROOT}/training/checkpoints/base-1.5b-f16.gguf`;
 
 const COMMAND_WIDTH = Math.max(...COMMANDS.map((command) => command.usage.length));
 
@@ -220,6 +222,22 @@ ${COMMANDS.map((command) => `  ${command.usage.padEnd(COMMAND_WIDTH)}  ${command
  * whatever it wrote in prose; that text is shown as it came, because the value of
  * the comparison is exactly that difference and reformatting it would hide it.
  */
+/** The untrained 1.5B base's block: the same shape as the 0.5B one, its own colour. */
+function renderComparison15(base) {
+  const lines = [`${ANSI.bold}${ANSI.magenta}── BASE MODEL 1.5B (untrained) ──${ANSI.reset}`];
+  if (base.error !== null) {
+    lines.push(`${ANSI.red}✗ no answer: ${base.error}${ANSI.reset}`);
+    return lines;
+  }
+  const text = base.text === null || base.text === '' ? '(empty answer)' : base.text;
+  lines.push(text);
+  const measured = [base.tokens === null ? null : `${base.tokens} tokens`, base.latencyMs === null ? null : `${(base.latencyMs / 1000).toFixed(1)}s`]
+    .filter((part) => part !== null)
+    .join(', ');
+  if (measured !== '') lines.push(`${ANSI.dim}(${measured})${ANSI.reset}`);
+  return lines;
+}
+
 function renderComparison(base) {
   const lines = [`${ANSI.bold}${ANSI.yellow}── ORIGINAL MODEL (untrained) ──${ANSI.reset}`];
   if (base.error !== null) {
@@ -257,6 +275,23 @@ function renderExchange(turn, options) {
   const lines = [];
   if (turn.baseComparison !== undefined) {
     lines.push(...renderComparison(turn.baseComparison), '');
+    // The 1.5B pair, when an experiment pinned the 1.5B base: its own base answer
+    // and its own compiled student, each in its own colour.
+    if (turn.base15 !== undefined) {
+      lines.push(...renderComparison15(turn.base15), '');
+    }
+    if (turn.student15 !== undefined) {
+      lines.push(`${ANSI.bold}${ANSI.green}── FINE-TUNED MODEL 1.5B (${turn.student15Experiment ?? '1.5B'}) ──${ANSI.reset}`);
+      if (turn.student15.program !== null && options.showPlan) {
+        lines.push(`${ANSI.dim}${turn.student15.program.trimEnd()}${ANSI.reset}`, '');
+      }
+      if (turn.student15.className === 'executed') {
+        const answer = turn.student15.answer;
+        lines.push(`${ANSI.green}✔ ${typeof answer === 'string' ? answer : JSON.stringify(answer)}${ANSI.reset}`, '');
+      } else {
+        lines.push(`${ANSI.red}✗ ${turn.student15.className}: ${turn.student15.detail ?? turn.student15.outcome?.code ?? 'did not execute'}${ANSI.reset}`, '');
+      }
+    }
     lines.push(`${ANSI.bold}${ANSI.cyan}── FINE-TUNED MODEL ──${ANSI.reset}`);
   }
   if (turn.program !== null && options.showPlan) {
@@ -362,6 +397,40 @@ async function servedAlias(base) {
   }
 }
 
+/**
+ * The winner of the 1.5B experiment, when one exists.
+ *
+ * The four-model comparison shows, in order: the untrained 0.5B base, the fine-tuned
+ * 0.5B student, the untrained 1.5B base, and the fine-tuned 1.5B student. The 1.5B
+ * pair appears the moment an experiment whose run manifest pins the 1.5B base has a
+ * recorded winner; until then the chat shows the 0.5B pair only.
+ */
+function winner15() {
+  const registry = `${REPOSITORY_ROOT}/evaluation/registry`;
+  const candidates = [];
+  for (const name of readdirSync(registry)) {
+    const selection = join(registry, name, 'selection.json');
+    const manifest = join(registry, name, 'run-manifest.json');
+    if (!existsSync(selection) || !existsSync(manifest)) continue;
+    const record = JSON.parse(readFileSync(manifest, 'utf8'));
+    const pinned = String(record.base_model_manifest?.path ?? '');
+    if (!pinned.includes('1.5b')) continue;
+    const selected = JSON.parse(readFileSync(selection, 'utf8'));
+    const row = selected.rows.find((entry) => entry.checkpoint === selected.winner);
+    if (row === undefined) continue;
+    const gguf = resolveArtifactPath(row.gguf);
+    if (!existsSync(gguf)) continue;
+    candidates.push({ experiment: selected.experiment, winner: selected.winner, gguf });
+  }
+  candidates.sort((left, right) => right.experiment.localeCompare(left.experiment));
+  return candidates[0] ?? null;
+}
+
+/** The ports of the four lanes: main, base-0.5, student-1.5, base-1.5. */
+function lanePorts(port) {
+  return { student05: port, base05: port + 1, student15: port + 2, base15: port + 3 };
+}
+
 async function ensureBaseServer(session, options) {
   const compare = session.compare;
   if (compare.state === 'ready' || compare.state === 'failed') {
@@ -411,6 +480,47 @@ async function ensureBaseServer(session, options) {
  * from the recorded chat profile, with no circuit and no execution, which is
  * exactly what the comparison is meant to show next to the compiled result.
  */
+/**
+ * Bring one lane's server up, exactly like `ensureBaseServer` but for any lane:
+ * reuse a server that already holds the lane's artifact, refuse one that holds a
+ * different model, start the lane's artifact otherwise. Returns the lane.
+ */
+async function ensureLane(lane, { gguf, port, options }) {
+  if (lane.state === 'ready' || lane.state === 'failed') {
+    return lane;
+  }
+  const base = `http://127.0.0.1:${port}`;
+  if (await serverIsUp(base)) {
+    const served = await servedAlias(base);
+    if (served === null || served === aliasFor(gguf)) {
+      lane.state = 'ready';
+      lane.base = base;
+      lane.alias = served ?? aliasFor(gguf);
+      lane.managed = null;
+      lane.detail = served === null ? 'an unnamed server on the port is assumed to serve the requested model' : null;
+      return lane;
+    }
+    lane.state = 'failed';
+    lane.detail = `port ${port} serves "${served}", not ${aliasFor(gguf)}; stop it or pass a different --port`;
+    return lane;
+  }
+  if (!existsSync(gguf)) {
+    lane.state = 'failed';
+    lane.detail = `the artifact is missing at ${gguf.replace(`${REPOSITORY_ROOT}/`, '')}`;
+    return lane;
+  }
+  try {
+    lane.managed = await startServer({ gguf, port, threads: options.threads });
+    lane.state = 'ready';
+    lane.base = base;
+    lane.alias = aliasFor(gguf);
+  } catch (error) {
+    lane.state = 'failed';
+    lane.detail = error.message;
+  }
+  return lane;
+}
+
 async function askBase({ question, compare, options }) {
   // The base model is asked to SOLVE the problem, not to compile it. Sending it the
   // recorded compilation profile would ask a model that was never trained on SOP Lang
@@ -448,6 +558,43 @@ async function askBase({ question, compare, options }) {
  * records, exports, and shows by default), with the base answer attached to it
  * under `baseComparison` so `/show-plan` and `/export` can read it.
  */
+/**
+ * Ask every lane the comparison has: the main student and the untrained 0.5B base
+ * are the pair `/use-both` has always shown; the fine-tuned 1.5B student and the
+ * untrained 1.5B base join them once a 1.5B experiment has a recorded winner. All
+ * asks start before any is awaited, so the wall clock is the slowest lane, not their
+ * sum. Lanes that fail to come up are reported, never answered silently.
+ */
+async function askTurn({ question, base, alias, compare, session, options, runtime }) {
+  const warnings = [];
+  let compareState = null;
+  if (compare !== null) {
+    const lane = await ensureBaseServer(session, options);
+    compareState = lane.state;
+    if (lane.state !== 'ready') warnings.push(`the 0.5B base model is unavailable: ${lane.detail}`);
+  }
+  const promises = [ask({ question, base, alias, options, runtime })];
+  if (compareState === 'ready') promises.push(askBase({ question, compare, options }));
+  if (session.student15 !== null && session.base15 !== null) {
+    const studentLane = await ensureLane(session.student15, { gguf: session.student15.gguf, port: lanePorts(options.port).student15, options });
+    const baseLane = await ensureLane(session.base15, { gguf: BASE_GGUF_15, port: lanePorts(options.port).base15, options });
+    if (studentLane.state !== 'ready') warnings.push(`the 1.5B student is unavailable: ${studentLane.detail}`);
+    else if (baseLane.state !== 'ready') warnings.push(`the 1.5B base model is unavailable: ${baseLane.detail}`);
+    else {
+      promises.push(ask({ question, base: studentLane.base, alias: studentLane.alias, options, runtime }));
+      promises.push(askBase({ question, compare: baseLane, options }));
+    }
+  }
+  const [turn, baseTurn, turn15, baseTurn15] = await Promise.all(promises);
+  if (baseTurn !== undefined) turn.baseComparison = baseTurn;
+  if (turn15 !== undefined) {
+    turn.student15 = turn15;
+    turn.student15Experiment = session.student15.experiment;
+  }
+  if (baseTurn15 !== undefined) turn.base15 = baseTurn15;
+  return { turn, warnings };
+}
+
 async function askBoth({ question, base, alias, compare, options, runtime }) {
   const compiled = ask({ question, base, alias, options, runtime });
   const untuned = askBase({ question, compare, options });
@@ -665,7 +812,7 @@ async function main() {
   const stopServer = () => {
     // The comparison's base server is managed by this session too, so it stops with
     // it: a leaked llama-server would hold both a port and the GPU memory.
-    for (const child of [managed, session.compare.managed]) {
+    for (const child of [managed, session.compare.managed, session.student15?.managed, session.base15?.managed]) {
       if (child === null || child === undefined) {
         continue;
       }
@@ -684,6 +831,7 @@ async function main() {
   process.on('exit', stopServer);
 
   const runtime = createRuntime();
+  const lanes = winner15();
   const session = {
     artifact,
     base,
@@ -694,23 +842,26 @@ async function main() {
     // reported rather than retried silently.
     // Comparing is the default now, because the question the CLI exists to answer is
     // what the fine-tuning bought; `--single` turns it off for a fast loop.
-    compare: { enabled: options.useBoth && !options.single, state: 'idle', base: null, alias: null, managed: null, detail: null }
+    compare: { enabled: options.useBoth && !options.single, state: 'idle', base: null, alias: null, managed: null, detail: null },
+    // The 1.5B pair: the fine-tuned 1.5B student and the untrained 1.5B base, shown
+    // as the third and fourth blocks once an experiment pins the 1.5B base.
+    student15: lanes === null
+      ? null
+      : { state: 'idle', base: null, alias: null, managed: null, detail: null, gguf: lanes.gguf, experiment: lanes.experiment, winner: lanes.winner },
+    base15: lanes === null
+      ? null
+      : { state: 'idle', base: null, alias: null, managed: null, detail: null, gguf: BASE_GGUF_15 }
   };
 
   if (options.once !== null) {
     // `--once` honours the same default as the interactive loop: both models answer,
     // the plan is shown, and `--single` restores the one-model form for a fast check.
-    let compare = null;
-    if (session.compare.enabled) {
-      compare = await ensureBaseServer(session, options);
-    }
-    const turn = compare !== null && compare.state === 'ready'
-      ? await askBoth({ question: options.once, base, alias, compare, options, runtime })
-      : await ask({ question: options.once, base, alias, options, runtime });
+    const compare = session.compare.enabled ? session.compare : null;
+    const { turn, warnings } = await askTurn({ question: options.once, base, alias, compare, session, options, runtime });
     const turnOptions = compare !== null && compare.state === 'ready' ? { ...options, showPlan: true } : options;
     process.stdout.write(`\n? ${options.once}\n${renderExchange(turn, turnOptions)}\n`);
-    if (compare !== null && compare.state !== 'ready') {
-      process.stdout.write(`✗ the comparison could not run: ${compare.detail}\n`);
+    for (const warning of warnings) {
+      process.stdout.write(`✗ ${warning}\n`);
     }
     stopServer();
     process.exit(0);
@@ -736,21 +887,16 @@ async function main() {
     // The comparison asks both models at the same time, on the same question, so the
     // two answers are comparable: awaiting one and then the other would also work,
     // but two 0.5B models fit side by side and the parallel form halves the wait.
-    let compare = null;
-    if (session.compare.enabled) {
-      compare = await ensureBaseServer(session, options);
-    }
+    const compare = session.compare.enabled ? session.compare : null;
+    const { turn, warnings } = await askTurn({ question: decision.text, base, alias, compare, session, options, runtime });
     // The compiled plan is always shown when the comparison runs: the whole point is to
     // compare what each model produced, and for the student the produced thing IS the
     // plan. Showing only the answer would hide the object under comparison.
     const turnOptions = compare !== null && compare.state === 'ready' ? { ...options, showPlan: true } : options;
-    const turn = compare !== null && compare.state === 'ready'
-      ? await askBoth({ question: decision.text, base, alias, compare, options, runtime })
-      : await ask({ question: decision.text, base, alias, options, runtime });
     session.turns.push(turn);
     process.stdout.write(`\n${renderExchange(turn, turnOptions)}\n\n`);
-    if (compare !== null && compare.state !== 'ready') {
-      process.stdout.write(`✗ the comparison could not run: ${compare.detail}\n`);
+    for (const warning of warnings) {
+      process.stdout.write(`✗ ${warning}\n`);
     }
     reader.prompt();
   }
