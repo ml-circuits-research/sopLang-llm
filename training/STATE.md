@@ -28,6 +28,12 @@ The two verdicts that matter, both written in `evaluation/registry/phase4-analys
 
 Nothing is training. The GPU is idle and the machine is safe to use. Two queues are armed and detached: `exp-008-queue.sh` waits for a *new* export before starting another arm, and `exp-009-queue.sh` is spent (its arm completed).
 
+## Running now: `exp-010-contrastive` (started 2026-09-22 14:35Z)
+
+The first arm built on the diagnosis. `teacher/procedural/contrastive.mjs` adds six families in three contrastive pairs to the procedural source, and the export grew from 7575 to 7815 rows (`procedural-arithmetic` 800 to 1040); the run uses exp-009's exact recipe (3 epochs, lr 1e-4, batch 4, grad-accum 8, gradient checkpointing, save-steps 90, preservation-10 extra data), so the arm changes the data and nothing else. Watch it with `bash training/environment/work-status.sh`, live log at `training/checkpoints/exp-010-contrastive/overnight.log`, and its chain writes `evaluation/registry/exp-010-contrastive/{selection.md,report.md,probes.md}`. The guards are running again beside it.
+
+What the arm is for: the pairs make the nearest-memorized-family shortcut observably wrong, since the two members of a pair share their wording, numbers and entities and differ only where the decisive phrase changes the required operation. The measurement that matters is paired accuracy — the number of pairs whose two answers are both correct — not single-answer accuracy alone. Compare against `exp-009-mix10`: 8 of 60 on the diagnostic's normal condition (13.3%), holdout and probes in `evaluation/registry/exp-009-mix10/`.
+
 ## The diagnosis is done (`diag-009`, 2026-09-22 08:07Z)
 
 The four-condition diagnostic ran on `exp-009-mix10`'s winner `checkpoint-728`: **normal 8 of 60 (13.3%)**, values supplied 9 of 60, plan supplied 8 of 60, both 10 of 60, all with 100% parse validity. Read it in `evaluation/registry/diag-009/report.md`, `items/diagnostic.jsonl`, and the analysis section **D-L**.
