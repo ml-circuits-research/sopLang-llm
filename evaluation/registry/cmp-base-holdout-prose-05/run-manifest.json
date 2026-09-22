@@ -1,0 +1,8 @@
+{
+  "experiment": "cmp-base-holdout-prose-05",
+  "gguf": "training/checkpoints/base-f16.gguf",
+  "items": 585,
+  "matched": 63,
+  "prompt": "Answer the problem directly and briefly. Give the final answer in one short sentence; no working, no explanation.",
+  "generatedAt": "2026-09-22T22:55:07.547Z"
+}

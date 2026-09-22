@@ -415,6 +415,23 @@ sets, money, time, sorting, geometry, ratio-as-division, percentage, probability
 a learnable dose of compositions and whole-composition structural splits, exactly as the inventory did for its
 eleven. The census script is `evaluation/census.mjs`, so the list stays reproducible when the families grow.
 
+### The fair base baselines, in prose (`cmp-base-holdout-prose-05/15`, 2026-09-23 00:10Z)
+
+The owner's correction applied: the compiled-plan holdout asks the untrained bases for a skill they never had,
+so the bases are now asked to answer the 585 eval statements directly, in prose, and each completion is
+compared with the printed answer (every stated number must appear; word answers by containment).
+
+| model | matched | items | rate |
+| --- | --- | --- | --- |
+| untrained 0.5B base, prose | 63 | 585 | 10.8% |
+| untrained 1.5B base, prose | 30 | 585 | 5.1% |
+
+The 1.5B base scores *lower* in prose: on the time-interpretation problems it produces a judgment ("Monday's
+attempt succeeds") where the printed answer is the exact fact ("Neither. Friday last ticket 11:30. Monday last
+ticket 14:30."), and the strict match refuses it, which is correct scoring, not an artefact. These are the
+numbers the fine-tuned students must beat; the compiled students are measured on the same 585 items by their
+chains (exp-012, exp-013).
+
 ## Decisions taken on the night of 2026-09-21
 
 **D-G — Containers and registry reads are not in the structure arm; six more multi-wire plan shapes are.** `DS008-training-data.md` specifies container plans and registry-reading plans, and the reconnaissance of this repository found four coupled gates that none of tonight's time could move together: the family validator accepts only `jsEval` and `literal` as an intermediate wire (`teacher/procedural/index.mjs`), the program builder has no container wire path (`teacher/families/index.mjs`, `buildProgram`), the provenance battery judges reactivity from `slots`/`facts` references in the answer wire (`training-data/provenance.mjs`), and no manifest column records the structural read set a definition-reading plan must publish (`DS008`, "Additional circuit shapes"). Each of those is a runtime-contract change that needs its own acceptance evidence, and a half-implemented shape would ship circuits the verifier cannot judge. The lever both shapes serve — plan coverage — is served tonight by six more generator families with two named intermediate stages each (`Teacher/families` equivalent: `teacher/procedural/grouping.mjs`, `aggregation.mjs`, `textshapes.mjs`), which deepens the dependency chain the suite teaches to three stages without touching the runtime contract. The container and registry items stay open with their four gates named above.
