@@ -290,7 +290,7 @@ writeFileSync(
     '',
     options.demos === 0
       ? 'The prompt is the recorded compiled-plan profile alone: the same measurement `evaluation/run-slice.mjs` reports for a slice.'
-      : `Each prompt carries ${options.demos} compiled examples drawn from the training rows in export order, never from the target's own book, so the demonstration teaches the protocol rather than the answer.`,
+      : `Each prompt carries ${options.demos} compiled examples drawn from the training rows in export order, never from the target's own book, so the demonstration teaches the protocol rather than the answer (rule: ${options.demoMode}).`,
     '',
     'Per-item records: `items/' + resolved.sliceName + '.jsonl` (each record names the demonstrations it received).',
     '',
@@ -298,7 +298,7 @@ writeFileSync(
 );
 writeFileSync(
   join(registryDir, 'run-manifest.json'),
-  `${JSON.stringify({ experiment: options.experiment, artifact: artifactLabel, slice: { name: resolved.sliceName, spec: options.slice, items: records.length }, demonstrations: options.demos, demonstrationRule: 'training rows in export order, never the target book, distinct templates', decoding: { temperature: 0, maxTokens: options.maxTokens, concurrency: options.concurrency, attemptsPerItem: 1, transportRetries: 1 }, startedAt: new Date().toISOString() }, null, 2)}\n`,
+  `${JSON.stringify({ experiment: options.experiment, artifact: artifactLabel, slice: { name: resolved.sliceName, spec: options.slice, items: records.length }, demonstrations: options.demos, demonstrationMode: options.demoMode, demonstrationRule: options.demoMode === 'shapes' ? 'training rows whose plan declares the same wire count as the target first, never the target book, one per template, the remainder filled by distinct templates' : 'training rows in export order, never the target book, distinct templates', decoding: { temperature: 0, maxTokens: options.maxTokens, concurrency: options.concurrency, attemptsPerItem: 1, transportRetries: 1 }, startedAt: new Date().toISOString() }, null, 2)}\n`,
 );
 
 process.stdout.write(
