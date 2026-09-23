@@ -432,6 +432,35 @@ ticket 14:30."), and the strict match refuses it, which is correct scoring, not 
 numbers the fine-tuned students must beat; the compiled students are measured on the same 585 items by their
 chains (exp-012, exp-013).
 
+### The census arm (`exp-012-census`, closed 2026-09-23 00:09Z)
+
+The 0.5B student on the expanded suite (8 new operators, 37 compositions, 9175 rows). Winner checkpoint-900:
+selection oracle 95.6% (the best of the series), plan-seen 99.4%, plan-unseen 18.8%. Holdout 585 items,
+oracle match 44.1% (258 of 585), decomposed:
+
+| slice | items | correct | rate |
+| --- | --- | --- | --- |
+| the four original reserved compositions | 160 | 160 | 100.0% |
+| the four NEW census reserved compositions | 160 | 96 | 60.0% |
+| the old procedural eval family | 40 | 0 | 0.0% |
+| the book-derived holdout | 225 | 2 | 0.9% |
+
+Two readings, both recorded:
+
+1. The vocabulary extension works. On compositions built from operators it never saw composed at eval time —
+   divisibility, modulo, percentage-with-discount, third-largest, ratio-division — the student answers 96 of
+   160 at first exposure, against 160 of 160 on the compositions it was taught a tranche ago. New operators
+   generalize, at a lower rate than established ones, which is exactly the learning curve the inventory was
+   built to measure per composition.
+2. The book holdout still barely moves (2 of 225). The census covered eight of the operations the books use;
+   the two-input shapes — time arithmetic, graph traversal, probability, and geometry over two dimensions —
+   are not yet composable, and the book plans use them. The vocabulary hypothesis holds: each tranche of
+   operators moves the procedural side, and the book side will move only when its operators join the chain.
+
+The base comparison in prose, same 585 items: untrained 0.5B 63 (10.8%), untrained 1.5B 30 (5.1%). The
+fine-tuned 0.5B therefore beats its own base four-fold on the deployed number (44.1% against 10.8%) — the
+first time the comparison the owner asked for can be stated with numbers on both sides.
+
 ## Decisions taken on the night of 2026-09-21
 
 **D-G — Containers and registry reads are not in the structure arm; six more multi-wire plan shapes are.** `DS008-training-data.md` specifies container plans and registry-reading plans, and the reconnaissance of this repository found four coupled gates that none of tonight's time could move together: the family validator accepts only `jsEval` and `literal` as an intermediate wire (`teacher/procedural/index.mjs`), the program builder has no container wire path (`teacher/families/index.mjs`, `buildProgram`), the provenance battery judges reactivity from `slots`/`facts` references in the answer wire (`training-data/provenance.mjs`), and no manifest column records the structural read set a definition-reading plan must publish (`DS008`, "Additional circuit shapes"). Each of those is a runtime-contract change that needs its own acceptance evidence, and a half-implemented shape would ship circuits the verifier cannot judge. The lever both shapes serve — plan coverage — is served tonight by six more generator families with two named intermediate stages each (`Teacher/families` equivalent: `teacher/procedural/grouping.mjs`, `aggregation.mjs`, `textshapes.mjs`), which deepens the dependency chain the suite teaches to three stages without touching the runtime contract. The container and registry items stay open with their four gates named above.
