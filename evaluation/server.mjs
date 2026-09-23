@@ -4,7 +4,7 @@
 
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { closeSync, openSync, readFileSync } from 'node:fs';
+import { closeSync, existsSync, openSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -130,4 +130,69 @@ export async function withServer({ ggufPath, port, logPath, threads = null, extr
     }
     await new Promise((resolve) => setTimeout(resolve, 2000));
   }
+}
+
+/**
+ * The newest experiment whose run-manifest records a winner on the requested
+ * base, or `null` when none does.
+ *
+ * An experiment "pins" a base through the `base_model_manifest` its run manifest
+ * records: the path names `base-model-1.5b.json` for the 1.5B arm and
+ * `base-model.json` for the 0.5B arm. Recency is the experiment id, the same
+ * order the chat's `latestExperiment` and `winner15` have always used; the
+ * winner row must still name a gguf that exists, because a pruned conversion
+ * must never hand the chat an artifact that is gone.
+ */
+function winnerByBase({ pins15 }) {
+  const registry = `${REPOSITORY_ROOT}/evaluation/registry`;
+  const candidates = [];
+  for (const name of readdirSync(registry)) {
+    const selection = join(registry, name, 'selection.json');
+    const manifest = join(registry, name, 'run-manifest.json');
+    if (!existsSync(selection) || !existsSync(manifest)) continue;
+    const record = JSON.parse(readFileSync(manifest, 'utf8'));
+    // Older evaluation manifests predate the base_model_manifest field; their
+    // trainer manifest (training/checkpoints/<name>/run-manifest.json) has carried
+    // it since the field existed, so the discrimination works for the whole series.
+    let basePath = record.base_model_manifest?.path ?? null;
+    if (basePath === null) {
+      const trainerManifestPath = join(REPOSITORY_ROOT, 'training/checkpoints', name, 'run-manifest.json');
+      if (existsSync(trainerManifestPath)) {
+        try {
+          basePath = JSON.parse(readFileSync(trainerManifestPath, 'utf8')).base_model_manifest?.path ?? null;
+        } catch {
+          basePath = null;
+        }
+      }
+    }
+    const pinned = String(basePath ?? '').includes('1.5b');
+    if (pinned !== pins15) continue;
+    const selected = JSON.parse(readFileSync(selection, 'utf8'));
+    const row = selected.rows.find((entry) => entry.checkpoint === selected.winner);
+    if (row === undefined) continue;
+    const gguf = resolveArtifactPath(row.gguf);
+    if (!existsSync(gguf)) continue;
+    candidates.push({ experiment: selected.experiment, winner: selected.winner, gguf });
+  }
+  candidates.sort((left, right) => right.experiment.localeCompare(left.experiment));
+  return candidates[0] ?? null;
+}
+
+/**
+ * The newest experiment whose run-manifest pins the 1.5B base, or `null` when
+ * none does. The 1.5B student lane joins the chat the moment this returns a
+ * winner, and it drops back out the moment it returns `null`.
+ */
+export function winner15() {
+  return winnerByBase({ pins15: true });
+}
+
+/**
+ * The newest experiment whose run-manifest does not pin the 1.5B base — the
+ * 0.5B arm — or `null` when none does. The chat's default artifact is this
+ * winner, so the owner's playground serves the latest 0.5B-trained student
+ * rather than a checkpoint whose recipe changed size.
+ */
+export function winner05() {
+  return winnerByBase({ pins15: false });
 }

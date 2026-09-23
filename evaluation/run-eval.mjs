@@ -393,6 +393,20 @@ export async function main(argv) {
       transportRetries: 1
     },
     chatProfile: { id: CHAT_PROFILE_ID, systemPromptSha256: SYSTEM_PROMPT_SHA256 },
+    // Which base the trained checkpoint was fine-tuned from, copied from the
+    // trainer's own manifest, so the chat (winner05/winner15) can tell the 0.5B
+    // arms from the 1.5B arms without guessing from the experiment name.
+    base_model_manifest: (() => {
+      const trainerManifestPath = join(REPO_ROOT, 'training/checkpoints', options.experiment, 'run-manifest.json');
+      if (!existsSync(trainerManifestPath)) return null;
+      try {
+        const trainerManifest = JSON.parse(readFileSync(trainerManifestPath, 'utf8'));
+        const pinned = trainerManifest.base_model_manifest ?? null;
+        return pinned === null || typeof pinned.path !== 'string' ? null : { path: pinned.path };
+      } catch {
+        return null;
+      }
+    })(),
     capabilityProbes: capabilityProbes === null
       ? null
       : { profile: capabilityProbes.profile, systemPromptSha256: capabilityProbes.systemPromptSha256, items: capabilityProbes.items, passed: capabilityProbes.passed },

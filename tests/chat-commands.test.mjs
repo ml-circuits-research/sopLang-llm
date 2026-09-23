@@ -8,7 +8,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { BASE_GGUF, COMMANDS, decodeLine, divergenceOf, runCommand } from '../evaluation/chat.mjs';
+import { BASE_GGUF, COMMANDS, decodeLine, divergenceOf, runCommand, select15Lanes } from '../evaluation/chat.mjs';
 import { aliasFor } from '../evaluation/server.mjs';
 import { answerBody } from '../teacher/families/probes.mjs';
 
@@ -280,6 +280,7 @@ test('each model is asked in the mode it was trained for', () => {
         'evaluation/chat.mjs',
         '--base', `http://127.0.0.1:${port}`,
         '--port', String(port - 1),
+        '--use-both',
         '--no-1.5b',
         '--retries', '0',
         '--once', 'How many cookies are left?'
@@ -405,4 +406,223 @@ test('a failed plan is regenerated with the failure fed back, up to --retries ti
       });
     });
   });
+});
+
+test('/bases toggles both untrained lanes together, and an explicit argument sets them', () => {
+  // /bases is the one command for both untrained bases, so it must flip the 0.5B
+  // base (compare) and the 1.5B base (bases) together and never touch the
+  // students. It is a command, so the decoder claims it before it can be a question.
+  const session = {
+    artifact: { experiment: 'exp-x', winner: null, gguf: '/tmp/exp-x.gguf' },
+    base: 'http://127.0.0.1:8087',
+    alias: 'exp-x',
+    turns: [],
+    compare: { enabled: false, state: 'ready', base: 'http://127.0.0.1:8088', alias: 'base-f16', managed: null, detail: null },
+    bases: { enabled: false },
+    student15: null,
+    base15: { state: 'idle', base: null, alias: null, managed: null, detail: null, gguf: '/tmp/base-1.5b.gguf' }
+  };
+  const run = (argument) => runCommand({ name: 'bases', argument }, session);
+
+  // A bare toggle flips both lanes together.
+  assert.equal(session.compare.enabled, false);
+  assert.equal(session.bases.enabled, false);
+  assert.match(run('').text, /bases on/);
+  assert.equal(session.compare.enabled, true);
+  assert.equal(session.bases.enabled, true);
+  assert.match(run('').text, /bases off/);
+  assert.equal(session.compare.enabled, false);
+  assert.equal(session.bases.enabled, false);
+
+  // An explicit argument sets rather than flips, and true/on and false/off agree.
+  assert.match(run('on').text, /bases on/);
+  assert.equal(session.compare.enabled, true);
+  assert.equal(session.bases.enabled, true);
+  assert.match(run('true').text, /bases on/);
+  assert.equal(session.bases.enabled, true, 'true twice must not turn it off');
+  assert.match(run('off').text, /bases off/);
+  assert.equal(session.compare.enabled, false);
+  assert.equal(session.bases.enabled, false);
+  assert.match(run('false').text, /bases off/);
+
+  // Anything else is refused and changes nothing.
+  assert.match(run('maybe').text, /takes true\/on or false\/off/);
+  assert.equal(session.compare.enabled, false);
+  assert.equal(session.bases.enabled, false);
+
+  // It is a command, so the decoder must claim it before it can be a question.
+  assert.deepEqual(decodeLine('/bases on'), { kind: 'command', name: 'bases', argument: 'on' });
+});
+
+test('/bases reports a base it cannot serve instead of promising it', () => {
+  const session = {
+    artifact: { experiment: 'exp-x', winner: null, gguf: '/tmp/exp-x.gguf' },
+    base: 'http://127.0.0.1:8087',
+    alias: 'exp-x',
+    turns: [],
+    compare: { enabled: false, state: 'failed', base: null, alias: null, managed: null, detail: 'the artifact is missing at training/checkpoints/base-f16.gguf' },
+    bases: { enabled: false },
+    student15: null,
+    base15: null
+  };
+  const { text } = runCommand({ name: 'bases', argument: 'on' }, session);
+  assert.match(text, /0\.5B base: unavailable/);
+  assert.match(text, /1\.5B base: unavailable/);
+});
+
+test('--single drops the 1.5B student, and --no-1.5b drops both 1.5B lanes', () => {
+  const lanes15 = { experiment: 'exp-1.5b', winner: 'checkpoint-450', gguf: '/tmp/exp-1.5b.gguf' };
+  const options = { no15: false, single: false };
+  // With a recorded 1.5B winner, the student lane joins by default.
+  assert.notEqual(select15Lanes(lanes15, options).student15, null);
+  // --single keeps only the main student.
+  const single = select15Lanes(lanes15, { ...options, single: true });
+  assert.equal(single.student15, null);
+  assert.equal(single.base15, null);
+  // --no-1.5b drops both 1.5B lanes.
+  const no15 = select15Lanes(lanes15, { ...options, no15: true });
+  assert.equal(no15.student15, null);
+  assert.equal(no15.base15, null);
+});
+
+test('the default view shows the trained student and no untrained base lane', async () => {
+  // The defect this pins: the old default ran the base comparison on every
+  // question. The new default asks only the trained students, so a question must
+  // produce one student answer and no base block.
+  let completions = 0;
+  const server = createServer((request, response) => {
+    if (request.method === 'GET' && request.url === '/health') {
+      response.writeHead(200, { 'content-type': 'application/json' });
+      response.end('{"status":"ok"}');
+      return;
+    }
+    if (request.method === 'POST' && request.url === '/v1/chat/completions') {
+      completions += 1;
+      request.resume();
+      response.writeHead(200, { 'content-type': 'application/json' });
+      response.end(JSON.stringify({
+        choices: [{ message: { role: 'assistant', content: PROGRAM }, finish_reason: 'stop' }],
+        usage: { prompt_tokens: 11, completion_tokens: 22, total_tokens: 33 }
+      }));
+      return;
+    }
+    response.writeHead(404).end();
+  });
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  try {
+    const child = spawn(process.execPath, ['evaluation/chat.mjs', '--base', `http://127.0.0.1:${server.address().port}`, '--no-1.5b', '--retries', '0'], {
+      env: { ...process.env, SOPLANG_CHAT_HISTORY: `${tmpdir()}/soplang-chat-history-test.jsonl` },
+      cwd: REPOSITORY_ROOT,
+      stdio: ['pipe', 'pipe', 'pipe']
+    });
+    let stdout = '';
+    child.stdout.setEncoding('utf8');
+    child.stdout.on('data', (chunk) => { stdout += chunk; });
+    const exited = once(child, 'exit', { signal: AbortSignal.timeout(30_000) });
+    child.stdin.end('What is 7 equal to?\n/exit\n');
+    const [code] = await exited;
+    child.stdout.destroy();
+    assert.equal(code, 0);
+    assert.equal(completions, 1, 'only the trained student is asked by default');
+    assert.ok(stdout.includes('FINE-TUNED MODEL') && stdout.includes('✔ 7'), `the student answer must be shown: ${stdout.slice(-300)}`);
+    assert.ok(!stdout.includes('ORIGINAL MODEL (untrained)'), 'no base lane may appear in the default view');
+    assert.ok(!stdout.includes('BASE MODEL 1.5B (untrained)'), 'no 1.5B base lane may appear in the default view');
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+  }
+});
+
+test('/bases on brings the untrained base in, and /bases off removes it again', async () => {
+  // The base lane is engaged only while /bases is on: one question with it on
+  // asks the base once, and the next question with it off does not.
+  let studentRequests = 0;
+  let baseRequests = 0;
+  const server = createServer((request, response) => {
+    if (request.method === 'GET' && request.url === '/health') {
+      response.writeHead(200, { 'content-type': 'application/json' });
+      response.end('{"status":"ok"}');
+      return;
+    }
+    if (request.method === 'GET' && request.url === '/v1/models') {
+      response.writeHead(200, { 'content-type': 'application/json' });
+      response.end(`{"models":[{"name":"${aliasFor(BASE_GGUF)}"}]}`);
+      return;
+    }
+    if (request.method === 'POST' && request.url === '/v1/chat/completions') {
+      let body = '';
+      request.on('data', (chunk) => { body += String(chunk); });
+      request.on('end', () => {
+        const isBase = !String(body).includes('SOP Lang');
+        if (isBase) baseRequests += 1; else studentRequests += 1;
+        response.writeHead(200, { 'content-type': 'application/json' });
+        response.end(JSON.stringify({ choices: [{ message: { role: 'assistant', content: isBase ? 'seven' : PROGRAM } }], usage: { completion_tokens: 2, prompt_tokens: 10 } }));
+      });
+      return;
+    }
+    response.writeHead(404);
+    response.end();
+  });
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  try {
+    const { port } = server.address();
+    const child = spawn(process.execPath, [
+      'evaluation/chat.mjs',
+      '--base', `http://127.0.0.1:${port}`,
+      '--port', String(port - 1),
+      '--no-1.5b',
+      '--retries', '0'
+    ], { env: { ...process.env, SOPLANG_CHAT_HISTORY: `${tmpdir()}/soplang-chat-history-test.jsonl` }, cwd: REPOSITORY_ROOT, stdio: ['pipe', 'pipe', 'pipe'] });
+    let stdout = '';
+    child.stdout.setEncoding('utf8');
+    child.stdout.on('data', (chunk) => { stdout += chunk; });
+    const exited = once(child, 'exit', { signal: AbortSignal.timeout(30_000) });
+    child.stdin.end([
+      '/bases on',
+      'What is 7 equal to?',
+      '/bases off',
+      'What is 8 equal to?',
+      '/exit'
+    ].join('\n') + '\n');
+    const [code] = await exited;
+    child.stdout.destroy();
+    assert.equal(code, 0);
+    assert.equal(baseRequests, 1, 'the base is asked only while /bases is on');
+    assert.equal(studentRequests, 2, 'the student is asked on both questions');
+    assert.equal(stdout.split('ORIGINAL MODEL (untrained)').length - 1, 1, `exactly one base block must be rendered: ${stdout.slice(-400)}`);
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+  }
+});
+
+async function waitForGone(pid, timeoutMs = 10_000) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    try {
+      process.kill(pid, 0);
+    } catch {
+      return;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  throw new Error(`process ${pid} is still alive after ${timeoutMs}ms`);
+}
+
+test('the reaper stops its recorded servers when the parent dies', async () => {
+  // The reaper is the only hard-death safety: a SIGKILLed chat cannot run its
+  // cleanup, so a dummy "server" (a sleep in its own process group) must die when
+  // the watched parent does, and the reaper must then exit itself.
+  const serverChild = spawn('sleep', ['30'], { detached: true, stdio: 'ignore' });
+  const parentChild = spawn('sleep', ['30'], { stdio: 'ignore' });
+  const reaper = spawn(process.execPath, ['evaluation/server-reaper.mjs', String(parentChild.pid), String(serverChild.pid)], { cwd: REPOSITORY_ROOT, stdio: 'ignore' });
+  try {
+    const reaperExited = once(reaper, 'exit', { signal: AbortSignal.timeout(15_000) });
+    parentChild.kill('SIGKILL');
+    const [reaperCode] = await reaperExited;
+    assert.equal(reaperCode, 0);
+    await waitForGone(serverChild.pid);
+  } finally {
+    for (const child of [serverChild, parentChild, reaper]) {
+      try { child.kill('SIGKILL'); } catch { /* already gone */ }
+    }
+  }
 });

@@ -28,13 +28,14 @@
  */
 
 import { spawn, spawnSync } from 'node:child_process';
-import { appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { createInterface } from 'node:readline';
 import { pathToFileURL } from 'node:url';
 
 import { buildMessages, extractProgram, generate } from './client.mjs';
-import { LLAMA_SERVER, REPOSITORY_ROOT, aliasFor, serverArguments, waitForServer } from './server.mjs';
+import { LLAMA_SERVER, REPOSITORY_ROOT, aliasFor, serverArguments, waitForServer, winner05, winner15 } from './server.mjs';
 import { artifactFor } from './artifacts.mjs';
 import { CHAT_PROFILE_ID } from '../training/export.mjs';
 import { parseCircuit } from '../runtime/parser.mjs';
@@ -76,7 +77,7 @@ async function startServer({ gguf, port, threads }) {
 }
 
 function parseArguments(argv) {
-  const options = { gguf: null, experiment: null, base: null, port: 8087, maxTokens: 1024, threads: null, showPlan: false, once: null, useBoth: true, single: false, no15: false, retries: 2, help: false };
+  const options = { gguf: null, experiment: null, base: null, port: 8087, maxTokens: 1024, threads: null, showPlan: false, once: null, useBoth: false, single: false, no15: false, retries: 2, help: false };
   for (let index = 0; index < argv.length; index += 1) {
     const flag = argv[index];
     const value = () => {
@@ -114,8 +115,9 @@ export const COMMANDS = [
   { usage: '/help', summary: 'list the interactive commands' },
   { usage: '/show-plan', summary: 'print the plan of the previous turn, its wire names, whether it executed, and its divergence' },
   { usage: '/stats', summary: 'print the number of turns and the token totals the server reported' },
-  { usage: '/model', summary: 'print the served artifact, its alias, and the base URL' },
+  { usage: '/model', summary: 'print the served artifact, its alias, and the state of all four lanes' },
   { usage: '/use-both [true|false]', summary: 'toggle comparing the fine-tuned model against the untuned base model; with no argument it flips the current setting' },
+  { usage: '/bases [true|false]', summary: 'toggle the two untrained base models (0.5B and 1.5B) together; with no argument it flips the current setting' },
   { usage: '/export <path>', summary: 'write the session transcript to a JSONL file (overwrites it)' },
   { usage: '/history [N]', summary: 'list the last N saved turns (default 20) with each model\'s answer' },
   { usage: '/exit', summary: 'leave the session (bare `exit`, `quit`, and Ctrl-D do the same)' }
@@ -190,17 +192,22 @@ const COMMAND_WIDTH = Math.max(...COMMANDS.map((command) => command.usage.length
 
 const HELP = `Usage: node evaluation/chat.mjs [--experiment <id> | --gguf <path>] [options]
 
-Ask a question; the student compiles it into a SOP Lang circuit and the runtime
-executes that circuit, so the printed answer is the one the circuit computed.
+Ask a question; the two trained students — the 0.5B and, when a 1.5B experiment
+has a winner, the 1.5B — each compile it into a SOP Lang circuit that the runtime
+executes, so the printed answer is the one the circuit computed. The two untrained
+bases stay out of sight until you ask for them with /bases.
 
 Options:
   --experiment <id>   serve the selected checkpoint of this experiment
-                      (default: the winner of the most recently evaluated experiment)
+                      (default: the newest 0.5B-trained winner)
   --gguf <path>       serve this artifact instead
   --base <url>        use an already running server instead of starting one
-  --use-both          start with the base-model comparison on: every question is
-                      answered by the fine-tuned model and by the untuned base
-                      model, the second on the next port (see /use-both)
+  --use-both          start with the 0.5B base-model comparison on: every question
+                      is answered by the fine-tuned model and by the untuned 0.5B
+                      base, the second on the next port (see /use-both)
+  --single            keep only the main (0.5B) student: no base, no 1.5B lanes
+  --no-1.5b           skip both 1.5B lanes (the 1.5B student and the 1.5B base)
+  --retries N         extra plans after the first failure (default 2)
   --port N            port for the managed server (default 8087)
   --max-tokens N      generation budget per question (default 1024)
   --threads N         CPU threads for llama-server
@@ -288,27 +295,25 @@ function renderExchange(turn, options) {
   const lines = [];
   if (turn.baseComparison !== undefined) {
     lines.push(...renderComparison(turn.baseComparison), '');
-    // The 1.5B pair, when an experiment pinned the 1.5B base: its own base answer
-    // and its own compiled student, each in its own colour.
-    if (turn.base15 !== undefined) {
-      lines.push(...renderComparison15(turn.base15), '');
-    }
-    if (turn.student15 !== undefined) {
-      lines.push(`${ANSI.bold}${ANSI.green}── FINE-TUNED MODEL 1.5B (${turn.student15Experiment ?? '1.5B'}) ──${ANSI.reset}`);
-      if (turn.student15.program !== null && options.showPlan) {
-        lines.push(`${ANSI.dim}${turn.student15.program.trimEnd()}${ANSI.reset}`, '');
-      }
-      if (turn.student15.className === 'executed') {
-        const answer = turn.student15.answer;
-        lines.push(`${ANSI.green}✔ ${typeof answer === 'string' ? answer : JSON.stringify(answer)}${ANSI.reset}`);
-        const timing15 = timingOf(turn.student15);
-        if (timing15 !== null) lines.push(timing15);
-      } else {
-        lines.push(`${ANSI.red}✗ ${turn.student15.className}: ${turn.student15.detail ?? turn.student15.outcome?.code ?? 'did not execute'}${ANSI.reset}`);
-      }
-    }
-    lines.push(`${ANSI.bold}${ANSI.cyan}── FINE-TUNED MODEL ──${ANSI.reset}`);
   }
+  if (turn.base15 !== undefined) {
+    lines.push(...renderComparison15(turn.base15), '');
+  }
+  if (turn.student15 !== undefined) {
+    lines.push(`${ANSI.bold}${ANSI.green}── FINE-TUNED MODEL 1.5B (${turn.student15Experiment ?? '1.5B'}) ──${ANSI.reset}`);
+    if (turn.student15.program !== null && options.showPlan) {
+      lines.push(`${ANSI.dim}${turn.student15.program.trimEnd()}${ANSI.reset}`, '');
+    }
+    if (turn.student15.className === 'executed') {
+      const answer = turn.student15.answer;
+      lines.push(`${ANSI.green}✔ ${typeof answer === 'string' ? answer : JSON.stringify(answer)}${ANSI.reset}`);
+      const timing15 = timingOf(turn.student15);
+      if (timing15 !== null) lines.push(timing15);
+    } else {
+      lines.push(`${ANSI.red}✗ ${turn.student15.className}: ${turn.student15.detail ?? turn.student15.outcome?.code ?? 'did not execute'}${ANSI.reset}`);
+    }
+  }
+  lines.push(`${ANSI.bold}${ANSI.cyan}── FINE-TUNED MODEL ──${ANSI.reset}`);
   if (turn.program !== null && options.showPlan) {
     lines.push(`${ANSI.dim}${turn.program.trimEnd()}${ANSI.reset}`, '');
   }
@@ -415,32 +420,20 @@ async function servedAlias(base) {
 }
 
 /**
- * The winner of the 1.5B experiment, when one exists.
- *
- * The four-model comparison shows, in order: the untrained 0.5B base, the fine-tuned
- * 0.5B student, the untrained 1.5B base, and the fine-tuned 1.5B student. The 1.5B
- * pair appears the moment an experiment whose run manifest pins the 1.5B base has a
- * recorded winner; until then the chat shows the 0.5B pair only.
+ * The two 1.5B lanes of a session, derived from the discovered 1.5B winner
+ * (`winner15()`, null when none) and the parsed options. The untrained 1.5B
+ * base joins whenever its gguf exists; the fine-tuned 1.5B student joins when a
+ * winner exists. `--no-1.5b` drops both 1.5B lanes, and `--single` keeps only
+ * the main student, so it drops them too.
  */
-function winner15() {
-  const registry = `${REPOSITORY_ROOT}/evaluation/registry`;
-  const candidates = [];
-  for (const name of readdirSync(registry)) {
-    const selection = join(registry, name, 'selection.json');
-    const manifest = join(registry, name, 'run-manifest.json');
-    if (!existsSync(selection) || !existsSync(manifest)) continue;
-    const record = JSON.parse(readFileSync(manifest, 'utf8'));
-    const pinned = String(record.base_model_manifest?.path ?? '');
-    if (!pinned.includes('1.5b')) continue;
-    const selected = JSON.parse(readFileSync(selection, 'utf8'));
-    const row = selected.rows.find((entry) => entry.checkpoint === selected.winner);
-    if (row === undefined) continue;
-    const gguf = resolveArtifactPath(row.gguf);
-    if (!existsSync(gguf)) continue;
-    candidates.push({ experiment: selected.experiment, winner: selected.winner, gguf });
-  }
-  candidates.sort((left, right) => right.experiment.localeCompare(left.experiment));
-  return candidates[0] ?? null;
+export function select15Lanes(lanes15, options) {
+  const student15 = lanes15 === null || options.no15 || options.single
+    ? null
+    : { state: 'idle', base: null, alias: null, managed: null, detail: null, gguf: lanes15.gguf, experiment: lanes15.experiment, winner: lanes15.winner };
+  const base15 = existsSync(BASE_GGUF_15) && !options.no15 && !options.single
+    ? { state: 'idle', base: null, alias: null, managed: null, detail: null, gguf: BASE_GGUF_15 }
+    : null;
+  return { student15, base15 };
 }
 
 /** The ports of the four lanes: main, base-0.5, student-1.5, base-1.5. */
@@ -500,6 +493,7 @@ async function ensureLane(lane, { gguf, port, options }) {
     }
     try {
       lane.managed = await startServer({ gguf, port: candidate, threads: options.threads });
+      recordServerPid(lane.managed);
       lane.state = 'ready';
       lane.base = base;
       lane.alias = aliasFor(gguf);
@@ -572,8 +566,9 @@ async function askTurn({ question, base, alias, compare, session, options, runti
   // when the 1.5B base existed but the 1.5B student did not.
   const results = { main: ask({ question, base, alias, options, runtime }) };
   if (compareState === 'ready') results.base05 = askBase({ question, compare, options });
-  // The 1.5B base lane joins on its own; the 1.5B student joins when its winner exists.
-  if (session.base15 !== null) {
+  // The 1.5B base lane joins only when the owner asked for the bases; the 1.5B
+  // student joins on its own when its winner exists.
+  if (session.base15 !== null && session.bases.enabled) {
     const baseLane = await ensureLane(session.base15, { gguf: BASE_GGUF_15, port: lanePorts(options.port).base15, options });
     if (baseLane.state !== 'ready') {
       warnings.push(`the 1.5B base model is unavailable: ${baseLane.detail}`);
@@ -784,6 +779,12 @@ export function runCommand({ name, argument }, session) {
   }
   if (name === 'model') {
     const artifact = session.artifact;
+    const laneState = (lane) => (lane.state === 'ready' ? 'ready' : lane.state === 'failed' ? 'unavailable' : 'starting');
+    const base05 = session.compare.enabled ? `on (${laneState(session.compare)})` : 'off';
+    const student15 = session.student15 === null ? 'off' : `on (${session.student15.experiment})`;
+    const base15 = session.bases.enabled
+      ? `on (${session.base15 === null ? 'unavailable' : laneState(session.base15)})`
+      : 'off';
     return {
       exit: false,
       text: [
@@ -791,9 +792,10 @@ export function runCommand({ name, argument }, session) {
         `artifact: ${artifact.gguf.replace(`${REPOSITORY_ROOT}/`, '')}`,
         `alias: ${session.alias}`,
         `base: ${session.base}`,
-        `compare against the base model: ${session.compare.enabled ? 'on' : 'off'}${
-          session.compare.enabled ? ` (${session.compare.state})` : ''
-        }`
+        `student 0.5B (main): on`,
+        `base 0.5B: ${base05}`,
+        `student 1.5B: ${student15}`,
+        `base 1.5B: ${base15}`
       ].join('\n')
     };
   }
@@ -807,7 +809,7 @@ export function runCommand({ name, argument }, session) {
     const wanted = wanted0 === '' ? !session.compare.enabled : wanted0 === 'true';
     session.compare.enabled = wanted;
     if (!wanted) {
-      return { exit: false, text: '✔ comparison off: only the fine-tuned model answers.' };
+      return { exit: false, text: '✔ comparison off: only the trained models answer.' };
     }
     if (session.compare.state === 'ready') {
       return { exit: false, text: '✔ comparison on: every question is answered by the fine-tuned model and by the untuned base model.' };
@@ -816,6 +818,40 @@ export function runCommand({ name, argument }, session) {
       return { exit: false, text: `✗ comparison on, but the base model is unavailable: ${session.compare.detail}` };
     }
     return { exit: false, text: '⏳ comparison on: the base model is starting; the next question waits for it.' };
+  }
+  if (name === 'bases') {
+    // One command for both untrained bases: the owner asks for the comparison as
+    // a pair, so `/bases` flips them together while `/use-both` keeps its narrow
+    // meaning (the 0.5B base only). A bare `/bases` flips, an explicit true/on or
+    // false/off sets them, and a lane that cannot come up is reported, not promised.
+    const wanted0 = argument.trim().toLowerCase();
+    if (wanted0 !== '' && wanted0 !== 'true' && wanted0 !== 'on' && wanted0 !== 'false' && wanted0 !== 'off') {
+      return { exit: false, text: '✗ /bases takes true/on or false/off, or nothing to toggle.' };
+    }
+    const bothOn = session.compare.enabled && session.bases.enabled;
+    const wanted = wanted0 === '' ? !bothOn : (wanted0 === 'true' || wanted0 === 'on');
+    session.compare.enabled = wanted;
+    session.bases.enabled = wanted;
+    if (!wanted) {
+      return { exit: false, text: '✔ bases off: only the two trained models answer.' };
+    }
+    const lines = ['✔ bases on: the two untrained bases join the two trained models.'];
+    // The 0.5B base lane: readiness is `compare.state`, its artifact existence is
+    // known up front.
+    if (session.compare.state === 'ready') lines.push('  0.5B base: ready');
+    else if (session.compare.state === 'failed') lines.push(`  ✗ 0.5B base: unavailable: ${session.compare.detail}`);
+    else if (!existsSync(BASE_GGUF)) lines.push(`  ✗ 0.5B base: unavailable: the artifact is missing at ${BASE_GGUF.replace(`${REPOSITORY_ROOT}/`, '')}`);
+    else lines.push('  0.5B base: starting');
+    // The 1.5B base lane: a missing gguf or --no-1.5b/--single leaves it out.
+    if (session.base15 === null) {
+      const reason = existsSync(BASE_GGUF_15)
+        ? 'disabled by --no-1.5b or --single'
+        : `the artifact is missing at ${BASE_GGUF_15.replace(`${REPOSITORY_ROOT}/`, '')}`;
+      lines.push(`  ✗ 1.5B base: unavailable: ${reason}`);
+    } else if (session.base15.state === 'ready') lines.push('  1.5B base: ready');
+    else if (session.base15.state === 'failed') lines.push(`  ✗ 1.5B base: unavailable: ${session.base15.detail}`);
+    else lines.push('  1.5B base: starting');
+    return { exit: false, text: lines.join('\n') };
   }
   if (name === 'stats') {
     const tokens = session.turns.reduce((totals, turn) => ({
@@ -895,6 +931,43 @@ export function runCommand({ name, argument }, session) {
   return { exit: false, text: `✗ unknown command "/${name}"; /help lists the commands.` };
 }
 
+/**
+ * Hard-death safety: one detached reaper watches this chat's PID and closes the
+ * servers the chat started if the chat is killed hard — a SIGKILL cannot run the
+ * cleanup in `stopServer`. The reaper reads the PID file this chat appends to,
+ * so a lane started late is covered too, and it never signals a server it was
+ * not given.
+ */
+const reaperPidFile = join(tmpdir(), `soplang-chat-${process.pid}.pids`);
+
+function startReaper() {
+  try {
+    writeFileSync(reaperPidFile, '');
+  } catch {
+    // A read-only temp dir only means the reaper sees no servers, not that the
+    // chat should refuse to run.
+  }
+  try {
+    const reaper = spawn(
+      process.execPath,
+      [join(REPOSITORY_ROOT, 'evaluation/server-reaper.mjs'), String(process.pid), reaperPidFile],
+      { cwd: REPOSITORY_ROOT, detached: true, stdio: 'ignore' }
+    );
+    reaper.unref();
+  } catch {
+    // Best-effort: graceful shutdown still works without the reaper.
+  }
+}
+
+function recordServerPid(child) {
+  if (child === null || child === undefined || !Number.isInteger(child.pid)) return;
+  try {
+    appendFileSync(reaperPidFile, `${child.pid}\n`);
+  } catch {
+    // Best-effort.
+  }
+}
+
 async function main() {
   const options = parseArguments(process.argv.slice(2));
   if (options.help) {
@@ -902,10 +975,16 @@ async function main() {
     process.exit(0);
   }
 
-  // No --gguf and no --experiment: the winner of the most recently evaluated
-  // experiment, because the owner wants to play with the latest work, and a frozen
-  // default would hand them an old checkpoint the day after every new arm.
-  const artifact = artifactFor({ gguf: options.gguf, experiment: options.experiment ?? latestExperiment() });
+  // The reaper must exist before any server is started: it is the only thing a
+  // SIGKILLed chat leaves behind, and it is what closes the servers then.
+  startReaper();
+
+  // No --gguf and no --experiment: the newest 0.5B-trained winner, because the
+  // owner wants to play with the latest work of the main arm, and a frozen
+  // default would hand them an old checkpoint the day after every new arm. The
+  // 1.5B arm's winner is a different size and never the default; when no 0.5B
+  // winner is recorded yet, the latest experiment of either arm is the fallback.
+  const artifact = artifactFor({ gguf: options.gguf, experiment: options.experiment ?? winner05()?.experiment ?? latestExperiment() });
   const base = options.base ?? `http://127.0.0.1:${options.port}`;
   let managed = null;
   // The alias this session must talk to: the one its own launch serves, or the
@@ -917,6 +996,7 @@ async function main() {
     }
     process.stdout.write(`starting llama-server with ${artifact.gguf.replace(`${REPOSITORY_ROOT}/`, '')} on port ${options.port} …\n`);
     managed = await startServer({ gguf: artifact.gguf, port: options.port, threads: options.threads });
+    recordServerPid(managed);
     alias = aliasFor(artifact.gguf);
   } else if (options.base === null) {
     // The port is occupied. If the occupier serves the requested artifact, reuse it;
@@ -933,17 +1013,19 @@ async function main() {
         throw new Error(`port ${options.port} is still occupied after stopping the leftover server; pass --port to use another`);
       }
       managed = await startServer({ gguf: artifact.gguf, port: options.port, threads: options.threads });
+      recordServerPid(managed);
       alias = aliasFor(artifact.gguf);
     }
   }
   process.stdout.write(`model: ${artifact.experiment}${artifact.winner === null ? '' : ` (${artifact.winner})`}\n`);
-  process.stdout.write('questions are answered by executing the circuit the model compiles; --show-plan prints the circuit.\n');
-  process.stdout.write('type /help for the interactive commands (/show-plan, /stats, /model, /use-both, /export, /history, /exit).\n');
+  process.stdout.write('the two trained models answer by default; /bases adds the two untrained bases.\n');
+  process.stdout.write('type /help for the interactive commands (/show-plan, /stats, /model, /use-both, /bases, /export, /history, /exit).\n');
   process.stdout.write(`questions are saved to evaluation/registry/chat-history.jsonl; the up arrow recalls them, /history lists them.\n`);
 
   const stopServer = () => {
-    // The comparison's base server is managed by this session too, so it stops with
-    // it: a leaked llama-server would hold both a port and the GPU memory.
+    // Every server this session manages — the main student and the three lanes —
+    // stops with the chat: a leaked llama-server would hold both a port and the
+    // GPU memory.
     for (const child of [managed, session.compare.managed, session.student15?.managed, session.base15?.managed]) {
       if (child === null || child === undefined) {
         continue;
@@ -954,16 +1036,28 @@ async function main() {
         child.kill('SIGTERM');
       }
     }
+    // Leave no stale PID file for the reaper to act on after a graceful exit.
+    try {
+      unlinkSync(reaperPidFile);
+    } catch {
+      // Already gone.
+    }
+  };
+  const leave = () => {
+    stopServer();
+    process.exit(0);
   };
   process.on('SIGINT', () => {
     stopServer();
     process.stdout.write('\n');
     process.exit(0);
   });
+  process.on('SIGTERM', leave);
+  process.on('SIGHUP', leave);
   process.on('exit', stopServer);
 
   const runtime = createRuntime();
-  const lanes = winner15();
+  const { student15, base15 } = select15Lanes(winner15(), options);
   const session = {
     artifact,
     base,
@@ -972,27 +1066,26 @@ async function main() {
     // Saved turns, loaded from the history file at startup and extended by this
     // session, so /history and the up arrow span every session, not just this one.
     saved: loadChatHistory(),
-    // The `/use-both` comparison: `state` tracks whether the base model has been
-    // started, so a question never pays for starting it twice and a failure is
-    // reported rather than retried silently.
-    // Comparing is the default now, because the question the CLI exists to answer is
-    // what the fine-tuning bought; `--single` turns it off for a fast loop.
+    // The `/use-both` comparison: `state` tracks whether the 0.5B base model has
+    // been started, so a question never pays for starting it twice and a failure
+    // is reported rather than retried silently. It is off by default; the bases
+    // are opt-in, and `/bases` flips both of them together.
     compare: { enabled: options.useBoth && !options.single, state: 'idle', base: null, alias: null, managed: null, detail: null },
-    // The 1.5B pair: the untrained 1.5B base answers whenever its gguf exists, and
-    // the fine-tuned 1.5B student joins it once an experiment pins the 1.5B base and
-    // has a recorded winner — so the chat shows the base 1.5B from the first night,
-    // and the fourth block the moment the 1.5B chain closes.
-    student15: lanes === null || options.no15
-      ? null
-      : { state: 'idle', base: null, alias: null, managed: null, detail: null, gguf: lanes.gguf, experiment: lanes.experiment, winner: lanes.winner },
-    base15: existsSync(BASE_GGUF_15) && !options.no15
-      ? { state: 'idle', base: null, alias: null, managed: null, detail: null, gguf: BASE_GGUF_15 }
-      : null
+    // Whether the two untrained bases are wanted. `/bases` flips this together
+    // with `compare.enabled`; the 1.5B base lane engages only while this is on.
+    bases: { enabled: false },
+    // The 1.5B pair: the fine-tuned 1.5B student joins whenever an experiment pins
+    // the 1.5B base and has a recorded winner; the untrained 1.5B base is kept
+    // ready to serve when `/bases` asks for it. `--no-1.5b` and `--single` drop
+    // both, per `select15Lanes`.
+    student15,
+    base15
   };
 
   if (options.once !== null) {
-    // `--once` honours the same default as the interactive loop: both models answer,
-    // the plan is shown, and `--single` restores the one-model form for a fast check.
+    // `--once` honours the same default as the interactive loop: the trained
+    // students answer, and the untrained bases stay off unless `--use-both`
+    // asks for the 0.5B one (the plan is force-shown only while a base is on).
     const compare = session.compare.enabled ? session.compare : null;
     const { turn, warnings } = await askTurn({ question: options.once, base, alias, compare, session, options, runtime });
     const turnOptions = compare !== null && compare.state === 'ready' ? { ...options, showPlan: true } : options;

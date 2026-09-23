@@ -39,8 +39,13 @@ pass() {
     name="$(basename "$dir")"
     [ -f "$dir/resume-recipe.sh" ] || continue
 
+    # The liveness signal is the SUPERVISOR, not the trainer: overnight.sh's
+    # episode loop pauses 120 seconds between a memory-guard stop and the resume,
+    # and during that pause no trainer runs. Treating the trainer as the signal
+    # made the watchdog spawn a second supervisor every pause, and three
+    # supervisors fought over one output directory (exp-014, 2026-09-23).
     running=no
-    pgrep -f "sft_train.py --experiment $name" >/dev/null && running=yes
+    pgrep -f "overnight.sh --experiment $name" >/dev/null && running=yes
 
     status="none"
     if [ -f "$dir/run-manifest.json" ]; then

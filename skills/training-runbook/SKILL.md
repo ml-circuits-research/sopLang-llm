@@ -114,12 +114,21 @@ the deployed retry loop. The scored metrics stay `--retries 0`.
 
 ## 9. The chat (deployment surface)
 
-`node evaluation/chat.mjs` serves the latest experiment's winner by default, shows the four
-blocks (0.5B base yellow, 0.5B student cyan, 1.5B base magenta, 1.5B student green — the
-1.5B pair appears when its winner exists), each with tokens and request-to-answer time, and
-retries failed plans with the full failure history (`--retries N`, default 2). Every answered question is appended
-to `evaluation/registry/chat-history.jsonl` (override the path with the `SOPLANG_CHAT_HISTORY`
+`node evaluation/chat.mjs` serves the newest **0.5B-trained winner** by default (the newest
+experiment whose run-manifest does not pin the 1.5B base; fall back to the latest experiment
+when none exists, and `--gguf`/`--experiment` override explicitly). The default view is the
+two **trained students** — the 0.5B student (cyan) and, once a 1.5B experiment has a recorded
+winner, the 1.5B student (green) — each with tokens and request-to-answer time. The two
+**untrained bases** stay hidden until asked for: `/bases [true|false|on|off]` toggles both the
+0.5B base (yellow) and the 1.5B base (magenta) together (bare `/bases` flips; a lane whose
+gguf or server is missing is reported instead of promised), while `/use-both` keeps its
+narrower meaning and toggles the 0.5B base only. The compiled plan is force-shown only while a
+base comparison is active. The student retries failed plans with the full failure history
+(`--retries N`, default 2). Every answered question is appended to
+`evaluation/registry/chat-history.jsonl` (override the path with the `SOPLANG_CHAT_HISTORY`
 environment variable), the up arrow recalls saved questions across sessions, and `/history [N]`
 lists the last N turns with every model's answer. The lanes scan upward for free ports and
-never kill a port held by another model; the main port reclaims its own. `--no-1.5b` skips
-the 1.5B pair, `--single` keeps only the student.
+never kill a port held by another model; the main port reclaims its own. `--no-1.5b` skips the
+1.5B pair, `--single` keeps only the main (0.5B) student. A detached reaper
+(`evaluation/server-reaper.mjs`) watches the chat's PID and closes every server the chat
+started if the chat is killed hard, so a llama-server never outlives the chat.
