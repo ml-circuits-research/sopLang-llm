@@ -492,6 +492,7 @@ async function ensureLane(lane, { gguf, port, options }) {
       continue;
     }
     try {
+      process.stdout.write(`starting llama-server with ${gguf.replace(`${REPOSITORY_ROOT}/`, '')} on port ${candidate} …\n`);
       lane.managed = await startServer({ gguf, port: candidate, threads: options.threads });
       recordServerPid(lane.managed);
       lane.state = 'ready';
@@ -1017,7 +1018,6 @@ async function main() {
       alias = aliasFor(artifact.gguf);
     }
   }
-  process.stdout.write(`model: ${artifact.experiment}${artifact.winner === null ? '' : ` (${artifact.winner})`}\n`);
   process.stdout.write('the two trained models answer by default; /bases adds the two untrained bases.\n');
   process.stdout.write('type /help for the interactive commands (/show-plan, /stats, /model, /use-both, /bases, /export, /history, /exit).\n');
   process.stdout.write(`questions are saved to evaluation/registry/chat-history.jsonl; the up arrow recalls them, /history lists them.\n`);
@@ -1081,6 +1081,17 @@ async function main() {
     student15,
     base15
   };
+
+  // The startup summary says plainly which models will answer, so the banner's
+  // single-server line is never mistaken for the whole session: the 1.5B student
+  // starts lazily on the first question, and the untrained bases stay off.
+  process.stdout.write(`model: ${artifact.experiment} (${artifact.winner ?? 'base'}) — the fine-tuned 0.5B student\n`);
+  if (session.student15 !== null) {
+    process.stdout.write(`1.5B student: ${session.student15.experiment} (${session.student15.winner}) — answers beside it, starting on the first question\n`);
+  } else {
+    process.stdout.write('1.5B student: none yet (no 1.5B experiment has a recorded winner; --no-1.5b also drops it)\n');
+  }
+  process.stdout.write('untrained bases: off — /bases adds the 0.5B and the 1.5B base\n');
 
   if (options.once !== null) {
     // `--once` honours the same default as the interactive loop: the trained
