@@ -68,6 +68,18 @@ sandbox, so a body writes bare `probe(...)` calls. The chat profile is
 `compiled-plan-chat-4`. Any parser or runtime change requires a version increment and a
 dataset migration.
 
+## 5b. Declarative wires replace big JavaScript (owner directive, 2026-09-23)
+
+From the wire-typed generation onward, every multi-line transcription in the procedural
+generator emits a declarative wire command instead of a hand-written jsEval body:
+`pathExists` and `neighbourCount` emit `graphPath`, `probability` emits `fraction`, and the
+filter-then-summarize stage pairs emit `aggregate`. The one-line operator transcriptions
+stay jsEval — the directive is about big JavaScript, not about renaming single expressions.
+The model learns to use the wires because the training targets carry them, and each wire
+makes its error class impossible instead of merely rarer (proposal_wires.md is the evidence).
+A new wire command is a parser/runtime change with a version increment and a dataset
+migration — never a silent addition.
+
 ## 6. The four-model comparison
 
 The bases and the students are different instruments:
