@@ -68,8 +68,8 @@ export function validateProceduralFamily(family, where) {
         throw new Error(`${where}: the intermediate wire ${wire.name} is declared twice`);
       }
       names.add(wire.name);
-      if (!["jsEval", "literal"].includes(wire.command)) {
-        throw new Error(`${where}: the intermediate wire ${wire.name} must be jsEval or literal`);
+      if (!["jsEval", "literal", "graphPath", "aggregate", "fraction"].includes(wire.command)) {
+        throw new Error(`${where}: the intermediate wire ${wire.name} must be jsEval, literal, graphPath, aggregate, or fraction`);
       }
       if (typeof wire.body !== "string" || wire.body.trim() === "") {
         throw new Error(`${where}: the intermediate wire ${wire.name} needs a body`);

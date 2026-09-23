@@ -91,41 +91,29 @@ const averageOfQualifying = {
   wires: [
     {
       name: 'qualifying',
-      command: 'jsEval',
+      command: 'aggregate',
       body: [
-        'const slots = $slots;',
-        'probe(Array.isArray(slots.scores) && slots.scores.length > 0, "the scores must be a non-empty list");',
-        'probe(slots.scores.every((score) => Number.isInteger(score)), "every score must be a whole number");',
-        'probe(Number.isInteger(slots.minimum), "the qualifying minimum must be a whole number");',
-        'const qualifying = slots.scores.filter((score) => score >= slots.minimum);',
-        'probe(qualifying.every((score) => score >= slots.minimum), "only the scores at or above the minimum may qualify");',
-        'return qualifying;'
+        'source: $slots.scores',
+        'op: count',
+        'predicate:',
+        '  atLeast: $slots.minimum'
       ].join('\n')
     },
     {
       name: 'summary',
-      command: 'jsEval',
+      command: 'aggregate',
       body: [
-        'const slots = $slots;',
-        'const count = $qualifying.length;',
-        'const total = $qualifying.reduce((sum, score) => sum + score, 0);',
-        'probe(total >= count * slots.minimum, "the published total must be at least the minimum times the count");',
-        'return { count, total };'
+        'source: $slots.scores',
+        'op: average',
+        'predicate:',
+        '  atLeast: $slots.minimum'
       ].join('\n')
     }
   ],
   compute: [
     'const slots = $slots;',
-    'probe($qualifying.every((score) => score >= slots.minimum), "every published qualifying score must be at least the minimum");',
-    'probe(Number.isInteger($summary.count) && $summary.count === $qualifying.length, "the published count must match the qualifying list");',
-    'if ($summary.count === 0) {',
-    '  return "No scores qualify, so an exact average cannot be computed.";',
-    '}',
-    'probe($summary.total % $summary.count === 0, "the published total must divide by the count into a whole average");',
-    'const average = $summary.total / $summary.count;',
-    'probe(average >= slots.minimum, "the average of the qualifying scores cannot be below the minimum");',
-    'return $summary.count + " scores qualify and their average is " + average + ".";'
-].join('\n'),
+    'return $qualifying + " scores qualify and their average is " + $summary + ".";'
+  ].join('\n'),
   explain(slots, solution) {
     return [
       `The statement lists ${slots.scores.length} scores and a qualifying minimum of ${slots.minimum}.`,

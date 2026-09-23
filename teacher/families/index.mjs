@@ -248,8 +248,11 @@ export function buildProgram(entry, slots) {
   wires.push('@slots literal', JSON.stringify(slots, null, 2), '');
   // Intermediate wires of a decomposition plan (DS008, "Additional circuit
   // shapes"): each one publishes a named value the answer wire reads through
-  // `$name`, and a `jsEval` stage carries the same probe harness as the answer
-  // wire, so no stage can publish an unchecked value.
+  // `$name`. A `jsEval` stage carries the same probe harness as the answer
+  // wire, so no stage can publish an unchecked value; a declarative stage
+  // (`graphPath`, `aggregate`, or `fraction`) carries its own body, which the
+  // command validates and executes, so its contract is asserted by the command
+  // rather than by probe text in the target.
   for (const wire of entry.wires ?? []) {
     wires.push(`@${wire.name} ${wire.command}`, wire.command === 'jsEval' ? answerBody(wire.body) : String(wire.body), '');
   }

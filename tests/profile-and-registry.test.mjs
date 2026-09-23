@@ -72,11 +72,14 @@ test('rejects an unterminated flow sequence', () => {
 test('the standard vocabulary registers every reference-profile command', () => {
   const registry = createRegistry(createStandardCommands());
   assert.deepEqual(registry.names(), [
+    'aggregate',
     'container',
     'containerAdd',
     'containerFilter',
     'containerRemove',
     'containerUpsert',
+    'fraction',
+    'graphPath',
     'input',
     'jsEval',
     'literal',

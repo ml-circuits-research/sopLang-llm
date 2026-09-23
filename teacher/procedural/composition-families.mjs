@@ -349,41 +349,8 @@ function operatorLines(name, index) {
   if (name === 'rectangleArea') {
     return [`const adjusted${index} = current * slots.width;`];
   }
-  if (name === 'neighbourCount') {
-    return [`const neighbours${index} = slots.edges.reduce((count, edge) => count + (edge[0] === current || edge[1] === current ? 1 : 0), 0);`];
-  }
-  if (name === 'probability') {
-    return [
-      `const favourable${index} = current.filter((value) => value % slots.favourableDivisor === 0).length;`,
-      `const total${index} = current.length;`,
-      `let divisorA${index} = favourable${index};`,
-      `let divisorB${index} = total${index};`,
-      `while (divisorB${index} !== 0) { const remainder${index} = divisorB${index}; divisorB${index} = divisorA${index} % divisorB${index}; divisorA${index} = remainder${index}; }`,
-      `const numerator${index} = favourable${index} / divisorA${index};`,
-      `const denominator${index} = total${index} / divisorA${index};`,
-      `const answer${index} = denominator${index} === 1 ? String(numerator${index}) : numerator${index} + "/" + denominator${index};`
-    ];
-  }
-  if (name === 'pathExists') {
-    return [
-      `const adjacency${index} = new Map();`,
-      `for (const edge${index} of slots.edges) {`,
-      `  for (const member${index} of edge${index}) { if (!adjacency${index}.has(member${index})) adjacency${index}.set(member${index}, []); }`,
-      `  adjacency${index}.get(edge${index}[0]).push(edge${index}[1]);`,
-      `  adjacency${index}.get(edge${index}[1]).push(edge${index}[0]);`,
-      `}`,
-      `const seen${index} = new Set([current]);`,
-      `const queue${index} = [current];`,
-      `while (queue${index}.length > 0) {`,
-      `  const node${index} = queue${index}.shift();`,
-      `  if (node${index} === slots.target) break;`,
-      `  for (const next${index} of adjacency${index}.get(node${index})) {`,
-      `    if (!seen${index}.has(next${index})) { seen${index}.add(next${index}); queue${index}.push(next${index}); }`,
-      `  }`,
-      `}`,
-      `const answer${index} = seen${index}.has(slots.target) ? "yes" : "no";`
-    ];
-  }
+  // `pathExists`, `neighbourCount`, and `probability` are declarative: they emit a
+  // `graphPath` or `fraction` wire rather than a JavaScript transcription.
   throw new Error(`no circuit line for the operator ${name}`);
 }
 
@@ -393,9 +360,128 @@ function resultVariable(name, index) {
   if (name === 'count' || name === 'uniqueCount') return `count${index}`;
   if (name === 'largest' || name === 'smallest' || name === 'nthLargest') return `extreme${index}`;
   if (name === 'double' || name === 'perUnit') return `scaled${index}`;
-  if (name === 'neighbourCount') return `neighbours${index}`;
-  if (name === 'probability' || name === 'pathExists') return `answer${index}`;
   return `adjusted${index}`;
+}
+
+/**
+ * Whether an operator emits a declarative wire rather than a JavaScript stage.
+ * These are the multi-line transcriptions the declarative commands replace:
+ * `pathExists` and `neighbourCount` become a `graphPath` wire, and
+ * `probability` becomes a `fraction` wire.
+ */
+function isDeclarative(name) {
+  return name === 'pathExists' || name === 'neighbourCount' || name === 'probability';
+}
+
+/** The command a declarative operator emits. */
+function declarativeCommand(name) {
+  if (name === 'pathExists' || name === 'neighbourCount') {
+    return 'graphPath';
+  }
+  if (name === 'probability') {
+    return 'fraction';
+  }
+  throw new Error(`the operator ${name} is not declarative`);
+}
+
+/** The body of a declarative wire, reading the value the previous stage published. */
+function declarativeBody(name, input) {
+  if (name === 'pathExists') {
+    return `from: ${input}\nto: $slots.target\nedges: $slots.edges`;
+  }
+  if (name === 'neighbourCount') {
+    return `from: ${input}\nedges: $slots.edges\ncount: true`;
+  }
+  if (name === 'probability') {
+    return `source: ${input}\ndivisibleBy: $slots.favourableDivisor`;
+  }
+  throw new Error(`the operator ${name} is not declarative`);
+}
+
+/** Whether a stage assigns its result through the filter's `kept` variable. */
+function assignsKept(name) {
+  return name === 'keepAbove' || name === 'keepBelow' || name === 'keepDivisibleBy';
+}
+
+/**
+ * The body of one run of JavaScript stages: the operators between two
+ * declarative boundaries, chained over the local `current` variable exactly as
+ * the single-body plan did, reading its first value from `input` (`values` for
+ * the first run, a `$stage` reference for later runs).
+ */
+function runBody(run, input) {
+  const lines = [];
+  if (input === 'values') {
+    lines.push('const slots = $slots;');
+    lines.push('const values = slots.values;');
+    lines.push('probe(Array.isArray(values) && values.length > 0, "the records must be a non-empty list");');
+    lines.push('let current = values;');
+  } else {
+    lines.push('const slots = $slots;');
+    lines.push(`let current = ${input};`);
+  }
+  for (const step of run) {
+    lines.push(...operatorLines(step.name, step.index));
+    lines.push(`current = ${assignsKept(step.name) ? `kept${step.index}` : resultVariable(step.name, step.index)};`);
+  }
+  lines.push('return current;');
+  return lines.join('\n');
+}
+
+/**
+ * The answer wire body: the terminal operator's report rendered over the value
+ * the last wire published. A declarative terminal owns its contract, so its
+ * probe stays out of the body; a JavaScript terminal keeps its whole-number
+ * assertion, which no command owns for it.
+ */
+function renderBody(report, finalVar, terminal) {
+  const lines = [];
+  if (!isDeclarative(terminal) && report.probe !== null) {
+    lines.push(report.probe.replace(/\bcurrent\b/g, finalVar));
+  }
+  lines.push(report.ret.replace(/\bcurrent\b/g, finalVar));
+  return lines.join('\n');
+}
+
+/**
+ * The circuit plan of a chain: a single answer body when every stage is
+ * JavaScript, or intermediate wires plus a thin answer body when a declarative
+ * operator splits the chain. The chain is walked in the same order as
+ * `walkChain`, so the plan and the oracle remain the same computation written
+ * twice.
+ */
+function chainPlan(composition) {
+  const report = reportFor(composition);
+  if (!composition.chain.some(isDeclarative)) {
+    return { wires: undefined, compute: chainBody(composition) };
+  }
+  const wires = [];
+  let run = [];
+  let input = 'values';
+  let wireIndex = 0;
+  const flushRun = () => {
+    if (run.length === 0) {
+      return;
+    }
+    const name = `stage${wireIndex}`;
+    wireIndex += 1;
+    wires.push({ name, command: 'jsEval', body: runBody(run, input) });
+    input = `$${name}`;
+    run = [];
+  };
+  for (const [index, name] of composition.chain.entries()) {
+    if (isDeclarative(name)) {
+      flushRun();
+      const wireName = `stage${wireIndex}`;
+      wireIndex += 1;
+      wires.push({ name: wireName, command: declarativeCommand(name), body: declarativeBody(name, input) });
+      input = `$${wireName}`;
+    } else {
+      run.push({ name, index });
+    }
+  }
+  flushRun();
+  return { wires, compute: renderBody(report, input, composition.chain.at(-1)) };
 }
 
 /**
@@ -415,7 +501,7 @@ function chainBody(composition) {
   for (const [index, name] of composition.chain.entries()) {
     lines.push(`// stage ${index + 1}: ${name}`);
     lines.push(...operatorLines(name, index));
-    if (name === 'keepAbove' || name === 'keepBelow' || name === 'keepDivisibleBy') {
+    if (assignsKept(name)) {
       // The sampling clause still refuses unobservable draws, but the emitted circuit
       // must not: an empty or full filter is a valid, honest answer.
       lines.push(`current = kept${index};`);
@@ -621,7 +707,7 @@ export function compositionFamily(composition) {
     render(solution) {
       return reportFor(composition).render(solution.answer, solution.slots);
     },
-    compute: chainBody(composition),
+    ...chainPlan(composition),
     explain(slots, solution) {
       const report = reportFor(composition);
       return [

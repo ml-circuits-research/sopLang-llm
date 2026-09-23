@@ -3,6 +3,9 @@ import { literalCommand } from './literal.mjs';
 import { jsEvalCommand } from './jsEval.mjs';
 import { modelCallCommand } from './modelCall.mjs';
 import { containerCommands } from './containers.mjs';
+import { graphPathCommand } from './graphPath.mjs';
+import { aggregateCommand } from './aggregate.mjs';
+import { fractionCommand } from './fraction.mjs';
 
 /**
  * The standard wire vocabulary of the reference profile.
@@ -19,6 +22,9 @@ export const standardCommands = [
   literalCommand,
   jsEvalCommand,
   modelCallCommand,
+  graphPathCommand,
+  aggregateCommand,
+  fractionCommand,
   ...containerCommands
 ];
 
@@ -31,5 +37,8 @@ export {
   literalCommand,
   jsEvalCommand,
   modelCallCommand,
+  graphPathCommand,
+  aggregateCommand,
+  fractionCommand,
   containerCommands
 };

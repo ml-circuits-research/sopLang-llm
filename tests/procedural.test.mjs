@@ -12,11 +12,10 @@
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createHash } from 'node:crypto';
 
 import { families, sourceId, generatorVersion } from '../teacher/procedural/arithmetic.mjs';
 import { sampleInstances } from '../teacher/procedural/random.mjs';
-import { buildProgram } from '../teacher/families/index.mjs';
+import { buildProgram, planFingerprint } from '../teacher/families/index.mjs';
 import { assertEnglishContent } from '../teacher/language.mjs';
 import { answerMatches, slugify } from '../teacher/naming.mjs';
 import { createRuntime } from '../runtime/kernel.mjs';
@@ -47,7 +46,10 @@ test('the procedural source is identified and its families are slugged and uniqu
 });
 
 test('the families declare distinct plan fingerprints', () => {
-  const fingerprints = new Set(families.map((family) => createHash('sha256').update(`\n===\n${family.compute}`).digest('hex')));
+  // The plan fingerprint covers the fact body, every intermediate wire, and the
+  // compute body, so a composition whose answer is a thin render over a
+  // declarative stage is still distinguished by the stages that feed it.
+  const fingerprints = new Set(families.map((family) => planFingerprint(family)));
   assert.equal(fingerprints.size, families.length);
 });
 

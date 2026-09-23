@@ -413,9 +413,15 @@ export async function verifyProvenance(root, files, { expected, runtime = create
       computed += 1;
       continue;
     }
-    const answerWire = parseCircuit(source, { sourceName: folder }).wires.find((wire) => wire.name === 'answer');
-    const references =
-      answerWire === undefined ? [] : findValueReferences(stripProbeStatements(answerWire.body)).map((reference) => reference.name);
+    const wires = parseCircuit(source, { sourceName: folder }).wires;
+    const answerWire = wires.find((wire) => wire.name === 'answer');
+    // A split plan's answer wire reads an intermediate stage, not `$slots`
+    // directly, so the "reads an input" diagnostic scans every wire: a plan whose
+    // computation transitively reads the instance data names `slots` or `facts` in
+    // some wire, not only in the answer wire.
+    const references = wires.flatMap((wire) =>
+      findValueReferences(stripProbeStatements(wire.body)).map((reference) => reference.name)
+    );
     invariant.push({
       file: relative(root, file),
       plan: entry.plan,
