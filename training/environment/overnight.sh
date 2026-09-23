@@ -16,6 +16,9 @@
 # Overnight-only options (everything else is passed to the trainer unchanged):
 #   --wait-seconds N   pause between episodes (default 120: the pool recovers)
 #   --max-episodes N   give up after N episodes (default 20)
+#   --patience N       consumed here, not by the trainer: it is read by
+#                      start-detached.sh, which runs early-stop.sh beside the
+#                      trainer to stop training after N stale validation saves
 #
 # Examples:
 #   # unattended, survives the terminal that started it
@@ -28,6 +31,7 @@ set -uo pipefail
 repository_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 wait_seconds=120
 max_episodes=20
+patience=0
 experiment=""
 trainer_args=()
 
@@ -35,6 +39,7 @@ while [ $# -gt 0 ]; do
   case "$1" in
     --wait-seconds) wait_seconds="$2"; shift 2 ;;
     --max-episodes) max_episodes="$2"; shift 2 ;;
+    --patience) patience="$2"; shift 2 ;;
     --experiment) experiment="$2"; trainer_args+=("$1" "$2"); shift 2 ;;
     *) trainer_args+=("$1"); shift ;;
   esac

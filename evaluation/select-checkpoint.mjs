@@ -19,7 +19,7 @@
  */
 
 import { spawn } from 'node:child_process';
-import { closeSync, existsSync, mkdirSync, openSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { appendFileSync, closeSync, existsSync, mkdirSync, openSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRuntime } from '../runtime/kernel.mjs';
@@ -41,6 +41,7 @@ function parseArguments(argv) {
     maxTokens: 2048,
     slice: 'validation',
     limit: null,
+    only: null,
   };
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
@@ -52,6 +53,7 @@ function parseArguments(argv) {
     else if (argument === '--max-tokens') { options.maxTokens = Number(argv[index + 1]); index += 1; }
     else if (argument === '--slice') { options.slice = argv[index + 1]; index += 1; }
     else if (argument === '--limit') { options.limit = Number(argv[index + 1]); index += 1; }
+    else if (argument === '--only') { options.only = argv[index + 1]; index += 1; }
     else throw new Error(`unknown argument: ${argument}`);
   }
   if (options.experiment === null) {
@@ -159,7 +161,14 @@ const registryDir = join(options.registry, options.experiment);
 const ggufDir = join(registryDir, 'gguf');
 mkdirSync(ggufDir, { recursive: true });
 
-const checkpoints = checkpointDirectories(checkpointsRoot);
+let checkpoints = checkpointDirectories(checkpointsRoot);
+if (options.only !== null) {
+  const named = checkpoints.find((checkpoint) => checkpoint.name === options.only);
+  if (named === undefined) {
+    throw new Error(`no checkpoint named ${options.only} under ${checkpointsRoot}`);
+  }
+  checkpoints = [named];
+}
 if (checkpoints.length === 0) {
   throw new Error(`no checkpoint-<step> directories under ${checkpointsRoot}`);
 }
@@ -234,6 +243,26 @@ for (const [className, count] of Object.entries(winner.metrics.classes)) {
 lines.push('');
 lines.push('Per-item records: `selection/<checkpoint>.jsonl`.');
 lines.push('');
-writeFileSync(join(registryDir, 'selection.md'), lines.join('\n'));
-writeFileSync(join(registryDir, 'selection.json'), JSON.stringify({ experiment: options.experiment, slice: options.slice, items: items.length, winner: winner.checkpoint, rows }, null, 2) + '\n');
-console.log(`\nselected ${winner.checkpoint}; wrote ${join(registryDir, 'selection.md')}`);
+if (options.only !== null) {
+  // The early-stop watcher scores each save as it lands. It appends one line to the
+  // experiment's scores file and prints the machine-readable verdict; the full
+  // selection table stays the chain's job at the end of the arm.
+  const scoreLine = {
+    checkpoint: winner.checkpoint,
+    step: winner.step,
+    oracle: winner.metrics.rates.oracle_match ?? null,
+    parse: winner.metrics.rates.parse_validity ?? null,
+    graph: winner.metrics.rates.graph_validity ?? null,
+    completion: winner.metrics.rates.runtime_completion ?? null,
+    items: winner.metrics.items,
+    scoredUtc: new Date().toISOString()
+  };
+  const scoresPath = join(REPOSITORY_ROOT, 'training/checkpoints', options.experiment, 'validation-scores.jsonl');
+  mkdirSync(dirname(scoresPath), { recursive: true });
+  appendFileSync(scoresPath, `${JSON.stringify(scoreLine)}\n`);
+  console.log(`EARLYSTOP ${JSON.stringify(scoreLine)}`);
+} else {
+  writeFileSync(join(registryDir, 'selection.md'), lines.join('\n'));
+  writeFileSync(join(registryDir, 'selection.json'), JSON.stringify({ experiment: options.experiment, slice: options.slice, items: items.length, winner: winner.checkpoint, rows }, null, 2) + '\n');
+  console.log(`\nselected ${winner.checkpoint}; wrote ${join(registryDir, 'selection.md')}`);
+}

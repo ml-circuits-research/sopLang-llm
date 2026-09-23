@@ -32,8 +32,17 @@ case "$mode" in
     printf '#!/usr/bin/env bash\n# recorded by start-detached.sh on %s\nexec bash "$(dirname "${BASH_SOURCE[0]}")/../../environment/overnight.sh" --experiment %s %s\n' \
       "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$experiment" "$*" > "$recipe"
     chmod +x "$recipe"
-    setsid nohup bash -c "bash '$recipe' >> '$checkpoints/overnight.log' 2>&1; bash '$root/evaluation/start-chain.sh' '$experiment' >> '$root/evaluation/registry/$experiment/series.log' 2>&1" \
-      > /dev/null 2>&1 < /dev/null &
+    patience="$(printf '%s\n' "$*" | sed -n 's/.*--patience \([0-9][0-9]*\).*/\1/p')"
+    if [ -n "$patience" ]; then
+      # In-loop validation with early stopping: the watcher scores every settled
+      # save beside the trainer and stops it after N stale ones; the chain then
+      # runs against the whole checkpoint set, exactly as it would have.
+      setsid nohup bash -c "bash '$recipe' >> '$checkpoints/overnight.log' 2>&1 & TP=\$!; bash '$root/training/environment/early-stop.sh' '$experiment' '$patience' >> '$checkpoints/early-stop.log' 2>&1 & WP=\$!; wait \$TP; kill \$WP 2>/dev/null; bash '$root/evaluation/start-chain.sh' '$experiment' >> '$root/evaluation/registry/$experiment/series.log' 2>&1" \
+        > /dev/null 2>&1 < /dev/null &
+    else
+      setsid nohup bash -c "bash '$recipe' >> '$checkpoints/overnight.log' 2>&1; bash '$root/evaluation/start-chain.sh' '$experiment' >> '$root/evaluation/registry/$experiment/series.log' 2>&1" \
+        > /dev/null 2>&1 < /dev/null &
+    fi
     ;;
   cmd)
     name="${2:-}"
