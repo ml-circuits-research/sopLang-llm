@@ -41,7 +41,7 @@ Run the direct checks (add them to `tests/` so the next tranche inherits them):
 ## 3. Rebuild and export
 
 ```bash
-node /tmp/rebuild-all.mjs           # or the equivalent per-source pilot loop
+node training/environment/rebuild-all.mjs
 node training-data/verify.mjs       # must print verify: OK
 node training/export.mjs            # regenerates training/data/*.jsonl
 npm test                            # 300+ tests, all green
