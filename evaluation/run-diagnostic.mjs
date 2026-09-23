@@ -56,6 +56,7 @@ function parseArguments(argv) {
     perStructure: 10,
     pairs: false,
     perPair: 8,
+    retries: 0,
     seed: 20260922,
     structures: null,
     threads: null,
@@ -79,6 +80,7 @@ function parseArguments(argv) {
     else if (flag === '--per-structure') options.perStructure = Number(value());
     else if (flag === '--pairs') options.pairs = true;
     else if (flag === '--per-pair') options.perPair = Number(value());
+    else if (flag === '--retries') options.retries = Number(value());
     else if (flag === '--seed') options.seed = Number(value());
     else if (flag === '--structures') options.structures = value().split(',').map((name) => name.trim());
     else if (flag === '--threads') options.threads = Number(value());
@@ -101,6 +103,8 @@ Options:
                       report paired accuracy, the count of pairs whose two answers
                       are both correct (astra_review I3)
   --per-pair N        pairs per contrastive kind (default 8)
+  --retries N        extra plan generations after a failed one, with the failure
+                      fed back (default 0, the historical single-shot metric)
   --seed N            suite seed (default 20260922)
   --structures a,b    only these structures
   --port N            port for the managed server (default 8087)
@@ -258,16 +262,37 @@ const OPERATOR_OF = (name) => OPERATORS_TABLE[name].steps;
 
   const runtime = createRuntime();
 
+  // The one-line failure hint a retry carries: the whole history of failed attempts.
+  const retryHintOf = (failures) => [
+    'Your previous attempts failed:',
+    ...failures.map((failure) => {
+      const kind = failure.class === 'parse_invalid'
+        ? 'did not parse'
+        : failure.class === 'execution_error'
+          ? 'executed but failed its own check'
+          : 'was not a SOP Lang program';
+      return `${failure.attempt}. ${kind}: ${failure.detail}`;
+    }),
+    'Emit a corrected SOP Lang program.'
+  ].join('\n');
+
   async function scoreOne({ problem, condition, base, alias }) {
-    const result = await generate({
-      base,
-      model: alias,
-      messages: buildMessages(promptOf(problem, condition)),
-      temperature: 0,
-      maxTokens: options.maxTokens,
-      timeoutMs: 600_000
-    });
-    const record = {
+    const maxAttempts = 1 + Math.max(0, Number(options.retries ?? 0));
+    let messages = buildMessages(promptOf(problem, condition));
+    const failures = [];
+    let result = null;
+    let attempt = 1;
+    let lastRecord = null;
+    for (; attempt <= maxAttempts; attempt += 1) {
+      result = await generate({
+        base,
+        model: alias,
+        messages,
+        temperature: 0,
+        maxTokens: options.maxTokens,
+        timeoutMs: 600_000
+      });
+      const record = {
       item: `${problem.id}/${condition}`,
       problem: problem.id,
       structure: problem.structure,
@@ -286,36 +311,58 @@ const OPERATOR_OF = (name) => OPERATORS_TABLE[name].steps;
         latencyMs: result.latencyMs
       }
     };
-    if (result.error !== null) {
-      return { ...record, class: 'generation_transport_error', detail: result.error.message, answer: null, program: null, divergence: 'no_completion' };
+      if (result.error !== null) {
+        lastRecord = { ...record, class: 'generation_transport_error', detail: result.error.message, answer: null, program: null, divergence: 'no_completion' };
+        break;
+      }
+      const extracted = extractProgram(result.completion);
+      if (!extracted.ok) {
+        lastRecord = { ...record, class: 'wrapper_rejected', detail: extracted.reason, answer: null, program: null, divergence: 'wrapper_rejected' };
+      } else {
+        let parsed = null;
+        try {
+          parsed = parseCircuit(extracted.program, { sourceName: 'completion' });
+        } catch (failure) {
+          lastRecord = { ...record, class: 'parse_invalid', detail: messageOf(failure), answer: null, program: extracted.program, divergence: 'invalid_syntax' };
+        }
+        if (lastRecord === null || lastRecord.class === null) {
+          let outcome;
+          try {
+            outcome = await runtime.run(extracted.program, { outputs: ['answer'] });
+          } catch (failure) {
+            lastRecord = { ...record, class: 'execution_error', detail: `runtime threw: ${messageOf(failure)}`, answer: null, program: extracted.program, divergence: 'runtime_failure' };
+          }
+          if (lastRecord === null || lastRecord.class === null) {
+            const answer = outcome.status === 'completed' ? String(outcome.outputs.answer) : null;
+            const className = outcome.status !== 'completed'
+              ? 'execution_error'
+              : statesValue(problem.oracle, answer) ? 'answer_match' : 'answer_mismatch';
+            lastRecord = {
+              ...record,
+              class: className,
+              detail: outcome.status === 'completed' ? null : `${outcome.status}:${outcome.code ?? ''}`,
+              answer,
+              program: extracted.program,
+              divergence: divergenceOf({ className, program: extracted.program, answer, problem, oracleOfStage: () => stageAnswers(problem) })
+            };
+          }
+        }
+      }
+      // A failed plan is retried with its history; a plan that ran (right or wrong) is
+      // not regenerated, because the retry exists to recover failed plans, not to
+      // second-guess computed answers.
+      const retriable = ['wrapper_rejected', 'parse_invalid', 'execution_error'].includes(lastRecord.class);
+      if (!retriable || attempt === maxAttempts) {
+        break;
+      }
+      failures.push({ attempt, class: lastRecord.class, detail: lastRecord.detail });
+      messages = [
+        ...messages,
+        { role: 'assistant', content: String(result.completion ?? '') },
+        { role: 'user', content: retryHintOf(failures) }
+      ];
     }
-    const extracted = extractProgram(result.completion);
-    if (!extracted.ok) {
-      return { ...record, class: 'wrapper_rejected', detail: extracted.reason, answer: null, program: null, divergence: 'wrapper_rejected' };
-    }
-    try {
-      parseCircuit(extracted.program, { sourceName: 'completion' });
-    } catch (failure) {
-      return { ...record, class: 'parse_invalid', detail: messageOf(failure), answer: null, program: extracted.program, divergence: 'invalid_syntax' };
-    }
-    let outcome;
-    try {
-      outcome = await runtime.run(extracted.program, { outputs: ['answer'] });
-    } catch (failure) {
-      return { ...record, class: 'execution_error', detail: `runtime threw: ${messageOf(failure)}`, answer: null, program: extracted.program, divergence: 'runtime_failure' };
-    }
-    const answer = outcome.status === 'completed' ? String(outcome.outputs.answer) : null;
-    const className = outcome.status !== 'completed'
-      ? 'execution_error'
-      : statesValue(problem.oracle, answer) ? 'answer_match' : 'answer_mismatch';
-    return {
-      ...record,
-      class: className,
-      detail: outcome.status === 'completed' ? null : `${outcome.status}:${outcome.code ?? ''}`,
-      answer,
-      program: extracted.program,
-      divergence: divergenceOf({ className, program: extracted.program, answer, problem, oracleOfStage: () => stageAnswers(problem) })
-    };
+    return { ...lastRecord, generated: { ...(lastRecord.generated ?? {}), attempt } };
   }
 
   async function mapWithConcurrency(items, concurrency, mapper) {
