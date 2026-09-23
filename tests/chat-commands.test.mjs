@@ -154,7 +154,7 @@ test('the interactive loop answers commands locally and sends only questions to 
   const root = mkdtempSync(join(tmpdir(), 'chat-cli-'));
   const transcript = join(root, 'session.jsonl');
   try {
-    const child = spawn(process.execPath, ['evaluation/chat.mjs', '--base', `http://127.0.0.1:${server.address().port}`], {
+    const child = spawn(process.execPath, ['evaluation/chat.mjs', '--base', `http://127.0.0.1:${server.address().port}`, '--no-1.5b'], {
       cwd: REPOSITORY_ROOT,
       stdio: ['pipe', 'pipe', 'pipe']
     });
@@ -279,6 +279,7 @@ test('each model is asked in the mode it was trained for', () => {
         'evaluation/chat.mjs',
         '--base', `http://127.0.0.1:${port}`,
         '--port', String(port - 1),
+        '--no-1.5b',
         '--once', 'How many cookies are left?'
       ], { encoding: 'utf8' });
       let stdout = '';

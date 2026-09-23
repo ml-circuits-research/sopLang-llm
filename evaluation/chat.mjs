@@ -76,7 +76,7 @@ async function startServer({ gguf, port, threads }) {
 }
 
 function parseArguments(argv) {
-  const options = { gguf: null, experiment: null, base: null, port: 8087, maxTokens: 1024, threads: null, showPlan: false, once: null, useBoth: true, single: false, help: false };
+  const options = { gguf: null, experiment: null, base: null, port: 8087, maxTokens: 1024, threads: null, showPlan: false, once: null, useBoth: true, single: false, no15: false, help: false };
   for (let index = 0; index < argv.length; index += 1) {
     const flag = argv[index];
     const value = () => {
@@ -90,6 +90,7 @@ function parseArguments(argv) {
     else if (flag === '--base') options.base = value();
     else if (flag === '--use-both') options.useBoth = true;
     else if (flag === '--single') options.single = true;
+    else if (flag === '--no-1.5b') options.no15 = true;
     else if (flag === '--port') options.port = Number(value());
     else if (flag === '--max-tokens') options.maxTokens = Number(value());
     else if (flag === '--threads') options.threads = Number(value());
@@ -575,14 +576,21 @@ async function askTurn({ question, base, alias, compare, session, options, runti
   }
   const promises = [ask({ question, base, alias, options, runtime })];
   if (compareState === 'ready') promises.push(askBase({ question, compare, options }));
+  // The 1.5B base lane joins on its own; the 1.5B student joins when its winner exists.
+  if (session.base15 !== null) {
+    const baseLane = await ensureLane(session.base15, { gguf: BASE_GGUF_15, port: lanePorts(options.port).base15, options });
+    if (baseLane.state !== 'ready') {
+      warnings.push(`the 1.5B base model is unavailable: ${baseLane.detail}`);
+    } else {
+      promises.push(askBase({ question, compare: baseLane, options }));
+    }
+  }
   if (session.student15 !== null && session.base15 !== null) {
     const studentLane = await ensureLane(session.student15, { gguf: session.student15.gguf, port: lanePorts(options.port).student15, options });
-    const baseLane = await ensureLane(session.base15, { gguf: BASE_GGUF_15, port: lanePorts(options.port).base15, options });
-    if (studentLane.state !== 'ready') warnings.push(`the 1.5B student is unavailable: ${studentLane.detail}`);
-    else if (baseLane.state !== 'ready') warnings.push(`the 1.5B base model is unavailable: ${baseLane.detail}`);
-    else {
+    if (studentLane.state !== 'ready') {
+      warnings.push(`the 1.5B student is unavailable: ${studentLane.detail}`);
+    } else {
       promises.push(ask({ question, base: studentLane.base, alias: studentLane.alias, options, runtime }));
-      promises.push(askBase({ question, compare: baseLane, options }));
     }
   }
   const [turn, baseTurn, turn15, baseTurn15] = await Promise.all(promises);
@@ -843,14 +851,16 @@ async function main() {
     // Comparing is the default now, because the question the CLI exists to answer is
     // what the fine-tuning bought; `--single` turns it off for a fast loop.
     compare: { enabled: options.useBoth && !options.single, state: 'idle', base: null, alias: null, managed: null, detail: null },
-    // The 1.5B pair: the fine-tuned 1.5B student and the untrained 1.5B base, shown
-    // as the third and fourth blocks once an experiment pins the 1.5B base.
-    student15: lanes === null
+    // The 1.5B pair: the untrained 1.5B base answers whenever its gguf exists, and
+    // the fine-tuned 1.5B student joins it once an experiment pins the 1.5B base and
+    // has a recorded winner — so the chat shows the base 1.5B from the first night,
+    // and the fourth block the moment the 1.5B chain closes.
+    student15: lanes === null || options.no15
       ? null
       : { state: 'idle', base: null, alias: null, managed: null, detail: null, gguf: lanes.gguf, experiment: lanes.experiment, winner: lanes.winner },
-    base15: lanes === null
-      ? null
-      : { state: 'idle', base: null, alias: null, managed: null, detail: null, gguf: BASE_GGUF_15 }
+    base15: existsSync(BASE_GGUF_15) && !options.no15
+      ? { state: 'idle', base: null, alias: null, managed: null, detail: null, gguf: BASE_GGUF_15 }
+      : null
   };
 
   if (options.once !== null) {
