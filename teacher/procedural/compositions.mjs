@@ -196,22 +196,23 @@ const OPERATORS = Object.freeze({
     sentence: () => 'take the area of a square with that side',
     clause: 'the side must be a whole number, so the area is whole'
   },
-  // Time arithmetic: convert a running total of minutes into whole hours, or of
-  // hours into whole days. The input unit is the ledger's unit for this draw, and
-  // the answer unit is the operator's own label, which is why the report below
-  // carries its own instruction and answer text instead of the numeric default.
+  // Time arithmetic: convert a running total of hours into minutes, or of days
+  // into hours, by a factor the sentence states. The factor is stated rather than
+  // assumed, because a unit convention is external knowledge (DS008 files those
+  // under `knowledge/`), and this family stays `no-knowledge`. The ledger records
+  // the input unit, the answer is reported in the operator's label.
   elapsed: {
     takes: 'scalar',
     returns: 'scalar',
-    apply: (value, parameters) => value / parameters.per,
-    sentence: (parameters) => `convert it into whole ${parameters.label}`,
-    clause: 'the running time must divide evenly into whole units',
+    apply: (value, parameters) => value * parameters.per,
+    sentence: (parameters) => `convert it into ${parameters.label} by the factor of ${parameters.per}`,
+    clause: 'the value must be a number',
     report: {
       instruction: (slots) => `Report the result in ${slots.label}.`,
       parseInstruction: (instruction, slots) => {
-        const match = /^Report the result in (hours|days)\.$/.exec(instruction);
+        const match = /^Report the result in (minutes|hours)\.$/.exec(instruction);
         if (match === null) {
-          throw new Error('the statement does not report the elapsed time in hours or days');
+          throw new Error('the statement does not report the elapsed time in minutes or hours');
         }
         if (match[1] !== slots.label) {
           throw new Error('the reported unit does not match the conversion');

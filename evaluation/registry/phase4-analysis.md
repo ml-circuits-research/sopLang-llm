@@ -461,6 +461,51 @@ The base comparison in prose, same 585 items: untrained 0.5B 63 (10.8%), untrain
 fine-tuned 0.5B therefore beats its own base four-fold on the deployed number (44.1% against 10.8%) — the
 first time the comparison the owner asked for can be stated with numbers on both sides.
 
+### The 1.5B arm (`exp-013-1.5b`, closed 2026-09-23 10:38Z)
+
+The same recipe and the same 9175-row suite on the 1.5B base (qwen2.5-coder-1.5b-instruct, pinned manifest
+`training/environment/base-model-1.5b.json`), 912 steps, 3 epochs, winner `checkpoint-450` (selection oracle
+95.6%, parse 100.0%, graph 100.0%). Holdout 585 items, oracle match 55.0% (322 of 585), decomposed:
+
+| slice | items | correct | rate |
+| --- | --- | --- | --- |
+| procedural-arithmetic (the trained clusters) | 360 | 320 | 88.9% |
+| the eight trained plan clusters | 320 | 320 | 100.0% |
+| the book-derived holdout | 225 | 2 | 0.9% |
+| mathematical-thinking | 10 | 2 | 20.0% |
+| every other book family | 215 | 0 | 0.0% |
+
+Three readings, each recorded:
+
+1. Scale helped inside the vocabulary: the 0.5B student answered 258 of 585 (44.1%), the 1.5B answers 322
+   of 585 (55.0%), and the in-vocabulary procedural slice went from ~71% to 88.9%. The winner beats its own
+   base 10.7-fold (322 against the 1.5B base's 30 prose matches).
+2. The vocabulary boundary did not move: the book holdout stays at 2 of 225, the same two items as the 0.5B
+   arm. The hypothesis holds exactly — a bigger model composes the trained operators better and does not
+   invent the untrained ones.
+3. The four-number table the owner asked for is now complete: base 0.5B prose 63 of 585 (10.8%), base 1.5B
+   prose 30 of 585 (5.1%), trained 0.5B 258 of 585 (44.1%), trained 1.5B 322 of 585 (55.0%).
+
+Capability probes 5 of 10 (instruction 3 of 4, javascript 2 of 6), up from 1 of 10 at the 0.5B arm — scale
+also helped the probes, without any preservation material.
+
+### The retry sweep (`retry-sweep-0/1/2`, closed 2026-09-23 10:58Z)
+
+The deployed retry loop measured on the exp-012 winner over the same 30 structural problems, single-shot
+against one and two extra shots, each retry carrying the full numbered failure history:
+
+| retries | matched | items | rate | executed |
+| --- | --- | --- | --- | --- |
+| 0 | 17 | 30 | 56.7% | 93.3% |
+| 1 | 17 | 30 | 56.7% | 100.0% |
+| 2 | 17 | 30 | 56.7% | 100.0% |
+
+The retries recover the failed plans to execution (93.3% to 100.0%), but the recovered plans answer wrong,
+so the matched count does not move. On this model and this suite, the retry loop converts execution errors
+into executed wrong answers, not into correct ones. The first sweep run had a bug in the diagnostic retry
+loop (attempts after the first never executed their plan); it was fixed and the sweep re-run, and this table
+is the re-run. The scored evaluations keep `--retries 0` as their historical default.
+
 ## Decisions taken on the night of 2026-09-21
 
 **D-G — Containers and registry reads are not in the structure arm; six more multi-wire plan shapes are.** `DS008-training-data.md` specifies container plans and registry-reading plans, and the reconnaissance of this repository found four coupled gates that none of tonight's time could move together: the family validator accepts only `jsEval` and `literal` as an intermediate wire (`teacher/procedural/index.mjs`), the program builder has no container wire path (`teacher/families/index.mjs`, `buildProgram`), the provenance battery judges reactivity from `slots`/`facts` references in the answer wire (`training-data/provenance.mjs`), and no manifest column records the structural read set a definition-reading plan must publish (`DS008`, "Additional circuit shapes"). Each of those is a runtime-contract change that needs its own acceptance evidence, and a half-implemented shape would ship circuits the verifier cannot judge. The lever both shapes serve — plan coverage — is served tonight by six more generator families with two named intermediate stages each (`Teacher/families` equivalent: `teacher/procedural/grouping.mjs`, `aggregation.mjs`, `textshapes.mjs`), which deepens the dependency chain the suite teaches to three stages without touching the runtime contract. The container and registry items stay open with their four gates named above.

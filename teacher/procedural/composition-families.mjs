@@ -155,14 +155,14 @@ function drawSlots(composition, random) {
     if (names.has('nthLargest')) {
       slots.nth = composition.rank ?? 2;
     }
-    // The elapsed operator converts the ledger unit into a larger one: the ledger
-    // records the input unit (minutes for hours, hours for days), and the answer is
-    // reported in the label. Retrying below waits for the total to divide evenly.
+    // The elapsed operator converts the ledger unit into a larger one by a factor
+    // the sentence states: hours into minutes, or days into hours. The ledger
+    // records the input unit and the answer is reported in the label.
     if (names.has('elapsed')) {
-      const toDays = random() < 0.5;
-      slots.per = toDays ? 24 : 60;
-      slots.label = toDays ? 'days' : 'hours';
-      slots.unit = toDays ? 'hours' : 'minutes';
+      const toMinutes = random() < 0.5;
+      slots.per = toMinutes ? 60 : 24;
+      slots.label = toMinutes ? 'minutes' : 'hours';
+      slots.unit = toMinutes ? 'hours' : 'days';
     }
     if (names.has('rectangleArea')) {
       slots.width = 2 + Math.floor(random() * 9);
@@ -245,9 +245,6 @@ function walkChain(composition, slots) {
       if (kept.length === current.length) {
         return null; // the distinct count must differ from the count
       }
-    }
-    if (name === 'elapsed' && current % slots.per !== 0) {
-      return null; // the total must divide evenly into whole hours or days
     }
     if (name === 'neighbourCount') {
       const degree = slots.edges.reduce((count, edge) => count + (edge[0] === current || edge[1] === current ? 1 : 0), 0);
@@ -404,7 +401,8 @@ function resultVariable(name, index) {
  * walked in the same order as `walkChain`, so the plan and the oracle are the same
  * computation written twice, which is what the acceptance class records.
  */
-function chainBody(composition, slots) {
+function chainBody(composition) {
+  const report = reportFor(composition);
   const lines = [
     'const slots = $slots;',
     'const values = slots.values;',
@@ -413,29 +411,20 @@ function chainBody(composition, slots) {
   ];
   for (const [index, name] of composition.chain.entries()) {
     lines.push(`// stage ${index + 1}: ${name}`);
-    lines.push(operatorLine(name, index));
+    lines.push(...operatorLines(name, index));
     if (name === 'keepAbove' || name === 'keepBelow' || name === 'keepDivisibleBy') {
       // The sampling clause still refuses unobservable draws, but the emitted circuit
       // must not: an empty or full filter is a valid, honest answer.
       lines.push(`current = kept${index};`);
     } else {
-      lines.push(`current = ${['total', 'count', 'uniqueCount', 'largest', 'smallest', 'nthLargest'].includes(name) ? lineName(name, index) : scaledName(name, index)};`);
+      lines.push(`current = ${resultVariable(name, index)};`);
     }
   }
-  lines.push('probe(Number.isInteger(current) && current >= 0, "the answer must be a whole number that is not negative");');
-  lines.push(`return current + " ${slots.unit}.";`);
+  if (report.probe !== null) {
+    lines.push(report.probe);
+  }
+  lines.push(report.ret);
   return lines.join('\n');
-}
-
-function lineName(name, index) {
-  if (name === 'total') return `total${index}`;
-  if (name === 'count' || name === 'uniqueCount') return `count${index}`;
-  return `extreme${index}`;
-}
-
-function scaledName(name, index) {
-  if (name === 'double' || name === 'perUnit') return `scaled${index}`;
-  return `adjusted${index}`;
 }
 
 /**
@@ -467,20 +456,21 @@ export function compositionFamily(composition) {
       const operations = composition.chain
         .map((name) => operatorSentence(name, slots))
         .join(', then ');
+      const instruction = reportFor(composition).instruction(slots);
       return `The ${slots.depot} recorded ${renderLedger(slots.values, slots.unit)}. ` +
-        `Please ${operations}. Report the result in ${slots.unit}.`;
+        `Please ${operations}. ${instruction}`;
     },
     parse(statement) {
-      const ledger = /recorded (.+)\. Please /.exec(statement);
-      const operationText = /\. Please (.+)\. Report the result in ([a-z]+)\.$/.exec(statement);
       const depot = /^The ([a-z ]+depot) recorded/.exec(statement);
-      if (ledger === null || operationText === null || depot === null) {
+      const ledger = /recorded (.+?) ([a-z]+)\. Please /.exec(statement);
+      const operations = /\. Please (.+)\. (Report .+)$/.exec(statement);
+      if (depot === null || ledger === null || operations === null) {
         throw new Error('the statement does not state the records, the operations, and the depot');
       }
       const names = new Set(composition.chain);
       const slots = {
         depot: depot[1],
-        unit: operationText[2],
+        unit: ledger[2],
         values: readLedger(ledger[1])
       };
       // The parameters are added in the order the sampler adds them, so the parsed
@@ -490,12 +480,16 @@ export function compositionFamily(composition) {
       if (names.has('addRate') || names.has('subtractRate')) slots.rate = 0;
       if (names.has('perUnit')) slots.perUnit = 0;
       if (names.has('double')) slots.multiplier = 0;
-      if (names.has('keepDivisibleBy') || names.has('modulo') || names.has('ratioPer')) slots.divisor = 0;
+      if (names.has('keepDivisibleBy') || names.has('modulo') || names.has('ratioPer') || names.has('probability')) slots.divisor = 0;
       if (names.has('percentOf') || names.has('discount')) slots.pct = 0;
       if (names.has('nthLargest')) slots.nth = 0;
+      if (names.has('elapsed')) { slots.per = 0; slots.label = ''; }
+      if (names.has('neighbourCount')) slots.edges = [];
+      if (names.has('pathExists')) { slots.edges = []; slots.target = 0; }
+      if (names.has('rectangleArea')) slots.width = 0;
       // Read each operator's parameter back from its own sentence, in the order the
       // chain declares, and refuse a statement whose sentences are not this chain's.
-      const sentences = operationText[1].split(', then ');
+      const sentences = operations[1].split(', then ');
       if (sentences.length !== composition.chain.length) {
         throw new Error(`the statement asks for ${sentences.length} operations but this family declares ${composition.chain.length}`);
       }
@@ -566,26 +560,70 @@ export function compositionFamily(composition) {
           slots.nth = ordinal[nth[1]] ?? Number(nth[1].replace('th', ''));
           continue;
         }
+        if (name === 'elapsed') {
+          const match = /convert it into whole (hours|days)$/.exec(sentence);
+          if (match === null) {
+            throw new Error(`operation ${index + 1} is not the time conversion of this family`);
+          }
+          slots.label = match[1];
+          slots.per = match[1] === 'days' ? 24 : 60;
+          continue;
+        }
+        if (name === 'neighbourCount') {
+          const match = /count the neighbours of that node in the edges (.+)$/.exec(sentence);
+          if (match === null) {
+            throw new Error(`operation ${index + 1} is not the neighbour step of this family`);
+          }
+          slots.edges = parseEdges(match[1]);
+          continue;
+        }
+        if (name === 'pathExists') {
+          const match = /check whether a path exists from that node to node (\d+) in the edges (.+)$/.exec(sentence);
+          if (match === null) {
+            throw new Error(`operation ${index + 1} is not the path step of this family`);
+          }
+          slots.target = Number(match[1]);
+          slots.edges = parseEdges(match[2]);
+          continue;
+        }
+        if (name === 'probability') {
+          const match = /count the outcomes divisible by (\d+) and divide by the total$/.exec(sentence);
+          if (match === null) {
+            throw new Error(`operation ${index + 1} is not the probability step of this family`);
+          }
+          slots.divisor = Number(match[1]);
+          continue;
+        }
+        if (name === 'rectangleArea') {
+          const match = /take the area of a rectangle that is (\d+) wide$/.exec(sentence);
+          if (match === null) {
+            throw new Error(`operation ${index + 1} is not the rectangle step of this family`);
+          }
+          slots.width = Number(match[1]);
+          continue;
+        }
         const expected = OPERATORS[name].sentence(slots);
         if (sentence !== expected) {
           throw new Error(`operation ${index + 1} does not match this family's chain`);
         }
       }
+      reportFor(composition).parseInstruction(operations[2], slots);
       return slots;
     },
     /** Independent oracle: the chain walked once over the parsed values. */
     solve(slots) {
-      return { answer: walkChain(composition, slots) };
+      return { answer: walkChain(composition, slots), slots };
     },
     render(solution) {
-      return `${solution.answer} units.`;
+      return reportFor(composition).render(solution.answer, solution.slots);
     },
-    compute: chainBody(composition, { unit: 'units' }),
+    compute: chainBody(composition),
     explain(slots, solution) {
+      const report = reportFor(composition);
       return [
         `The ${slots.depot} recorded ${slots.values.length} records in ${slots.unit}.`,
         `The plan is ${composition.chain.join(' then ')}, in that order.`,
-        `Walking the stages gives ${solution.answer} ${slots.unit}.`
+        `Walking the stages gives ${report.phrase(solution.answer, slots)}.`
       ];
     }
   };
