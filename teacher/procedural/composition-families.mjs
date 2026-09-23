@@ -262,7 +262,8 @@ function chainBody(composition, slots) {
     lines.push(`// stage ${index + 1}: ${name}`);
     lines.push(operatorLine(name, index));
     if (name === 'keepAbove' || name === 'keepBelow' || name === 'keepDivisibleBy') {
-      lines.push(`probe(kept${index}.length > 0 && kept${index}.length < values.length, "the filter must keep some records and drop some");`);
+      // The sampling clause still refuses unobservable draws, but the emitted circuit
+      // must not: an empty or full filter is a valid, honest answer.
       lines.push(`current = kept${index};`);
     } else {
       lines.push(`current = ${['total', 'count', 'uniqueCount', 'largest', 'smallest', 'nthLargest'].includes(name) ? lineName(name, index) : scaledName(name, index)};`);

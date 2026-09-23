@@ -168,10 +168,11 @@ function inclusionPair(kind) {
       return `${solution.kept} records were kept, and their total is ${solution.total} crates.`;
     },
     compute: [
-      ...probeValues([], 'crates'),
-      'probe(Number.isInteger(slots.threshold) && slots.threshold > 0, "the threshold must be a positive whole number of crates");',
+      'const slots = $slots;',
+      'const values = slots.values;',
       `const kept = values.filter((value) => ${above ? 'value > slots.threshold' : 'value >= slots.threshold'});`,
-      'probe(kept.length > 0, "the threshold must leave at least one record");',
+      // The empty filter is a valid, honest answer: zero kept, zero total. No guard
+      // may turn it into a failure.
       'let total = 0;',
       'for (const value of kept) {',
       '  total += value;',

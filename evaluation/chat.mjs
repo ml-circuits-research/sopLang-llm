@@ -620,6 +620,7 @@ async function ask({ question, base, alias, options, runtime }) {
   const maxAttempts = 1 + Math.max(0, Number(options.retries ?? 2));
   let messages = buildMessages(question);
   let lastTurn = null;
+  const failures = [];
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
     const result = await generate({ base, model: alias, messages, temperature: 0, maxTokens: options.maxTokens, timeoutMs: 600000 });
     const turn = {
@@ -679,25 +680,35 @@ async function ask({ question, base, alias, options, runtime }) {
     if (turn.className === 'executed' || attempt === maxAttempts) {
       break;
     }
-    // The retry message states the failure plainly; the model decides the fix.
+    // Every retry carries the whole history of what went wrong before, so the model
+    // sees its earlier mistakes and can correct them rather than repeating them.
+    failures.push({ attempt, className: turn.className, detail: turn.detail });
     messages = [
       ...messages,
       { role: 'assistant', content: String(turn.completion ?? '') },
-      { role: 'user', content: retryHintOf(turn) }
+      { role: 'user', content: retryHintOf(failures) }
     ];
   }
   return lastTurn;
 }
 
-/** The one-line failure hint the student sees before regenerating its plan. */
-function retryHintOf(turn) {
-  if (turn.className === 'parse_invalid') {
-    return `Your program did not parse: ${turn.detail} Emit a corrected SOP Lang program.`;
-  }
-  if (turn.className === 'execution_error') {
-    return `Your program executed but failed its own check: ${turn.detail} Fix the computation or the check, then emit a corrected SOP Lang program.`;
-  }
-  return `Your reply was not a SOP Lang program: ${turn.detail} Emit a SOP Lang program.`;
+/**
+ * The failure hint the student sees before regenerating its plan: every previous
+ * attempt, numbered, each with its own failure, then one instruction. The history is
+ * the point — a model that sees only the last error repeats the first.
+ */
+function retryHintOf(failures) {
+  const lines = ['Your previous attempts failed:',
+    ...failures.map((failure) => {
+      const kind = failure.className === 'parse_invalid'
+        ? 'did not parse'
+        : failure.className === 'execution_error'
+          ? 'executed but failed its own check'
+          : 'was not a SOP Lang program';
+      return `${failure.attempt}. ${kind}: ${failure.detail}`;
+    }),
+    'Emit a corrected SOP Lang program.'];
+  return lines.join('\n');
 }
 
 /** The transcript record of one turn; the raw completion is kept for a turn that produced no program. */
@@ -771,12 +782,15 @@ export function runCommand({ name, argument }, session) {
       total: totals.total + (turn.usage?.total_tokens ?? 0)
     }), { prompt: 0, completion: 0, total: 0 });
     const executed = session.turns.filter((turn) => turn.className === 'executed').length;
+    const recovered = session.turns.filter((turn) => turn.className === 'executed' && turn.attempt > 1).length;
+    const failedFirst = session.turns.filter((turn) => turn.attempt > 1 || turn.className !== 'executed').length;
     return {
       exit: false,
       text: [
         `turns: ${session.turns.length}`,
         `tokens: ${tokens.prompt} prompt + ${tokens.completion} completion = ${tokens.total} total (as the server reported them)`,
-        `executed: ${executed} of ${session.turns.length}`
+        `executed: ${executed} of ${session.turns.length}`,
+        `retries recovered: ${recovered} of ${failedFirst} turns whose first plan failed`
       ].join('\n')
     };
   }

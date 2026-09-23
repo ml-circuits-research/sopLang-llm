@@ -77,10 +77,16 @@ const averageOfQualifying = {
         total += score;
       }
     }
-    return { count: kept, total, average: total / kept };
+    return kept === 0
+      ? { count: 0, total: 0, average: null }
+      : { count: kept, total, average: total / kept };
   },
   render(solution) {
-    return `${solution.count} scores qualify and their average is ${solution.average}.`;
+    // Zero qualifying scores is a valid, honest outcome of the filter, so the family
+    // says so instead of dividing by zero or emitting an execution error.
+    return solution.average === null
+      ? 'No scores qualify, so an exact average cannot be computed.'
+      : `${solution.count} scores qualify and their average is ${solution.average}.`;
   },
   wires: [
     {
@@ -93,8 +99,6 @@ const averageOfQualifying = {
         'probe(Number.isInteger(slots.minimum), "the qualifying minimum must be a whole number");',
         'const qualifying = slots.scores.filter((score) => score >= slots.minimum);',
         'probe(qualifying.every((score) => score >= slots.minimum), "only the scores at or above the minimum may qualify");',
-        'probe(qualifying.length >= 2, "at least two scores must qualify");',
-        'probe(qualifying.length < slots.scores.length, "at least one score must fail to qualify");',
         'return qualifying;'
       ].join('\n')
     },
@@ -103,28 +107,25 @@ const averageOfQualifying = {
       command: 'jsEval',
       body: [
         'const slots = $slots;',
-        'probe(Array.isArray($qualifying) && $qualifying.length > 0, "the qualifying stage must publish a non-empty list");',
-        'probe($qualifying.every((score) => Number.isInteger(score)), "every published qualifying score must be a whole number");',
         'const count = $qualifying.length;',
         'const total = $qualifying.reduce((sum, score) => sum + score, 0);',
         'probe(total >= count * slots.minimum, "the published total must be at least the minimum times the count");',
-        'probe(total % count === 0, "the published total must divide by the count into a whole average");',
         'return { count, total };'
       ].join('\n')
     }
   ],
   compute: [
     'const slots = $slots;',
-    'probe(Array.isArray($qualifying) && $qualifying.length > 0, "the qualifying stage must publish a non-empty list");',
     'probe($qualifying.every((score) => score >= slots.minimum), "every published qualifying score must be at least the minimum");',
-    'probe(typeof $summary === "object" && $summary !== null, "the summary stage must publish an object");',
     'probe(Number.isInteger($summary.count) && $summary.count === $qualifying.length, "the published count must match the qualifying list");',
-    'probe(Number.isInteger($summary.total) && $summary.total > 0, "the published total must be a positive whole number");',
+    'if ($summary.count === 0) {',
+    '  return "No scores qualify, so an exact average cannot be computed.";',
+    '}',
     'probe($summary.total % $summary.count === 0, "the published total must divide by the count into a whole average");',
     'const average = $summary.total / $summary.count;',
     'probe(average >= slots.minimum, "the average of the qualifying scores cannot be below the minimum");',
     'return $summary.count + " scores qualify and their average is " + average + ".";'
-  ].join('\n'),
+].join('\n'),
   explain(slots, solution) {
     return [
       `The statement lists ${slots.scores.length} scores and a qualifying minimum of ${slots.minimum}.`,

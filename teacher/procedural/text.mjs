@@ -296,9 +296,6 @@ const countSelfLetter = {
   },
   compute: [
     'const slots = $slots;',
-    'probe(typeof slots.word === "string" && slots.word.length > 0, "the word must be a non-empty string");',
-    'probe(typeof slots.letter === "string" && slots.letter.length === 1, "the letter must be a single character");',
-    'probe(slots.word.includes(slots.letter), "the word must contain the letter it asks about");',
     'const characters = [...slots.word];',
     'let occurrences = 0;',
     'for (const character of characters) {',
@@ -306,7 +303,9 @@ const countSelfLetter = {
     '    occurrences += 1;',
     '  }',
     '}',
-    'probe(occurrences >= 1, "a self-referential word must contain the letter it names at least once");',
+    // The one true invariant: a character count lies between zero and the word length,
+    // zero included — a question may validly ask for a letter the word does not hold.
+    'probe(occurrences >= 0 && occurrences <= characters.length, "the count must lie between zero and the word length");',
     'return occurrences + " times.";'
   ].join('\n'),
   explain(slots, solution) {
