@@ -55,8 +55,15 @@ Never rebuild while an evaluation chain is reading `training-data/`.
 bash training/environment/start-detached.sh train exp-NNN-slug \
   --epochs 3 --lr 1e-4 --batch-size 4 --grad-accum 8 \
   --gradient-checkpointing --save-steps 90 \
-  --extra-data training/data/preservation-10.jsonl
+  --extra-data training/data/preservation-10.jsonl \
+  --patience 5
 ```
+
+`--patience N` adds in-loop validation with early stopping: the watcher
+(`training/environment/early-stop.sh`, spawned by start-detached.sh) scores every settled save on the
+validation slice via `select-checkpoint.mjs --only` and stops the trainer after N consecutive saves without
+a new best oracle match; the chain then runs over the whole checkpoint set as usual. The scored saves land
+in `training/checkpoints/<experiment>/validation-scores.jsonl` during training, not after it.
 
 The recipe is frozen across arms so the only variable is the change under test. A different
 base model adds `--base-model <dir> --model-manifest training/environment/base-model-<size>.json`

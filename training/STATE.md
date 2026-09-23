@@ -24,9 +24,39 @@ The two verdicts that matter, both written in `evaluation/registry/phase4-analys
 - **D-J (structure):** teaching deeper structure buys *executable* programs on unseen families (holdout completion 12.8% for `exp-007` to 30.9% for `exp-008`) and does not buy correct answers (1 of 265 in every widened arm, 0 for the newest two). Failures moved from programs that break to programs that answer the wrong question.
 - **D-K (preservation mixture):** the derived mixture did not restore the probe substrate (`exp-008` 2/10, `exp-009` 1/10), the comparison carries a 747-versus-681 step confound, and six of the ten probes measure short answers the preservation targets never taught — three of six JavaScript probes state the correct value and are still scored strictly wrong. The next mixture arm changes the mixture *shape* and matches the training budget.
 
+## The composition series (2026-09-22 evening through 2026-09-23)
+
+| arm | suite | winner | selection oracle | holdout (correct / items) | probes |
+| --- | --- | --- | --- | --- | --- |
+| `exp-011-compositions` | 22 compositions (18 trained, 4 reserved) | checkpoint-630 | 94.7% | 161 / 425 (reserved 160/160) | — |
+| `exp-012-census` | 8 new operators, 37 compositions, 9175 rows | checkpoint-720 | 95.6% | 258 / 585 (44.1%) | 1/10 |
+| `exp-013-1.5b` | same suite on the 1.5B base | checkpoint-450 | 95.6% | **322 / 585 (55.0%)** | 5/10 |
+
+Base prose baselines on the same 585 items: 0.5B base 63 (10.8%), 1.5B base 30 (5.1%). The trained 0.5B beats
+its base 4.1-fold, the trained 1.5B beats its own 10.7-fold. The book holdout stays at 2 / 225 in both arms:
+generalization composes within the trained operator vocabulary and does not cross it.
+
+The retry sweep (exp-012 winner, 30 structural problems): 0, 1, and 2 retries all answer 17 / 30 (56.7%);
+retries lift execution 93.3% to 100.0% but the recovered plans answer wrong, so the matched count does not
+move. Scored runs stay `--retries 0`; the deployed chat retries failed plans with the full failure history.
+
 ## Resume point
 
-Nothing is training. The GPU is idle and the machine is safe to use. Two queues are armed and detached: `exp-008-queue.sh` waits for a *new* export before starting another arm, and `exp-009-queue.sh` is spent (its arm completed).
+`exp-014-deep-chains` is training (detached): the tranche dataset — 9495 training rows with the eleven
+depth-3/4 census compositions (time arithmetic, graph traversal, probability, 2D geometry) and the
+chained-filter fix — on the 1.5B base, 2 epochs (630 steps), save-steps 150, `--patience 5` in-loop
+validation with early stopping (4 saves this arm, so patience is telemetry; the watcher scores each save
+into `training/checkpoints/exp-014-deep-chains/validation-scores.jsonl`). The guards (watchdog, night-watch,
+disk-guard) run beside it. Follow with `bash training/environment/work-status.sh`; when it closes, the chain
+selects and holds out as usual (start-chain.sh runs automatically after the recipe; the supervisor's
+automatic start has failed twice before, so if `series.log` shows no selection within minutes of training
+ending, run `bash evaluation/start-chain.sh exp-014-deep-chains` manually).
+
+The deployment surfaces: `node evaluation/chat.mjs` serves the newest winner with the four-model comparison,
+`--retries` with full failure history, `/history`, and the up-arrow recall of saved questions
+(`evaluation/registry/chat-history.jsonl`). The skills in `skills/training-rules` and `skills/training-runbook`
+hold the measured rules and the end-to-end procedure; `proposal_wires.md` holds the evidence-ranked wire-type
+proposal (graphPath leads).
 
 ## The four-model night (2026-09-22, ~23:15Z)
 

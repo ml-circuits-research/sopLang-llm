@@ -506,6 +506,17 @@ into executed wrong answers, not into correct ones. The first sweep run had a bu
 loop (attempts after the first never executed their plan); it was fixed and the sweep re-run, and this table
 is the re-run. The scored evaluations keep `--retries 0` as their historical default.
 
+### The deep-chains arm (`exp-014-deep-chains`, launched 2026-09-23 11:35Z)
+
+The tranche dataset (9,495 training rows: the eleven depth-3/4 census compositions, the chained-filter fix, the
+no-knowledge elapsed, the independent favourableDivisor) on the 1.5B base, so the only variables against
+exp-013 are the data and the agreed recipe efficiencies: 2 epochs instead of 3, save-steps 150 instead of 90,
+and in-loop validation with early stopping at patience 5 (with 2 epochs and 150-step saves the arm holds 4
+saves, so the patience guard is telemetry this arm and the actual stop on longer ones; the watcher scores
+every save as it lands into `validation-scores.jsonl`). Hypothesis: the two-input and deeper chains move the
+census-composition holdout and push procedural-arithmetic toward its ceiling, while the books stay at the
+vocabulary boundary until their operators join the chain.
+
 ## Decisions taken on the night of 2026-09-21
 
 **D-G — Containers and registry reads are not in the structure arm; six more multi-wire plan shapes are.** `DS008-training-data.md` specifies container plans and registry-reading plans, and the reconnaissance of this repository found four coupled gates that none of tonight's time could move together: the family validator accepts only `jsEval` and `literal` as an intermediate wire (`teacher/procedural/index.mjs`), the program builder has no container wire path (`teacher/families/index.mjs`, `buildProgram`), the provenance battery judges reactivity from `slots`/`facts` references in the answer wire (`training-data/provenance.mjs`), and no manifest column records the structural read set a definition-reading plan must publish (`DS008`, "Additional circuit shapes"). Each of those is a runtime-contract change that needs its own acceptance evidence, and a half-implemented shape would ship circuits the verifier cannot judge. The lever both shapes serve — plan coverage — is served tonight by six more generator families with two named intermediate stages each (`Teacher/families` equivalent: `teacher/procedural/grouping.mjs`, `aggregation.mjs`, `textshapes.mjs`), which deepens the dependency chain the suite teaches to three stages without touching the runtime contract. The container and registry items stay open with their four gates named above.
