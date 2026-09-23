@@ -25,7 +25,7 @@
  * name is not rewarded by a coincidence of wording.
  */
 
-import { COMPOSITIONS, OPERATORS, HELD_OUT } from './compositions.mjs';
+import { COMPOSITIONS, OPERATORS, HELD_OUT, parseEdges } from './compositions.mjs';
 
 const DEPOTS = ['north depot', 'river depot', 'hill depot', 'market depot', 'harbour depot'];
 const UNITS = ['crates', 'parts', 'tickets', 'litres', 'sheets'];
@@ -33,6 +33,37 @@ const UNITS = ['crates', 'parts', 'tickets', 'litres', 'sheets'];
 /** The composition entries a family may be built from, split as the inventory declares. */
 export const TRAINED_COMPOSITIONS = Object.freeze(COMPOSITIONS.filter((entry) => !HELD_OUT.includes(entry.id)));
 export const HELD_OUT_COMPOSITIONS = Object.freeze(COMPOSITIONS.filter((entry) => HELD_OUT.includes(entry.id)));
+
+/**
+ * The answer report of a numeric terminal operator: the statement asks for the
+ * result in the ledger's unit, the answer is printed with the generic "units"
+ * word, and the circuit asserts a whole, non-negative number. The generic word
+ * is deliberate: a statement that prints "N crates" would carry its own answer
+ * whenever N is one of the recorded values, while "N units" can never collide
+ * with the ledger. Operators whose answer is a different unit or a word carry
+ * their own `report` object instead.
+ */
+const DEFAULT_REPORT = Object.freeze({
+  instruction: (slots) => `Report the result in ${slots.unit}.`,
+  parseInstruction: (instruction, slots) => {
+    const match = /^Report the result in ([a-z]+)\.$/.exec(instruction);
+    if (match === null) {
+      throw new Error('the statement does not report the result in a unit');
+    }
+    if (match[1] !== slots.unit) {
+      throw new Error('the reported unit does not match the recorded unit');
+    }
+  },
+  render: (answer) => `${answer} units.`,
+  phrase: (answer, slots) => `${answer} ${slots.unit}`,
+  ret: 'return current + " units.";',
+  probe: 'probe(Number.isInteger(current) && current >= 0, "the answer must be a whole number that is not negative");'
+});
+
+/** The report of the composition's terminal operator, or the numeric default. */
+function reportFor(composition) {
+  return OPERATORS[composition.chain.at(-1)].report ?? DEFAULT_REPORT;
+}
 
 function renderLedger(values, unit) {
   const printed = values.map((value) => `${value}`);
@@ -50,6 +81,33 @@ function readLedger(text) {
     }
   }
   return numbers;
+}
+
+/**
+ * Draw an edge list over the distinct ledger values, in ascending order. Each
+ * adjacent pair is kept with a fixed probability, so the list is a set of path
+ * segments: a node's degree is one or two, and whether two nodes are joined is
+ * the kind of adjacency question the operator asks. The retry loop of `drawSlots`
+ * guarantees the chain's own node appears in at least one edge.
+ */
+function drawEdges(values, random) {
+  const nodes = [...new Set(values)].sort((left, right) => left - right);
+  const edges = [];
+  for (let index = 0; index < nodes.length - 1; index += 1) {
+    if (random() < 0.6) {
+      edges.push([nodes[index], nodes[index + 1]]);
+    }
+  }
+  if (edges.length === 0) {
+    edges.push([nodes[0], nodes[1]]);
+  }
+  return edges;
+}
+
+/** One distinct ledger value, drawn as the target node a path question names. */
+function pickDistinctNode(values, random) {
+  const nodes = [...new Set(values)];
+  return nodes[Math.floor(random() * nodes.length)];
 }
 
 /**
@@ -88,7 +146,7 @@ function drawSlots(composition, random) {
     if (names.has('double')) {
       slots.multiplier = 2 + Math.floor(random() * 2);
     }
-    if (names.has('keepDivisibleBy') || names.has('modulo') || names.has('ratioPer')) {
+    if (names.has('keepDivisibleBy') || names.has('modulo') || names.has('ratioPer') || names.has('probability')) {
       slots.divisor = 3 + Math.floor(random() * 6);
     }
     if (names.has('percentOf') || names.has('discount')) {
@@ -96,6 +154,24 @@ function drawSlots(composition, random) {
     }
     if (names.has('nthLargest')) {
       slots.nth = composition.rank ?? 2;
+    }
+    // The elapsed operator converts the ledger unit into a larger one: the ledger
+    // records the input unit (minutes for hours, hours for days), and the answer is
+    // reported in the label. Retrying below waits for the total to divide evenly.
+    if (names.has('elapsed')) {
+      const toDays = random() < 0.5;
+      slots.per = toDays ? 24 : 60;
+      slots.label = toDays ? 'days' : 'hours';
+      slots.unit = toDays ? 'hours' : 'minutes';
+    }
+    if (names.has('rectangleArea')) {
+      slots.width = 2 + Math.floor(random() * 9);
+    }
+    if (names.has('neighbourCount') || names.has('pathExists')) {
+      slots.edges = drawEdges(slots.values, random);
+    }
+    if (names.has('pathExists')) {
+      slots.target = pickDistinctNode(slots.values, random);
     }
     if (walkChain(composition, slots) !== null) {
       return slots;
@@ -170,9 +246,34 @@ function walkChain(composition, slots) {
         return null; // the distinct count must differ from the count
       }
     }
+    if (name === 'elapsed' && current % slots.per !== 0) {
+      return null; // the total must divide evenly into whole hours or days
+    }
+    if (name === 'neighbourCount') {
+      const degree = slots.edges.reduce((count, edge) => count + (edge[0] === current || edge[1] === current ? 1 : 0), 0);
+      if (degree === 0) {
+        return null; // the chain's node must appear in at least one edge
+      }
+    }
+    if (name === 'pathExists') {
+      const present = new Set(slots.edges.flat());
+      if (current === slots.target || !present.has(current) || !present.has(slots.target)) {
+        return null; // the two nodes must be distinct and both appear in the edges
+      }
+    }
+    if (name === 'probability') {
+      const favourable = current.filter((value) => value % slots.divisor === 0).length;
+      if (favourable === 0 || favourable === current.length) {
+        return null; // some but not all outcomes must be favourable
+      }
+    }
     current = operator.apply(current, slots);
   }
-  if (!Number.isInteger(current) || current < 0) {
+  if (OPERATORS[composition.chain.at(-1)].returns === 'answer') {
+    if (typeof current !== 'string' || current.trim() === '') {
+      return null;
+    }
+  } else if (!Number.isInteger(current) || current < 0) {
     return null;
   }
   return current;
@@ -186,63 +287,115 @@ function operatorSentence(name, slots) {
   return OPERATORS[name].sentence(slots);
 }
 
-/** The circuit line of one operator: the plan transcription, one line per stage. */
-function operatorLine(name, index) {
+/** The circuit lines of one operator: the plan transcription, one or more lines per stage. */
+function operatorLines(name, index) {
   if (name === 'keepAbove') {
-    return `const kept${index} = values.filter((value) => value > slots.threshold);`;
+    return [`const kept${index} = values.filter((value) => value > slots.threshold);`];
   }
   if (name === 'keepBelow') {
-    return `const kept${index} = values.filter((value) => value < slots.threshold);`;
+    return [`const kept${index} = values.filter((value) => value < slots.threshold);`];
   }
   if (name === 'total') {
-    return `const total${index} = current.reduce((sum, value) => sum + value, 0);`;
+    return [`const total${index} = current.reduce((sum, value) => sum + value, 0);`];
   }
   if (name === 'count') {
-    return `const count${index} = current.length;`;
+    return [`const count${index} = current.length;`];
   }
   if (name === 'largest') {
-    return `const extreme${index} = Math.max(...current);`;
+    return [`const extreme${index} = Math.max(...current);`];
   }
   if (name === 'smallest') {
-    return `const extreme${index} = Math.min(...current);`;
+    return [`const extreme${index} = Math.min(...current);`];
   }
   if (name === 'double') {
-    return `const scaled${index} = current * slots.multiplier;`;
+    return [`const scaled${index} = current * slots.multiplier;`];
   }
   if (name === 'perUnit') {
-    return `const scaled${index} = current * slots.perUnit;`;
+    return [`const scaled${index} = current * slots.perUnit;`];
   }
   if (name === 'addRate') {
-    return `const adjusted${index} = current + slots.rate;`;
+    return [`const adjusted${index} = current + slots.rate;`];
   }
   if (name === 'subtractRate') {
-    return `const adjusted${index} = current - slots.rate;`;
+    return [`const adjusted${index} = current - slots.rate;`];
   }
   if (name === 'keepDivisibleBy') {
-    return `const kept${index} = values.filter((value) => value % slots.divisor === 0);`;
+    return [`const kept${index} = values.filter((value) => value % slots.divisor === 0);`];
   }
   if (name === 'modulo') {
-    return `const adjusted${index} = current % slots.divisor;`;
+    return [`const adjusted${index} = current % slots.divisor;`];
   }
   if (name === 'ratioPer') {
-    return `const adjusted${index} = current / slots.divisor;`;
+    return [`const adjusted${index} = current / slots.divisor;`];
   }
   if (name === 'percentOf') {
-    return `const adjusted${index} = (current * slots.pct) / 100;`;
+    return [`const adjusted${index} = (current * slots.pct) / 100;`];
   }
   if (name === 'discount') {
-    return `const adjusted${index} = current - (current * slots.pct) / 100;`;
+    return [`const adjusted${index} = current - (current * slots.pct) / 100;`];
   }
   if (name === 'nthLargest') {
-    return `const extreme${index} = [...current].sort((left, right) => right - left)[slots.nth - 1];`;
+    return [`const extreme${index} = [...current].sort((left, right) => right - left)[slots.nth - 1];`];
   }
   if (name === 'uniqueCount') {
-    return `const count${index} = new Set(current).size;`;
+    return [`const count${index} = new Set(current).size;`];
   }
   if (name === 'squareArea') {
-    return `const adjusted${index} = current * current;`;
+    return [`const adjusted${index} = current * current;`];
+  }
+  if (name === 'elapsed') {
+    return [`const adjusted${index} = current / slots.per;`];
+  }
+  if (name === 'rectangleArea') {
+    return [`const adjusted${index} = current * slots.width;`];
+  }
+  if (name === 'neighbourCount') {
+    return [`const neighbours${index} = slots.edges.reduce((count, edge) => count + (edge[0] === current || edge[1] === current ? 1 : 0), 0);`];
+  }
+  if (name === 'probability') {
+    return [
+      `const favourable${index} = current.filter((value) => value % slots.divisor === 0).length;`,
+      `const total${index} = current.length;`,
+      `let divisorA${index} = favourable${index};`,
+      `let divisorB${index} = total${index};`,
+      `while (divisorB${index} !== 0) { const remainder${index} = divisorB${index}; divisorB${index} = divisorA${index} % divisorB${index}; divisorA${index} = remainder${index}; }`,
+      `const numerator${index} = favourable${index} / divisorA${index};`,
+      `const denominator${index} = total${index} / divisorA${index};`,
+      `const answer${index} = denominator${index} === 1 ? String(numerator${index}) : numerator${index} + "/" + denominator${index};`
+    ];
+  }
+  if (name === 'pathExists') {
+    return [
+      `const adjacency${index} = new Map();`,
+      `for (const edge${index} of slots.edges) {`,
+      `  for (const member${index} of edge${index}) { if (!adjacency${index}.has(member${index})) adjacency${index}.set(member${index}, []); }`,
+      `  adjacency${index}.get(edge${index}[0]).push(edge${index}[1]);`,
+      `  adjacency${index}.get(edge${index}[1]).push(edge${index}[0]);`,
+      `}`,
+      `const seen${index} = new Set([current]);`,
+      `const queue${index} = [current];`,
+      `while (queue${index}.length > 0) {`,
+      `  const node${index} = queue${index}.shift();`,
+      `  if (node${index} === slots.target) break;`,
+      `  for (const next${index} of adjacency${index}.get(node${index})) {`,
+      `    if (!seen${index}.has(next${index})) { seen${index}.add(next${index}); queue${index}.push(next${index}); }`,
+      `  }`,
+      `}`,
+      `const answer${index} = seen${index}.has(slots.target) ? "yes" : "no";`
+    ];
   }
   throw new Error(`no circuit line for the operator ${name}`);
+}
+
+/** The variable a stage publishes, which the next stage reads as `current`. */
+function resultVariable(name, index) {
+  if (name === 'total') return `total${index}`;
+  if (name === 'count' || name === 'uniqueCount') return `count${index}`;
+  if (name === 'largest' || name === 'smallest' || name === 'nthLargest') return `extreme${index}`;
+  if (name === 'double' || name === 'perUnit') return `scaled${index}`;
+  if (name === 'neighbourCount') return `neighbours${index}`;
+  if (name === 'probability' || name === 'pathExists') return `answer${index}`;
+  return `adjusted${index}`;
 }
 
 /**

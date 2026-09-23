@@ -7,9 +7,9 @@ The **values**, **plan**, and **both** conditions are oracle-assisted diagnostic
 
 | condition | oracle-assisted | matched | items | rate | parse valid | executed |
 | --- | --- | --- | --- | --- | --- | --- |
-| normal | no | 17 | 30 | 56.7% | 100.0% | 93.3% |
-| values | yes | 20 | 30 | 66.7% | 100.0% | 96.7% |
-| plan | yes | 15 | 30 | 50.0% | 100.0% | 80.0% |
+| normal | no | 17 | 30 | 56.7% | 100.0% | 100.0% |
+| values | yes | 20 | 30 | 66.7% | 100.0% | 100.0% |
+| plan | yes | 15 | 30 | 50.0% | 100.0% | 93.3% |
 | both | yes | 20 | 30 | 66.7% | 100.0% | 96.7% |
 
 ## Paired outcome against the normal condition
@@ -28,5 +28,4 @@ The **values**, **plan**, and **both** conditions are oracle-assisted diagnostic
 | divergence | items |
 | --- | --- |
 | none | 17 |
-| wrong_values_or_operation | 11 |
-| runtime_failure | 2 |
+| wrong_values_or_operation | 13 |

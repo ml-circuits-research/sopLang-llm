@@ -110,6 +110,9 @@ the deployed retry loop. The scored metrics stay `--retries 0`.
 `node evaluation/chat.mjs` serves the latest experiment's winner by default, shows the four
 blocks (0.5B base yellow, 0.5B student cyan, 1.5B base magenta, 1.5B student green — the
 1.5B pair appears when its winner exists), each with tokens and request-to-answer time, and
-retries failed plans with the full failure history (`--retries N`, default 2). The lanes
-scan upward for free ports and never kill a port held by another model; the main port
-reclaims its own. `--no-1.5b` skips the 1.5B pair, `--single` keeps only the student.
+retries failed plans with the full failure history (`--retries N`, default 2). Every answered question is appended
+to `evaluation/registry/chat-history.jsonl` (override the path with the `SOPLANG_CHAT_HISTORY`
+environment variable), the up arrow recalls saved questions across sessions, and `/history [N]`
+lists the last N turns with every model's answer. The lanes scan upward for free ports and
+never kill a port held by another model; the main port reclaims its own. `--no-1.5b` skips
+the 1.5B pair, `--single` keeps only the student.

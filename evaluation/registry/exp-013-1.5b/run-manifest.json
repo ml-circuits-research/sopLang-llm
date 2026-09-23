@@ -1,0 +1,46 @@
+{
+  "experiment": "exp-013-1.5b",
+  "slice": {
+    "name": "holdout",
+    "spec": "holdout",
+    "source": "/home/salboaie/work/sopLang-llm/training-data/<book>/eval/**/solution.sop",
+    "count": 585,
+    "books": null,
+    "limit": null,
+    "itemsSha256": "90adfe367b7d9ad948328a65a5d6ca8f75b8cddea3b43d34a9e2eb4b43d2172a"
+  },
+  "checkpoint": {
+    "gguf": "evaluation/registry/exp-013-1.5b/gguf/checkpoint-450.gguf"
+  },
+  "model": null,
+  "base": "http://127.0.0.1:8080",
+  "decoding": {
+    "temperature": 0,
+    "maxTokens": 2048,
+    "stream": false,
+    "timeoutMs": 600000,
+    "concurrency": 4,
+    "attemptsPerItem": 1,
+    "transportRetries": 1
+  },
+  "chatProfile": {
+    "id": "compiled-plan-chat-4",
+    "systemPromptSha256": "c2967d80d31eeb8a8f1605e75ece90edd16a0f0338a7b24bf15442bbf9287a74"
+  },
+  "capabilityProbes": {
+    "profile": "capability-probes-1.0.0",
+    "systemPromptSha256": "3f0ff0bee57e51871d4c09dcf8e3e6ffb0ab414c41100199873dfd0fc5c69fe9",
+    "items": 10,
+    "passed": 5
+  },
+  "dataset": {
+    "exportManifest": "training/data/export-manifest.json",
+    "snapshot": "cc1929f3d7c3da19f17bf254758c8d9e52c42324e35f01b13bff16c7bf423f00",
+    "validationSlice": "training/data/validation-slice.json"
+  },
+  "environment": {
+    "manifest": "training/environment/environment-manifest.json",
+    "sha256": "cacd40e3d24b0c41f44061afd77af9f7b8fdece0bf959dcaa2f577c4873fe180"
+  },
+  "startedAt": "2026-09-23T10:38:16.101Z"
+}

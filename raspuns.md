@@ -428,3 +428,40 @@ daca spatiul ar colapsa sub 15G. Rezultatele vor fi in `evaluation/registry/exp-
    experimentelor anterioare, cu 0 preambul si 0 helper in 8735 de tinte.
 
 Sondele de capacitate au ramas 1/10 — problema ei deschisa (DS009), documentata ca atare.
+
+## 2026-09-23, 11:00Z — Rezultatul 1.5B (exp-013) si masurarea reincercarilor
+
+**Intrebarea:** cat castiga 1.5B fata de 0.5B pe aceleasi date, si cat ajuta reincercarile la deploy?
+
+**Rezultatul 1.5B (checkpoint-450, 912 pasi, aceeasi reteta, holdout 585):**
+
+| model | raspunsuri corecte |
+|---|---|
+| baza 0.5B, in proza | 63/585 (10.8%) |
+| baza 1.5B, in proza | 30/585 (5.1%) |
+| 0.5B antrenat (exp-012) | 258/585 (44.1%) |
+| **1.5B antrenat (exp-013)** | **322/585 (55.0%)** |
+
+1.5B-ul antrenat e de 10.7 ori peste baza lui (30 -> 322) si peste 0.5B-ul antrenat (322 vs 258).
+Descompunerea spune aceeasi poveste ca la 0.5B: 8 cluster-e procedurale antrenate la 40/40 fiecare,
+procedural-arithmetic 320/360 (88.9% fata de ~71% la 0.5B), iar cartile nevazute raman la 0 (2/10 doar la
+mathematical-thinking). Scara a ajutat in interiorul vocabularului acoperit; generalizarea peste vocabular
+nu s-a miscat. Sonde de capacitate 5/10 (de la 1/10 la 0.5B).
+
+**Masurarea reincercarilor (sweep pe castigatorul exp-012, 30 de probleme structurale):**
+
+| retries | corecte | executate |
+|---|---|---|
+| 0 | 17/30 (56.7%) | 93.3% |
+| 1 | 17/30 (56.7%) | 100.0% |
+| 2 | 17/30 (56.7%) | 100.0% |
+
+Reincercarile recupereaza planurile esuate pana la executie (93.3% -> 100%), dar numarul de raspunsuri
+corecte ramane 17: cele 2 planuri recuperate ruleaza si raspund gresit. Cu alte cuvinte, reincercarea
+transforma "planul a murit" in "planul a raspuns gresit" — nu mai mult, la acest model si la acest set.
+Primul sweep (10:43-10:49Z) a avut un bug in bucla de retry (planurile din incercarile 2-3 nu se mai
+executau deloc) — reparat si re-rulat; acesta e rezultatul real.
+
+**Ce urmeaza:** setul de date se reconstruieste acum (lantzul 1.5B s-a inchis), cu operatorii noi ai
+agentului DatasetTranche, si porneste urmatorul arm cu 2 epoci, salvari la 150 de pasi si oprire pe
+validare.

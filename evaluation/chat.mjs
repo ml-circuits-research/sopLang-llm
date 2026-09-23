@@ -28,7 +28,7 @@
  */
 
 import { spawn, spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { createInterface } from 'node:readline';
 import { pathToFileURL } from 'node:url';
@@ -117,6 +117,7 @@ export const COMMANDS = [
   { usage: '/model', summary: 'print the served artifact, its alias, and the base URL' },
   { usage: '/use-both [true|false]', summary: 'toggle comparing the fine-tuned model against the untuned base model; with no argument it flips the current setting' },
   { usage: '/export <path>', summary: 'write the session transcript to a JSONL file (overwrites it)' },
+  { usage: '/history [N]', summary: 'list the last N saved turns (default 20) with each model\'s answer' },
   { usage: '/exit', summary: 'leave the session (bare `exit`, `quit`, and Ctrl-D do the same)' }
 ];
 
@@ -183,6 +184,7 @@ const ANSI = Object.freeze({
 
 export const BASE_GGUF = `${REPOSITORY_ROOT}/training/checkpoints/base-f16.gguf`;
 export const BASE_GGUF_15 = `${REPOSITORY_ROOT}/training/checkpoints/base-1.5b-f16.gguf`;
+export const CHAT_HISTORY_FILE = process.env.SOPLANG_CHAT_HISTORY ?? `${REPOSITORY_ROOT}/evaluation/registry/chat-history.jsonl`;
 
 const COMMAND_WIDTH = Math.max(...COMMANDS.map((command) => command.usage.length));
 
@@ -712,6 +714,46 @@ function retryHintOf(failures) {
 }
 
 /** The transcript record of one turn; the raw completion is kept for a turn that produced no program. */
+
+/**
+ * The chat keeps every answered question on disk, one JSON record per line, so the
+ * up arrow and /history still know them after the process (and the terminal) is gone.
+ * The file is a convenience: it grows by appends, and a read-only disk must not kill
+ * the chat, so every read and write here is best-effort.
+ */
+function loadChatHistory() {
+  let records = [];
+  try {
+    if (!existsSync(CHAT_HISTORY_FILE)) return records;
+    records = readFileSync(CHAT_HISTORY_FILE, 'utf8')
+      .split('\n')
+      .filter((line) => line.trim() !== '')
+      .map((line) => { try { return JSON.parse(line); } catch { return null; } })
+      .filter((record) => record !== null && typeof record.q === 'string');
+  } catch {
+    records = [];
+  }
+  return records;
+}
+
+function appendChatHistory(record) {
+  try {
+    mkdirSync(dirname(CHAT_HISTORY_FILE), { recursive: true });
+    appendFileSync(CHAT_HISTORY_FILE, `${JSON.stringify(record)}\n`);
+  } catch {
+    // Best-effort: the answer was shown regardless of whether the note could be kept.
+  }
+}
+
+function historyRecordOf(turn) {
+  const record = { t: new Date().toISOString(), q: turn.question, student: exportedTurn(turn) };
+  const baseFields = (base) => ({ answer: base.text ?? null, error: base.error, tokens: base.tokens ?? null, latencyMs: base.latencyMs ?? null });
+  if (turn.baseComparison !== undefined) record.base05 = baseFields(turn.baseComparison);
+  if (turn.base15 !== undefined) record.base15 = baseFields(turn.base15);
+  if (turn.student15 !== undefined) record.student15 = exportedTurn(turn.student15);
+  return record;
+}
+
 function exportedTurn(turn) {
   return {
     question: turn.question,
@@ -820,6 +862,36 @@ export function runCommand({ name, argument }, session) {
     writeFileSync(argument, `${session.turns.map((turn) => JSON.stringify(exportedTurn(turn))).join('\n')}\n`);
     return { exit: false, text: `✔ wrote ${session.turns.length} turn(s) to ${argument}` };
   }
+  if (name === 'history') {
+    const saved = session.saved ?? [];
+    if (saved.length === 0) return { exit: false, text: 'no saved turns yet: ask a question first.' };
+    const count = argument.trim() === '' ? 20 : Number(argument.trim());
+    if (!Number.isInteger(count) || count < 1) return { exit: false, text: '✗ /history takes a number of turns, e.g. /history 10' };
+    const shown = saved.slice(-count);
+    const lines = [];
+    shown.forEach((record, index) => {
+      const when = typeof record.t === 'string' ? `${record.t.slice(0, 10)} ${record.t.slice(11, 16)}Z` : '';
+      lines.push(`#${saved.length - shown.length + index + 1}${when === '' ? '' : ` (${when})`} ? ${record.q}`);
+      const student = record.student;
+      if (student !== undefined) {
+        const parts = [student.class !== 'executed' ? `✗ ${student.class}` : null, student.answer]
+          .filter((part) => part !== null && part !== undefined);
+        lines.push(`  fine-tuned: ${parts.join(' ') || '(no answer)'}`);
+      }
+      for (const [key, label] of [['base05', 'base 0.5B'], ['base15', 'base 1.5B'], ['student15', 'fine-tuned 1.5B']]) {
+        const lane = record[key];
+        if (lane === undefined) continue;
+        if (lane.error !== null && lane.error !== undefined) {
+          lines.push(`  ${label}: ✗ ${lane.error}`);
+        } else if (lane.class !== undefined && lane.class !== null && lane.class !== 'executed') {
+          lines.push(`  ${label}: ✗ ${lane.class}${lane.detail === null || lane.detail === undefined ? '' : `: ${lane.detail}`}`);
+        } else {
+          lines.push(`  ${label}: ${lane.answer ?? '(empty)'}`);
+        }
+      }
+    });
+    return { exit: false, text: lines.join('\n') };
+  }
   return { exit: false, text: `✗ unknown command "/${name}"; /help lists the commands.` };
 }
 
@@ -866,7 +938,8 @@ async function main() {
   }
   process.stdout.write(`model: ${artifact.experiment}${artifact.winner === null ? '' : ` (${artifact.winner})`}\n`);
   process.stdout.write('questions are answered by executing the circuit the model compiles; --show-plan prints the circuit.\n');
-  process.stdout.write('type /help for the interactive commands (/show-plan, /stats, /model, /use-both, /export, /exit).\n');
+  process.stdout.write('type /help for the interactive commands (/show-plan, /stats, /model, /use-both, /export, /history, /exit).\n');
+  process.stdout.write(`questions are saved to evaluation/registry/chat-history.jsonl; the up arrow recalls them, /history lists them.\n`);
 
   const stopServer = () => {
     // The comparison's base server is managed by this session too, so it stops with
@@ -896,6 +969,9 @@ async function main() {
     base,
     alias,
     turns: [],
+    // Saved turns, loaded from the history file at startup and extended by this
+    // session, so /history and the up arrow span every session, not just this one.
+    saved: loadChatHistory(),
     // The `/use-both` comparison: `state` tracks whether the base model has been
     // started, so a question never pays for starting it twice and a failure is
     // reported rather than retried silently.
@@ -924,11 +1000,15 @@ async function main() {
     for (const warning of warnings) {
       process.stdout.write(`✗ ${warning}\n`);
     }
+    appendChatHistory(historyRecordOf(turn));
     stopServer();
     process.exit(0);
   }
 
-  const reader = createInterface({ input: process.stdin, output: process.stdout, prompt: '? ' });
+  const reader = createInterface({ input: process.stdin, output: process.stdout, prompt: '? ', historySize: 500 });
+  // The up arrow walks the line history readline keeps, oldest first; seeding it with
+  // every saved question makes earlier sessions' examples reachable the same way.
+  reader.history = session.saved.map((record) => record.q);
   reader.prompt();
   for await (const line of reader) {
     const decision = decodeLine(line);
@@ -955,6 +1035,9 @@ async function main() {
     // plan. Showing only the answer would hide the object under comparison.
     const turnOptions = compare !== null && compare.state === 'ready' ? { ...options, showPlan: true } : options;
     session.turns.push(turn);
+    const record = historyRecordOf(turn);
+    session.saved.push(record);
+    appendChatHistory(record);
     process.stdout.write(`\n${renderExchange(turn, turnOptions)}\n\n`);
     for (const warning of warnings) {
       process.stdout.write(`✗ ${warning}\n`);

@@ -32,6 +32,23 @@
  *   operator must require different answers on the same draw, so the family that
  *   names the distinction can be learned from the statement rather than guessed.
  *
+ * The third tranche adds the four census operations the book families perform
+ * that the inventory still did not cover (`evaluation/census.mjs`): time
+ * arithmetic (`elapsed`), graph traversal (`neighbourCount`, `pathExists`),
+ * probability (`probability`), and two-dimensional geometry (`rectangleArea`).
+ *
+ * Two of them take two inputs, which the single-input chain cannot express, so
+ * the smallest honest extension is used: the operator reads the chain value as
+ * its first input and a second literal that the statement states explicitly as
+ * its second. `rectangleArea` takes the length from the chain and the width from
+ * its own sentence; `pathExists` takes one node from the chain and the other
+ * node, plus the edge list, from its sentence. The chain keeps walking one value,
+ * and the parameters a stage reads are recovered by the family's parse exactly as
+ * the original operators' parameters are. An operator that ends on a word rather
+ * than a number (`pathExists` -> yes/no, `probability` -> a reduced fraction)
+ * declares `returns: 'answer'`, which the inventory check accepts as a terminal
+ * type alongside `scalar`.
+ *
  * The generators here are deliberately independent of `evaluation/diagnostics/`:
  * that module is evaluation-only material, and a training family that imported it
  * would put the evaluation vocabulary inside the suite it is measured by.
@@ -178,6 +195,108 @@ const OPERATORS = Object.freeze({
     apply: (value) => value * value,
     sentence: () => 'take the area of a square with that side',
     clause: 'the side must be a whole number, so the area is whole'
+  },
+  // Time arithmetic: convert a running total of minutes into whole hours, or of
+  // hours into whole days. The input unit is the ledger's unit for this draw, and
+  // the answer unit is the operator's own label, which is why the report below
+  // carries its own instruction and answer text instead of the numeric default.
+  elapsed: {
+    takes: 'scalar',
+    returns: 'scalar',
+    apply: (value, parameters) => value / parameters.per,
+    sentence: (parameters) => `convert it into whole ${parameters.label}`,
+    clause: 'the running time must divide evenly into whole units',
+    report: {
+      instruction: (slots) => `Report the result in ${slots.label}.`,
+      parseInstruction: (instruction, slots) => {
+        const match = /^Report the result in (hours|days)\.$/.exec(instruction);
+        if (match === null) {
+          throw new Error('the statement does not report the elapsed time in hours or days');
+        }
+        if (match[1] !== slots.label) {
+          throw new Error('the reported unit does not match the conversion');
+        }
+      },
+      render: (answer, slots) => `${answer} ${slots.label}.`,
+      phrase: (answer, slots) => `${answer} ${slots.label}`,
+      ret: 'return current + " " + slots.label + ".";',
+      probe: 'probe(Number.isInteger(current) && current >= 0, "the answer must be a whole number that is not negative");'
+    }
+  },
+  // Graph traversal, single-input: count the neighbours of the chain's node among
+  // the stated edges. The node is the value the previous stage produced, and the
+  // edge list is a second literal the sentence states explicitly.
+  neighbourCount: {
+    takes: 'scalar',
+    returns: 'scalar',
+    apply: (value, parameters) => parameters.edges.reduce((count, edge) => count + (edge[0] === value || edge[1] === value ? 1 : 0), 0),
+    sentence: (parameters) => `count the neighbours of that node in the edges ${formatEdges(parameters.edges)}`,
+    clause: 'the node must appear in at least one edge',
+    report: {
+      instruction: () => 'Report the number of neighbours.',
+      parseInstruction: (instruction) => {
+        if (instruction !== 'Report the number of neighbours.') {
+          throw new Error('the statement does not ask for the number of neighbours');
+        }
+      },
+      render: (answer) => `${answer} neighbours.`,
+      phrase: (answer) => `${answer} neighbours`,
+      ret: 'return current + " neighbours.";',
+      probe: 'probe(Number.isInteger(current) && current >= 0, "the answer must be a whole number that is not negative");'
+    }
+  },
+  // Graph traversal, two-input: whether a path joins the chain's node to a second
+  // node the sentence states, over a stated edge list. The answer is a word, so
+  // this operator returns 'answer'.
+  pathExists: {
+    takes: 'scalar',
+    returns: 'answer',
+    apply: (value, parameters) => (hasPath(parameters.edges, value, parameters.target) ? 'yes' : 'no'),
+    sentence: (parameters) => `check whether a path exists from that node to node ${parameters.target} in the edges ${formatEdges(parameters.edges)}`,
+    clause: 'the two nodes must be distinct and appear in the edges',
+    report: {
+      instruction: () => 'Report whether a path exists.',
+      parseInstruction: (instruction) => {
+        if (instruction !== 'Report whether a path exists.') {
+          throw new Error('the statement does not ask whether a path exists');
+        }
+      },
+      render: (answer) => `${answer}.`,
+      phrase: (answer) => `${answer}`,
+      ret: 'return current + ".";',
+      probe: 'probe(current === "yes" || current === "no", "the answer must be yes or no");'
+    }
+  },
+  // Probability over the list at this stage: count the outcomes divisible by the
+  // stated divisor, divide by the total, and reduce. The answer is a reduced
+  // fraction (or a whole number when the fraction is whole), so 'answer'.
+  probability: {
+    takes: 'list',
+    returns: 'answer',
+    apply: (values, parameters) => reduceFraction(values.filter((value) => value % parameters.divisor === 0).length, values.length),
+    sentence: (parameters) => `count the outcomes divisible by ${parameters.divisor} and divide by the total`,
+    clause: 'some but not all outcomes must be favourable',
+    report: {
+      instruction: () => 'Report the probability as a reduced fraction.',
+      parseInstruction: (instruction) => {
+        if (instruction !== 'Report the probability as a reduced fraction.') {
+          throw new Error('the statement does not ask for the probability');
+        }
+      },
+      render: (answer) => `${answer}.`,
+      phrase: (answer) => `${answer}`,
+      ret: 'return current + ".";',
+      probe: 'probe(typeof current === "string" && /^\\d+(\\/\\d+)?$/.test(current), "the answer must be a reduced fraction");'
+    }
+  },
+  // Two-dimensional geometry: the area of a rectangle whose length is the chain
+  // value and whose width is the second literal the sentence states.
+  rectangleArea: {
+    takes: 'scalar',
+    returns: 'scalar',
+    apply: (value, parameters) => value * parameters.width,
+    sentence: (parameters) => `take the area of a rectangle that is ${parameters.width} wide`,
+    clause: 'the width must be a whole number, so the area is whole'
   }
 });
 
@@ -185,6 +304,60 @@ const OPERATORS = Object.freeze({
 function ordinal(n) {
   const names = { 1: 'first', 2: 'second', 3: 'third', 4: 'fourth', 5: 'fifth' };
   return names[n] ?? `${n}th`;
+}
+
+/** The stated edge list as prose: [[12, 15], [15, 8]] -> "12-15, 15-8". */
+function formatEdges(edges) {
+  return edges.map((edge) => `${edge[0]}-${edge[1]}`).join(', ');
+}
+
+/** The prose edge list back to pairs of numbers, the inverse of `formatEdges`. */
+function parseEdges(text) {
+  return text.split(', ').map((pair) => pair.split('-').map(Number));
+}
+
+/** The greatest common divisor of two whole numbers, by Euclid's algorithm. */
+function gcd(left, right) {
+  let a = left;
+  let b = right;
+  while (b !== 0) {
+    const remainder = b;
+    b = a % b;
+    a = remainder;
+  }
+  return a;
+}
+
+/** A reduced fraction as text: 2/8 -> "1/4", and a whole result as "1". */
+function reduceFraction(numerator, denominator) {
+  const divisor = gcd(numerator, denominator);
+  const reducedNumerator = numerator / divisor;
+  const reducedDenominator = denominator / divisor;
+  return reducedDenominator === 1 ? String(reducedNumerator) : `${reducedNumerator}/${reducedDenominator}`;
+}
+
+/** Whether an undirected path joins `from` to `to` over the stated edge list. */
+function hasPath(edges, from, to) {
+  const adjacency = new Map();
+  for (const [left, right] of edges) {
+    if (!adjacency.has(left)) adjacency.set(left, []);
+    if (!adjacency.has(right)) adjacency.set(right, []);
+    adjacency.get(left).push(right);
+    adjacency.get(right).push(left);
+  }
+  const seen = new Set([from]);
+  const queue = [from];
+  while (queue.length > 0) {
+    const node = queue.shift();
+    if (node === to) return true;
+    for (const next of adjacency.get(node)) {
+      if (!seen.has(next)) {
+        seen.add(next);
+        queue.push(next);
+      }
+    }
+  }
+  return false;
 }
 
 /**
@@ -245,7 +418,21 @@ export const COMPOSITIONS = Object.freeze([
   { id: 'above-total-modulo', chain: ['keepAbove', 'total', 'modulo'], depths: 3 },
   { id: 'above-total-percent-discount', chain: ['keepAbove', 'total', 'percentOf', 'discount'], depths: 4 },
   { id: 'above-third-largest-percent', chain: ['keepAbove', 'nthLargest', 'percentOf'], depths: 3, rank: 3 },
-  { id: 'keep-below-total-ratio', chain: ['keepBelow', 'total', 'ratioPer'], depths: 3 }
+  { id: 'keep-below-total-ratio', chain: ['keepBelow', 'total', 'ratioPer'], depths: 3 },
+  // The tranche compositions: time arithmetic, graph traversal, probability, and
+  // two-dimensional geometry, composed by the same declared-inventory discipline.
+  { id: 'above-total-elapsed', chain: ['keepAbove', 'total', 'elapsed'], depths: 3 },
+  { id: 'above-largest-neighbour-count', chain: ['keepAbove', 'largest', 'neighbourCount'], depths: 3 },
+  { id: 'below-smallest-neighbour-count', chain: ['keepBelow', 'smallest', 'neighbourCount'], depths: 3 },
+  { id: 'above-largest-path-exists', chain: ['keepAbove', 'largest', 'pathExists'], depths: 3 },
+  { id: 'above-probability', chain: ['keepAbove', 'probability'], depths: 2 },
+  { id: 'above-largest-rectangle-area', chain: ['keepAbove', 'largest', 'rectangleArea'], depths: 3 },
+  { id: 'above-total-rectangle-area', chain: ['keepAbove', 'total', 'rectangleArea'], depths: 3 },
+  // The tranche compositions the held-out side reserves.
+  { id: 'below-total-elapsed', chain: ['keepBelow', 'total', 'elapsed'], depths: 3 },
+  { id: 'above-smallest-path-exists', chain: ['keepAbove', 'smallest', 'pathExists'], depths: 3 },
+  { id: 'below-probability', chain: ['keepBelow', 'probability'], depths: 2 },
+  { id: 'below-largest-rectangle-area', chain: ['keepBelow', 'largest', 'rectangleArea'], depths: 3 }
 ]);
 
 /**
@@ -265,7 +452,11 @@ export const HELD_OUT = Object.freeze([
   'above-total-modulo',
   'above-total-percent-discount',
   'above-third-largest-percent',
-  'keep-below-total-ratio'
+  'keep-below-total-ratio',
+  'below-total-elapsed',
+  'above-smallest-path-exists',
+  'below-probability',
+  'below-largest-rectangle-area'
 ]);
 
 /**
@@ -281,6 +472,7 @@ export const COMPOSITION_PAIRS = Object.freeze([
 ]);
 
 export { OPERATORS };
+export { formatEdges, parseEdges };
 
 /**
  * Check the declared inventory before any family derives from it.
@@ -313,8 +505,8 @@ export function assertInventoryIsWellFormed() {
       }
       current = operator.returns;
     }
-    if (current !== 'scalar') {
-      throw new Error(`${composition.id}: the chain ends on a ${current}, so the answer would not be one number`);
+    if (current !== 'scalar' && current !== 'answer') {
+      throw new Error(`${composition.id}: the chain ends on a ${current}, so the answer would not be one value`);
     }
     const key = composition.chain.join('>');
     if (seen.has(key)) {

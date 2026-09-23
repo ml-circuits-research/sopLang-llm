@@ -280,11 +280,9 @@ const OPERATOR_OF = (name) => OPERATORS_TABLE[name].steps;
     const maxAttempts = 1 + Math.max(0, Number(options.retries ?? 0));
     let messages = buildMessages(promptOf(problem, condition));
     const failures = [];
-    let result = null;
-    let attempt = 1;
-    let lastRecord = null;
-    for (; attempt <= maxAttempts; attempt += 1) {
-      result = await generate({
+    let last = null;
+    for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+      const result = await generate({
         base,
         model: alias,
         messages,
@@ -293,76 +291,69 @@ const OPERATOR_OF = (name) => OPERATORS_TABLE[name].steps;
         timeoutMs: 600_000
       });
       const record = {
-      item: `${problem.id}/${condition}`,
-      problem: problem.id,
-      structure: problem.structure,
-      split: problem.split ?? 'development',
-      pair: problem.pairKind === undefined ? null : { id: problem.pairId, kind: problem.pairKind, role: problem.role },
-      fingerprint: structureFingerprint(problem),
-      condition,
-      oracle: problem.oracle,
-      statement: problem.statement,
-      valueRecord: condition === 'values' || condition === 'both' ? problem.valueRecord : null,
-      planRecord: condition === 'plan' || condition === 'both' ? problem.planRecord : null,
-      generated: {
-        tokens: result.usage?.completion_tokens ?? null,
-        promptTokens: result.usage?.prompt_tokens ?? null,
-        attempts: result.attempts,
-        latencyMs: result.latencyMs
-      }
-    };
-      if (result.error !== null) {
-        lastRecord = { ...record, class: 'generation_transport_error', detail: result.error.message, answer: null, program: null, divergence: 'no_completion' };
-        break;
-      }
-      const extracted = extractProgram(result.completion);
-      if (!extracted.ok) {
-        lastRecord = { ...record, class: 'wrapper_rejected', detail: extracted.reason, answer: null, program: null, divergence: 'wrapper_rejected' };
-      } else {
-        let parsed = null;
+        item: `${problem.id}/${condition}`,
+        problem: problem.id,
+        structure: problem.structure,
+        split: problem.split ?? 'development',
+        pair: problem.pairKind === undefined ? null : { id: problem.pairId, kind: problem.pairKind, role: problem.role },
+        fingerprint: structureFingerprint(problem),
+        condition,
+        oracle: problem.oracle,
+        statement: problem.statement,
+        valueRecord: condition === 'values' || condition === 'both' ? problem.valueRecord : null,
+        planRecord: condition === 'plan' || condition === 'both' ? problem.planRecord : null,
+        generated: {
+          tokens: result.usage?.completion_tokens ?? null,
+          promptTokens: result.usage?.prompt_tokens ?? null,
+          attempts: result.attempts,
+          latencyMs: result.latencyMs
+        }
+      };
+      const turn = async () => {
+        if (result.error !== null) {
+          return { ...record, class: 'generation_transport_error', detail: result.error.message, answer: null, program: null, divergence: 'no_completion' };
+        }
+        const extracted = extractProgram(result.completion);
+        if (!extracted.ok) {
+          return { ...record, class: 'wrapper_rejected', detail: extracted.reason, answer: null, program: null, divergence: 'wrapper_rejected' };
+        }
         try {
-          parsed = parseCircuit(extracted.program, { sourceName: 'completion' });
+          parseCircuit(extracted.program, { sourceName: 'completion' });
         } catch (failure) {
-          lastRecord = { ...record, class: 'parse_invalid', detail: messageOf(failure), answer: null, program: extracted.program, divergence: 'invalid_syntax' };
+          return { ...record, class: 'parse_invalid', detail: messageOf(failure), answer: null, program: extracted.program, divergence: 'invalid_syntax' };
         }
-        if (lastRecord === null || lastRecord.class === null) {
-          let outcome;
-          try {
-            outcome = await runtime.run(extracted.program, { outputs: ['answer'] });
-          } catch (failure) {
-            lastRecord = { ...record, class: 'execution_error', detail: `runtime threw: ${messageOf(failure)}`, answer: null, program: extracted.program, divergence: 'runtime_failure' };
-          }
-          if (lastRecord === null || lastRecord.class === null) {
-            const answer = outcome.status === 'completed' ? String(outcome.outputs.answer) : null;
-            const className = outcome.status !== 'completed'
-              ? 'execution_error'
-              : statesValue(problem.oracle, answer) ? 'answer_match' : 'answer_mismatch';
-            lastRecord = {
-              ...record,
-              class: className,
-              detail: outcome.status === 'completed' ? null : `${outcome.status}:${outcome.code ?? ''}`,
-              answer,
-              program: extracted.program,
-              divergence: divergenceOf({ className, program: extracted.program, answer, problem, oracleOfStage: () => stageAnswers(problem) })
-            };
-          }
+        let outcome;
+        try {
+          outcome = await runtime.run(extracted.program, { outputs: ['answer'] });
+        } catch (failure) {
+          return { ...record, class: 'execution_error', detail: `runtime threw: ${messageOf(failure)}`, answer: null, program: extracted.program, divergence: 'runtime_failure' };
         }
-      }
-      // A failed plan is retried with its history; a plan that ran (right or wrong) is
-      // not regenerated, because the retry exists to recover failed plans, not to
-      // second-guess computed answers.
-      const retriable = ['wrapper_rejected', 'parse_invalid', 'execution_error'].includes(lastRecord.class);
+        const answer = outcome.status === 'completed' ? String(outcome.outputs.answer) : null;
+        const className = outcome.status !== 'completed'
+          ? 'execution_error'
+          : statesValue(problem.oracle, answer) ? 'answer_match' : 'answer_mismatch';
+        return {
+          ...record,
+          class: className,
+          detail: outcome.status === 'completed' ? null : `${outcome.status}:${outcome.code ?? ''}`,
+          answer,
+          program: extracted.program,
+          divergence: divergenceOf({ className, program: extracted.program, answer, problem, oracleOfStage: () => stageAnswers(problem) })
+        };
+      };
+      last = { ...(await turn()), generated: { ...record.generated, attempt } };
+      const retriable = ['wrapper_rejected', 'parse_invalid', 'execution_error'].includes(last.class);
       if (!retriable || attempt === maxAttempts) {
         break;
       }
-      failures.push({ attempt, class: lastRecord.class, detail: lastRecord.detail });
+      failures.push({ attempt, class: last.class, detail: last.detail });
       messages = [
         ...messages,
         { role: 'assistant', content: String(result.completion ?? '') },
         { role: 'user', content: retryHintOf(failures) }
       ];
     }
-    return { ...lastRecord, generated: { ...(lastRecord.generated ?? {}), attempt } };
+    return last;
   }
 
   async function mapWithConcurrency(items, concurrency, mapper) {

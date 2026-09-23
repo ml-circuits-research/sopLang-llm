@@ -155,6 +155,7 @@ test('the interactive loop answers commands locally and sends only questions to 
   const transcript = join(root, 'session.jsonl');
   try {
     const child = spawn(process.execPath, ['evaluation/chat.mjs', '--base', `http://127.0.0.1:${server.address().port}`, '--no-1.5b', '--retries', '0'], {
+      env: { ...process.env, SOPLANG_CHAT_HISTORY: `${tmpdir()}/soplang-chat-history-test.jsonl` },
       cwd: REPOSITORY_ROOT,
       stdio: ['pipe', 'pipe', 'pipe']
     });
@@ -282,7 +283,7 @@ test('each model is asked in the mode it was trained for', () => {
         '--no-1.5b',
         '--retries', '0',
         '--once', 'How many cookies are left?'
-      ], { encoding: 'utf8' });
+      ], { encoding: 'utf8', env: { ...process.env, SOPLANG_CHAT_HISTORY: `${tmpdir()}/soplang-chat-history-test.jsonl` } });
       let stdout = '';
       child.stdout.on('data', (chunk) => { stdout += String(chunk); });
       child.on('close', () => {
@@ -335,7 +336,7 @@ test('a port occupied by a different model is never silently reused', () => {
         '--port', String(port),
         '--single',
         '--once', 'How many r in raspberry?'
-      ], { encoding: 'utf8' });
+      ], { encoding: 'utf8', env: { ...process.env, SOPLANG_CHAT_HISTORY: `${tmpdir()}/soplang-chat-history-test.jsonl` } });
       let stdout = '';
       child.stdout.on('data', (chunk) => { stdout += String(chunk); });
       child.stderr.on('data', (chunk) => { stdout += String(chunk); });
@@ -389,7 +390,7 @@ test('a failed plan is regenerated with the failure fed back, up to --retries ti
         '--base', `http://127.0.0.1:${port}`,
         '--no-1.5b',
         '--once', 'What is 7 equal to?'
-      ], { encoding: 'utf8' });
+      ], { encoding: 'utf8', env: { ...process.env, SOPLANG_CHAT_HISTORY: `${tmpdir()}/soplang-chat-history-test.jsonl` } });
       let stdout = '';
       child.stdout.on('data', (chunk) => { stdout += String(chunk); });
       child.stderr.on('data', (chunk) => { stdout += String(chunk); });
