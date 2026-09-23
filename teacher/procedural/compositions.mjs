@@ -269,13 +269,16 @@ const OPERATORS = Object.freeze({
     }
   },
   // Probability over the list at this stage: count the outcomes divisible by the
-  // stated divisor, divide by the total, and reduce. The answer is a reduced
-  // fraction (or a whole number when the fraction is whole), so 'answer'.
+  // stated divisor, divide by the total, and reduce. The divisor is its own slot
+  // (`favourableDivisor`) rather than the filter's, so a chain that first keeps
+  // multiples of one divisor and then asks for the probability of another does not
+  // collapse onto certainty. The answer is a reduced fraction (or a whole number
+  // when the fraction is whole), so 'answer'.
   probability: {
     takes: 'list',
     returns: 'answer',
-    apply: (values, parameters) => reduceFraction(values.filter((value) => value % parameters.divisor === 0).length, values.length),
-    sentence: (parameters) => `count the outcomes divisible by ${parameters.divisor} and divide by the total`,
+    apply: (values, parameters) => reduceFraction(values.filter((value) => value % parameters.favourableDivisor === 0).length, values.length),
+    sentence: (parameters) => `count the outcomes divisible by ${parameters.favourableDivisor} and divide by the total`,
     clause: 'some but not all outcomes must be favourable',
     report: {
       instruction: () => 'Report the probability as a reduced fraction.',
@@ -421,18 +424,20 @@ export const COMPOSITIONS = Object.freeze([
   { id: 'above-third-largest-percent', chain: ['keepAbove', 'nthLargest', 'percentOf'], depths: 3, rank: 3 },
   { id: 'keep-below-total-ratio', chain: ['keepBelow', 'total', 'ratioPer'], depths: 3 },
   // The tranche compositions: time arithmetic, graph traversal, probability, and
-  // two-dimensional geometry, composed by the same declared-inventory discipline.
-  { id: 'above-total-elapsed', chain: ['keepAbove', 'total', 'elapsed'], depths: 3 },
-  { id: 'above-largest-neighbour-count', chain: ['keepAbove', 'largest', 'neighbourCount'], depths: 3 },
-  { id: 'below-smallest-neighbour-count', chain: ['keepBelow', 'smallest', 'neighbourCount'], depths: 3 },
-  { id: 'above-largest-path-exists', chain: ['keepAbove', 'largest', 'pathExists'], depths: 3 },
-  { id: 'above-probability', chain: ['keepAbove', 'probability'], depths: 2 },
-  { id: 'above-largest-rectangle-area', chain: ['keepAbove', 'largest', 'rectangleArea'], depths: 3 },
+  // two-dimensional geometry, each chained three or four steps deep so the new
+  // operators teach decomposition rather than a one-step completion.
+  { id: 'above-divisible-probability', chain: ['keepAbove', 'keepDivisibleBy', 'probability'], depths: 3 },
+  { id: 'above-count-neighbour-count', chain: ['keepAbove', 'count', 'neighbourCount'], depths: 3 },
+  { id: 'above-count-neighbour-add-rate', chain: ['keepAbove', 'count', 'neighbourCount', 'addRate'], depths: 4 },
   { id: 'above-total-rectangle-area', chain: ['keepAbove', 'total', 'rectangleArea'], depths: 3 },
-  // The tranche compositions the held-out side reserves.
+  { id: 'below-count-rectangle-add-rate', chain: ['keepBelow', 'count', 'rectangleArea', 'addRate'], depths: 4 },
+  { id: 'above-total-elapsed', chain: ['keepAbove', 'total', 'elapsed'], depths: 3 },
+  { id: 'below-count-elapsed-add-rate', chain: ['keepBelow', 'count', 'elapsed', 'addRate'], depths: 4 },
+  { id: 'above-largest-path-exists', chain: ['keepAbove', 'largest', 'pathExists'], depths: 3 },
+  // The tranche compositions the held-out side reserves, so the trainer never
+  // sees these whole chains.
+  { id: 'below-largest-path-exists', chain: ['keepBelow', 'largest', 'pathExists'], depths: 3 },
   { id: 'below-total-elapsed', chain: ['keepBelow', 'total', 'elapsed'], depths: 3 },
-  { id: 'above-smallest-path-exists', chain: ['keepAbove', 'smallest', 'pathExists'], depths: 3 },
-  { id: 'below-probability', chain: ['keepBelow', 'probability'], depths: 2 },
   { id: 'below-largest-rectangle-area', chain: ['keepBelow', 'largest', 'rectangleArea'], depths: 3 }
 ]);
 
@@ -454,9 +459,8 @@ export const HELD_OUT = Object.freeze([
   'above-total-percent-discount',
   'above-third-largest-percent',
   'keep-below-total-ratio',
+  'below-largest-path-exists',
   'below-total-elapsed',
-  'above-smallest-path-exists',
-  'below-probability',
   'below-largest-rectangle-area'
 ]);
 

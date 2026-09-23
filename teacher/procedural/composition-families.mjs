@@ -146,8 +146,11 @@ function drawSlots(composition, random) {
     if (names.has('double')) {
       slots.multiplier = 2 + Math.floor(random() * 2);
     }
-    if (names.has('keepDivisibleBy') || names.has('modulo') || names.has('ratioPer') || names.has('probability')) {
+    if (names.has('keepDivisibleBy') || names.has('modulo') || names.has('ratioPer')) {
       slots.divisor = 3 + Math.floor(random() * 6);
+    }
+    if (names.has('probability')) {
+      slots.favourableDivisor = 3 + Math.floor(random() * 6);
     }
     if (names.has('percentOf') || names.has('discount')) {
       slots.pct = 10 * (1 + Math.floor(random() * 9));
@@ -259,7 +262,7 @@ function walkChain(composition, slots) {
       }
     }
     if (name === 'probability') {
-      const favourable = current.filter((value) => value % slots.divisor === 0).length;
+      const favourable = current.filter((value) => value % slots.favourableDivisor === 0).length;
       if (favourable === 0 || favourable === current.length) {
         return null; // some but not all outcomes must be favourable
       }
@@ -287,10 +290,10 @@ function operatorSentence(name, slots) {
 /** The circuit lines of one operator: the plan transcription, one or more lines per stage. */
 function operatorLines(name, index) {
   if (name === 'keepAbove') {
-    return [`const kept${index} = values.filter((value) => value > slots.threshold);`];
+    return [`const kept${index} = current.filter((value) => value > slots.threshold);`];
   }
   if (name === 'keepBelow') {
-    return [`const kept${index} = values.filter((value) => value < slots.threshold);`];
+    return [`const kept${index} = current.filter((value) => value < slots.threshold);`];
   }
   if (name === 'total') {
     return [`const total${index} = current.reduce((sum, value) => sum + value, 0);`];
@@ -317,7 +320,7 @@ function operatorLines(name, index) {
     return [`const adjusted${index} = current - slots.rate;`];
   }
   if (name === 'keepDivisibleBy') {
-    return [`const kept${index} = values.filter((value) => value % slots.divisor === 0);`];
+    return [`const kept${index} = current.filter((value) => value % slots.divisor === 0);`];
   }
   if (name === 'modulo') {
     return [`const adjusted${index} = current % slots.divisor;`];
@@ -341,7 +344,7 @@ function operatorLines(name, index) {
     return [`const adjusted${index} = current * current;`];
   }
   if (name === 'elapsed') {
-    return [`const adjusted${index} = current / slots.per;`];
+    return [`const adjusted${index} = current * slots.per;`];
   }
   if (name === 'rectangleArea') {
     return [`const adjusted${index} = current * slots.width;`];
@@ -351,7 +354,7 @@ function operatorLines(name, index) {
   }
   if (name === 'probability') {
     return [
-      `const favourable${index} = current.filter((value) => value % slots.divisor === 0).length;`,
+      `const favourable${index} = current.filter((value) => value % slots.favourableDivisor === 0).length;`,
       `const total${index} = current.length;`,
       `let divisorA${index} = favourable${index};`,
       `let divisorB${index} = total${index};`,
@@ -480,7 +483,8 @@ export function compositionFamily(composition) {
       if (names.has('addRate') || names.has('subtractRate')) slots.rate = 0;
       if (names.has('perUnit')) slots.perUnit = 0;
       if (names.has('double')) slots.multiplier = 0;
-      if (names.has('keepDivisibleBy') || names.has('modulo') || names.has('ratioPer') || names.has('probability')) slots.divisor = 0;
+      if (names.has('keepDivisibleBy') || names.has('modulo') || names.has('ratioPer')) slots.divisor = 0;
+      if (names.has('probability')) slots.favourableDivisor = 0;
       if (names.has('percentOf') || names.has('discount')) slots.pct = 0;
       if (names.has('nthLargest')) slots.nth = 0;
       if (names.has('elapsed')) { slots.per = 0; slots.label = ''; }
@@ -561,12 +565,12 @@ export function compositionFamily(composition) {
           continue;
         }
         if (name === 'elapsed') {
-          const match = /convert it into whole (hours|days)$/.exec(sentence);
+          const match = /convert it into (minutes|hours) by the factor of (\d+)$/.exec(sentence);
           if (match === null) {
             throw new Error(`operation ${index + 1} is not the time conversion of this family`);
           }
           slots.label = match[1];
-          slots.per = match[1] === 'days' ? 24 : 60;
+          slots.per = Number(match[2]);
           continue;
         }
         if (name === 'neighbourCount') {
@@ -591,7 +595,7 @@ export function compositionFamily(composition) {
           if (match === null) {
             throw new Error(`operation ${index + 1} is not the probability step of this family`);
           }
-          slots.divisor = Number(match[1]);
+          slots.favourableDivisor = Number(match[1]);
           continue;
         }
         if (name === 'rectangleArea') {
