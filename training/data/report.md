@@ -1,7 +1,7 @@
 # Trainer-view export report
 
 Derived by `training/export.mjs` from the shipped trees under `training-data/`;
-dataset snapshot `cc1929f3d7c3da19f17bf254758c8d9e52c42324e35f01b13bff16c7bf423f00`. The report is deterministic and carries no timestamp.
+dataset snapshot `57daa1d42132f5f7f2abb9c1d2fe667512dd38983d467f0658e80f5cba405d99`. The report is deterministic and carries no timestamp.
 
 | book | rows | no-knowledge | knowledge | templates | plans |
 | --- | --- | --- | --- | --- | --- |
@@ -10,10 +10,10 @@ dataset snapshot `cc1929f3d7c3da19f17bf254758c8d9e52c42324e35f01b13bff16c7bf423f
 | decompose-to-solve | 900 | 900 | 0 | 9 | 9 |
 | logical-reasoning | 990 | 990 | 0 | 99 | 99 |
 | mathematical-thinking | 990 | 935 | 55 | 600 | 579 |
-| procedural-arithmetic | 2400 | 2400 | 0 | 60 | 60 |
+| procedural-arithmetic | 2720 | 2720 | 0 | 68 | 68 |
 | scientific-reasoning | 975 | 950 | 25 | 39 | 39 |
 | world-as-a-system | 980 | 980 | 0 | 196 | 49 |
-| all books | 9175 | 9095 | 80 | 1120 | 953 |
+| all books | 9495 | 9415 | 80 | 1128 | 961 |
 
 ## Distributions
 
@@ -49,10 +49,10 @@ of the solution, `jsEval body lines` the non-empty lines after the `jsEval` decl
 | mathematical-thinking | wire declarations | 2 | 2 | 2 | 3 | 3 |
 | mathematical-thinking | jsEval body lines | 2 | 6 | 15 | 30 | 40 |
 | mathematical-thinking | $ dependencies | 1 | 1 | 1 | 2 | 2 |
-| procedural-arithmetic | statement characters | 70 | 176 | 242 | 278 | 285 |
-| procedural-arithmetic | target characters | 341 | 889 | 1617 | 3322 | 3330 |
+| procedural-arithmetic | statement characters | 70 | 186 | 250 | 279 | 290 |
+| procedural-arithmetic | target characters | 341 | 829 | 1584 | 3322 | 3330 |
 | procedural-arithmetic | wire declarations | 2 | 2 | 4 | 4 | 4 |
-| procedural-arithmetic | jsEval body lines | 5 | 16 | 22 | 40 | 40 |
+| procedural-arithmetic | jsEval body lines | 5 | 15 | 24 | 40 | 40 |
 | procedural-arithmetic | $ dependencies | 1 | 1 | 3 | 3 | 3 |
 | scientific-reasoning | statement characters | 578 | 869 | 1149 | 1361 | 1545 |
 | scientific-reasoning | target characters | 947 | 1969 | 3435 | 4915 | 4951 |
@@ -64,10 +64,10 @@ of the solution, `jsEval body lines` the non-empty lines after the `jsEval` decl
 | world-as-a-system | wire declarations | 2 | 2 | 2 | 2 | 2 |
 | world-as-a-system | jsEval body lines | 9 | 47 | 70 | 98 | 98 |
 | world-as-a-system | $ dependencies | 1 | 1 | 1 | 1 | 1 |
-| all books | statement characters | 57 | 363 | 809 | 1224 | 1545 |
-| all books | target characters | 110 | 1508 | 2827 | 4050 | 5556 |
+| all books | statement characters | 57 | 351 | 802 | 1223 | 1545 |
+| all books | target characters | 110 | 1472 | 2825 | 4048 | 5556 |
 | all books | wire declarations | 2 | 2 | 2 | 4 | 4 |
-| all books | jsEval body lines | 2 | 16 | 41 | 70 | 98 |
+| all books | jsEval body lines | 2 | 15 | 41 | 70 | 98 |
 | all books | $ dependencies | 1 | 1 | 1 | 3 | 3 |
 
 ## Longest targets

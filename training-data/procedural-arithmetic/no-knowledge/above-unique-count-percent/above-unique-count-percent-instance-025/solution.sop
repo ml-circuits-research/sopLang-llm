@@ -22,8 +22,7 @@ const values = slots.values;
 probe(Array.isArray(values) && values.length > 0, "the records must be a non-empty list");
 let current = values;
 // stage 1: keepAbove
-const kept0 = values.filter((value) => value > slots.threshold);
-probe(kept0.length > 0 && kept0.length < values.length, "the filter must keep some records and drop some");
+const kept0 = current.filter((value) => value > slots.threshold);
 current = kept0;
 // stage 2: uniqueCount
 const count1 = new Set(current).size;

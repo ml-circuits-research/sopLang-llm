@@ -17,14 +17,8 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Array.isArray(slots.values) && slots.values.length > 0, "the records must be a non-empty list");
 const values = slots.values;
-for (const value of values) {
-  probe(Number.isInteger(value) && value > 0, "every record must be a positive whole number of crates");
-}
-probe(Number.isInteger(slots.threshold) && slots.threshold > 0, "the threshold must be a positive whole number of crates");
 const kept = values.filter((value) => value >= slots.threshold);
-probe(kept.length > 0, "the threshold must leave at least one record");
 let total = 0;
 for (const value of kept) {
   total += value;

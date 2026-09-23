@@ -2,7 +2,7 @@
 
 Source: `teacher/procedural/arithmetic.mjs` (generator arithmetic.mjs 1.3.0, seed 20260921, 40 instances per family).
 
-Accepted examples: 2760. Rejected candidates: 0. Evaluation holdout: 360 (13.0%). Distinct plans: 69. Distinct compiled circuits: 2760 (a circuit embeds the values it was compiled from, so the count equals the accepted set unless two problems compile to identical text).
+Accepted examples: 3200. Rejected candidates: 0. Evaluation holdout: 480 (15.0%). Distinct plans: 80. Distinct compiled circuits: 3200 (a circuit embeds the values it was compiled from, so the count equals the accepted set unless two problems compile to identical text).
 
 Acceptance class: every accepted example is `constructed_verified` as defined by `DS008-training-data`: the executed circuit produced the answer of the recorded latent plan, and the family oracle computed that answer by an independent route. The printed-answer signal of a book source does not exist for a generated instance, so the manifest rows record the generator, the family, the instance index, and the sampling seed instead of a source span.
 
@@ -10,19 +10,22 @@ Probes: every assembled circuit carries the probe harness of `teacher/families/p
 
 ## Accepted by category
 
-- no-knowledge: 2760
+- no-knowledge: 3200
 
 ## Accepted by problem type
 
-no-knowledge/above-count (40), no-knowledge/above-count-double (40), no-knowledge/above-count-per-unit-add-rate (40), no-knowledge/above-largest-add-rate (40),
-no-knowledge/above-largest-double (40), no-knowledge/above-largest-per-unit-subtract-rate (40), no-knowledge/above-largest-square-area (40), no-knowledge/above-second-largest (40),
-no-knowledge/above-smallest-double (40), no-knowledge/above-smallest-per-unit-add-rate (40), no-knowledge/above-third-largest-percent (40), no-knowledge/above-total (40),
-no-knowledge/above-total-add-rate (40), no-knowledge/above-total-discount (40), no-knowledge/above-total-double-per-unit-add-rate (40), no-knowledge/above-total-modulo (40),
-no-knowledge/above-total-modulo-add-rate (40), no-knowledge/above-total-per-unit-add-rate (40), no-knowledge/above-total-percent (40),
-no-knowledge/above-total-percent-discount (40), no-knowledge/above-total-ratio (40), no-knowledge/above-total-subtract-rate (40), no-knowledge/above-unique-count (40),
-no-knowledge/above-unique-count-percent (40), no-knowledge/average-of-qualifying (40), no-knowledge/below-count (40), no-knowledge/below-count-per-unit-add-rate (40),
-no-knowledge/below-largest-add-rate (40), no-knowledge/below-largest-double (40), no-knowledge/below-largest-per-unit-double-add-rate (40), no-knowledge/below-total (40),
-no-knowledge/below-total-add-rate (40), no-knowledge/below-total-double-subtract-rate (40), no-knowledge/below-total-per-unit-subtract-rate (40),
+no-knowledge/above-count (40), no-knowledge/above-count-double (40), no-knowledge/above-count-neighbour-add-rate (40), no-knowledge/above-count-neighbour-count (40),
+no-knowledge/above-count-per-unit-add-rate (40), no-knowledge/above-divisible-probability (40), no-knowledge/above-largest-add-rate (40), no-knowledge/above-largest-double (40),
+no-knowledge/above-largest-path-exists (40), no-knowledge/above-largest-per-unit-subtract-rate (40), no-knowledge/above-largest-square-area (40),
+no-knowledge/above-second-largest (40), no-knowledge/above-smallest-double (40), no-knowledge/above-smallest-per-unit-add-rate (40), no-knowledge/above-third-largest-percent (40),
+no-knowledge/above-total (40), no-knowledge/above-total-add-rate (40), no-knowledge/above-total-discount (40), no-knowledge/above-total-double-per-unit-add-rate (40),
+no-knowledge/above-total-elapsed (40), no-knowledge/above-total-modulo (40), no-knowledge/above-total-modulo-add-rate (40), no-knowledge/above-total-per-unit-add-rate (40),
+no-knowledge/above-total-percent (40), no-knowledge/above-total-percent-discount (40), no-knowledge/above-total-ratio (40), no-knowledge/above-total-rectangle-area (40),
+no-knowledge/above-total-subtract-rate (40), no-knowledge/above-unique-count (40), no-knowledge/above-unique-count-percent (40), no-knowledge/average-of-qualifying (40),
+no-knowledge/below-count (40), no-knowledge/below-count-elapsed-add-rate (40), no-knowledge/below-count-per-unit-add-rate (40), no-knowledge/below-count-rectangle-add-rate (40),
+no-knowledge/below-largest-add-rate (40), no-knowledge/below-largest-double (40), no-knowledge/below-largest-path-exists (40),
+no-knowledge/below-largest-per-unit-double-add-rate (40), no-knowledge/below-largest-rectangle-area (40), no-knowledge/below-total (40), no-knowledge/below-total-add-rate (40),
+no-knowledge/below-total-double-subtract-rate (40), no-knowledge/below-total-elapsed (40), no-knowledge/below-total-per-unit-subtract-rate (40),
 no-knowledge/cheaper-rate-per-unit (40), no-knowledge/conversion-chain-leftover (40), no-knowledge/count-letter-in-word (40), no-knowledge/count-self-referential-letter (40),
 no-knowledge/crate-count-with-partial-last (40), no-knowledge/depletion-days-and-lead-time (40), no-knowledge/distinct-letters-in-word (40), no-knowledge/elapsed-minutes (40),
 no-knowledge/filtered-records-above-a-threshold (40), no-knowledge/filtered-records-at-least-a-threshold (40), no-knowledge/filtered-total (40),
@@ -38,9 +41,13 @@ no-knowledge/two-tier-price (40), no-knowledge/vowel-richest-word (40), no-knowl
 
 - family above-count: 40
 - family above-count-double: 40
+- family above-count-neighbour-add-rate: 40
+- family above-count-neighbour-count: 40
 - family above-count-per-unit-add-rate: 40
+- family above-divisible-probability: 40
 - family above-largest-add-rate: 40
 - family above-largest-double: 40
+- family above-largest-path-exists: 40
 - family above-largest-per-unit-subtract-rate: 40
 - family above-largest-square-area: 40
 - family above-second-largest: 40
@@ -51,24 +58,31 @@ no-knowledge/two-tier-price (40), no-knowledge/vowel-richest-word (40), no-knowl
 - family above-total-add-rate: 40
 - family above-total-discount: 40
 - family above-total-double-per-unit-add-rate: 40
+- family above-total-elapsed: 40
 - family above-total-modulo: 40
 - family above-total-modulo-add-rate: 40
 - family above-total-per-unit-add-rate: 40
 - family above-total-percent: 40
 - family above-total-percent-discount: 40
 - family above-total-ratio: 40
+- family above-total-rectangle-area: 40
 - family above-total-subtract-rate: 40
 - family above-unique-count: 40
 - family above-unique-count-percent: 40
 - family average-of-qualifying: 40
 - family below-count: 40
+- family below-count-elapsed-add-rate: 40
 - family below-count-per-unit-add-rate: 40
+- family below-count-rectangle-add-rate: 40
 - family below-largest-add-rate: 40
 - family below-largest-double: 40
+- family below-largest-path-exists: 40
 - family below-largest-per-unit-double-add-rate: 40
+- family below-largest-rectangle-area: 40
 - family below-total: 40
 - family below-total-add-rate: 40
 - family below-total-double-subtract-rate: 40
+- family below-total-elapsed: 40
 - family below-total-per-unit-subtract-rate: 40
 - family cheaper-rate-per-unit: 40
 - family conversion-chain-leftover: 40
@@ -115,7 +129,7 @@ Every accepted example ships the answer its source prints.
 
 ## Family integrity checks
 
-Templates covered: 69, of which 69 have several variants and 69 of those print several distinct answers, which is what shows that the computation reacts to its input.
+Templates covered: 80, of which 80 have several variants and 80 of those print several distinct answers, which is what shows that the computation reacts to its input.
 
 No template with several variants prints one answer for every variant.
 

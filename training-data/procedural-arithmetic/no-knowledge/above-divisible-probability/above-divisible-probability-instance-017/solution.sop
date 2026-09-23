@@ -1,0 +1,40 @@
+@slots literal
+{
+  "depot": "hill depot",
+  "unit": "tickets",
+  "values": [
+    5,
+    30,
+    5,
+    24,
+    13
+  ],
+  "threshold": 11,
+  "divisor": 6,
+  "favourableDivisor": 8
+}
+
+@answer jsEval
+const slots = $slots;
+const values = slots.values;
+probe(Array.isArray(values) && values.length > 0, "the records must be a non-empty list");
+let current = values;
+// stage 1: keepAbove
+const kept0 = current.filter((value) => value > slots.threshold);
+current = kept0;
+// stage 2: keepDivisibleBy
+const kept1 = current.filter((value) => value % slots.divisor === 0);
+current = kept1;
+// stage 3: probability
+const favourable2 = current.filter((value) => value % slots.favourableDivisor === 0).length;
+const total2 = current.length;
+let divisorA2 = favourable2;
+let divisorB2 = total2;
+while (divisorB2 !== 0) { const remainder2 = divisorB2; divisorB2 = divisorA2 % divisorB2; divisorA2 = remainder2; }
+const numerator2 = favourable2 / divisorA2;
+const denominator2 = total2 / divisorA2;
+const answer2 = denominator2 === 1 ? String(numerator2) : numerator2 + "/" + denominator2;
+current = answer2;
+probe(typeof current === "string" && /^\d+(\/\d+)?$/.test(current), "the answer must be a reduced fraction");
+return current + ".";
+
