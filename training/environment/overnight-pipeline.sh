@@ -71,23 +71,39 @@ baseline_of() {
   fi
   node evaluation/run-prose-eval.mjs --experiment "cmp-base-holdout-prose-$name" --gguf "$gguf" --port "$port" >> evaluation/registry/overnight-pipeline.log 2>&1
 }
-note "shootout: prose baselines for the two new bases"
+note "shootout: prose baselines for the candidate bases"
 baseline_of 15g training/models/qwen2.5-1.5b-instruct training/checkpoints/base-1.5b-general-f16.gguf 8135
 baseline_of q3 training/models/qwen3-1.7b training/checkpoints/base-qwen3-17b-f16.gguf 8136
+baseline_of gemma training/models/gemma-3-1b-it training/checkpoints/base-gemma3-1b-f16.gguf 8137
 note "shootout done"
-grep -hE "printed answer matched" evaluation/registry/cmp-base-holdout-prose-15g/report.md evaluation/registry/cmp-base-holdout-prose-q3/report.md >> evaluation/registry/overnight-pipeline.log
+grep -hE "printed answer matched" evaluation/registry/cmp-base-holdout-prose-15g/report.md evaluation/registry/cmp-base-holdout-prose-q3/report.md evaluation/registry/cmp-base-holdout-prose-gemma/report.md >> evaluation/registry/overnight-pipeline.log
 
-# The owner wants the 1.7B arm; the shootout only vetoes it when the base is
-# clearly worse than the coder incumbent (30 of 585 in prose).
-q3="$(grep -oE '[0-9]+ \| 585' evaluation/registry/cmp-base-holdout-prose-q3/report.md | head -1 | cut -d' ' -f1 || echo 0)"
-if [ "${q3:-0}" -lt 30 ]; then
-  note "Qwen3-1.7B prose baseline $q3 is below the coder's 30; NOT training on it — a human decides" >&2
+# The owner's rule: train the next arm on the best base found, and a candidate
+# must clear the coder incumbent's 30 of 585 in prose to earn a training run.
+score_of() { grep -oE '[0-9]+ \| 585' "$1" 2>/dev/null | head -1 | cut -d' ' -f1; }
+best=""
+best_score=30
+for cand in "q3:training/models/qwen3-1.7b:training/environment/base-model-qwen3-17b.json" \
+           "gemma:training/models/gemma-3-1b-it:training/environment/base-model-gemma3-1b.json" \
+           "15g:training/models/qwen2.5-1.5b-instruct:training/environment/base-model-1.5b-general.json"; do
+  IFS=':' read -r slug dir manifest_name <<< "$cand"
+  score="$(score_of "evaluation/registry/cmp-base-holdout-prose-$slug/report.md")"
+  score="${score:-0}"
+  if [ "$score" -gt "$best_score" ]; then
+    best_score="$score"
+    best="$slug:$dir:$manifest_name"
+  fi
+done
+if [ -z "$best" ]; then
+  note "no candidate base cleared the coder's 30 of 585 in prose; NOT training — a human decides" >&2
   exit 4
 fi
-note "Qwen3-1.7B prose baseline $q3 passes the floor; launching exp-017-qwen3-17b"
-bash training/environment/start-detached.sh train exp-017-qwen3-17b --epochs 2 --lr 1e-4 --batch-size 4 --grad-accum 8 --gradient-checkpointing --save-steps 150 --extra-data training/data/preservation-10.jsonl --patience 5 --base-model training/models/qwen3-1.7b --model-manifest training/environment/base-model-qwen3-17b.json >> evaluation/registry/overnight-pipeline.log 2>&1
-wait_chain exp-017-qwen3-17b
-prune_ggufs exp-017-qwen3-17b
+IFS=':' read -r best_slug best_dir best_manifest <<< "$best"
+note "the best base is $best_slug with a prose baseline of $best_score of 585; launching exp-017-$best_slug"
+bash training/environment/start-detached.sh train "exp-017-$best_slug" --epochs 2 --lr 1e-4 --batch-size 4 --grad-accum 8 --gradient-checkpointing --save-steps 150 --extra-data training/data/preservation-10.jsonl --patience 5 --base-model "$best_dir" --model-manifest "$best_manifest" >> evaluation/registry/overnight-pipeline.log 2>&1
+wait_chain "exp-017-$best_slug"
+prune_ggufs "exp-017-$best_slug"
+ARM_017="exp-017-$best_slug"
 note "PIPELINE COMPLETE: exp-014, exp-015, exp-016, exp-017 all closed"
 {
   echo "=== exp-014 (1.5B, jsEval tranche) ==="
@@ -96,12 +112,12 @@ note "PIPELINE COMPLETE: exp-014, exp-015, exp-016, exp-017 all closed"
   grep -E "oracle match|capability probes" evaluation/registry/exp-015-deep-chains-05/series.log | tail -2
   echo "=== exp-016 (1.5B, declarative wires) ==="
   grep -E "oracle match|capability probes" evaluation/registry/exp-016-wires/series.log | tail -2
-  echo "=== exp-017 (Qwen3-1.7B, declarative wires) ==="
-  grep -E "oracle match|capability probes" evaluation/registry/exp-017-qwen3-17b/series.log | tail -2
+  echo "=== exp-017 (best shootout base, declarative wires) ==="
+  grep -E "oracle match|capability probes" "evaluation/registry/$ARM_017/series.log" 2>/dev/null | tail -2
   echo "=== prose baselines ==="
-  grep -hE "printed answer matched" evaluation/registry/cmp-base-holdout-prose-15g/report.md evaluation/registry/cmp-base-holdout-prose-q3/report.md
+  grep -hE "printed answer matched" evaluation/registry/cmp-base-holdout-prose-15g/report.md evaluation/registry/cmp-base-holdout-prose-q3/report.md evaluation/registry/cmp-base-holdout-prose-gemma/report.md
   echo "=== wire arms: classes ==="
-  for exp in exp-014-deep-chains exp-016-wires exp-017-qwen3-17b; do
+  for exp in exp-014-deep-chains exp-016-wires "$ARM_017"; do
     printf "%s: " "$exp"
     python3 -c "import json; m=json.load(open('evaluation/registry/$exp/metrics.json')); print(m['classes'])"
   done
