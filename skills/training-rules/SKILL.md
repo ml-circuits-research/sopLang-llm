@@ -80,6 +80,16 @@ makes its error class impossible instead of merely rarer (proposal_wires.md is t
 A new wire command is a parser/runtime change with a version increment and a dataset
 migration — never a silent addition.
 
+## 5c. Base selection: the shootout and the 2B ceiling (owner decision, 2026-09-23)
+
+The next base is chosen by a measured shootout, not by branding: the prose baseline on the
+same 585 eval items for every candidate — 0.5B coder (63), 1.5B coder (30), 1.5B general,
+Qwen3-1.7B — and the winner must beat the incumbent on reasoning while holding code emission
+(the procedural recall the coder base delivers). No jump to the 4B and 8B classes until the
+sub-2B class is exhausted and shown not to be enough: scale raised in-vocabulary recall
+(322 vs 258 at 1.5B) but never moved the vocabulary boundary (books 2 of 225 at both sizes),
+so scale is a multiplier of proven data, not a substitute for it.
+
 ## 6. The four-model comparison
 
 The bases and the students are different instruments:
