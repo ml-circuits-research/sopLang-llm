@@ -564,32 +564,39 @@ async function askTurn({ question, base, alias, compare, session, options, runti
     compareState = lane.state;
     if (lane.state !== 'ready') warnings.push(`the 0.5B base model is unavailable: ${lane.detail}`);
   }
-  const promises = [ask({ question, base, alias, options, runtime })];
-  if (compareState === 'ready') promises.push(askBase({ question, compare, options }));
+  // Each lane's ask is named, never positional, so a missing lane cannot shift its
+  // neighbour's result into the wrong slot — the crash the first four-block run hit
+  // when the 1.5B base existed but the 1.5B student did not.
+  const results = { main: ask({ question, base, alias, options, runtime }) };
+  if (compareState === 'ready') results.base05 = askBase({ question, compare, options });
   // The 1.5B base lane joins on its own; the 1.5B student joins when its winner exists.
   if (session.base15 !== null) {
     const baseLane = await ensureLane(session.base15, { gguf: BASE_GGUF_15, port: lanePorts(options.port).base15, options });
     if (baseLane.state !== 'ready') {
       warnings.push(`the 1.5B base model is unavailable: ${baseLane.detail}`);
     } else {
-      promises.push(askBase({ question, compare: baseLane, options }));
+      results.base15 = askBase({ question, compare: baseLane, options });
     }
   }
-  if (session.student15 !== null && session.base15 !== null) {
+  if (session.student15 !== null) {
     const studentLane = await ensureLane(session.student15, { gguf: session.student15.gguf, port: lanePorts(options.port).student15, options });
     if (studentLane.state !== 'ready') {
       warnings.push(`the 1.5B student is unavailable: ${studentLane.detail}`);
     } else {
-      promises.push(ask({ question, base: studentLane.base, alias: studentLane.alias, options, runtime }));
+      results.student15 = ask({ question, base: studentLane.base, alias: studentLane.alias, options, runtime });
     }
   }
-  const [turn, baseTurn, turn15, baseTurn15] = await Promise.all(promises);
-  if (baseTurn !== undefined) turn.baseComparison = baseTurn;
-  if (turn15 !== undefined) {
-    turn.student15 = turn15;
+  const settled = {};
+  const names = Object.keys(results);
+  const values = await Promise.all(Object.values(results));
+  names.forEach((name, index) => { settled[name] = values[index]; });
+  const turn = settled.main;
+  if (settled.base05 !== undefined) turn.baseComparison = settled.base05;
+  if (settled.base15 !== undefined) turn.base15 = settled.base15;
+  if (settled.student15 !== undefined) {
+    turn.student15 = settled.student15;
     turn.student15Experiment = session.student15.experiment;
   }
-  if (baseTurn15 !== undefined) turn.base15 = baseTurn15;
   return { turn, warnings };
 }
 
