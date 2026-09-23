@@ -7,7 +7,7 @@ code=$?
 echo "download exit $code" >> /tmp/dl-general-15.log
 if [ $code -eq 0 ]; then
   training/.venv/bin/python training/environment/pin_base_model.py \
-    --model training/models/qwen2.5-1.5b-instruct \
+    --model "$(pwd)/training/models/qwen2.5-1.5b-instruct" \
     --repo Qwen/Qwen2.5-1.5B-Instruct \
     --out training/environment/base-model-1.5b-general.json >> /tmp/dl-general-15.log 2>&1
 fi
