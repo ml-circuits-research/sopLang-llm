@@ -224,6 +224,15 @@ ${COMMANDS.map((command) => `  ${command.usage.padEnd(COMMAND_WIDTH)}  ${command
  * the comparison is exactly that difference and reformatting it would hide it.
  */
 /** The untrained 1.5B base's block: the same shape as the 0.5B one, its own colour. */
+/** The measured line of one generation: completion tokens and the request-to-answer time. */
+function timingOf(turn) {
+  const tokens = turn.usage?.completion_tokens ?? null;
+  const seconds = turn.latencyMs === null || turn.latencyMs === undefined ? null : (turn.latencyMs / 1000).toFixed(1);
+  const parts = [tokens === null ? null : `${tokens} tokens`, seconds === null ? null : `${seconds}s total`]
+    .filter((part) => part !== null);
+  return parts.length === 0 ? null : `${ANSI.dim}(${parts.join(', ')})${ANSI.reset}`;
+}
+
 function renderComparison15(base) {
   const lines = [`${ANSI.bold}${ANSI.magenta}── BASE MODEL 1.5B (untrained) ──${ANSI.reset}`];
   if (base.error !== null) {
@@ -288,9 +297,11 @@ function renderExchange(turn, options) {
       }
       if (turn.student15.className === 'executed') {
         const answer = turn.student15.answer;
-        lines.push(`${ANSI.green}✔ ${typeof answer === 'string' ? answer : JSON.stringify(answer)}${ANSI.reset}`, '');
+        lines.push(`${ANSI.green}✔ ${typeof answer === 'string' ? answer : JSON.stringify(answer)}${ANSI.reset}`);
+        const timing15 = timingOf(turn.student15);
+        if (timing15 !== null) lines.push(timing15);
       } else {
-        lines.push(`${ANSI.red}✗ ${turn.student15.className}: ${turn.student15.detail ?? turn.student15.outcome?.code ?? 'did not execute'}${ANSI.reset}`, '');
+        lines.push(`${ANSI.red}✗ ${turn.student15.className}: ${turn.student15.detail ?? turn.student15.outcome?.code ?? 'did not execute'}${ANSI.reset}`);
       }
     }
     lines.push(`${ANSI.bold}${ANSI.cyan}── FINE-TUNED MODEL ──${ANSI.reset}`);
@@ -314,6 +325,8 @@ function renderExchange(turn, options) {
   if (turn.className === 'executed') {
     const answer = turn.answer;
     lines.push(`${ANSI.green}✔ ${typeof answer === 'string' ? answer : JSON.stringify(answer)}${ANSI.reset}`);
+    const timing = timingOf(turn);
+    if (timing !== null) lines.push(timing);
     return lines.join('\n');
   }
   lines.push(`${ANSI.red}✗ the plan did not execute: ${turn.outcome?.status ?? 'failed'}${turn.outcome?.code ? ':' + turn.outcome.code : ''}${ANSI.reset}`);
