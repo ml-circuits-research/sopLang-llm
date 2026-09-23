@@ -446,45 +446,13 @@ function lanePorts(port) {
 }
 
 async function ensureBaseServer(session, options) {
+  // The 0.5B base lane uses the same free-port scan as the 1.5B lanes: its preferred
+  // port is the next one up, and a port held by another model is left alone while the
+  // lane moves on. The lane record keeps its original shape for the renderer.
   const compare = session.compare;
-  if (compare.state === 'ready' || compare.state === 'failed') {
-    return compare;
-  }
-  const port = options.port + 1;
-  const base = `http://127.0.0.1:${port}`;
-  if (await serverIsUp(base)) {
-    // Something already answers on the comparison port. It is not necessarily the
-    // base artifact — another session may serve a checkpoint there — so the alias is
-    // read from the server itself rather than assumed, and a server serving a student
-    // is refused. Comparing a student against a student would produce two compiled
-    // answers and call the comparison a success.
-    const served = await servedAlias(base);
-    if (served === null || served === aliasFor(BASE_GGUF)) {
-      compare.state = 'ready';
-      compare.base = base;
-      compare.alias = served ?? aliasFor(BASE_GGUF);
-      compare.managed = null;
-      compare.detail = served === null ? 'an unnamed server on the comparison port is assumed to serve the base model' : null;
-      return compare;
-    }
-    compare.state = 'failed';
-    compare.detail = `port ${port} serves "${served}", not the untuned base model; stop it or pass a different --port`;
-    return compare;
-  }
-  if (!existsSync(BASE_GGUF)) {
-    compare.state = 'failed';
-    compare.detail = `the base artifact is missing at ${BASE_GGUF.replace(`${REPOSITORY_ROOT}/`, '')}`;
-    return compare;
-  }
-  try {
-    process.stdout.write(`starting the untuned base model on port ${port} for the comparison …\n`);
-    compare.managed = await startServer({ gguf: BASE_GGUF, port, threads: options.threads });
-    compare.state = 'ready';
-    compare.base = base;
-    compare.alias = aliasFor(BASE_GGUF);
-  } catch (error) {
-    compare.state = 'failed';
-    compare.detail = error.message;
+  await ensureLane(compare, { gguf: BASE_GGUF, port: options.port + 1, options });
+  if (compare.state === 'ready' && compare.managed === null && compare.detail === null && compare.base === null) {
+    compare.base = `http://127.0.0.1:${options.port + 1}`;
   }
   return compare;
 }
@@ -503,35 +471,44 @@ async function ensureLane(lane, { gguf, port, options }) {
   if (lane.state === 'ready' || lane.state === 'failed') {
     return lane;
   }
-  const base = `http://127.0.0.1:${port}`;
-  if (await serverIsUp(base)) {
-    const served = await servedAlias(base);
-    if (served === null || served === aliasFor(gguf)) {
-      lane.state = 'ready';
-      lane.base = base;
-      lane.alias = served ?? aliasFor(gguf);
-      lane.managed = null;
-      lane.detail = served === null ? 'an unnamed server on the port is assumed to serve the requested model' : null;
-      return lane;
-    }
-    lane.state = 'failed';
-    lane.detail = `port ${port} serves "${served}", not ${aliasFor(gguf)}; stop it or pass a different --port`;
-    return lane;
-  }
   if (!existsSync(gguf)) {
     lane.state = 'failed';
     lane.detail = `the artifact is missing at ${gguf.replace(`${REPOSITORY_ROOT}/`, '')}`;
     return lane;
   }
-  try {
-    lane.managed = await startServer({ gguf, port, threads: options.threads });
-    lane.state = 'ready';
-    lane.base = base;
-    lane.alias = aliasFor(gguf);
-  } catch (error) {
-    lane.state = 'failed';
-    lane.detail = error.message;
+  // The preferred port is a hint, not a claim: a port already held by a different
+  // model — the evaluation chain's server, a leftover chat, anything — is left alone,
+  // and the lane moves up until it finds a free port. That is the difference from the
+  // main port, whose occupier the CLI stops, because the main port is the session's
+  // own while a lane's neighbour may be someone else's work.
+  for (let candidate = port; candidate < port + 16; candidate += 1) {
+    const base = `http://127.0.0.1:${candidate}`;
+    if (await serverIsUp(base)) {
+      const served = await servedAlias(base);
+      if (served === null || served === aliasFor(gguf)) {
+        lane.state = 'ready';
+        lane.base = base;
+        lane.alias = served ?? aliasFor(gguf);
+        lane.managed = null;
+        lane.detail = served === null ? 'an unnamed server on the port is assumed to serve the requested model' : null;
+        return lane;
+      }
+      continue;
+    }
+    try {
+      lane.managed = await startServer({ gguf, port: candidate, threads: options.threads });
+      lane.state = 'ready';
+      lane.base = base;
+      lane.alias = aliasFor(gguf);
+      return lane;
+    } catch (error) {
+      lane.state = 'failed';
+      lane.detail = error.message;
+      return lane;
+    }
   }
+  lane.state = 'failed';
+  lane.detail = `no free port in ${port}-${port + 15} for ${gguf.replace(`${REPOSITORY_ROOT}/`, '')}`;
   return lane;
 }
 
