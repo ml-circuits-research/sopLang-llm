@@ -154,7 +154,7 @@ test('the interactive loop answers commands locally and sends only questions to 
   const root = mkdtempSync(join(tmpdir(), 'chat-cli-'));
   const transcript = join(root, 'session.jsonl');
   try {
-    const child = spawn(process.execPath, ['evaluation/chat.mjs', '--base', `http://127.0.0.1:${server.address().port}`, '--no-1.5b'], {
+    const child = spawn(process.execPath, ['evaluation/chat.mjs', '--base', `http://127.0.0.1:${server.address().port}`, '--no-1.5b', '--retries', '0'], {
       cwd: REPOSITORY_ROOT,
       stdio: ['pipe', 'pipe', 'pipe']
     });
@@ -280,6 +280,7 @@ test('each model is asked in the mode it was trained for', () => {
         '--base', `http://127.0.0.1:${port}`,
         '--port', String(port - 1),
         '--no-1.5b',
+        '--retries', '0',
         '--once', 'How many cookies are left?'
       ], { encoding: 'utf8' });
       let stdout = '';
@@ -345,6 +346,60 @@ test('a port occupied by a different model is never silently reused', () => {
         assert.ok(stdout.includes('serves "student-other"'), `the mismatch must be named: ${stdout.slice(-400)}`);
         assert.ok(stdout.includes('still occupied') || stdout.includes('stopping the leftover'),
           `the CLI must not answer from the wrong model: ${stdout.slice(-400)}`);
+        resolve();
+      });
+    });
+  });
+});
+
+test('a failed plan is regenerated with the failure fed back, up to --retries times', () => {
+  // The deployed execution mode: the first shot fails, the failure is named to the
+  // model, and it regenerates. The fake fails the first two shots and succeeds on the
+  // third, so the contract is pinned: three requests, the retry hints present, and the
+  // final answer wins.
+  let shots = 0;
+  const bodies = [];
+  const server = createServer((request, response) => {
+    if (request.method === 'GET' && request.url === '/health') {
+      response.writeHead(200, { 'content-type': 'application/json' });
+      response.end('{"status":"ok"}');
+      return;
+    }
+    if (request.method === 'POST' && request.url === '/v1/chat/completions') {
+      let body = '';
+      request.on('data', (chunk) => { body += String(chunk); });
+      request.on('end', () => {
+        shots += 1;
+        bodies.push(JSON.parse(body));
+        const fail = shots < 3;
+        const content = fail ? 'not a program' : '@slots literal\n{"v": 7}\n\n@answer jsEval\nreturn $slots.v;';
+        response.writeHead(200, { 'content-type': 'application/json' });
+        response.end(JSON.stringify({ choices: [{ message: { role: 'assistant', content } }], usage: { completion_tokens: 5, prompt_tokens: 10 } }));
+      });
+      return;
+    }
+    response.writeHead(404);
+    response.end();
+  });
+  return new Promise((resolve) => {
+    server.listen(0, '127.0.0.1', () => {
+      const { port } = server.address();
+      const child = spawn(process.execPath, [
+        'evaluation/chat.mjs',
+        '--base', `http://127.0.0.1:${port}`,
+        '--no-1.5b',
+        '--once', 'What is 7 equal to?'
+      ], { encoding: 'utf8' });
+      let stdout = '';
+      child.stdout.on('data', (chunk) => { stdout += String(chunk); });
+      child.stderr.on('data', (chunk) => { stdout += String(chunk); });
+      child.on('close', () => {
+        server.close();
+        assert.equal(shots, 3, `three shots: one initial and two retries (got ${shots})`);
+        const lastMessages = bodies[1].messages ?? [];
+        const hint = lastMessages.find((message) => message.role === 'user' && String(message.content).includes('not a SOP Lang program'));
+        assert.ok(hint !== undefined, 'the second shot must carry the failure hint');
+        assert.ok(stdout.includes('✔ 7'), `the third shot must be the executed answer: ${stdout.slice(-300)}`);
         resolve();
       });
     });

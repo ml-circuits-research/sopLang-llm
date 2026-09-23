@@ -76,7 +76,7 @@ async function startServer({ gguf, port, threads }) {
 }
 
 function parseArguments(argv) {
-  const options = { gguf: null, experiment: null, base: null, port: 8087, maxTokens: 1024, threads: null, showPlan: false, once: null, useBoth: true, single: false, no15: false, help: false };
+  const options = { gguf: null, experiment: null, base: null, port: 8087, maxTokens: 1024, threads: null, showPlan: false, once: null, useBoth: true, single: false, no15: false, retries: 2, help: false };
   for (let index = 0; index < argv.length; index += 1) {
     const flag = argv[index];
     const value = () => {
@@ -91,6 +91,7 @@ function parseArguments(argv) {
     else if (flag === '--use-both') options.useBoth = true;
     else if (flag === '--single') options.single = true;
     else if (flag === '--no-1.5b') options.no15 = true;
+    else if (flag === '--retries') options.retries = Number(value());
     else if (flag === '--port') options.port = Number(value());
     else if (flag === '--max-tokens') options.maxTokens = Number(value());
     else if (flag === '--threads') options.threads = Number(value());
@@ -608,56 +609,95 @@ async function askBoth({ question, base, alias, compare, options, runtime }) {
 }
 
 async function ask({ question, base, alias, options, runtime }) {
-  const result = await generate({ base, model: alias, messages: buildMessages(question), temperature: 0, maxTokens: options.maxTokens, timeoutMs: 600000 });
-  const turn = {
-    question,
-    completion: result.completion,
-    usage: result.usage,
-    latencyMs: result.latencyMs,
-    attempts: result.attempts,
-    error: result.error,
-    detail: null,
-    program: null,
-    wires: [],
-    outcome: null,
-    answer: null,
-    className: null
-  };
-  if (result.error !== null) {
-    turn.className = 'generation_transport_error';
-    return turn;
+  // The student gets up to three shots per question. When a plan fails — it did not
+  // parse, its guard fired, or it was not a program at all — the failure is fed back
+  // in the profile's own vocabulary and the model regenerates, so a transient mistake
+  // costs a retry instead of a wrong turn. The scored evaluations stay single-shot;
+  // this retry loop is the deployed execution mode.
+  // `--retries N` names the extra shots after the first, so the default of two
+  // means three attempts in total, and a caller can raise it for a stubborn problem
+  // or set it to zero for the strict single-shot behaviour the scored runs use.
+  const maxAttempts = 1 + Math.max(0, Number(options.retries ?? 2));
+  let messages = buildMessages(question);
+  let lastTurn = null;
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    const result = await generate({ base, model: alias, messages, temperature: 0, maxTokens: options.maxTokens, timeoutMs: 600000 });
+    const turn = {
+      question,
+      completion: result.completion,
+      usage: result.usage,
+      latencyMs: result.latencyMs,
+      attempts: result.attempts,
+      attempt,
+      totalAttempts: maxAttempts,
+      error: result.error,
+      detail: null,
+      program: null,
+      wires: [],
+      outcome: null,
+      answer: null,
+      className: null
+    };
+    if (result.error !== null) {
+      turn.className = 'generation_transport_error';
+      lastTurn = turn;
+      break;
+    }
+    const extracted = extractProgram(result.completion);
+    if (!extracted.ok) {
+      turn.className = 'wrapper_rejected';
+      turn.detail = extracted.reason;
+    } else {
+      turn.program = extracted.program;
+      let circuit;
+      try {
+        circuit = parseCircuit(turn.program);
+      } catch (failure) {
+        turn.className = 'parse_invalid';
+        turn.detail = failure.message;
+      }
+      if (turn.className === null) {
+        turn.wires = circuit.wires.map((wire) => ({ name: wire.name, command: wire.command }));
+        try {
+          turn.outcome = await runtime.run(circuit, { outputs: ['answer'] });
+        } catch (failure) {
+          turn.className = 'execution_error';
+          turn.detail = `runtime threw: ${failure.message}`;
+        }
+        if (turn.className === null) {
+          if (turn.outcome.status === 'completed') {
+            turn.className = 'executed';
+            turn.answer = turn.outcome.outputs?.answer ?? null;
+          } else {
+            turn.className = 'execution_error';
+            turn.detail = turn.outcome.error?.message ?? null;
+          }
+        }
+      }
+    }
+    lastTurn = turn;
+    if (turn.className === 'executed' || attempt === maxAttempts) {
+      break;
+    }
+    // The retry message states the failure plainly; the model decides the fix.
+    messages = [
+      ...messages,
+      { role: 'assistant', content: String(turn.completion ?? '') },
+      { role: 'user', content: retryHintOf(turn) }
+    ];
   }
-  const extracted = extractProgram(result.completion);
-  if (!extracted.ok) {
-    turn.className = 'wrapper_rejected';
-    turn.detail = extracted.reason;
-    return turn;
+  return lastTurn;
+}
+
+/** The one-line failure hint the student sees before regenerating its plan. */
+function retryHintOf(turn) {
+  if (turn.className === 'parse_invalid') {
+    return `Your program did not parse: ${turn.detail} Emit a corrected SOP Lang program.`;
   }
-  turn.program = extracted.program;
-  let circuit;
-  try {
-    circuit = parseCircuit(turn.program);
-  } catch (failure) {
-    turn.className = 'parse_invalid';
-    turn.detail = failure.message;
-    return turn;
+  if (turn.className === 'execution_error') {
+    return `Your program executed but failed its own check: ${turn.detail} Fix the computation or the check, then emit a corrected SOP Lang program.`;
   }
-  turn.wires = circuit.wires.map((wire) => ({ name: wire.name, command: wire.command }));
-  try {
-    turn.outcome = await runtime.run(circuit, { outputs: ['answer'] });
-  } catch (failure) {
-    turn.className = 'execution_error';
-    turn.detail = `runtime threw: ${failure.message}`;
-    return turn;
-  }
-  if (turn.outcome.status === 'completed') {
-    turn.className = 'executed';
-    turn.answer = turn.outcome.outputs?.answer ?? null;
-  } else {
-    turn.className = 'execution_error';
-    turn.detail = turn.outcome.error?.message ?? null;
-  }
-  return turn;
+  return `Your reply was not a SOP Lang program: ${turn.detail} Emit a SOP Lang program.`;
 }
 
 /** The transcript record of one turn; the raw completion is kept for a turn that produced no program. */
