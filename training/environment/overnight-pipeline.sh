@@ -6,21 +6,7 @@ root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$root"
 note() { printf '%s %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*" >> evaluation/registry/overnight-pipeline.log; }
 
-wait_chain() {
-  local exp="$1"
-  local waited=0
-  # metrics.json is the honest completion signal: a failed chain also writes
-  # "series done" (exp-016's first chain did).
-  while [ ! -f "evaluation/registry/$exp/metrics.json" ]; do
-    sleep 180
-    waited=$((waited + 3))
-    if [ "$waited" -ge 12 ] && ! grep -q "selection" "evaluation/registry/$exp/series.log" 2>/dev/null \
-       && ! pgrep -f "start-chain.sh $exp" > /dev/null; then
-      note "no $exp chain after ${waited}min; starting it manually"
-      bash evaluation/start-chain.sh "$exp" >> "evaluation/registry/$exp/series.log" 2>&1 &
-    fi
-  done
-}
+source "$(dirname "${BASH_SOURCE[0]}")/lib-watch.sh"
 
 note "pipeline armed"
 wait_chain exp-014-deep-chains
