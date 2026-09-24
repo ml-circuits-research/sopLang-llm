@@ -20,9 +20,17 @@ wait_chain() {
       && { [ -z "$WORKER_PATTERN" ] || ! pgrep -f "$WORKER_PATTERN" > /dev/null; } \
       && { [ -z "$SUPERVISOR_PATTERN" ] || ! pgrep -f "$SUPERVISOR_PATTERN" > /dev/null; } \
       && { [ -z "$CHAIN_PATTERN" ] || ! pgrep -f "$CHAIN_PATTERN" > /dev/null; }; then
-      note "CHAIN FAILURE $job: the log reports a failure, the work is over, and no chain is running - a human must look"
-      exit 5
+      # Never exit on a failure line: a stale failure from an earlier aborted
+      # chain fired once right between training completion and the new chain
+      # starting. Raise a visible marker and keep waiting for the result
+      # artifact - a human or an agent sees the marker in the health check.
+      alarm="$RESULTS_DIR/$job/CHAIN-ALARM.txt"
+      if [ ! -f "$alarm" ]; then
+        note "CHAIN FAILURE $job: the log reports a failure, the work is over, and no chain is running - a human must look; marker: $alarm"
+        printf 'chain failure detected %s; waiting for metrics.json\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$alarm"
+      fi
     fi
+
     sleep 180
     waited=$((waited + 3))
     if [ "$waited" -ge 12 ] && ! grep -q "$SELECTION_MARKER" "$RESULTS_DIR/$job/series.log" 2>/dev/null \
@@ -32,4 +40,6 @@ wait_chain() {
       bash "$CHAIN_LAUNCHER" "$job" >> "$RESULTS_DIR/$job/series.log" 2>&1 &
     fi
   done
+  # The result artifact arrived: any chain alarm from the wait is moot.
+  rm -f "$RESULTS_DIR/$job/CHAIN-ALARM.txt"
 }

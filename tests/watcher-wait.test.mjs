@@ -1,6 +1,7 @@
 // The portable chain-waiting logic (skills/night-orchestration/scripts/lib-watch.sh),
 // pinned against its failure modes: metrics.json is the only completion signal, and a
-// really-failed chain stops the watcher (exit 5) instead of waiting forever. The lib
+// really-failed chain raises a visible CHAIN-ALARM.txt marker instead of either
+// exiting or waiting silently. The lib
 // runs against a fake root in a temp dir, configured through its environment variables,
 // so no real experiment or process is touched.
 import test from 'node:test';
@@ -46,10 +47,37 @@ test('a chain that wrote metrics.json completes immediately', () => {
   assert.match(result.stdout, /DONE/);
 });
 
-test('a failed chain with no live processes stops the watcher with exit 5', () => {
-  const result = runWait({ metrics: null, series: 'selection failed; see series.log\nseries done\n' });
-  assert.equal(result.status, 5);
+test('a failed chain raises a visible alarm marker and keeps waiting', () => {
+  // The watcher must never exit on a failure line (a stale failure from an
+  // earlier aborted chain fired once right between training completion and the
+  // new chain starting). It raises CHAIN-ALARM.txt and keeps waiting for
+  // metrics.json, so the pipeline stays alive and a human sees the marker.
+  const root = mkdtempSync(join(tmpdir(), 'watch-alarm-'));
+  const registry = join(root, 'evaluation/registry/test-watch-xyz');
+  mkdirSync(registry, { recursive: true });
+  writeFileSync(join(registry, 'series.log'), 'selection failed; see series.log\nseries done\n');
+  const script = [
+    `export PROJECT_ROOT='${root}'`,
+    `export RESULTS_DIR='${root}/evaluation/registry'`,
+    `export WORKER_PATTERN=''`,
+    `export SUPERVISOR_PATTERN=''`,
+    `export CHAIN_PATTERN=''`,
+    `export FAILURE_MARKER='failed'`,
+    `export SELECTION_MARKER='selection'`,
+    `source '${LIB}'`,
+    `note() { printf '%s\n' "$*"; }`,
+    `wait_chain test-watch-xyz &`,
+    `WATCH=$!`,
+    `sleep 2`,
+    `kill $WATCH 2>/dev/null`,
+    `wait 2>/dev/null`,
+    `cat ${root}/evaluation/registry/test-watch-xyz/CHAIN-ALARM.txt`,
+  ].join('\n');
+  const result = spawnSync('bash', ['-c', script], { cwd: root, encoding: 'utf8', timeout: 60_000 });
+  rmSync(root, { recursive: true, force: true });
+  assert.equal(result.status, 0);
   assert.match(result.stdout, /CHAIN FAILURE/);
+  assert.match(result.stdout, /chain failure detected/);
   assert.doesNotMatch(result.stdout, /DONE/);
 });
 
