@@ -5,27 +5,38 @@ fiecare raport nou il inlocuieste pe cel vechi.
 
 ---
 
-## Status — 2026-09-24, 10:00Z
+## Status — 2026-09-24, 10:30Z: modelele si rezultatele lor la eval
 
-### Firele declarative au castigat — masurat
+### Modelele fine-tunate (cu rezultat la holdout)
 
-| brat | baza | set | holdout (705) | procedural (480) | erori de executie pe procedural |
+| model | baza | versiune date | antrenat | holdout | procedural (480) |
 | --- | --- | --- | --- | --- | --- |
-| exp-014 | 1.5B coder | jsEval | 379 (53.8%) | 377 (78.5%) | 201 total |
-| **exp-016-wires** | 1.5B coder | **fire declarative** | **440 (62.4%)** | **440 (91.7%)** | **13** |
+| exp-016-wires | Qwen2.5-Coder-1.5B | dv3 — fire declarative | 2026-09-24 08:14Z | **440/705 (62.4%)** | **440 (91.7%)** |
+| exp-014-deep-chains | Qwen2.5-Coder-1.5B | dv2 — transa adanca | ≈2026-09-23 17:10Z | 379/705 (53.8%) | 377 (78.5%) |
+| exp-015-deep-chains-05 | Qwen2.5-Coder-0.5B | dv2 — transa adanca | ≈2026-09-23 19:53Z | 362/705 (51.3%) | 361 (75.2%) |
+| exp-013-1.5b | Qwen2.5-Coder-1.5B | dv1 — inventar | ≈2026-09-23 07:59Z | 322/585 (55.0%)* | — |
+| exp-012-census | Qwen2.5-Coder-0.5B | dv1 — inventar | ≈2026-09-22 22:50Z | 258/585 (44.1%)* | — |
+| exp-017-qwen3-17b | Qwen3-1.7B | dv3 — fire declarative | in antrenare | — | — |
 
-Aceeasi baza, aceeasi reteta, aceleasi date - singura diferenta e ca circuitele generate folosesc
-graphPath/aggregate/fraction in loc de JavaScript. +61 de raspunsuri corecte (+8.6 puncte), iar erorile
-de executie pe procedural s-au prabusit (13 fata de sute). Cartile raman la 0/225: firele ajuta unde
-modelul compileaza formele, iar cartile au nevoie de familii proprii (urmatoarea transa).
+* setul de eval era de 585 de itemi; de la dv2 e de 705 (120 de compozitii noi rezervate).
+
+Concluzia masurata: aceeasi baza 1.5B, aceleasi date — firele declarative au ridicat holdout-ul de la
+379 la 440 (+61 corecte, +8.6 puncte) si au prabusit erorile de executie pe procedural de la 63 la 13.
+Cartile raman la 0/225: firele ajuta unde modelul compileaza formele respective; cartile au nevoie de
+familii proprii (urmatoarea transa).
+
+### Bazele neantrenate (raspund in proza, acelasi eval)
+
+| baza | corecte |
+| --- | --- |
+| Qwen2.5-Coder-0.5B | 63/585 (10.8%) |
+| Qwen2.5-Coder-1.5B | 30/585 (5.1%) |
+| Qwen2.5-1.5B (general) | 80/705 (11.3%) |
+| Qwen3-1.7B | 357/705 (50.6%) — castigatoarea shootout-ului |
 
 ### Ce ruleaza acum
 
-- **exp-017-qwen3-17b** antreneaza pe acelasi set cu fire, pe baza castigatoare din shootout
-  (Qwen3-1.7B, 357/705 in proza) - lansat prin poarta noua de preflight.
-- Sentinela de sesiune verifica la 30 de minute (disc 451 GiB, totul OK).
-
-### Infrastructura
-
-Toata monitorizarea e portabila in skills/night-orchestration (preflight, lib-watch, disk-guard,
-stall-check, health-check, session-sentinel), testata 353/353, adaptoare subtiri in repo.
+- exp-017-qwen3-17b antreneaza (Qwen3-1.7B pe fire, dv3); cand se inchide lantzul, castigatorul intra
+  automat in chat cu identitatea completa (1.7B · Qwen3-1.7B · dv3 · data antrenarii).
+- Sentinela de sesiune verifica la 30 de minute; disc 451 GiB; infrastructura portabila in
+  skills/night-orchestration, testata 353/353.
