@@ -26,6 +26,8 @@ adopted in minutes.
 6. Operational scripts live in the repository (or this skill), never in /tmp: a machine reset
    wipes /tmp and the runbook with it.
 7. Run the health check before and after every action; a clean morning starts with it.
+   A stall sentinel watches every worker and raises a marker the moment a restart loop forms,
+   so a blocked night is discovered in minutes, not when a human asks.
 
 ## Conventions (overridable by environment)
 
@@ -53,8 +55,12 @@ $RESULTS_DIR/<job>/metrics.json, and its log is $RESULTS_DIR/<job>/series.log.
   caller provides a `note` function.
 - scripts/disk-guard.sh — the disk sentinel: one line every five minutes, warns below
   WARN_FREE_GIB, stops workers and downloads below STOP_FREE_GIB.
+- scripts/stall-check.sh — the stall sentinel: runs every five minutes and raises a
+  STALL-ALARM.txt marker when a worker is trapped in a restart loop (consecutive supervisor
+  episodes ending at the same step) or its progress log is frozen. Detection only, never
+  kills. The health check reports the markers.
 - scripts/health-check.sh — the one-command status: disk, workers, supervisors, chains,
-  watchers, gates. Run it before and after every action.
+  watchers, gates, and stall alarms. Run it before and after every action.
 
 ## Adopting in a new project
 

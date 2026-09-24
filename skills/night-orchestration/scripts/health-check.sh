@@ -44,6 +44,9 @@ fi
 for gate in "$PROJECT_ROOT"/*.flag "$JOBS_DIR"/*.flag; do
   [ -f "$gate" ] && echo "  gate open: $gate"
 done
+for alarm in "$JOBS_DIR"/*/STALL-ALARM.txt; do
+  [ -f "$alarm" ] && echo "  STALL ALARM: $(cat "$alarm")"
+done
 echo "  watchers:"
 for watcher in overnight-pipeline overnight-tail watchdog disk-guard night-watch; do
   count="$(pgrep -f "$watcher.sh" 2>/dev/null | wc -l | tr -d ' ')"

@@ -63,6 +63,7 @@ The night of 2026-09-23 was lost to a full disk: base-model downloads plus check
 - After an experiment's chain closes AND its winner is recorded (selection.json plus report.md), prune that experiment completely: delete every `training/checkpoints/<exp>/checkpoint-*` HF directory AND every non-winner GGUF under `evaluation/registry/<exp>/gguf/`. The kept artifacts are the winner's GGUF, every log, manifest, report, and item record — nothing else. Closed arms are never resumed; their HF checkpoints are dead weight (exp-013 alone held 116 GiB).
 - Before starting a new download or a new arm, check the free space and prune closed arms first; never queue work that needs more space than is free.
 - The disk guard (`training/environment/disk-guard.sh`) is the last line of defense: it warns below 40 GiB free and stops trainers AND downloads below 16 GiB free, well above the point where a mid-save interruption corrupts a checkpoint.
+- The stall sentinel (`training/environment/stall-check.sh`) watches every job and raises a STALL-ALARM.txt marker when a worker is trapped in a restart loop (consecutive supervisor episodes ending at the same step) or its progress log is frozen — a blocked night is discovered in minutes, not when a human asks.
 
 ## Runtime Defaults
 

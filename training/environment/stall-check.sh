@@ -1,0 +1,11 @@
+# Repo adapter: the portable stall sentinel from the night-orchestration skill.
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+export PROJECT_ROOT="${PROJECT_ROOT:-$root}"
+export JOBS_DIR="${JOBS_DIR:-$root/training/checkpoints}"
+export STALL_CHECK_LOG="${STALL_CHECK_LOG:-$root/evaluation/registry/stall-check.log}"
+export STALL_STATE_FILE="${STALL_STATE_FILE:-overnight-state.jsonl}"
+export STALL_CHECK_INTERVAL="${STALL_CHECK_INTERVAL:-300}"
+export STALL_CHECK_WINDOW="${STALL_CHECK_WINDOW:-3}"
+export STALL_STALE_SECONDS="${STALL_STALE_SECONDS:-1800}"
+export WORKER_PATTERN="${WORKER_PATTERN:-sft_train.py --experiment}"
+exec bash "$root/skills/night-orchestration/scripts/stall-check.sh"
