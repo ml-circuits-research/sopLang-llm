@@ -4,7 +4,7 @@
     "id": "compiled-plan-chat-4",
     "systemPromptSha256": "c2967d80d31eeb8a8f1605e75ece90edd16a0f0338a7b24bf15442bbf9287a74"
   },
-  "snapshot": "57daa1d42132f5f7f2abb9c1d2fe667512dd38983d467f0658e80f5cba405d99",
+  "snapshot": "b423751423877019cfd23d13aedc435cffeb5991e758b53131acb25124236e40",
   "rows": 9495,
   "books": {
     "adult-reasoning": {
@@ -107,8 +107,8 @@
       "rows": 990
     },
     "procedural-arithmetic.jsonl": {
-      "sha256": "4453328e6b6a3494520989d5986ac6cbf8f73b0a61fb0990bc6b5f74979364bb",
-      "bytes": 8768880,
+      "sha256": "8902725f401232ada1c725acc1206b87bbfadef4f07bd3e6354aa08d2b10f772",
+      "bytes": 8656280,
       "rows": 2720
     },
     "scientific-reasoning.jsonl": {
@@ -122,13 +122,13 @@
       "rows": 980
     },
     "all-books.jsonl": {
-      "sha256": "e6075bb6d31c2ef8a6afa9b0246def572ddd6efbf6975a825ea3e5c730998bf9",
-      "bytes": 40040495,
+      "sha256": "f80edb5523c234292a43a801467e16df35d138f9ae9f708aae4854c378cbc13b",
+      "bytes": 39927895,
       "rows": 9495
     },
     "preservation-10.jsonl": {
-      "sha256": "df32f1218222223a38618646a970c7d4db7bf6d9198f9d7cf0a88a25644e43d8",
-      "bytes": 3594089,
+      "sha256": "1320818e8e5b51da38e1ff7e12822f84345573dee5ab10e72591a3cec573c7d8",
+      "bytes": 3582289,
       "rows": 950
     }
   },
@@ -148,10 +148,10 @@
     "ratio": 0.1,
     "stride": 10,
     "rows": 950,
-    "sourceSnapshot": "57daa1d42132f5f7f2abb9c1d2fe667512dd38983d467f0658e80f5cba405d99",
+    "sourceSnapshot": "b423751423877019cfd23d13aedc435cffeb5991e758b53131acb25124236e40",
     "derivation": "training/preservation.mjs 1.0.0: each sampled circuit is re-emitted as standalone JavaScript with the same wires bound as constants and the answer printed by console.log",
     "file": "preservation-10.jsonl",
-    "sha256": "df32f1218222223a38618646a970c7d4db7bf6d9198f9d7cf0a88a25644e43d8",
-    "bytes": 3594089
+    "sha256": "1320818e8e5b51da38e1ff7e12822f84345573dee5ab10e72591a3cec573c7d8",
+    "bytes": 3582289
   }
 }

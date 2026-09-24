@@ -1,0 +1,8 @@
+{
+  "experiment": "cmp-base-holdout-prose-q3",
+  "gguf": "training/checkpoints/base-qwen3-17b-f16.gguf",
+  "items": 705,
+  "matched": 357,
+  "prompt": "Answer the problem directly and briefly. Give the final answer in one short sentence; no working, no explanation.",
+  "generatedAt": "2026-09-23T22:22:18.931Z"
+}

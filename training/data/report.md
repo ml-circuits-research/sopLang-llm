@@ -1,7 +1,7 @@
 # Trainer-view export report
 
 Derived by `training/export.mjs` from the shipped trees under `training-data/`;
-dataset snapshot `57daa1d42132f5f7f2abb9c1d2fe667512dd38983d467f0658e80f5cba405d99`. The report is deterministic and carries no timestamp.
+dataset snapshot `b423751423877019cfd23d13aedc435cffeb5991e758b53131acb25124236e40`. The report is deterministic and carries no timestamp.
 
 | book | rows | no-knowledge | knowledge | templates | plans |
 | --- | --- | --- | --- | --- | --- |
@@ -50,10 +50,10 @@ of the solution, `jsEval body lines` the non-empty lines after the `jsEval` decl
 | mathematical-thinking | jsEval body lines | 2 | 6 | 15 | 30 | 40 |
 | mathematical-thinking | $ dependencies | 1 | 1 | 1 | 2 | 2 |
 | procedural-arithmetic | statement characters | 70 | 186 | 250 | 279 | 290 |
-| procedural-arithmetic | target characters | 341 | 829 | 1584 | 3322 | 3330 |
-| procedural-arithmetic | wire declarations | 2 | 2 | 4 | 4 | 4 |
-| procedural-arithmetic | jsEval body lines | 5 | 15 | 24 | 40 | 40 |
-| procedural-arithmetic | $ dependencies | 1 | 1 | 3 | 3 | 3 |
+| procedural-arithmetic | target characters | 341 | 788 | 1567 | 3322 | 3330 |
+| procedural-arithmetic | wire declarations | 2 | 2 | 4 | 5 | 5 |
+| procedural-arithmetic | jsEval body lines | 2 | 15 | 21 | 40 | 40 |
+| procedural-arithmetic | $ dependencies | 1 | 1 | 3 | 4 | 4 |
 | scientific-reasoning | statement characters | 578 | 869 | 1149 | 1361 | 1545 |
 | scientific-reasoning | target characters | 947 | 1969 | 3435 | 4915 | 4951 |
 | scientific-reasoning | wire declarations | 2 | 2 | 2 | 3 | 3 |
@@ -65,10 +65,10 @@ of the solution, `jsEval body lines` the non-empty lines after the `jsEval` decl
 | world-as-a-system | jsEval body lines | 9 | 47 | 70 | 98 | 98 |
 | world-as-a-system | $ dependencies | 1 | 1 | 1 | 1 | 1 |
 | all books | statement characters | 57 | 351 | 802 | 1223 | 1545 |
-| all books | target characters | 110 | 1472 | 2825 | 4048 | 5556 |
-| all books | wire declarations | 2 | 2 | 2 | 4 | 4 |
+| all books | target characters | 110 | 1445 | 2825 | 4048 | 5556 |
+| all books | wire declarations | 2 | 2 | 2 | 4 | 5 |
 | all books | jsEval body lines | 2 | 15 | 41 | 70 | 98 |
-| all books | $ dependencies | 1 | 1 | 1 | 3 | 3 |
+| all books | $ dependencies | 1 | 1 | 1 | 3 | 4 |
 
 ## Longest targets
 

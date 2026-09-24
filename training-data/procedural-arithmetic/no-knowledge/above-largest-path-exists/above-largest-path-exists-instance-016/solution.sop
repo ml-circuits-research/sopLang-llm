@@ -32,35 +32,22 @@
   "target": 26
 }
 
-@answer jsEval
+@stage0 jsEval
 const slots = $slots;
 const values = slots.values;
 probe(Array.isArray(values) && values.length > 0, "the records must be a non-empty list");
 let current = values;
-// stage 1: keepAbove
 const kept0 = current.filter((value) => value > slots.threshold);
 current = kept0;
-// stage 2: largest
 const extreme1 = Math.max(...current);
 current = extreme1;
-// stage 3: pathExists
-const adjacency2 = new Map();
-for (const edge2 of slots.edges) {
-  for (const member2 of edge2) { if (!adjacency2.has(member2)) adjacency2.set(member2, []); }
-  adjacency2.get(edge2[0]).push(edge2[1]);
-  adjacency2.get(edge2[1]).push(edge2[0]);
-}
-const seen2 = new Set([current]);
-const queue2 = [current];
-while (queue2.length > 0) {
-  const node2 = queue2.shift();
-  if (node2 === slots.target) break;
-  for (const next2 of adjacency2.get(node2)) {
-    if (!seen2.has(next2)) { seen2.add(next2); queue2.push(next2); }
-  }
-}
-const answer2 = seen2.has(slots.target) ? "yes" : "no";
-current = answer2;
-probe(current === "yes" || current === "no", "the answer must be yes or no");
-return current + ".";
+return current;
+
+@stage1 graphPath
+from: $stage0
+to: $slots.target
+edges: $slots.edges
+
+@answer jsEval
+return $stage1 + ".";
 

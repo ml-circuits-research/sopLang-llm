@@ -12,31 +12,19 @@
   "minimum": 18
 }
 
-@qualifying jsEval
-const slots = $slots;
-probe(Array.isArray(slots.scores) && slots.scores.length > 0, "the scores must be a non-empty list");
-probe(slots.scores.every((score) => Number.isInteger(score)), "every score must be a whole number");
-probe(Number.isInteger(slots.minimum), "the qualifying minimum must be a whole number");
-const qualifying = slots.scores.filter((score) => score >= slots.minimum);
-probe(qualifying.every((score) => score >= slots.minimum), "only the scores at or above the minimum may qualify");
-return qualifying;
+@qualifying aggregate
+source: $slots.scores
+op: count
+predicate:
+  atLeast: $slots.minimum
 
-@summary jsEval
-const slots = $slots;
-const count = $qualifying.length;
-const total = $qualifying.reduce((sum, score) => sum + score, 0);
-probe(total >= count * slots.minimum, "the published total must be at least the minimum times the count");
-return { count, total };
+@summary aggregate
+source: $slots.scores
+op: average
+predicate:
+  atLeast: $slots.minimum
 
 @answer jsEval
 const slots = $slots;
-probe($qualifying.every((score) => score >= slots.minimum), "every published qualifying score must be at least the minimum");
-probe(Number.isInteger($summary.count) && $summary.count === $qualifying.length, "the published count must match the qualifying list");
-if ($summary.count === 0) {
-  return "No scores qualify, so an exact average cannot be computed.";
-}
-probe($summary.total % $summary.count === 0, "the published total must divide by the count into a whole average");
-const average = $summary.total / $summary.count;
-probe(average >= slots.minimum, "the average of the qualifying scores cannot be below the minimum");
-return $summary.count + " scores qualify and their average is " + average + ".";
+return $qualifying + " scores qualify and their average is " + $summary + ".";
 
