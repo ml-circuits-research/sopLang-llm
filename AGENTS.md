@@ -46,6 +46,10 @@ Report concretely. Name the thing, the run, and the number in the same sentence;
 - Keep the seed books in `vision/` unchanged and treat them as read-only research material.
 - The library and its tests use Node.js built-ins only. Do not add an external dependency without explicit approval and a matching entry in `dependencies.md`.
 
+## Launch discipline
+
+Every training launch passes `training/environment/preflight.sh` first, and a failed precondition is a refused launch, never a warning: no second trainer (one trainer at a time), no double supervision of the same experiment, at least 30 GiB free disk, and no resume from an incomplete checkpoint. The completion signal for a chain is `evaluation/registry/<exp>/metrics.json` — never the `series done` log line, which a failed chain also writes.
+
 ## Disk discipline
 
 The night of 2026-09-23 was lost to a full disk: base-model downloads plus checkpoint saves filled the drive mid-save, corrupting a checkpoint and killing the arm at step 160 of 630. Disk space is part of the experiment design, not an afterthought:

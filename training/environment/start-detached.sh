@@ -26,6 +26,9 @@ case "$mode" in
     experiment="${2:-}"
     [ -z "$experiment" ] && { echo "usage: start-detached.sh train <experiment> [trainer flags...]" >&2; exit 2; }
     shift 2
+    # Every launch passes the preflight gate first: a second trainer, a full disk,
+    # or a corrupt resume checkpoint is a refused launch, not a corrupted night.
+    bash "$root/training/environment/preflight.sh" "$experiment" || exit 1
     checkpoints="$root/training/checkpoints/$experiment"
     mkdir -p "$checkpoints"
     recipe="$checkpoints/resume-recipe.sh"
