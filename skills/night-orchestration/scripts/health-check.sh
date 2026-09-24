@@ -46,6 +46,6 @@ for gate in "$PROJECT_ROOT"/*.flag "$JOBS_DIR"/*.flag; do
 done
 echo "  watchers:"
 for watcher in overnight-pipeline overnight-tail watchdog disk-guard night-watch; do
-  count="$(pgrep -c -f "$watcher.sh" 2>/dev/null || echo 0)"
-  [ "$count" -gt 0 ] && echo "    - $watcher: running"
+  count="$(pgrep -f "$watcher.sh" 2>/dev/null | wc -l | tr -d ' ')"
+  [ "${count:-0}" -gt 0 ] 2>/dev/null && echo "    - $watcher: running"
 done

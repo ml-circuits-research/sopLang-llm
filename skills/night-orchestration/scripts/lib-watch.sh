@@ -12,22 +12,24 @@ wait_chain() {
   local job="$1"
   local waited=0
   RESULTS_DIR="${RESULTS_DIR:-$PROJECT_ROOT/.results}"
+  FAILURE_MARKER="${FAILURE_MARKER:-failed}"
+  SELECTION_MARKER="${SELECTION_MARKER:-selection}"
+  CHAIN_LAUNCHER="${CHAIN_LAUNCHER:-}"
   while [ ! -f "$RESULTS_DIR/$job/metrics.json" ]; do
-    if grep -q "failed" "$RESULTS_DIR/$job/series.log" 2>/dev/null \
-      && ! pgrep -f "sft_train.py --experiment $job" > /dev/null \
-      && ! pgrep -f "overnight.sh --experiment $job" > /dev/null \
-      && ! pgrep -f "start-chain.sh $job" > /dev/null \
-      && ! pgrep -f "select-checkpoint.mjs --experiment $job" > /dev/null \
-      && ! pgrep -f "run-eval.mjs --experiment $job" > /dev/null; then
+    if grep -q "$FAILURE_MARKER" "$RESULTS_DIR/$job/series.log" 2>/dev/null \
+      && { [ -z "$WORKER_PATTERN" ] || ! pgrep -f "$WORKER_PATTERN" > /dev/null; } \
+      && { [ -z "$SUPERVISOR_PATTERN" ] || ! pgrep -f "$SUPERVISOR_PATTERN" > /dev/null; } \
+      && { [ -z "$CHAIN_PATTERN" ] || ! pgrep -f "$CHAIN_PATTERN" > /dev/null; }; then
       note "CHAIN FAILURE $job: the log reports a failure, the work is over, and no chain is running - a human must look"
       exit 5
     fi
     sleep 180
     waited=$((waited + 3))
-    if [ "$waited" -ge 12 ] && ! grep -q "selection" "$RESULTS_DIR/$job/series.log" 2>/dev/null \
-      && ! pgrep -f "start-chain.sh $job" > /dev/null; then
+    if [ "$waited" -ge 12 ] && ! grep -q "$SELECTION_MARKER" "$RESULTS_DIR/$job/series.log" 2>/dev/null \
+      && { [ -z "$CHAIN_PATTERN" ] || ! pgrep -f "$CHAIN_PATTERN" > /dev/null; } \
+      && [ -n "$CHAIN_LAUNCHER" ]; then
       note "no $job chain after ${waited}min; starting it manually"
-      bash evaluation/start-chain.sh "$job" >> "$RESULTS_DIR/$job/series.log" 2>&1 &
+      bash "$CHAIN_LAUNCHER" "$job" >> "$RESULTS_DIR/$job/series.log" 2>&1 &
     fi
   done
 }

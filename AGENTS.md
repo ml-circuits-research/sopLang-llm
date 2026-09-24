@@ -15,7 +15,13 @@ This repository is the sopLang-llm project. It fine-tunes a small code-capable l
 
 ## Current Skill Catalog
 
-The repository does not distribute skills as product artifacts. The agent skills available under `.agents/skills/` are imported tooling used while working in this repository; they are not part of the project's documented surface, and their guidance and dependency records stay inside their own folders. The product surfaces of this repository are the language runtime, the wire registry, the context adapter, the teaching pipeline, and the training data suite described by the design specifications.
+The repository does not distribute skills as product artifacts. The agent skills under `skills/` (linked from `.agents/skills/`) are portable tooling, reusable in any project:
+
+- `night-orchestration` — unattended long-running work done safely: the launch gate (preflight.sh), the shared chain-waiting logic (lib-watch.sh, result-artifact completion + failure detection), the disk guard, and the health check. All parameterized by environment variables with documented conventions. The repo's `training/environment/` scripts are thin adapters that bind the skill's tools to this project's paths.
+- `training-rules` — the measured methodology of small-model training on synthetic data: coverage law, vocabulary hypothesis, structural splits, assertion policy, target-form minimalism, retries as deployment, training economics, base shootout, reporting discipline.
+- `training-runbook` — the portable phase runbook: arm design, generator extension, family verification, rebuild, training, chain, baselines, retry sweep, report and cleanup.
+
+The product surfaces of this repository are the language runtime, the wire registry, the context adapter, the teaching pipeline, and the training data suite described by the design specifications.
 
 ## Long-running work
 
