@@ -407,12 +407,38 @@ export async function main(argv) {
         return null;
       }
     })(),
+    training: (() => {
+      const trainerManifestPath = join(REPO_ROOT, 'training/checkpoints', options.experiment, 'run-manifest.json');
+      if (!existsSync(trainerManifestPath)) return null;
+      try {
+        const trainerManifest = JSON.parse(readFileSync(trainerManifestPath, 'utf8'));
+        return {
+          createdUtc: trainerManifest.created_utc ?? null,
+          finishedUtc: trainerManifest.finished_utc ?? null,
+          epochs: trainerManifest.epochs ?? null
+        };
+      } catch {
+        return null;
+      }
+    })(),
     capabilityProbes: capabilityProbes === null
       ? null
       : { profile: capabilityProbes.profile, systemPromptSha256: capabilityProbes.systemPromptSha256, items: capabilityProbes.items, passed: capabilityProbes.passed },
     dataset: {
       exportManifest: relative(REPO_ROOT, EXPORT_MANIFEST).split(sep).join('/'),
       snapshot: exportManifest?.snapshot ?? null,
+      dataVersion: (() => {
+        const path = join(REPO_ROOT, 'training-data', 'VERSION');
+        if (!existsSync(path)) return null;
+        try {
+          const number = readFileSync(path, 'utf8').trim();
+          const labelPath = join(REPO_ROOT, 'training-data', 'VERSION.label');
+          const label = existsSync(labelPath) ? readFileSync(labelPath, 'utf8').trim() : null;
+          return { number, label };
+        } catch {
+          return null;
+        }
+      })(),
       validationSlice: relative(REPO_ROOT, DEFAULT_VALIDATION_SLICE).split(sep).join('/')
     },
     environment: existsSync(ENVIRONMENT_MANIFEST)

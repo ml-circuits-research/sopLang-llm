@@ -8,8 +8,15 @@ the `night-orchestration` skill.
 ## 0. Design the arm
 
 One arm = one change: one hypothesis (a data tranche, a base model, a recipe parameter). Name it
-and record the hypothesis before running anything. A parser or executor change is a version
-increment with a data migration, not an arm.
+and record the hypothesis before running anything. The name carries what the owner needs to
+understand what runs: `exp-NNN-<size>-<base>-<dataVersion>`, for example
+`exp-018-1.7b-qwen3-dv3`. The data version is the counter in the dataset's VERSION file,
+bumped at every dataset change; the version's human label (what changed) lives beside it and is
+what the owner sees, not the number alone. A parser or executor change is a version increment
+with a data migration, not an arm. The chain records the training timestamps and the data
+version in the evaluation manifest, so any report or interface can show when a model was
+trained and on which data version - checkpoint numbers are implementation detail, never the
+identity of a model.
 
 ## 1. Extend the generator (data arms only)
 

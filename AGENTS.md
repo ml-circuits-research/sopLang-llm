@@ -52,6 +52,10 @@ Report concretely. Name the thing, the run, and the number in the same sentence;
 - Keep the seed books in `vision/` unchanged and treat them as read-only research material.
 - The library and its tests use Node.js built-ins only. Do not add an external dependency without explicit approval and a matching entry in `dependencies.md`.
 
+## Model and data identity
+
+Every dataset change bumps `training-data/VERSION` (number plus a human label in VERSION.label). New arms are named `exp-NNN-<size>-<base>-<dataVersion>` (e.g. `exp-018-1.7b-qwen3-dv3`). The evaluation chain records the training timestamps and the data version in its run-manifest, and reports and interfaces (the chat) state a model's identity as size, base, data version, and training finish time - never a bare checkpoint number.
+
 ## Launch discipline
 
 Every training launch passes `training/environment/preflight.sh` first, and a failed precondition is a refused launch, never a warning: no second trainer (one trainer at a time), no double supervision of the same experiment, at least 30 GiB free disk, and no resume from an incomplete checkpoint. The completion signal for a chain is `evaluation/registry/<exp>/metrics.json` — never the `series done` log line, which a failed chain also writes.

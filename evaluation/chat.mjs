@@ -291,6 +291,55 @@ function parseVerdictOf(text) {
   }
 }
 
+/**
+ * Human-readable identity of a trained model: its size (from the base name), the
+ * training-data version, and when the training finished - the things the owner
+ * asked to see instead of raw checkpoint numbers. Read from the evaluation
+ * manifest, which the chain records from the trainer's manifest, so the fields
+ * survive the checkpoint prune. Missing fields are omitted, never guessed.
+ */
+export function modelInfoOf(experiment) {
+  const info = { size: null, base: null, dataVersion: null, finishedUtc: null };
+  if (experiment === null || experiment === undefined || experiment === '') return info;
+  try {
+    const manifestPath = `${REPOSITORY_ROOT}/evaluation/registry/${experiment}/run-manifest.json`;
+    if (!existsSync(manifestPath)) return info;
+    const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+    const basePath = manifest.base_model_manifest?.path ?? null;
+    if (typeof basePath === 'string') {
+      // The path names the pinned manifest; the model identity is its repo field.
+      const pinnedPath = basePath.startsWith('/') ? basePath : `${REPOSITORY_ROOT}/${basePath}`;
+      if (existsSync(pinnedPath)) {
+        try {
+          const pinned = JSON.parse(readFileSync(pinnedPath, 'utf8'));
+          if (typeof pinned.repo === 'string' && pinned.repo !== '') {
+            info.base = pinned.repo.split('/').pop();
+          }
+        } catch {
+          info.base = basePath.split('/').pop();
+        }
+      } else {
+        info.base = basePath.split('/').pop();
+      }
+      if (info.base !== null) {
+        const size = /(\d+(?:\.\d+)?b)/i.exec(info.base);
+        if (size !== null) info.size = size[1].toUpperCase();
+      }
+    }
+    const dv = manifest.dataset?.dataVersion ?? null;
+    if (dv !== null && typeof dv.number === 'string' && dv.number !== '') {
+      info.dataVersion = `dv${dv.number}${typeof dv.label === 'string' && dv.label !== '' ? ` ${dv.label}` : ''}`;
+    }
+    const finished = manifest.training?.finishedUtc ?? null;
+    if (typeof finished === 'string' && finished !== '') {
+      info.finishedUtc = finished.replace('T', ' ').replace(/:\d{2}Z$/, 'Z');
+    }
+  } catch {
+    // Display-only: an unreadable manifest must not break the chat.
+  }
+  return info;
+}
+
 function renderExchange(turn, options) {
   const lines = [];
   if (turn.baseComparison !== undefined) {
@@ -300,7 +349,11 @@ function renderExchange(turn, options) {
     lines.push(...renderComparison15(turn.base15), '');
   }
   if (turn.student15 !== undefined) {
-    lines.push(`${ANSI.bold}${ANSI.green}── FINE-TUNED MODEL 1.5B (${turn.student15Experiment ?? '1.5B'}) ──${ANSI.reset}`);
+    const info15 = modelInfoOf(turn.student15Experiment ?? null);
+    const label15 = [info15.size !== null ? info15.size : '1.5B', info15.base, info15.dataVersion, info15.finishedUtc === null ? null : `trained ${info15.finishedUtc}`, turn.student15Experiment ?? null]
+      .filter((part) => part !== null && part !== '')
+      .join(' · ');
+    lines.push(`${ANSI.bold}${ANSI.green}── FINE-TUNED MODEL (${label15}) ──${ANSI.reset}`);
     if (turn.student15.program !== null && options.showPlan) {
       lines.push(`${ANSI.dim}${turn.student15.program.trimEnd()}${ANSI.reset}`, '');
     }
@@ -313,7 +366,11 @@ function renderExchange(turn, options) {
       lines.push(`${ANSI.red}✗ ${turn.student15.className}: ${turn.student15.detail ?? turn.student15.outcome?.code ?? 'did not execute'}${ANSI.reset}`);
     }
   }
-  lines.push(`${ANSI.bold}${ANSI.cyan}── FINE-TUNED MODEL ──${ANSI.reset}`);
+  const infoMain = modelInfoOf(turn.mainExperiment ?? null);
+  const labelMain = [infoMain.size !== null ? infoMain.size : null, infoMain.base, infoMain.dataVersion, infoMain.finishedUtc === null ? null : `trained ${infoMain.finishedUtc}`, turn.mainExperiment ?? null]
+    .filter((part) => part !== null && part !== '')
+    .join(' · ');
+  lines.push(`${ANSI.bold}${ANSI.cyan}── FINE-TUNED MODEL (${labelMain === '' ? 'student' : labelMain}) ──${ANSI.reset}`);
   if (turn.program !== null && options.showPlan) {
     lines.push(`${ANSI.dim}${turn.program.trimEnd()}${ANSI.reset}`, '');
   }
@@ -590,6 +647,7 @@ async function askTurn({ question, base, alias, compare, session, options, runti
   const values = await Promise.all(Object.values(results));
   names.forEach((name, index) => { settled[name] = values[index]; });
   const turn = settled.main;
+  turn.mainExperiment = session.artifact?.experiment ?? null;
   if (settled.base05 !== undefined) turn.baseComparison = settled.base05;
   if (settled.base15 !== undefined) turn.base15 = settled.base15;
   if (settled.student15 !== undefined) {
@@ -1085,7 +1143,8 @@ async function main() {
   // The startup summary says plainly which models will answer, so the banner's
   // single-server line is never mistaken for the whole session: the 1.5B student
   // starts lazily on the first question, and the untrained bases stay off.
-  process.stdout.write(`model: ${artifact.experiment} (${artifact.winner ?? 'base'}) — the fine-tuned 0.5B student\n`);
+  const bannerInfo = modelInfoOf(artifact.experiment);
+  process.stdout.write(`model: ${artifact.experiment} (${artifact.winner ?? 'base'})${bannerInfo.base === null ? '' : ` — ${bannerInfo.base}`}${bannerInfo.dataVersion === null ? '' : ` — ${bannerInfo.dataVersion}`}${bannerInfo.finishedUtc === null ? '' : ` — trained ${bannerInfo.finishedUtc}`}\n`);
   if (session.student15 !== null) {
     process.stdout.write(`1.5B student: ${session.student15.experiment} (${session.student15.winner}) — answers beside it, starting on the first question\n`);
   } else {
