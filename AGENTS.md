@@ -46,6 +46,14 @@ Report concretely. Name the thing, the run, and the number in the same sentence;
 - Keep the seed books in `vision/` unchanged and treat them as read-only research material.
 - The library and its tests use Node.js built-ins only. Do not add an external dependency without explicit approval and a matching entry in `dependencies.md`.
 
+## Disk discipline
+
+The night of 2026-09-23 was lost to a full disk: base-model downloads plus checkpoint saves filled the drive mid-save, corrupting a checkpoint and killing the arm at step 160 of 630. Disk space is part of the experiment design, not an afterthought:
+
+- After an experiment's chain closes AND its winner is recorded (selection.json plus report.md), prune that experiment completely: delete every `training/checkpoints/<exp>/checkpoint-*` HF directory AND every non-winner GGUF under `evaluation/registry/<exp>/gguf/`. The kept artifacts are the winner's GGUF, every log, manifest, report, and item record — nothing else. Closed arms are never resumed; their HF checkpoints are dead weight (exp-013 alone held 116 GiB).
+- Before starting a new download or a new arm, check the free space and prune closed arms first; never queue work that needs more space than is free.
+- The disk guard (`training/environment/disk-guard.sh`) is the last line of defense: it warns below 40 GiB free and stops trainers AND downloads below 16 GiB free, well above the point where a mid-save interruption corrupts a checkpoint.
+
 ## Runtime Defaults
 
 - Default executable language: Node.js using `.mjs` ECMAScript modules with explicit exports, relative imports that include file extensions, `node:` imports for built-ins, and async/await for asynchronous work.

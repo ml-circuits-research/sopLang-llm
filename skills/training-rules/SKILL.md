@@ -126,7 +126,10 @@ Do not cut the dataset or the dose per family: coverage is the gain, and it is m
 
 - One trainer at a time; long jobs detached (`start-detached.sh`); guards (watchdog,
   disk guard) beside any queued run.
-- After an experiment closes, prune the non-winner GGUF conversions; keep each winner,
-  the base GGUF, and every log, report, metric and item.
+- After an experiment closes and its winner is recorded, prune it completely: every
+  `checkpoint-*` HF directory and every non-winner GGUF. The kept artifacts are the winner's
+  GGUF, the base GGUFs, and every log, report, metric, and item. A closed arm is never
+  resumed, and its checkpoints are dead weight (exp-013 alone held 116 GiB; the 2026-09-23
+  night died on a full disk).
 - A dataset rebuild or export regeneration must never run while an evaluation chain reads
   `training-data/`.
