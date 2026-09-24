@@ -159,3 +159,10 @@ export async function loadProceduralFamilies({ source, only = null, smoke = true
   }
   return { families, ordered, generator: { id: source.id, version: module.generatorVersion, seed: source.seed } };
 }
+
+// The scheduling families of the fourth tranche are re-exported here so a caller
+// can reach them through the loader module exactly like the other standalone
+// family modules. They join the `procedural-arithmetic` generator's `families`
+// array at the rebuild (see the migration checklist), not here: the generator
+// entry is `arithmetic.mjs`, and it is wired only once the training arm closes.
+export { schedulingFamilies } from './scheduling.mjs';

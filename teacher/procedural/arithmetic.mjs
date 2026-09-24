@@ -27,6 +27,7 @@ import { decompositionFamilies } from './decompose.mjs';
 import { mixedFamilies } from './mixed.mjs';
 import { groupingFamilies } from './grouping.mjs';
 import { aggregationFamilies } from './aggregation.mjs';
+import { schedulingFamilies } from './scheduling.mjs';
 import { textShapeFamilies } from './textshapes.mjs';
 import { families as contrastiveFamilies } from './contrastive.mjs';
 import { compositionFamilies } from './composition-families.mjs';
@@ -295,5 +296,6 @@ export const families = [
   ...aggregationFamilies,
   ...textShapeFamilies,
   ...contrastiveFamilies,
-  ...compositionFamilies
+  ...compositionFamilies,
+  ...schedulingFamilies
 ];
