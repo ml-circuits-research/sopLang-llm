@@ -39,11 +39,19 @@
   "dataset": {
     "exportManifest": "training/data/export-manifest.json",
     "snapshot": "57daa1d42132f5f7f2abb9c1d2fe667512dd38983d467f0658e80f5cba405d99",
-    "validationSlice": "training/data/validation-slice.json"
+    "validationSlice": "training/data/validation-slice.json",
+    "dataVersion": {
+      "number": "2",
+      "label": "deep tranche (2026-09-23) \u2014 the five census operators in depth-3/4 chains, 9495 rows"
+    }
   },
   "environment": {
     "manifest": "training/environment/environment-manifest.json",
     "sha256": "cacd40e3d24b0c41f44061afd77af9f7b8fdece0bf959dcaa2f577c4873fe180"
   },
-  "startedAt": "2026-09-23T18:12:50.257Z"
+  "startedAt": "2026-09-23T18:12:50.257Z",
+  "training": {
+    "finishedUtc": "2026-09-23T17:10:57Z",
+    "finishedUtcApprox": true
+  }
 }

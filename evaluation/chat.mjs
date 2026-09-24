@@ -332,7 +332,8 @@ export function modelInfoOf(experiment) {
     }
     const finished = manifest.training?.finishedUtc ?? null;
     if (typeof finished === 'string' && finished !== '') {
-      info.finishedUtc = finished.replace('T', ' ').replace(/:\d{2}Z$/, 'Z');
+      const approx = manifest.training?.finishedUtcApprox === true ? '≈' : '';
+      info.finishedUtc = `${approx}${finished.replace('T', ' ').replace(/:\d{2}Z$/, 'Z')}`;
     }
   } catch {
     // Display-only: an unreadable manifest must not break the chat.

@@ -36,11 +36,22 @@
   "dataset": {
     "exportManifest": "training/data/export-manifest.json",
     "snapshot": "5ffd341ef13dcda876fe51c15569553dc7af9f4cd0adf6773fcdf7dc64842e12",
-    "validationSlice": "training/data/validation-slice.json"
+    "validationSlice": "training/data/validation-slice.json",
+    "dataVersion": {
+      "number": "0",
+      "label": "pre-inventory suite"
+    }
   },
   "environment": {
     "manifest": "training/environment/environment-manifest.json",
     "sha256": "cacd40e3d24b0c41f44061afd77af9f7b8fdece0bf959dcaa2f577c4873fe180"
   },
-  "startedAt": "2026-09-21T22:33:14.087Z"
+  "startedAt": "2026-09-21T22:33:14.087Z",
+  "training": {
+    "finishedUtc": "2026-09-21T20:36:59Z",
+    "finishedUtcApprox": true
+  },
+  "base_model_manifest": {
+    "path": "training/environment/base-model.json"
+  }
 }

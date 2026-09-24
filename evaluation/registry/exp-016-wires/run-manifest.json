@@ -39,11 +39,19 @@
   "dataset": {
     "exportManifest": "training/data/export-manifest.json",
     "snapshot": "b423751423877019cfd23d13aedc435cffeb5991e758b53131acb25124236e40",
-    "validationSlice": "training/data/validation-slice.json"
+    "validationSlice": "training/data/validation-slice.json",
+    "dataVersion": {
+      "number": "3",
+      "label": "declarative wires (2026-09-24) \u2014 graphPath, aggregate, fraction replace the multi-line transcriptions"
+    }
   },
   "environment": {
     "manifest": "training/environment/environment-manifest.json",
     "sha256": "cacd40e3d24b0c41f44061afd77af9f7b8fdece0bf959dcaa2f577c4873fe180"
   },
-  "startedAt": "2026-09-24T09:29:12.891Z"
+  "startedAt": "2026-09-24T09:29:12.891Z",
+  "training": {
+    "finishedUtc": "2026-09-24T08:14:49Z",
+    "finishedUtcApprox": false
+  }
 }

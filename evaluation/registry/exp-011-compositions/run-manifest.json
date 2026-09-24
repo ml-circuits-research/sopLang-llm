@@ -36,11 +36,22 @@
   "dataset": {
     "exportManifest": "training/data/export-manifest.json",
     "snapshot": "a4b1a534db1049828654782722696e32d0b90d436df7bb3d17bd6e4bb58ebc37",
-    "validationSlice": "training/data/validation-slice.json"
+    "validationSlice": "training/data/validation-slice.json",
+    "dataVersion": {
+      "number": "1",
+      "label": "composition inventory (2026-09-22) \u2014 the declared operator inventory, 37 compositions"
+    }
   },
   "environment": {
     "manifest": "training/environment/environment-manifest.json",
     "sha256": "cacd40e3d24b0c41f44061afd77af9f7b8fdece0bf959dcaa2f577c4873fe180"
   },
-  "startedAt": "2026-09-22T20:33:12.501Z"
+  "startedAt": "2026-09-22T20:33:12.501Z",
+  "training": {
+    "finishedUtc": "2026-09-22T19:34:28Z",
+    "finishedUtcApprox": true
+  },
+  "base_model_manifest": {
+    "path": "training/environment/base-model.json"
+  }
 }
