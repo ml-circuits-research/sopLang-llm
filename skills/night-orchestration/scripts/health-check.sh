@@ -15,14 +15,16 @@ if [ -n "${TEMP_COMMAND:-}" ]; then
   [ -n "$temp" ] && { echo "  temperatures:"; echo "$temp" | sed 's/^/    /'; }
 fi
 if [ -n "${WORKER_PATTERN:-}" ]; then
-  count="$(pgrep -c -f "$WORKER_PATTERN" 2>/dev/null || echo 0)"
+  count="$(pgrep -f "$WORKER_PATTERN" 2>/dev/null | wc -l | tr -d ' ')"
+  count="${count:-0}"
   echo "  workers running: $count"
   if [ "$count" -gt 0 ]; then
     pgrep -af "$WORKER_PATTERN" | while read -r line; do echo "    - ${line:0:110}"; done
   fi
 fi
 if [ -n "${SUPERVISOR_PATTERN:-}" ]; then
-  count="$(pgrep -c -f "$SUPERVISOR_PATTERN" 2>/dev/null || echo 0)"
+  count="$(pgrep -f "$SUPERVISOR_PATTERN" 2>/dev/null | wc -l | tr -d ' ')"
+  count="${count:-0}"
   echo "  supervisors running: $count"
 fi
 if [ -d "$RESULTS_DIR" ]; then
