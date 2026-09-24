@@ -74,4 +74,7 @@ coverage gap stays current.
 
 Serve the newest winner by default; show every trained model side by side with its timing; keep
 the untrained bases behind an explicit command; persist the interaction history to disk; never
-leave model servers running after the interface closes (the reaper watches the parent).
+leave model servers running after the interface closes (the reaper watches the parent). Every
+model block states the model's identity as the owner reads it: size, base, data version, and
+training finish time, derived from the pinned base manifest and the evaluation manifest - the
+checkpoint number stays internal.

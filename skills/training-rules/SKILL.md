@@ -67,11 +67,16 @@ reasoning while holding the emission quality the task needs. Stay in a size clas
 exhausted and shown insufficient - scale raised in-vocabulary recall but never moved the
 vocabulary boundary, so scale is a multiplier of proven data, not a substitute for it.
 
-## 9. Reporting discipline
+## 9. Reporting and model identity
 
 Percentages always carry their counts; decomposed numbers beat aggregates (per family, per plan
 cluster, per book); when comparing two numbers, name both sides and what changed between them.
-Record each arm's hypothesis before running it.
+Record each arm's hypothesis before running it. A trained model's identity is: its size, its
+base model, its training-data version, and the date and time its training finished - reported
+as one sentence, never as a bare checkpoint number or an internal experiment id alone. The data
+version is the counter in the dataset's VERSION file with its human label (what changed), and
+it enters the arm name (`exp-NNN-<size>-<base>-<dataVersion>`), so the name alone tells the
+owner what runs.
 
 ## 10. Operations discipline
 
