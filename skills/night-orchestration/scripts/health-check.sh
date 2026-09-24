@@ -10,6 +10,10 @@ free_gib="$(df -k "$PROJECT_ROOT" | awk 'NR==2 {print $4}')"
 free_gib=$(( free_gib / 1024 / 1024 ))
 echo "health $(date -u +%Y-%m-%dT%H:%M:%SZ)"
 echo "  disk free: ${free_gib} GiB"
+if [ -n "${TEMP_COMMAND:-}" ]; then
+  temp="$(bash -c "$TEMP_COMMAND" 2>/dev/null | head -3)"
+  [ -n "$temp" ] && { echo "  temperatures:"; echo "$temp" | sed 's/^/    /'; }
+fi
 if [ -n "${WORKER_PATTERN:-}" ]; then
   count="$(pgrep -c -f "$WORKER_PATTERN" 2>/dev/null || echo 0)"
   echo "  workers running: $count"
