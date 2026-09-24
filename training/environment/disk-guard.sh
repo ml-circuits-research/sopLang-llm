@@ -1,25 +1,10 @@
-#!/usr/bin/env bash
-# Disk-space guard for unattended work: one line every five minutes, a warning
-# below 20 GiB free, and a trainer stop below 8 GiB free so a filling disk can
-# never wedge the night. Lives in the repository because /tmp dies on a reset.
-# Usage: bash training/environment/start-detached.sh cmd disk-guard "bash training/environment/disk-guard.sh"
-set -uo pipefail
+# Repo adapter: the portable disk guard from the night-orchestration skill,
+# bound to this project's paths and process patterns.
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-LOG="$root/evaluation/registry/disk-guard.log"
-WARN_GIB=40
-STOP_GIB=16
-note() { printf '%s %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*" >> "$LOG"; }
-note "disk guard started (warn < ${WARN_GIB} GiB, stop trainer < ${STOP_GIB} GiB)"
-while :; do
-  free_kib="$(df -k "$root" | awk 'NR==2 {print $4}')"
-  free_gib=$(( free_kib / 1024 / 1024 ))
-  note "free ${free_gib} GiB on $(df -h "$root" | awk 'NR==2 {print $1}')"
-  if [ "$free_gib" -lt "$STOP_GIB" ]; then
-    note "CRITICAL: below ${STOP_GIB} GiB; stopping the trainer and every download"
-    pkill -TERM -f "sft_train.py --experiment" || true
-    pkill -TERM -f "snapshot_download" || true
-  elif [ "$free_gib" -lt "$WARN_GIB" ]; then
-    note "WARN: below ${WARN_GIB} GiB free"
-  fi
-  sleep 300
-done
+export PROJECT_ROOT="${PROJECT_ROOT:-$root}"
+export DISK_GUARD_LOG="${DISK_GUARD_LOG:-$root/evaluation/registry/disk-guard.log}"
+export WARN_FREE_GIB="${WARN_FREE_GIB:-40}"
+export STOP_FREE_GIB="${STOP_FREE_GIB:-16}"
+export WORKER_PATTERN="${WORKER_PATTERN:-sft_train.py --experiment}"
+export DOWNLOAD_PATTERN="${DOWNLOAD_PATTERN:-snapshot_download}"
+exec bash "$root/skills/night-orchestration/scripts/disk-guard.sh"
