@@ -7,7 +7,11 @@ note() { printf '%s %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*" >> evaluation/re
 wait_chain() {
   local exp="$1"
   local waited=0
-  while ! grep -q "series done" "evaluation/registry/$exp/series.log" 2>/dev/null; do
+  # The honest completion signal is metrics.json, not "series done": a failed
+  # chain also writes "series done" (exp-016's first chain did), and treating
+  # that stale line as done pruned a live arm's resume checkpoint and launched
+  # the next arm beside a running trainer (2026-09-24).
+  while [ ! -f "evaluation/registry/$exp/metrics.json" ]; do
     sleep 180
     waited=$((waited + 3))
     if [ "$waited" -ge 12 ] && ! grep -q "selection" "evaluation/registry/$exp/series.log" 2>/dev/null \
