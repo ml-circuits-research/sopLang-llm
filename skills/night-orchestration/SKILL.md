@@ -15,9 +15,10 @@ adopted in minutes.
    supervised, enough disk, and no resume from an incomplete checkpoint. A refused launch is a
    healthy night; a forced launch is a corrupted one.
 3. The completion signal is an artifact, never a log line: a chain that failed also writes
-   "series done". Wait for the result artifact (metrics.json in the conventions below), and
-   treat a failure marker with no live processes as a stop-and-alarm (exit 5), never as an
-   infinite wait.
+   "series done". Wait for the result artifact (metrics.json in the conventions below). A
+   failure marker with no live processes raises a visible CHAIN-ALARM.txt (reported by the
+   health check) and the watcher KEEPS WAITING - it never exits, because a stale failure line
+   can precede a fresh chain by seconds, and an exited watcher kills the queue silently.
 4. Disk is part of the experiment design. Prune closed jobs proactively (the night of
    2026-09-23 died on a full disk mid-save); the disk guard warns below 40 GiB and stops
    workers and downloads below 16 GiB.
@@ -50,17 +51,23 @@ $RESULTS_DIR/<job>/metrics.json, and its log is $RESULTS_DIR/<job>/series.log.
   running, double supervision, disk below MIN_FREE_GIB, incomplete newest checkpoint).
   Call it from every launcher, before anything else.
 - scripts/lib-watch.sh — `wait_chain <job>`: returns only when metrics.json exists; detects a
-  really-failed chain (failure marker + no live worker/supervisor/chain) and exits 5; starts
-  the chain manually when nothing did after a grace period. Source it from watchers; the
-  caller provides a `note` function.
+  really-failed chain (failure marker + no live worker/supervisor/chain), raises
+  CHAIN-ALARM.txt, and keeps waiting; starts the chain manually when nothing did after a
+  grace period. Source it from watchers; the caller provides a `note` function.
 - scripts/disk-guard.sh — the disk sentinel: one line every five minutes, warns below
   WARN_FREE_GIB, stops workers and downloads below STOP_FREE_GIB.
 - scripts/stall-check.sh — the stall sentinel: runs every five minutes and raises a
   STALL-ALARM.txt marker when a worker is trapped in a restart loop (consecutive supervisor
   episodes ending at the same step) or its progress log is frozen. Detection only, never
   kills. The health check reports the markers.
-- scripts/health-check.sh — the one-command status: disk, workers, supervisors, chains,
-  watchers, gates, and stall alarms. Run it before and after every action.
+- scripts/health-check.sh — the one-command status: disk, temperatures, workers,
+  supervisors, chains, watchers, gates, stall alarms, and chain alarms. Run it before and
+  after every action.
+- scripts/session-sentinel.sh — the standing guard for a working session: every
+  CHECK_INTERVAL (default 30 minutes) it runs the health check and writes one line to the
+  sentinel log; when an alarm marker exists, disk is below WARN_FREE_GIB, or a check output
+  is CRITICAL, it prints the full report and exits non-zero so the supervising agent is
+  woken. Silent while healthy, loud when not.
 
 ## Adopting in a new project
 

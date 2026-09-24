@@ -1,0 +1,10 @@
+# Repo adapter: the portable session sentinel from the night-orchestration skill.
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+export PROJECT_ROOT="${PROJECT_ROOT:-$root}"
+export JOBS_DIR="${JOBS_DIR:-$root/training/checkpoints}"
+export RESULTS_DIR="${RESULTS_DIR:-$root/evaluation/registry}"
+export HEALTH_COMMAND="${HEALTH_COMMAND:-bash $root/training/environment/health-check.sh}"
+export SENTINEL_INTERVAL="${SENTINEL_INTERVAL:-1800}"
+export SENTINEL_LOG="${SENTINEL_LOG:-$root/evaluation/registry/session-sentinel.log}"
+export WARN_FREE_GIB="${WARN_FREE_GIB:-40}"
+exec bash "$root/skills/night-orchestration/scripts/session-sentinel.sh"
