@@ -1,0 +1,21 @@
+@slots literal
+{
+  "capacities": [
+    20,
+    2,
+    14,
+    12,
+    10
+  ]
+}
+
+@bottleneck aggregate
+source: $slots.capacities
+op: min
+
+@answer jsEval
+const slots = $slots;
+const bottleneck = $bottleneck;
+probe(Number.isInteger(bottleneck) && bottleneck > 0, "the bottleneck capacity must be a positive whole number");
+return "The bottleneck capacity of the route is " + bottleneck + " units.";
+

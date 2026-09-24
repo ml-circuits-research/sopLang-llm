@@ -76,7 +76,11 @@ The manifest is split by family so a long table stays reviewable. Each family ma
 | raised-largest-record | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-raised-largest-record.md | 306f48846330 |
 | raised-smallest-record | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-raised-smallest-record.md | 624c8a0d56b3 |
 | reverse-word | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-reverse-word.md | c3c7d5274f0c |
+| route-bottleneck-capacity | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-route-bottleneck-capacity.md | 729955b2d23e |
 | scaled-recipe | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-scaled-recipe.md | 5e0bffe7db36 |
+| schedule-deadline-feasibility | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-schedule-deadline-feasibility.md | c2749196430d |
+| schedule-finish-time | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-schedule-finish-time.md | 6a76efd88cfa |
+| task-prerequisite-count | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-task-prerequisite-count.md | 82953d59b7ce |
 | top-k-among-list | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-top-k-among-list.md | 562ef55bb3fe |
 | total-plus-a-fixed-amount | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-total-plus-a-fixed-amount.md | a25b61c006c5 |
 | total-plus-a-percentage | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-total-plus-a-percentage.md | 7633f30b3df4 |
@@ -85,4 +89,4 @@ The manifest is split by family so a long table stays reviewable. Each family ma
 | whole-units-under-a-budget | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-whole-units-under-a-budget.md | 850cbef4059e |
 | words-containing-letter | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-words-containing-letter.md | 68d5bc573401 |
 
-Total accepted examples: 3200.
+Total accepted examples: 3360.

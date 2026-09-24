@@ -2,7 +2,7 @@
 
 Source: `teacher/procedural/arithmetic.mjs` (generator arithmetic.mjs 1.3.0, seed 20260921, 40 instances per family).
 
-Accepted examples: 3200. Rejected candidates: 0. Evaluation holdout: 480 (15.0%). Distinct plans: 80. Distinct compiled circuits: 3200 (a circuit embeds the values it was compiled from, so the count equals the accepted set unless two problems compile to identical text).
+Accepted examples: 3360. Rejected candidates: 0. Evaluation holdout: 480 (14.3%). Distinct plans: 84. Distinct compiled circuits: 3360 (a circuit embeds the values it was compiled from, so the count equals the accepted set unless two problems compile to identical text).
 
 Acceptance class: every accepted example is `constructed_verified` as defined by `DS008-training-data`: the executed circuit produced the answer of the recorded latent plan, and the family oracle computed that answer by an independent route. The printed-answer signal of a book source does not exist for a generated instance, so the manifest rows record the generator, the family, the instance index, and the sampling seed instead of a source span.
 
@@ -10,7 +10,7 @@ Probes: every assembled circuit carries the probe harness of `teacher/families/p
 
 ## Accepted by category
 
-- no-knowledge: 3200
+- no-knowledge: 3360
 
 ## Accepted by problem type
 
@@ -33,7 +33,8 @@ no-knowledge/first-and-last-letter (40), no-knowledge/grouped-label-totals (40),
 no-knowledge/keep-divisible-count (40), no-knowledge/keep-divisible-total (40), no-knowledge/keep-divisible-total-percent (40), no-knowledge/length-of-word (40),
 no-knowledge/length-ranked-words (40), no-knowledge/longer-of-two-words (40), no-knowledge/net-balance-with-withdrawals (40), no-knowledge/parallel-join-deadline (40),
 no-knowledge/percent-of-total (40), no-knowledge/raised-largest-record (40), no-knowledge/raised-smallest-record (40), no-knowledge/reverse-word (40),
-no-knowledge/scaled-recipe (40), no-knowledge/top-k-among-list (40), no-knowledge/total-plus-a-fixed-amount (40), no-knowledge/total-plus-a-percentage (40),
+no-knowledge/route-bottleneck-capacity (40), no-knowledge/scaled-recipe (40), no-knowledge/schedule-deadline-feasibility (40), no-knowledge/schedule-finish-time (40),
+no-knowledge/task-prerequisite-count (40), no-knowledge/top-k-among-list (40), no-knowledge/total-plus-a-fixed-amount (40), no-knowledge/total-plus-a-percentage (40),
 no-knowledge/two-tier-price (40), no-knowledge/vowel-richest-word (40), no-knowledge/whole-units-under-a-budget (40), no-knowledge/words-containing-letter (40)
 
 
@@ -111,7 +112,11 @@ no-knowledge/two-tier-price (40), no-knowledge/vowel-richest-word (40), no-knowl
 - family raised-largest-record: 40
 - family raised-smallest-record: 40
 - family reverse-word: 40
+- family route-bottleneck-capacity: 40
 - family scaled-recipe: 40
+- family schedule-deadline-feasibility: 40
+- family schedule-finish-time: 40
+- family task-prerequisite-count: 40
 - family top-k-among-list: 40
 - family total-plus-a-fixed-amount: 40
 - family total-plus-a-percentage: 40
@@ -129,7 +134,7 @@ Every accepted example ships the answer its source prints.
 
 ## Family integrity checks
 
-Templates covered: 80, of which 80 have several variants and 80 of those print several distinct answers, which is what shows that the computation reacts to its input.
+Templates covered: 84, of which 84 have several variants and 84 of those print several distinct answers, which is what shows that the computation reacts to its input.
 
 No template with several variants prints one answer for every variant.
 

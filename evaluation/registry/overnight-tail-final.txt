@@ -1,0 +1,9 @@
+=== exp-016 (1.5B coder, declarative wires) ===
+parse validity 100.0%, graph validity 100.0%, runtime completion 75.2%, oracle match 62.4%
+capability probes 3/10 (capability-probes-1.0.0)
+=== exp-017 (Qwen3-1.7B, declarative wires) ===
+parse validity 100.0%, graph validity 100.0%, runtime completion 78.4%, oracle match 62.7%
+capability probes 4/10 (capability-probes-1.0.0)
+=== classes ===
+exp-016-wires: {'generation_transport_error': 0, 'wrapper_rejected': 0, 'parse_invalid': 0, 'graph_invalid': 0, 'execution_error': 175, 'answer_mismatch': 90, 'answer_match': 440}
+exp-017-qwen3-17b: {'generation_transport_error': 0, 'wrapper_rejected': 0, 'parse_invalid': 0, 'graph_invalid': 0, 'execution_error': 152, 'answer_mismatch': 111, 'answer_match': 442}

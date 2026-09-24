@@ -4,8 +4,8 @@
     "id": "compiled-plan-chat-4",
     "systemPromptSha256": "c2967d80d31eeb8a8f1605e75ece90edd16a0f0338a7b24bf15442bbf9287a74"
   },
-  "snapshot": "b423751423877019cfd23d13aedc435cffeb5991e758b53131acb25124236e40",
-  "rows": 9495,
+  "snapshot": "228417f29220f664e4a8250051403a3b9a8793ee23cc3bb3a998934d079adb77",
+  "rows": 9655,
   "books": {
     "adult-reasoning": {
       "rows": 990,
@@ -53,13 +53,13 @@
       "plans": 579
     },
     "procedural-arithmetic": {
-      "rows": 2720,
+      "rows": 2880,
       "categories": {
-        "no-knowledge": 2720,
+        "no-knowledge": 2880,
         "knowledge": 0
       },
-      "templates": 68,
-      "plans": 68
+      "templates": 72,
+      "plans": 72
     },
     "scientific-reasoning": {
       "rows": 975,
@@ -107,9 +107,9 @@
       "rows": 990
     },
     "procedural-arithmetic.jsonl": {
-      "sha256": "8902725f401232ada1c725acc1206b87bbfadef4f07bd3e6354aa08d2b10f772",
-      "bytes": 8656280,
-      "rows": 2720
+      "sha256": "d3f0bea4a58d08e8f2981a9c4624288313ca0c5894bb544f5b362915dfc65086",
+      "bytes": 9315648,
+      "rows": 2880
     },
     "scientific-reasoning.jsonl": {
       "sha256": "680ff6353fa1f36a1c08e65155118183fc2b361e3822fb84604d394befe7e758",
@@ -122,14 +122,14 @@
       "rows": 980
     },
     "all-books.jsonl": {
-      "sha256": "f80edb5523c234292a43a801467e16df35d138f9ae9f708aae4854c378cbc13b",
-      "bytes": 39927895,
-      "rows": 9495
+      "sha256": "b592ebfb4c0de4b2409049b83aeb743f43bdde49517aa3b0e1109603c26e22cf",
+      "bytes": 40587263,
+      "rows": 9655
     },
     "preservation-10.jsonl": {
-      "sha256": "1320818e8e5b51da38e1ff7e12822f84345573dee5ab10e72591a3cec573c7d8",
-      "bytes": 3582289,
-      "rows": 950
+      "sha256": "5d074ce132612b99df4032c3ae13044acceeec664ecd7f516f964c6d3c369b8d",
+      "bytes": 3641294,
+      "rows": 966
     }
   },
   "dataset": {
@@ -147,11 +147,11 @@
     },
     "ratio": 0.1,
     "stride": 10,
-    "rows": 950,
-    "sourceSnapshot": "b423751423877019cfd23d13aedc435cffeb5991e758b53131acb25124236e40",
+    "rows": 966,
+    "sourceSnapshot": "228417f29220f664e4a8250051403a3b9a8793ee23cc3bb3a998934d079adb77",
     "derivation": "training/preservation.mjs 1.0.0: each sampled circuit is re-emitted as standalone JavaScript with the same wires bound as constants and the answer printed by console.log",
     "file": "preservation-10.jsonl",
-    "sha256": "1320818e8e5b51da38e1ff7e12822f84345573dee5ab10e72591a3cec573c7d8",
-    "bytes": 3582289
+    "sha256": "5d074ce132612b99df4032c3ae13044acceeec664ecd7f516f964c6d3c369b8d",
+    "bytes": 3641294
   }
 }

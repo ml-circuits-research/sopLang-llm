@@ -1,0 +1,111 @@
+@slots literal
+{
+  "tasks": [
+    {
+      "name": "A",
+      "duration": 7
+    },
+    {
+      "name": "B",
+      "duration": 3
+    },
+    {
+      "name": "C",
+      "duration": 2
+    },
+    {
+      "name": "D",
+      "duration": 6
+    },
+    {
+      "name": "E",
+      "duration": 2
+    },
+    {
+      "name": "F",
+      "duration": 2
+    },
+    {
+      "name": "G",
+      "duration": 8
+    }
+  ],
+  "edges": [
+    [
+      "A",
+      "B"
+    ],
+    [
+      "A",
+      "D"
+    ],
+    [
+      "A",
+      "F"
+    ],
+    [
+      "B",
+      "C"
+    ],
+    [
+      "B",
+      "E"
+    ],
+    [
+      "C",
+      "F"
+    ],
+    [
+      "D",
+      "F"
+    ],
+    [
+      "D",
+      "G"
+    ]
+  ],
+  "target": "B"
+}
+
+@blocking jsEval
+const slots = $slots;
+probe(Array.isArray(slots.tasks) && slots.tasks.length > 0, "the plan must schedule at least one task");
+probe(Array.isArray(slots.edges), "the plan must state the precedence pairs");
+probe(slots.tasks.some((task) => task.name === slots.target), "the target task must be one of the scheduled tasks");
+const beforeOf = {};
+for (const task of slots.tasks) {
+  beforeOf[task.name] = [];
+}
+for (const edge of slots.edges) {
+  beforeOf[edge[1]].push(edge[0]);
+}
+const seen = new Set([slots.target]);
+const queue = [slots.target];
+while (queue.length > 0) {
+  const name = queue.shift();
+  for (const before of beforeOf[name]) {
+    if (!seen.has(before)) {
+      seen.add(before);
+      queue.push(before);
+    }
+  }
+}
+seen.delete(slots.target);
+return [...seen];
+
+@count aggregate
+source: $blocking
+op: count
+
+@answer jsEval
+const slots = $slots;
+const count = $count;
+probe(Number.isInteger(count) && count >= 0 && count < slots.tasks.length, "the prerequisite count must be a whole number below the task count");
+if (count === 0) {
+  return "No task must finish before task " + slots.target + " can start.";
+}
+if (count === 1) {
+  return "1 task must finish before task " + slots.target + " can start.";
+}
+return count + " tasks must finish before task " + slots.target + " can start.";
+
