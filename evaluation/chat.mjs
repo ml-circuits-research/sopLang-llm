@@ -935,20 +935,34 @@ export function runCommand({ name, argument }, session) {
   if (name === 'show-plan') {
     const turn = session.turns.at(-1) ?? null;
     if (turn === null) return { exit: false, text: '✗ no turn to show yet: ask a question first.' };
-    const lines = [`? ${turn.question}`];
-    if (turn.program === null) {
-      lines.push(`✗ no program was generated (${turn.className}${turn.detail === null ? '' : `: ${turn.detail}`}).`);
-      return { exit: false, text: lines.join('\n') };
-    }
-    lines.push('--- generated plan ---', turn.program.trimEnd(), '--- end of plan ---', '');
-    lines.push(`wires: ${turn.wires.map((wire) => `@${wire.name} ${wire.command}`).join(', ')}`);
-    lines.push(`executed: ${turn.className === 'executed' ? 'yes' : 'no'}`);
-    if (turn.className === 'executed') {
-      lines.push(`divergence: ${divergenceOf(turn.className)} (the circuit executed; this CLI holds no reference answer to compare its answer against)`);
-    } else {
-      lines.push(`divergence: ${divergenceOf(turn.className)}`);
-      if (turn.detail) lines.push(`detail: ${turn.detail}`);
-    }
+    const lines = [`? ${turn.question}`, ''];
+    // One section per loaded model. The compiled students carry their plan and
+    // its wires; the untrained bases answer in prose, so they state that and
+    // their answer instead of a plan they do not have.
+    const planSection = (model, label) => {
+      const section = [`── ${label} ──`];
+      if (model === null || model === undefined) return section.concat(['not loaded']);
+      if (model.program === null) {
+        if (model.text !== undefined) {
+          return section.concat([`answers in prose, no plan: ${model.text ?? '(no answer)'}`]);
+        }
+        return section.concat([`✗ no program was generated (${model.className}${model.detail === null ? '' : `: ${model.detail}`}).`]);
+      }
+      section.push('--- generated plan ---', model.program.trimEnd(), '--- end of plan ---', '');
+      section.push(`wires: ${model.wires.map((wire) => `@${wire.name} ${wire.command}`).join(', ')}`);
+      section.push(`executed: ${model.className === 'executed' ? 'yes' : 'no'}`);
+      if (model.className === 'executed') {
+        section.push(`divergence: ${divergenceOf(model.className)} (the circuit executed; this CLI holds no reference answer to compare its answer against)`);
+      } else {
+        section.push(`divergence: ${divergenceOf(model.className)}`);
+        if (model.detail) section.push(`detail: ${model.detail}`);
+      }
+      return section;
+    };
+    lines.push(...planSection(turn, 'FINE-TUNED MODEL'));
+    lines.push('', ...planSection(turn.student15 ?? null, `FINE-TUNED MODEL 1.5B (${turn.student15Experiment ?? '1.5B'})`));
+    if (turn.base15 !== undefined) lines.push('', ...planSection(turn.base15, 'BASE MODEL 1.5B (untrained)'));
+    if (turn.baseComparison !== undefined) lines.push('', ...planSection(turn.baseComparison, 'BASE MODEL (untrained)'));
     return { exit: false, text: lines.join('\n') };
   }
   if (name === 'export') {
