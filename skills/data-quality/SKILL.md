@@ -108,3 +108,17 @@ The complete per-body list is on stdout; re-run the tool to see it.
 - `scripts/static-check.mjs` — the scanner. `node --check` it after any edit; `--help` lists the
   flags (`--training-data`, `--report`, `--wire-discovery-report`). Node.js built-ins only; no
   GPU, no servers, no rebuild, English-only output.
+
+## Running it manually
+
+```bash
+node skills/data-quality/scripts/static-check.mjs                    # stdout + the report
+node skills/wire-discovery/scripts/discover-wires.mjs                 # shape analysis
+node training-data/verify.mjs                                         # executes every circuit, reproduces the printed answer
+```
+
+Only Node.js built-ins — no dependencies. The report's bloat indicator is the headline: wires
+per plan against hand-written JavaScript lines. On the current suite the numbers are ~2.2 wires
+per plan against ~15.4 jsEval lines per plan (7 lines per wire), and the plans with at most 3
+wires but more than 25 jsEval lines are the bloat class the next abstractions must absorb.
+

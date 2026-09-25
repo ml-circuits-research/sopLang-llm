@@ -47,6 +47,7 @@
         <tr><td>the budgets</td><td>Bounds every call.</td><td>JavaScript time (default 2000 ms, charged cumulatively against the request budget) and a transaction operation cap; exhaustion is a structured <code>budget_exceeded</code> outcome. Failures are typed: <code>validation_error</code> (syntax), <code>execution_error</code> (body failure), <code>unsupported_value</code> (non-transferable).</td></tr>
       </table>
       <p>These helpers are candidates for the same abstraction-learning loop as the wires: a recurring body pattern that a sandbox helper or a declarative command can absorb is a measured win, not a stylistic preference.</p>
+      <p><strong>The bloat indicator.</strong> The static checker reports, per plan, the wire count against the hand-written JavaScript mass: ~2.2 wires per plan against ~15.4 jsEval lines (7 lines per wire) on the current suite, with 1,468 plans (13.8%) holding at most three wires but more than 25 jsEval lines — the class the next abstractions must absorb. Run it with <code>node skills/data-quality/scripts/static-check.mjs</code>.</p>
       <p><strong>Status (2026-09-25):</strong> the container commands joined the teaching pipeline in dataset version 7 — the family validator, the program builder, and the provenance battery now admit and judge container plans, and three minimal families (a store built in stages, a store patched by upsert, a store queried by filter) train the shape. The measurement arm is exp-021.</p>
 
       <h2>Why the declarative commands exist</h2>

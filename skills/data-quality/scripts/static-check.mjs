@@ -550,6 +550,9 @@ function main() {
   const flagged = [];
 
   let jsEvalBodies = 0;
+  let totalWires = 0;
+  let totalJsLines = 0;
+  const bloated = [];
 
   for (const file of files) {
     let text;
@@ -560,10 +563,14 @@ function main() {
     }
     const family = familyFromPath(file);
     const wires = extractWires(text);
+    totalWires += wires.length;
+    let fileJsLines = 0;
 
     for (const w of wires) {
       if (w.command !== 'jsEval') continue;
       jsEvalBodies += 1;
+      fileJsLines += nonEmptyLineCount(w.body);
+      totalJsLines += nonEmptyLineCount(w.body);
 
       const code = cleanedCode(w.body);
       const metrics = {
@@ -598,9 +605,15 @@ function main() {
 
       flagged.push({ file, family, metrics, trips, suggestion });
     }
+    // The bloat indicator: a plan with at most the minimal three wires (slots,
+    // answer, and maybe one stage) that still carries a large mass of hand-written
+    // JavaScript is a candidate for more, smaller wires.
+    if (wires.length <= 3 && fileJsLines > 25) {
+      bloated.push({ file, family, wires: wires.length, lines: fileJsLines });
+    }
   }
 
-  const report = buildReport({ args, thr, files, jsEvalBodies, metricExceeds, tripCounts, suggestionCounts, familyFlagged, topShapeHits, flagged, topShapes });
+  const report = buildReport({ args, thr, files, jsEvalBodies, totalWires, totalJsLines, bloated, metricExceeds, tripCounts, suggestionCounts, familyFlagged, topShapeHits, flagged, topShapes });
   console.log(report.text);
 
   writeFileSync(reportPath, report.markdown, 'utf8');
@@ -612,7 +625,7 @@ function pct(part, whole) {
   return `${((part / whole) * 100).toFixed(1)}%`;
 }
 
-function buildReport({ args, thr, files, jsEvalBodies, metricExceeds, tripCounts, suggestionCounts, familyFlagged, topShapeHits, flagged, topShapes }) {
+function buildReport({ args, thr, files, jsEvalBodies, totalWires, totalJsLines, bloated, metricExceeds, tripCounts, suggestionCounts, familyFlagged, topShapeHits, flagged, topShapes }) {
   const flaggedFiles = new Set(flagged.map((f) => f.file)).size;
   const topShapesPresent = Object.keys(topShapeHits).length;
   const topShapeHitBodies = Object.values(topShapeHits).reduce((s, n) => s + n, 0);
@@ -658,6 +671,18 @@ function buildReport({ args, thr, files, jsEvalBodies, metricExceeds, tripCounts
   lines.push(`jsEval bodies scanned:     ${jsEvalBodies}`);
   lines.push(`bodies flagged MONSTROUS:  ${flagged.length} (${pct(flagged.length, jsEvalBodies)} of bodies)`);
   lines.push(`files with a flagged body: ${flaggedFiles} (${pct(flaggedFiles, files.length)} of files)`);
+
+  // The bloat indicator: wires per plan against hand-written JavaScript mass.
+  const avgWires = files.length === 0 ? 0 : (totalWires / files.length).toFixed(2);
+  const avgJsLines = files.length === 0 ? 0 : (totalJsLines / files.length).toFixed(1);
+  const jsPerWire = totalWires === 0 ? 0 : (totalJsLines / totalWires).toFixed(1);
+  lines.push('');
+  lines.push('the bloat indicator (wires vs hand-written JavaScript):');
+  lines.push(`  total wires across the suite: ${totalWires}`);
+  lines.push(`  average wires per plan:       ${avgWires}`);
+  lines.push(`  average jsEval lines per plan: ${avgJsLines}`);
+  lines.push(`  jsEval lines per wire:        ${jsPerWire} — low wire counts with high line counts mean bloat`);
+  lines.push(`  plans with <= 3 wires but > 25 jsEval lines (too few wires): ${bloated.length} (${pct(bloated.length, files.length)} of plans)`);
   lines.push(`wire-discovery top shapes available for candidate matching: ${topShapes.size}`);
   lines.push(`wire-discovery top shapes still present in the current dataset: ${topShapesPresent} (${topShapeHitBodies} bodies)`);
 
@@ -717,6 +742,7 @@ function buildReport({ args, thr, files, jsEvalBodies, metricExceeds, tripCounts
   md.push('## Totals');
   md.push('');
   md.push(`- solution.sop files scanned: **${files.length}**`);
+  md.push(`- the bloat indicator: **${avgWires}** wires per plan against **${avgJsLines}** jsEval lines per plan (${jsPerWire} lines per wire); **${bloated.length}** plans carry ${'`'}<= 3 wires but > 25 jsEval lines${'`'} — too few wires for the JavaScript mass`);
   md.push(`- jsEval bodies scanned: **${jsEvalBodies}**`);
   md.push(`- bodies flagged MONSTROUS: **${flagged.length}** (${pct(flagged.length, jsEvalBodies)} of bodies)`);
   md.push(`- files with a flagged body: **${flaggedFiles}** (${pct(flaggedFiles, files.length)} of files)`);

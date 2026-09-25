@@ -1,6 +1,6 @@
 # data-quality: jsEval body complexity scan
 
-Run: 2026-09-25T11:46:19.185Z
+Run: 2026-09-25T13:53:24.416Z
 
 ## Thresholds in effect
 
@@ -14,10 +14,11 @@ Run: 2026-09-25T11:46:19.185Z
 
 ## Totals
 
-- solution.sop files scanned: **10520**
-- jsEval bodies scanned: **11400**
-- bodies flagged MONSTROUS: **4397** (38.6% of bodies)
-- files with a flagged body: **4397** (41.8% of files)
+- solution.sop files scanned: **10640**
+- the bloat indicator: **2.19** wires per plan against **15.4** jsEval lines per plan (7.0 lines per wire); **1468** plans carry `<= 3 wires but > 25 jsEval lines` — too few wires for the JavaScript mass
+- jsEval bodies scanned: **11760**
+- bodies flagged MONSTROUS: **4397** (37.4% of bodies)
+- files with a flagged body: **4397** (41.3% of files)
 - wire-discovery top shapes available for candidate matching: **20**
 - wire-discovery top shapes still present in the current dataset: **1** (80 bodies)
 
@@ -27,10 +28,10 @@ A body may exceed several thresholds; each row counts bodies that trip that one 
 
 | metric | threshold | bodies | share of all bodies |
 |---|---|---|---|
-| lines | `> 15` | 3676 | 32.2% |
-| loops | `> 2` | 774 | 6.8% |
-| chains | `> 3` | 947 | 8.3% |
-| variables | `> 6` | 3922 | 34.4% |
+| lines | `> 15` | 3676 | 31.3% |
+| loops | `> 2` | 774 | 6.6% |
+| chains | `> 3` | 947 | 8.1% |
+| variables | `> 6` | 3922 | 33.4% |
 | depth | `> 3` | 207 | 1.8% |
 
 ## Thresholds tripped per flagged body
