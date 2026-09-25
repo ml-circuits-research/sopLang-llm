@@ -81,10 +81,6 @@ const deadlineFeasibility = {
   },
   compute: [
     'const slots = $slots;',
-    'probe(Number.isInteger(slots.firstMinutes) && slots.firstMinutes > 0, "the first track must take a positive whole number of minutes");',
-    'probe(Number.isInteger(slots.secondMinutes) && slots.secondMinutes > 0, "the second track must take a positive whole number of minutes");',
-    'probe(Number.isInteger(slots.serialMinutes) && slots.serialMinutes > 0, "the serial step must take a positive whole number of minutes");',
-    'probe(Number.isInteger(slots.limitMinutes) && slots.limitMinutes > 0, "the window must be a positive whole number of minutes");',
     'const tracks = [slots.firstMinutes, slots.secondMinutes].sort((left, right) => right - left);',
     'const joinMinutes = tracks[0];',
     'probe(joinMinutes >= tracks[1], "the join must wait for the slower parallel track");',
@@ -146,9 +142,6 @@ const restockThreshold = {
   },
   compute: [
     'const slots = $slots;',
-    'probe(Number.isInteger(slots.stockUnits) && slots.stockUnits > 0, "the stock must be a positive whole number of units");',
-    'probe(Number.isInteger(slots.dailyUse) && slots.dailyUse > 0, "the daily use must be a positive whole number of units");',
-    'probe(Number.isInteger(slots.leadDays) && slots.leadDays > 0, "the lead time must be a positive whole number of days");',
     'let remaining = slots.stockUnits;',
     'let days = 0;',
     'while (remaining >= slots.dailyUse) {',
@@ -219,11 +212,6 @@ const tieredDiscount = {
   },
   compute: [
     'const slots = $slots;',
-    'probe(Number.isInteger(slots.basePrice) && slots.basePrice > 0, "the first price must be a positive whole number of units");',
-    'probe(Number.isInteger(slots.discountedPrice) && slots.discountedPrice > 0, "the discounted price must be a positive whole number of units");',
-    'probe(slots.discountedPrice < slots.basePrice, "the discounted price must be lower than the first price");',
-    'probe(Number.isInteger(slots.threshold) && slots.threshold > 0, "the threshold must be a positive whole number");',
-    'probe(Number.isInteger(slots.quantity) && slots.quantity > 0, "the ordered quantity must be a positive whole number");',
     'let total = 0;',
     'for (let index = 0; index < slots.quantity; index += 1) {',
     '  total += index < slots.threshold ? slots.basePrice : slots.discountedPrice;',
@@ -284,8 +272,6 @@ const crateCount = {
   },
   compute: [
     'const slots = $slots;',
-    'probe(Number.isInteger(slots.totalUnits) && slots.totalUnits > 0, "the produced units must be a positive whole number");',
-    'probe(Number.isInteger(slots.unitsPerCrate) && slots.unitsPerCrate > 1, "the crate capacity must be a whole number greater than one");',
     'let crates = 0;',
     'let packed = 0;',
     'while (packed < slots.totalUnits) {',

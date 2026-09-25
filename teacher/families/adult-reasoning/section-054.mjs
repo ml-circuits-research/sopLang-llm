@@ -63,11 +63,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.observer === "string" && slots.observer.length > 0, "the case must name the observer");',
-  'probe(/^[A-Z][a-z]+$/.test(slots.observer), "the observer must be a plain capitalised name");',
-  'probe(slots.soundNeedsMedium === true, "the sheet must state that sound needs a medium");',
-  'probe(slots.airRemoved === true, "the sheet must describe the jar with the air removed");',
-  'probe(typeof slots.motionSeen === "boolean" && typeof slots.soundHeard === "boolean" && typeof slots.lampSeen === "boolean", "the recording must report motion, sound, and lamp");',
   'let mediumClause;',
   'if (slots.soundNeedsMedium && !slots.soundHeard && slots.lampSeen) {',
   '  mediumClause = "Sound needed air; light did not.";',

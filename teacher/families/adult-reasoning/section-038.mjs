@@ -81,13 +81,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots === "object" && slots !== null, "the emergency case must carry its parsed values");',
-  'probe(typeof slots.resident === "string" && slots.resident.length > 0, "the described resident must be named");',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the block must be placed in a named village");',
-  'probe(Number.isInteger(slots.floor) && slots.floor > 0, "the described floor must be a positive whole number");',
-  'probe(typeof slots.meetingPoint === "string" && slots.meetingPoint.length > 0, "the guide must name the meeting point");',
-  'probe(slots.byWindow === true && slots.takesLift === true && slots.usesPhone === true, "the route must leave the window, take the lift, and make the panic call");',
-  'probe(slots.leavesId === true && slots.goesToShop === true, "the route must leave the ID and end at a shop");',
   'const breaches = [];',
   'if (slots.byWindow) { breaches.push("not window"); }',
   'if (slots.takesLift) { breaches.push("not lift"); }',

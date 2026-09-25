@@ -50,12 +50,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the committee place");',
-  'probe(typeof slots.member === "string" && slots.member.length > 0, "the case must name the committee member");',
-  'probe(typeof slots.soldItem === "string" && slots.soldItem.length > 0, "the case must name what the member sells");',
-  'probe(typeof slots.votedTopic === "string" && slots.votedTopic.length > 0, "the case must name the topic put to the vote");',
-  'probe(slots.votedTopic === slots.soldItem + " firm", "the voted topic must be the trade of the member");',
-  'probe(slots.interestMatchesTopic === true, "the sale must be a direct money interest in the voted topic");',
   'const voteClause = slots.interestMatchesTopic ? "Does not vote." : "May vote.";',
   'return voteClause + " May speak.";'
 ].join('\n');

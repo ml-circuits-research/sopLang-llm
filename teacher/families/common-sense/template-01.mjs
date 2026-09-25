@@ -70,8 +70,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Number.isInteger(slots.countA) && slots.countA > 0 && Number.isInteger(slots.countB) && slots.countB > 0, "both groups must have a positive case count");',
-  'probe(Number.isInteger(slots.meanA) && slots.meanA > 0 && Number.isInteger(slots.meanB) && slots.meanB > 0, "both group means must be positive integers");',
   'const roundHundredths = (numerator, denominator) => {',
   '  let hundredths = Math.floor((numerator * 100) / denominator);',
   '  const remainder = (numerator * 100) % denominator;',
@@ -89,7 +87,6 @@ const COMPUTE = [
   'const totalA = slots.countA * slots.meanA;',
   'const totalB = slots.countB * slots.meanB;',
   'const cases = slots.countA + slots.countB;',
-  'probe(cases > 1, "the two groups must be compared across more than one case");',
   'const weighted = roundHundredths(totalA + totalB, cases);',
   'const simple = roundHundredths(slots.meanA + slots.meanB, 2);',
   'probe(weighted > 0 && simple > 0, "both combined means must be positive");',

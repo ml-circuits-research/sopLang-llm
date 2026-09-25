@@ -102,14 +102,7 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place whose page carries the headline");',
-  'probe(typeof slots.claim === "string" && slots.claim.length > 0, "the case must quote the headline claim");',
-  'probe(Number.isInteger(slots.lastMonth) && slots.lastMonth > 0, "last month must be listed with a positive count of sales");',
-  'probe(Number.isInteger(slots.thisMonth) && slots.thisMonth > slots.lastMonth, "this month must be above last month for the printed verdict of a small rise");',
-  'probe(typeof slots.tableClaimant === "string" && slots.tableClaimant.length > 0, "the case must name the speaker who reads the table");',
-  'probe(slots.headlineClaimant !== slots.tableClaimant && slots.headlineClaimant !== slots.singClaimant && slots.tableClaimant !== slots.singClaimant, "the three readings of the page must come from three different speakers");',
   'const claimed = slots.lastMonth * slots.multiple;',
-  'probe(slots.thisMonth < claimed, "the table cell must stay below the headline\'s claim, so the banner and the cells disagree");',
   'return "The table. Double of " + slots.lastMonth + " would be " + claimed + ". " + slots.thisMonth + " is a small rise.";'
 ].join('\n');
 

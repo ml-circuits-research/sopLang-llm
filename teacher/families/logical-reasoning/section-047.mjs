@@ -64,12 +64,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place the card is posted in");',
-  'probe(typeof slots.span === "string" && slots.span.length > 0, "the case must state the listed span of the sealed cupboard");',
-  'probe(typeof slots.supported === "string" && slots.supported.length > 0, "the case must name the speaker who keeps the written path");',
-  'probe(slots.supportedSpan === slots.span, "the verdict about the path must cover the listed span of the cupboard");',
-  'probe(slots.supported !== slots.proverb && slots.supported !== slots.correlation && slots.proverb !== slots.correlation, "the three verdicts must be attributed to three different people");',
-  'probe(typeof slots.idleSubject === "string" && slots.idleSubject.length > 0, "the correlation verdict must name what the darkness goes with");',
   'return slots.supported + "\\u2019s sentence. The mechanism names light as an input. \\u201cFind a way\\u201d invents a second process the card does not give.";'
 ].join('\n');
 

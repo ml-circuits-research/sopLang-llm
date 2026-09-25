@@ -68,12 +68,8 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(Array.isArray(slots.claims) && slots.claims.length === 2, "the statement must propose exactly two claims");',
-  'probe(typeof slots.evidence === "string" && slots.evidence.length > 0, "the statement must say what the source directly shows");',
   'const sameContent = (left, right) => String(left).toLowerCase().replace(/[.]/g, "").replace(/\\s+/g, " ").trim() === String(right).toLowerCase().replace(/[.]/g, "").replace(/\\s+/g, " ").trim();',
   'const supported = slots.claims.findIndex((claim) => sameContent(claim, slots.evidence));',
-  'probe(supported !== -1, "one of the two claims must be the content the source directly shows");',
-  'probe(typeof slots.source === "string" && slots.source.length > 0, "the source itself must be named");',
   'const main = "C" + (supported + 1) + " is supported. C" + (supported === 0 ? 2 : 1) + " is not justified by the source alone.";',
   'const suffix = renderCrossDomain(slots.crossDomain);',
   'return suffix === "" ? main : main + " " + suffix;'

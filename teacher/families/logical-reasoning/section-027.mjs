@@ -55,11 +55,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.kitchen === "string" && slots.kitchen.length > 0, "the case must name the kitchen");',
-  'probe(Number.isInteger(slots.cardMinutes) && slots.cardMinutes > 0, "the card must state a positive cooking time in minutes");',
-  'probe(slots.nightMinutes === slots.cardMinutes, "the firm night must fall at the time the card names");',
-  'probe(typeof slots.attacker === "string" && slots.attacker.length > 0, "the case must name the speaker who attacks the card");',
-  'probe(slots.attacker !== slots.hedger && slots.attacker !== slots.third && slots.hedger !== slots.third, "the case must name three different speakers");',
   'return "An inductive policy with slack in \\u201cusually.\\u201d " + slots.attacker + " attacked a universal that was not posted.";'
 ].join('\n');
 

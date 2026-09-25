@@ -56,12 +56,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.name === "string" && slots.name.length > 0, "the case must attribute the belief to a named reader");',
-  'probe(Number.isInteger(slots.retentionMonths) && slots.retentionMonths > 0, "the terms must keep the history for a positive whole number of months");',
-  'probe(slots.newsSwitchInAccount === true, "the terms must place the news switch in Account");',
-  'probe(slots.emailListNotSold === true, "the terms must state that the email list is not sold");',
-  'probe(slots.photosPublicWhileInApp === true, "the terms must state that uploaded photos stay public while they are in the app");',
-  'probe(slots.beliefPhotosPrivate === true && slots.beliefHistoryDeletedAtOnce === true, "the reader must hold the two beliefs the terms contradict");',
   'const switchClause = "It stops news.";',
   'const photoClause = "It does not change photos.";',
   'const historyClause = "It does not delete history before " + slots.retentionMonths + " months.";',

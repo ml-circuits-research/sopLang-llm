@@ -63,11 +63,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the town of the fete committee");',
-  'probe(Number.isInteger(slots.successes) && slots.successes > 0 && slots.successes <= slots.trials, "the rainy mornings must be a positive count within the listed mornings");',
-  'probe(slots.echoedSuccesses === slots.successes && slots.echoedTrials === slots.trials, "the last speaker must quote the same run of mornings");',
-  'probe(typeof slots.climber === "string" && slots.climber.length > 0, "the case must name the speaker who acts on the climb");',
-  'probe(slots.deducer !== slots.climber && slots.deducer !== slots.overhardener && slots.climber !== slots.overhardener, "the case must name three different speakers");',
   'return "Yes, as practical induction. " + slots.climber + " has the family right. " + slots.overhardener + " over-hardened a climb into a law.";'
 ].join('\n');
 

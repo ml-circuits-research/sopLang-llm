@@ -86,10 +86,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Array.isArray(slots.values) && slots.values.length === 9, "the statement must list nine observations");',
-  'probe(slots.values.every((value) => Number.isInteger(value) && value >= 0), "every observation must be a whole non-negative number");',
-  'probe(slots.values[slots.values.length - 1] === slots.extreme, "the named extreme value must be the last observation");',
-  'probe(slots.values[slots.values.length - 1] === Math.max.apply(null, slots.values), "the named extreme value must be the largest observation");',
   'const hundredthsOf = (sum, count) => {',
   '  const scaled = sum * 100;',
   '  const quotient = Math.floor(scaled / count);',

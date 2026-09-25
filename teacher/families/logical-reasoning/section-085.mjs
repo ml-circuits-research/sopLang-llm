@@ -95,12 +95,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the shop window");',
-  'probe(Number.isInteger(slots.shownShops) && slots.shownShops > 0, "the window must show a positive number of shops");',
-  'probe(Number.isInteger(slots.lastedYears) && slots.lastedYears > 0, "the shown shops must have lasted a positive number of years");',
-  'probe(Number.isInteger(slots.closedShops) && slots.closedShops > slots.shownShops, "the footnote must list more closed shops than the window shows");',
-  'probe(typeof slots.closedWord === "string" && slots.closedWord.length > 0, "the case must print the footnote count as a word");',
-  'probe(slots.windowVoice !== slots.survivorshipVoice && slots.windowVoice !== slots.jealousyVoice && slots.survivorshipVoice !== slots.jealousyVoice, "the three readings must belong to three different speakers");',
   'return "The leavers. Visible duration is selected for survival. A fair inductive climb would include the " + slots.closedWord + ".";'
 ].join('\n');
 

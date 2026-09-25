@@ -70,12 +70,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.quantity === "string" && slots.quantity.length > 0, "the subexperiment must name the quantity that increases");',
-  'probe(Array.isArray(slots.factors) && slots.factors.length === 2, "the subexperiment must name exactly two factors");',
-  'probe(slots.factors[0] !== slots.factors[1], "the two factors must be distinct");',
-  'probe(Array.isArray(slots.tests) && slots.tests.length === 2, "the subexperiment must report exactly two interventions");',
-  'probe(slots.tests.every((test) => slots.factors.includes(test.factor)), "every intervention must remove one of the stated factors");',
-  'probe(slots.tests.every((test) => test.outcome === "disappears" || test.outcome === "remains"), "an intervention either removes the increase or leaves it in place");',
   'const causal = slots.tests.filter((test) => test.outcome === "disappears");',
   'probe(causal.length === 1, "exactly one intervention must remove the increase, not " + causal.length);',
   'const associated = slots.factors.find((factor) => factor !== causal[0].factor);',

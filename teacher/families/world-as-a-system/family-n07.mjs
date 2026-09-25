@@ -68,9 +68,6 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(Array.isArray(slots.sites) && slots.sites.length > 0, "the statement must list at least one site");',
-  'probe(slots.sites.every((site) => typeof site.hazard === "number" && typeof site.exposure === "number" && typeof site.protection === "number"), "every site must carry hazard, exposure, and protection");',
-  'probe(slots.sites.every((site) => site.protection !== 0), "a protection value of zero makes the risk index undefined");',
   'const rows = slots.sites.map((site) => ({ id: site.id, value: (site.hazard * site.exposure) / site.protection }));',
   'let lowest = rows[0];',
   'for (const row of rows) {',

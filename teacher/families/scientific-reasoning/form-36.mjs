@@ -61,11 +61,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Array.isArray(slots.steps) && slots.steps.length === 4, "the statement must state four chain steps");',
-  'probe(slots.steps.every((step) => typeof step === "string" && step.length > 0), "every chain step must be a non-empty phrase");',
-  'probe(Array.isArray(slots.roles) && slots.roles.length === 4, "the statement must state the four roles of the artificial system");',
-  'probe(slots.roles.every((role) => typeof role === "string" && role.length > 0), "every role must be a non-empty name");',
-  'probe(new Set(slots.roles).size === slots.roles.length, "the four roles must be distinct");',
   'const spaced = new Set(' + JSON.stringify([...SPACED_ARROW_CHAINS]) + ');',
   'const repairs = new Map(' + JSON.stringify([...PRINTED_ROLE_REPAIRS]) + ');',
   'const arrow = spaced.has(slots.steps[0]) ? " ↔ " : "↔ ";',

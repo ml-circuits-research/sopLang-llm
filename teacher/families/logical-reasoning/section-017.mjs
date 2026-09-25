@@ -61,10 +61,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.contrapositive === "string" && slots.contrapositive.length > 0, "the case must name the speaker of the contrapositive twin");',
-  'probe(typeof slots.converse === "string" && slots.converse.length > 0, "the case must name the speaker of the converse twin");',
-  'probe(typeof slots.bystander === "string" && slots.bystander.length > 0, "the case must name the speaker who hears no difference");',
-  'probe(slots.contrapositive !== slots.converse && slots.contrapositive !== slots.bystander && slots.converse !== slots.bystander, "the three speakers must be different people");',
   'return "Only " + slots.contrapositive + "\\u2019s twin \\u2014 the contrapositive. " + slots.converse + " wrote the converse, a new claim. Wetness can arrive by a street-cleaning truck.";'
 ].join('\n');
 

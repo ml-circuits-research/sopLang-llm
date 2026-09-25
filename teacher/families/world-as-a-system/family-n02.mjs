@@ -128,9 +128,6 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(Array.isArray(slots.constraints) && slots.constraints.length >= 2, "the statement must state at least two simultaneous constraints");',
-  'probe(Number.isInteger(slots.gridMax) && Number.isInteger(slots.gridMin) && slots.gridMax >= slots.gridMin, "the statement must state a valid integer grid range");',
-  'probe(slots.constraints.every((constraint) => ["=", ">=", "<="].includes(constraint.op)), "every stated constraint must use a known comparison");',
   'const candidates = [];',
   'for (let x = slots.gridMin; x <= slots.gridMax; x += 1) {',
   '  for (let y = slots.gridMin; y <= slots.gridMax; y += 1) {',

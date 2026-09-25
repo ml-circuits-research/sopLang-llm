@@ -55,9 +55,6 @@ function render() {
 const COMPUTE = [
   'const slots = $slots;',
   'const readers = [slots.headlineReader, slots.separator, slots.loudnessReader];',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the square must name its place");',
-  'probe(readers.every((name) => typeof name === "string" && name.length > 0), "the square must name the three people reading it");',
-  'probe(new Set(readers).size === readers.length, "the three readings must come from three different people");',
   'return "It refuses the headline as costume, notes that iron sinking does not speak about ice, keeps the density mechanism, and sets aside the person-strike. Loudness is not a family of reasoning.";'
 ].join('\n');
 

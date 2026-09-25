@@ -1,0 +1,8 @@
+=== exp-018 (Qwen3-1.7B, dv4 scheduling) ===
+parse validity 100.0%, graph validity 100.0%, runtime completion 73.6%, oracle match 61.8%
+capability probes 2/10 (capability-probes-1.0.0)
+=== books ===
+books 4/225
+=== vs exp-017 (dv3, aceeasi baza) ===
+exp-017: 442 / 705
+exp-018: 436 / 705

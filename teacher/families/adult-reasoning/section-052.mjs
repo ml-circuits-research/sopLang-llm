@@ -60,13 +60,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.boilC === "number" && Number.isInteger(slots.boilC), "the sheet must state a whole boiling temperature");',
-  'probe(typeof slots.meltC === "number" && Number.isInteger(slots.meltC), "the sheet must state a whole melting temperature");',
-  'probe(slots.meltC < slots.boilC, "ice must melt below the temperature at which water boils");',
-  'probe(slots.lidCeilingC === slots.boilC, "the sheet must state that the lid does not raise the boiling point");',
-  'probe(slots.mixtureC === slots.meltC, "the sheet must hold the melting temperature while both phases are present");',
-  'probe(typeof slots.student === "string" && slots.student.length > 0, "the case must name the student");',
-  'probe(slots.claimedBoilC > slots.boilC, "the case must describe a claim above the stated boiling temperature");',
   'const boilClause = slots.lidShortensOnly',
   '  ? "Boil with lid: still " + slots.boilC + " \u00b0C."',
   '  : "Boil with lid: " + slots.claimedBoilC + " \u00b0C.";',

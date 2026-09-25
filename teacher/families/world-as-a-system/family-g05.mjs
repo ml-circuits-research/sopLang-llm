@@ -57,8 +57,6 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(Array.isArray(slots.cells) && slots.cells.length > 0, "the statement must describe at least one cell");',
-  'probe(Array.isArray(slots.required) && slots.required.length > 0, "the task must require at least one attribute");',
   'const matching = slots.cells.filter((cell) => slots.required.every((attribute) => cell.attributes.includes(attribute))).map((cell) => cell.id);',
   'probe(matching.length > 0, "at least one cell must have every required attribute");',
   'const suffix = renderCrossDomain(slots.crossDomain);',

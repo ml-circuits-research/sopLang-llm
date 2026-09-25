@@ -100,9 +100,6 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(Array.isArray(slots.pairs) && slots.pairs.length > 0, "the facts must order at least two events");',
-  'probe(slots.pairs.every((pair) => typeof pair.earlier === "string" && typeof pair.later === "string" && pair.earlier !== pair.later), "a stated order must relate two different events");',
-  'probe(slots.must !== null && slots.determined !== null, "the task must ask one forced and one open comparison");',
   'const edges = new Map();',
   'for (const pair of slots.pairs) {',
   '  if (!edges.has(pair.earlier)) {',

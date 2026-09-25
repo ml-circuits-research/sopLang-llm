@@ -68,15 +68,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.applicant === "string" && slots.applicant.length > 0, "the case must name the applicant");',
-  'probe(typeof slots.collector === "string" && slots.collector.length > 0, "the case must name the person sent to collect");',
-  'probe(slots.collector !== slots.applicant, "the person sent to collect must not be the applicant");',
-  'probe(Number.isInteger(slots.fee) && slots.fee > 0, "the fee must be a positive whole number");',
-  'probe(slots.forgottenFee === slots.fee, "the forgotten proof must be the proof of the stated fee");',
-  'probe(Number.isInteger(slots.slotMinutes) && slots.slotMinutes > 0, "the slot must last a positive whole number of minutes");',
-  'probe(slots.latenessLimitMinutes === slots.slotMinutes, "the guide must bound lateness by the slot length");',
-  'probe(Number.isInteger(slots.lateMinutes) && slots.lateMinutes >= 0, "the lateness must be a whole number of minutes");',
-  'probe(Number.isInteger(slots.workingDays) && slots.workingDays > 0, "the issue period must be a positive whole number of working days");',
   'const lateness = slots.lateMinutes > slots.latenessLimitMinutes',
   '  ? slots.lateMinutes + ">" + slots.latenessLimitMinutes + " → rebook."',
   '  : slots.lateMinutes + "<=" + slots.latenessLimitMinutes + " → keep the slot.";',

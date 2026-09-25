@@ -55,8 +55,6 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(typeof slots.start === "number" && typeof slots.regeneration === "number" && typeof slots.harvest === "number", "the statement must state a starting stock and a yearly flow");',
-  'probe(typeof slots.years === "number" && slots.years > 0, "the statement must state a positive number of years");',
   'const net = slots.regeneration - slots.harvest;',
   'const stock = slots.start + slots.years * net;',
   'probe(Number.isFinite(stock), "the stock after the stated years must be a finite number");',

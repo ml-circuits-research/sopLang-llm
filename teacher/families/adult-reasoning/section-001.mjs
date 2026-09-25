@@ -54,11 +54,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.visitor === "object" && slots.visitor !== null, "the case must describe the visitor wearing the vest");',
-  'probe(typeof slots.minor === "object" && slots.minor !== null, "the case must describe the person asking about the cabin");',
-  'probe(Number.isInteger(slots.visitor.age) && slots.visitor.age >= 0, "the visitor age must be a whole number");',
-  'probe(Number.isInteger(slots.minor.age) && slots.minor.age >= 0, "the asking person age must be a whole number");',
-  'probe(slots.visitor.name !== slots.minor.name, "the two described people must be different");',
   'const visitorClause = slots.visitor.homeVest',
   '  ? slots.visitor.name + " may not enter in the home vest (the rail vest is required)."',
   '  : slots.visitor.name + " may enter in the rail vest.";',

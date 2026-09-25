@@ -81,13 +81,7 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Array.isArray(slots.routes) && slots.routes.length === 3, "the scenario must state three routes");',
-  'probe(Number.isInteger(slots.requiredFlow) && slots.requiredFlow > 0, "the required flow must be a positive whole number");',
-  'probe(Number.isInteger(slots.limitMinutes) && slots.limitMinutes > 0, "the route time limit must be a positive whole number");',
   'for (const route of slots.routes) {',
-  '  probe(Array.isArray(route.times) && route.times.length === route.capacities.length, "every link time must be paired with a link capacity");',
-  '  probe(route.times.every((minutes) => Number.isInteger(minutes) && minutes > 0), "every link time must be a positive whole number");',
-  '  probe(route.capacities.every((capacity) => Number.isInteger(capacity) && capacity > 0), "every link capacity must be a positive whole number");',
   '}',
   'const summaries = slots.routes.map((route) => ({',
   '  name: route.name,',

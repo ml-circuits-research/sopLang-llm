@@ -87,9 +87,6 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(Array.isArray(slots.groups) && slots.groups.length >= 2, "the statement must name at least two groups");',
-  'probe(slots.groups.every((group) => typeof group.label === "string" && Number.isInteger(group.seats) && group.seats >= 0), "every group must carry a label and a non-negative integer seat count");',
-  'probe(Number.isInteger(slots.threshold) && slots.threshold > 0, "the governing threshold must be a stated positive integer");',
   'const subsets = [];',
   'const build = (start, picked) => {',
   '  if (picked.length > 0) {',

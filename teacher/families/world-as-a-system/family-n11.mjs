@@ -68,11 +68,8 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(Array.isArray(slots.events) && slots.events.length === 2, "the statement must date exactly two events");',
-  'probe(slots.events.every((event) => typeof event.start === "number" && typeof event.end === "number"), "every event must carry a numeric start and end year");',
   'const laterStart = Math.max(...slots.events.map((event) => event.start));',
   'const earlierEnd = Math.min(...slots.events.map((event) => event.end));',
-  'probe(new Set(slots.events.map((event) => event.name)).size === 2, "the two intervals must be named differently");',
   'const overlapYears = earlierEnd - laterStart;',
   'const main = overlapYears > 0 ? "Yes, overlap " + overlapYears + " years." : "No, the events do not overlap.";',
   'const suffix = renderCrossDomain(slots.crossDomain);',

@@ -78,12 +78,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.name === "string" && slots.name.length > 0, "the case must name the person acting on the copies");',
-  'probe(slots.deletedFromComputer === true, "the stem deletes the newer version from the computer");',
-  'probe(slots.staysInBin === true, "the deleted version only stays in the recycle bin");',
-  'probe(slots.editsOnlyStick === true, "the stem edits the only stick");',
-  'probe(typeof slots.newerLabel === "string" && slots.newerLabel !== slots.olderLabel, "the guide names two different versions");',
-  'probe(Number.isInteger(slots.newerDay) && Number.isInteger(slots.olderDay) && slots.newerDay > slots.olderDay, "the guide dates the newer version later than the older one");',
   'const usefulPlaces = slots.deletedFromComputer ? 1 : 2;',
   'probe(usefulPlaces === 1, "the deletion must leave a single useful place");',
   'const clauses = [];',

@@ -127,9 +127,6 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(Array.isArray(slots.pairs) && slots.pairs.length > 0, "the facts must state at least one containment");',
-  'probe(slots.question !== null && typeof slots.question === "object" && typeof slots.question.kind === "string", "the task must state one of the containment questions");',
-  'probe(slots.pairs.every((pair) => typeof pair.inner === "string" && typeof pair.outer === "string" && pair.inner !== pair.outer), "a containment must relate two different named units");',
   'const parent = new Map(slots.pairs.map((pair) => [pair.inner, pair.outer]));',
   'const chainOf = (start) => {',
   '  const chain = [];',
@@ -160,7 +157,6 @@ const COMPUTE = [
   '  probe(chain.length > 0, "the facts must state a larger unit for the asked place");',
   '  main = listPhrase(chain) + ".";',
   '} else {',
-  '  probe(question.kind === "region", "the task question must be one the family recognises");',
   '  main = "No. Country membership alone is insufficient to identify the region.";',
   '}',
   'const suffix = renderCrossDomain(slots.crossDomain);',

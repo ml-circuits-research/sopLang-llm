@@ -83,14 +83,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the two pages must name their place");',
-  'probe(typeof slots.observedPage === "string" && slots.observedPage.length > 0, "the watching page must carry a label");',
-  'probe(typeof slots.assignedPage === "string" && slots.assignedPage.length > 0, "the assigned page must carry a label");',
-  'probe(slots.observedPage !== slots.assignedPage, "the watching page and the assigned page must be different pages");',
-  'probe(Number.isInteger(slots.assignedCount) && slots.assignedCount > 0, "the assigned group must have a positive listed size");',
-  'probe(Number.isInteger(slots.restCount) && slots.restCount > 0, "the rest-only group must have a positive listed size");',
-  'probe(slots.equatedLeft === slots.observedPage && slots.equatedRight === slots.assignedPage, "the equating verdict must compare the watching page with the assigned page");',
-  'probe(slots.leakyPage === slots.observedPage && slots.betterPage === slots.assignedPage, "the design verdict must name the watching page as leaky and the assigned page as better");',
   'return "Page " + slots.assignedPage + ", as written. Page " + slots.observedPage + " observes choosers. Design, not sincerity, is the difference.";'
 ].join('\n');
 

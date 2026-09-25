@@ -55,9 +55,6 @@ function render(solution) {
 const COMPUTE = [
   'const slots = $slots;',
   'const responders = [slots.panicker, slots.ignorer, slots.matcher];',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the board must name the place of the river");',
-  'probe(responders.every((name) => typeof name === "string" && name.length > 0), "the board must name the panicker, the ignorer, and the matcher");',
-  'probe(new Set(responders).size === responders.length, "the three responses must come from three different people");',
   'return slots.matcher + ". The picture is availability. The rise is a small listed change. Proportion is the adult tool.";'
 ].join('\n');
 

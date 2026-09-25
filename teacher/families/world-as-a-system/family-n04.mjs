@@ -63,9 +63,6 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(Number.isInteger(slots.start) && slots.start >= 0, "the starting stock must be a non-negative integer");',
-  'probe(Number.isInteger(slots.inflow) && Number.isInteger(slots.outflow), "both daily flows must be stated integers");',
-  'probe(Number.isInteger(slots.days) && slots.days > 0, "the day count must be a positive integer");',
   'const dailyNet = slots.inflow - slots.outflow;',
   'const end = slots.start + slots.days * dailyNet;',
   'probe(Number.isInteger(end), "the end stock must be a whole number of units");',

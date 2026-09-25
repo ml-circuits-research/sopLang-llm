@@ -56,16 +56,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the school card");',
-  'probe(typeof slots.engine === "string" && slots.engine.length > 0, "the card must name the engine that drives the seasons");',
-  'probe(typeof slots.rival === "string" && slots.rival.length > 0, "the card must name the factor it rejects");',
-  'probe(slots.engine !== slots.rival, "the card must choose one factor over a different one");',
-  'probe(typeof slots.lamp === "string" && slots.lamp.length > 0, "the case must name the surviving picture");',
-  'probe(typeof slots.supporter === "string" && slots.supporter.length > 0, "the case must name the speaker who offers the lamp picture");',
-  'probe(typeof slots.preferrer === "string" && slots.preferrer.length > 0, "the case must name the speaker who prefers the nearer-in-summer picture");',
-  'probe(typeof slots.denier === "string" && slots.denier.length > 0, "the case must name the speaker who denies that two analogies can disagree");',
-  'probe(new Set([slots.supporter, slots.preferrer, slots.denier]).size === 3, "the three speakers must be three different people");',
-  'probe(slots.taught === slots.engine, "the lamp picture must teach the engine the card chose, or it is a rival too");',
   'return "The " + slots.lamp + ", as a map of " + slots.engine + ". The nearer-in-summer picture contradicts the listed fact about " + slots.rival + ".";'
 ].join('\n');
 

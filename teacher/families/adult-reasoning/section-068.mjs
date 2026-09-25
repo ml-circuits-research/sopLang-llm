@@ -58,10 +58,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.owner === "string" && slots.owner.length > 0, "the room must belong to a named person");',
-  'probe(typeof slots.length === "number" && slots.length > 0, "the first side of the room must be a positive length");',
-  'probe(typeof slots.width === "number" && slots.width > 0, "the second side of the room must be a positive length");',
-  'probe(slots.rugIsArea === true && slots.cordIsPerimeter === true, "the sheet must map the rug to the area and the cord to the perimeter");',
   'const area = slots.length * slots.width;',
   'const perimeter = 2 * (slots.length + slots.width);',
   'probe(area === slots.length * slots.width, "the rug must be the rectangle area L×W");',

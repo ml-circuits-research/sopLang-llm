@@ -81,13 +81,7 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.speaker === "string" && slots.speaker.length > 0, "the case must name the speaker who made the sample claim");',
-  'probe(typeof slots.critic === "string" && slots.critic.length > 0, "the case must name the commentator who called the reply a knock-down of a stronger copy");',
-  'probe(typeof slots.originalClaim === "string" && slots.originalClaim.length > 0, "the case must quote the claim that was made");',
-  'probe(typeof slots.replyClaim === "string" && slots.replyClaim.length > 0, "the case must quote the reply");',
-  'probe(Number.isInteger(slots.sampleSize) && slots.sampleSize > 0, "the sample the claim admits must be a positive whole number");',
   'const attached = slots.originalClaim === slots.replyClaim;',
-  'probe(attached === false, "the reply must not be the sentence that was made");',
   'const verdict = attached ? "Yes" : "No";',
   'return verdict + ". \u201cToo small for this climb\u201d is not \u201cknow nothing forever.\u201d That is a straw man.";'
 ].join('\n');

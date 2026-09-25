@@ -80,12 +80,7 @@ function render(solution) {
 const COMPUTE = [
   'const slots = $slots;',
   'const formatTenths = (tenths) => Math.floor(tenths / 10) + "." + (tenths % 10);',
-  'probe(Number.isInteger(slots.demand) && slots.demand > 0, "the expected demand must be a positive whole number");',
-  'probe(Number.isInteger(slots.errorPercent) && slots.errorPercent > 0, "the forecast error must be a positive whole number of percent");',
-  'probe(Number.isInteger(slots.marginPercent) && slots.marginPercent > 0, "the safety margin must be a positive whole number of percent");',
   'for (const side of ["A", "B"]) {',
-  '  probe(Number.isInteger(slots["capacity" + side]) && slots["capacity" + side] > 0, "the capacity of option " + side + " must be a positive whole number");',
-  '  probe(Number.isInteger(slots["cost" + side]) && slots["cost" + side] > 0, "the cost of option " + side + " must be a positive whole number");',
   '}',
   'const scaled = slots.demand * (100 + slots.errorPercent) * (100 + slots.marginPercent);',
   'const requirementTenths = Math.floor((scaled + 500) / 1000);',

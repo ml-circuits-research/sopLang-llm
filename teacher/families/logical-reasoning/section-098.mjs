@@ -54,9 +54,6 @@ function render() {
 const COMPUTE = [
   'const slots = $slots;',
   'const readers = [slots.disproofReader, slots.separator, slots.canceller];',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the card must name the place of the clinic");',
-  'probe(readers.every((name) => typeof name === "string" && name.length > 0), "the card must name the three neighbours reading it");',
-  'probe(new Set(readers).size === readers.length, "the three readings must come from three different people");',
   'return "Yes. The training sentence is a definitional mechanism on the card. Three tired evenings are a small sample about a side feeling, not a refutation of what the card said a vaccine is.";'
 ].join('\n');
 

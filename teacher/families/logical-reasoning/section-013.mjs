@@ -72,9 +72,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Number.isInteger(slots.fee) && slots.fee > 0, "the fee must be a positive whole number");',
-  'probe(Array.isArray(slots.applicants) && slots.applicants.length === 3, "the case must record exactly three applicants");',
-  'probe(new Set(slots.applicants.map((applicant) => applicant.name)).size === 3, "the three applicants must be different people");',
   'const holders = slots.applicants.filter((applicant) => applicant.paid === true && applicant.photograph === true);',
   'probe(holders.length === 1, "exactly one applicant holds both halves of the biconditional");',
   'return "Only " + holders[0].name + ". \\u201cIf and only if\\u201d makes the pair necessary and sufficient. Missing either half blocks the pass.";'

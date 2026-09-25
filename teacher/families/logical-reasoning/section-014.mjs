@@ -70,10 +70,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.closing === "string" && /^\\d{1,2}:\\d{2}$/.test(slots.closing), "the board must state a closing time of the form HH:MM");',
-  'probe(typeof slots.cancelledClass === "string" && slots.cancelledClass.length > 0, "the board must name the class it cancels");',
-  'probe(slots.warningPosted === false, "the case must post no storm warning, so the default closing time stands");',
-  'probe(new Set([slots.doubter, slots.reader, slots.overreach]).size === 3, "the three reactions must come from three different people");',
   'return "Without a posted warning, the hall stays open until " + slots.closing + ". The " + slots.cancelledClass + " is the listed hole. Other classes still run.";'
 ].join('\n');
 

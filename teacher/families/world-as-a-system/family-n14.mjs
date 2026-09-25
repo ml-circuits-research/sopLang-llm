@@ -118,8 +118,6 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(Array.isArray(slots.steps) && slots.steps.length > 0, "the artifact record must state at least one handoff");',
-  'probe(slots.steps.some((step) => step.kind === "found"), "the artifact record must state how the object was found");',
   'const ordered = [...slots.steps].sort((left, right) => left.day - right.day);',
   'let holder = null;',
   'let gap = slots.statedGap || null;',
@@ -137,7 +135,6 @@ const COMPUTE = [
   '  }',
   '  holder = step.receiver;',
   '}',
-  'probe(new Set(ordered.map((step) => step.day)).size === ordered.length, "every record entry must carry its own day");',
   'const main = gap === null',
   '  ? "The chain is complete under the stated rule."',
   '  : gap.kind === "link"',

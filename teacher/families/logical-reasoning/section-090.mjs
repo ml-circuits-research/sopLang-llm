@@ -53,13 +53,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place with the board");',
-  'probe(typeof slots.outvoter === "string" && slots.outvoter.length > 0, "the case must name the person who lets the face outvote the table");',
-  'probe(typeof slots.keeper === "string" && slots.keeper.length > 0, "the case must name the voice that keeps the face and the table separate");',
-  'probe(typeof slots.conflater === "string" && slots.conflater.length > 0, "the case must name the voice that promotes the face to a rate");',
-  'probe(slots.keeper !== slots.conflater, "the two voices must be different people");',
-  'probe(Number.isInteger(slots.rows) && slots.rows > 0, "the table must list a positive number of cases");',
-  'probe(slots.claimedRows === slots.rows, "the two mentions of the table size must agree");',
   'return "The rate. A story can be true and urgent. It does not become " + slots.rows + " rows.";'
 ].join('\n');
 

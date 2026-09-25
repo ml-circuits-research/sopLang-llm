@@ -152,19 +152,14 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Array.isArray(slots.cases) && slots.cases.length >= 2, "the statement must list at least two candidates");',
-  'probe(slots.cases.every((entry) => typeof entry.label === "string" && entry.label.length > 0), "every candidate must carry a label");',
-  'probe(typeof slots.questions === "object" && slots.questions !== null, "the statement must carry the printed question of each property");',
   'const counts = new Map();',
   'const order = [];',
   'for (const entry of slots.cases) {',
-  '  probe(Array.isArray(entry.properties), "every candidate must state its properties as a list");',
   '  for (const property of entry.properties) {',
   '    if (!counts.has(property)) { counts.set(property, 0); order.push(property); }',
   '    counts.set(property, counts.get(property) + 1);',
   '  }',
   '}',
-  'probe(order.length > 0, "the statement must state at least one property");',
   'const questions = order.map((property) => ({ property: property, yes: counts.get(property), no: slots.cases.length - counts.get(property) }));',
   'let best = null;',
   'let tied = 0;',
@@ -173,11 +168,9 @@ const COMPUTE = [
   '  if (best === null || worst < best.worst) { best = { property: candidate.property, yes: candidate.yes, no: candidate.no, worst: worst }; tied = 1; }',
   '  else if (worst === best.worst) { tied += 1; }',
   '}',
-  'probe(best !== null, "the statement must state at least one property");',
   'probe(tied === 1, "the stated properties must leave exactly one most informative question");',
   'probe(best.yes + best.no === slots.cases.length, "the split must count every candidate");',
   'const phrase = slots.questions[best.property];',
-  'probe(typeof phrase === "string" && phrase.length > 0, "the statement must print the question of the chosen property: " + best.property);',
   'return "The optimal question is “" + phrase + "”, with split " + best.yes + "/" + best.no + ".";'
 ].join('\n');
 

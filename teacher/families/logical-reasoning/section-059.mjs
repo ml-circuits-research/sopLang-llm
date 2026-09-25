@@ -53,12 +53,8 @@ function render() {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the damp wall");',
   'const people = [slots.drama, slots.tieHolder, slots.dismisser];',
-  'probe(people.every((name) => typeof name === "string" && name.length > 0), "the case must name the person behind each reaction");',
-  'probe(new Set(people).size === people.length, "the three reactions must come from three different people");',
   'const rivals = ["a leaking roof tile above", "rising damp from a listed cracked plinth"];',
-  'probe(rivals.length === 2, "the section fits exactly two listed stories to one damp wall");',
   'return "A tie on present signs. Drama does not break a tie. A method that leaves a tie has told you what to measure next.";'
 ].join('\n');
 

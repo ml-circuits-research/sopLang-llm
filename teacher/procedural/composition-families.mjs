@@ -414,7 +414,6 @@ function runBody(run, input) {
   if (input === 'values') {
     lines.push('const slots = $slots;');
     lines.push('const values = slots.values;');
-    lines.push('probe(Array.isArray(values) && values.length > 0, "the records must be a non-empty list");');
     lines.push('let current = values;');
   } else {
     lines.push('const slots = $slots;');
@@ -495,7 +494,6 @@ function chainBody(composition) {
   const lines = [
     'const slots = $slots;',
     'const values = slots.values;',
-    'probe(Array.isArray(values) && values.length > 0, "the records must be a non-empty list");',
     'let current = values;'
   ];
   for (const [index, name] of composition.chain.entries()) {

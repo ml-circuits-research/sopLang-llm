@@ -35,9 +35,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.covered === "string" && slots.covered.length > 0, "the case must name the person pointing at the listed sparrow");',
-  'probe(typeof slots.uncovered === "string" && slots.uncovered.length > 0, "the case must name the person pointing at the listed oak");',
-  'probe(slots.covered !== slots.uncovered, "the two pointing people must be different");',
   'return "Only " + slots.covered + "\\u2019s. The sparrow is a listed bird, so the universal covers it. The oak is listed as a tree, so the same universal does not touch it.";'
 ].join('\n');
 

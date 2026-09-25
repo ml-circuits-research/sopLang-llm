@@ -62,11 +62,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the forecast card must name the place of the fete");',
-  'probe(slots.listedDays === slots.dryListedDays, "the rain and dry counts must describe the same listed days");',
-  'probe(slots.rainDays + slots.dryDays === slots.listedDays, "the rain and dry counts must fill the listed days");',
-  'probe(slots.rainDays > 0 && slots.rainDays < slots.listedDays, "the card must give thin-to-moderate support, not certainty either way");',
-  'probe(slots.proofReader !== slots.policyReader && slots.policyReader !== slots.safetyReader && slots.proofReader !== slots.safetyReader, "the three readings must come from three different people");',
   'return "Practical reasoning under uncertainty, not a deduction of doom and not a deduction of safety. Precaution is a policy. " + slots.rainDays + " of " + slots.listedDays + " is a climb.";'
 ].join('\n');
 

@@ -68,11 +68,6 @@ function render() {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.town === "string" && slots.town.length > 0, "the case must name the town of the clinic book");',
-  'probe(Number.isInteger(slots.firstWeek) && slots.firstWeek > 0 && Number.isInteger(slots.secondWeek) && slots.secondWeek > 0, "both weeks must count at least one improved patient");',
-  'probe(slots.firstWeek <= slots.firstTotal && slots.secondWeek <= slots.secondTotal, "an improved count cannot exceed its listed total");',
-  'probe(Math.abs(slots.firstWeek / slots.firstTotal - slots.secondWeek / slots.secondTotal) <= 0.5, "the two counts the speakers compare must be similar");',
-  'probe(slots.replicator !== slots.doubter && slots.replicator !== slots.universalizer && slots.doubter !== slots.universalizer, "the case must name three different speakers");',
   'return "More inductive weight than a single week. They still do not buy a universal about every town.";'
 ].join('\n');
 

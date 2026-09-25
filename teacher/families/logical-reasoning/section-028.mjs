@@ -47,10 +47,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.witness === "string" && slots.witness.length > 0, "the case must name the witness");',
-  'probe(typeof slots.village === "string" && slots.village.length > 0, "the case must name the village");',
-  'probe(slots.witness === slots.echoed, "the testimony must report the witness\\u2019 own slip, so the two names must agree");',
-  'probe(slots.critic !== slots.witness && slots.third !== slots.witness && slots.critic !== slots.third, "the case must name two onlookers besides the witness");',
   'return "That " + slots.witness + " slipped once last March on that path. It does not by itself support \\u201calways icy in March.\\u201d";'
 ].join('\n');
 

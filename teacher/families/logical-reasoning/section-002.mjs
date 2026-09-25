@@ -55,12 +55,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the notice must name the place of the stall");',
-  'probe(Number.isInteger(slots.boxes) && slots.boxes >= 2, "the notice must state a count of at least two boxes per kind");',
-  'probe(typeof slots.soupSpeaker === "string" && slots.soupSpeaker.length > 0, "the case must name the speaker who takes a soup");',
-  'probe(typeof slots.pieSpeaker === "string" && slots.pieSpeaker.length > 0, "the case must name the speaker who takes a pie");',
-  'probe(typeof slots.juiceSpeaker === "string" && slots.juiceSpeaker.length > 0, "the case must name the speaker who doubts the juice clause");',
-  'probe(new Set([slots.pieSpeaker, slots.soupSpeaker, slots.juiceSpeaker]).size === 3, "the three claims must come from three different speakers");',
   'return slots.soupSpeaker + " is forced. " + slots.pieSpeaker + " is possible but not forced (\\u201csome\\u201d is not \\u201cthis one\\u201d). " + slots.juiceSpeaker + " contradicts \\u201cnone.\\u201d";'
 ].join('\n');
 

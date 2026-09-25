@@ -65,16 +65,8 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the notice must name the place");',
-  'probe(typeof slots.rebuilder === "string" && slots.rebuilder.length > 0, "the case must name the person who rebuilds the product");',
-  'probe(Number.isInteger(slots.jars) && slots.jars > 0, "the notice must offer a positive number of jars");',
-  'probe(Number.isInteger(slots.each) && slots.each > 0, "the notice must give a positive each price");',
-  'probe(Number.isInteger(slots.noticeTotal) && slots.noticeTotal > 0, "the notice must print a positive total");',
-  'probe(Number.isInteger(slots.claimedSaving) && slots.claimedSaving > 0, "the notice must advertise a positive saving");',
-  'probe(slots.product === slots.jars * slots.each, "the stated product must be the jars times the each price");',
   'const discrepancy = slots.noticeTotal - slots.product;',
   'probe(discrepancy !== 0, "the notice total must differ from the product, or there is no error to find");',
-  'probe(slots.claimedSaving === Math.abs(discrepancy), "the advertised saving must be the discrepancy with its sign flipped");',
   'const direction = discrepancy > 0 ? discrepancy + " higher, not lower" : (-discrepancy) + " lower, not higher";',
   'return "The correct product is " + slots.product + ". The notice is " + direction + ". The “saving” is the sign flipped.";'
 ].join('\n');

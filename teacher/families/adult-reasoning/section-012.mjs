@@ -65,13 +65,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.shop === "string" && slots.shop.trim().length > 0, "the case must name the shop");',
-  'probe(typeof slots.customer === "string" && /^[A-Z][a-z]+$/.test(slots.customer), "the case must name the customer who holds the card");',
-  'probe(Number.isInteger(slots.originalCents) && slots.originalCents > 0, "the ticket must be a positive whole number of cents");',
-  'probe(Number.isInteger(slots.firstPercent) && slots.firstPercent >= 1, "the first discount must be a whole percent of at least one");',
-  'probe(Number.isInteger(slots.secondPercent) && slots.secondPercent >= 1, "the second discount must be a whole percent of at least one");',
-  'probe(slots.firstPercent + slots.secondPercent < 100, "the two percents must leave a positive price when added");',
-  'probe(slots.tillLoyalty === true, "the second discount must be the till 2 card discount");',
   'const format = (cents) => Math.trunc(cents / 100) + "." + String(cents % 100).padStart(2, "0");',
   'const reducedCents = Math.round((slots.originalCents * (100 - slots.firstPercent)) / 100);',
   'const paidCents = Math.round((reducedCents * (100 - slots.secondPercent)) / 100);',

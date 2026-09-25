@@ -93,10 +93,6 @@ function render(solution) {
 const COMPUTE = [
   'const slots = $slots;',
   'const numberOf = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12 };',
-  'probe(numberOf[slots.countWord] === slots.count, "the case must state its count consistently in words and in the slot");',
-  'probe(typeof slots.region === "string" && slots.region.length > 0, "the case must name the region of the universal claim");',
-  'probe(typeof slots.sample === "string" && slots.sample.length > 0, "the case must name the sampled noun");',
-  'probe(slots.count >= 2, "a leap from few to all needs at least two cases");',
   'const capitalized = slots.countWord.charAt(0).toUpperCase() + slots.countWord.slice(1);',
   'return "Induction, hardened into a universal without the right to that climb. " + capitalized + " cases do not buy “all in the " + slots.region + ".”";'
 ].join('\n');

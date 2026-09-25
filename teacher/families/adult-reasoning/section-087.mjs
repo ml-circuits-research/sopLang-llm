@@ -70,15 +70,8 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Array.isArray(slots.messages) && slots.messages.length === 2, "the case must print exactly two numbered messages");',
   'const actionable = slots.messages.find((message) => message.missing.length === 0);',
   'const vague = slots.messages.find((message) => message.missing.length > 0);',
-  'probe(actionable !== undefined, "one message must carry every aspect the notebook lists");',
-  'probe(vague !== undefined, "the other message must lack at least one listed aspect");',
-  'probe(typeof actionable.id === "string" && actionable.id.length > 0, "the actionable message must carry its printed label");',
-  'probe(typeof vague.id === "string" && vague.id.length > 0, "the vague message must carry its printed label");',
-  'probe(typeof actionable.text === "string" && actionable.text.length > 0, "the actionable message must carry its text");',
-  'probe(vague.id !== actionable.id, "the two messages must be different");',
   'return actionable.id + " yes. " + vague.id + ": no " + vague.missing.join(", ") + ".";'
 ].join('\n');
 

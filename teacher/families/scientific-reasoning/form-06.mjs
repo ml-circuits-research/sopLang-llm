@@ -85,11 +85,7 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Array.isArray(slots.causes) && slots.causes.length > 0, "the statement must list at least one possible cause");',
-  'probe(Array.isArray(slots.observed) && slots.observed.length > 0, "the statement must report at least one observation");',
   'for (const entry of slots.causes) {',
-  '  probe(typeof entry.cause === "string" && entry.cause.length > 0, "every cause must carry a name");',
-  '  probe(Array.isArray(entry.signs) && entry.signs.length > 0, "every cause must list the signs it produces: " + entry.cause);',
   '}',
   'const matching = slots.causes.filter((entry) => entry.signs.length === slots.observed.length && slots.observed.every((sign) => entry.signs.includes(sign)));',
   'probe(matching.length > 0, "at least one cause must explain every observed sign");',

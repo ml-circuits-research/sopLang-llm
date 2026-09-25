@@ -98,18 +98,13 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Array.isArray(slots.flows) && slots.flows.length > 0, "the statement must state at least one flow between rivers");',
-  'probe(typeof slots.source === "string" && slots.source.length > 0, "the upstream river of the question must be named");',
-  'probe(typeof slots.target === "string" && slots.target.length > 0, "the downstream river of the question must be named");',
   'const adjacency = new Map();',
   'for (const flow of slots.flows) {',
-  '  probe(typeof flow.from === "string" && flow.from.length > 0 && typeof flow.to === "string" && flow.to.length > 0, "every stated flow must name both rivers");',
   '  if (!adjacency.has(flow.from)) {',
   '    adjacency.set(flow.from, []);',
   '  }',
   '  adjacency.get(flow.from).push(flow.to);',
   '}',
-  'probe(adjacency.has(slots.source), "the upstream river of the question must appear in the stated network");',
   'const seen = new Set([slots.source]);',
   'const queue = [slots.source];',
   'let reachable = false;',

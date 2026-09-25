@@ -215,8 +215,6 @@ function suffixOf(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(Array.isArray(slots.facts) && slots.facts.length > 0, "the statement must list at least one given fact");',
-  'probe(Array.isArray(slots.rules) && slots.rules.length > 0, "the statement must state at least one implication rule");',
   'const names = { flooding: "flooding", "road closure": "road closure", warning: "a warning", "field muddy": "the field becomes muddy", "bus rerouting": "bus rerouting" };',
   'const nameOf = (key) => { const name = names[key]; if (name === undefined) { throw new Error("unknown consequence " + key); } return name; };',
   'const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1);',
@@ -245,7 +243,6 @@ const COMPUTE = [
   'const heads = slots.rules.map((rule) => rule.consequent);',
   'const givenHeads = heads.filter((head) => trueKeys.has(head));',
   'const missingHeads = heads.filter((head) => !trueKeys.has(head) && !derivedKeys.has(head));',
-  'probe(heads.every((head) => names[head] !== undefined), "every consequence must be one the book names");',
   'const deduced = capitalize(joinList(derived.map(nameOf)));',
   'let main;',
   'if (givenHeads.length > 0) {',

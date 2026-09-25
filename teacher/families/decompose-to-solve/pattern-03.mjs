@@ -75,12 +75,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Number.isInteger(slots.rawRequirement) && slots.rawRequirement > 0, "the raw requirement must be a positive whole number");',
-  'probe(Number.isInteger(slots.unitFactorNumerator) && slots.unitFactorNumerator > 0, "the unit factor must have a positive numerator");',
-  'probe(Number.isInteger(slots.unitFactorDenominator) && slots.unitFactorDenominator > 0, "the unit factor must have a positive denominator");',
-  'probe(Number.isInteger(slots.lossPercent) && slots.lossPercent > 0 && slots.lossPercent < 100, "the loss percentage must be a whole number between 1 and 99");',
-  'probe(Number.isInteger(slots.containerCapacity) && slots.containerCapacity > 0, "the container capacity must be a positive whole number");',
-  'probe(Number.isInteger(slots.availableContainers) && slots.availableContainers >= 0, "the available container count must be a whole number");',
   'const need = slots.rawRequirement * slots.unitFactorNumerator * 100;',
   'const lossAdjusted = slots.unitFactorDenominator * (100 - slots.lossPercent) * slots.containerCapacity;',
   'const containers = Math.ceil(need / lossAdjusted);',

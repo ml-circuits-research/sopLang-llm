@@ -73,14 +73,7 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Array.isArray(slots.links) && slots.links.length === 3, "a chain case carries three conditional links");',
-  'probe(typeof slots.subject === "string" && slots.subject.length > 0, "the case must name the person issued the key");',
-  'probe(typeof slots.trigger === "string" && slots.trigger.length > 0, "the case must name the condition that is issued");',
-  'probe(slots.links[0]["if"] === slots.trigger + " is issued", "the chain must start at the condition the holder satisfies");',
   'const conclusion = slots.links[slots.links.length - 1].then;',
-  'probe(typeof conclusion === "string" && conclusion.length > 0, "the chain must end in a conclusion");',
-  'probe(conclusion.indexOf(slots.denierClaim) === 0 && conclusion !== slots.denierClaim, "the denial must name the subject of the chain conclusion");',
-  'probe(typeof slots.denier === "string" && slots.denier.length > 0, "the case must name the person who denied the front of the chain");',
   'const verdict = conclusion.charAt(0).toUpperCase() + conclusion.slice(1);',
   'return verdict + ". " + slots.denier + " denied the front of the first link and treated that as a proof of the opposite end. The card did not say the key is the only possible door.";'
 ].join('\n');

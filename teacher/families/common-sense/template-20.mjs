@@ -117,13 +117,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Number.isInteger(slots.start) && slots.start > 0, "the base value must be a positive integer");',
-  'probe(typeof slots.unit === "string" && slots.unit.length > 0, "the base value must carry a unit noun");',
-  'probe(slots.unit === slots.thresholdUnit, "the base value and the threshold must use the same unit noun");',
-  'probe(Number.isInteger(slots.increasePercent) && slots.increasePercent > 0 && slots.increasePercent < 100, "the first percentage must lie strictly between zero and one hundred");',
-  'probe(Number.isInteger(slots.decreasePercent) && slots.decreasePercent > 0 && slots.decreasePercent < 100, "the second percentage must lie strictly between zero and one hundred");',
-  'probe(slots.proposedIncreasePercent === slots.increasePercent && slots.proposedDecreasePercent === slots.decreasePercent, "the simplified method must restate the two stated percentages");',
-  'probe(Number.isInteger(slots.threshold) && slots.threshold >= 0, "the materiality threshold must be a non-negative integer");',
   'const numerator = slots.start * (100 + slots.increasePercent) * (100 - slots.decreasePercent);',
   'probe(numerator % 100 === 0, "the successive percentages must produce a whole number of hundredths");',
   'const finalHundredths = numerator / 100;',

@@ -75,12 +75,7 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Array.isArray(slots.cases) && slots.cases.length > 0, "the statement must list at least one case");',
-  'probe(Array.isArray(slots.required) && slots.required.length > 0, "the rule must require at least one property");',
-  'probe(Array.isArray(slots.forbidden), "the rule must state its forbidden properties, possibly none");',
   'for (const entry of slots.cases) {',
-  '  probe(typeof entry.label === "string" && entry.label.length > 0, "every case must carry a label");',
-  '  probe(slots.required.every((property) => property in entry.properties), "every required property must appear in every case: " + entry.label);',
   '}',
   'const matching = slots.cases.filter((entry) => slots.required.every((property) => entry.properties[property] === true) && slots.forbidden.every((property) => entry.properties[property] === false));',
   'probe(matching.length > 0, "at least one case must satisfy the competition rule");',

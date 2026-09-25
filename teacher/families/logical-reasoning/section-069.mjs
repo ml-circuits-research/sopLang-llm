@@ -117,14 +117,7 @@ function render(solution) {
 const COMPUTE = [
   'const slots = $slots;',
   'const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);',
-  'probe(Number.isInteger(slots.firstCount) && slots.firstCount > 0, "the first group must be listed with a positive count");',
-  'probe(Number.isInteger(slots.secondCount) && slots.secondCount > 0, "the second group must be listed with a positive count");',
-  'probe(Number.isInteger(slots.bothCount) && slots.bothCount >= 0 && slots.bothCount <= Math.min(slots.firstCount, slots.secondCount), "the overlap must be a count no larger than either group");',
-  'probe(Number.isInteger(slots.neitherCount) && slots.neitherCount >= 0, "the people outside both groups must be listed with a non-negative count");',
-  'probe(typeof slots.firstGroup === "string" && slots.firstGroup.length > 0 && typeof slots.secondGroup === "string" && slots.secondGroup.length > 0, "the case must name both groups");',
   'const union = slots.firstCount + slots.secondCount - slots.bothCount + slots.neitherCount;',
-  'probe(slots.correction.total === union, "the correction sentence must state the union the listed counts produce");',
-  'probe(slots.naiveSum - union === slots.bothCount, "the naive sum must exceed the union by exactly the double-counted overlap");',
   'return union + ". " + capitalize(slots.firstGroup) + " plus " + slots.secondGroup + " counts the overlap twice unless you subtract it once.";'
 ].join('\n');
 

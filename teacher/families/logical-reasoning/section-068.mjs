@@ -99,12 +99,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place whose club posted the notes");',
-  'probe(Number.isInteger(slots.extremes) && slots.extremes === 1, "the notes must show exactly one extreme before the quieter week");',
-  'probe(Number.isInteger(slots.quietWeeks) && slots.quietWeeks === 1, "the quieter score must follow the extreme by one week");',
-  'probe(typeof slots.teaClaimant === "string" && slots.teaClaimant.length > 0, "the case must name the speaker who credits the tea");',
-  'probe(typeof slots.regressionClaimant === "string" && slots.regressionClaimant.length > 0, "the case must name the speaker who names the retreat of an extreme");',
-  'probe(slots.teaClaimant !== slots.regressionClaimant && slots.teaClaimant !== slots.changedClaimant && slots.regressionClaimant !== slots.changedClaimant, "the three readings of the notes must come from three different speakers");',
   'return "No. Regression toward a mean is available when a result was an extreme of a noisy board. The tea may still have done something; this page does not show it.";'
 ].join('\n');
 

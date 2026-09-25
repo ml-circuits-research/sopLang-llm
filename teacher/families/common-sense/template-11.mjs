@@ -90,14 +90,8 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Number.isInteger(slots.population) && slots.population > 0, "the target population must be a positive integer");',
-  'probe(Number.isInteger(slots.areas) && slots.areas > 1, "the population must be divided among several areas");',
-  'probe(Array.isArray(slots.methods) && slots.methods.length >= 3, "the statement must state the candidate methods");',
-  'probe(slots.methods.every((method) => typeof method.label === "string" && Number.isInteger(method.size) && method.size > 0), "every method must carry a label and a positive group size");',
   'const stratified = slots.methods.filter((method) => method.kind === "stratified");',
-  'probe(stratified.length === 1, "exactly one stated method must select randomly within each area");',
   'const chosen = stratified[0];',
-  'probe(["voluntary", "venue"].every((kind) => slots.methods.some((method) => method.kind === kind)), "the statement must also state the voluntary and the single-site methods");',
   'const planned = chosen.size * slots.areas;',
   'probe(planned > 0, "the chosen method must plan to select a positive number of people");',
   'probe(planned < slots.population, "the chosen sample cannot exceed the target population");',

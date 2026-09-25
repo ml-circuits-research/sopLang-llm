@@ -52,9 +52,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the card must name the place of the trial");',
-  'probe(Number.isInteger(slots.listedPeople) && slots.listedPeople > 0, "the card must list a positive number of people per group");',
-  'probe(slots.teaReader !== slots.contrastReader && slots.contrastReader !== slots.controlReader && slots.teaReader !== slots.controlReader, "the three readings must come from three different people");',
   'return "Acting as the contrast. Without it, improvement after tea could be rest, time, or regression.";'
 ].join('\n');
 

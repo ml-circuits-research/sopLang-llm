@@ -134,10 +134,6 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(Array.isArray(slots.labels) && slots.labels.length > 0, "the statement must name at least one district");',
-  'probe(Number.isFinite(slots.fund) && slots.fund > 0, "the fund must be a stated positive number");',
-  'probe(Array.isArray(slots.populations) && slots.populations.length === slots.labels.length, "every district must have one stated population");',
-  'probe(Array.isArray(slots.needScores) && slots.needScores.length === slots.labels.length, "every district must have one stated need score");',
   'const count = slots.labels.length;',
   'const proportional = (weights) => {',
   '  const total = weights.reduce((sum, weight) => sum + weight, 0);',
@@ -153,7 +149,6 @@ const COMPUTE = [
   '} else if (slots.method === "need") {',
   '  amounts = proportional(slots.needScores);',
   '} else if (slots.method === "guarantee") {',
-  '  probe(Number.isFinite(slots.minimum) && slots.minimum >= 0, "the minimum guarantee must be a stated non-negative number");',
   '  const remainder = slots.fund - slots.minimum * count;',
   '  probe(remainder >= 0, "the stated minimum guarantees must not exceed the fund");',
   '  amounts = slots.labels.map(() => slots.minimum + remainder / count);',

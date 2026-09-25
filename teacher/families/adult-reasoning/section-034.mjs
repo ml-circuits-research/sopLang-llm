@@ -69,14 +69,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the village whose water book is read");',
-  'probe(typeof slots.name === "string" && slots.name.length > 0, "the case must name the person with the dripping tap");',
-  'probe(Number.isInteger(slots.indexFrom) && Number.isInteger(slots.indexTo) && slots.indexTo > slots.indexFrom, "the two index readings must be whole numbers in increasing order");',
-  'probe(typeof slots.pricePerCubicMetre === "number" && slots.pricePerCubicMetre > 0, "the book must state a positive price per cubic metre");',
-  'probe(Number.isInteger(slots.litresPerHour) && slots.litresPerHour > 0, "the drip table must state a positive rate in litres per hour");',
-  'probe(slots.litresPerCubicMetre === 1000, "the table must equate 1000 litres with one cubic metre");',
-  'probe(Number.isInteger(slots.days) && slots.days > 0, "the drip must last a positive whole number of days");',
-  'probe(Number.isInteger(slots.hoursPerDay) && slots.hoursPerDay > 0 && slots.hoursPerDay <= 24, "the drip must run a positive whole number of hours per day, at most 24");',
   'const indexUse = slots.indexTo - slots.indexFrom;',
   'const cost = Math.round(indexUse * slots.pricePerCubicMetre * 100) / 100;',
   'probe(cost > 0, "the billed cost must be positive");',

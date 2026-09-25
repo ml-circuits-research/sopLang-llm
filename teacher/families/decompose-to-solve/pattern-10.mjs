@@ -56,12 +56,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Number.isInteger(slots.lowerBound) && slots.lowerBound > 0, "the lower bound must be a positive whole number");',
-  'probe(Number.isInteger(slots.upperBound) && slots.upperBound >= slots.lowerBound, "the stated upper bound must not fall below the lower bound");',
-  'probe(Number.isInteger(slots.divisor) && slots.divisor > 1, "the divisibility rule must name a whole number greater than one");',
-  'probe(Number.isInteger(slots.resourceLimit) && slots.resourceLimit > 0, "the resource limit must be a positive whole number");',
-  'probe(Number.isInteger(slots.reserve) && slots.reserve > 0, "the reserve must be a positive whole number");',
-  'probe(slots.reserve < slots.resourceLimit, "the reserve must be smaller than the resource limit");',
   'const effectiveUpper = Math.min(slots.upperBound, slots.resourceLimit - slots.reserve);',
   'const x = Math.floor(effectiveUpper / slots.divisor) * slots.divisor;',
   'probe(x >= slots.lowerBound, "the clauses must admit at least one multiple of the divisor");',

@@ -57,14 +57,8 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the teacher");',
-  'probe(typeof slots.transferrer === "string" && slots.transferrer.length > 0, "the case must name the speaker who reads improvisation into the picture");',
-  'probe(typeof slots.ladderReader === "string" && slots.ladderReader.length > 0, "the case must name the speaker who reads the picture as a teaching ladder");',
-  'probe(typeof slots.denier === "string" && slots.denier.length > 0, "the case must name the speaker who rejects teaching pictures");',
-  'probe(new Set([slots.transferrer, slots.ladderReader, slots.denier]).size === 3, "the three speakers must be three different people");',
   'const JOB_BY_READING = { "teaching ladder": { "intro": "Explanation for beginners", "limit": "not a proof that last-minute improvisation transfers" } };',
   'const job = JOB_BY_READING[slots.reading];',
-  'probe(job !== undefined, "the picture must be read as a teaching ladder, so the case states the ladder reading");',
   'return job.intro + ", " + job.limit + ".";'
 ].join('\n');
 

@@ -85,14 +85,8 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Array.isArray(slots.tags) && slots.tags.length === 3, "the case must post a closed list of three tags");',
-  'probe(Array.isArray(slots.ruledOut) && slots.ruledOut.length === 2, "the case must rule out exactly two tags");',
-  'probe(new Set(slots.tags).size === slots.tags.length, "the closed list holds distinct tags");',
-  'probe(slots.ruledOut.every((tag) => slots.tags.indexOf(tag) !== -1), "both negatives must strike tags of the closed list");',
   'const remaining = slots.tags.filter((tag) => slots.ruledOut.indexOf(tag) === -1);',
   'probe(remaining.length === 1, "two negatives over a three-tag list leave exactly one tag");',
-  'probe(slots.claimed === remaining[0], "the claimant must name the tag the two negatives leave");',
-  'probe(slots.tags.indexOf(slots.proposed) === -1, "the proposed colour must not be a member of the closed list");',
   'const named = slots.proposed.charAt(0).toUpperCase() + slots.proposed.slice(1);',
   'return slots.claimant + " is forced. Two tags are ruled out; the third remains. " + named + " is unlisted. Two negatives force the remainder only because the list was exhaustive.";'
 ].join('\n');

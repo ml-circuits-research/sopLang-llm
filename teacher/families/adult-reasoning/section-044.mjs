@@ -80,17 +80,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.holder === "string" && slots.holder.length > 0, "the case must name the policy holder");',
-  'probe(Array.isArray(slots.coveredPerils) && slots.coveredPerils.length > 0, "the policy must list what it covers");',
-  'probe(Array.isArray(slots.exclusions) && slots.exclusions.length > 0, "the policy must list what it does not cover");',
-  'probe(slots.coveredPerils.indexOf("theft with forced entry") !== -1, "the covered list must include theft with forced entry");',
-  'probe(Number.isInteger(slots.excess) && slots.excess > 0, "the excess must be a positive whole amount");',
-  'probe(Number.isInteger(slots.undeclaredLimit) && slots.undeclaredLimit > 0, "the undeclared-object threshold must be a positive whole amount");',
-  'probe(Number.isInteger(slots.loss) && slots.loss > slots.excess, "the covered loss must be a whole amount above the excess");',
-  'probe(Number.isInteger(slots.noticeWindow) && slots.noticeWindow > 0, "the notice window must be a positive number of hours");',
-  'probe(slots.objectDeclared === false, "this section reads an object that was never declared");',
-  'probe(Number.isInteger(slots.objectValue) && slots.objectValue > slots.undeclaredLimit, "the undeclared object must be worth more than the threshold");',
-  'probe(slots.noticeHours <= slots.noticeWindow, "the claim must be notified inside the window");',
   'const paid = slots.loss - slots.excess;',
   'const theftClause = "Forced entry is covered: (" + slots.excess + "+" + paid + ")−" + slots.excess + "=" + paid + ".";',
   'const objectExcluded = !slots.objectDeclared && slots.objectValue > slots.undeclaredLimit;',

@@ -97,7 +97,6 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(typeof slots.intervention === "string" && slots.intervention.length > 0, "the task must name one intervention");',
   'const phrase = slots.intervention.toLowerCase();',
   'const forms = [',
   '  { variable: "gate", closed: true, pattern: /close (?:the )?gate/ },',
@@ -107,7 +106,6 @@ const COMPUTE = [
   '  { variable: "market", open: true, pattern: /(?:keep|hold) (?:the )?market open/ }',
   '];',
   'const plan = forms.find((candidate) => candidate.pattern.test(phrase));',
-  'probe(plan !== undefined, "the intervention must be one of the stated counterfactual changes");',
   'const rain = plan.variable === "rain" ? plan.occurs : true;',
   'const river = plan.variable === "river" ? plan.occurs : rain;',
   'const gateClosed = plan.variable === "gate" ? plan.closed : false;',

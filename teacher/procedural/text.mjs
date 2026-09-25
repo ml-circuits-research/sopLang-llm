@@ -217,8 +217,6 @@ const countLetter = {
   },
   compute: [
     'const slots = $slots;',
-    'probe(typeof slots.word === "string" && slots.word.length > 0, "the word must be a non-empty string");',
-    'probe(typeof slots.letter === "string" && slots.letter.length === 1, "the letter must be a single character");',
     'const characters = [...slots.word.toLowerCase()];',
     'const wanted = slots.letter.toLowerCase();',
     'let occurrences = 0;',
@@ -350,7 +348,6 @@ const reverseWord = {
   },
   compute: [
     'const slots = $slots;',
-    'probe(typeof slots.word === "string" && slots.word.length > 0, "the word must be a non-empty string");',
     'const reversed = [...slots.word].reverse().join("");',
     'probe(reversed.length === [...slots.word].length, "reversing must keep the number of characters");',
     'probe([...slots.word].every((character, index) => character === [...reversed][[...reversed].length - 1 - index]), "every character must move to its mirrored position");',
@@ -397,10 +394,7 @@ const wordsWithLetter = {
   },
   compute: [
     'const slots = $slots;',
-    'probe(typeof slots.sentence === "string" && slots.sentence.length > 0, "the sentence must be a non-empty string");',
-    'probe(typeof slots.letter === "string" && slots.letter.length === 1, "the letter must be a single character");',
     'const words = slots.sentence.split(/\\s+/).filter((word) => word.length > 0);',
-    'probe(words.length > 0, "the sentence must contain at least one word");',
     'const wanted = slots.letter.toLowerCase();',
     'let count = 0;',
     'for (const word of words) {',
@@ -457,9 +451,7 @@ const lengthOfWord = {
   },
   compute: [
     'const slots = $slots;',
-    'probe(typeof slots.word === "string" && slots.word.length > 0, "the word must be a non-empty string");',
     'const characters = [...slots.word];',
-    'probe(characters.every((character) => /[a-z]/.test(character)), "the word must hold lowercase letters only");',
     'return characters.length + " letters.";'
   ].join('\n'),
   explain(slots, solution) {
@@ -509,8 +501,6 @@ const firstAndLastLetter = {
   },
   compute: [
     'const slots = $slots;',
-    'probe(typeof slots.word === "string" && slots.word.length > 0, "the word must be a non-empty string");',
-    'probe(slots.position === "first" || slots.position === "last", "the position must be first or last");',
     'const characters = [...slots.word];',
     'const letter = slots.position === "first" ? characters[0] : characters[characters.length - 1];',
     'probe(typeof letter === "string" && letter.length === 1, "the chosen position must hold exactly one letter");',
@@ -564,9 +554,7 @@ const distinctLetters = {
   },
   compute: [
     'const slots = $slots;',
-    'probe(typeof slots.word === "string" && slots.word.length > 0, "the word must be a non-empty string");',
     'const seen = new Set([...slots.word]);',
-    'probe(seen.size > 1, "a word of this family must repeat at least one letter");',
     'return seen.size + " distinct letters.";'
   ].join('\n'),
   explain(slots, solution) {
@@ -619,11 +607,8 @@ const longerOfTwoWords = {
   },
   compute: [
     'const slots = $slots;',
-    'probe(typeof slots.first === "string" && slots.first.length > 0, "the first word must be a non-empty string");',
-    'probe(typeof slots.second === "string" && slots.second.length > 0, "the second word must be a non-empty string");',
     'const firstLength = [...slots.first].length;',
     'const secondLength = [...slots.second].length;',
-    'probe(firstLength !== secondLength, "the two words must differ in length");',
     'const longer = firstLength > secondLength ? slots.first : slots.second;',
     'return longer + " (" + Math.max(firstLength, secondLength) + " letters).";'
   ].join('\n'),

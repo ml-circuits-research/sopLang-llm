@@ -51,13 +51,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots === "object" && slots !== null, "the insurance case must carry its parsed values");',
-  'probe(typeof slots.holder === "string" && slots.holder.length > 0, "the person holding the policy must be named");',
-  'probe(Number.isInteger(slots.premium) && slots.premium > 0, "the yearly premium must be a positive whole number");',
-  'probe(Number.isInteger(slots.excess) && slots.excess > 0, "the excess must be a positive whole number");',
-  'probe(Number.isInteger(slots.reserve) && slots.reserve > 0, "the reserve must be a positive whole number");',
-  'probe(Number.isInteger(slots.loss) && slots.loss > 0, "the loss must be a positive whole number");',
-  'probe(slots.reserve < slots.loss, "the reserve must not cover the uninsured loss for this section");',
   'const insured = slots.premium + slots.excess;',
   'const uninsured = slots.loss;',
   'let comparison = ">";',

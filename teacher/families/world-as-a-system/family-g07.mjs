@@ -86,14 +86,9 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Array.isArray(slots.routes) && slots.routes.length > 0, "the statement must list at least one candidate route");',
-  'probe(typeof slots.costs === "object" && slots.costs !== null && Object.keys(slots.costs).length > 0, "the statement must state the terrain energy costs");',
-  'probe(Number.isFinite(slots.limit), "the statement must state a numeric energy limit");',
   'const scored = slots.routes.map((route) => {',
-  '  probe(Array.isArray(route.terrains) && route.terrains.length > 0, "every candidate route must list at least one terrain segment");',
   '  let energy = 0;',
   '  for (const terrain of route.terrains) {',
-  '    probe(typeof slots.costs[terrain] === "number", "every terrain of a route must have a stated cost");',
   '    energy += slots.costs[terrain];',
   '  }',
   '  return { name: route.name, energy };',

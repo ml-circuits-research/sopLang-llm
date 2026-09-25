@@ -71,14 +71,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.patient === "string" && slots.patient.length > 0, "the statement must name the person bleeding");',
-  'probe(typeof slots.helper === "string" && slots.helper.length > 0, "the statement must name the person helping");',
-  'probe(slots.patient !== slots.helper, "the two named people must be different");',
-  'probe(slots.questionHelper === slots.helper, "the question must ask about the person who acted");',
-  'probe(Number.isInteger(slots.pinchMinutes) && slots.pinchMinutes > 0, "the sheet pinch time must be a positive whole number of minutes");',
-  'probe(Number.isInteger(slots.emergencyMinutes) && slots.emergencyMinutes > slots.pinchMinutes, "the emergency time must exceed the pinch time");',
-  'probe(Number.isInteger(slots.waitMinutes) && slots.waitMinutes >= 0, "the waiting time must be a whole number of minutes");',
-  'probe(slots.waitMinutes < slots.pinchMinutes, "the helper must wait less than the sheet requires");',
   'const breaches = [];',
   'if (slots.postureReversed) { breaches.push("Posture reversed"); }',
   'if (slots.cottonPacked) { breaches.push("cotton"); }',

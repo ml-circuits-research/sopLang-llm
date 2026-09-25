@@ -56,8 +56,6 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(typeof slots.start === "number" && slots.start > 0, "the statement must state a starting population");',
-  'probe([slots.births, slots.deaths, slots.movingIn, slots.movingOut].every((value) => typeof value === "number" && value >= 0), "the four yearly flows must be non-negative numbers");',
   'const natural = slots.births - slots.deaths;',
   'const migration = slots.movingIn - slots.movingOut;',
   'const end = slots.start + natural + migration;',

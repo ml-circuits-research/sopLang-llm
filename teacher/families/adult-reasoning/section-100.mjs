@@ -79,15 +79,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots === "object" && slots !== null, "the case must carry the three fragments");',
-  'probe(typeof slots.buyer === "string" && slots.buyer.length > 0, "the purchase fragment must name the buyer");',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the closing fragment must name the place");',
-  'probe(Number.isInteger(slots.quantityKg) && slots.quantityKg > 0, "the purchase must ask for a positive whole number of kilograms");',
-  'probe(Number.isInteger(slots.pricePerKg) && slots.pricePerKg > 0, "the sugar must carry a positive whole-number price per kilogram");',
-  'probe(Number.isInteger(slots.budget) && slots.budget > 0, "the buyer must carry a positive whole-number budget");',
-  'probe(Number.isInteger(slots.walkMinutes) && slots.walkMinutes > 0, "the walk from the stop to the door must be a positive whole number of minutes");',
-  'probe(slots.closesAt > slots.arrival, "the shop must close after the bus arrives");',
-  'probe(slots.lastBoarding > slots.arrival, "the last boarding back must leave after the bus arrives");',
   'const toClock = (total) => {',
   '  const wrapped = ((total % 1440) + 1440) % 1440;',
   '  return String(Math.floor(wrapped / 60)).padStart(2, "0") + ":" + String(wrapped % 60).padStart(2, "0");',

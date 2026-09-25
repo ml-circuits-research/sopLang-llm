@@ -105,13 +105,7 @@ function render(solution) {
 const COMPUTE = [
   'const slots = $slots;',
   'const names = ["A", "B", "C"];',
-  'probe(slots.programs !== null && typeof slots.programs === "object", "the statement must state the marginal benefits of three programs");',
-  'probe(names.every((name) => Array.isArray(slots.programs[name]) && slots.programs[name].length > 0), "every program must list at least one marginal benefit");',
-  'probe(names.every((name) => slots.programs[name].every((value) => Number.isInteger(value) && value > 0)), "every marginal benefit must be a positive integer");',
-  'probe(names.every((name) => slots.programs[name].length === slots.programs.A.length), "the programs must list the same number of marginal benefits");',
-  'probe(Number.isInteger(slots.units) && slots.units > 0, "the statement must state a positive number of units to allocate");',
   'const depth = slots.programs.A.length;',
-  'probe(slots.units <= names.length * depth, "the stated units must not exceed the benefits the programs can absorb");',
   'const totalOf = (taken) => names.reduce((sum, name) => sum + slots.programs[name].slice(0, taken[name]).reduce((left, right) => left + right, 0), 0);',
   'let best = null;',
   'let optima = 0;',

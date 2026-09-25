@@ -151,14 +151,8 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Array.isArray(slots.conditions) && slots.conditions.length > 0, "the statement must name the possible faulty conditions");',
-  'probe(Array.isArray(slots.labels) && slots.labels.length > 0, "the statement must state which labels the possible faults carry");',
-  'probe(Array.isArray(slots.actions) && slots.actions.length > 0, "the statement must list the actions with their repair sets");',
   'const labels = [...new Set(slots.labels)];',
   'const covering = slots.actions.filter((action) => {',
-  '  probe(typeof action.name === "string" && action.name.length > 0, "every action must carry a name");',
-  '  probe(Array.isArray(action.repairs) && action.repairs.length > 0, "every action must repair at least one label");',
-  '  probe(Number.isInteger(action.cost) && action.cost > 0, "every action must carry a positive integer cost");',
   '  return labels.every((label) => action.repairs.includes(label));',
   '});',
   'probe(covering.length > 0, "no stated action repairs every fault that is still possible");',

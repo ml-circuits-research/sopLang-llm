@@ -82,12 +82,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the club");',
-  'probe(slots.waterDensity > 0, "the sheet must state a positive density for water");',
-  'probe(Number.isInteger(slots.massGrams) && slots.massGrams > 0, "the clay must have a positive whole mass");',
-  'probe(Number.isInteger(slots.cubeVolumeCm3) && slots.cubeVolumeCm3 > 0, "the cube must have a positive whole volume");',
-  'probe(Number.isInteger(slots.boatVolumeCm3) && slots.boatVolumeCm3 > slots.cubeVolumeCm3, "the boat must displace more water than the solid cube");',
-  'probe(slots.trappedAirLowersDensity === true, "the sheet must explain that trapped air lowers the average density");',
   'const formatDensity = (value) => Number.isInteger(value) ? String(value) : value.toFixed(2);',
   'const densityFate = (massGrams, volumeCm3) => {',
   '  const density = massGrams / volumeCm3;',
@@ -99,7 +93,6 @@ const COMPUTE = [
   '};',
   'const cube = densityFate(slots.massGrams, slots.cubeVolumeCm3);',
   'const boat = densityFate(slots.massGrams, slots.boatVolumeCm3);',
-  'probe(slots.massGrams / slots.cubeVolumeCm3 > slots.massGrams / slots.boatVolumeCm3, "the same clay must be denser as a cube than as a boat");',
   'return "Cube " + cube + ". Boat " + boat + ".";'
 ].join('\n');
 

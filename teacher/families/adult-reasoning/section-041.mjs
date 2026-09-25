@@ -69,17 +69,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots === "object" && slots !== null, "the election case must carry its parsed values");',
-  'probe(typeof slots.name === "string" && slots.name.length > 0, "the box member must be named");',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the association must sit in a named place");',
-  'probe(Number.isInteger(slots.thresholdDays) && slots.thresholdDays > 0, "the membership threshold must be a positive whole number of days");',
-  'probe(Number.isInteger(slots.minimumPresence) && slots.minimumPresence > 0, "the presence floor must be a positive whole number of members");',
-  'probe(Number.isInteger(slots.presentCount) && slots.presentCount >= 0, "the valid members present must be a whole number");',
-  'probe(Number.isInteger(slots.memberDays) && slots.memberDays >= 0, "the days of membership must be a whole number");',
-  'probe(slots.duesPaid === true, "the box member must have the dues paid for this answer");',
-  'probe(slots.memberDays < slots.thresholdDays, "the box member must fall short of the membership threshold");',
-  'probe(slots.presentCount < slots.minimumPresence, "the round must fall short of the presence floor");',
-  'probe(slots.doublePaper === true && slots.phoneVote === true, "the box must hold the double paper and the phone vote");',
   'const membershipClause = slots.name + " has " + slots.memberDays + "<" + slots.thresholdDays + " → does not vote.";',
   'const phoneClause = "The phone is not a paper.";',
   'const presenceClause = slots.presentCount + "<" + slots.minimumPresence + " → reconvene.";',

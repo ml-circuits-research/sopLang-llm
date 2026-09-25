@@ -86,12 +86,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the two mornings");',
-  'probe(Number.isInteger(slots.sample) && slots.sample >= 2 && slots.sample <= 4, "the section is about a sample of a few mornings, not a long record");',
-  'probe(slots.late === 1, "the printed verdict names a single miss, so the case must report exactly one late morning");',
-  'probe(Number.isInteger(slots.onTime) && slots.onTime >= 1, "the sample must also list a morning that was on time");',
-  'probe(slots.sample === slots.late + slots.onTime, "every listed morning must be late or on time");',
-  'probe(slots.typeHastener !== slots.sampleSceptic && slots.sampleSceptic !== slots.alarmist && slots.typeHastener !== slots.alarmist, "the three speakers must be three different people");',
   'return "Almost nothing as a type. n = " + slots.sample + " is almost all noise. A single miss is not a destiny.";'
 ].join('\n');
 

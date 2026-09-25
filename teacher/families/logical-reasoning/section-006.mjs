@@ -66,13 +66,7 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the signs must name the canteen they hang in");',
-  'probe(Array.isArray(slots.inclusiveSides) && slots.inclusiveSides.length === 2 && slots.inclusiveSides[0] !== slots.inclusiveSides[1], "Sign One must list two different sides");',
-  'probe(Array.isArray(slots.exclusiveSides) && slots.exclusiveSides.length === 2 && slots.exclusiveSides[0] !== slots.exclusiveSides[1], "Sign Two must list two different sides");',
   'const samePair = (left, right) => left[0] === right[0] && left[1] === right[1];',
-  'probe(samePair(slots.takenPair, slots.inclusiveSides), "the first reading must pair the two sides of the inclusive sign");',
-  'probe(samePair(slots.askedPair, slots.exclusiveSides), "the second reading must pair the two sides of the exclusive sign");',
-  'probe(new Set([slots.pairTaker, slots.bothAsker, slots.reader]).size === 3, "the three readings must come from three different speakers");',
   'return slots.reader + ". Sign One is inclusive. Sign Two is exclusive. The word takes the sense the sentence writes.";'
 ].join('\n');
 

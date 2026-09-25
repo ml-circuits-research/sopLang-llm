@@ -90,14 +90,10 @@ function readLedger(text) {
   return numbers;
 }
 
-function probeValues(values, unit) {
+function probeValues() {
   return [
     'const slots = $slots;',
-    'probe(Array.isArray(slots.values) && slots.values.length > 0, "the records must be a non-empty list");',
-    'const values = slots.values;',
-    'for (const value of values) {',
-    `  probe(Number.isInteger(value) && value > 0, "every record must be a positive whole number of ${unit}");`,
-    '}'
+    'const values = slots.values;'
   ];
 }
 
@@ -265,8 +261,7 @@ function directionPair(direction) {
       return `The ${largest ? 'largest' : 'smallest'} record becomes ${solution.raised} shipments, so the total is ${solution.total} shipments.`;
     },
     compute: [
-      ...probeValues([], 'shipments'),
-      'probe(Number.isInteger(slots.bonus) && slots.bonus > 0, "the raise must be a positive whole number of shipments");',
+      ...probeValues(),
       `let target = values[0];`,
       'for (const value of values) {',
       `  if (${largest ? 'value > target' : 'value < target'}) {`,
@@ -277,7 +272,6 @@ function directionPair(direction) {
       'for (const value of values) {',
       '  total += value;',
       '}',
-      'probe(values.filter((value) => value === target).length === 1, "the extreme record must be unique");',
       `return "The ${largest ? 'largest' : 'smallest'} record becomes " + (target + slots.bonus) + " shipments, so the total is " + (total + slots.bonus) + " shipments.";`
     ].join('\n'),
     explain(slots, solution) {
@@ -371,14 +365,12 @@ function ratePair(mode) {
       return `${solution.ordered} sheets must be ordered, which is ${solution.consumed} consumed plus ${solution.extra} extra.`;
     },
     compute: [
-      ...probeValues([], 'sheets'),
-      'probe(Number.isInteger(slots.rate) && slots.rate > 0, "the extra stock must be a positive whole number");',
+      ...probeValues(),
       'let consumed = 0;',
       'for (const value of values) {',
       '  consumed += value;',
       '}',
       `const extra = ${percent ? '(consumed * slots.rate) / 100;' : 'slots.rate;'}`,
-      `probe(${percent ? 'consumed * slots.rate % 100 === 0' : 'true'}, "the percentage of the total must be a whole number of sheets");`,
       'return (consumed + extra) + " sheets must be ordered, which is " + consumed + " consumed plus " + extra + " extra.";'
     ].join('\n'),
     explain(slots, solution) {

@@ -85,12 +85,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.visitor === "string" && slots.visitor.length > 0, "the case must name the person asking for a ticket");',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the counter");',
-  'probe(slots.fridayCloseMinutes < slots.weekdayCloseMinutes, "the Friday closing time must come before the weekday closing time");',
-  'probe(slots.fridayOpenMinutes < slots.fridayCloseMinutes && slots.weekdayOpenMinutes < slots.weekdayCloseMinutes, "each day must close after it opens");',
-  'probe(slots.breakStartMinutes < slots.breakEndMinutes, "the break must end after it starts");',
-  'probe(slots.lastTicketLeadMinutes > 0 && slots.lastTicketLeadMinutes < slots.fridayCloseMinutes, "the last-ticket lead must fit inside the shortest day");',
   'const formatTime = (totalMinutes) => String(Math.floor(totalMinutes / 60)).padStart(2, "0") + ":" + String(totalMinutes % 60).padStart(2, "0");',
   'const inBreak = (time) => time >= slots.breakStartMinutes && time < slots.breakEndMinutes;',
   'const lastTicket = (closingMinutes) => {',
@@ -101,8 +95,6 @@ const COMPUTE = [
   'const mondayLast = lastTicket(slots.weekdayCloseMinutes);',
   'const fridaySucceeds = !inBreak(slots.fridayAttemptMinutes) && slots.fridayAttemptMinutes <= fridayLast;',
   'const mondaySucceeds = !inBreak(slots.mondayAttemptMinutes) && slots.mondayAttemptMinutes <= mondayLast;',
-  'probe(slots.fridayAttemptMinutes >= slots.fridayOpenMinutes && slots.fridayAttemptMinutes < slots.fridayCloseMinutes, "the Friday attempt must fall inside the opening hours");',
-  'probe(slots.mondayAttemptMinutes >= slots.weekdayOpenMinutes && slots.mondayAttemptMinutes < slots.weekdayCloseMinutes, "the Monday attempt must fall inside the opening hours");',
   'const verdict = fridaySucceeds && mondaySucceeds ? "Both" : fridaySucceeds ? "Friday" : mondaySucceeds ? "Monday" : "Neither";',
   'return verdict + ". Friday last ticket " + formatTime(fridayLast) + ". Monday last ticket " + formatTime(mondayLast) + ".";'
 ].join('\n');

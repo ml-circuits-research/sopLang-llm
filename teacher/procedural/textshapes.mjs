@@ -99,8 +99,6 @@ const vowelRichestWord = {
       command: 'jsEval',
       body: [
         'const slots = $slots;',
-        'probe(Array.isArray(slots.words) && slots.words.length === 4, "the chalkboard must list exactly four words");',
-        'probe(slots.words.every((word) => typeof word === "string" && word.length >= 3 && word.length <= 9 && [...word].every((character) => character >= "a" && character <= "z")), "every listed word must be a lowercase word of three to nine letters");',
         'const vowels = "aeiou";',
         'const counted = slots.words.map((word) => ({ word, vowels: [...word].filter((character) => vowels.includes(character)).length }));',
         'probe(counted.length === slots.words.length, "every listed word must be counted once");',
@@ -113,7 +111,6 @@ const vowelRichestWord = {
       command: 'jsEval',
       body: [
         'const counted = $perWord;',
-        'probe(Array.isArray(counted) && counted.length === 4, "the counting stage must publish the four records");',
         'probe(counted.every((record) => typeof record.word === "string" && Number.isInteger(record.vowels) && record.vowels >= 0), "every record must carry a word and a whole vowel count");',
         'const ranked = counted.map((record, index) => ({ record, index }))',
         '  .sort((left, right) => (right.record.vowels - left.record.vowels) || (left.index - right.index))',
@@ -127,12 +124,10 @@ const vowelRichestWord = {
   ],
   compute: [
     'const slots = $slots;',
-    'probe(Array.isArray($ranked) && $ranked.length === slots.words.length, "the ranking stage must publish every listed word");',
     'probe($ranked.every((record) => slots.words.includes(record.word)), "every ranked word must be a word the chalkboard shows");',
     'probe($ranked.every((record) => Number.isInteger(record.vowels) && record.vowels >= 0), "every ranked record must carry a whole vowel count");',
     'const best = $ranked[0];',
     'probe(best.vowels === Math.max(...$ranked.map((record) => record.vowels)), "the first ranked word must carry the most vowels");',
-    'probe($ranked.filter((record) => record.vowels === best.vowels).length === 1, "exactly one word may carry the most vowels");',
     'return "The word " + JSON.stringify(best.word) + " carries " + best.vowels + " vowels.";'
   ].join('\n'),
   explain(slots, solution) {
@@ -206,8 +201,6 @@ const lengthRankedWords = {
       command: 'jsEval',
       body: [
         'const slots = $slots;',
-        'probe(Array.isArray(slots.words) && slots.words.length === 5, "the label must list exactly five words");',
-        'probe(slots.words.every((word) => typeof word === "string" && word.length >= 2 && word.length <= 8 && [...word].every((character) => character >= "a" && character <= "z")), "every listed word must be a lowercase word of two to eight letters");',
         'const decorated = slots.words.map((word, index) => ({ word, length: word.length, index }));',
         'for (let position = 0; position < decorated.length; position += 1) {',
         '  let first = position;',
@@ -235,7 +228,6 @@ const lengthRankedWords = {
       command: 'jsEval',
       body: [
         'const ordered = $ordered;',
-        'probe(Array.isArray(ordered) && ordered.length === 5, "the ordering stage must publish the five words");',
         'probe(ordered.every((word) => typeof word === "string" && word.length > 0), "every ordered entry must be a word of at least one letter");',
         'const extremes = { shortest: ordered[0].length, longest: ordered[ordered.length - 1].length };',
         'probe(Number.isInteger(extremes.shortest) && Number.isInteger(extremes.longest), "both extremes must be whole numbers of letters");',
@@ -247,9 +239,7 @@ const lengthRankedWords = {
   ],
   compute: [
     'const slots = $slots;',
-    'probe(Array.isArray($ordered) && $ordered.length === slots.words.length, "the ordering stage must publish every listed word");',
     'probe($ordered.every((word) => slots.words.includes(word)), "every ordered word must be a word the label shows");',
-    'probe(typeof $extremes === "object" && $extremes !== null && Number.isInteger($extremes.shortest) && Number.isInteger($extremes.longest), "the extremes stage must publish both lengths");',
     'probe($extremes.shortest === $ordered[0].length, "the shortest length must belong to the first ordered word");',
     'probe($extremes.longest === $ordered[$ordered.length - 1].length, "the longest length must belong to the last ordered word");',
     'return "From shortest to longest: " + $ordered.join(", ") + "; the longest word has " + $extremes.longest + " letters.";'

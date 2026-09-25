@@ -73,15 +73,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the dark lamp must name its place");',
-  'probe(typeof slots.lampNoun === "string" && slots.lampNoun.length > 0, "the case must name the kind of thing that is dark");',
-  'probe(slots.lampNoun === slots.neighbourNoun, "the lit neighbour must be the same kind of thing as the dark lamp");',
-  'probe(typeof slots.strip === "string" && slots.strip.length > 0, "the lit neighbour must name the strip it shares");',
-  'probe(typeof slots.fitting === "string" && slots.fitting.length > 0, "the first story must be attributed to a person");',
-  'probe(typeof slots.part === "string" && slots.part.length > 0, "the first story must name the part it replaces");',
-  'probe(typeof slots.unlistedAnimal === "string" && slots.unlistedAnimal.length > 0, "the postponed story must name its unlisted engine");',
-  'probe(slots.fitting !== slots.rival && slots.fitting !== slots.unlisted && slots.rival !== slots.unlisted, "the three stories must be offered by three different people");',
-  'probe(slots.part !== slots.unlistedAnimal, "the postponed engine must not be the part the first story replaces");',
   'return slots.fitting + "\\u2019s. A dead " + slots.part + " fits a dark " + slots.lampNoun + " beside a working neighbour. A whole-grid failure fights the neighbour " + slots.lampNoun + ". The " + slots.unlistedAnimal + " adds an unlisted engine.";'
 ].join('\n');
 

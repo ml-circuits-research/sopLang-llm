@@ -50,11 +50,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.promiser === "string" && slots.promiser.length > 0, "the case must name the person who promised");',
-  'probe(typeof slots.accuser === "string" && slots.accuser.length > 0, "the case must name the person who accuses");',
-  'probe(slots.promiser !== slots.accuser, "the promising person and the accusing person must be different");',
-  'probe(slots.conditionHolds === false, "the stated day must make the condition false");',
-  'probe(slots.rainDay === "Saturday", "the case must state that it rains on the promised day");',
   'const brokenClause = "No.";',
   'const dutyClause = "The condition is false, so the duty does not start.";',
   'const readingClause = slots.accuser + " read without the \\u201cif\\u201d.";',

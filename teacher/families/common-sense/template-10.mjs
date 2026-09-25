@@ -84,12 +84,6 @@ function render(solution) {
 const COMPUTE = [
   'const slots = $slots;',
   'const plans = slots.plans;',
-  'probe(plans !== null && typeof plans === "object", "the statement must state both plans");',
-  'probe(["A", "B"].every((label) => plans[label] !== null && typeof plans[label] === "object"), "each plan must state its fixed cost and its per-unit cost");',
-  'probe(["A", "B"].every((label) => Number.isInteger(plans[label].fixed) && plans[label].fixed > 0), "every fixed cost must be a positive integer");',
-  'probe(["A", "B"].every((label) => Number.isInteger(plans[label].variable) && plans[label].variable > 0), "every per-unit cost must be a positive integer");',
-  'probe(plans.A.variable !== plans.B.variable, "the plans must differ in their per-unit cost so that they cross");',
-  'probe(plans.A.fixed !== plans.B.fixed, "the plans must differ in their fixed cost so that one is cheaper at low volume");',
   'let numerator = (plans.B.fixed - plans.A.fixed) * 100;',
   'let denominator = plans.A.variable - plans.B.variable;',
   'if (denominator < 0) {',

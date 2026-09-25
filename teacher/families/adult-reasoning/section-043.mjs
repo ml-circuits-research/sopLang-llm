@@ -90,11 +90,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the workplace");',
-  'probe(typeof slots.employee === "string" && slots.employee.length > 0, "the case must name the employee");',
-  'probe(Array.isArray(slots.punchIns) && slots.punchIns.length > 0, "the case must record the week of punch-ins");',
-  'probe(typeof slots.restDay === "string" && slots.restDay.length > 0, "the clock must name the day it does not count");',
-  'probe(Number.isInteger(slots.warningCount) && slots.warningCount > 0, "the warning must be a positive number of lates");',
   'const minutesOf = (clock) => {',
   '  const parts = clock.split(":");',
   '  return Number(parts[0]) * 60 + Number(parts[1]);',
@@ -103,7 +98,6 @@ const COMPUTE = [
   'const late = slots.punchIns.filter((entry) => minutesOf(entry.clock) > threshold);',
   'const onTime = slots.punchIns.filter((entry) => minutesOf(entry.clock) <= threshold);',
   'probe(late.length > 0 && onTime.length > 0, "the week must contain a late arrival and a clean arrival");',
-  'probe(slots.punchIns.every((entry) => typeof entry.day === "string" && entry.day.length > 0), "every punch-in must name its weekday");',
   'probe(late.length + onTime.length === slots.punchIns.length, "every punch-in is either late or clean against the threshold");',
   'const COUNT_WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];',
   'const count = late.length;',

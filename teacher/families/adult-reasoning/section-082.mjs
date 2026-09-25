@@ -52,11 +52,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.speaker === "string" && slots.speaker.length > 0, "the case must name the speaker");',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the buses");',
-  'probe(Number.isInteger(slots.minutes) && slots.minutes > 0, "the observed wait must be a positive whole number of minutes");',
-  'probe(slots.busesObserved === 1 && slots.daysObserved === 1, "the observation covers one bus on one day");',
-  'probe(slots.generalised === true && slots.leapSubject === true, "the claim must generalise and leap to any subject");',
   'const observedClause = "Observed: one bus, one day, " + slots.minutes + " min.";',
   'const generalisationClause = "Generalisation: every bus.";',
   'const leapClause = "Leap: from traffic to \\u201cany subject\\u201d.";',

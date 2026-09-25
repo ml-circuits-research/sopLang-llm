@@ -66,8 +66,6 @@ const percentOfTotal = {
   },
   compute: [
     'const slots = $slots;',
-    'probe(Number.isInteger(slots.units) && slots.units > 0, "the total must be a positive whole number of units");',
-    'probe(Number.isInteger(slots.percent) && slots.percent > 0 && slots.percent < 100, "the percentage must be a whole number between 0 and 100");',
     'const product = slots.units * slots.percent;',
     'probe(product % 100 === 0, "the percentage must divide the total into whole units");',
     'const checked = product / 100;',
@@ -144,13 +142,8 @@ const elapsedMinutes = {
   },
   compute: [
     'const slots = $slots;',
-    'probe(Number.isInteger(slots.startHour) && slots.startHour >= 0 && slots.startHour < 24, "the start hour must be a clock hour");',
-    'probe(Number.isInteger(slots.endHour) && slots.endHour >= 0 && slots.endHour < 24, "the end hour must be a clock hour");',
-    'probe(Number.isInteger(slots.startMinute) && slots.startMinute >= 0 && slots.startMinute < 60, "the start minute must be a clock minute");',
-    'probe(Number.isInteger(slots.endMinute) && slots.endMinute >= 0 && slots.endMinute < 60, "the end minute must be a clock minute");',
     'const startTotal = slots.startHour * 60 + slots.startMinute;',
     'const endTotal = slots.endHour * 60 + slots.endMinute;',
-    'probe(endTotal > startTotal, "the end time must be later than the start time on the same day");',
     'const total = endTotal - startTotal;',
     'probe(total <= 24 * 60, "the window cannot exceed one day");',
     'return total + " minutes.";'
@@ -212,10 +205,6 @@ const scaledRecipe = {
   },
   compute: [
     'const slots = $slots;',
-    'probe(Number.isInteger(slots.baseServings) && slots.baseServings > 0, "the base servings must be a positive whole number");',
-    'probe(Number.isInteger(slots.wanted) && slots.wanted > 0, "the wanted servings must be a positive whole number");',
-    'probe(Number.isInteger(slots.baseAmount) && slots.baseAmount > 0, "the stated amount must be a positive whole number of units");',
-    'probe(slots.baseAmount % slots.baseServings === 0, "the stated amount must divide into whole units per serving");',
     'const perServing = slots.baseAmount / slots.baseServings;',
     'const needed = perServing * slots.wanted;',
     'probe(needed % 1 === 0, "the scaled amount must be a whole number of units");',

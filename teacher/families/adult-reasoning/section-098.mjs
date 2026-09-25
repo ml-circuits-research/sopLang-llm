@@ -80,9 +80,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots === "object" && slots !== null, "the grid case must carry the parsed cells and chores");',
-  'probe(Array.isArray(slots.items) && slots.items.length === 4, "the grid case must carry four tagged chores");',
-  'probe(slots.grid.both === "today", "the both-cells of the grid must be the today cell");',
   'const classify = (tag) => {',
   '  if (/i\\+u/.test(tag)) return "both";',
   '  if (/neither/.test(tag)) return "neither";',

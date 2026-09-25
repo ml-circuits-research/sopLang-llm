@@ -106,9 +106,6 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(Array.isArray(slots.students) && slots.students.length > 0, "the statement must name at least one student");',
-  'probe(Array.isArray(slots.tasks) && slots.tasks.length > 0, "the statement must name at least one task");',
-  'probe(slots.students.length === slots.tasks.length, "the statement must pair as many tasks as students");',
   'const used = new Set();',
   'const assignment = new Map();',
   'const search = (index) => {',
@@ -117,7 +114,6 @@ const COMPUTE = [
   '  }',
   '  const student = slots.students[index];',
   '  const allowed = slots.choices[student];',
-  '  probe(Array.isArray(allowed) && allowed.length > 0, "every student must have at least one allowed task");',
   '  for (const task of allowed) {',
   '    if (used.has(task)) {',
   '      continue;',

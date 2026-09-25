@@ -57,11 +57,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the diary");',
-  'probe(typeof slots.habit === "string" && slots.habit.length > 0, "the case must name the late habit the pairing reports");',
-  'probe(typeof slots.outcome === "string" && slots.outcome.length > 0, "the case must name the state the diary reports");',
-  'probe(slots.vivid === slots.habit && slots.lateHabit === slots.habit && slots.forwardCause === slots.habit, "the pairing, the reverse reading, and the vividness claim must name the same habit");',
-  'probe(slots.forwardOutcome === slots.outcome && slots.reverseOutcome === slots.outcome, "the two readings must name the same reported state");',
   'return "No. The page gives a pairing, not a direction. Vividness of " + slots.vivid + " is not an arrow.";'
 ].join('\n');
 

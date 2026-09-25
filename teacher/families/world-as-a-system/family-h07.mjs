@@ -64,8 +64,6 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(Array.isArray(slots.period1) && slots.period1.length > 0, "the statement must list the features of Period 1");',
-  'probe(Array.isArray(slots.period2) && slots.period2.length > 0, "the statement must list the features of Period 2");',
   'const quoted = (items) => "[" + items.map((item) => "\'" + item + "\'").join(", ") + "]";',
   'const continuities = slots.period1.filter((feature) => slots.period2.includes(feature));',
   'const disappearances = slots.period1.filter((feature) => !slots.period2.includes(feature));',

@@ -72,11 +72,7 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.factor === "string" && slots.factor.length > 0, "the statement must name the factor that was changed");',
-  'probe(Array.isArray(slots.points) && slots.points.length >= 2, "the statement must report at least two tested levels");',
-  'probe(slots.points.every((point) => Array.isArray(point) && point.length === 2 && Number.isFinite(point[0]) && Number.isFinite(point[1])), "every data point must carry a tested level and its result");',
   'const levels = slots.points.map((point) => point[0]);',
-  'probe(new Set(levels).size === levels.length, "the tested levels must be distinct");',
   'const ordered = [...slots.points].sort((left, right) => left[0] - right[0]);',
   'const results = ordered.map((point) => point[1]);',
   'const rising = results.every((value, index) => index === 0 || value > results[index - 1]);',

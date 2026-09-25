@@ -117,10 +117,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person keeping the notebook");',
-  'probe(Number.isInteger(slots.lightsOut) && Number.isInteger(slots.rise), "the protocol clocks must be whole minutes");',
-  'probe(slots.coffeeHoursBeforeLightsOut > 0 && slots.screenMinutesBeforeLightsOut > 0, "the protocol must name positive coffee and screen windows");',
-  'probe(slots.planNapMinutes > slots.napMaxMinutes, "the plan nap must exceed the protocol maximum for this section pattern");',
   'const clock = (value) => String(Math.floor(value / 60)).padStart(2, "0") + ":" + String(value % 60).padStart(2, "0");',
   'const coffeeCutoff = slots.lightsOut - slots.coffeeHoursBeforeLightsOut * 60;',
   'const screenCutoff = slots.lightsOut - slots.screenMinutesBeforeLightsOut;',

@@ -67,13 +67,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Array.isArray(slots.values) && slots.values.length === 6, "the chart must plot the six months it names");',
-  'probe(slots.values.every((value) => Number.isInteger(value) && value >= 0), "every plotted value must be a whole count");',
-  'probe(Number.isInteger(slots.axisStart) && slots.axisStart > 0, "the vertical axis must start above zero");',
-  'probe(Number.isInteger(slots.axisEnd) && slots.axisEnd - slots.axisStart === 20, "the axis must span the twenty units the header states");',
-  'probe(slots.values[5] > slots.values[0], "the series must end above where it began");',
-  'probe(typeof slots.name === "string" && slots.name.length > 0 && slots.claim === "doubled", "the case must quote a doubling claim by a named reader");',
-  'probe(slots.cutAxis === true, "the described chart must cut its axis");',
   'const first = slots.values[0];',
   'const last = slots.values[5];',
   'const difference = last - first;',

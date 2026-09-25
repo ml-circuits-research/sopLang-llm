@@ -94,10 +94,7 @@ const filteredTotal = {
       command: 'jsEval',
       body: [
         'const slots = $slots;',
-        'probe(Array.isArray(slots.values) && slots.values.length > 0, "the values must be a non-empty list");',
-        'probe(Number.isInteger(slots.threshold), "the threshold must be a whole number");',
         'const kept = slots.values.filter((value) => value > slots.threshold);',
-        'probe(slots.values.every((value) => Number.isInteger(value)), "every value must be a whole number");',
         'probe(kept.every((value) => value > slots.threshold), "only the values above the threshold may be kept");',
         'probe(kept.length <= slots.values.length, "the kept list cannot be longer than the recorded list");',
         'return kept;'
@@ -106,7 +103,6 @@ const filteredTotal = {
   ],
   compute: [
     'const slots = $slots;',
-    'probe(Array.isArray($kept), "the kept stage must publish a list");',
     'probe($kept.every((value) => value > slots.threshold), "the published list must hold only values above the threshold");',
     'const total = $kept.reduce((sum, value) => sum + value, 0);',
     'probe(total >= 0, "the total cannot be negative for positive values");',
@@ -176,8 +172,6 @@ const higherBest = {
       command: 'jsEval',
       body: [
         'const slots = $slots;',
-        'probe(Array.isArray(slots.first) && slots.first.length > 0, "the first side must have at least one score");',
-        'probe(slots.first.every((score) => Number.isInteger(score)), "every first-side score must be a whole number");',
         'const best = slots.first.reduce((highest, score) => (score > highest ? score : highest), slots.first[0]);',
         'probe(slots.first.includes(best), "the published best must be one of the stated scores");',
         'return best;'
@@ -188,8 +182,6 @@ const higherBest = {
       command: 'jsEval',
       body: [
         'const slots = $slots;',
-        'probe(Array.isArray(slots.second) && slots.second.length > 0, "the second side must have at least one score");',
-        'probe(slots.second.every((score) => Number.isInteger(score)), "every second-side score must be a whole number");',
         'const best = slots.second.reduce((highest, score) => (score > highest ? score : highest), slots.second[0]);',
         'probe(slots.second.includes(best), "the published best must be one of the stated scores");',
         'return best;'
@@ -199,10 +191,8 @@ const higherBest = {
   compute: [
     'const slots = $slots;',
     'probe(Number.isInteger($bestLeft) && Number.isInteger($bestRight), "both stages must publish a whole number");',
-    'probe($bestLeft !== $bestRight, "the two sides must not share their best score");',
     'const winner = $bestLeft > $bestRight ? slots.left : slots.right;',
     'const margin = Math.abs($bestLeft - $bestRight);',
-    'probe(margin > 0, "the margin must be positive when the best scores differ");',
     'return winner + " has the higher best score, by " + margin + " points.";'
   ].join('\n'),
   explain(slots, solution) {

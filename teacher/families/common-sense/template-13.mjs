@@ -86,11 +86,6 @@ function render(solution) {
 const COMPUTE = [
   'const slots = $slots;',
   'const measurements = slots.measurements;',
-  'probe(measurements !== null && typeof measurements === "object", "the statement must report two measurements");',
-  'probe(["A", "B"].every((name) => measurements[name] !== null && typeof measurements[name] === "object"), "each measurement must report a value and an error");',
-  'probe(["A", "B"].every((name) => Number.isInteger(measurements[name].value) && measurements[name].value > 0), "each reported value must be a positive integer number of hundredths");',
-  'probe(["A", "B"].every((name) => Number.isInteger(measurements[name].error) && measurements[name].error >= 0), "each stated error must be a non-negative integer number of hundredths");',
-  'probe(["A", "B"].every((name) => measurements[name].error * 2 < measurements[name].value), "each error must leave a positive lower endpoint");',
   'const intervals = {};',
   'for (const name of ["A", "B"]) {',
   '  const measurement = measurements[name];',

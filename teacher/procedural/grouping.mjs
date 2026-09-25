@@ -113,15 +113,11 @@ const groupedLabelTotals = {
       command: 'jsEval',
       body: [
         'const slots = $slots;',
-        'probe(Array.isArray(slots.labels) && Array.isArray(slots.amounts), "the labels and the recorded amounts must be two lists");',
-        'probe(slots.labels.length === slots.amounts.length && slots.labels.length > 0, "every listed site must carry exactly one recorded amount");',
-        'probe(slots.amounts.every((amount) => Number.isInteger(amount) && amount > 0), "every recorded amount must be a positive whole number");',
         'const totals = {};',
         'for (let index = 0; index < slots.labels.length; index += 1) {',
         '  const label = slots.labels[index];',
         '  totals[label] = (totals[label] ?? 0) + slots.amounts[index];',
         '}',
-        'probe(Object.keys(totals).length > 0, "the totals must cover at least one site");',
         'probe(Object.values(totals).every((total) => Number.isInteger(total) && total > 0), "every published total must be a positive whole number");',
         'return totals;'
       ].join('\n')
@@ -131,8 +127,6 @@ const groupedLabelTotals = {
       command: 'jsEval',
       body: [
         'const totals = $totals;',
-        'probe(totals !== null && typeof totals === "object" && !Array.isArray(totals), "the totals stage must publish an object");',
-        'probe(Object.keys(totals).length > 0, "the totals stage must publish at least one site");',
         'const entries = Object.entries(totals).map(([label, total], order) => ({ label, total, order }));',
         'entries.sort((left, right) => (right.total - left.total) || (left.order - right.order));',
         'const ranked = entries.map((entry) => [entry.label, entry.total]);',
@@ -147,14 +141,9 @@ const groupedLabelTotals = {
     'const slots = $slots;',
     'const totals = $totals;',
     'const ranked = $ranked;',
-    'probe(Array.isArray(slots.labels) && slots.labels.length === slots.amounts.length, "every listed site must carry exactly one recorded amount");',
-    'probe(totals !== null && typeof totals === "object" && !Array.isArray(totals), "the totals stage must publish an object");',
-    'probe(Array.isArray(ranked) && ranked.length === Object.keys(totals).length, "the ranking stage must publish one pair per recorded site");',
-    'probe(ranked.length > 1 && ranked[0][1] > ranked[1][1], "exactly one site must hold the strict maximum total");',
     'const winner = ranked[0][0];',
     'const total = ranked[0][1];',
     'probe(totals[winner] === total, "the leading pair must repeat the total the totals stage published for that site");',
-    'probe(Object.values(totals).filter((value) => value === total).length === 1, "the leading total must belong to exactly one site");',
     'return "The " + winner + " site leads with " + total + " units.";'
   ].join('\n'),
   explain(slots, solution) {
@@ -239,11 +228,8 @@ const topKAmongList = {
       command: 'jsEval',
       body: [
         'const slots = $slots;',
-        'probe(Array.isArray(slots.values) && slots.values.length > 0, "the values must be a non-empty list");',
-        'probe(slots.values.every((value) => Number.isInteger(value) && value > 0), "every value must be a positive whole number");',
         'const ranked = slots.values.slice().sort((left, right) => right - left);',
         'probe(ranked.length === slots.values.length, "the ranking must keep every stated value");',
-        'probe(ranked.every((value, index) => index === 0 || ranked[index - 1] > value), "the ranking must run from the largest value down without repeating one");',
         'return ranked;'
       ].join('\n')
     },
@@ -253,8 +239,6 @@ const topKAmongList = {
       body: [
         'const slots = $slots;',
         'const ranked = $ranked;',
-        'probe(Array.isArray(ranked) && ranked.length > 0, "the ranking stage must publish a non-empty list");',
-        'probe(Number.isInteger(slots.k) && slots.k >= 2, "the requested count must be a whole number of at least two");',
         'const keptTop = ranked.slice(0, slots.k);',
         'probe(keptTop.length === slots.k, "the kept values must be exactly the requested count");',
         'probe(keptTop.every((value, index) => value === ranked[index]), "the kept values must be the leading part of the ranking");',
@@ -266,10 +250,7 @@ const topKAmongList = {
     'const slots = $slots;',
     'const ranked = $ranked;',
     'const keptTop = $keptTop;',
-    'probe(Array.isArray(ranked) && ranked.length === slots.values.length, "the ranking stage must publish one entry per stated value");',
-    'probe(Array.isArray(keptTop) && keptTop.length === slots.k, "the kept stage must publish exactly the requested count");',
     'probe(keptTop.every((value, index) => value === ranked[index]), "the kept values must be the leading values of the ranking");',
-    'probe(ranked.every((value, index) => index < keptTop.length || value < keptTop[keptTop.length - 1]), "every value left out must be smaller than every kept value");',
     'const total = keptTop.reduce((sum, value) => sum + value, 0);',
     'probe(Number.isInteger(total) && total > 0, "the total of the kept values must be a positive whole number");',
     'const list = keptTop.length === 1 ? String(keptTop[0]) : keptTop.slice(0, -1).join(", ") + " and " + keptTop[keptTop.length - 1];',

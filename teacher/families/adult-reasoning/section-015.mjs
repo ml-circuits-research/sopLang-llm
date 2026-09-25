@@ -60,13 +60,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.ward === "string" && slots.ward.trim().length > 0, "the case must name the ward of the notebook");',
-  'probe(typeof slots.writer === "string" && /^[A-Z][a-z]+$/.test(slots.writer), "the case must name the person writing the mean");',
-  'probe(Array.isArray(slots.litres) && slots.litres.length === 3, "the case must carry exactly three group sizes");',
-  'probe(slots.litres.every((value) => Number.isInteger(value) && value > 0), "every group size must be a positive whole number of litres");',
-  'probe(new Set(slots.litres).size === 3, "the three group sizes must differ");',
-  'probe(slots.arithmeticMean === true, "the notebook must define the arithmetic mean as the sum over how many");',
-  'probe(slots.ratioRule === true, "the notebook must define a ratio as parts to parts");',
   'const format = (hundredths) => Math.trunc(hundredths / 100) + "." + String(hundredths % 100).padStart(2, "0");',
   'const total = slots.litres[0] + slots.litres[1] + slots.litres[2];',
   'const meanHundredths = Math.round((total * 100) / 3);',

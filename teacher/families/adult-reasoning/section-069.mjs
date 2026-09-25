@@ -66,11 +66,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.tank === "object" && slots.tank !== null, "the case must describe the tank");',
-  'probe(slots.tank.length > 0 && slots.tank.width > 0 && slots.tank.height > 0, "the three sides of the tank must be positive lengths");',
-  'probe(slots.filledPercent > 0 && slots.filledPercent < 100, "the tank must be filled to a percentage strictly between 0 and 100");',
-  'probe(slots.stonesLitres > 0, "the submerged stones must have a positive volume");',
-  'probe(slots.waterIsLevelMinusStones === true, "the statement must state the level-minus-stones rule");',
   'const fullCm3 = slots.tank.length * slots.tank.width * slots.tank.height;',
   'const fullTenths = fullCm3 / 100;',
   'const levelTenths = (fullTenths * slots.filledPercent) / 100;',

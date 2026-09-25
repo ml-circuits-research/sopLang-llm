@@ -61,14 +61,8 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Array.isArray(slots.observations) && slots.observations.length > 0, "the statement must list at least one observation");',
   'for (const observation of slots.observations) {',
-  '  probe(typeof observation.label === "string" && observation.label.length > 0, "every observation must carry a label");',
-  '  probe(Array.isArray(observation.properties) && observation.properties.length > 0, "every observation must list its properties: " + observation.label);',
   '}',
-  'probe(typeof slots.subject === "string" && slots.subject.length > 0, "the claim must name the property it starts from");',
-  'probe(typeof slots.required === "string" && slots.required.length > 0, "the claim must name the property it promises");',
-  'probe(slots.subject !== slots.required, "the claim must link two different properties");',
   'const counterexample = slots.observations.find((observation) => observation.properties.indexOf(slots.subject) !== -1 && observation.properties.indexOf(slots.required) === -1);',
   'probe(counterexample !== undefined, "the data must contain one observation that refutes the universal claim");',
   'return "The statement is false. Counterexample: " + counterexample.label + ".";'

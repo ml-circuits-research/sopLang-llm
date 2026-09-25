@@ -121,11 +121,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Array.isArray(slots.order) && slots.order.length > 0, "the statement must name the tasks");',
-  'probe(slots.order.every((name) => Number.isInteger(slots.durations[name]) && slots.durations[name] > 0), "every task duration must be a positive whole number");',
-  'probe(slots.order.every((name) => Array.isArray(slots.prerequisites[name])), "every task must state its prerequisites");',
-  'probe(slots.order.every((name) => slots.prerequisites[name].every((prerequisite) => slots.order.indexOf(prerequisite) !== -1)), "every prerequisite must be a stated task");',
-  'probe(typeof slots.unit === "string" && slots.unit.length > 0, "the statement must state the time unit of the durations");',
   'const start = {};',
   'const finish = {};',
   'const scheduled = [];',

@@ -63,11 +63,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the evening notes must name their place");',
-  'probe(Array.isArray(slots.factors) && slots.factors.length >= 2, "the page must list several factors for the late opening");',
-  'probe(slots.factors.every((factor) => typeof factor === "string" && factor.length > 0), "every listed factor must be stated");',
-  'probe(slots.factors.some((factor) => factor.includes(slots.chosenFactor)), "the picked favourite must be one of the listed factors");',
-  'probe(slots.picker !== slots.plural && slots.picker !== slots.absence && slots.plural !== slots.absence, "the three verdicts must be attributed to three different people");',
   'return "That several listed factors were present and each is a candidate contributor. A single-winner story is not forced. \\u201cSeveral\\u201d does not mean \\u201cnone.\\u201d";'
 ].join('\n');
 

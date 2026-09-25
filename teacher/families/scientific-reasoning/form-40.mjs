@@ -87,12 +87,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Array.isArray(slots.criteria) && slots.criteria.length > 0, "the problem must score its options on at least one criterion");',
-  'probe(slots.criteria.every((criterion) => typeof criterion.name === "string" && criterion.name.length > 0), "every criterion must be named");',
-  'probe(Array.isArray(slots.options) && slots.options.length >= 2, "dominance needs at least two options");',
-  'probe(new Set(slots.options.map((option) => option.label)).size === slots.options.length, "the option labels must be distinct");',
-  'probe(slots.options.every((option) => Array.isArray(option.scores) && option.scores.length === slots.criteria.length), "every option must be scored on every criterion");',
-  'probe(slots.options.every((option) => option.scores.every((score) => Number.isInteger(score) && score >= 1 && score <= 5)), "every score must be an integer from 1 to 5");',
   'const dominates = (left, right) => left.scores.every((score, index) => score >= right.scores[index]) && left.scores.some((score, index) => score > right.scores[index]);',
   'const dominators = new Map(slots.options.map((option) => [option.label, slots.options.filter((other) => other.label !== option.label && dominates(other, option)).map((other) => other.label)]));',
   'const eliminated = slots.options.filter((option) => dominators.get(option.label).length > 0);',

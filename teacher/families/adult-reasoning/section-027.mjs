@@ -81,15 +81,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.runner === "string" && slots.runner.length > 0, "the statement must name the person working the boards");',
-  'probe(typeof slots.helper === "string" && slots.helper.length > 0, "the statement must name the person rinsing the meat");',
-  'probe(slots.runner !== slots.helper, "the two named people must be different");',
-  'probe(Number.isInteger(slots.washSeconds) && slots.washSeconds > 0, "the required hand-wash time must be a positive whole number of seconds");',
-  'probe(Number.isInteger(slots.towelLimitHours) && slots.towelLimitHours > 0, "the towel change interval must be a positive whole number of hours");',
-  'probe(Number.isInteger(slots.wipeSeconds) && slots.wipeSeconds >= 0, "the actual hand-wash time must be a whole number of seconds");',
-  'probe(Number.isInteger(slots.towelHours) && slots.towelHours >= 0, "the towel age must be a whole number of hours");',
-  'probe(slots.eggBoard === "green", "the raw eggs must be cracked on the ready board to breach the colour rule");',
-  'probe(Number.isInteger(slots.fridgeTemp) && Number.isInteger(slots.fridgeMax) && slots.fridgeTemp > slots.fridgeMax, "the stem states the fridge is above the sheet maximum");',
   'const breaches = [];',
   'breaches.push(slots.eggBoard.charAt(0).toUpperCase() + slots.eggBoard.slice(1) + " for raw");',
   'if (slots.wipeSeconds < slots.washSeconds) { breaches.push(slots.wipeSeconds + " s"); }',

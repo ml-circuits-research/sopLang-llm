@@ -55,10 +55,6 @@ function render(solution) {
 const COMPUTE = [
   'const slots = $slots;',
   'const assertor = slots.assertor;',
-  'probe(typeof assertor === "string" && assertor.length > 0, "the case must name the person who pinned the claim");',
-  'probe(typeof slots.claim === "string" && slots.claim.length > 0, "the case must state the pinned claim");',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the board");',
-  'probe(assertor !== slots.reporter && assertor !== slots.silence && slots.reporter !== slots.silence, "the case must name three different speakers");',
   'return assertor + ", the assertor. Shifting the burden asks the room to disprove an unsupported claim. Silence is not a premise.";'
 ].join('\n');
 

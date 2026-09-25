@@ -47,11 +47,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Number.isInteger(slots.workload) && slots.workload > 0, "the workload must be a positive whole number");',
-  'probe(Number.isInteger(slots.blockCapacity) && slots.blockCapacity > 0, "the block capacity must be a positive whole number");',
-  'probe(Number.isInteger(slots.blockMinutes) && slots.blockMinutes > 0, "the block time must be a positive whole number");',
-  'probe(Number.isInteger(slots.setupMinutes) && slots.setupMinutes >= 0, "the setup time must be a whole number");',
-  'probe(Number.isInteger(slots.limitMinutes) && slots.limitMinutes > 0, "the limit must be a positive whole number");',
   'const blocks = Math.ceil(slots.workload / slots.blockCapacity);',
   'const minutes = blocks * slots.blockMinutes + slots.setupMinutes;',
   'return "The correct answer is " + (minutes <= slots.limitMinutes ? "yes" : "no") + ". First compress the operational details into one number (" + minutes + " minutes), then compare that output with the deadline. The large problem becomes a workload calculation followed by a pure constraint test.";'

@@ -69,14 +69,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the sheet must name the place");',
-  'probe(typeof slots.organiser === "string" && slots.organiser.length > 0, "the case must name the organiser");',
-  'probe(Number.isInteger(slots.people) && slots.people > 0, "the confirmed list must hold a positive number of people");',
-  'probe(slots.uncertain === 0, "the printed reserve verdict is the one for a certain list");',
-  'probe(Number.isInteger(slots.loafRate) && slots.loafRate > 0, "the sheet must give a positive loaf rate");',
-  'probe(Number.isInteger(slots.saladPerPerson) && slots.saladPerPerson > 0, "the sheet must give a positive salad amount per person");',
-  'probe(Number.isInteger(slots.bottleRate) && slots.bottleRate > 0, "the sheet must give a positive bottle rate");',
-  'probe(Number.isInteger(slots.extraLoaves) && slots.extraLoaves > 0, "the organiser must want a positive number of extra loaves");',
   'const loaves = Math.ceil(slots.people / slots.loafRate);',
   'const salad = slots.people * slots.saladPerPerson;',
   'const bottles = Math.ceil(slots.people / slots.bottleRate);',

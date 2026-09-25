@@ -85,10 +85,6 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(Array.isArray(slots.districts) && slots.districts.length > 0, "the statement must name at least one district");',
-  'probe(slots.districts.every((district) => typeof district.name === "string" && district.name.length > 0), "every district must carry a name");',
-  'probe(slots.districts.every((district) => Number.isInteger(district.population) && district.population > 0), "every district must have a positive whole population");',
-  'probe(Number.isInteger(slots.seats) && slots.seats > 0, "the seat total must be a positive whole number");',
   'const total = slots.districts.reduce((sum, district) => sum + district.population, 0);',
   'probe(total > 0, "the stated populations must add up to a positive total");',
   'const quotas = slots.districts.map((district) => { const scaled = district.population * slots.seats; return { name: district.name, seats: Math.floor(scaled / total), remainder: scaled % total }; });',

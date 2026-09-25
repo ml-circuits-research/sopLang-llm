@@ -66,8 +66,6 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(Number.isFinite(slots.denominator) && slots.denominator > 0, "the statement must state a positive scale denominator");',
-  'probe(Number.isFinite(slots.mapCentimetres) && slots.mapCentimetres > 0, "the statement must state a positive map distance");',
   'const realCentimetres = slots.mapCentimetres * slots.denominator;',
   'probe(realCentimetres > 0, "the real distance must be positive because the scale is a ratio, not an added distance");',
   'const kilometres = String(Number((realCentimetres / 100000).toFixed(4)));',

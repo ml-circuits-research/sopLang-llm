@@ -83,10 +83,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Number.isInteger(slots.throughput) && slots.throughput > 0, "the nominal throughput must be a positive integer");',
-  'probe(typeof slots.unit === "string" && slots.unit.length > 0, "the statement must name the unit of the throughput");',
-  'probe(Number.isInteger(slots.overheadPercent) && slots.overheadPercent >= 0 && slots.overheadPercent < 100, "the overhead must be a percentage below one hundred");',
-  'probe(Number.isInteger(slots.minutes) && slots.minutes > 0, "the running time must be a positive number of minutes");',
   'const roundHundredths = (numerator, denominator) => {',
   '  let hundredths = Math.floor((numerator * 100) / denominator);',
   '  const remainder = (numerator * 100) % denominator;',

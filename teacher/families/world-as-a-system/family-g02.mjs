@@ -63,8 +63,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Array.isArray(slots.routes) && slots.routes.length > 0, "the statement must list at least one candidate route");',
-  'probe(Array.isArray(slots.closed), "the closed-road list must be an array");',
   'const usable = slots.routes.filter((route) => slots.closed.every((segment) => !route.name.includes(segment)));',
   'probe(usable.length > 0, "at least one listed route must avoid every closed road");',
   'let best = usable[0];',

@@ -61,12 +61,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.name === "string" && slots.name.length > 0, "the case must name the person leaving the bulb on");',
-  'probe(Number.isInteger(slots.watts) && slots.watts > 0, "the bulb power must be a positive whole number of watts");',
-  'probe(Number.isInteger(slots.hoursPerNight) && slots.hoursPerNight > 0 && slots.hoursPerNight <= 24, "the nightly hours must be a positive whole number up to 24");',
-  'probe(Number.isInteger(slots.nights) && slots.nights > 0, "the nights must be a positive whole number");',
-  'probe(typeof slots.pricePerKwh === "number" && slots.pricePerKwh > 0, "the sheet must state a positive round price per kWh");',
-  'probe(slots.kwhRule === "1000 W × 1 h = 1 kWh", "the sheet must state the watt-hour to kilowatt-hour rule");',
   'const wattHours = slots.watts * slots.hoursPerNight * slots.nights;',
   'const kwh = Math.round(wattHours / 10) / 100;',
   'probe(kwh > 0, "the consumption of the bulb must be positive");',

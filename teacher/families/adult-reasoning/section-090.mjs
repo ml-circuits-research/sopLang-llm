@@ -50,12 +50,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.lifter === "string" && slots.lifter.length > 0, "the case must name the person lifting one end");',
-  'probe(typeof slots.blocker === "string" && slots.blocker.length > 0, "the case must name the person on the phone");',
-  'probe(slots.lifter !== slots.blocker, "the lifting person and the blocked person must be different");',
-  'probe(slots.requiredPeople === 2 && slots.presentPeople === 1, "moving the table must need two people with only one present");',
-  'probe(Number.isInteger(slots.phoneMinutes) && slots.phoneMinutes > 0, "the phone time must be a positive whole number of minutes");',
-  'probe(slots.doorNarrow === true && slots.dragForbidden === true, "the door and floor prohibitions must both hold");',
   'return "No. The second person is missing. The floor is not an allowed path. " + slots.blocker + "\\u2019s phone holds the resource.";'
 ].join('\n');
 

@@ -75,10 +75,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Number.isInteger(slots.population) && slots.population > 0, "the model population must be a positive whole number of cases");',
-  'probe(Number.isInteger(slots.prevalence) && slots.prevalence > 0 && slots.prevalence < 100, "the prevalence must be a percentage of the population");',
-  'probe(Number.isInteger(slots.sensitivity) && slots.sensitivity > 0 && slots.sensitivity <= 100, "the sensitivity must be a percentage of the cases that carry the event");',
-  'probe(Number.isInteger(slots.specificity) && slots.specificity > 0 && slots.specificity < 100, "the specificity must be a percentage below one hundred, so false positives exist");',
   'const present = slots.population * slots.prevalence / 100;',
   'const absent = slots.population - present;',
   'const truePositives = present * slots.sensitivity / 100;',

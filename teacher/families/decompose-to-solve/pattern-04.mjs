@@ -54,13 +54,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Number.isInteger(slots.aMinutes) && slots.aMinutes > 0, "the A duration must be a positive whole number");',
-  'probe(Number.isInteger(slots.bMinutes) && slots.bMinutes > 0, "the B duration must be a positive whole number");',
-  'probe(Number.isInteger(slots.cMinutes) && slots.cMinutes > 0, "the C duration must be a positive whole number");',
-  'probe(Number.isInteger(slots.dMinutes) && slots.dMinutes > 0, "the D duration must be a positive whole number");',
-  'probe(Number.isInteger(slots.eMinutes) && slots.eMinutes > 0, "the E duration must be a positive whole number");',
-  'probe(Number.isInteger(slots.bufferMinutes) && slots.bufferMinutes >= 0, "the safety buffer must be a whole number");',
-  'probe(Number.isInteger(slots.limitMinutes) && slots.limitMinutes > 0, "the completion limit must be a positive whole number");',
   'const joinMinutes = Math.max(slots.bMinutes, slots.cMinutes);',
   'const minutes = slots.aMinutes + joinMinutes + slots.dMinutes + slots.eMinutes + slots.bufferMinutes;',
   'return "The earliest safe completion time is " + minutes + " minutes, so the plan is " + (minutes <= slots.limitMinutes ? "feasible" : "not feasible") + ". The critical insight is that B and C are parallel branches whose maximum duration controls the join.";'

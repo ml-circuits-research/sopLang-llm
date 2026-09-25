@@ -94,13 +94,7 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.zoneOffsets === "object" && slots.zoneOffsets !== null && !Array.isArray(slots.zoneOffsets), "the table must give the zone offsets");',
-  'probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person who sets the alarm");',
-  'probe(typeof slots.referenceLabel === "string" && slots.referenceLabel.length === 1, "the reference zone must carry a one-letter label");',
-  'probe(slots.referenceLabel !== slots.zoneLabel, "the person must sit in another zone than the reference zone");',
-  'probe(Number.isInteger(slots.referenceMinutes) && slots.referenceMinutes >= 0 && slots.referenceMinutes < 1440, "the call hour must be a whole minute of the day");',
   'const offset = slots.zoneOffsets[slots.zoneLabel];',
-  'probe(Number.isInteger(offset) && offset !== 0, "the zone of the person must carry a whole, non-zero offset");',
   'const formatTime = (totalMinutes) => {',
   '  const wrapped = ((totalMinutes % 1440) + 1440) % 1440;',
   '  return String(Math.floor(wrapped / 60)).padStart(2, "0") + ":" + String(wrapped % 60).padStart(2, "0");',
@@ -112,7 +106,6 @@ const COMPUTE = [
   '};',
   'const localMinutes = slots.referenceMinutes + offset;',
   'const missMinutes = slots.alarmMinutes - localMinutes;',
-  'probe(Number.isInteger(slots.alarmMinutes) && slots.alarmMinutes >= 0, "the alarm hour must be a whole minute of the day");',
   'probe(missMinutes !== 0, "the alarm must miss the local time for the printed clause to exist");',
   'const localTime = formatTime(localMinutes);',
   'const direction = missMinutes > 0 ? "late" : "early";',

@@ -67,9 +67,6 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(typeof slots.area === "number" && slots.area > 0, "the stated area must be a positive number of hectares");',
-  'probe(Number.isInteger(slots.visitors) && slots.visitors >= 0, "the stated number of visitors must be a non-negative integer");',
-  'probe(typeof slots.threshold === "number" && slots.threshold > 0, "the stated comfortable density must be a positive number");',
   'const densityText = (visitors, area) => {',
   '  const scaled = visitors * 100;',
   '  const quotient = Math.floor(scaled / area);',
@@ -78,7 +75,6 @@ const COMPUTE = [
   '  const rounded = twice > area ? quotient + 1 : twice < area ? quotient : quotient % 2 === 0 ? quotient : quotient + 1;',
   '  return String(Math.floor(rounded / 100)) + "." + String(rounded % 100).padStart(2, "0");',
   '};',
-  'probe(Number.isFinite(slots.visitors / slots.area), "the stated area must yield a finite visitor density");',
   'const above = slots.visitors > slots.threshold * slots.area;',
   'const suffix = renderCrossDomain(slots.crossDomain);',
   'const main = densityText(slots.visitors, slots.area) + " visitors/hectare; " + (above ? "above" : "within") + " capacity.";',

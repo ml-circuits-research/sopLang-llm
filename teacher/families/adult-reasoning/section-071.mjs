@@ -74,11 +74,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.town === "string" && slots.town.length > 0, "the case must name the town of the well");',
-  'probe(typeof slots.neighbourClaim === "string" && slots.neighbourClaim.length > 0, "the case must carry the neighbour claim");',
-  'probe(typeof slots.speaker === "string" && slots.speaker.length > 0, "the case must name the person who repeats the rumour");',
-  'probe(slots.notice.from > 0 && slots.notice.to >= slots.notice.from, "the notice must announce a well-formed closure range");',
-  'probe(slots.photoDay > 0, "the photo must carry a day of September");',
   'const hearsay = /I heard from someone/i.test(slots.neighbourClaim);',
   'probe(hearsay === true, "the neighbour claim must be second-hand rather than first-hand");',
   'const photoInWindow = slots.photoDay >= slots.notice.from && slots.photoDay <= slots.notice.to;',

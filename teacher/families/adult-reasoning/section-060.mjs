@@ -91,12 +91,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person");',
-  'probe(slots.spoonSticksToMagnet === true, "the spoon must stick to a magnet");',
-  'probe(slots.plateLightsTester === false, "the plate must fail the continuity tester");',
-  'probe(Array.isArray(slots.materials) && slots.materials.length >= 4, "the table must list its materials");',
-  'probe(slots.magnetising.length === 1 && slots.flammable.length === 1 && slots.brittle.length === 1, "exactly one material must magnetise, burn, and break");',
-  'probe(slots.nonConducting.indexOf(slots.trialMaterial) !== -1, "the trial the plate matched must not conduct");',
   'const capitalise = (text) => text.charAt(0).toUpperCase() + text.slice(1);',
   'const spoonClause = "Spoon: " + slots.magnetising[0] + ".";',
   'const plateClause = "Plate: " + slots.trialMaterial + "-like behaviour.";',

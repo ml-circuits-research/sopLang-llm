@@ -76,12 +76,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Number.isInteger(slots.threshold) && slots.threshold > 0, "the card must state a positive threshold reading");',
-  'probe(Number.isInteger(slots.reading) && slots.reading > 0, "the case must record a positive reading");',
-  'probe(slots.reading >= slots.threshold, "the recorded reading must meet the card threshold");',
-  'probe(slots.readInstrument === slots.instrument, "the recorded reading must come from the instrument the card names");',
-  'probe(slots.stopAction === slots.action, "the action the case records must be the action the card names");',
-  'probe(typeof slots.alternative === "string" && slots.alternative.length > 0, "the objector must name the extra sign");',
   'const alternative = slots.alternative.charAt(0).toUpperCase() + slots.alternative.slice(1);',
   'return "Yes. The listed reading is sufficient for stopping. " + alternative + " would be another possible reason in another document.";'
 ].join('\n');

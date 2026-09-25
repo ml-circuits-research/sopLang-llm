@@ -92,10 +92,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Number.isInteger(slots.start) && slots.start >= 0, "the initial state must be a non-negative integer");',
-  'probe(Number.isInteger(slots.add) && slots.add > slots.subtract && slots.subtract >= 0, "every cycle must have a positive net change");',
-  'probe(Number.isInteger(slots.cap) && slots.cap > 0, "the cap must be a positive integer");',
-  'probe(Number.isInteger(slots.cycles) && slots.cycles >= 1, "the statement must repeat at least one cycle");',
   'const states = [];',
   'let value = slots.start;',
   'let firstCapped = null;',

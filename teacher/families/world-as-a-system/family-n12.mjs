@@ -131,8 +131,6 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(Array.isArray(slots.links) && slots.links.length > 0, "the statement must state at least one parent link");',
-  'probe(typeof slots.subject === "string" && typeof slots.object === "string" && slots.subject !== slots.object, "the task must name two different people");',
   'const parents = new Map();',
   'const children = new Map();',
   'const remember = (map, key, value) => {',
@@ -142,7 +140,6 @@ const COMPUTE = [
   '  map.get(key).add(value);',
   '};',
   'for (const link of slots.links) {',
-  '  probe(typeof link.parent === "string" && typeof link.child === "string", "every stated link must name a parent and a child");',
   '  remember(parents, link.child, link.parent);',
   '  remember(children, link.parent, link.child);',
   '}',

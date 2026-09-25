@@ -69,8 +69,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(Number.isInteger(slots.start) && Number.isInteger(slots.end), "the two events must be dated with whole years");',
-  'probe(slots.start >= 1 && slots.start < slots.end, "the later event must follow the earlier one");',
   'const centuryOf = (year) => Math.floor((year - 1) / 100) + 1;',
   'const ordinal = (value) => { const remainder = value % 100; const suffix = remainder >= 11 && remainder <= 13 ? "th" : value % 10 === 1 ? "st" : value % 10 === 2 ? "nd" : value % 10 === 3 ? "rd" : "th"; return value + suffix; };',
   'const startCentury = centuryOf(slots.start);',

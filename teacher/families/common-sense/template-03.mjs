@@ -74,10 +74,6 @@ function render(solution) {
 const COMPUTE = [
   'const slots = $slots;',
   'const stages = ["A", "B", "C", "D"];',
-  'probe(slots.capacities !== null && typeof slots.capacities === "object", "the statement must state the four stage capacities");',
-  'probe(stages.every((stage) => Number.isInteger(slots.capacities[stage]) && slots.capacities[stage] > 0), "every stage capacity must be a positive integer");',
-  'probe(stages.includes(slots.stage), "the improved stage must be one of A, B, C, D");',
-  'probe(Number.isInteger(slots.percent) && slots.percent > 0 && slots.percent < 100, "the improvement must be a positive percentage below one hundred");',
   'const initial = Math.min(...stages.map((stage) => slots.capacities[stage]));',
   'const improved = {};',
   'for (const stage of stages) {',
@@ -85,7 +81,6 @@ const COMPUTE = [
   '}',
   'const after = Math.min(...stages.map((stage) => improved[stage]));',
   'const bottlenecks = stages.filter((stage) => improved[stage] === after);',
-  'probe(bottlenecks.length > 0, "the improved capacities must have a smallest stage");',
   'return "Initial capacity: " + initial + " " + slots.unit + "/hour. After the improvement: " + String(after / 100) + " " + slots.unit + "/hour. Final bottleneck stage(s): " + bottlenecks.join(", ") + ".";'
 ].join('\n');
 

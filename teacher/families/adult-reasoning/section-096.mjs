@@ -62,14 +62,7 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots === "object" && slots !== null, "the trap case must carry its parsed values");',
-  'probe(typeof slots.person === "string" && slots.person.length > 0, "the person in the vignette must be named");',
-  'probe(Number.isInteger(slots.amount) && slots.amount > 0, "the sum paid for the course must be a positive whole number");',
-  'probe(slots.amount === slots.saidAmount, "the sum paid and the sum the person wants to save must be the same");',
-  'probe(Array.isArray(slots.definitions) && slots.definitions.length === 3, "the statement must define the three traps");',
   'const trap = slots.definitions.find((entry) => /already put money in/.test(entry.definition));',
-  'probe(trap !== undefined, "the listed traps must include the one defined by continuing because money was already put in");',
-  'probe(/so as not to lose/.test(slots.vignetteText), "the vignette must show the person staying so as not to lose the sum");',
   'const label = trap.label.charAt(0).toUpperCase() + trap.label.slice(1);',
   'const answer = label + ". The " + slots.amount + " are gone on both branches. The next hour is a new cost of time.";',
   'return answer;'

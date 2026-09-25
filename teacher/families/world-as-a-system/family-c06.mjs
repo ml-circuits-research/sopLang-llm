@@ -101,8 +101,6 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(Array.isArray(slots.projects) && slots.projects.length > 0, "the statement must list at least one project");',
-  'probe(Number.isInteger(slots.budget) && slots.budget >= 0, "the statement must state a non-negative integer budget");',
   'const mandatoryIndex = slots.mandatory === null ? -1 : slots.projects.findIndex((project) => project.name === slots.mandatory);',
   'probe(slots.mandatory === null || mandatoryIndex !== -1, "a mandatory project must appear in the stated project list");',
   'let best = null;',

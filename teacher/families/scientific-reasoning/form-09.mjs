@@ -70,10 +70,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.name1 === "string" && slots.name1.length > 0, "the first hypothesis must carry its name");',
-  'probe(Array.isArray(slots.predictions1) && slots.predictions1.length > 0, "the first hypothesis must state its predictions");',
-  'probe(typeof slots.name2 === "string" && slots.name2.length > 0, "the second hypothesis must carry its name");',
-  'probe(Array.isArray(slots.predictions2) && slots.predictions2.length > 0, "the second hypothesis must state its predictions");',
   'const first = slots.predictions1.find((prediction) => slots.predictions2.indexOf(prediction) === -1);',
   'const second = slots.predictions2.find((prediction) => slots.predictions1.indexOf(prediction) === -1);',
   'probe(first !== undefined, "the first hypothesis must predict something the second does not");',

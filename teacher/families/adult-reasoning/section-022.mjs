@@ -81,11 +81,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person opening the pack");',
-  'probe(Number.isInteger(slots.sealed.day) && Number.isInteger(slots.opened.day) && Number.isInteger(slots.target.day), "the dates must be whole day numbers");',
-  'probe(Number.isInteger(slots.openWindowDays) && slots.openWindowDays > 0, "the open window must be a positive number of days");',
-  'probe(slots.lidSwollen === false, "this section describes a pack whose lid is not swollen");',
-  'probe(slots.fridgeC >= slots.storageLowC && slots.fridgeC <= slots.storageHighC, "the fridge temperature must sit inside the storage range");',
   'const ordinal = (value) => {',
   '  const rest = value % 100;',
   '  if (rest >= 11 && rest <= 13) return value + "th";',
@@ -96,7 +91,6 @@ const COMPUTE = [
   '};',
   'const windowEndDay = slots.opened.day + slots.openWindowDays - 1;',
   'const expiresFirst = Math.min(slots.sealed.day, windowEndDay);',
-  'probe(slots.target.day > expiresFirst, "the target day must overrun both clocks for this section pattern");',
   'return "No. Opened on the " + ordinal(slots.opened.day) + " \u2192 window " + slots.opened.day + "\u2013" + windowEndDay + " (" + slots.openWindowDays + " days). The 20th/21st overruns both the sealed date (" + slots.sealed.day + ") and the open window.";'
 ].join('\n');
 

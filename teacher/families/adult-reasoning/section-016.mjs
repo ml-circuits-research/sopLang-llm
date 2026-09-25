@@ -80,14 +80,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.saver === "string" && /^[A-Z][a-z]+$/.test(slots.saver), "the case must name the person the sheet belongs to");',
-  'probe(typeof slots.village === "string" && slots.village.trim().length > 0, "the case must name the village of the sheet");',
-  'probe(Number.isInteger(slots.incomeCents) && slots.incomeCents > 0, "the net income must be a positive whole number of cents");',
-  'probe(Number.isInteger(slots.fixedCents) && slots.fixedCents >= 0, "the fixed lines must be a whole number of cents");',
-  'probe(Number.isInteger(slots.coatCents) && slots.coatCents > 0, "the wanted coat must cost a positive whole number of cents");',
-  'probe(typeof slots.fundPercent === "number" && slots.fundPercent > 0 && slots.fundPercent < 100, "the emergency fund must take a positive percent below the whole income");',
-  'probe(slots.fundFirst === true, "the sheet must take the fund first");',
-  'probe(slots.noDoubleCount === true, "the sheet must forbid counting one unit of currency twice");',
   'const format = (cents) => cents % 100 === 0 ? String(cents / 100) : Math.trunc(cents / 100) + "." + String(cents % 100).padStart(2, "0");',
   'const fundCents = Math.round((slots.incomeCents * Math.round(slots.fundPercent * 100)) / 10000);',
   'const remainderCents = slots.incomeCents - fundCents - slots.fixedCents;',

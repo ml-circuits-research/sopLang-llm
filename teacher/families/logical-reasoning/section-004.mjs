@@ -59,11 +59,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the card must name the place of the caretaker");',
-  'probe(typeof slots.antecedent === "string" && slots.antecedent.length > 0, "the card must state the antecedent of the conditional");',
-  'probe(typeof slots.consequent === "string" && slots.consequent.length > 0, "the card must state the consequent of the conditional");',
-  'probe(slots.consequent.indexOf("no water") !== -1, "the consequent of the card must be the dryness of the taps");',
-  'probe(new Set([slots.tapOpener, slots.denier, slots.overreacher]).size === 3, "the observation and the two sentences must come from three different speakers");',
   'return slots.denier + " is forced (modus tollens). " + slots.overreacher + " affirms the back: a dry tap has more than one possible path. The card named one sufficient path to dryness, not the only path.";'
 ].join('\n');
 

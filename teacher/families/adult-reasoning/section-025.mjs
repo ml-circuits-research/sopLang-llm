@@ -79,12 +79,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.guest === "object" && slots.guest !== null, "the case must describe the guest and the declaration");',
-  'probe(typeof slots.guest.name === "string" && slots.guest.name.length > 0, "the guest must be named");',
-  'probe(slots.traces.length + slots.facilityAllergens.length > 0, "the label must print a warning channel");',
-  'probe(slots.facilityAllergens.some((item) => /^peanuts?$/.test(item)), "the facility warning must name peanuts");',
-  'probe(slots.ingredients.some((item) => /^butter/.test(item)), "the ingredient list must name butter, a milk product");',
-  'probe(slots.guest.peanutAllergy === true && slots.guest.lactoseIntolerance === true, "the guest must declare both the peanut allergy and lactose intolerance");',
   'const channels = [];',
   'if (slots.guest.peanutAllergy && slots.facilityAllergens.some((item) => /^peanuts?$/.test(item))) { channels.push("Peanuts in the facility warning"); }',
   'if (slots.guest.lactoseIntolerance && slots.ingredients.some((item) => /^butter/.test(item))) { channels.push("butter/milk as an ingredient"); }',

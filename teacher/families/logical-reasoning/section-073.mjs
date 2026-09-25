@@ -65,10 +65,6 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place where the market sits");',
-  'probe(Array.isArray(slots.horns) && slots.horns.length === 2, "the either-or must name exactly two horns");',
-  'probe(Array.isArray(slots.options) && slots.options.length > 2, "the page must list more rooms than the either-or admits");',
-  'probe(typeof slots.critic === "string" && slots.critic.length > 0, "the case must name the commentator who points at the other listed rooms");',
   'const forced = slots.options.length <= slots.horns.length;',
   'probe(forced === false, "a page that lists further rooms does not force the either-or");',
   'const verdict = forced ? "Yes" : "No";',

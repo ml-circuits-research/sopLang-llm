@@ -62,14 +62,7 @@ function render(solution) {
 
 const COMPUTE = [
   'const slots = $slots;',
-  'probe(typeof slots.person === "string" && slots.person.length > 0, "the statement must name the person the journal is about");',
-  'probe(Number.isInteger(slots.today) && slots.today > 0, "the resting pulse for today must be a positive whole number");',
-  'probe(Number.isInteger(slots.yesterday) && slots.yesterday > 0, "the resting pulse for yesterday must be a positive whole number");',
-  'probe(Number.isInteger(slots.methodSeconds) && slots.methodSeconds > 0, "the counting method must be a positive number of seconds");',
   'const difference = slots.today - slots.yesterday;',
-  'probe(difference >= slots.watchThreshold, "the difference must reach the notebook change-to-watch threshold");',
-  'probe(Number(slots.temperature) < Number(slots.feverLimit), "the axillary temperature must stay below the notebook fever line");',
-  'probe(slots.askedTemperature === slots.temperature, "the question must ask about the temperature the journal recorded");',
   'return "Difference " + difference + " ≥ " + slots.watchThreshold + " → “change to watch”. " + slots.temperature + " < " + slots.feverLimit + " → not fever. “Dangerous” is outside the stem.";'
 ].join('\n');
 

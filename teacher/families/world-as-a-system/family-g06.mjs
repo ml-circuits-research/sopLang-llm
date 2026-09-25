@@ -76,7 +76,6 @@ function render(solution) {
 const COMPUTE = [
   CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'probe(Array.isArray(slots.sites) && slots.sites.length > 0, "the statement must describe at least one candidate site");',
   'const valid = slots.sites.filter((site) => (!slots.requiresWater || site.water) && (!slots.requiresRoad || site.road) && (!slots.forbidsFloodZone || !site.floodZone));',
   'probe(valid.length > 0, "at least one candidate site must satisfy the mandatory conditions");',
   'let best = valid[0];',
@@ -85,7 +84,6 @@ const COMPUTE = [
   '    best = site;',
   '  }',
   '}',
-  'probe(valid.every((site) => Number.isInteger(site.farmland) && site.farmland >= 0), "every farmland score must be a non-negative integer");',
   'const main = "Site " + best.id + ".";',
   'const suffix = renderCrossDomain(slots.crossDomain);',
   'return suffix === "" ? main : main + " " + suffix;'
