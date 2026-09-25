@@ -428,7 +428,27 @@ export async function verifyProvenance(root, files, { expected, runtime = create
     const source = readFileSync(file, 'utf8');
     const { candidates, reason } = perturbedSlotBodies(source, { maxCandidates });
     if (candidates.length === 0) {
-      skipped.push({ file: relative(root, file), reason });
+      // Nothing to perturb: reactivity cannot be PROVEN by perturbation, but the
+      // static scan still decides whether the plan reads an input at all. A plan
+      // whose wires never name slots or facts (a container seeded from a baked
+      // literal) is flagged instead of quietly skipped.
+      const wires = parseCircuit(source, { sourceName: folder }).wires;
+      const staticReferences = wires.flatMap((wire) =>
+        findValueReferences(stripProbeStatements(wire.body)).map((reference) => reference.name)
+      );
+      const answerWire = wires.find((wire) => wire.name === 'answer');
+      if (!staticReferences.includes('slots') && !staticReferences.includes('facts')) {
+        invariant.push({
+          file: relative(root, file),
+          plan: entry.plan,
+          answer: entry.answer,
+          echoed: answerWire === undefined ? false : answerEcho(answerWire.body, entry.answer),
+          usesInputs: false,
+          perturbations: 0
+        });
+      } else {
+        skipped.push({ file: relative(root, file), reason });
+      }
       continue;
     }
     const base = await runtime.run(source, { outputs: ['answer'] });

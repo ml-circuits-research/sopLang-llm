@@ -89,3 +89,41 @@ test('an unknown command is still rejected', () => {
   const family = familyWith([{ name: 'mystery', command: 'madeUp', body: 'x' }]);
   assert.throws(() => validateProceduralFamily(family, 'test'), /unknown command madeUp/);
 });
+
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { verifyProvenance } from '../training-data/provenance.mjs';
+
+test('the provenance battery proves a container plan reacts to its seeded inputs', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'container-prov-'));
+  const folder = join(root, 'no-knowledge', 'container-smoke');
+  mkdirSync(folder, { recursive: true });
+  const family = familyWith(CONTAINER_WIRES);
+  family.compute = 'return String($kept.records.length);';
+  const program = buildProgram({ compute: family.compute, wires: family.wires }, { records: [{ id: 'a', enabled: true }, { id: 'b', enabled: false }] });
+  writeFileSync(join(folder, 'solution.sop'), program);
+  const expected = new Map([['no-knowledge/container-smoke', { plan: 'x', answer: '1' }]]);
+  const result = await verifyProvenance(root, [join(folder, 'solution.sop')], { expected });
+  assert.equal(result.computed, 1, JSON.stringify(result));
+  rmSync(root, { recursive: true, force: true });
+});
+
+test('a container plan whose seed is a baked literal is reported as non-reacting', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'container-baked-'));
+  const folder = join(root, 'no-knowledge', 'container-baked');
+  mkdirSync(folder, { recursive: true });
+  const wires = [
+    { name: 'ledger', command: 'container', body: 'kind: table\nprimaryKey: id' },
+    { name: 'seed', command: 'containerAdd', body: 'target: ledger\nitems:\n  - id: a\n    enabled: true' },
+    { name: 'kept', command: 'containerFilter', body: 'source: $ledger\npredicate: return row.enabled === true;' }
+  ];
+  const program = buildProgram({ compute: 'return String($kept.records.length);', wires }, {});
+  writeFileSync(join(folder, 'solution.sop'), program);
+  const expected = new Map([['no-knowledge/container-baked', { plan: 'x', answer: '1' }]]);
+  const result = await verifyProvenance(root, [join(folder, 'solution.sop')], { expected });
+  assert.equal(result.computed, 0);
+  assert.equal(result.invariant.length, 1);
+  assert.equal(result.invariant[0].usesInputs, false);
+  rmSync(root, { recursive: true, force: true });
+});
