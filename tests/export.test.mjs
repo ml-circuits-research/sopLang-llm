@@ -19,7 +19,7 @@ import { bookRoots, expectedAnswersOf, statementBodyOf } from '../training-data/
 const DATASET_ROOT = fileURLToPath(new URL('../training-data/', import.meta.url));
 const DATA_DIR = fileURLToPath(new URL('../training/data/', import.meta.url));
 const HOLD_ROW_COUNTS = {
-  'procedural-arithmetic': 3040,
+  'procedural-arithmetic': 3160,
   'adult-reasoning': 990,
   'common-sense': 950,
   'decompose-to-solve': 900,
@@ -32,7 +32,7 @@ const HOLD_ROW_COUNTS = {
 const rows = collectRows({ datasetRoot: DATASET_ROOT });
 
 test('the export holds every training row and no holdout row', () => {
-  assert.equal(rows.length, 9815);
+  assert.equal(rows.length, 9935);
   const perBook = new Map();
   for (const row of rows) {
     perBook.set(row.book, (perBook.get(row.book) ?? 0) + 1);
@@ -113,7 +113,7 @@ test('the export is deterministic and the committed artifacts are current', () =
       );
     }
     const manifest = JSON.parse(readFileSync(join(first, 'export-manifest.json'), 'utf8'));
-    assert.equal(manifest.rows, 9815);
+    assert.equal(manifest.rows, 9935);
     assert.equal(manifest.snapshot, JSON.parse(readFileSync(join(DATA_DIR, 'export-manifest.json'), 'utf8')).snapshot);
   } finally {
     rmSync(first, { recursive: true, force: true });

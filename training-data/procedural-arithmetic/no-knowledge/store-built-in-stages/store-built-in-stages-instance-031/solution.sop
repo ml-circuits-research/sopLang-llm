@@ -1,0 +1,59 @@
+@slots literal
+{
+  "firstStage": [
+    {
+      "id": "A",
+      "quantity": 23
+    },
+    {
+      "id": "B",
+      "quantity": 6
+    },
+    {
+      "id": "C",
+      "quantity": 30
+    }
+  ],
+  "secondStage": [
+    {
+      "id": "D",
+      "quantity": 25
+    },
+    {
+      "id": "E",
+      "quantity": 11
+    }
+  ]
+}
+
+@ledger container
+kind: table
+primaryKey: id
+schema:
+  type: object
+
+@first jsEval
+return $slots.firstStage;
+
+@second jsEval
+return $slots.secondStage;
+
+@seedFirst containerAdd
+target: ledger
+items: $first
+
+@seedSecond containerAdd
+target: ledger
+items: $second
+
+@answer jsEval
+const ledger = $ledger;
+const records = ledger.records;
+let total = 0;
+for (const record of records) {
+  total += record.quantity;
+}
+probe(Number.isInteger(records.length) && records.length > 0, "the shipment count must be a positive whole number");
+probe(Number.isInteger(total) && total > 0, "the total quantity must be a positive whole number");
+return "The store holds " + records.length + " shipments whose total quantity is " + total + " units.";
+

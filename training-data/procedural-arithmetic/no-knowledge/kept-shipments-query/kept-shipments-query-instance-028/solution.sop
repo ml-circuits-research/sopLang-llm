@@ -1,0 +1,59 @@
+@slots literal
+{
+  "records": [
+    {
+      "id": "A",
+      "quantity": 18
+    },
+    {
+      "id": "B",
+      "quantity": 18
+    },
+    {
+      "id": "C",
+      "quantity": 16
+    },
+    {
+      "id": "D",
+      "quantity": 8
+    },
+    {
+      "id": "E",
+      "quantity": 15
+    }
+  ],
+  "threshold": 6
+}
+
+@ledger container
+kind: table
+primaryKey: id
+schema:
+  type: object
+
+@records jsEval
+return $slots.records;
+
+@threshold jsEval
+return $slots.threshold;
+
+@seed containerAdd
+target: ledger
+items: $records
+
+@kept containerFilter
+source: $ledger
+predicate: return row.quantity >= $threshold;
+
+@answer jsEval
+const kept = $kept;
+const records = kept.records;
+let total = 0;
+for (const record of records) {
+  total += record.quantity;
+}
+probe(Number.isInteger(records.length) && records.length >= 0, "the kept count must be a whole number");
+probe(Number.isInteger(total) && total >= 0, "the kept total must be a whole number");
+const noun = records.length === 1 ? "shipment" : "shipments";
+return records.length + " " + noun + " were kept, and their total quantity is " + total + " units.";
+

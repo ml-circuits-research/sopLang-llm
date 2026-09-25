@@ -2,7 +2,7 @@
 
 Source: `teacher/procedural/arithmetic.mjs` (generator arithmetic.mjs 1.3.0, seed 20260921, 40 instances per family).
 
-Accepted examples: 3520. Rejected candidates: 0. Evaluation holdout: 480 (13.6%). Distinct plans: 88. Distinct compiled circuits: 3520 (a circuit embeds the values it was compiled from, so the count equals the accepted set unless two problems compile to identical text).
+Accepted examples: 3640. Rejected candidates: 0. Evaluation holdout: 480 (13.2%). Distinct plans: 91. Distinct compiled circuits: 3640 (a circuit embeds the values it was compiled from, so the count equals the accepted set unless two problems compile to identical text).
 
 Acceptance class: every accepted example is `constructed_verified` as defined by `DS008-training-data`: the executed circuit produced the answer of the recorded latent plan, and the family oracle computed that answer by an independent route. The printed-answer signal of a book source does not exist for a generated instance, so the manifest rows record the generator, the family, the instance index, and the sampling seed instead of a source span.
 
@@ -10,7 +10,7 @@ Probes: every assembled circuit carries the probe harness of `teacher/families/p
 
 ## Accepted by category
 
-- no-knowledge: 3520
+- no-knowledge: 3640
 
 ## Accepted by problem type
 
@@ -31,12 +31,13 @@ no-knowledge/crate-count-with-partial-last (40), no-knowledge/dependency-chain-j
 no-knowledge/elapsed-minutes (40), no-knowledge/evidence-tree-elimination (40), no-knowledge/filtered-records-above-a-threshold (40),
 no-knowledge/filtered-records-at-least-a-threshold (40), no-knowledge/filtered-total (40), no-knowledge/first-and-last-letter (40), no-knowledge/grouped-label-totals (40),
 no-knowledge/higher-best-of-two (40), no-knowledge/keep-below-total-ratio (40), no-knowledge/keep-divisible-count (40), no-knowledge/keep-divisible-total (40),
-no-knowledge/keep-divisible-total-percent (40), no-knowledge/length-of-word (40), no-knowledge/length-ranked-words (40), no-knowledge/longer-of-two-words (40),
-no-knowledge/minimal-winning-coalition (40), no-knowledge/net-balance-with-withdrawals (40), no-knowledge/parallel-join-deadline (40), no-knowledge/percent-of-total (40),
-no-knowledge/raised-largest-record (40), no-knowledge/raised-smallest-record (40), no-knowledge/reverse-word (40), no-knowledge/route-bottleneck-capacity (40),
-no-knowledge/route-summary-selection (40), no-knowledge/scaled-recipe (40), no-knowledge/schedule-deadline-feasibility (40), no-knowledge/schedule-finish-time (40),
-no-knowledge/task-prerequisite-count (40), no-knowledge/top-k-among-list (40), no-knowledge/total-plus-a-fixed-amount (40), no-knowledge/total-plus-a-percentage (40),
-no-knowledge/two-tier-price (40), no-knowledge/vowel-richest-word (40), no-knowledge/whole-units-under-a-budget (40), no-knowledge/words-containing-letter (40)
+no-knowledge/keep-divisible-total-percent (40), no-knowledge/kept-shipments-query (40), no-knowledge/length-of-word (40), no-knowledge/length-ranked-words (40),
+no-knowledge/longer-of-two-words (40), no-knowledge/minimal-winning-coalition (40), no-knowledge/net-balance-with-withdrawals (40), no-knowledge/parallel-join-deadline (40),
+no-knowledge/percent-of-total (40), no-knowledge/raised-largest-record (40), no-knowledge/raised-smallest-record (40), no-knowledge/reverse-word (40),
+no-knowledge/route-bottleneck-capacity (40), no-knowledge/route-summary-selection (40), no-knowledge/scaled-recipe (40), no-knowledge/schedule-deadline-feasibility (40),
+no-knowledge/schedule-finish-time (40), no-knowledge/store-built-in-stages (40), no-knowledge/store-patched-by-upsert (40), no-knowledge/task-prerequisite-count (40),
+no-knowledge/top-k-among-list (40), no-knowledge/total-plus-a-fixed-amount (40), no-knowledge/total-plus-a-percentage (40), no-knowledge/two-tier-price (40),
+no-knowledge/vowel-richest-word (40), no-knowledge/whole-units-under-a-budget (40), no-knowledge/words-containing-letter (40)
 
 
 ## Accepted by family
@@ -106,6 +107,7 @@ no-knowledge/two-tier-price (40), no-knowledge/vowel-richest-word (40), no-knowl
 - family keep-divisible-count: 40
 - family keep-divisible-total: 40
 - family keep-divisible-total-percent: 40
+- family kept-shipments-query: 40
 - family length-of-word: 40
 - family length-ranked-words: 40
 - family longer-of-two-words: 40
@@ -121,6 +123,8 @@ no-knowledge/two-tier-price (40), no-knowledge/vowel-richest-word (40), no-knowl
 - family scaled-recipe: 40
 - family schedule-deadline-feasibility: 40
 - family schedule-finish-time: 40
+- family store-built-in-stages: 40
+- family store-patched-by-upsert: 40
 - family task-prerequisite-count: 40
 - family top-k-among-list: 40
 - family total-plus-a-fixed-amount: 40
@@ -139,7 +143,7 @@ Every accepted example ships the answer its source prints.
 
 ## Family integrity checks
 
-Templates covered: 88, of which 88 have several variants and 88 of those print several distinct answers, which is what shows that the computation reacts to its input.
+Templates covered: 91, of which 91 have several variants and 91 of those print several distinct answers, which is what shows that the computation reacts to its input.
 
 No template with several variants prints one answer for every variant.
 

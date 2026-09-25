@@ -69,6 +69,7 @@ The manifest is split by family so a long table stays reviewable. Each family ma
 | keep-divisible-count | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-keep-divisible-count.md | 1556308fce19 |
 | keep-divisible-total | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-keep-divisible-total.md | 32ed7f0988b8 |
 | keep-divisible-total-percent | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-keep-divisible-total-percent.md | 358408cc53f5 |
+| kept-shipments-query | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-kept-shipments-query.md | 0e57c5fd59b9 |
 | length-of-word | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-length-of-word.md | 5334d02963d3 |
 | length-ranked-words | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-length-ranked-words.md | afca999da8a3 |
 | longer-of-two-words | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-longer-of-two-words.md | a3783e72400e |
@@ -84,6 +85,8 @@ The manifest is split by family so a long table stays reviewable. Each family ma
 | scaled-recipe | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-scaled-recipe.md | be8e4387f0b9 |
 | schedule-deadline-feasibility | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-schedule-deadline-feasibility.md | 4da5f9cbfc35 |
 | schedule-finish-time | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-schedule-finish-time.md | 6a76efd88cfa |
+| store-built-in-stages | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-store-built-in-stages.md | c0ceca285230 |
+| store-patched-by-upsert | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-store-patched-by-upsert.md | 18ac4303967c |
 | task-prerequisite-count | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-task-prerequisite-count.md | 82953d59b7ce |
 | top-k-among-list | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-top-k-among-list.md | c6365b717419 |
 | total-plus-a-fixed-amount | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-total-plus-a-fixed-amount.md | f92a6af163e4 |
@@ -93,4 +96,4 @@ The manifest is split by family so a long table stays reviewable. Each family ma
 | whole-units-under-a-budget | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-whole-units-under-a-budget.md | 4f8dbf36839a |
 | words-containing-letter | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-words-containing-letter.md | 848f3315832b |
 
-Total accepted examples: 3520.
+Total accepted examples: 3640.

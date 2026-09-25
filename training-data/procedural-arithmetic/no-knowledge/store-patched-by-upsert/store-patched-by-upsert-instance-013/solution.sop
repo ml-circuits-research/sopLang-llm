@@ -1,0 +1,54 @@
+@slots literal
+{
+  "seed": [
+    {
+      "id": "A",
+      "quantity": 17
+    },
+    {
+      "id": "B",
+      "quantity": 5
+    },
+    {
+      "id": "C",
+      "quantity": 5
+    }
+  ],
+  "patch": {
+    "id": "B",
+    "quantity": 23
+  }
+}
+
+@ledger container
+kind: table
+primaryKey: id
+mergePolicy: replace
+schema:
+  type: object
+
+@records jsEval
+return $slots.seed;
+
+@seed containerAdd
+target: ledger
+items: $records
+
+@changed jsEval
+return [$slots.patch];
+
+@patch containerUpsert
+target: ledger
+items: $changed
+
+@answer jsEval
+const ledger = $ledger;
+const records = ledger.records;
+let total = 0;
+for (const record of records) {
+  total += record.quantity;
+}
+probe(Number.isInteger(records.length) && records.length > 0, "the shipment count must be a positive whole number");
+probe(Number.isInteger(total) && total > 0, "the total quantity must be a positive whole number");
+return "The store holds " + records.length + " shipments whose total quantity is " + total + " units.";
+
