@@ -58,7 +58,7 @@ Every dataset change bumps `training-data/VERSION` (number plus a human label in
 
 ## Wire-type documentation discipline
 
-`docs/wire-types.html` is the live record of the wire vocabulary: what each command does and how it works. Any addition of a wire command, and any change to a wire's behavior, contract, version, or manifest MUST update `docs/wire-types.html` (and the affected specification, DS002/DS004/DS008) in the same commit — a wire change that ships without its documentation is incomplete work. The page also carries the abstraction-learning loop (measure, flag, propose, validate, measure again), which is the standing goal beside the benchmark: pass 90% on the holdout and grow an increasingly powerful wire vocabulary experiment by experiment.
+`docs/wire-types.html` is the live record of the wire vocabulary and of the jsEval sandbox's injected abstractions: what each command does, how it works, and what generated code may use inside a body (`probe`, the `$wire` dependencies, the `circuit` facade, the contracts, the budgets). Any addition of a wire command, any change to a wire's behavior or contract, AND any change to the sandbox API (helpers, the circuit facade, the input/output contracts, the budgets) MUST update `docs/wire-types.html` (and the affected specification, DS002/DS004/DS008) in the same commit — a change that ships without its documentation is incomplete work. The page also carries the abstraction-learning loop (measure, flag, propose, validate, measure again), which is the standing goal beside the benchmark: pass 90% on the holdout and grow an increasingly powerful wire vocabulary experiment by experiment.
 
 ## Launch discipline
 

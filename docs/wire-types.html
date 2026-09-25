@@ -33,6 +33,21 @@
         <tr><td><code>containerFilter</code></td><td>Defines a pure derived view of a source container.</td><td>The predicate runs over a <code>row</code>; the view keeps the source revision through a filter chain, so provenance stays traceable and every link is invalidated by the base commit.</td></tr>
       </table>
 
+      <h2>The jsEval sandbox: the abstractions generated code may use</h2>
+      <p>A <code>jsEval</code> body runs in a private guest realm inside a worker thread: a fresh ECMAScript context per call, holding only ECMAScript intrinsics, so generated code cannot reach <code>process</code>, the module loader, or any host object. Values enter and leave as transfer-profile copies. On top of that isolation, the sandbox injects a small set of composable abstractions — the same idea as the declarative wires, at the helper level:</p>
+      <table>
+        <tr><th>Abstraction</th><th>What it does</th><th>How it works</th></tr>
+        <tr><td><code>probe(condition, message)</code></td><td>Asserts a domain invariant inside the body.</td><td>Provided by the sandbox (jsEval 2.1), never written by the body. A failed probe throws and ends the wire as an <code>execution_error</code>. A body that declares its own helper shadows this binding and still runs.</td></tr>
+        <tr><td><code>$wire</code> dependencies</td><td>Binds the declared dependencies as function parameters.</td><td>The analyzer reads <code>$name</code> references outside strings and comments; the values arrive as copies, so a guest mutation never reaches a stored value.</td></tr>
+        <tr><td><code>circuit.addWire / redefineWire / invalidateWire / invalidateDownstream</code></td><td>Stages graph operations from inside the body.</td><td>Recorded in the guest realm and replayed onto the real transaction after the call; an uncommitted transaction never publishes.</td></tr>
+        <tr><td><code>circuit.getDefinition(name)</code></td><td>Reads a definition structurally.</td><td>Records the read; the wire is invalidated when the definition changes. Returns <code>name, known, command, version, definitionHash, body</code>.</td></tr>
+        <tr><td><code>circuit.listDefinitions({prefix})</code></td><td>Lists definitions by prefix.</td><td>Records the list read; returns sorted entries with <code>name, command, version, definitionHash</code>.</td></tr>
+        <tr><td><code>circuit.commit({key, result})</code></td><td>Commits the staged transaction.</td><td>Returns <code>result</code>; the wire's output contract then applies.</td></tr>
+        <tr><td>the jsEval contract</td><td>The command owns the generic input/output checks.</td><td>Version 2: every declared dependency is defined, a compiled <code>slots</code> record is non-empty, and the result is not <code>null</code>, <code>undefined</code>, or the empty string — structured <code>execution_error</code>s otherwise, so no body restates them.</td></tr>
+        <tr><td>the budgets</td><td>Bounds every call.</td><td>JavaScript time (default 2000 ms, charged cumulatively against the request budget) and a transaction operation cap; exhaustion is a structured <code>budget_exceeded</code> outcome. Failures are typed: <code>validation_error</code> (syntax), <code>execution_error</code> (body failure), <code>unsupported_value</code> (non-transferable).</td></tr>
+      </table>
+      <p>These helpers are candidates for the same abstraction-learning loop as the wires: a recurring body pattern that a sandbox helper or a declarative command can absorb is a measured win, not a stylistic preference.</p>
+
       <h2>Why the declarative commands exist</h2>
       <p>Three commands (<code>graphPath</code>, <code>aggregate</code>, <code>fraction</code>) were introduced after a measured audit of the shipped circuits: they each absorb one recurring multi-line transcription. The result, measured on the same base, recipe, and data: the holdout moved from 379 of 705 (53.8%) to 440 of 705 (62.4%), procedural execution errors collapsed from 63 to 13, and later to 1. A declarative command makes its error class impossible instead of merely rarer — the model names the operation, and the runtime owns the traversal, the reduction, or the gcd.</p>
 

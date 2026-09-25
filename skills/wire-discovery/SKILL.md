@@ -87,7 +87,9 @@ matter how high it ranks.
 
 ## The abstraction-learning loop (the standing goal)
 
-Each experiment feeds the loop: measure the shipped circuits (discover-wires.mjs), flag the
+The candidates are composable abstractions of two kinds: new wire commands AND new sandbox
+helpers (the jsEval guest realm already injects `probe`, the `circuit` facade, and the contracts -
+see docs/wire-types.html for the live inventory). Each experiment feeds the loop: measure the shipped circuits (discover-wires.mjs), flag the
 monstrous jsEval bodies (the data-quality static checker), propose a wire with its contract and
 its measured line reduction and error elimination, validate through the family round-trip/oracle
 tests plus `node training-data/verify.mjs` (which executes every circuit and reproduces its
