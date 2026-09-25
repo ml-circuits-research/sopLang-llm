@@ -30,7 +30,7 @@ The suite grew as the procedural generator entered the tree: the census arms mea
 | `exp-017-qwen3-17b` | 1.7B base | 705 | 100.0% | 100.0% | 78.4% | 442/705 (62.7%) |
 | `exp-018-1.7b-qwen3-dv4` | Qwen3-1.7B, dv4 | 705 | 100.0% | 100.0% | 73.6% | 436/705 (61.8%) |
 | `exp-019-1.7b-qwen3-dv5` | Qwen3-1.7B, dv5 | 705 | 100.0% | 100.0% | 84.4% | 442/705 (62.7%) |
-| `exp-021-1.7b-qwen3-dv7` | dv7 baseline (monolithic) | 705 | `{{TODO: exp-021 parse}}` | `{{TODO: exp-021 graph}}` | `{{TODO: exp-021 completion}}` | `{{TODO: exp-021 dv7 holdout}}` |
+| `exp-021-1.7b-qwen3-dv7` | dv7 baseline (monolithic) | 705 | `{{TODO: exp-021 parse}}` | `{{TODO: exp-021 graph}}` | `{{TODO: exp-021 completion}}` | `460/705 (65.2%), world-as-a-system 20/20` |
 
 The ceiling is the finding: after the wires arm reached 62.4%, neither a 1.7B base (62.7%) nor the dv4/dv5 data revisions (61.8%, 62.7%) moved the oracle-match rate meaningfully. What *did* move across the last arms is where the failure sits. In `exp-019` runtime completion reached 84.4% and procedural-arithmetic execution errors fell to a single row — the model now runs on most of the suite, and the residual error is answering the wrong question, not breaking.
 
@@ -63,6 +63,6 @@ The pending comparison — monolithic dv7 against modular dv8 — will report th
 
 ## Pending numbers
 
-- `{{TODO: exp-021 dv7 holdout}}` — the monolithic-structure dv7 baseline.
+- `460/705 (65.2%), world-as-a-system 20/20` — the monolithic-structure dv7 baseline.
 - `{{TODO: exp-022 dv8 holdout}}` — the modular multi-wire refactor of the same content.
 - `{{TODO: exp-021 container-arm holdout}}` — the container-shape arm (two families trained, one withheld whole).
