@@ -5,6 +5,41 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { validateProceduralFamily } from '../teacher/procedural/index.mjs';
+import { buildProgram, planFingerprint } from '../teacher/families/index.mjs';
+import { createRuntime } from '../runtime/kernel.mjs';
+
+const CONTAINER_WIRES = [
+  { name: 'ledger', command: 'container', body: 'kind: table\nprimaryKey: id\nschema:\n  type: object' },
+  { name: 'records', command: 'jsEval', body: 'return $slots.records;' },
+  { name: 'seed', command: 'containerAdd', body: 'target: ledger\nitems: $records' },
+  { name: 'kept', command: 'containerFilter', body: 'source: $ledger\npredicate: return row.enabled === true;' }
+];
+
+test('buildProgram rejects a mutation that names an undeclared container', () => {
+  const family = familyWith([
+    { name: 'seed', command: 'containerAdd', body: 'target: missing\nitems: $slots.records' }
+  ]);
+  assert.throws(() => buildProgram({ compute: family.compute, wires: family.wires }, {}), /before any container declares it/);
+});
+
+test('a built container plan executes on the runtime and answers from the seeded state', async () => {
+  const family = familyWith(CONTAINER_WIRES);
+  family.compute = 'return String($kept.records.length);';
+  const program = buildProgram({ compute: family.compute, wires: family.wires }, {
+    records: [{ id: 'a', enabled: true }, { id: 'b', enabled: false }, { id: 'c', enabled: true }]
+  });
+  const runtime = createRuntime();
+  const outcome = await runtime.run(program, { outputs: ['answer'] });
+  assert.equal(outcome.status, 'completed', outcome.error?.message ?? outcome.code);
+  assert.equal(String(outcome.outputs.answer), '2');
+});
+
+test('a container plan carries a distinct plan fingerprint', () => {
+  const entry = { compute: 'return "answer";', wires: CONTAINER_WIRES };
+  const entryNoWires = { compute: 'return "answer";' };
+  assert.notEqual(planFingerprint(entry), planFingerprint(entryNoWires));
+});
+
 
 const DIFFICULTY = { subproblems: 1, dependencyDepth: 1, branching: 1, irrelevantInformation: 1, symbolicShare: 1 };
 

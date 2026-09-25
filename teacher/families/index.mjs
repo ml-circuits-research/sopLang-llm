@@ -40,6 +40,7 @@ import { readdirSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { parseCircuit } from '../../runtime/parser.mjs';
 import { slugify } from '../naming.mjs';
+import { parseProfile } from '../../runtime/profile.mjs';
 import { getSource } from '../sources/index.mjs';
 import { answerBody, probeFindings } from './probes.mjs';
 
@@ -253,7 +254,29 @@ export function buildProgram(entry, slots) {
   // (`graphPath`, `aggregate`, or `fraction`) carries its own body, which the
   // command validates and executes, so its contract is asserted by the command
   // rather than by probe text in the target.
+  const declaredContainers = new Set();
   for (const wire of entry.wires ?? []) {
+    // Container wires carry their profile body verbatim; the declarative
+    // commands' own contracts validate it at execution, and buildProgram only
+    // asserts the structural order the epoch rule needs: a mutation or a filter
+    // may only name a container that an earlier wire declared, so the runtime
+    // always reads a declared store.
+    if (wire.command === 'container') {
+      declaredContainers.add(wire.name);
+    } else if (['containerAdd', 'containerUpsert', 'containerRemove', 'containerFilter'].includes(wire.command)) {
+      let referenced = null;
+      try {
+        const profile = parseProfile(wire.body);
+        referenced = wire.command === 'containerFilter'
+          ? (typeof profile.source === 'string' ? profile.source.replace(/^\$/, '') : null)
+          : (typeof profile.target === 'string' ? profile.target : null);
+      } catch {
+        referenced = null;
+      }
+      if (referenced !== null && !declaredContainers.has(referenced)) {
+        throw new Error(`the intermediate wire ${wire.name} (${wire.command}) names ${referenced} before any container declares it`);
+      }
+    }
     wires.push(`@${wire.name} ${wire.command}`, wire.command === 'jsEval' ? answerBody(wire.body) : String(wire.body), '');
   }
   wires.push('@answer jsEval', answerBody(entry.compute));
