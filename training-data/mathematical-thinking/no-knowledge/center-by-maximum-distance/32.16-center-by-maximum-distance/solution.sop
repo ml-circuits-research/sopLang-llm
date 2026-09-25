@@ -32,7 +32,7 @@
   ]
 }
 
-@answer jsEval
+@neighbours jsEval
 const slots = $slots;
 function adjacency(nodes, edges) {
   const map = new Map(nodes.map((node) => [node, []]));
@@ -40,30 +40,25 @@ function adjacency(nodes, edges) {
   for (const list of map.values()) list.sort();
   return map;
 }
-function buildPath(previous, to) {
-  if (!previous.has(to)) return null;
-  const path = [];
-  for (let node = to; node !== null; node = previous.get(node)) path.unshift(node);
-  return path;
-}
-function searchPath(successorsOf, from, to) {
-  const previous = new Map([[from, null]]);
-  const queue = [from];
-  while (queue.length > 0) {
-    const node = queue.shift(); for (const next of successorsOf(node)) if (!previous.has(next)) { previous.set(next, node); queue.push(next); }
-  }
-  return buildPath(previous, to);
-}
-function shortestPath(nodes, edges, from, to) {
-  const neighbours = adjacency(nodes, edges);
-  return searchPath((node) => neighbours.get(node), from, to);
-}
-function eccentricity(nodes, edges, node) {
-  let farthest = 0;
-  for (const other of nodes) farthest = Math.max(farthest, shortestPath(nodes, edges, node, other).length - 1);
-  return farthest;
-}
+return adjacency(slots.nodes, slots.edges);
+
+@centre jsEval
 let best = null;
-for (const candidate of slots.candidates) { const d = eccentricity(slots.nodes, slots.edges, candidate); if (best === null || d < best.d) { best = { node: candidate, d }; } }
-return best.node + ".";
+for (const candidate of $slots.candidates) {
+  const dist = new Map([[candidate, 0]]);
+  const queue = [candidate];
+  while (queue.length > 0) {
+    const node = queue.shift();
+    for (const next of $neighbours.get(node)) {
+      if (!dist.has(next)) { dist.set(next, dist.get(node) + 1); queue.push(next); }
+    }
+  }
+  let d = 0;
+  for (const other of $slots.nodes) { d = Math.max(d, dist.get(other)); }
+  if (best === null || d < best.d) { best = { node: candidate, d }; }
+}
+return best;
+
+@answer jsEval
+return $centre.node + ".";
 

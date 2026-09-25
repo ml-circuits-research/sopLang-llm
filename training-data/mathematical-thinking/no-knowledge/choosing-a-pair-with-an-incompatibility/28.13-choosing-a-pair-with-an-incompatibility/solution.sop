@@ -11,15 +11,12 @@
   "second": "B"
 }
 
-@answer jsEval
+@combos jsEval
 const slots = $slots;
-const badKey = [slots.first, slots.second].sort().join("");
-let total = 0;
+const teams = [];
 const walk = (start, chosen) => {
   if (chosen.length === slots.size) {
-    if (chosen.slice().sort().join("") !== badKey) {
-      total += 1;
-    }
+    teams.push(chosen);
     return;
   }
   for (let index = start; index < slots.people.length; index += 1) {
@@ -27,5 +24,13 @@ const walk = (start, chosen) => {
   }
 };
 walk(0, []);
-return String(total) + " teams.";
+return teams;
+
+@teams jsEval
+const slots = $slots;
+const badKey = [slots.first, slots.second].sort().join("");
+return $combos.filter((team) => team.slice().sort().join("") !== badKey).length;
+
+@answer jsEval
+return String($teams) + " teams.";
 

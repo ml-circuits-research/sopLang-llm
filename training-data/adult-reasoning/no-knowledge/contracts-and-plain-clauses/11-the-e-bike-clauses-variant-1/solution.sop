@@ -16,7 +16,7 @@
   "changeArticle": 9
 }
 
-@answer jsEval
+@verdicts jsEval
 const slots = $slots;
 const lateTotal = slots.lateDays * slots.latePerDay;
 const lateClause = "Late fee " + slots.lateDays + "×" + slots.latePerDay + "=" + lateTotal + ".";
@@ -26,5 +26,8 @@ const batteryClause = slots.batteryPercent < slots.batteryLimit
 const depositClause = "The scratch cancels the duty to return the deposit in full (Art. " + slots.depositArticle + ").";
 const speechClause = "Speech does not amend Art. " + slots.changeArticle + ".";
 const cashClause = "Return is not “same day cash”.";
-return [lateClause, batteryClause, depositClause, speechClause, cashClause].join(" ");
+return { lateClause, batteryClause, depositClause, speechClause, cashClause };
+
+@answer jsEval
+return [$verdicts.lateClause, $verdicts.batteryClause, $verdicts.depositClause, $verdicts.speechClause, $verdicts.cashClause].join(" ");
 

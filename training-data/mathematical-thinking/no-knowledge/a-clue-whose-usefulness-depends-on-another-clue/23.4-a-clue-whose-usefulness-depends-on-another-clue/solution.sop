@@ -17,7 +17,7 @@
   }
 }
 
-@answer jsEval
+@eliminated jsEval
 const slots = $slots;
 const matches = (value, predicate) => {
   if (predicate.op === "and") { return predicate.of.every((part) => matches(value, part)); }
@@ -32,13 +32,8 @@ const matches = (value, predicate) => {
   throw new Error("unsupported predicate " + predicate.op);
 };
 const keep = (candidates, predicate) => candidates.filter((value) => matches(value, predicate));
-const joinList = (items) => {
-  const parts = items.map(String);
-  if (parts.length === 1) { return parts[0]; }
-  if (parts.length === 2) { return parts[0] + " and " + parts[1]; }
-  return parts.slice(0, -1).join(", ") + ", and " + parts[parts.length - 1];
-};
-const afterFirst = keep(slots.candidates, slots.first);
-const eliminated = afterFirst.filter((value) => !matches(value, slots.second));
-return eliminated.length + " candidates.";
+return keep(slots.candidates, slots.first).filter((value) => !matches(value, slots.second));
+
+@answer jsEval
+return $eliminated.length + " candidates.";
 

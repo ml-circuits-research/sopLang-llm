@@ -16,7 +16,7 @@
   }
 }
 
-@answer jsEval
+@costs jsEval
 const slots = $slots;
 const perHundredCents = (box) => ((box.price + box.delivery) * 10000) / box.washes;
 const aCents = perHundredCents(slots.a);
@@ -25,6 +25,9 @@ probe(Number.isInteger(aCents) && Number.isInteger(bCents), "both costs per 100 
 const differenceCents = Math.abs(aCents - bCents);
 const useWeight = differenceCents < slots.threshold * 100;
 const choice = useWeight ? (slots.a.weight <= slots.b.weight ? "A" : "B") : (aCents <= bCents ? "A" : "B");
+return { aCents, bCents, differenceCents, choice };
+
+@answer jsEval
 const money = (cents) => (cents / 100).toFixed(2);
-return "A " + money(aCents) + ", B " + money(bCents) + ", difference " + money(differenceCents) + ". Chooses " + choice + ".";
+return "A " + money($costs.aCents) + ", B " + money($costs.bCents) + ", difference " + money($costs.differenceCents) + ". Chooses " + $costs.choice + ".";
 

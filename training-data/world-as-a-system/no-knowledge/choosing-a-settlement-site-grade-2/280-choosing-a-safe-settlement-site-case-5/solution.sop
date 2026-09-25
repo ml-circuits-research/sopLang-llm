@@ -42,7 +42,19 @@
   ]
 }
 
-@answer jsEval
+@best jsEval
+const slots = $slots;
+const valid = slots.sites.filter((site) => (!slots.requiresWater || site.water) && (!slots.requiresRoad || site.road) && (!slots.forbidsFloodZone || !site.floodZone));
+probe(valid.length > 0, "at least one candidate site must satisfy the mandatory conditions");
+let best = valid[0];
+for (const site of valid.slice(1)) {
+  if (site.farmland > best.farmland) {
+    best = site;
+  }
+}
+return best;
+
+@cross jsEval
 const describeCrossDomain = function describeCrossDomain(check) {
   if (check.kind === 'distance') {
     return `${check.centimetres * check.kilometresPerCentimetre} km.`;
@@ -74,16 +86,10 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   });
   return parts.join(' ');
 };
-const slots = $slots;
-const valid = slots.sites.filter((site) => (!slots.requiresWater || site.water) && (!slots.requiresRoad || site.road) && (!slots.forbidsFloodZone || !site.floodZone));
-probe(valid.length > 0, "at least one candidate site must satisfy the mandatory conditions");
-let best = valid[0];
-for (const site of valid.slice(1)) {
-  if (site.farmland > best.farmland) {
-    best = site;
-  }
-}
-const main = "Site " + best.id + ".";
-const suffix = renderCrossDomain(slots.crossDomain);
+return { suffix: renderCrossDomain($slots.crossDomain) };
+
+@answer jsEval
+const main = "Site " + $best.id + ".";
+const suffix = $cross.suffix;
 return suffix === "" ? main : main + " " + suffix;
 

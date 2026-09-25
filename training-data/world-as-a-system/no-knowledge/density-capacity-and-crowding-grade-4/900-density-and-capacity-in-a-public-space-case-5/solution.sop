@@ -6,7 +6,7 @@
   "crossDomain": null
 }
 
-@answer jsEval
+@cross jsEval
 const describeCrossDomain = function describeCrossDomain(check) {
   if (check.kind === 'distance') {
     return `${check.centimetres * check.kilometresPerCentimetre} km.`;
@@ -39,6 +39,10 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
+return { suffix: renderCrossDomain(slots.crossDomain) };
+
+@density jsEval
+const slots = $slots;
 const densityText = (visitors, area) => {
   const scaled = visitors * 100;
   const quotient = Math.floor(scaled / area);
@@ -48,7 +52,9 @@ const densityText = (visitors, area) => {
   return String(Math.floor(rounded / 100)) + "." + String(rounded % 100).padStart(2, "0");
 };
 const above = slots.visitors > slots.threshold * slots.area;
-const suffix = renderCrossDomain(slots.crossDomain);
-const main = densityText(slots.visitors, slots.area) + " visitors/hectare; " + (above ? "above" : "within") + " capacity.";
-return suffix === "" ? main : main + " " + suffix;
+return { density: densityText(slots.visitors, slots.area), above };
+
+@answer jsEval
+const main = $density.density + " visitors/hectare; " + ($density.above ? "above" : "within") + " capacity.";
+return $cross.suffix === "" ? main : main + " " + $cross.suffix;
 

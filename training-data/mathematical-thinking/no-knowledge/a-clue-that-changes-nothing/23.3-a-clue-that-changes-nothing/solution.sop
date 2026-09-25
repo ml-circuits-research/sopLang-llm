@@ -30,7 +30,7 @@
   ]
 }
 
-@answer jsEval
+@useless jsEval
 const slots = $slots;
 const matches = (value, predicate) => {
   if (predicate.op === "and") { return predicate.of.every((part) => matches(value, part)); }
@@ -44,14 +44,9 @@ const matches = (value, predicate) => {
   if (predicate.op === "lacks") { return !String(value).includes(predicate.word); }
   throw new Error("unsupported predicate " + predicate.op);
 };
-const keep = (candidates, predicate) => candidates.filter((value) => matches(value, predicate));
-const joinList = (items) => {
-  const parts = items.map(String);
-  if (parts.length === 1) { return parts[0]; }
-  if (parts.length === 2) { return parts[0] + " and " + parts[1]; }
-  return parts.slice(0, -1).join(", ") + ", and " + parts[parts.length - 1];
-};
-const useless = slots.clues.filter((clue) => slots.candidates.every((value) => matches(value, clue.predicate)));
-const parts = useless.map((clue, index) => "“" + (index === 0 ? clue.text.charAt(0).toUpperCase() + clue.text.slice(1) : clue.text) + "”");
+return slots.clues.filter((clue) => slots.candidates.every((value) => matches(value, clue.predicate)));
+
+@answer jsEval
+const parts = $useless.map((clue, index) => "“" + (index === 0 ? clue.text.charAt(0).toUpperCase() + clue.text.slice(1) : clue.text) + "”");
 return parts.join(" and ") + ".";
 

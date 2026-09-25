@@ -26,7 +26,17 @@
   ]
 }
 
-@answer jsEval
+@sets jsEval
+const slots = $slots;
+const continuities = slots.period1.filter((feature) => slots.period2.includes(feature));
+const disappearances = slots.period1.filter((feature) => !slots.period2.includes(feature));
+const appearances = slots.period2.filter((feature) => !slots.period1.includes(feature));
+probe(continuities.length > 0, "the two periods must share at least one feature, otherwise the comparison has no continuity");
+probe(continuities.length + disappearances.length === slots.period1.length, "every Period 1 feature must be either a continuity or a disappearance");
+probe(continuities.length + appearances.length === slots.period2.length, "every Period 2 feature must be either a continuity or an appearance");
+return { continuities: continuities, disappearances: disappearances, appearances: appearances };
+
+@cross jsEval
 const describeCrossDomain = function describeCrossDomain(check) {
   if (check.kind === 'distance') {
     return `${check.centimetres * check.kilometresPerCentimetre} km.`;
@@ -59,14 +69,10 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
+return { suffix: renderCrossDomain(slots.crossDomain) };
+
+@answer jsEval
 const quoted = (items) => "[" + items.map((item) => "'" + item + "'").join(", ") + "]";
-const continuities = slots.period1.filter((feature) => slots.period2.includes(feature));
-const disappearances = slots.period1.filter((feature) => !slots.period2.includes(feature));
-const appearances = slots.period2.filter((feature) => !slots.period1.includes(feature));
-probe(continuities.length > 0, "the two periods must share at least one feature, otherwise the comparison has no continuity");
-probe(continuities.length + disappearances.length === slots.period1.length, "every Period 1 feature must be either a continuity or a disappearance");
-probe(continuities.length + appearances.length === slots.period2.length, "every Period 2 feature must be either a continuity or an appearance");
-const main = "Continuities: " + quoted(continuities) + "; disappearances: " + quoted(disappearances) + "; appearances: " + quoted(appearances) + ".";
-const suffix = renderCrossDomain(slots.crossDomain);
-return suffix === "" ? main : main + " " + suffix;
+const main = "Continuities: " + quoted($sets.continuities) + "; disappearances: " + quoted($sets.disappearances) + "; appearances: " + quoted($sets.appearances) + ".";
+return $cross.suffix === "" ? main : main + " " + $cross.suffix;
 

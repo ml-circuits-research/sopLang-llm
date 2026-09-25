@@ -25,7 +25,7 @@
   ]
 }
 
-@answer jsEval
+@sets jsEval
 const slots = $slots;
 const matches = (value, predicate) => {
   if (predicate.op === "and") { return predicate.of.every((part) => matches(value, part)); }
@@ -40,14 +40,10 @@ const matches = (value, predicate) => {
   throw new Error("unsupported predicate " + predicate.op);
 };
 const keep = (candidates, predicate) => candidates.filter((value) => matches(value, predicate));
-const joinList = (items) => {
-  const parts = items.map(String);
-  if (parts.length === 1) { return parts[0]; }
-  if (parts.length === 2) { return parts[0] + " and " + parts[1]; }
-  return parts.slice(0, -1).join(", ") + ", and " + parts[parts.length - 1];
-};
-const sets = slots.clues.map((clue) => keep(slots.candidates, clue.predicate));
-const same = sets[0].length === sets[1].length && sets[0].every((value, index) => value === sets[1][index]);
-if (same) { return "Yes; both keep {" + sets[0].join(",") + "}."; }
-return "No; {" + sets[0].join(",") + "} and {" + sets[1].join(",") + "}.";
+return slots.clues.map((clue) => keep(slots.candidates, clue.predicate));
+
+@answer jsEval
+const same = $sets[0].length === $sets[1].length && $sets[0].every((value, index) => value === $sets[1][index]);
+if (same) { return "Yes; both keep {" + $sets[0].join(",") + "}."; }
+return "No; {" + $sets[0].join(",") + "} and {" + $sets[1].join(",") + "}.";
 

@@ -16,7 +16,7 @@
   ]
 }
 
-@answer jsEval
+@best jsEval
 const slots = $slots;
 const parts = slots.questions.map(function (question, index) {
   const atMost = question.match(/at most (\d+)/);
@@ -31,5 +31,8 @@ const parts = slots.questions.map(function (question, index) {
 });
 let best = parts[0];
 for (const part of parts) { if (part.remaining < best.remaining) { best = part; } }
-return "Q" + best.index + ": “" + best.question + "”.";
+return { index: best.index, question: best.question };
+
+@answer jsEval
+return "Q" + $best.index + ": “" + $best.question + "”.";
 

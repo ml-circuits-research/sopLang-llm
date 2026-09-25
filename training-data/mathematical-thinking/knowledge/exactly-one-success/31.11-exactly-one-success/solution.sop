@@ -6,7 +6,7 @@
   "success": "A"
 }
 
-@answer jsEval
+@counts jsEval
 const slots = $slots;
 const facts = $facts;
 let space = [""];
@@ -14,9 +14,12 @@ for (let step = 0; step < facts.trials; step += 1) {
   space = space.flatMap((prefix) => facts.outcomes.map((symbol) => prefix + symbol));
 }
 const favorable = space.filter((outcome) => outcome.split("").filter((letter) => letter === slots.success).length === 1).length;
+return { favorable: favorable, total: space.length };
+
+@answer jsEval
 function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
-const factor = gcd(favorable, space.length);
-const n = favorable / factor;
-const d = space.length / factor;
+const factor = gcd($counts.favorable, $counts.total);
+const n = $counts.favorable / factor;
+const d = $counts.total / factor;
 return d === 1 ? String(n) : n + "/" + d;
 

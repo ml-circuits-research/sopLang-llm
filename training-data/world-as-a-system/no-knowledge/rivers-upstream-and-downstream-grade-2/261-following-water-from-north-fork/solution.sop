@@ -19,32 +19,32 @@
   "canal": false
 }
 
-@answer jsEval
-const slots = $slots;
+@adjacency jsEval
 const adjacency = new Map();
-for (const flow of slots.flows) {
+for (const flow of $slots.flows) {
   if (!adjacency.has(flow.from)) {
     adjacency.set(flow.from, []);
   }
   adjacency.get(flow.from).push(flow.to);
 }
-const seen = new Set([slots.source]);
-const queue = [slots.source];
-let reachable = false;
+return adjacency;
+
+@reach jsEval
+const seen = new Set([$slots.source]);
+const queue = [$slots.source];
 while (queue.length > 0) {
   const river = queue.shift();
-  if (river === slots.target) {
-    reachable = true;
-    break;
-  }
-  for (const next of adjacency.get(river) ?? []) {
+  for (const next of $adjacency.get(river) ?? []) {
     if (!seen.has(next)) {
       seen.add(next);
       queue.push(next);
     }
   }
 }
-return reachable
-  ? "Yes; water from " + slots.source + " can reach " + slots.target + "."
-  : "No; water from " + slots.source + " cannot reach " + slots.target + ".";
+return seen.has($slots.target);
+
+@answer jsEval
+return $reach
+  ? "Yes; water from " + $slots.source + " can reach " + $slots.target + "."
+  : "No; water from " + $slots.source + " cannot reach " + $slots.target + ".";
 

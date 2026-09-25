@@ -9,7 +9,7 @@
   "trappedAirLowersDensity": true
 }
 
-@answer jsEval
+@fates jsEval
 const slots = $slots;
 const formatDensity = (value) => Number.isInteger(value) ? String(value) : value.toFixed(2);
 const densityFate = (massGrams, volumeCm3) => {
@@ -22,5 +22,8 @@ const densityFate = (massGrams, volumeCm3) => {
 };
 const cube = densityFate(slots.massGrams, slots.cubeVolumeCm3);
 const boat = densityFate(slots.massGrams, slots.boatVolumeCm3);
-return "Cube " + cube + ". Boat " + boat + ".";
+return { cube, boat };
+
+@answer jsEval
+return "Cube " + $fates.cube + ". Boat " + $fates.boat + ".";
 

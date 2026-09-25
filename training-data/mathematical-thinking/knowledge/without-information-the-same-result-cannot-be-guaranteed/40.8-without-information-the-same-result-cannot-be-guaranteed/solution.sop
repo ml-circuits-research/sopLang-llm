@@ -15,7 +15,7 @@
   "informed": false
 }
 
-@answer jsEval
+@guarantee jsEval
 const slots = $slots;
 const facts = typeof $facts === "string" ? JSON.parse($facts) : $facts;
 if (slots.informed) { throw new Error("the template requires a choice made before observing the state"); }
@@ -28,5 +28,8 @@ for (const action of slots.actions) {
   }
   guarantee = rule.acrossActions === "max" ? Math.max(guarantee, worst) : (() => { throw new Error("unsupported action rule " + rule.acrossActions); })();
 }
-return guarantee >= slots.target ? "Yes." : "No.";
+return guarantee;
+
+@answer jsEval
+return $guarantee >= $slots.target ? "Yes." : "No.";
 

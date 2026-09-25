@@ -37,7 +37,18 @@
   ]
 }
 
-@answer jsEval
+@role jsEval
+const ROLE_TOPICS = [{"role":"Public Works Office","keywords":["road","roads","street","streets","bridge","bridges","pavement","maintain","maintains","maintenance","repair","repairs","infrastructure"]},{"role":"Local Court","keywords":["dispute","disputes","law","laws","legal","court","courts","hearing","hearings","judge","judges","justice"]},{"role":"Town Council","keywords":["budget","budgets","policy","tax","taxes","fund","funds","funding","levy"]},{"role":"Election Committee","keywords":["election","elections","ballot","ballots","vote","votes","voting","count","counting","tally"]},{"role":"School Board","keywords":["school","schools","calendar","calendars","curriculum","class","classes","student","students","pupil","pupils"]}];
+const slots = $slots;
+const tokens = slots.action.toLowerCase().split(/[^a-z]+/).filter((token) => token !== "");
+let matched = null; let bestScore = 0; let tied = false;
+for (const entry of ROLE_TOPICS) { const score = entry.keywords.filter((keyword) => tokens.includes(keyword)).length; if (score > bestScore) { matched = entry.role; bestScore = score; tied = false; } else if (score > 0 && score === bestScore) { tied = true; } }
+probe(matched !== null, "one stated role must cover the requested action");
+probe(tied === false, "exactly one stated role must cover the requested action");
+probe(slots.options.includes(matched), "the matched institution must be one of the two offered candidates");
+return matched;
+
+@cross jsEval
 const describeCrossDomain = function describeCrossDomain(check) {
   if (check.kind === 'distance') {
     return `${check.centimetres * check.kilometresPerCentimetre} km.`;
@@ -69,15 +80,10 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   });
   return parts.join(' ');
 };
-const ROLE_TOPICS = [{"role":"Public Works Office","keywords":["road","roads","street","streets","bridge","bridges","pavement","maintain","maintains","maintenance","repair","repairs","infrastructure"]},{"role":"Local Court","keywords":["dispute","disputes","law","laws","legal","court","courts","hearing","hearings","judge","judges","justice"]},{"role":"Town Council","keywords":["budget","budgets","policy","tax","taxes","fund","funds","funding","levy"]},{"role":"Election Committee","keywords":["election","elections","ballot","ballots","vote","votes","voting","count","counting","tally"]},{"role":"School Board","keywords":["school","schools","calendar","calendars","curriculum","class","classes","student","students","pupil","pupils"]}];
 const slots = $slots;
-const tokens = slots.action.toLowerCase().split(/[^a-z]+/).filter((token) => token !== "");
-let matched = null; let bestScore = 0; let tied = false;
-for (const entry of ROLE_TOPICS) { const score = entry.keywords.filter((keyword) => tokens.includes(keyword)).length; if (score > bestScore) { matched = entry.role; bestScore = score; tied = false; } else if (score > 0 && score === bestScore) { tied = true; } }
-probe(matched !== null, "one stated role must cover the requested action");
-probe(tied === false, "exactly one stated role must cover the requested action");
-probe(slots.options.includes(matched), "the matched institution must be one of the two offered candidates");
-const main = "The request should go first to the " + matched + ".";
-const suffix = renderCrossDomain(slots.crossDomain);
-return suffix === "" ? main : main + " " + suffix;
+return { suffix: renderCrossDomain(slots.crossDomain) };
+
+@answer jsEval
+const main = "The request should go first to the " + $role + ".";
+return $cross.suffix === "" ? main : main + " " + $cross.suffix;
 

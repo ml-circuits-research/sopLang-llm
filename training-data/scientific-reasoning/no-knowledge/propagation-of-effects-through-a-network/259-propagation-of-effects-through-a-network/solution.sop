@@ -21,11 +21,9 @@
   "start": "moist soil"
 }
 
-@answer jsEval
+@reached jsEval
 const slots = $slots;
 const nodeKey = (text) => String(text).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().split(" ").filter((word) => word !== "").sort().join(" ");
-for (const arrow of slots.arrows) {
-}
 const seen = new Set([nodeKey(slots.start)]);
 const reached = new Map();
 let changed = true;
@@ -38,6 +36,9 @@ while (changed) {
     changed = true;
   }
 }
-probe(reached.size > 0, "the changed node must reach at least one node of the network");
-return "The effect can propagate to: " + [...reached.values()].join(", ") + ".";
+return [...reached.values()];
+
+@answer jsEval
+probe($reached.length > 0, "the changed node must reach at least one node of the network");
+return "The effect can propagate to: " + $reached.join(", ") + ".";
 

@@ -36,7 +36,7 @@
   ]
 }
 
-@answer jsEval
+@cross jsEval
 const describeCrossDomain = function describeCrossDomain(check) {
   if (check.kind === 'distance') {
     return `${check.centimetres * check.kilometresPerCentimetre} km.`;
@@ -69,6 +69,10 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
+return { suffix: renderCrossDomain(slots.crossDomain) };
+
+@answer jsEval
+const slots = $slots;
 const byName = new Map(slots.intervals.map((interval) => [interval.name, interval]));
 const anachronistic = [];
 for (const item of slots.mentioned) {
@@ -78,6 +82,5 @@ for (const item of slots.mentioned) {
   }
 }
 const main = anachronistic.length === 0 ? "No anachronistic item." : "Anachronistic: " + anachronistic.join(", ") + ".";
-const suffix = renderCrossDomain(slots.crossDomain);
-return suffix === "" ? main : main + " " + suffix;
+return $cross.suffix === "" ? main : main + " " + $cross.suffix;
 

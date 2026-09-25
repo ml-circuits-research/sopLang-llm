@@ -9,7 +9,7 @@
   "required": 1
 }
 
-@answer jsEval
+@matching jsEval
 const slots = $slots;
 let states = [[]];
 for (let index = 0; index < slots.count; index += 1) {
@@ -19,7 +19,10 @@ for (let index = 0; index < slots.count; index += 1) {
   }
   states = next;
 }
-const matching = states.filter((state) => state.filter((value) => value === slots.onValue).length === slots.required).map((state) => "(" + state.join(",") + ")");
+return states.filter((state) => state.filter((value) => value === slots.onValue).length === slots.required).map((state) => "(" + state.join(",") + ")");
+
+@answer jsEval
+const matching = $matching;
 if (matching.length === 2) return "In states " + matching[0] + " and " + matching[1] + ".";
 return "In states " + matching.slice(0, -1).join(", ") + ", and " + matching[matching.length - 1] + ".";
 

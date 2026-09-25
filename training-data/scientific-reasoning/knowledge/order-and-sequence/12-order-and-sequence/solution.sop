@@ -11,7 +11,7 @@
   ]
 }
 
-@answer jsEval
+@chain jsEval
 const slots = $slots;
 const facts = (typeof $facts === "object" && $facts !== null) ? $facts : JSON.parse(String($facts));
 const sheets = facts.sheets;
@@ -26,6 +26,9 @@ const positions = slots.stages.map((stage) => rank.get(normalize(stage)));
 probe(positions.every((index) => typeof index === "number"), "every stage must be one step of the sheet");
 const chain = positions.slice().sort((left, right) => left - right).map((index) => sheet[index]);
 probe(chain.length === slots.stages.length, "the ordered chain must keep every stage of the case");
-const text = chain.join(" → ");
+return chain;
+
+@answer jsEval
+const text = $chain.join(" → ");
 return text.charAt(0).toUpperCase() + text.slice(1) + ".";
 

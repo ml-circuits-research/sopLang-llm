@@ -11,7 +11,7 @@
   "speakerClaim": "“Everybody knows it’s dry.”"
 }
 
-@answer jsEval
+@source jsEval
 const slots = $slots;
 const hearsay = /I heard from someone/i.test(slots.neighbourClaim);
 probe(hearsay === true, "the neighbour claim must be second-hand rather than first-hand");
@@ -23,5 +23,8 @@ const primaryClause = "C2 states the closure and the cause.";
 const compatibleClause = photoInWindow ? "C3 is visually compatible." : "C3 is visually incompatible.";
 const hearsayClause = hearsay && !noticeMentionsDry ? "C1 is hearsay; “dry” is not in C2." : "C1 is a first-hand source.";
 const authorityClause = authorityIsSource ? "“Everybody” is a source." : "“Everybody” is not a source.";
-return primaryClause + " " + compatibleClause + " " + hearsayClause + " " + authorityClause;
+return { primaryClause, compatibleClause, hearsayClause, authorityClause };
+
+@answer jsEval
+return $source.primaryClause + " " + $source.compatibleClause + " " + $source.hearsayClause + " " + $source.authorityClause;
 

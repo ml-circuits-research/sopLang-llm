@@ -5,7 +5,7 @@
   "crossDomain": null
 }
 
-@answer jsEval
+@cross jsEval
 const describeCrossDomain = function describeCrossDomain(check) {
   if (check.kind === 'distance') {
     return `${check.centimetres * check.kilometresPerCentimetre} km.`;
@@ -38,10 +38,13 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
+return { suffix: renderCrossDomain(slots.crossDomain) };
+
+@answer jsEval
+const slots = $slots;
 const realCentimetres = slots.mapCentimetres * slots.denominator;
 probe(realCentimetres > 0, "the real distance must be positive because the scale is a ratio, not an added distance");
 const kilometres = String(Number((realCentimetres / 100000).toFixed(4)));
 const main = kilometres + " km.";
-const suffix = renderCrossDomain(slots.crossDomain);
-return suffix === "" ? main : main + " " + suffix;
+return $cross.suffix === "" ? main : main + " " + $cross.suffix;
 

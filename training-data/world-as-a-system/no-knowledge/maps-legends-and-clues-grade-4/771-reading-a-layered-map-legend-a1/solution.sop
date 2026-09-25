@@ -49,7 +49,13 @@
   ]
 }
 
-@answer jsEval
+@matching jsEval
+const slots = $slots;
+const matching = slots.cells.filter((cell) => slots.required.every((attribute) => cell.attributes.includes(attribute))).map((cell) => cell.id);
+probe(matching.length > 0, "at least one cell must have every required attribute");
+return matching;
+
+@cross jsEval
 const describeCrossDomain = function describeCrossDomain(check) {
   if (check.kind === 'distance') {
     return `${check.centimetres * check.kilometresPerCentimetre} km.`;
@@ -81,9 +87,9 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   });
   return parts.join(' ');
 };
-const slots = $slots;
-const matching = slots.cells.filter((cell) => slots.required.every((attribute) => cell.attributes.includes(attribute))).map((cell) => cell.id);
-probe(matching.length > 0, "at least one cell must have every required attribute");
-const suffix = renderCrossDomain(slots.crossDomain);
-return suffix === "" ? matching.join(", ") : matching.join(", ") + " " + suffix;
+return { suffix: renderCrossDomain($slots.crossDomain) };
+
+@answer jsEval
+const suffix = $cross.suffix;
+return suffix === "" ? $matching.join(", ") : $matching.join(", ") + " " + suffix;
 

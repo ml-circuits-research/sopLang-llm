@@ -7,7 +7,7 @@
   ]
 }
 
-@answer jsEval
+@codes jsEval
 const slots = $slots;
 if (!Number.isInteger(slots.positions) || slots.positions < 1) { throw new Error("invalid position count"); }
 const symbols = slots.symbols;
@@ -22,5 +22,8 @@ for (let value = 0; value < total; value += 1) {
   }
   codes.push(digits.join(""));
 }
-return codes.join(", ") + ".";
+return codes;
+
+@answer jsEval
+return $codes.join(", ") + ".";
 

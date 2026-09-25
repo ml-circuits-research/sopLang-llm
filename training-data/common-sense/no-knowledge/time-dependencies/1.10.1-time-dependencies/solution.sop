@@ -37,10 +37,8 @@
   "unit": "day"
 }
 
-@answer jsEval
+@order jsEval
 const slots = $slots;
-const start = {};
-const finish = {};
 const scheduled = [];
 const remaining = slots.order.slice();
 while (remaining.length > 0) {
@@ -49,24 +47,40 @@ while (remaining.length > 0) {
     throw new Error("the stated prerequisites contain a cycle, so no schedule exists");
   }
   for (const name of ready) {
-    const prerequisites = slots.prerequisites[name];
-    start[name] = prerequisites.length === 0 ? 0 : Math.max(...prerequisites.map((prerequisite) => finish[prerequisite]));
-    finish[name] = start[name] + slots.durations[name];
     scheduled.push(name);
     remaining.splice(remaining.indexOf(name), 1);
   }
 }
-const last = scheduled.reduce((best, name) => (finish[name] > finish[best] ? name : best));
-probe(finish[last] > 0, "the project must have a positive duration");
+return scheduled;
+
+@schedule jsEval
+const slots = $slots;
+const start = {};
+const finish = {};
+for (const name of $order) {
+  const prerequisites = slots.prerequisites[name];
+  start[name] = prerequisites.length === 0 ? 0 : Math.max(...prerequisites.map((prerequisite) => finish[prerequisite]));
+  finish[name] = start[name] + slots.durations[name];
+}
+return { start, finish, scheduled: $order };
+
+@critical jsEval
+const slots = $slots;
+const schedule = $schedule;
+const last = schedule.scheduled.reduce((best, name) => (schedule.finish[name] > schedule.finish[best] ? name : best));
+probe(schedule.finish[last] > 0, "the project must have a positive duration");
 const chain = [last];
 let task = last;
 while (slots.prerequisites[task].length > 0) {
-  const binding = slots.prerequisites[task].find((prerequisite) => finish[prerequisite] === start[task]);
+  const binding = slots.prerequisites[task].find((prerequisite) => schedule.finish[prerequisite] === schedule.start[task]);
   if (binding === undefined) {
     throw new Error("no stated prerequisite of task " + task + " fixes its start time");
   }
   chain.unshift(binding);
   task = binding;
 }
-return "The minimum duration is " + finish[last] + " " + slots.unit + "s. One critical chain is " + chain.join("\u2013") + ".";
+return { chain, duration: schedule.finish[last] };
+
+@answer jsEval
+return "The minimum duration is " + $critical.duration + " " + $slots.unit + "s. One critical chain is " + $critical.chain.join("\u2013") + ".";
 

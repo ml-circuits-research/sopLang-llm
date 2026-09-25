@@ -22,7 +22,7 @@
   "start": "A"
 }
 
-@answer jsEval
+@circuit jsEval
 const slots = $slots;
 function eulerianTrail(edges, start, mustReturn) {
   const path = [start];
@@ -36,6 +36,8 @@ function eulerianTrail(edges, start, mustReturn) {
   };
   return visit() ? path : null;
 }
-const path = eulerianTrail(slots.edges, slots.start, true);
-return "Yes: " + path.join("-") + ".";
+return eulerianTrail(slots.edges, slots.start, true);
+
+@answer jsEval
+return "Yes: " + $circuit.join("-") + ".";
 

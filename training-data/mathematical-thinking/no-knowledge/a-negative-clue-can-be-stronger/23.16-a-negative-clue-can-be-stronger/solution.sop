@@ -24,7 +24,7 @@
   ]
 }
 
-@answer jsEval
+@counts jsEval
 const slots = $slots;
 const matches = (value, predicate) => {
   if (predicate.op === "and") { return predicate.of.every((part) => matches(value, part)); }
@@ -39,17 +39,16 @@ const matches = (value, predicate) => {
   throw new Error("unsupported predicate " + predicate.op);
 };
 const keep = (candidates, predicate) => candidates.filter((value) => matches(value, predicate));
-const joinList = (items) => {
-  const parts = items.map(String);
-  if (parts.length === 1) { return parts[0]; }
-  if (parts.length === 2) { return parts[0] + " and " + parts[1]; }
-  return parts.slice(0, -1).join(", ") + ", and " + parts[parts.length - 1];
-};
+return slots.clues.map((clue) => ({ text: clue.text, remaining: keep(slots.candidates, clue.predicate).length }));
+
+@strongest jsEval
 let best = null;
-for (const clue of slots.clues) {
-  const remaining = keep(slots.candidates, clue.predicate).length;
-  if (best === null || remaining < best.remaining) { best = { text: clue.text, remaining }; }
+for (const entry of $counts) {
+  if (best === null || entry.remaining < best.remaining) { best = entry; }
 }
-const first = best.text.charAt(0).toUpperCase() + best.text.slice(1);
+return best;
+
+@answer jsEval
+const first = $strongest.text.charAt(0).toUpperCase() + $strongest.text.slice(1);
 return "“" + first + "”.";
 

@@ -25,7 +25,7 @@
   "crossDomain": null
 }
 
-@answer jsEval
+@cross jsEval
 const describeCrossDomain = function describeCrossDomain(check) {
   if (check.kind === 'distance') {
     return `${check.centimetres * check.kilometresPerCentimetre} km.`;
@@ -58,6 +58,10 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
+return { suffix: renderCrossDomain(slots.crossDomain) };
+
+@candidates jsEval
+const slots = $slots;
 const candidates = [];
 for (let x = slots.gridMin; x <= slots.gridMax; x += 1) {
   for (let y = slots.gridMin; y <= slots.gridMax; y += 1) {
@@ -71,7 +75,10 @@ for (let x = slots.gridMin; x <= slots.gridMax; x += 1) {
   }
 }
 probe(candidates.length > 0, "the stated constraints must admit at least one point of the integer grid");
+return candidates;
+
+@answer jsEval
+const candidates = $candidates;
 const main = "P=" + candidates.join(", ") + "; the solution is " + (candidates.length === 1 ? "unique" : "not unique") + ".";
-const suffix = renderCrossDomain(slots.crossDomain);
-return suffix === "" ? main : main + " " + suffix;
+return $cross.suffix === "" ? main : main + " " + $cross.suffix;
 

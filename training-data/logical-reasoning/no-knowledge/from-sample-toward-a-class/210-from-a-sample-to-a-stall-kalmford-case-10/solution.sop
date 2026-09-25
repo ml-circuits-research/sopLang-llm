@@ -19,9 +19,11 @@
   ]
 }
 
-@answer jsEval
+@cautious jsEval
 const slots = $slots;
 const cautious = slots.claims.filter((claim) => claim.stance === "cautious").map((claim) => claim.name);
-const universal = slots.claims.filter((claim) => claim.stance === "universal").map((claim) => claim.name);
-return "A limited inductive claim about this carton, not a forced universal. " + cautious[0] + " has the strength right. \u201cSo far\u201d is the honest adverb.";
+return cautious;
+
+@answer jsEval
+return "A limited inductive claim about this carton, not a forced universal. " + $cautious[0] + " has the strength right. \u201cSo far\u201d is the honest adverb.";
 

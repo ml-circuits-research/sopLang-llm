@@ -8,15 +8,16 @@
   "replacement": false
 }
 
-@answer jsEval
+@counts jsEval
 const slots = $slots;
 const counts = { ...slots.counts };
 if (!slots.replacement) counts[slots.drawnColor] -= 1;
-const favorable = counts.red;
-const total = counts.red + counts.blue;
+return { favorable: counts.red, total: counts.red + counts.blue };
+
+@answer jsEval
 function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
-const factor = gcd(favorable, total);
-const n = favorable / factor;
-const d = total / factor;
+const factor = gcd($counts.favorable, $counts.total);
+const n = $counts.favorable / factor;
+const d = $counts.total / factor;
 return d === 1 ? String(n) : n + "/" + d;
 

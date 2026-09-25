@@ -10,7 +10,7 @@
   "later": 2
 }
 
-@answer jsEval
+@permutations jsEval
 const slots = $slots;
 const digits = slots.digits.map(String);
 const permutations = [];
@@ -24,10 +24,13 @@ const build = (prefix, rest) => {
   }
 };
 build("", digits);
-const first = String(slots.first);
-const earlier = String(slots.earlier);
-const later = String(slots.later);
-const matching = permutations.filter((code) => code[0] === first && code.indexOf(earlier) < code.indexOf(later));
+return permutations;
+
+@answer jsEval
+const first = String($slots.first);
+const earlier = String($slots.earlier);
+const later = String($slots.later);
+const matching = $permutations.filter((code) => code[0] === first && code.indexOf(earlier) < code.indexOf(later));
 if (matching.length !== 1) {
   throw new Error("the clues leave " + matching.length + " codes instead of one");
 }

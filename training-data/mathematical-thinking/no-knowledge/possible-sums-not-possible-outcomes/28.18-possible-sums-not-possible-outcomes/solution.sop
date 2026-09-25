@@ -7,7 +7,7 @@
   "cubes": 2
 }
 
-@answer jsEval
+@sums jsEval
 const slots = $slots;
 const sums = new Set();
 const walk = (left, total) => {
@@ -20,12 +20,14 @@ const walk = (left, total) => {
   }
 };
 walk(slots.cubes, 0);
-const values = [...sums].sort((left, right) => left - right);
+return [...sums].sort((left, right) => left - right);
+
+@answer jsEval
 let text;
-if (values.length === 1) {
-  text = String(values[0]);
+if ($sums.length === 1) {
+  text = String($sums[0]);
 } else {
-  text = values.slice(0, -1).join(", ") + ", and " + values[values.length - 1];
+  text = $sums.slice(0, -1).join(", ") + ", and " + $sums[$sums.length - 1];
 }
 return text + ".";
 

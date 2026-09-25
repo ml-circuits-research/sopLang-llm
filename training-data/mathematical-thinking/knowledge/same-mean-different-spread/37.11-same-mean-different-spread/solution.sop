@@ -15,7 +15,7 @@
   ]
 }
 
-@answer jsEval
+@comparison jsEval
 const slots = $slots;
 const meanRule = $facts.meanRule;
 const rangeRule = $facts.rangeRule;
@@ -29,6 +29,8 @@ const range = (values) => {
   const to = rangeRule.to === "min" ? Math.min(...values) : (() => { throw new Error("unsupported range to " + rangeRule.to); })();
   return rangeRule.combine === "difference" ? from - to : (() => { throw new Error("unsupported range combine " + rangeRule.combine); })();
 };
-return "The mean is " + (mean(slots.setA) === mean(slots.setB) ? "the same" : "not the same") +
-  "; the range is " + (range(slots.setA) === range(slots.setB) ? "the same" : "not") + ".";
+return { sameMean: mean(slots.setA) === mean(slots.setB), sameRange: range(slots.setA) === range(slots.setB) };
+
+@answer jsEval
+return "The mean is " + ($comparison.sameMean ? "the same" : "not the same") + "; the range is " + ($comparison.sameRange ? "the same" : "not") + ".";
 

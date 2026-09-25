@@ -12,7 +12,7 @@
   }
 }
 
-@answer jsEval
+@threshold jsEval
 const slots = $slots;
 const plans = slots.plans;
 let numerator = (plans.B.fixed - plans.A.fixed) * 100;
@@ -25,9 +25,14 @@ const sign = numerator < 0 ? -1 : 1;
 const magnitude = Math.abs(numerator);
 const quotient = Math.floor(magnitude / denominator);
 const remainder = magnitude - quotient * denominator;
-const threshold = sign * (quotient + (2 * remainder >= denominator ? 1 : 0));
+return sign * (quotient + (2 * remainder >= denominator ? 1 : 0));
+
+@breakEven jsEval
+const slots = $slots;
+const threshold = $threshold;
 probe(threshold > 0, "the two plans must cross at a positive volume");
-const cheaperBelow = plans.A.fixed < plans.B.fixed ? "A" : "B";
-const cheaperAbove = plans.A.variable < plans.B.variable ? "A" : "B";
-return "Break-even volume: " + String(threshold / 100) + " units. Below it, Plan " + cheaperBelow + " is cheaper; above it, Plan " + cheaperAbove + " is cheaper.";
+return { threshold, cheaperBelow: slots.plans.A.fixed < slots.plans.B.fixed ? "A" : "B", cheaperAbove: slots.plans.A.variable < slots.plans.B.variable ? "A" : "B" };
+
+@answer jsEval
+return "Break-even volume: " + String($breakEven.threshold / 100) + " units. Below it, Plan " + $breakEven.cheaperBelow + " is cheaper; above it, Plan " + $breakEven.cheaperAbove + " is cheaper.";
 

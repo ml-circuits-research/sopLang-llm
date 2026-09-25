@@ -6,7 +6,7 @@
   ]
 }
 
-@answer jsEval
+@equivalent jsEval
 const slots = $slots;
 const coefficients = (formula) => {
   const product = formula.match(/^(\d*)\((.*)\)$/);
@@ -18,5 +18,8 @@ const coefficients = (formula) => {
 const left = coefficients(slots.formulas[0]);
 const right = coefficients(slots.formulas[1]);
 const terms = [...new Set([...Object.keys(left), ...Object.keys(right)])];
-return terms.every((term) => (left[term] || 0) === (right[term] || 0)) ? "The formulas are equivalent." : "The formulas are not equivalent.";
+return terms.every((term) => (left[term] || 0) === (right[term] || 0));
+
+@answer jsEval
+return $equivalent ? "The formulas are equivalent." : "The formulas are not equivalent.";
 

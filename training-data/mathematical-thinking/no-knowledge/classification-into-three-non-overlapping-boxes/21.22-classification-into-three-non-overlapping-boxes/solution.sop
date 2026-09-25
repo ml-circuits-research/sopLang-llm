@@ -33,7 +33,7 @@
   ]
 }
 
-@answer jsEval
+@offending jsEval
 const slots = $slots;
 let offending = null;
 for (const rule of slots.proposed) {
@@ -46,5 +46,8 @@ for (const rule of slots.proposed) {
   if (overflow) { offending = intended; break; }
 }
 if (offending === null) { throw new Error("no proposed rule overflows its box"); }
-return "The rule for " + offending.name + " must be limited to " + offending.lo + "–" + offending.hi + ".";
+return offending;
+
+@answer jsEval
+return "The rule for " + $offending.name + " must be limited to " + $offending.lo + "–" + $offending.hi + ".";
 

@@ -14,7 +14,7 @@
   ]
 }
 
-@answer jsEval
+@route jsEval
 const slots = $slots;
 const walk = (moves) => {
   const d = { dx: 0, dy: 0 };
@@ -24,13 +24,15 @@ const walk = (moves) => {
   }
   return d;
 };
-const a = walk(slots.routeA); const b = walk(slots.routeB);
+return { a: walk(slots.routeA), b: walk(slots.routeB) };
+
+@answer jsEval
 const show = (d) => {
   const pieces = [];
   if (d.dx !== 0) pieces.push(Math.abs(d.dx) + " squares " + (d.dx > 0 ? "east" : "west"));
   if (d.dy !== 0) pieces.push(Math.abs(d.dy) + " squares " + (d.dy > 0 ? "north" : "south"));
   return pieces.join(" and ");
 };
-if (a.dx === b.dx && a.dy === b.dy) return "Yes; both end " + show(a) + " of the start.";
-return "No; one route ends " + show(a) + " of the start and the other " + show(b) + " of the start.";
+if ($route.a.dx === $route.b.dx && $route.a.dy === $route.b.dy) return "Yes; both end " + show($route.a) + " of the start.";
+return "No; one route ends " + show($route.a) + " of the start and the other " + show($route.b) + " of the start.";
 

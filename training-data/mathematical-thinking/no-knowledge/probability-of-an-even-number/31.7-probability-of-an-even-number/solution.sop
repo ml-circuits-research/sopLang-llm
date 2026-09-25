@@ -4,14 +4,14 @@
   "total": 6
 }
 
-@answer jsEval
+@reduced jsEval
 const slots = $slots;
 function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
-const favorable = slots.favorable;
-const total = slots.total;
-const factor = gcd(favorable, total);
-const n = favorable / factor;
-const d = total / factor;
-const reduced = d === 1 ? String(n) : n + "/" + d;
-return favorable + "/" + total + "=" + reduced;
+const factor = gcd(slots.favorable, slots.total);
+const n = slots.favorable / factor;
+const d = slots.total / factor;
+return d === 1 ? String(n) : n + "/" + d;
+
+@answer jsEval
+return $slots.favorable + "/" + $slots.total + "=" + $reduced;
 

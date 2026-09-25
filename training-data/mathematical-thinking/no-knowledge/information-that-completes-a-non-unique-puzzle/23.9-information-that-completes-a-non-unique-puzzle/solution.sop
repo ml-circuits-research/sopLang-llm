@@ -32,7 +32,7 @@
   ]
 }
 
-@answer jsEval
+@winners jsEval
 const slots = $slots;
 const matches = (value, predicate) => {
   if (predicate.op === "and") { return predicate.of.every((part) => matches(value, part)); }
@@ -47,13 +47,9 @@ const matches = (value, predicate) => {
   throw new Error("unsupported predicate " + predicate.op);
 };
 const keep = (candidates, predicate) => candidates.filter((value) => matches(value, predicate));
-const joinList = (items) => {
-  const parts = items.map(String);
-  if (parts.length === 1) { return parts[0]; }
-  if (parts.length === 2) { return parts[0] + " and " + parts[1]; }
-  return parts.slice(0, -1).join(", ") + ", and " + parts[parts.length - 1];
-};
-const winners = slots.clues.filter((clue) => keep(slots.candidates, clue.predicate).length === 1);
-const first = winners[0];
-return winners.map((clue) => clue.label).join(", ") + ": “" + first.text + "”.";
+return slots.clues.filter((clue) => keep(slots.candidates, clue.predicate).length === 1);
+
+@answer jsEval
+const first = $winners[0];
+return $winners.map((clue) => clue.label).join(", ") + ": “" + first.text + "”.";
 

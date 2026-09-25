@@ -23,7 +23,7 @@
   "unreadTime": "18:26"
 }
 
-@answer jsEval
+@verdicts jsEval
 const slots = $slots;
 const holder = slots.ownerWithdrew ? slots.runner : slots.owner;
 const holderClause = holder + " stays on bread.";
@@ -35,5 +35,8 @@ const milkClause = conditionMet
 const order = slots.stopSaysBuy ? "buy" : "don’t buy";
 const respected = boughtMilk === slots.stopSaysBuy;
 const stopClause = slots.unreadTime + " was unread and, in any case, said “" + order + "” — " + (respected ? "already respected" : "still open") + ".";
-return holderClause + " " + milkClause + " " + stopClause;
+return { holderClause, milkClause, stopClause };
+
+@answer jsEval
+return $verdicts.holderClause + " " + $verdicts.milkClause + " " + $verdicts.stopClause;
 

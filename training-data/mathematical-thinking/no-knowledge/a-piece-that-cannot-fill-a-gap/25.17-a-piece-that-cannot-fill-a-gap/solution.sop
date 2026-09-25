@@ -10,11 +10,14 @@
   ]
 }
 
-@answer jsEval
+@covers jsEval
 const s = $slots;
 const [gapRows, gapColumns] = s.gap;
 const [pieceRows, pieceColumns] = s.piece;
 const fits = (pieceRows <= gapRows && pieceColumns <= gapColumns) || (pieceColumns <= gapRows && pieceRows <= gapColumns);
 const areaMatches = pieceRows * pieceColumns === gapRows * gapColumns;
-return fits && areaMatches ? "Yes." : "No.";
+return fits && areaMatches;
+
+@answer jsEval
+return ($covers ? "Yes" : "No") + ".";
 

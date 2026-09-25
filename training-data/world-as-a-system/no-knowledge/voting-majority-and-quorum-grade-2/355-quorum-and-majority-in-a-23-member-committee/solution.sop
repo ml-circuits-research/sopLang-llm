@@ -9,7 +9,7 @@
   "crossDomain": null
 }
 
-@answer jsEval
+@cross jsEval
 const describeCrossDomain = function describeCrossDomain(check) {
   if (check.kind === 'distance') {
     return `${check.centimetres * check.kilometresPerCentimetre} km.`;
@@ -42,11 +42,14 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
+return { suffix: renderCrossDomain(slots.crossDomain) };
+
+@answer jsEval
+const slots = $slots;
 const threshold = Math.ceil((slots.quorumPercent * slots.members) / 100);
 probe(threshold > 0 && threshold <= slots.members, "the quorum threshold must fall inside the committee");
 const quorumMet = slots.present >= threshold;
 const passes = quorumMet && slots.yes > slots.no;
 const main = (quorumMet ? "Quorum is met" : "Quorum is not met") + "; " + (passes ? "the motion passes." : "the motion does not pass.");
-const suffix = renderCrossDomain(slots.crossDomain);
-return suffix === "" ? main : main + " " + suffix;
+return $cross.suffix === "" ? main : main + " " + $cross.suffix;
 

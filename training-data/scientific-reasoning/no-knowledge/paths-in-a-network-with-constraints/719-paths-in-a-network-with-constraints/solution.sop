@@ -42,14 +42,8 @@
   "destination": "the external environment"
 }
 
-@answer jsEval
+@adjacency jsEval
 const slots = $slots;
-for (const edge of slots.edges) {
-}
-const nodes = [];
-for (const edge of slots.edges) {
-  for (const node of [edge.from, edge.to]) { if (!nodes.includes(node)) nodes.push(node); }
-}
 const adjacency = new Map();
 slots.edges.forEach((edge, index) => {
   if (edge.closed === true) return;
@@ -58,18 +52,26 @@ slots.edges.forEach((edge, index) => {
     adjacency.get(pair[0]).push({ to: pair[1], cost: edge.cost, index: index });
   }
 });
+return { adjacency: adjacency, start: slots.start, destination: slots.destination };
+
+@routes jsEval
+const net = $adjacency;
 const routes = [];
 const walk = (node, path, cost, indexes) => {
-  if (node === slots.destination) { routes.push({ path: path.slice(), cost: cost, indexes: indexes.slice() }); return; }
-  for (const step of adjacency.get(node) || []) {
+  if (node === net.destination) { routes.push({ path: path.slice(), cost: cost, indexes: indexes.slice() }); return; }
+  for (const step of net.adjacency.get(node) || []) {
     if (path.includes(step.to)) continue;
     path.push(step.to);
     walk(step.to, path, cost + step.cost, indexes.concat([step.index]));
     path.pop();
   }
 };
-walk(slots.start, [slots.start], 0, []);
+walk(net.start, [net.start], 0, []);
 probe(routes.length > 0, "the closed link must leave at least one allowed route");
+return routes;
+
+@best jsEval
+const routes = $routes;
 const cheapest = Math.min(...routes.map((route) => route.cost));
 probe(Number.isInteger(cheapest) && cheapest > 0, "the cheapest allowed route must have a positive whole cost");
 const winners = routes.filter((route) => route.cost === cheapest);
@@ -81,7 +83,10 @@ const chosen = winners.slice().sort((left, right) => {
   }
   return left.indexes.length - right.indexes.length;
 })[0];
-probe(chosen.path[0] === slots.start && chosen.path[chosen.path.length - 1] === slots.destination, "the reported route must run from the starting point to the destination");
+probe(chosen.path[0] === $slots.start && chosen.path[chosen.path.length - 1] === $slots.destination, "the reported route must run from the starting point to the destination");
 probe(chosen.path.length > 1 && new Set(chosen.path).size === chosen.path.length, "the reported route must visit every node once");
-return "The minimum-cost path is " + chosen.path.join(" → ") + ", total cost " + cheapest + ".";
+return { path: chosen.path, cost: cheapest };
+
+@answer jsEval
+return "The minimum-cost path is " + $best.path.join(" → ") + ", total cost " + $best.cost + ".";
 

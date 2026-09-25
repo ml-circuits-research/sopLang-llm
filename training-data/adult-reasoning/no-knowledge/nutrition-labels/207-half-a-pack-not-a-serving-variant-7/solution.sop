@@ -11,7 +11,7 @@
   "meanHundredths": 180
 }
 
-@answer jsEval
+@half jsEval
 const slots = $slots;
 const roundHalfEven = (value) => {
   const whole = Math.floor(value);
@@ -23,10 +23,17 @@ const roundHalfEven = (value) => {
 const exactHalf = slots.pack / 2;
 const half = roundHalfEven(exactHalf);
 probe(half > 0 && half <= slots.pack, "the half pack must weigh no more than the pack");
-const kcal = Math.round((slots.kcalPer100 * exactHalf) / 100);
-const saltHundredths = Math.round((slots.saltPer100Hundredths * exactHalf) / 100);
+return { half, exactHalf };
+
+@nutrients jsEval
+const slots = $slots;
+const kcal = Math.round((slots.kcalPer100 * $half.exactHalf) / 100);
+const saltHundredths = Math.round((slots.saltPer100Hundredths * $half.exactHalf) / 100);
 const claim = slots.saltPer100Hundredths < slots.meanHundredths
   ? slots.saltLabel + "<" + slots.meanLabel + ", so the claim is consistent with the printed reference."
   : slots.saltLabel + " is not below " + slots.meanLabel + ", so the claim is not consistent with the printed reference.";
-return half + " g → " + kcal + " kcal and " + (saltHundredths / 100).toFixed(2) + " g salt. " + claim;
+return { kcal, saltHundredths, claim };
+
+@answer jsEval
+return $half.half + " g → " + $nutrients.kcal + " kcal and " + ($nutrients.saltHundredths / 100).toFixed(2) + " g salt. " + $nutrients.claim;
 

@@ -10,16 +10,13 @@
   "upper": 5000
 }
 
-@answer jsEval
+@candidates jsEval
 const slots = $slots;
 const results = [];
 const walk = (used, prefix) => {
-  if (prefix.length === slots.digits.length) {
-    results.push(Number(prefix.join("")));
-    return;
-  }
+  if (prefix.length === slots.digits.length) { results.push(Number(prefix.join(""))); return; }
   for (let index = 0; index < slots.digits.length; index += 1) {
-    if (used[index] === true) { continue; }
+    if (used[index]) { continue; }
     used[index] = true;
     prefix.push(slots.digits[index]);
     walk(used, prefix);
@@ -28,6 +25,9 @@ const walk = (used, prefix) => {
   }
 };
 walk(slots.digits.map(() => false), []);
-const allowed = results.filter((value) => value > slots.lower && value < slots.upper);
+return results;
+
+@answer jsEval
+const allowed = $candidates.filter((value) => value > $slots.lower && value < $slots.upper);
 return String(Math.max(...allowed));
 

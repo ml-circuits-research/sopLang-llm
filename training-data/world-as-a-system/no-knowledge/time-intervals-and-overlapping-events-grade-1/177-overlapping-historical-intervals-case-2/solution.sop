@@ -15,7 +15,7 @@
   "crossDomain": null
 }
 
-@answer jsEval
+@cross jsEval
 const describeCrossDomain = function describeCrossDomain(check) {
   if (check.kind === 'distance') {
     return `${check.centimetres * check.kilometresPerCentimetre} km.`;
@@ -48,10 +48,13 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
+return { suffix: renderCrossDomain(slots.crossDomain) };
+
+@answer jsEval
+const slots = $slots;
 const laterStart = Math.max(...slots.events.map((event) => event.start));
 const earlierEnd = Math.min(...slots.events.map((event) => event.end));
 const overlapYears = earlierEnd - laterStart;
 const main = overlapYears > 0 ? "Yes, overlap " + overlapYears + " years." : "No, the events do not overlap.";
-const suffix = renderCrossDomain(slots.crossDomain);
-return suffix === "" ? main : main + " " + suffix;
+return $cross.suffix === "" ? main : main + " " + $cross.suffix;
 

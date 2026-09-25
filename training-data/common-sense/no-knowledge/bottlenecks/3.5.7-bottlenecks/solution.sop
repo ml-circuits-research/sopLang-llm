@@ -11,7 +11,7 @@
   "percent": 30
 }
 
-@answer jsEval
+@plan jsEval
 const slots = $slots;
 const stages = ["A", "B", "C", "D"];
 const initial = Math.min(...stages.map((stage) => slots.capacities[stage]));
@@ -21,5 +21,8 @@ for (const stage of stages) {
 }
 const after = Math.min(...stages.map((stage) => improved[stage]));
 const bottlenecks = stages.filter((stage) => improved[stage] === after);
-return "Initial capacity: " + initial + " " + slots.unit + "/hour. After the improvement: " + String(after / 100) + " " + slots.unit + "/hour. Final bottleneck stage(s): " + bottlenecks.join(", ") + ".";
+return { initial, after, bottlenecks };
+
+@answer jsEval
+return "Initial capacity: " + $plan.initial + " " + $slots.unit + "/hour. After the improvement: " + String($plan.after / 100) + " " + $slots.unit + "/hour. Final bottleneck stage(s): " + $plan.bottlenecks.join(", ") + ".";
 

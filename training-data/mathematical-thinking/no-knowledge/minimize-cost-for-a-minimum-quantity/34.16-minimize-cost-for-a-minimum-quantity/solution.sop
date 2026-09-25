@@ -7,7 +7,7 @@
   "need": 8
 }
 
-@answer jsEval
+@best jsEval
 const slots = $slots;
 let best = null;
 const limitA = Math.ceil(slots.need / slots.unitsA) + 1;
@@ -19,5 +19,8 @@ for (let a = 0; a <= limitA; a += 1) {
     if (best === null || cost < best.cost || (cost === best.cost && a + b < best.a + best.b)) { best = { a, b, cost, units: a * slots.unitsA + b * slots.unitsB }; }
   }
 }
-return best.a + " package" + (best.a === 1 ? "" : "s") + " A, cost " + best.cost + ".";
+return best;
+
+@answer jsEval
+return $best.a + " package" + ($best.a === 1 ? "" : "s") + " A, cost " + $best.cost + ".";
 

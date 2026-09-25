@@ -12,7 +12,7 @@
   ]
 }
 
-@answer jsEval
+@cross jsEval
 const describeCrossDomain = function describeCrossDomain(check) {
   if (check.kind === 'distance') {
     return `${check.centimetres * check.kilometresPerCentimetre} km.`;
@@ -45,7 +45,10 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
-const suffix = renderCrossDomain(slots.crossDomain);
+return { suffix: renderCrossDomain(slots.crossDomain) };
+
+@answer jsEval
+const slots = $slots;
 let main;
 if (slots.kind === "timezone") {
   const totalMinutes = slots.baseHour * 60 + slots.baseMinute + slots.shiftHours * 60;
@@ -56,5 +59,5 @@ if (slots.kind === "timezone") {
 } else {
   main = slots.longer + " has longer daylight; rainfall cannot be determined from this fact alone.";
 }
-return suffix === "" ? main : main + " " + suffix;
+return $cross.suffix === "" ? main : main + " " + $cross.suffix;
 

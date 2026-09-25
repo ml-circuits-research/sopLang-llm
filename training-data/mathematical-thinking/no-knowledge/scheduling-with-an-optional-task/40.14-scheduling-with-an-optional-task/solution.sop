@@ -20,7 +20,7 @@
   ]
 }
 
-@answer jsEval
+@best jsEval
 const slots = $slots;
 let best = null;
 for (let mask = 0; mask < (1 << slots.tasks.length); mask += 1) {
@@ -32,5 +32,8 @@ for (let mask = 0; mask < (1 << slots.tasks.length); mask += 1) {
     best = { names: chosen.map((task) => task.name), time: time, value: value };
   }
 }
-return best.names.join("+") + ", " + best.value + " points.";
+return best;
+
+@answer jsEval
+return $best.names.join("+") + ", " + $best.value + " points.";
 

@@ -23,7 +23,7 @@
   ]
 }
 
-@answer jsEval
+@neighbours jsEval
 const slots = $slots;
 function adjacency(nodes, edges) {
   const map = new Map(nodes.map((node) => [node, []]));
@@ -31,16 +31,25 @@ function adjacency(nodes, edges) {
   for (const list of map.values()) list.sort();
   return map;
 }
-function countComponents(nodes, edges) {
-  const neighbours = adjacency(nodes, edges);
-  const seen = new Set();
-  let count = 0;
-  for (const start of nodes) {
-    if (seen.has(start)) continue; count += 1; const stack = [start]; seen.add(start); while (stack.length > 0) {
-      for (const next of neighbours.get(stack.pop())) if (!seen.has(next)) { seen.add(next); stack.push(next); }
+return adjacency(slots.nodes, slots.edges);
+
+@groups jsEval
+const seen = new Set();
+let count = 0;
+for (const start of $slots.nodes) {
+  if (seen.has(start)) { continue; }
+  count += 1;
+  const stack = [start];
+  seen.add(start);
+  while (stack.length > 0) {
+    const node = stack.pop();
+    for (const next of $neighbours.get(node)) {
+      if (!seen.has(next)) { seen.add(next); stack.push(next); }
     }
   }
-  return count;
 }
-return countComponents(slots.nodes, slots.edges) + " groups.";
+return count;
+
+@answer jsEval
+return $groups + " groups.";
 

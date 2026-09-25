@@ -10,7 +10,7 @@
   ]
 }
 
-@answer jsEval
+@initials jsEval
 const slots = $slots;
 let states = [[]];
 for (let index = 0; index < slots.count; index += 1) {
@@ -20,6 +20,8 @@ for (let index = 0; index < slots.count; index += 1) {
   }
   states = next;
 }
-const initials = states.map((state) => state.map((value) => $facts[value]).join(""));
-return initials.join(", ") + " (on/off).";
+return states.map((state) => state.map((value) => $facts[value]).join(""));
+
+@answer jsEval
+return $initials.join(", ") + " (on/off).";
 

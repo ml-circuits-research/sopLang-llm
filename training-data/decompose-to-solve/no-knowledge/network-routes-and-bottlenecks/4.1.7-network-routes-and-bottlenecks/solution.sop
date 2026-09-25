@@ -46,16 +46,18 @@
   ]
 }
 
-@answer jsEval
+@summaries jsEval
 const slots = $slots;
-for (const route of slots.routes) {
-}
 const summaries = slots.routes.map((route) => ({
   name: route.name,
   timeMinutes: route.times.reduce((total, minutes) => total + minutes, 0),
   bottleneck: Math.min(...route.capacities)
 }));
-const feasible = summaries.filter((summary) => summary.bottleneck >= slots.requiredFlow && summary.timeMinutes <= slots.limitMinutes);
+return summaries;
+
+@chosen jsEval
+const slots = $slots;
+const feasible = $summaries.filter((summary) => summary.bottleneck >= slots.requiredFlow && summary.timeMinutes <= slots.limitMinutes);
 probe(feasible.length > 0, "at least one route must carry the required flow within the time limit");
 let chosen = feasible[0];
 for (const summary of feasible) {
@@ -66,5 +68,8 @@ for (const summary of feasible) {
 probe(chosen.bottleneck >= slots.requiredFlow, "the chosen route must carry the required flow");
 probe(chosen.timeMinutes <= slots.limitMinutes, "the chosen route must stay within the time limit");
 probe(feasible.every((summary) => summary.timeMinutes >= chosen.timeMinutes), "no feasible route may be faster than the chosen route");
-return "Choose Route " + chosen.name + ". The decomposition uses different aggregation operators for different meanings: sequential times add, serial capacities take a minimum, then shared constraints filter entire-route summaries.";
+return chosen;
+
+@answer jsEval
+return "Choose Route " + $chosen.name + ". The decomposition uses different aggregation operators for different meanings: sequential times add, serial capacities take a minimum, then shared constraints filter entire-route summaries.";
 

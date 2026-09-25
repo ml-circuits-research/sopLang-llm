@@ -16,7 +16,7 @@
   "reference": "school"
 }
 
-@answer jsEval
+@axes jsEval
 const slots = $slots;
 const names = new Set();
 for (const r of slots.relations) { names.add(r.subject); names.add(r.reference); }
@@ -30,6 +30,12 @@ for (const r of slots.relations) {
   const lesser = forward ? r.reference : r.subject;
   map[greater].add(lesser);
 }
+return { east: east, north: north, names: [...names] };
+
+@closure jsEval
+const names = $axes.names;
+const east = $axes.east;
+const north = $axes.north;
 for (const n of names) {
   for (const map of [east, north]) {
     const stack = [...map[n]];
@@ -41,10 +47,19 @@ for (const n of names) {
     }
   }
 }
+return { east: east, north: north };
+
+@position jsEval
+const slots = $slots;
+const east = $closure.east;
+const north = $closure.north;
 const s = slots.subject; const t = slots.reference;
-if (east[s].has(t)) return "East of the " + t + ".";
-if (east[t].has(s)) return "West of the " + t + ".";
-if (north[s].has(t)) return "North of the " + t + ".";
-if (north[t].has(s)) return "South of the " + t + ".";
+if (east[s].has(t)) return "east";
+if (east[t].has(s)) return "west";
+if (north[s].has(t)) return "north";
+if (north[t].has(s)) return "south";
 throw new Error("the relations do not determine the relative position");
+
+@answer jsEval
+return $position.charAt(0).toUpperCase() + $position.slice(1) + " of the " + $slots.reference + ".";
 

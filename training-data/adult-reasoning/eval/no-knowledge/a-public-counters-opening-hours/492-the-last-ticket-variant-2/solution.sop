@@ -13,9 +13,8 @@
   "mondayAttemptMinutes": 880
 }
 
-@answer jsEval
+@limits jsEval
 const slots = $slots;
-const formatTime = (totalMinutes) => String(Math.floor(totalMinutes / 60)).padStart(2, "0") + ":" + String(totalMinutes % 60).padStart(2, "0");
 const inBreak = (time) => time >= slots.breakStartMinutes && time < slots.breakEndMinutes;
 const lastTicket = (closingMinutes) => {
   const candidate = closingMinutes - slots.lastTicketLeadMinutes;
@@ -26,5 +25,9 @@ const mondayLast = lastTicket(slots.weekdayCloseMinutes);
 const fridaySucceeds = !inBreak(slots.fridayAttemptMinutes) && slots.fridayAttemptMinutes <= fridayLast;
 const mondaySucceeds = !inBreak(slots.mondayAttemptMinutes) && slots.mondayAttemptMinutes <= mondayLast;
 const verdict = fridaySucceeds && mondaySucceeds ? "Both" : fridaySucceeds ? "Friday" : mondaySucceeds ? "Monday" : "Neither";
-return verdict + ". Friday last ticket " + formatTime(fridayLast) + ". Monday last ticket " + formatTime(mondayLast) + ".";
+return { verdict, fridayLast, mondayLast };
+
+@answer jsEval
+const formatTime = (totalMinutes) => String(Math.floor(totalMinutes / 60)).padStart(2, "0") + ":" + String(totalMinutes % 60).padStart(2, "0");
+return $limits.verdict + ". Friday last ticket " + formatTime($limits.fridayLast) + ". Monday last ticket " + formatTime($limits.mondayLast) + ".";
 

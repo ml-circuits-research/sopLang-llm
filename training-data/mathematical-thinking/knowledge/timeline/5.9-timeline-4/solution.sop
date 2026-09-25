@@ -8,7 +8,7 @@
   "hours": 2
 }
 
-@answer jsEval
+@clock jsEval
 const slots = $slots;
 const facts = $facts;
 const minutesPerHour = facts.minutesPerHour;
@@ -16,7 +16,8 @@ const hoursPerDay = facts.hoursPerDay;
 const day = hoursPerDay * minutesPerHour;
 const start = slots.hour * minutesPerHour + slots.minute;
 const end = ((start + slots.hours * minutesPerHour) % day + day) % day;
-const endHour = Math.floor(end / minutesPerHour);
-const endMinute = end % minutesPerHour;
-return endHour + ":" + (endMinute < 10 ? "0" + endMinute : String(endMinute));
+return { endHour: Math.floor(end / minutesPerHour), endMinute: end % minutesPerHour };
+
+@answer jsEval
+return $clock.endHour + ":" + ($clock.endMinute < 10 ? "0" + $clock.endMinute : String($clock.endMinute));
 

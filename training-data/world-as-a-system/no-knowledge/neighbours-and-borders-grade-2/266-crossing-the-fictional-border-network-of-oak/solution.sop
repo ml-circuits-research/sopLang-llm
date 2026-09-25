@@ -39,56 +39,56 @@
   "candidate": "Riverbend"
 }
 
-@answer jsEval
+@adjacency jsEval
 const slots = $slots;
-const adjacency = new Map();
+const adjacency = {};
 for (const pair of slots.pairs) {
   const left = pair[0];
   const right = pair[1];
-  if (!adjacency.has(left)) {
-    adjacency.set(left, new Set());
+  if (!adjacency[left]) {
+    adjacency[left] = [];
   }
-  if (!adjacency.has(right)) {
-    adjacency.set(right, new Set());
+  if (!adjacency[right]) {
+    adjacency[right] = [];
   }
-  adjacency.get(left).add(right);
-  adjacency.get(right).add(left);
+  adjacency[left].push(right);
+  adjacency[right].push(left);
 }
-const seen = new Set([slots.from]);
-let frontier = [slots.from];
-let distance = 0;
-let found = false;
-while (frontier.length > 0 && !found) {
-  distance += 1;
-  const next = [];
-  for (const state of frontier) {
-    for (const neighbour of adjacency.get(state) ?? []) {
-      if (neighbour === slots.to) {
-        found = true;
-      } else if (!seen.has(neighbour)) {
-        seen.add(neighbour);
-        next.push(neighbour);
-      }
-    }
-  }
-  frontier = found ? [] : next;
-}
-probe(found, "the stated borders must connect the two endpoints of the crossing question");
-const visited = new Set([slots.from]);
-const queue = [slots.from];
-let reachable = false;
+return adjacency;
+
+@reach jsEval
+const distances = new Map([[ $slots.from, 0 ]]);
+const queue = [$slots.from];
 while (queue.length > 0) {
   const state = queue.shift();
-  if (state === slots.to) {
-    reachable = true;
-    break;
+  for (const neighbour of $adjacency[state] ?? []) {
+    if (!distances.has(neighbour)) {
+      distances.set(neighbour, distances.get(state) + 1);
+      queue.push(neighbour);
+    }
   }
-  for (const neighbour of adjacency.get(state) ?? []) {
-    if (neighbour !== slots.candidate && !visited.has(neighbour)) {
+}
+return distances;
+
+@distance jsEval
+const found = $reach.has($slots.to);
+probe(found, "the stated borders must connect the two endpoints of the crossing question");
+return $reach.get($slots.to);
+
+@unavoidable jsEval
+const visited = new Set([$slots.from]);
+const queue = [$slots.from];
+while (queue.length > 0) {
+  const state = queue.shift();
+  for (const neighbour of $adjacency[state] ?? []) {
+    if (neighbour !== $slots.candidate && !visited.has(neighbour)) {
       visited.add(neighbour);
       queue.push(neighbour);
     }
   }
 }
-return distance + " border crossing(s); " + slots.candidate + (reachable ? " is not unavoidable." : " is unavoidable.");
+return visited.has($slots.to);
+
+@answer jsEval
+return $distance + " border crossing(s); " + $slots.candidate + ($unavoidable ? " is not unavoidable." : " is unavoidable.");
 

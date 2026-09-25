@@ -27,7 +27,7 @@
   ]
 }
 
-@answer jsEval
+@answers jsEval
 const slots = $slots;
 function reachableIn(arcs, from, to) {
   const nexts = new Map();
@@ -39,6 +39,8 @@ function reachableIn(arcs, from, to) {
   }
   return seen.has(to);
 }
-const answers = slots.queries.map(([from, to]) => from + "→" + to + ": " + (reachableIn(slots.arcs, from, to) ? "yes" : "no"));
-return answers.join("; ") + ".";
+return slots.queries.map(([from, to]) => from + "→" + to + ": " + (reachableIn(slots.arcs, from, to) ? "yes" : "no"));
+
+@answer jsEval
+return $answers.join("; ") + ".";
 

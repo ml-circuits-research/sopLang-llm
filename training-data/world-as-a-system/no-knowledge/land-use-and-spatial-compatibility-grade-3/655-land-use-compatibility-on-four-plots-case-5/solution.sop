@@ -37,7 +37,7 @@
   ]
 }
 
-@answer jsEval
+@cross jsEval
 const describeCrossDomain = function describeCrossDomain(check) {
   if (check.kind === 'distance') {
     return `${check.centimetres * check.kilometresPerCentimetre} km.`;
@@ -70,54 +70,41 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
+return { suffix: renderCrossDomain(slots.crossDomain) };
+
+@permutations jsEval
+const slots = $slots;
+const perms = [];
+const place = (order, used) => {
+  if (order.length === slots.uses.length) { perms.push(order.slice()); return; }
+  for (const use of slots.uses) {
+    if (!used.has(use)) {
+      place([...order, use], new Set([...used, use]));
+    }
+  }
+};
+place([], new Set());
+return perms;
+
+@assignments jsEval
+const slots = $slots;
 const holds = (order) => {
   const position = new Map(slots.plots.map((plot, index) => [order[index], index]));
   const last = slots.plots.length - 1;
-  for (const [left, right] of slots.forbidden) {
-    if (Math.abs(position.get(left) - position.get(right)) === 1) {
-      return false;
-    }
-  }
-  for (const [left, right] of slots.adjacent) {
-    if (Math.abs(position.get(left) - position.get(right)) !== 1) {
-      return false;
-    }
-  }
-  for (const use of slots.ends) {
-    const index = position.get(use);
-    if (index !== 0 && index !== last) {
-      return false;
-    }
-  }
+  if (slots.forbidden.some(([left, right]) => Math.abs(position.get(left) - position.get(right)) === 1)) { return false; }
+  if (slots.adjacent.some(([left, right]) => Math.abs(position.get(left) - position.get(right)) !== 1)) { return false; }
+  if (slots.ends.some((use) => position.get(use) !== 0 && position.get(use) !== last)) { return false; }
   return true;
 };
-const valid = [];
-const order = [];
-const used = new Set();
-const place = (index) => {
-  if (index === slots.plots.length) {
-    if (holds(order)) {
-      valid.push(order.slice());
-    }
-    return;
-  }
-  for (const use of slots.uses) {
-    if (used.has(use)) {
-      continue;
-    }
-    used.add(use);
-    order.push(use);
-    place(index + 1);
-    order.pop();
-    used.delete(use);
-  }
-};
-place(0);
+const valid = $permutations.filter(holds);
 probe(valid.length > 0, "the stated constraints must leave at least one valid assignment");
 const chosen = valid[(slots.caseNumber - 1) % valid.length];
 probe(chosen.length === slots.plots.length && new Set(chosen).size === slots.uses.length, "the assignment must place every use exactly once");
 probe(holds(chosen), "the assignment must satisfy every stated constraint");
-const main = slots.plots.map((plot, index) => plot + "=" + chosen[index]).join(", ") + " is a valid assignment.";
-const suffix = renderCrossDomain(slots.crossDomain);
-return suffix === "" ? main : main + " " + suffix;
+return { chosen };
+
+@answer jsEval
+const slots = $slots;
+const main = slots.plots.map((plot, index) => plot + "=" + $assignments.chosen[index]).join(", ") + " is a valid assignment.";
+return $cross.suffix === "" ? main : main + " " + $cross.suffix;
 

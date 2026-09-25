@@ -5,3 +5,4 @@
 5: probe cleanup - parameter checks, boilerplate, and false guards removed from the emitted circuits (2026-09-25)
 6: book shapes - dependency chain-and-join, minimal winning coalition, route bottleneck, evidence-tree elimination (2026-09-25)
 7: container plans - store built in stages, store patched by upsert, kept-shipments query (2026-09-25)
+8: dv8 structure - the bloated book-family compute bodies become small multi-wire plans; statements/oracles/answers unchanged (2026-09-25)

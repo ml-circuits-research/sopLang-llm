@@ -7,14 +7,17 @@
   "target": "triangle"
 }
 
-@answer jsEval
+@counts jsEval
 const slots = $slots;
 const facts = $facts;
 const remaining = facts.cards.filter((card) => card.color === slots.condition);
 const favorable = remaining.filter((card) => card.shape === slots.target).length;
+return { favorable: favorable, total: remaining.length };
+
+@answer jsEval
 function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
-const factor = gcd(favorable, remaining.length);
-const n = favorable / factor;
-const d = remaining.length / factor;
+const factor = gcd($counts.favorable, $counts.total);
+const n = $counts.favorable / factor;
+const d = $counts.total / factor;
 return d === 1 ? String(n) : n + "/" + d;
 
