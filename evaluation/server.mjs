@@ -206,6 +206,25 @@ export function winner15() {
  * today is the Qwen3-1.7B arm and would fall back to the 1.5B coder when no
  * other base exists. The block label shows its true size.
  */
+/**
+ * The recorded winner of one named experiment, or null when it has none or its
+ * gguf is gone. Used by the chat's --second flag to pin a lane explicitly.
+ */
+export function winnerByExperiment(experiment) {
+  const selection = join(`${REPOSITORY_ROOT}/evaluation/registry`, experiment, 'selection.json');
+  if (!existsSync(selection)) return null;
+  try {
+    const selected = JSON.parse(readFileSync(selection, 'utf8'));
+    const row = selected.rows.find((entry) => entry.checkpoint === selected.winner);
+    if (row === undefined) return null;
+    const gguf = resolveArtifactPath(row.gguf);
+    if (!existsSync(gguf)) return null;
+    return { experiment: selected.experiment, winner: selected.winner, gguf };
+  } catch {
+    return null;
+  }
+}
+
 export function winnerSecondary() {
   const fifteen = winnerByBase({ pins15: true });
   const byNewest = (a, b) => b.experiment.localeCompare(a.experiment);

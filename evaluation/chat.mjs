@@ -35,7 +35,7 @@ import { createInterface } from 'node:readline';
 import { pathToFileURL } from 'node:url';
 
 import { buildMessages, extractProgram, generate } from './client.mjs';
-import { LLAMA_SERVER, REPOSITORY_ROOT, aliasFor, serverArguments, waitForServer, winner05, winner15, winnerSecondary } from './server.mjs';
+import { LLAMA_SERVER, REPOSITORY_ROOT, aliasFor, serverArguments, waitForServer, winner05, winner15, winnerSecondary, winnerByExperiment } from './server.mjs';
 import { artifactFor } from './artifacts.mjs';
 import { CHAT_PROFILE_ID } from '../training/export.mjs';
 import { parseCircuit } from '../runtime/parser.mjs';
@@ -77,7 +77,7 @@ async function startServer({ gguf, port, threads }) {
 }
 
 function parseArguments(argv) {
-  const options = { gguf: null, experiment: null, base: null, port: 8087, maxTokens: 1024, threads: null, showPlan: false, once: null, useBoth: false, single: false, no15: false, retries: 2, help: false };
+  const options = { gguf: null, experiment: null, second: null, base: null, port: 8087, maxTokens: 1024, threads: null, showPlan: false, once: null, useBoth: false, single: false, no15: false, retries: 2, help: false };
   for (let index = 0; index < argv.length; index += 1) {
     const flag = argv[index];
     const value = () => {
@@ -88,6 +88,7 @@ function parseArguments(argv) {
     };
     if (flag === '--gguf') options.gguf = value();
     else if (flag === '--experiment') options.experiment = value();
+    else if (flag === '--second') options.second = value();
     else if (flag === '--base') options.base = value();
     else if (flag === '--use-both') options.useBoth = true;
     else if (flag === '--single') options.single = true;
@@ -1133,7 +1134,10 @@ async function main() {
   // The second student is the newest trained winner outside the 0.5B class -
   // the Qwen3-1.7B arm today, the 1.5B coder when no other base exists. The
   // block header labels it with its real size.
-  const { student15, base15 } = select15Lanes(winnerSecondary(), options);
+  // The second student is the newest trained winner outside the 0.5B class by
+  // default; --second <experiment> pins it, so two variants of the same family
+  // (the monolithic and the modular arms) can be compared side by side.
+  const { student15, base15 } = select15Lanes(options.second !== null ? winnerByExperiment(options.second) : winnerSecondary(), options);
   const session = {
     artifact,
     base,
