@@ -166,3 +166,9 @@ export async function loadProceduralFamilies({ source, only = null, smoke = true
 // array at the rebuild (see the migration checklist), not here: the generator
 // entry is `arithmetic.mjs`, and it is wired only once the training arm closes.
 export { schedulingFamilies } from './scheduling.mjs';
+
+// The book-shape families of the sixth tranche are re-exported the same way:
+// they mirror the actual single-body plan shapes of the decompose-to-solve and
+// world-as-a-system families that still score zero in the holdout, and they join
+// the generator's `families` array at the rebuild (see the migration checklist).
+export { bookShapeFamilies } from './bookshapes.mjs';
