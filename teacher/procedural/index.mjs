@@ -186,3 +186,9 @@ export { schedulingFamilies } from './scheduling.mjs';
 // world-as-a-system families that still score zero in the holdout, and they join
 // the generator's `families` array at the rebuild (see the migration checklist).
 export { bookShapeFamilies } from './bookshapes.mjs';
+
+// The container families of the seventh tranche are re-exported the same way:
+// they are the container plan shapes of containers-plan.md step 5 (a declared
+// store, a staged patch, and a derived-view query), and they join the
+// generator's `families` array at the rebuild (see the migration checklist).
+export { containerFamilies } from './containers.mjs';

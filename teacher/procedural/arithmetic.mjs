@@ -32,6 +32,7 @@ import { textShapeFamilies } from './textshapes.mjs';
 import { families as contrastiveFamilies } from './contrastive.mjs';
 import { compositionFamilies } from './composition-families.mjs';
 import { bookShapeFamilies } from './bookshapes.mjs';
+import { containerFamilies } from './containers.mjs';
 import { assertInventoryIsWellFormed } from './compositions.mjs';
 
 export const sourceId = 'procedural-arithmetic';
@@ -281,5 +282,6 @@ export const families = [
   ...contrastiveFamilies,
   ...compositionFamilies,
   ...schedulingFamilies,
-  ...bookShapeFamilies
+  ...bookShapeFamilies,
+  ...containerFamilies
 ];
