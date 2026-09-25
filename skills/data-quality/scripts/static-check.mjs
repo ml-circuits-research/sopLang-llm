@@ -52,6 +52,33 @@ import { readFileSync, readdirSync, writeFileSync, existsSync } from 'node:fs';
 import { join, basename, dirname, resolve } from 'node:path';
 
 // ---------------------------------------------------------------------------
+// Colors for the stdout listing: active only on a TTY and never under NO_COLOR,
+// so piped output and the markdown report stay plain text.
+// ---------------------------------------------------------------------------
+
+const USE_COLOR = process.stdout.isTTY === true && process.env.NO_COLOR === undefined;
+const C = {
+  reset: '\x1b[0m',
+  bold: '\x1b[1m',
+  dim: '\x1b[2m',
+  white: '\x1b[37m',
+  red: '\x1b[31m',
+  green: '\x1b[32m',
+  yellow: '\x1b[33m',
+  blue: '\x1b[34m',
+  magenta: '\x1b[35m',
+  cyan: '\x1b[36m'
+};
+const paint = (code, text) => (USE_COLOR ? `${code}${text}${C.reset}` : text);
+const SUGGESTION_COLORS = {
+  container: C.magenta,
+  aggregate: C.green,
+  fraction: C.cyan,
+  graphPath: C.blue,
+  candidate: C.yellow
+};
+
+// ---------------------------------------------------------------------------
 // CLI
 // ---------------------------------------------------------------------------
 
@@ -722,8 +749,11 @@ function buildReport({ args, thr, files, jsEvalBodies, totalWires, totalJsLines,
   lines.push('');
   lines.push(`flagged bodies (${flagged.length}):`);
   for (const f of flagged) {
-    lines.push(`  ${f.file}`);
-    lines.push(`    ${f.family}: lines=${f.metrics.lines} loops=${f.metrics.loops} chains=${f.metrics.chains} variables=${f.metrics.variables} depth=${f.metrics.depth} | tripped=${f.trips.join('+')} | suggestion=${f.suggestion}`);
+    lines.push(`  ${paint(C.bold + C.white, f.file)}`);
+    const observation = paint(C.dim, `    ${f.family}: lines=${f.metrics.lines} loops=${f.metrics.loops} chains=${f.metrics.chains} variables=${f.metrics.variables} depth=${f.metrics.depth}`)
+      + ` | ${paint(C.red, `tripped=${f.trips.join('+')}`)}`
+      + ` | ${paint(SUGGESTION_COLORS[f.suggestion] ?? C.white, `suggestion=${f.suggestion}`)}`;
+    lines.push(observation);
   }
 
   // ---- markdown ----
