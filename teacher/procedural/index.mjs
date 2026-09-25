@@ -19,6 +19,10 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { join } from 'node:path';
 import { slugify } from '../naming.mjs';
 import { sampleInstances } from './random.mjs';
+import { containerCommands } from '../../wires/standard/containers.mjs';
+
+const CONTAINER_COMMANDS = new Map(containerCommands.map((command) => [command.name, command]));
+const INTERMEDIATE_COMMANDS = new Set(['jsEval', 'literal', 'graphPath', 'aggregate', 'fraction', ...containerCommands.map((command) => command.name)]);
 
 export const PROCEDURAL_DIRECTORY = fileURLToPath(new URL('.', import.meta.url));
 
@@ -68,11 +72,21 @@ export function validateProceduralFamily(family, where) {
         throw new Error(`${where}: the intermediate wire ${wire.name} is declared twice`);
       }
       names.add(wire.name);
-      if (!["jsEval", "literal", "graphPath", "aggregate", "fraction"].includes(wire.command)) {
-        throw new Error(`${where}: the intermediate wire ${wire.name} must be jsEval, literal, graphPath, aggregate, or fraction`);
+      if (!INTERMEDIATE_COMMANDS.has(wire.command)) {
+        throw new Error(`${where}: the intermediate wire ${wire.name} uses the unknown command ${wire.command}`);
       }
       if (typeof wire.body !== "string" || wire.body.trim() === "") {
         throw new Error(`${where}: the intermediate wire ${wire.name} needs a body`);
+      }
+      // A container wire's own command owns its contract (target, source,
+      // predicate, kind): delegating here instead of restating it keeps the
+      // validator from drifting when the command changes.
+      const containerCommand = CONTAINER_COMMANDS.get(wire.command);
+      if (containerCommand !== undefined && typeof containerCommand.validate === 'function') {
+        const verdict = containerCommand.validate({ body: wire.body, wire: wire.name });
+        if (verdict.ok !== true) {
+          throw new Error(`${where}: the intermediate wire ${wire.name} (${wire.command}) is invalid: ${verdict.message}`);
+        }
       }
     }
   }
