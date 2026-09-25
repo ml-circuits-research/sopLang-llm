@@ -58,3 +58,11 @@ Ipoteza containerelor e validata masurabil: prima familie de carti (world-as-a-s
 0 la 100%, iar runtime completion a sarit la 91.9%. Celelalte carti raman la 0 - formele lor (scheduling,
 ratiune de bun-simt) nu sunt inca in vocabular. Urmeaza dv8 (refactorizarea modulara a corpurilor
 monstruoase) si exp-022 - experimentul de structura pentru articol.
+
+## Status — 2026-09-25, 21:55Z: verdictul experimentului de structura
+
+dv7 monolitic: 460/705 (65.2%) | dv8 modular: 448/705 (63.5%) — acelasi model de baza, aceeasi reteta.
+Structura modulara a mutat indicatorul de bloat (2.81 fire/plan vs 2.19) dar a costat 12 raspunsuri
+si a dublat erorile de executie (135 vs 57). Punctul bun masurat: planul compact (2-3 fire, putine
+linii) — exact stilul familiilor de containere care au dus world-as-a-system la 20/20. Urmatoarele
+familii se scriu compact, niciodata supra-sparte. Verdictul e in articol (04/05) si in registry.
