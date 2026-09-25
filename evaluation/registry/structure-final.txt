@@ -1,0 +1,8 @@
+=== the structure experiment: dv7 vs dv8, same base, same recipe ===
+exp-021-1.7b-qwen3-dv7: 460 of 705 (65.2%) | books 22 /225 | exec_errors 57
+exp-022-1.7b-qwen3-dv8: 448 of 705 (63.5%) | books 20 /225 | exec_errors 135
+=== bloat indicator (shipped dv8) ===
+the bloat indicator (wires vs hand-written JavaScript):
+  average wires per plan:       2.81
+  average jsEval lines per plan: 15.5
+  jsEval lines per wire:        5.5 — low wire counts with high line counts mean bloat
