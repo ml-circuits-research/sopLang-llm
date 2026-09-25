@@ -717,11 +717,13 @@ function buildReport({ args, thr, files, jsEvalBodies, totalWires, totalJsLines,
     lines.push(`  ... ${sortedFamilies.length - 20} more families`);
   }
 
-  // Flagged list (full, one line per body).
+  // Flagged list (full). Each body is two lines: the file on top, the
+  // observation beneath it — one wide line per file was unreadable.
   lines.push('');
   lines.push(`flagged bodies (${flagged.length}):`);
   for (const f of flagged) {
-    lines.push(`  ${f.file} | ${f.family} | lines=${f.metrics.lines} loops=${f.metrics.loops} chains=${f.metrics.chains} variables=${f.metrics.variables} depth=${f.metrics.depth} trips=${f.trips.join('+')} suggestion=${f.suggestion}`);
+    lines.push(`  ${f.file}`);
+    lines.push(`    ${f.family}: lines=${f.metrics.lines} loops=${f.metrics.loops} chains=${f.metrics.chains} variables=${f.metrics.variables} depth=${f.metrics.depth} | tripped=${f.trips.join('+')} | suggestion=${f.suggestion}`);
   }
 
   // ---- markdown ----
