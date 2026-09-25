@@ -1,0 +1,58 @@
+{
+  "experiment": "exp-021-1.7b-qwen3-dv7",
+  "slice": {
+    "name": "holdout",
+    "spec": "holdout",
+    "source": "/home/salboaie/work/sopLang-llm/training-data/<book>/eval/**/solution.sop",
+    "count": 705,
+    "books": null,
+    "limit": null,
+    "itemsSha256": "c5f946fcf65baa8b7ece6423f0e8f3b6eb902791a5f734a83bd745a65d32c572"
+  },
+  "checkpoint": {
+    "gguf": "evaluation/registry/exp-021-1.7b-qwen3-dv7/gguf/checkpoint-450.gguf"
+  },
+  "model": null,
+  "base": "http://127.0.0.1:8080",
+  "decoding": {
+    "temperature": 0,
+    "maxTokens": 2048,
+    "stream": false,
+    "timeoutMs": 600000,
+    "concurrency": 4,
+    "attemptsPerItem": 1,
+    "transportRetries": 1
+  },
+  "chatProfile": {
+    "id": "compiled-plan-chat-4",
+    "systemPromptSha256": "c2967d80d31eeb8a8f1605e75ece90edd16a0f0338a7b24bf15442bbf9287a74"
+  },
+  "base_model_manifest": {
+    "path": "/home/salboaie/work/sopLang-llm/training/environment/base-model-qwen3-17b.json"
+  },
+  "training": {
+    "createdUtc": "2026-09-25T15:31:53Z",
+    "finishedUtc": "2026-09-25T15:44:50Z",
+    "epochs": 2
+  },
+  "capabilityProbes": {
+    "profile": "capability-probes-1.0.0",
+    "systemPromptSha256": "3f0ff0bee57e51871d4c09dcf8e3e6ffb0ab414c41100199873dfd0fc5c69fe9",
+    "items": 10,
+    "passed": 1
+  },
+  "dataset": {
+    "exportManifest": "training/data/export-manifest.json",
+    "snapshot": "d4c741c3ccb4b0886a5053abddfd829a06f25951462e6185d9e8dcf152752609",
+    "dataVersion": {
+      "number": "7",
+      "label": "container plans: store built in stages, store patched by upsert, kept-shipments query"
+    },
+    "validationSlice": "training/data/validation-slice.json"
+  },
+  "environment": {
+    "manifest": "training/environment/environment-manifest.json",
+    "sha256": "cacd40e3d24b0c41f44061afd77af9f7b8fdece0bf959dcaa2f577c4873fe180"
+  },
+  "startedAt": "2026-09-25T16:05:38.547Z"
+}
