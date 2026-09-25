@@ -1,0 +1,3 @@
+# evidence-tree-elimination-16 — Evidence Tree Elimination
+
+Scenario. In a warehouse, a failure occurred while handling 18 consignments. H1 - a measurement error slipped into the consignments count; H2 - the consignments steps ran in the wrong order; H3 - the consignments handling had insufficient capacity. The capacity log shows at least 23 units were available throughout. A time-stamped record shows a dependent action occurred before its prerequisite had been completed. An independent record reproduces the measured quantity within the stated tolerance. A separate comment says the team was busy; this may be true but does not discriminate among the three hypotheses. Which hypothesis is the best-supported explanation?

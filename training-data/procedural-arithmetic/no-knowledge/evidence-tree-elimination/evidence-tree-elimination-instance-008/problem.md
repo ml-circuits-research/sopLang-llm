@@ -1,0 +1,3 @@
+# evidence-tree-elimination-8 — Evidence Tree Elimination
+
+Scenario. In a freight yard, a failure occurred while handling 16 batches. H1 - the batches handling had insufficient capacity; H2 - the batches steps ran in the wrong order; H3 - a measurement error slipped into the batches count. The capacity log shows at least 26 units were available throughout. A time-stamped record shows a dependent action occurred before its prerequisite had been completed. An independent record reproduces the measured quantity within the stated tolerance. A separate comment says the supervisor was away; this may be true but does not discriminate among the three hypotheses. Which hypothesis is the best-supported explanation?

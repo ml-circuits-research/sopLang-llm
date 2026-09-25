@@ -1,0 +1,3 @@
+# evidence-tree-elimination-13 — Evidence Tree Elimination
+
+Scenario. In a loading dock, a failure occurred while handling 14 invoices. H1 - the invoices handling had insufficient capacity; H2 - a measurement error slipped into the invoices count; H3 - the invoices steps ran in the wrong order. The capacity log shows at least 18 units were available throughout. A time-stamped record shows a dependent action occurred before its prerequisite had been completed. An independent record reproduces the measured quantity within the stated tolerance. A separate comment says the team was busy; this may be true but does not discriminate among the three hypotheses. Which hypothesis is the best-supported explanation?

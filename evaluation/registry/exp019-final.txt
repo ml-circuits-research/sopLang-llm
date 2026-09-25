@@ -1,0 +1,8 @@
+=== exp-019 (Qwen3-1.7B, dv5 probe-clean) ===
+parse validity 100.0%, graph validity 100.0%, runtime completion 84.4%, oracle match 62.7%
+capability probes 3/10 (capability-probes-1.0.0)
+=== vs exp-017 (dv3, same base) ===
+exp-017: 442 of 705
+exp-019: 442 of 705
+=== books ===
+books 3/225

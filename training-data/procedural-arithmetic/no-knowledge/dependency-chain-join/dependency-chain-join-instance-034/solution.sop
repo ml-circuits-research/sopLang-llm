@@ -1,0 +1,18 @@
+@slots literal
+{
+  "aMinutes": 7,
+  "bMinutes": 4,
+  "cMinutes": 4,
+  "dMinutes": 5,
+  "eMinutes": 12,
+  "bufferMinutes": 5,
+  "limitMinutes": 37
+}
+
+@answer jsEval
+const slots = $slots;
+const joinMinutes = Math.max(slots.bMinutes, slots.cMinutes);
+const minutes = slots.aMinutes + joinMinutes + slots.dMinutes + slots.eMinutes + slots.bufferMinutes;
+probe(Number.isInteger(minutes) && minutes > 0, "the earliest safe completion time must be a positive whole number of minutes");
+return "The earliest safe completion time is " + minutes + " minutes, so the plan is " + (minutes <= slots.limitMinutes ? "feasible" : "not feasible") + ". The critical insight is that B and C are parallel branches whose maximum duration controls the join.";
+

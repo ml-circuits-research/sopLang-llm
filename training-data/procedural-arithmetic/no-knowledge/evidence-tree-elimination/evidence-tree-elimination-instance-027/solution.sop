@@ -1,0 +1,61 @@
+@slots literal
+{
+  "domain": "a freight yard",
+  "workNoun": "shipments",
+  "failureCount": 4,
+  "hypotheses": [
+    {
+      "id": "H1",
+      "claim": "a measurement error slipped into the shipments count",
+      "kind": "measurement"
+    },
+    {
+      "id": "H2",
+      "claim": "the shipments handling had insufficient capacity",
+      "kind": "capacity"
+    },
+    {
+      "id": "H3",
+      "claim": "the shipments steps ran in the wrong order",
+      "kind": "ordering"
+    }
+  ],
+  "observations": [
+    {
+      "kind": "capacity-availability",
+      "availableUnits": 7
+    },
+    {
+      "kind": "ordering-violation"
+    },
+    {
+      "kind": "measurement-reproduction"
+    },
+    {
+      "kind": "testimony",
+      "comment": "the weather was poor"
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const supported = [];
+const eliminated = [];
+for (const observation of slots.observations) {
+  if (observation.kind === "capacity-availability") {
+    if (observation.availableUnits >= slots.failureCount) { eliminated.push("capacity"); } else { supported.push("capacity"); }
+  } else if (observation.kind === "ordering-violation") {
+    supported.push("ordering");
+  } else if (observation.kind === "measurement-reproduction") {
+    eliminated.push("measurement");
+  } else {
+  }
+}
+const survivors = slots.hypotheses.filter((hypothesis) => supported.includes(hypothesis.kind) && !eliminated.includes(hypothesis.kind));
+probe(survivors.length === 1, "exactly one hypothesis must survive the discriminating observations");
+const labels = { capacity: "capacity shortfall", ordering: "dependency/order mistake", measurement: "measurement error" };
+const winner = survivors[0];
+probe(typeof labels[winner.kind] === "string", "the surviving hypothesis must be a known claim");
+return winner.id + ", the " + labels[winner.kind] + ", is the best-supported explanation. The decomposition is evidential: each observation is sent only to the hypothesis it can actually discriminate, then the hypothesis-level results are recombined.";
+

@@ -3,3 +3,4 @@
 3: declarative wires (2026-09-24) — graphPath, aggregate, fraction replace the multi-line transcriptions
 4: scheduling tranche (dv4) - critical path, deadline, prerequisite count, route bottleneck (2026-09-24)
 5: probe cleanup - parameter checks, boilerplate, and false guards removed from the emitted circuits (2026-09-25)
+6: book shapes - dependency chain-and-join, minimal winning coalition, route bottleneck, evidence-tree elimination (2026-09-25)

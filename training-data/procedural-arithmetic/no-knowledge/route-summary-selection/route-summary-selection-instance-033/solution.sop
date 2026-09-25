@@ -1,0 +1,68 @@
+@slots literal
+{
+  "subject": "mail",
+  "requiredFlow": 3,
+  "limitMinutes": 13,
+  "routes": [
+    {
+      "name": "A",
+      "times": [
+        2,
+        6,
+        4
+      ],
+      "capacities": [
+        5,
+        4,
+        9
+      ]
+    },
+    {
+      "name": "B",
+      "times": [
+        9,
+        2,
+        9
+      ],
+      "capacities": [
+        4,
+        7,
+        5
+      ]
+    },
+    {
+      "name": "C",
+      "times": [
+        3,
+        3,
+        8
+      ],
+      "capacities": [
+        3,
+        8,
+        8
+      ]
+    }
+  ]
+}
+
+@answer jsEval
+const slots = $slots;
+const summaries = slots.routes.map((route) => ({
+  name: route.name,
+  timeMinutes: route.times.reduce((total, minutes) => total + minutes, 0),
+  bottleneck: Math.min(...route.capacities)
+}));
+const feasible = summaries.filter((summary) => summary.bottleneck >= slots.requiredFlow && summary.timeMinutes <= slots.limitMinutes);
+probe(feasible.length > 0, "at least one route must carry the required flow within the time limit");
+let chosen = feasible[0];
+for (const summary of feasible) {
+  if (summary.timeMinutes < chosen.timeMinutes) {
+    chosen = summary;
+  }
+}
+probe(chosen.bottleneck >= slots.requiredFlow, "the chosen route must carry the required flow");
+probe(chosen.timeMinutes <= slots.limitMinutes, "the chosen route must stay within the time limit");
+probe(feasible.every((summary) => summary.timeMinutes >= chosen.timeMinutes), "no feasible route may be faster than the chosen route");
+return "Choose Route " + chosen.name + ". The decomposition uses different aggregation operators for different meanings: sequential times add, serial capacities take a minimum, then shared constraints filter entire-route summaries.";
+

@@ -54,9 +54,11 @@ The manifest is split by family so a long table stays reviewable. Each family ma
 | count-letter-in-word | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-count-letter-in-word.md | 05946e35bfc3 |
 | count-self-referential-letter | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-count-self-referential-letter.md | c1e5504f63f8 |
 | crate-count-with-partial-last | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-crate-count-with-partial-last.md | dca27ac74ab0 |
+| dependency-chain-join | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-dependency-chain-join.md | e4ac5ab74719 |
 | depletion-days-and-lead-time | 40 | 0 | 40 | 0 | 40 | 1 | manifest/family-depletion-days-and-lead-time.md | 6a998c9b15a2 |
 | distinct-letters-in-word | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-distinct-letters-in-word.md | e026ef3c9ad2 |
 | elapsed-minutes | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-elapsed-minutes.md | 818f29f337da |
+| evidence-tree-elimination | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-evidence-tree-elimination.md | c40f062f63c6 |
 | filtered-records-above-a-threshold | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-filtered-records-above-a-threshold.md | 9882ebbf6333 |
 | filtered-records-at-least-a-threshold | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-filtered-records-at-least-a-threshold.md | ffa87a6b833f |
 | filtered-total | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-filtered-total.md | 2bf66225b8e3 |
@@ -70,6 +72,7 @@ The manifest is split by family so a long table stays reviewable. Each family ma
 | length-of-word | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-length-of-word.md | 5334d02963d3 |
 | length-ranked-words | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-length-ranked-words.md | afca999da8a3 |
 | longer-of-two-words | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-longer-of-two-words.md | a3783e72400e |
+| minimal-winning-coalition | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-minimal-winning-coalition.md | c1e8ebaade51 |
 | net-balance-with-withdrawals | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-net-balance-with-withdrawals.md | 69d02cc38da6 |
 | parallel-join-deadline | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-parallel-join-deadline.md | 7c0f2853833b |
 | percent-of-total | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-percent-of-total.md | df77913ed5c8 |
@@ -77,6 +80,7 @@ The manifest is split by family so a long table stays reviewable. Each family ma
 | raised-smallest-record | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-raised-smallest-record.md | 57c03542ec34 |
 | reverse-word | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-reverse-word.md | d6145c15c527 |
 | route-bottleneck-capacity | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-route-bottleneck-capacity.md | 729955b2d23e |
+| route-summary-selection | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-route-summary-selection.md | 829c398223bb |
 | scaled-recipe | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-scaled-recipe.md | be8e4387f0b9 |
 | schedule-deadline-feasibility | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-schedule-deadline-feasibility.md | 4da5f9cbfc35 |
 | schedule-finish-time | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-schedule-finish-time.md | 6a76efd88cfa |
@@ -89,4 +93,4 @@ The manifest is split by family so a long table stays reviewable. Each family ma
 | whole-units-under-a-budget | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-whole-units-under-a-budget.md | 4f8dbf36839a |
 | words-containing-letter | 40 | 40 | 0 | 0 | 40 | 1 | manifest/family-words-containing-letter.md | 848f3315832b |
 
-Total accepted examples: 3360.
+Total accepted examples: 3520.

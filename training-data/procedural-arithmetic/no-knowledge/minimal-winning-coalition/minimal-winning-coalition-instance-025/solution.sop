@@ -1,0 +1,40 @@
+@slots literal
+{
+  "groups": [
+    {
+      "label": "A",
+      "seats": 5
+    },
+    {
+      "label": "B",
+      "seats": 3
+    },
+    {
+      "label": "C",
+      "seats": 2
+    }
+  ],
+  "threshold": 8
+}
+
+@answer jsEval
+const slots = $slots;
+const count = slots.groups.length;
+const winning = [];
+for (let mask = 1; mask < (1 << count); mask += 1) {
+  const members = [];
+  let seats = 0;
+  for (let index = 0; index < count; index += 1) {
+    if (mask & (1 << index)) {
+      members.push(slots.groups[index].label);
+      seats += slots.groups[index].seats;
+    }
+  }
+  if (seats < slots.threshold) { continue; }
+  const minimal = members.every((label) => seats - slots.groups.find((group) => group.label === label).seats < slots.threshold);
+  if (minimal) { winning.push({ label: members.join(""), seats: seats }); }
+}
+probe(winning.length > 0, "the stated seats must leave at least one minimal winning coalition");
+winning.sort((left, right) => left.label.length === right.label.length ? left.label.localeCompare(right.label) : left.label.length - right.label.length);
+return winning.map((coalition) => coalition.label + " with " + coalition.seats + " seats").join("; ") + ".";
+
