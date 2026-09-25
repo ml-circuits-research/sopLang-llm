@@ -132,7 +132,7 @@ const WIRES = [
     ].join('\n')
   },
   {
-    name: 'appraisal',
+    name: 'value',
     command: 'jsEval',
     body: [
       'const valueOf = (claim) => {',
@@ -145,15 +145,22 @@ const WIRES = [
       '};',
       'const values = $split.sound.map((source) => valueOf(source.claim));',
       'const outlier = valueOf($split.derivative[0].claim);',
-      'const texts = values.map((value) => value.text);',
+      'return { values: values, outlier: outlier, texts: values.map((value) => value.text) };'
+    ].join('\n')
+  },
+  {
+    name: 'appraisal',
+    command: 'jsEval',
+    body: [
+      'const texts = $value.texts;',
       'let main;',
       'if (texts.every((text) => text === texts[0])) {',
       '  main = texts[0] + " is better supported, while remaining a historical conclusion rather than absolute proof.";',
       '} else {',
-      '  const numbers = values.map((value) => value.number);',
+      '  const numbers = $value.values.map((value) => value.number);',
       '  const low = Math.min.apply(null, numbers);',
       '  const high = Math.max.apply(null, numbers);',
-      '  main = "An arrival count near " + low + "\\u2013" + high + " " + values[0].unit + " is better supported than " + outlier.number + ".";',
+      '  main = "An arrival count near " + low + "\\u2013" + high + " " + $value.values[0].unit + " is better supported than " + $value.outlier.number + ".";',
       '}',
       'return { main: main };'
     ].join('\n')

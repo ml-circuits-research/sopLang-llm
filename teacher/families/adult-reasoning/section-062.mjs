@@ -92,25 +92,36 @@ function render(solution) {
   return `${solution.referenceClause} ${solution.alarmClause}`;
 }
 
+const WIRES = [
+  {
+    name: 'miss',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const offset = slots.zoneOffsets[slots.zoneLabel];',
+      'const formatTime = (totalMinutes) => {',
+      '  const wrapped = ((totalMinutes % 1440) + 1440) % 1440;',
+      '  return String(Math.floor(wrapped / 60)).padStart(2, "0") + ":" + String(wrapped % 60).padStart(2, "0");',
+      '};',
+      'const localMinutes = slots.referenceMinutes + offset;',
+      'const missMinutes = slots.alarmMinutes - localMinutes;',
+      'probe(missMinutes !== 0, "the alarm must miss the local time for the printed clause to exist");',
+      'const localTime = formatTime(localMinutes);',
+      'const direction = missMinutes > 0 ? "late" : "early";',
+      'return { localTime, missMinutes, direction };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
   'const slots = $slots;',
-  'const offset = slots.zoneOffsets[slots.zoneLabel];',
-  'const formatTime = (totalMinutes) => {',
-  '  const wrapped = ((totalMinutes % 1440) + 1440) % 1440;',
-  '  return String(Math.floor(wrapped / 60)).padStart(2, "0") + ":" + String(wrapped % 60).padStart(2, "0");',
-  '};',
   'const spellHours = (minutes) => {',
   '  const hours = minutes / 60;',
   '  const value = Number.isInteger(hours) ? String(hours) : String(Number(hours.toFixed(2)));',
   '  return value + " " + (hours === 1 ? "hour" : "hours");',
   '};',
-  'const localMinutes = slots.referenceMinutes + offset;',
-  'const missMinutes = slots.alarmMinutes - localMinutes;',
-  'probe(missMinutes !== 0, "the alarm must miss the local time for the printed clause to exist");',
-  'const localTime = formatTime(localMinutes);',
-  'const direction = missMinutes > 0 ? "late" : "early";',
-  'const referenceClause = slots.referenceTime + " " + slots.referenceLabel + " = " + localTime + " in " + slots.zoneLabel + ".";',
-  'const alarmClause = "The local alarm is " + spellHours(Math.abs(missMinutes)) + " " + direction + ".";',
+  'const referenceClause = slots.referenceTime + " " + slots.referenceLabel + " = " + $miss.localTime + " in " + slots.zoneLabel + ".";',
+  'const alarmClause = "The local alarm is " + spellHours(Math.abs($miss.missMinutes)) + " " + $miss.direction + ".";',
   'return referenceClause + " " + alarmClause;'
 ].join('\n');
 
@@ -136,6 +147,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

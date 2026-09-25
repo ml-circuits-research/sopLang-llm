@@ -85,7 +85,7 @@ function render(solution) {
 
 const WIRES = [
   {
-    name: 'verdict',
+    name: 'intervals',
     command: 'jsEval',
     body: [
       'const slots = $slots;',
@@ -96,6 +96,14 @@ const WIRES = [
       '  intervals[name] = { low: measurement.value - measurement.error, high: measurement.value + measurement.error };',
       '}',
       'probe(intervals.A.low <= intervals.A.high && intervals.B.low <= intervals.B.high, "every interval must run from its lower to its upper endpoint");',
+      'return intervals;'
+    ].join('\n')
+  },
+  {
+    name: 'verdict',
+    command: 'jsEval',
+    body: [
+      'const intervals = $intervals;',
       'const greater = intervals.A.high < intervals.B.low ? "B" : intervals.B.high < intervals.A.low ? "A" : null;',
       'if (greater === "B") {',
       '  return "B is certainly greater than A.";',

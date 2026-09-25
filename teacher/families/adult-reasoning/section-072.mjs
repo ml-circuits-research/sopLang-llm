@@ -65,21 +65,32 @@ function render(solution) {
   return `${solution.growth} ${solution.axisClause} ${solution.titleClause}`;
 }
 
+const WIRES = [
+  {
+    name: 'growth',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const first = slots.values[0];',
+      'const last = slots.values[5];',
+      'const difference = last - first;',
+      'const doubled = first * 2;',
+      'probe(doubled !== last, "a plotted endpoint that really doubled would carry no defect to report");',
+      'const growth = first + " → " + last + " is +" + difference + ", not ×2 (that would be " + doubled + ").";',
+      'return growth;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
   'const slots = $slots;',
-  'const first = slots.values[0];',
-  'const last = slots.values[5];',
-  'const difference = last - first;',
-  'const doubled = first * 2;',
-  'probe(doubled !== last, "a plotted endpoint that really doubled would carry no defect to report");',
-  'const growth = first + " → " + last + " is +" + difference + ", not ×2 (that would be " + doubled + ").";',
   'const axisClause = slots.cutAxis',
   '  ? "A cut axis makes the slope look steep."',
   '  : "The axis starts at zero, so the slope is honest.";',
   'const titleClause = slots.titleIsJudgement',
   '  ? "The title is a judgement."',
   '  : "The title is neutral.";',
-  'return growth + " " + axisClause + " " + titleClause;'
+  'return $growth + " " + axisClause + " " + titleClause;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -101,6 +112,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

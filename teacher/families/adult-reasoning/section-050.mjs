@@ -83,20 +83,30 @@ function render(solution) {
   return `${solution.verdict}. Friday last ticket ${formatTime(solution.fridayLast)}. Monday last ticket ${formatTime(solution.mondayLast)}.`;
 }
 
+const WIRES = [
+  {
+    name: 'limits',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const inBreak = (time) => time >= slots.breakStartMinutes && time < slots.breakEndMinutes;',
+      'const lastTicket = (closingMinutes) => {',
+      '  const candidate = closingMinutes - slots.lastTicketLeadMinutes;',
+      '  return inBreak(candidate) ? slots.breakStartMinutes : candidate;',
+      '};',
+      'const fridayLast = lastTicket(slots.fridayCloseMinutes);',
+      'const mondayLast = lastTicket(slots.weekdayCloseMinutes);',
+      'const fridaySucceeds = !inBreak(slots.fridayAttemptMinutes) && slots.fridayAttemptMinutes <= fridayLast;',
+      'const mondaySucceeds = !inBreak(slots.mondayAttemptMinutes) && slots.mondayAttemptMinutes <= mondayLast;',
+      'const verdict = fridaySucceeds && mondaySucceeds ? "Both" : fridaySucceeds ? "Friday" : mondaySucceeds ? "Monday" : "Neither";',
+      'return { verdict, fridayLast, mondayLast };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
   'const formatTime = (totalMinutes) => String(Math.floor(totalMinutes / 60)).padStart(2, "0") + ":" + String(totalMinutes % 60).padStart(2, "0");',
-  'const inBreak = (time) => time >= slots.breakStartMinutes && time < slots.breakEndMinutes;',
-  'const lastTicket = (closingMinutes) => {',
-  '  const candidate = closingMinutes - slots.lastTicketLeadMinutes;',
-  '  return inBreak(candidate) ? slots.breakStartMinutes : candidate;',
-  '};',
-  'const fridayLast = lastTicket(slots.fridayCloseMinutes);',
-  'const mondayLast = lastTicket(slots.weekdayCloseMinutes);',
-  'const fridaySucceeds = !inBreak(slots.fridayAttemptMinutes) && slots.fridayAttemptMinutes <= fridayLast;',
-  'const mondaySucceeds = !inBreak(slots.mondayAttemptMinutes) && slots.mondayAttemptMinutes <= mondayLast;',
-  'const verdict = fridaySucceeds && mondaySucceeds ? "Both" : fridaySucceeds ? "Friday" : mondaySucceeds ? "Monday" : "Neither";',
-  'return verdict + ". Friday last ticket " + formatTime(fridayLast) + ". Monday last ticket " + formatTime(mondayLast) + ".";'
+  'return $limits.verdict + ". Friday last ticket " + formatTime($limits.fridayLast) + ". Monday last ticket " + formatTime($limits.mondayLast) + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -117,6 +127,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

@@ -76,19 +76,30 @@ function render(solution) {
   return `${solution.rotationClause} ${solution.routeClause}`;
 }
 
+const WIRES = [
+  {
+    name: 'walk',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const PAGE_DIRECTIONS = ["UP", "RIGHT", "DOWN", "LEFT"];',
+      'const COMPASS = ["NORTH", "EAST", "SOUTH", "WEST"];',
+      'const rotationPage = PAGE_DIRECTIONS.indexOf(slots.rotation);',
+      'const sidePage = PAGE_DIRECTIONS.indexOf(slots.side);',
+      'const walkingIndex = (((sidePage - rotationPage) % 4) + 4) % 4;',
+      'const walking = COMPASS[walkingIndex];',
+      'const reachesPark = walking === slots.firstLeg;',
+      'return { walking, reachesPark };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
   'const slots = $slots;',
-  'const PAGE_DIRECTIONS = ["UP", "RIGHT", "DOWN", "LEFT"];',
-  'const COMPASS = ["NORTH", "EAST", "SOUTH", "WEST"];',
-  'const rotationPage = PAGE_DIRECTIONS.indexOf(slots.rotation);',
-  'const sidePage = PAGE_DIRECTIONS.indexOf(slots.side);',
-  'const walkingIndex = (((sidePage - rotationPage) % 4) + 4) % 4;',
-  'const walking = COMPASS[walkingIndex];',
-  'const reachesPark = walking === slots.firstLeg;',
-  'const rotationClause = "With north " + slots.rotation.toLowerCase() + ", " + walking.toLowerCase() + " is to the " + slots.side.toLowerCase() + " of the rotated page.";',
-  'const routeClause = reachesPark',
+  'const rotationClause = "With north " + slots.rotation.toLowerCase() + ", " + $walk.walking.toLowerCase() + " is to the " + slots.side.toLowerCase() + " of the rotated page.";',
+  'const routeClause = $walk.reachesPark',
   '  ? "Yes, they walk " + slots.firstLeg.toLowerCase() + " on the path and reach the park."',
-  '  : "No, they walk " + walking.toLowerCase() + " and miss the park.";',
+  '  : "No, they walk " + $walk.walking.toLowerCase() + " and miss the park.";',
   'return rotationClause + " " + routeClause;'
 ].join('\n');
 
@@ -112,6 +123,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

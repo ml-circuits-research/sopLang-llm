@@ -103,10 +103,23 @@ function render(solution) {
 
 const WIRES = [
   {
-    name: 'yields',
+    name: 'raw',
     command: 'jsEval',
     body: [
       'const slots = $slots;',
+      'const outputOf = (rates) => slots.start * (rates[0] / 100) * (rates[1] / 100) * (rates[2] / 100);',
+      'const current = outputOf(slots.rates);',
+      'const gains = slots.rates.map((rate, index) => {',
+      '  const improved = slots.rates.map((other, position) => (position === index ? Math.min(100, other + slots.improvementPoints) : other));',
+      '  return outputOf(improved) - current;',
+      '});',
+      'return { current, gains };'
+    ].join('\n')
+  },
+  {
+    name: 'yields',
+    command: 'jsEval',
+    body: [
       'const roundHundredths = (value) => {',
       '  const text = value.toFixed(20);',
       '  const point = text.indexOf(".");',
@@ -119,22 +132,15 @@ const WIRES = [
       '  }',
       '  return String(hundredths / 100);',
       '};',
-      'const outputOf = (rates) => slots.start * (rates[0] / 100) * (rates[1] / 100) * (rates[2] / 100);',
-      'const current = outputOf(slots.rates);',
-      'const gains = slots.rates.map((rate, index) => {',
-      '  const improved = slots.rates.map((other, position) => (position === index ? Math.min(100, other + slots.improvementPoints) : other));',
-      '  return outputOf(improved) - current;',
-      '});',
-      'const shown = gains.map(roundHundredths);',
+      'const shown = $raw.gains.map(roundHundredths);',
       'const bestGain = shown.reduce((left, right) => (Number(right) > Number(left) ? right : left), shown[0]);',
-      'probe(Number(bestGain) >= 0, "improving a stage must not lower the final output");',
-      'const stages = shown.map((value, index) => (value === bestGain ? index + 1 : 0)).filter((stage) => stage > 0);',
-      'return { current: roundHundredths(current), stages, bestGain };'
+      'return { current: roundHundredths($raw.current), stages: shown.map((value, index) => (value === bestGain ? index + 1 : 0)).filter((stage) => stage > 0), bestGain };'
     ].join('\n')
   }
 ];
 
 const COMPUTE = [
+  'probe(Number($yields.bestGain) >= 0, "improving a stage must not lower the final output");',
   'return "Current final output: " + $yields.current + " " + $slots.unit + ". Best stage(s) to improve: " + $yields.stages.join(", ") + ", for a gain of " + $yields.bestGain + " " + $slots.unit + ".";'
 ].join('\n');
 

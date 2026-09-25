@@ -115,24 +115,23 @@ const WIRES = [
       'const verdicts = slots.statements.map((statement) => {',
       '  const subject = statement.properties[0];',
       '  const predicate = statement.properties[1];',
+      '  const holders = slots.cases.filter((entry) => holds(entry, subject));',
       '  if (statement.quantifier === "all") {',
-      '    const holders = slots.cases.filter((entry) => holds(entry, subject));',
       '    return holders.every((entry) => holds(entry, predicate) === !statement.negative);',
       '  }',
       '  if (statement.quantifier === "some") {',
-      '    const holders = slots.cases.filter((entry) => holds(entry, subject));',
       '    return holders.some((entry) => holds(entry, predicate) === !statement.negative);',
       '  }',
       '  return !slots.cases.some((entry) => holds(entry, subject) && holds(entry, predicate));',
       '});',
-      'probe(verdicts.length === slots.statements.length, "every statement must receive a truth value");',
-      'probe(verdicts.every((verdict) => typeof verdict === "boolean"), "every verdict must be true or false");',
       'return verdicts;'
     ].join('\n')
   }
 ];
 
 const COMPUTE = [
+  'probe($verdicts.length === $slots.statements.length, "every statement must receive a truth value");',
+  'probe($verdicts.every((verdict) => typeof verdict === "boolean"), "every verdict must be true or false");',
   'return "In order: " + $verdicts.map((verdict) => (verdict ? "true" : "false")).join(", ") + ".";'
 ].join('\n');
 

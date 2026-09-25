@@ -265,9 +265,8 @@ export const cases = [
     render(solution) { return `${solution.names.join('+')}, value ${solution.value}.`; },
     wires: [
       {
-        name: 'best', command: 'jsEval', body: circuit([
-          'let best = null;',
-          'for (let mask = 0; mask < (1 << slots.items.length); mask += 1) {',
+        name: 'subsets', command: 'jsEval', body: circuit([
+          'return Array.from({ length: 1 << slots.items.length }, (unused, mask) => {',
           '  let weight = 0;',
           '  let value = 0;',
           '  const names = [];',
@@ -278,8 +277,16 @@ export const cases = [
           '      names.push(slots.items[index].name);',
           '    }',
           '  }',
-          '  if (weight > slots.capacity) { continue; }',
-          '  if (best === null || value > best.value || (value === best.value && names.length < best.names.length)) { best = { names, value }; }',
+          '  return { weight, value, names };',
+          '});'
+        ])
+      },
+      {
+        name: 'best', command: 'jsEval', body: circuit([
+          'let best = null;',
+          'for (const subset of $subsets) {',
+          '  if (subset.weight > slots.capacity) { continue; }',
+          '  if (best === null || subset.value > best.value || (subset.value === best.value && subset.names.length < best.names.length)) { best = { names: subset.names, value: subset.value }; }',
           '}',
           'return best;'
         ])

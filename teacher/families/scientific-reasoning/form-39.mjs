@@ -81,29 +81,47 @@ function render(solution) {
   return `The series shows no evident outlier in the model; verification must precede any correction. A robust center is the median ${solution.median}.`;
 }
 
+const WIRES = [
+  {
+    name: 'stats',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const sorted = [...slots.values].sort((left, right) => left - right);',
+      'const median = (list) => { const half = Math.floor(list.length / 2); return list.length % 2 === 1 ? list[half] : (list[half - 1] + list[half]) / 2; };',
+      'const center = median(sorted);',
+      'const half = Math.floor(sorted.length / 2);',
+      'const low = median(sorted.slice(0, half));',
+      'const high = median(sorted.slice(sorted.length - half));',
+      'const spread = high - low;',
+      'const suspicious = slots.values.filter((value) => value < low - 1.5 * spread || value > high + 1.5 * spread);',
+      'probe(suspicious.length <= 1, "the series must show at most one value beyond the fences, not " + suspicious.length);',
+      'probe(Number.isFinite(low) && Number.isFinite(high) && spread >= 0, "the fences of the series must be finite and ordered");',
+      'probe(center >= low && center <= high, "the robust center must lie between the first and third quartiles");',
+      'probe(suspicious.length === 0 || suspicious[0] !== center, "an isolated point must differ from the robust center");',
+      'return { center: center, suspicious: suspicious };'
+    ].join('\n')
+  },
+  {
+    name: 'diagnosis',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const steps = slots.values.slice(1).map((value, index) => value - slots.values[index]);',
+      'const drifting = steps.every((step) => step === steps[0] && step !== 0);',
+      'return { center: $stats.center, suspicious: $stats.suspicious, drifting: drifting };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const sorted = [...slots.values].sort((left, right) => left - right);',
-  'const median = (list) => { const half = Math.floor(list.length / 2); return list.length % 2 === 1 ? list[half] : (list[half - 1] + list[half]) / 2; };',
-  'const center = median(sorted);',
-  'const half = Math.floor(sorted.length / 2);',
-  'const low = median(sorted.slice(0, half));',
-  'const high = median(sorted.slice(sorted.length - half));',
-  'const spread = high - low;',
-  'const suspicious = slots.values.filter((value) => value < low - 1.5 * spread || value > high + 1.5 * spread);',
-  'probe(suspicious.length <= 1, "the series must show at most one value beyond the fences, not " + suspicious.length);',
-  'probe(Number.isFinite(low) && Number.isFinite(high) && spread >= 0, "the fences of the series must be finite and ordered");',
-  'probe(center >= low && center <= high, "the robust center must lie between the first and third quartiles");',
-  'probe(suspicious.length === 0 || suspicious[0] !== center, "an isolated point must differ from the robust center");',
-  'const steps = slots.values.slice(1).map((value, index) => value - slots.values[index]);',
-  'const drifting = steps.every((step) => step === steps[0] && step !== 0);',
-  'if (suspicious.length === 1) {',
-  '  return "The series contains an isolated suspicious point: " + suspicious[0] + "; verification must precede any correction. A robust center is the median " + center + ".";',
+  'if ($diagnosis.suspicious.length === 1) {',
+  '  return "The series contains an isolated suspicious point: " + $diagnosis.suspicious[0] + "; verification must precede any correction. A robust center is the median " + $diagnosis.center + ".";',
   '}',
-  'if (!drifting) {',
-  '  return "The series shows no evident outlier in the model; verification must precede any correction. A robust center is the median " + center + ".";',
+  'if (!$diagnosis.drifting) {',
+  '  return "The series shows no evident outlier in the model; verification must precede any correction. A robust center is the median " + $diagnosis.center + ".";',
   '}',
-  'return "The diagnosis of the series: a gradual drift, not a single outlier; verification must precede any correction. A robust center is the median " + center + ", but the series must also be analyzed in temporal order.";'
+  'return "The diagnosis of the series: a gradual drift, not a single outlier; verification must precede any correction. A robust center is the median " + $diagnosis.center + ", but the series must also be analyzed in temporal order.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -144,6 +162,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

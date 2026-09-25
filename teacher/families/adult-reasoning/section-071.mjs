@@ -72,19 +72,29 @@ function render(solution) {
   return `${solution.primaryClause} ${solution.compatibleClause} ${solution.hearsayClause} ${solution.authorityClause}`;
 }
 
+const WIRES = [
+  {
+    name: 'source',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const hearsay = /I heard from someone/i.test(slots.neighbourClaim);',
+      'probe(hearsay === true, "the neighbour claim must be second-hand rather than first-hand");',
+      'const photoInWindow = slots.photoDay >= slots.notice.from && slots.photoDay <= slots.notice.to;',
+      'probe(photoInWindow === true, "the photo must fall inside the announced closure to be compatible with it");',
+      'const noticeMentionsDry = /dry/i.test("Closed for repairs " + slots.notice.from + "–" + slots.notice.to + " September");',
+      'const authorityIsSource = /^Everybody/.test(slots.speakerClaim);',
+      'const primaryClause = "C2 states the closure and the cause.";',
+      'const compatibleClause = photoInWindow ? "C3 is visually compatible." : "C3 is visually incompatible.";',
+      'const hearsayClause = hearsay && !noticeMentionsDry ? "C1 is hearsay; “dry” is not in C2." : "C1 is a first-hand source.";',
+      'const authorityClause = authorityIsSource ? "“Everybody” is a source." : "“Everybody” is not a source.";',
+      'return { primaryClause, compatibleClause, hearsayClause, authorityClause };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const hearsay = /I heard from someone/i.test(slots.neighbourClaim);',
-  'probe(hearsay === true, "the neighbour claim must be second-hand rather than first-hand");',
-  'const photoInWindow = slots.photoDay >= slots.notice.from && slots.photoDay <= slots.notice.to;',
-  'probe(photoInWindow === true, "the photo must fall inside the announced closure to be compatible with it");',
-  'const noticeMentionsDry = /dry/i.test("Closed for repairs " + slots.notice.from + "–" + slots.notice.to + " September");',
-  'const authorityIsSource = /^Everybody/.test(slots.speakerClaim);',
-  'const primaryClause = "C2 states the closure and the cause.";',
-  'const compatibleClause = photoInWindow ? "C3 is visually compatible." : "C3 is visually incompatible.";',
-  'const hearsayClause = hearsay && !noticeMentionsDry ? "C1 is hearsay; “dry” is not in C2." : "C1 is a first-hand source.";',
-  'const authorityClause = authorityIsSource ? "“Everybody” is a source." : "“Everybody” is not a source.";',
-  'return primaryClause + " " + compatibleClause + " " + hearsayClause + " " + authorityClause;'
+  'return $source.primaryClause + " " + $source.compatibleClause + " " + $source.hearsayClause + " " + $source.authorityClause;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -106,6 +116,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

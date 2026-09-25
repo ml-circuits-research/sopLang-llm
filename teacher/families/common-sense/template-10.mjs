@@ -83,7 +83,7 @@ function render(solution) {
 
 const WIRES = [
   {
-    name: 'breakEven',
+    name: 'threshold',
     command: 'jsEval',
     body: [
       'const slots = $slots;',
@@ -98,11 +98,17 @@ const WIRES = [
       'const magnitude = Math.abs(numerator);',
       'const quotient = Math.floor(magnitude / denominator);',
       'const remainder = magnitude - quotient * denominator;',
-      'const threshold = sign * (quotient + (2 * remainder >= denominator ? 1 : 0));',
+      'return sign * (quotient + (2 * remainder >= denominator ? 1 : 0));'
+    ].join('\n')
+  },
+  {
+    name: 'breakEven',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const threshold = $threshold;',
       'probe(threshold > 0, "the two plans must cross at a positive volume");',
-      'const cheaperBelow = plans.A.fixed < plans.B.fixed ? "A" : "B";',
-      'const cheaperAbove = plans.A.variable < plans.B.variable ? "A" : "B";',
-      'return { threshold, cheaperBelow, cheaperAbove };'
+      'return { threshold, cheaperBelow: slots.plans.A.fixed < slots.plans.B.fixed ? "A" : "B", cheaperAbove: slots.plans.A.variable < slots.plans.B.variable ? "A" : "B" };'
     ].join('\n')
   }
 ];

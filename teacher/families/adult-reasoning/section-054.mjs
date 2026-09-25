@@ -61,25 +61,39 @@ function render(solution) {
   return `${solution.mediumClause} ${solution.bellClause}`;
 }
 
+const WIRES = [
+  {
+    name: 'medium',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'if (slots.soundNeedsMedium && !slots.soundHeard && slots.lampSeen) {',
+      '  return "Sound needed air; light did not.";',
+      '} else if (slots.soundHeard) {',
+      '  return "Sound was carried by the air that was still in the jar.";',
+      '} else {',
+      '  return "Neither sound nor light crossed the jar.";',
+      '}'
+    ].join('\n')
+  },
+  {
+    name: 'bell',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'if (slots.motionSeen && !slots.soundHeard) {',
+      '  return "The bell is not \u201cbroken\u201d: the motion is seen.";',
+      '} else if (slots.motionSeen && slots.soundHeard) {',
+      '  return "The bell works: it moves and it is heard.";',
+      '} else {',
+      '  return "The bell does not move, so the recording does not show it working.";',
+      '}'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'let mediumClause;',
-  'if (slots.soundNeedsMedium && !slots.soundHeard && slots.lampSeen) {',
-  '  mediumClause = "Sound needed air; light did not.";',
-  '} else if (slots.soundHeard) {',
-  '  mediumClause = "Sound was carried by the air that was still in the jar.";',
-  '} else {',
-  '  mediumClause = "Neither sound nor light crossed the jar.";',
-  '}',
-  'let bellClause;',
-  'if (slots.motionSeen && !slots.soundHeard) {',
-  '  bellClause = "The bell is not \u201cbroken\u201d: the motion is seen.";',
-  '} else if (slots.motionSeen && slots.soundHeard) {',
-  '  bellClause = "The bell works: it moves and it is heard.";',
-  '} else {',
-  '  bellClause = "The bell does not move, so the recording does not show it working.";',
-  '}',
-  'return mediumClause + " " + bellClause;'
+  'return $medium + " " + $bell;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -100,6 +114,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

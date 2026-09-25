@@ -227,21 +227,30 @@ export const cases = [
     render(solution) {
       return `${formatClock(solution.start)}–${formatClock(solution.end)}.`;
     },
+    wires: [
+      {
+        name: 'window',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'const minutes = (text) => { const parts = String(text).split(":"); return Number(parts[0]) * 60 + Number(parts[1]); };',
+          'const busy = slots.busy.map((interval) => [minutes(interval[0]), minutes(interval[1])]).sort((left, right) => left[0] - right[0]);',
+          'const windowEnd = minutes(slots.window[1]);',
+          'let cursor = minutes(slots.window[0]);',
+          'let found = null;',
+          'for (const [start, end] of busy) {',
+          '  if (start - cursor >= slots.need) { found = [cursor, start]; break; }',
+          '  if (end > cursor) { cursor = end; }',
+          '}',
+          'if (found === null && windowEnd - cursor >= slots.need) { found = [cursor, windowEnd]; }',
+          'if (found === null) { throw new Error("no free window is long enough"); }',
+          'return found;'
+        ].join('\n')
+      }
+    ],
     compute: [
-      'const slots = $slots;',
-      'const minutes = (text) => { const parts = String(text).split(":"); return Number(parts[0]) * 60 + Number(parts[1]); };',
       'const clock = (value) => Math.floor(value / 60) + ":" + String(value % 60).padStart(2, "0");',
-      'const busy = slots.busy.map((interval) => [minutes(interval[0]), minutes(interval[1])]).sort((left, right) => left[0] - right[0]);',
-      'const windowEnd = minutes(slots.window[1]);',
-      'let cursor = minutes(slots.window[0]);',
-      'let found = null;',
-      'for (const [start, end] of busy) {',
-      '  if (start - cursor >= slots.need) { found = [cursor, start]; break; }',
-      '  if (end > cursor) { cursor = end; }',
-      '}',
-      'if (found === null && windowEnd - cursor >= slots.need) { found = [cursor, windowEnd]; }',
-      'if (found === null) { throw new Error("no free window is long enough"); }',
-      'return clock(found[0]) + "–" + clock(found[1]) + ".";'
+      'return clock($window[0]) + "–" + clock($window[1]) + ".";'
     ].join('\n'),
     explain(slots, solution) {
       return [
@@ -367,14 +376,22 @@ export const cases = [
     render(solution) {
       return solution.coincide ? 'Yes.' : 'No.';
     },
+    wires: [
+      {
+        name: 'coincide',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'const gcd = (left, right) => { let a = Math.abs(left); let b = Math.abs(right); while (b !== 0) { const next = a % b; a = b; b = next; } return a; };',
+          'const periodA = slots.a[1] - slots.a[0];',
+          'const periodB = slots.b[1] - slots.b[0];',
+          'if (periodA !== slots.period || periodB !== slots.period) { throw new Error("the stated period does not match the two day lists"); }',
+          'return (slots.b[0] - slots.a[0]) % gcd(periodA, periodB) === 0;'
+        ].join('\n')
+      }
+    ],
     compute: [
-      'const slots = $slots;',
-      'const gcd = (left, right) => { let a = Math.abs(left); let b = Math.abs(right); while (b !== 0) { const next = a % b; a = b; b = next; } return a; };',
-      'const periodA = slots.a[1] - slots.a[0];',
-      'const periodB = slots.b[1] - slots.b[0];',
-      'if (periodA !== slots.period || periodB !== slots.period) { throw new Error("the stated period does not match the two day lists"); }',
-      'const coincide = (slots.b[0] - slots.a[0]) % gcd(periodA, periodB) === 0;',
-      'return (coincide ? "Yes" : "No") + ".";'
+      'return ($coincide ? "Yes" : "No") + ".";'
     ].join('\n'),
     explain(slots, solution) {
       return [

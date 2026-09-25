@@ -298,7 +298,7 @@ function verifyPrinted(parsedSlots, solution, printedText) {
 
 const WIRES = [
   {
-    name: 'routes',
+    name: 'adjacency',
     command: 'jsEval',
     body: [
       'const slots = $slots;',
@@ -310,17 +310,25 @@ const WIRES = [
       '    adjacency.get(pair[0]).push({ to: pair[1], cost: edge.cost, index: index });',
       '  }',
       '});',
+      'return { adjacency: adjacency, start: slots.start, destination: slots.destination };'
+    ].join('\n')
+  },
+  {
+    name: 'routes',
+    command: 'jsEval',
+    body: [
+      'const net = $adjacency;',
       'const routes = [];',
       'const walk = (node, path, cost, indexes) => {',
-      '  if (node === slots.destination) { routes.push({ path: path.slice(), cost: cost, indexes: indexes.slice() }); return; }',
-      '  for (const step of adjacency.get(node) || []) {',
+      '  if (node === net.destination) { routes.push({ path: path.slice(), cost: cost, indexes: indexes.slice() }); return; }',
+      '  for (const step of net.adjacency.get(node) || []) {',
       '    if (path.includes(step.to)) continue;',
       '    path.push(step.to);',
       '    walk(step.to, path, cost + step.cost, indexes.concat([step.index]));',
       '    path.pop();',
       '  }',
       '};',
-      'walk(slots.start, [slots.start], 0, []);',
+      'walk(net.start, [net.start], 0, []);',
       'probe(routes.length > 0, "the closed link must leave at least one allowed route");',
       'return routes;'
     ].join('\n')

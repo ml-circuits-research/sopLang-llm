@@ -98,57 +98,48 @@ const WIRES = [
     ].join('\n')
   },
   {
+    name: 'reach',
+    command: 'jsEval',
+    body: [
+      'const distances = new Map([[ $slots.from, 0 ]]);',
+      'const queue = [$slots.from];',
+      'while (queue.length > 0) {',
+      '  const state = queue.shift();',
+      '  for (const neighbour of $adjacency[state] ?? []) {',
+      '    if (!distances.has(neighbour)) {',
+      '      distances.set(neighbour, distances.get(state) + 1);',
+      '      queue.push(neighbour);',
+      '    }',
+      '  }',
+      '}',
+      'return distances;'
+    ].join('\n')
+  },
+  {
     name: 'distance',
     command: 'jsEval',
     body: [
-      'const adjacency = $adjacency;',
-      'const slots = $slots;',
-      'const seen = new Set([slots.from]);',
-      'let frontier = [slots.from];',
-      'let distance = 0;',
-      'let found = false;',
-      'while (frontier.length > 0 && !found) {',
-      '  distance += 1;',
-      '  const next = [];',
-      '  for (const state of frontier) {',
-      '    for (const neighbour of adjacency[state] ?? []) {',
-      '      if (neighbour === slots.to) {',
-      '        found = true;',
-      '      } else if (!seen.has(neighbour)) {',
-      '        seen.add(neighbour);',
-      '        next.push(neighbour);',
-      '      }',
-      '    }',
-      '  }',
-      '  frontier = found ? [] : next;',
-      '}',
+      'const found = $reach.has($slots.to);',
       'probe(found, "the stated borders must connect the two endpoints of the crossing question");',
-      'return distance;'
+      'return $reach.get($slots.to);'
     ].join('\n')
   },
   {
     name: 'unavoidable',
     command: 'jsEval',
     body: [
-      'const adjacency = $adjacency;',
-      'const slots = $slots;',
-      'const visited = new Set([slots.from]);',
-      'const queue = [slots.from];',
-      'let reachable = false;',
+      'const visited = new Set([$slots.from]);',
+      'const queue = [$slots.from];',
       'while (queue.length > 0) {',
       '  const state = queue.shift();',
-      '  if (state === slots.to) {',
-      '    reachable = true;',
-      '    break;',
-      '  }',
-      '  for (const neighbour of adjacency[state] ?? []) {',
-      '    if (neighbour !== slots.candidate && !visited.has(neighbour)) {',
+      '  for (const neighbour of $adjacency[state] ?? []) {',
+      '    if (neighbour !== $slots.candidate && !visited.has(neighbour)) {',
       '      visited.add(neighbour);',
       '      queue.push(neighbour);',
       '    }',
       '  }',
       '}',
-      'return reachable;'
+      'return visited.has($slots.to);'
     ].join('\n')
   }
 ];

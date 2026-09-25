@@ -152,7 +152,7 @@ function render(solution) {
 
 const WIRES = [
   {
-    name: 'question',
+    name: 'questions',
     command: 'jsEval',
     body: [
       'const slots = $slots;',
@@ -165,9 +165,17 @@ const WIRES = [
       '  }',
       '}',
       'const questions = order.map((property) => ({ property: property, yes: counts.get(property), no: slots.cases.length - counts.get(property) }));',
+      'return questions;'
+    ].join('\n')
+  },
+  {
+    name: 'question',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
       'let best = null;',
       'let tied = 0;',
-      'for (const candidate of questions) {',
+      'for (const candidate of $questions) {',
       '  const worst = Math.max(candidate.yes, candidate.no);',
       '  if (best === null || worst < best.worst) { best = { property: candidate.property, yes: candidate.yes, no: candidate.no, worst: worst }; tied = 1; }',
       '  else if (worst === best.worst) { tied += 1; }',

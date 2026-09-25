@@ -100,27 +100,44 @@ function render(solution) {
 
 const WIRES = [
   {
-    name: 'plan',
+    name: 'mandatory',
     command: 'jsEval',
     body: [
-      'const slots = $slots;',
-      'const mandatoryIndex = slots.mandatory === null ? -1 : slots.projects.findIndex((project) => project.name === slots.mandatory);',
-      'probe(slots.mandatory === null || mandatoryIndex !== -1, "a mandatory project must appear in the stated project list");',
-      'let best = null;',
-      'const total = 1 << slots.projects.length;',
+      'const mandatoryIndex = $slots.mandatory === null ? -1 : $slots.projects.findIndex((project) => project.name === $slots.mandatory);',
+      'probe($slots.mandatory === null || mandatoryIndex !== -1, "a mandatory project must appear in the stated project list");',
+      'return { index: mandatoryIndex };'
+    ].join('\n')
+  },
+  {
+    name: 'candidates',
+    command: 'jsEval',
+    body: [
+      'const total = 1 << $slots.projects.length;',
+      'const candidates = [];',
       'for (let mask = 0; mask < total; mask += 1) {',
-      '  if (mandatoryIndex !== -1 && (mask & (1 << mandatoryIndex)) === 0) {',
+      '  if ($mandatory.index !== -1 && (mask & (1 << $mandatory.index)) === 0) {',
       '    continue;',
       '  }',
-      '  const chosen = slots.projects.filter((project, index) => (mask & (1 << index)) !== 0);',
+      '  const chosen = $slots.projects.filter((project, index) => (mask & (1 << index)) !== 0);',
       '  const cost = chosen.reduce((sum, project) => sum + project.cost, 0);',
-      '  if (cost > slots.budget) {',
+      '  if (cost > $slots.budget) {',
       '    continue;',
       '  }',
       '  const benefit = chosen.reduce((sum, project) => sum + project.benefit, 0);',
-      '  const better = best === null || benefit > best.benefit || (benefit === best.benefit && (cost < best.cost || (cost === best.cost && mask < best.mask)));',
+      '  candidates.push({ names: chosen.map((project) => project.name), cost, benefit, mask });',
+      '}',
+      'return candidates;'
+    ].join('\n')
+  },
+  {
+    name: 'best',
+    command: 'jsEval',
+    body: [
+      'let best = null;',
+      'for (const candidate of $candidates) {',
+      '  const better = best === null || candidate.benefit > best.benefit || (candidate.benefit === best.benefit && (candidate.cost < best.cost || (candidate.cost === best.cost && candidate.mask < best.mask)));',
       '  if (better) {',
-      '    best = { names: chosen.map((project) => project.name), cost, benefit, mask };',
+      '    best = candidate;',
       '  }',
       '}',
       'probe(best !== null, "at least one project set must fit the stated budget");',
@@ -139,7 +156,7 @@ const WIRES = [
 ];
 
 const COMPUTE = [
-  'const main = "Choose " + $plan.names.join(", ") + "; cost " + $plan.cost + ", benefit " + $plan.benefit + ".";',
+  'const main = "Choose " + $best.names.join(", ") + "; cost " + $best.cost + ", benefit " + $best.benefit + ".";',
   'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 

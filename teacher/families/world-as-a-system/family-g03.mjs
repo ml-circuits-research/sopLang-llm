@@ -98,34 +98,35 @@ function render(solution) {
 
 const WIRES = [
   {
-    name: 'reach',
+    name: 'adjacency',
     command: 'jsEval',
     body: [
-      'const slots = $slots;',
       'const adjacency = new Map();',
-      'for (const flow of slots.flows) {',
+      'for (const flow of $slots.flows) {',
       '  if (!adjacency.has(flow.from)) {',
       '    adjacency.set(flow.from, []);',
       '  }',
       '  adjacency.get(flow.from).push(flow.to);',
       '}',
-      'const seen = new Set([slots.source]);',
-      'const queue = [slots.source];',
-      'let reachable = false;',
+      'return adjacency;'
+    ].join('\n')
+  },
+  {
+    name: 'reach',
+    command: 'jsEval',
+    body: [
+      'const seen = new Set([$slots.source]);',
+      'const queue = [$slots.source];',
       'while (queue.length > 0) {',
       '  const river = queue.shift();',
-      '  if (river === slots.target) {',
-      '    reachable = true;',
-      '    break;',
-      '  }',
-      '  for (const next of adjacency.get(river) ?? []) {',
+      '  for (const next of $adjacency.get(river) ?? []) {',
       '    if (!seen.has(next)) {',
       '      seen.add(next);',
       '      queue.push(next);',
       '    }',
       '  }',
       '}',
-      'return reachable;'
+      'return seen.has($slots.target);'
     ].join('\n')
   }
 ];

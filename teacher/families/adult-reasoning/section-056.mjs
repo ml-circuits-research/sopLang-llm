@@ -68,22 +68,32 @@ function render(solution) {
   return `${solution.loseClause} ${solution.touchedClause} ${solution.extraClause}`;
 }
 
+const WIRES = [
+  {
+    name: 'chain',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const index = slots.chain.indexOf(slots.removed);',
+      'const prey = slots.chain[index + 1];',
+      'const eater = slots.chain[index + 2];',
+      'const preyHead = prey.split(" ").pop();',
+      'const loseClause = eater === undefined',
+      '  ? "Without " + slots.removed + ": " + prey + " lose food."',
+      '  : "Without " + slots.removed + ": " + prey + " lose food, the " + eater + " loses " + preyHead + ".";',
+      'const touchedClause = eater === slots.claimUntouched',
+      '  ? "The " + eater + " is touched."',
+      '  : slots.claimUntouched + " keeps its place on the given chain.";',
+      'const extraClause = slots.chain.includes(slots.reason)',
+      '  ? slots.reason + " is one of the links of the given chain."',
+      '  : "Pond " + slots.reason + " is not in the chain — do not add it.";',
+      'return { loseClause, touchedClause, extraClause };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const index = slots.chain.indexOf(slots.removed);',
-  'const prey = slots.chain[index + 1];',
-  'const eater = slots.chain[index + 2];',
-  'const preyHead = prey.split(" ").pop();',
-  'const loseClause = eater === undefined',
-  '  ? "Without " + slots.removed + ": " + prey + " lose food."',
-  '  : "Without " + slots.removed + ": " + prey + " lose food, the " + eater + " loses " + preyHead + ".";',
-  'const touchedClause = eater === slots.claimUntouched',
-  '  ? "The " + eater + " is touched."',
-  '  : slots.claimUntouched + " keeps its place on the given chain.";',
-  'const extraClause = slots.chain.includes(slots.reason)',
-  '  ? slots.reason + " is one of the links of the given chain."',
-  '  : "Pond " + slots.reason + " is not in the chain — do not add it.";',
-  'return loseClause + " " + touchedClause + " " + extraClause;'
+  'return $chain.loseClause + " " + $chain.touchedClause + " " + $chain.extraClause;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -104,6 +114,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

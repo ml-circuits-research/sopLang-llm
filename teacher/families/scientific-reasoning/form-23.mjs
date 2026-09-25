@@ -140,46 +140,66 @@ function render(solution) {
 
 const WIRES = [
   {
-    name: 'results',
+    name: 'sets',
     command: 'jsEval',
     body: [
       'const slots = $slots;',
-      'const INTERSECTION = String.fromCharCode(8745);',
-      'const UNION = String.fromCharCode(8746);',
-      'const DIFFERENCE = String.fromCharCode(92);',
-      'const EMPTY = String.fromCharCode(8709);',
-      'const OPERATORS = [INTERSECTION, UNION, DIFFERENCE];',
       'const sets = {};',
       'for (const letter of Object.keys(slots.labels)) {',
       '  sets[letter] = slots.cases.filter((entry) => entry.properties.indexOf(slots.labels[letter]) !== -1).map((entry) => entry.name);',
       '  probe(sets[letter].length > 0, "the labelled property must appear in the observations: " + slots.labels[letter]);',
       '}',
-      'const results = slots.ops.map((op) => {',
+      'return sets;'
+    ].join('\n')
+  },
+  {
+    name: 'ops',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const OPERATORS = [String.fromCharCode(8745), String.fromCharCode(8746), String.fromCharCode(92)];',
+      'const parsed = slots.ops.map((op) => {',
       '  const parts = [];',
       '  let current = "";',
       '  for (const character of op) {',
-      '    if (OPERATORS.indexOf(character) !== -1) {',
-      '      parts.push(current.trim());',
-      '      parts.push(character);',
-      '      current = "";',
-      '    } else {',
-      '      current += character;',
-      '    }',
+      '    if (OPERATORS.indexOf(character) !== -1) { parts.push(current.trim()); parts.push(character); current = ""; }',
+      '    else { current += character; }',
       '  }',
       '  parts.push(current.trim());',
-      '  let members = sets[parts[0]].slice();',
-      '  for (let index = 1; index < parts.length; index += 2) {',
-      '    const other = sets[parts[index + 1]];',
-      '    if (parts[index] === INTERSECTION) {',
-      '      members = members.filter((name) => other.indexOf(name) !== -1);',
-      '    } else if (parts[index] === UNION) {',
-      '      members = members.concat(other.filter((name) => members.indexOf(name) === -1));',
-      '    } else {',
-      '      members = members.filter((name) => other.indexOf(name) === -1);',
-      '    }',
+      '  return { op: op, parts: parts };',
+      '});',
+      'return parsed;'
+    ].join('\n')
+  },
+  {
+    name: 'members',
+    command: 'jsEval',
+    body: [
+      'const INTERSECTION = String.fromCharCode(8745);',
+      'const UNION = String.fromCharCode(8746);',
+      'const members = $ops.map((parsed) => {',
+      '  let current = $sets[parsed.parts[0]].slice();',
+      '  for (let index = 1; index < parsed.parts.length; index += 2) {',
+      '    const other = $sets[parsed.parts[index + 1]];',
+      '    const op = parsed.parts[index];',
+      '    if (op === INTERSECTION) { current = current.filter((name) => other.indexOf(name) !== -1); }',
+      '    else if (op === UNION) { current = current.concat(other.filter((name) => current.indexOf(name) === -1)); }',
+      '    else { current = current.filter((name) => other.indexOf(name) === -1); }',
       '  }',
-      '  probe(members.length <= slots.cases.length, "an operation must not invent members: " + op);',
-      '  return op + "=" + (members.length === 0 ? EMPTY : "{" + members.join(", ") + "}");',
+      '  return { op: parsed.op, members: current };',
+      '});',
+      'return members;'
+    ].join('\n')
+  },
+  {
+    name: 'results',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const EMPTY = String.fromCharCode(8709);',
+      'const results = $members.map((entry) => {',
+      '  probe(entry.members.length <= slots.cases.length, "an operation must not invent members: " + entry.op);',
+      '  return entry.op + "=" + (entry.members.length === 0 ? EMPTY : "{" + entry.members.join(", ") + "}");',
       '});',
       'return results;'
     ].join('\n')

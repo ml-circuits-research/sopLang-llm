@@ -282,17 +282,24 @@ export const cases = [
     },
     wires: [
       {
-        name: 'best',
+        name: 'entries',
         command: 'jsEval',
         body: [
           'const slots = $slots;',
           MATCHES_SOURCE,
           KEEP_SOURCE,
+          'return slots.questions.map((question) => ({ text: question.text, yes: keep(slots.candidates, question.predicate).length }));'
+        ].join('\n')
+      },
+      {
+        name: 'best',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
           'let best = null;',
-          'for (const question of slots.questions) {',
-          '  const yes = keep(slots.candidates, question.predicate).length;',
-          '  const worst = Math.max(yes, slots.candidates.length - yes);',
-          '  if (best === null || worst < best.worst) { best = { text: question.text, worst }; }',
+          'for (const entry of $entries) {',
+          '  const worst = Math.max(entry.yes, slots.candidates.length - entry.yes);',
+          '  if (best === null || worst < best.worst) { best = { text: entry.text, worst }; }',
           '}',
           'return best;'
         ].join('\n')
@@ -442,8 +449,7 @@ export const cases = [
           'const slots = $slots;',
           MATCHES_SOURCE,
           KEEP_SOURCE,
-          'const afterFirst = keep(slots.candidates, slots.first);',
-          'return afterFirst.filter((value) => !matches(value, slots.second));'
+          'return keep(slots.candidates, slots.first).filter((value) => !matches(value, slots.second));'
         ].join('\n')
       }
     ],

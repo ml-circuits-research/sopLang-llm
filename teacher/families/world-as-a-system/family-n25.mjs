@@ -259,64 +259,100 @@ const WIRES = [
       'const slots = $slots;',
       'return { suffix: renderCrossDomain(slots.crossDomain) };'
     ].join('\n')
+  },
+  {
+    name: 'balance',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'if (slots.kind !== "balance") { return { main: "" }; }',
+      'const locations = slots.locations;',
+      'const questions = slots.questions;',
+      'let best = questions[0];',
+      'for (const question of questions.slice(1)) {',
+      '  const balance = Math.abs(2 * question.options.length - locations.length);',
+      '  const bestBalance = Math.abs(2 * best.options.length - locations.length);',
+      '  if (balance < bestBalance) { best = question; }',
+      '}',
+      'return { main: best.name + "." };'
+    ].join('\n')
+  },
+  {
+    name: 'robustness',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'if (slots.kind !== "robustness") { return { main: "" }; }',
+      'const intervals = slots.intervals;',
+      'const robust = intervals[0].low > intervals[1].high;',
+      'const main = robust',
+      '  ? "Yes; the ranking " + intervals[0].name + ">" + intervals[1].name + " is robust across the stated ranges."',
+      '  : "No; the ranking is sensitive to the uncertainty.";',
+      'return { main };'
+    ].join('\n')
+  },
+  {
+    name: 'counterexample',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'if (slots.kind !== "counterexample") { return { main: "" }; }',
+      'const towns = slots.towns;',
+      'let pair = null;',
+      'for (let i = 0; i < towns.length && pair === null; i += 1) {',
+      '  for (let j = i + 1; j < towns.length && pair === null; j += 1) {',
+      '    const left = towns[i];',
+      '    const right = towns[j];',
+      '    if (left.roads > right.roads && left.minutes >= right.minutes) { pair = [left.name, right.name]; }',
+      '    else if (right.roads > left.roads && right.minutes >= left.minutes) { pair = [right.name, left.name]; }',
+      '  }',
+      '}',
+      'return { main: pair === null ? "No; the stated towns agree with the claim." : "Yes. " + pair[0] + " and " + pair[1] + " form a counterexample." };'
+    ].join('\n')
+  },
+  {
+    name: 'causality',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'if (slots.kind !== "causality") { return { main: "" }; }',
+      'return { main: "No. The association alone does not establish that " + slots.cause + " cause " + slots.effect + "." };'
+    ].join('\n')
+  },
+  {
+    name: 'dominance',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'if (slots.kind !== "dominance") { return { main: "" }; }',
+      'const plans = slots.plans;',
+      'const first = plans[0], second = plans[1];',
+      'const atLeast = (left, right) => left.cost <= right.cost && left.minutes <= right.minutes && left.safety >= right.safety;',
+      'const strictlyBetter = (left, right) => left.cost < right.cost || left.minutes < right.minutes || left.safety > right.safety;',
+      'let main;',
+      'if (atLeast(first, second) && strictlyBetter(first, second)) {',
+      '  main = first.name + " Pareto-dominates " + second.name + ".";',
+      '} else if (atLeast(second, first) && strictlyBetter(second, first)) {',
+      '  main = second.name + " Pareto-dominates " + first.name + ".";',
+      '} else {',
+      '  main = "Neither plan dominates the other.";',
+      '}',
+      'return { main };'
+    ].join('\n')
+  },
+  {
+    name: 'verdict',
+    command: 'jsEval',
+    body: [
+      'const main = $balance.main || $robustness.main || $counterexample.main || $causality.main || $dominance.main;',
+      'if (main === "") { throw new Error("unknown meta-reasoning criterion: " + $slots.kind); }',
+      'return { main };'
+    ].join('\n')
   }
 ];
 
 const COMPUTE = [
-  'const slots = $slots;',
-  'let main;',
-  'if (slots.kind === "balance") {',
-  '  const locations = slots.locations;',
-  '  const questions = slots.questions;',
-  '  let best = questions[0];',
-  '  for (const question of questions.slice(1)) {',
-  '    const balance = Math.abs(2 * question.options.length - locations.length);',
-  '    const bestBalance = Math.abs(2 * best.options.length - locations.length);',
-  '    if (balance < bestBalance) {',
-  '      best = question;',
-  '    }',
-  '  }',
-  '  main = best.name + ".";',
-  '} else if (slots.kind === "robustness") {',
-  '  const intervals = slots.intervals;',
-  '  const robust = intervals[0].low > intervals[1].high;',
-  '  main = robust',
-  '    ? "Yes; the ranking " + intervals[0].name + ">" + intervals[1].name + " is robust across the stated ranges."',
-  '    : "No; the ranking is sensitive to the uncertainty.";',
-  '} else if (slots.kind === "counterexample") {',
-  '  const towns = slots.towns;',
-  '  let pair = null;',
-  '  for (let i = 0; i < towns.length && pair === null; i += 1) {',
-  '    for (let j = i + 1; j < towns.length && pair === null; j += 1) {',
-  '      const left = towns[i];',
-  '      const right = towns[j];',
-  '      if (left.roads > right.roads && left.minutes >= right.minutes) {',
-  '        pair = [left.name, right.name];',
-  '      } else if (right.roads > left.roads && right.minutes >= left.minutes) {',
-  '        pair = [right.name, left.name];',
-  '      }',
-  '    }',
-  '  }',
-  '  main = pair === null ? "No; the stated towns agree with the claim." : "Yes. " + pair[0] + " and " + pair[1] + " form a counterexample.";',
-  '} else if (slots.kind === "causality") {',
-  '  main = "No. The association alone does not establish that " + slots.cause + " cause " + slots.effect + ".";',
-  '} else if (slots.kind === "dominance") {',
-  '  const plans = slots.plans;',
-  '  const first = plans[0];',
-  '  const second = plans[1];',
-  '  const atLeast = (left, right) => left.cost <= right.cost && left.minutes <= right.minutes && left.safety >= right.safety;',
-  '  const strictlyBetter = (left, right) => left.cost < right.cost || left.minutes < right.minutes || left.safety > right.safety;',
-  '  if (atLeast(first, second) && strictlyBetter(first, second)) {',
-  '    main = first.name + " Pareto-dominates " + second.name + ".";',
-  '  } else if (atLeast(second, first) && strictlyBetter(second, first)) {',
-  '    main = second.name + " Pareto-dominates " + first.name + ".";',
-  '  } else {',
-  '    main = "Neither plan dominates the other.";',
-  '  }',
-  '} else {',
-  '  throw new Error("unknown meta-reasoning criterion: " + slots.kind);',
-  '}',
-  'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
+  'return $cross.suffix === "" ? $verdict.main : $verdict.main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {

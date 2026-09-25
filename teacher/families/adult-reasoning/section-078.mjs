@@ -84,20 +84,31 @@ function render(solution) {
   return `One person: ~${solution.minutes} min/GB. ${solution.peopleWord} people: about ${solution.slowFactor} times slower.`;
 }
 
+const WIRES = [
+  {
+    name: 'transfer',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const seconds = slots.gbInMb / slots.rateMbps;',
+      'probe(Number.isInteger(seconds) && seconds === slots.secondsShown && seconds > 0, "the exclusive transfer takes the whole number of seconds the sheet prints");',
+      'const minutes = Math.floor(seconds / 60);',
+      'probe(minutes === slots.minutesShown && minutes > 0, "the printed minutes are the truncated quotient of the seconds");',
+      'const perUser = slots.rateMbps / slots.userCount;',
+      'probe(perUser === slots.perUserShown && perUser > 0, "the equal model divides the rate between the sharers");',
+      'const slowFactor = slots.userCount / perUser;',
+      'probe(Number.isInteger(slowFactor) && slowFactor === slots.userCount, "the slowdown equals the number of sharers");',
+      'return { minutes, slowFactor };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
   'const slots = $slots;',
-  'const seconds = slots.gbInMb / slots.rateMbps;',
-  'probe(Number.isInteger(seconds) && seconds === slots.secondsShown && seconds > 0, "the exclusive transfer takes the whole number of seconds the sheet prints");',
-  'const minutes = Math.floor(seconds / 60);',
-  'probe(minutes === slots.minutesShown && minutes > 0, "the printed minutes are the truncated quotient of the seconds");',
-  'const perUser = slots.rateMbps / slots.userCount;',
-  'probe(perUser === slots.perUserShown && perUser > 0, "the equal model divides the rate between the sharers");',
-  'const slowFactor = slots.userCount / perUser;',
-  'probe(Number.isInteger(slowFactor) && slowFactor === slots.userCount, "the slowdown equals the number of sharers");',
   'const words = { 1: "One", 2: "Two", 3: "Three", 4: "Four", 5: "Five", 6: "Six", 7: "Seven", 8: "Eight", 9: "Nine", 10: "Ten" };',
   'const peopleWord = words[slots.userCount];',
   'probe(typeof peopleWord === "string", "the number of sharers must have a printed word");',
-  'return "One person: ~" + minutes + " min/GB. " + peopleWord + " people: about " + slowFactor + " times slower.";'
+  'return "One person: ~" + $transfer.minutes + " min/GB. " + peopleWord + " people: about " + $transfer.slowFactor + " times slower.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -118,6 +129,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

@@ -336,20 +336,32 @@ export const cases = [
     render(solution) {
       return `${solution.day}.`;
     },
-    compute: weekdayCompute([
-      'const first = days.indexOf(slots.range[0]);',
-      'const last = days.indexOf(slots.range[1]);',
-      'if (first === -1 || last < first) { throw new Error("the working-day range does not match the weekday order"); }',
-      'const working = days.slice(first, last + 1);',
-      'if (!working.includes(slots.start)) { throw new Error("the task starts on " + slots.start + ", which is not a working day"); }',
-      'let index = days.indexOf(slots.start);',
-      'let counted = 1;',
-      'while (counted < slots.required) {',
-      '  index = (index + 1) % days.length;',
-      '  if (working.includes(days[index])) { counted += 1; }',
-      '}',
-      'return days[index] + ".";'
-    ]),
+    wires: [
+      {
+        name: 'day',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'const facts = (typeof $facts === "object" && $facts !== null) ? $facts : JSON.parse(String($facts));',
+          'const days = facts.weekdays;',
+          'const first = days.indexOf(slots.range[0]);',
+          'const last = days.indexOf(slots.range[1]);',
+          'if (first === -1 || last < first) { throw new Error("the working-day range does not match the weekday order"); }',
+          'const working = days.slice(first, last + 1);',
+          'if (!working.includes(slots.start)) { throw new Error("the task starts on " + slots.start + ", which is not a working day"); }',
+          'let index = days.indexOf(slots.start);',
+          'let counted = 1;',
+          'while (counted < slots.required) {',
+          '  index = (index + 1) % days.length;',
+          '  if (working.includes(days[index])) { counted += 1; }',
+          '}',
+          'return days[index];'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'return $day + ".";'
+    ].join('\n'),
     explain(slots, solution) {
       return [
         `The working week is the block from ${slots.range[0]} to ${slots.range[1]}, read on the weekday order supplied by the fact table; Saturday and Sunday are outside it.`,
@@ -401,20 +413,32 @@ export const cases = [
     render(solution) {
       return `${solution.day}.`;
     },
-    compute: weekdayCompute([
-      'const first = days.indexOf(slots.range[0]);',
-      'const last = days.indexOf(slots.range[1]);',
-      'if (first === -1 || last < first) { throw new Error("the working-day range does not match the weekday order"); }',
-      'const working = days.slice(first, last + 1);',
-      'let index = days.indexOf(slots.received);',
-      'if (index === -1) { throw new Error("unknown weekday \\"" + slots.received + "\\""); }',
-      'let counted = 0;',
-      'while (counted < slots.count) {',
-      '  index = (index + 1) % days.length;',
-      '  if (working.includes(days[index])) { counted += 1; }',
-      '}',
-      'return days[index] + ".";'
-    ]),
+    wires: [
+      {
+        name: 'day',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'const facts = (typeof $facts === "object" && $facts !== null) ? $facts : JSON.parse(String($facts));',
+          'const days = facts.weekdays;',
+          'const first = days.indexOf(slots.range[0]);',
+          'const last = days.indexOf(slots.range[1]);',
+          'if (first === -1 || last < first) { throw new Error("the working-day range does not match the weekday order"); }',
+          'const working = days.slice(first, last + 1);',
+          'let index = days.indexOf(slots.received);',
+          'if (index === -1) { throw new Error("unknown weekday \\"" + slots.received + "\\""); }',
+          'let counted = 0;',
+          'while (counted < slots.count) {',
+          '  index = (index + 1) % days.length;',
+          '  if (working.includes(days[index])) { counted += 1; }',
+          '}',
+          'return days[index];'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'return $day + ".";'
+    ].join('\n'),
     explain(slots, solution) {
       return [
         `Working days are the block from ${slots.range[0]} to ${slots.range[1]} in the weekday order given by the fact table.`,

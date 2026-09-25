@@ -82,33 +82,58 @@ function render(solution) {
   return `${solution.tempClause}; ${solution.humidityClause}. ${solution.actClause}`;
 }
 
+const WIRES = [
+  {
+    name: 'temp',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const drop = slots.midTemperature - slots.wallTemperature;',
+      'const coldWall = drop > slots.coldWallDrop;',
+      'const tempClause = coldWall',
+      '  ? slots.midTemperature + "−" + slots.wallTemperature + "=" + drop + ">" + slots.coldWallDrop + " cold wall"',
+      '  : slots.midTemperature + "−" + slots.wallTemperature + "=" + drop + "≤" + slots.coldWallDrop + " no cold wall";',
+      'return { tempClause, coldWall };'
+    ].join('\n')
+  },
+  {
+    name: 'humidity',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'let humidityClause;',
+      'if ($temp.coldWall && slots.humidityPercent >= slots.riskHumidity) {',
+      '  humidityClause = slots.humidityPercent + "% + cold wall = condensation risk";',
+      '} else if (slots.humidityPercent > slots.humidityHigh) {',
+      '  humidityClause = slots.humidityPercent + "% is above the " + slots.humidityLow + "–" + slots.humidityHigh + "% target";',
+      '} else if (slots.humidityPercent < slots.humidityLow) {',
+      '  humidityClause = slots.humidityPercent + "% is below the " + slots.humidityLow + "–" + slots.humidityHigh + "% target";',
+      '} else {',
+      '  humidityClause = slots.humidityPercent + "% is inside the " + slots.humidityLow + "–" + slots.humidityHigh + "% target";',
+      '}',
+      'return humidityClause;'
+    ].join('\n')
+  },
+  {
+    name: 'act',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'let actClause;',
+      'if (slots.tiltHours >= slots.tiltLimit) {',
+      '  actClause = "Long tilt breaks the " + slots.airingMinutes + "-minute airing.";',
+      '} else if (slots.radiatorOn) {',
+      '  actClause = "The radiator must be off during the airing.";',
+      '} else {',
+      '  actClause = "A wide " + slots.airingMinutes + "-minute airing with the radiator off is the gesture.";',
+      '}',
+      'return actClause;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const drop = slots.midTemperature - slots.wallTemperature;',
-  'const coldWall = drop > slots.coldWallDrop;',
-  'const tempClause = coldWall',
-  '  ? slots.midTemperature + "−" + slots.wallTemperature + "=" + drop + ">" + slots.coldWallDrop + " cold wall"',
-  '  : slots.midTemperature + "−" + slots.wallTemperature + "=" + drop + "≤" + slots.coldWallDrop + " no cold wall";',
-  'let humidityClause;',
-  'if (coldWall && slots.humidityPercent >= slots.riskHumidity) {',
-  '  humidityClause = slots.humidityPercent + "% + cold wall = condensation risk";',
-  '} else if (slots.humidityPercent > slots.humidityHigh) {',
-  '  humidityClause = slots.humidityPercent + "% is above the " + slots.humidityLow + "–" + slots.humidityHigh + "% target";',
-  '} else if (slots.humidityPercent < slots.humidityLow) {',
-  '  humidityClause = slots.humidityPercent + "% is below the " + slots.humidityLow + "–" + slots.humidityHigh + "% target";',
-  '} else {',
-  '  humidityClause = slots.humidityPercent + "% is inside the " + slots.humidityLow + "–" + slots.humidityHigh + "% target";',
-  '}',
-  'let actClause;',
-  'if (slots.tiltHours >= slots.tiltLimit) {',
-  '  actClause = "Long tilt breaks the " + slots.airingMinutes + "-minute airing.";',
-  '} else if (slots.radiatorOn) {',
-  '  actClause = "The radiator must be off during the airing.";',
-  '} else {',
-  '  actClause = "A wide " + slots.airingMinutes + "-minute airing with the radiator off is the gesture.";',
-  '}',
-  'const answer = tempClause + "; " + humidityClause + ". " + actClause;',
-  'return answer;'
+  'return $temp.tempClause + "; " + $humidity + ". " + $act;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -129,6 +154,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

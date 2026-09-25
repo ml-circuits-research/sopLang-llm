@@ -97,26 +97,31 @@ function render(solution) {
 
 const WIRES = [
   {
-    name: 'scores',
+    name: 'weighted',
     command: 'jsEval',
     body: [
       'const slots = $slots;',
       'const criteria = slots.weights.length;',
-      'const labels = [];',
       'const hundredths = {};',
       'for (const option of slots.options) {',
       '  let total = 0;',
       '  for (let index = 0; index < criteria; index += 1) {',
-      '    const score = option.scores[index];',
-      '    total += slots.weights[index].percent * score;',
+      '    total += slots.weights[index].percent * option.scores[index];',
       '  }',
       '  hundredths[option.label] = total;',
-      '  labels.push(option.label);',
       '}',
-      'const maximum = Math.max(...labels.map((label) => hundredths[label]));',
-      'const winners = labels.filter((label) => hundredths[label] === maximum);',
+      'return { hundredths, labels: slots.options.map((option) => option.label) };'
+    ].join('\n')
+  },
+  {
+    name: 'scores',
+    command: 'jsEval',
+    body: [
+      'const weighted = $weighted;',
+      'const maximum = Math.max(...weighted.labels.map((label) => weighted.hundredths[label]));',
+      'const winners = weighted.labels.filter((label) => weighted.hundredths[label] === maximum);',
       'probe(winners.length > 0, "the weighted scores must attain a maximum");',
-      'return { labels, hundredths, winners };'
+      'return { labels: weighted.labels, hundredths: weighted.hundredths, winners };'
     ].join('\n')
   }
 ];

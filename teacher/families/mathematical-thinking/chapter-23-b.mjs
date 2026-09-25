@@ -350,29 +350,32 @@ export const cases = [
     },
     wires: [
       {
-        name: 'separating',
+        name: 'optionValues',
         command: 'jsEval',
         body: [
           'const slots = $slots;',
-          'let separating = null;',
-          'for (const option of slots.options) {',
-          '  const word = option.toLowerCase().replace("does it have ", "").replace("is it ", "").replace("does it ", "").replace("?", "").trim();',
-          '  const values = slots.possibilities.map((description) => {',
-          '    const words = description.toLowerCase().split(/\\s+/);',
-          '    if (word === "flat faces" || word === "flat face") {',
-          '      if (words.includes(slots.flatFaces.yes)) { return true; }',
-          '      if (words.includes(slots.flatFaces.no)) { return false; }',
-          '      return null;',
-          '    }',
-          '    const opposites = { large: "small", small: "large" };',
-          '    if (words.includes(word)) { return true; }',
-          '    if (opposites[word] !== undefined && words.includes(opposites[word])) { return false; }',
-          '    return null;',
-          '  });',
-          '  if (values.some((value) => value === null)) { throw new Error("the descriptions do not answer " + option); }',
-          '  if (values[0] !== values[1]) { separating = option; break; }',
+          'const opposites = { large: "small", small: "large" };',
+          'const wordsOf = slots.possibilities.map((description) => description.toLowerCase().split(/\\s+/));',
+          'const valueOf = (word, words) => {',
+          '  if (word === "flat faces" || word === "flat face") { return words.includes(slots.flatFaces.yes) ? true : words.includes(slots.flatFaces.no) ? false : null; }',
+          '  if (words.includes(word)) { return true; }',
+          '  if (opposites[word] !== undefined && words.includes(opposites[word])) { return false; }',
+          '  return null;',
+          '};',
+          'const wordOf = (option) => option.toLowerCase().replace("does it have ", "").replace("is it ", "").replace("does it ", "").replace("?", "").trim();',
+          'return slots.options.map((option) => ({ option, values: wordsOf.map((words) => valueOf(wordOf(option), words)) }));'
+        ].join('\n')
+      },
+      {
+        name: 'separating',
+        command: 'jsEval',
+        body: [
+          'const values = $optionValues;',
+          'for (const entry of values) {',
+          '  if (entry.values.some((value) => value === null)) { throw new Error("the descriptions do not answer " + entry.option); }',
+          '  if (entry.values[0] !== entry.values[1]) { return entry.option; }',
           '}',
-          'return separating;'
+          'return null;'
         ].join('\n')
       }
     ],
@@ -492,10 +495,8 @@ export const cases = [
         body: [
           'const slots = $slots;',
           MATCHES_SOURCE,
-          KEEP_SOURCE,
-          'const first = keep(keep(slots.candidates, slots.clues[0]), slots.clues[1]);',
-          'const second = keep(keep(slots.candidates, slots.clues[1]), slots.clues[0]);',
-          'return { first, second };'
+          'const apply = (a, b) => slots.candidates.filter((value) => matches(value, a)).filter((value) => matches(value, b));',
+          'return { first: apply(slots.clues[0], slots.clues[1]), second: apply(slots.clues[1], slots.clues[0]) };'
         ].join('\n')
       }
     ],
@@ -542,16 +543,22 @@ export const cases = [
     },
     wires: [
       {
-        name: 'strongest',
+        name: 'counts',
         command: 'jsEval',
         body: [
           'const slots = $slots;',
           MATCHES_SOURCE,
           KEEP_SOURCE,
+          'return slots.clues.map((clue) => ({ text: clue.text, remaining: keep(slots.candidates, clue.predicate).length }));'
+        ].join('\n')
+      },
+      {
+        name: 'strongest',
+        command: 'jsEval',
+        body: [
           'let best = null;',
-          'for (const clue of slots.clues) {',
-          '  const remaining = keep(slots.candidates, clue.predicate).length;',
-          '  if (best === null || remaining < best.remaining) { best = { text: clue.text, remaining }; }',
+          'for (const entry of $counts) {',
+          '  if (best === null || entry.remaining < best.remaining) { best = entry; }',
           '}',
           'return best;'
         ].join('\n')

@@ -78,23 +78,41 @@ function render(solution) {
   return `${parts.join('; ')}.`;
 }
 
+const WIRES = [
+  {
+    name: 'classified',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const classify = (tag) => {',
+      '  if (/i\\+u/.test(tag)) return "both";',
+      '  if (/neither/.test(tag)) return "neither";',
+      '  if (/u, not i/.test(tag)) return "urgent";',
+      '  if (/i, not u/.test(tag)) return "important";',
+      '  throw new Error("the item tag " + tag + " does not name a cell of the grid");',
+      '};',
+      'const rank = { both: 0, important: 1, urgent: 2, neither: 3 };',
+      'return slots.items.map((item) => {',
+      '  const cls = classify(item.tag);',
+      '  return { n: item.n, rank: rank[cls], label: cls === "urgent" ? "short/delegated" : slots.grid[cls] };',
+      '});'
+    ].join('\n')
+  },
+  {
+    name: 'ordered',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const ordered = $classified.sort((left, right) => left.rank - right.rank);',
+      'probe(ordered[0].label === slots.grid.both, "the first chore must sit in the both-cells of the grid");',
+      'probe(ordered[3].label === slots.grid.neither, "the last chore must sit in the neither cell of the grid");',
+      'return ordered;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const classify = (tag) => {',
-  '  if (/i\\+u/.test(tag)) return "both";',
-  '  if (/neither/.test(tag)) return "neither";',
-  '  if (/u, not i/.test(tag)) return "urgent";',
-  '  if (/i, not u/.test(tag)) return "important";',
-  '  throw new Error("the item tag " + tag + " does not name a cell of the grid");',
-  '};',
-  'const rank = { both: 0, important: 1, urgent: 2, neither: 3 };',
-  'const ordered = slots.items.map((item) => {',
-  '  const cls = classify(item.tag);',
-  '  return { n: item.n, rank: rank[cls], label: cls === "urgent" ? "short/delegated" : slots.grid[cls] };',
-  '}).sort((left, right) => left.rank - right.rank);',
-  'probe(ordered[0].label === slots.grid.both, "the first chore must sit in the both-cells of the grid");',
-  'probe(ordered[3].label === slots.grid.neither, "the last chore must sit in the neither cell of the grid");',
-  'return ordered.map((item) => "(" + item.n + ") " + item.label).join("; ") + ".";'
+  'return $ordered.map((item) => "(" + item.n + ") " + item.label).join("; ") + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -118,6 +136,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

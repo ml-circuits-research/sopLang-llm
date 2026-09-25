@@ -77,26 +77,44 @@ function render(solution) {
   return `${solution.moneyClause} ${solution.timeClause} ${solution.verdict}`;
 }
 
+const WIRES = [
+  {
+    name: 'money',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const cost = slots.quantityKg * slots.pricePerKg;',
+      'const moneyOk = cost <= slots.budget;',
+      'const moneyClause = moneyOk',
+      '  ? "Money: " + cost + " ≤ " + slots.budget + " → ok."',
+      '  : "Money: " + cost + " > " + slots.budget + " → no.";',
+      'return { moneyClause, moneyOk };'
+    ].join('\n')
+  },
+  {
+    name: 'time',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const toClock = (total) => {',
+      '  const wrapped = ((total % 1440) + 1440) % 1440;',
+      '  return String(Math.floor(wrapped / 60)).padStart(2, "0") + ":" + String(wrapped % 60).padStart(2, "0");',
+      '};',
+      'const arrivalPlus = slots.arrival + slots.walkMinutes;',
+      'const minutesLeft = slots.closesAt - arrivalPlus;',
+      'const minutesText = minutesLeft === 1 ? "1 minute" : minutesLeft + " minutes";',
+      'const timeOk = slots.shoppingMinutes !== null && slots.shoppingMinutes <= minutesLeft;',
+      'const timeClause = "Time: " + toClock(slots.arrival) + "+" + slots.walkMinutes + " min=" + toClock(arrivalPlus) + ", close " + toClock(slots.closesAt) + " — " + minutesText + " in the shop, " + (timeOk ? "enough." : "not given as enough.");',
+      'return { timeClause, timeOk };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const toClock = (total) => {',
-  '  const wrapped = ((total % 1440) + 1440) % 1440;',
-  '  return String(Math.floor(wrapped / 60)).padStart(2, "0") + ":" + String(wrapped % 60).padStart(2, "0");',
-  '};',
-  'const cost = slots.quantityKg * slots.pricePerKg;',
-  'const moneyOk = cost <= slots.budget;',
-  'const moneyClause = moneyOk',
-  '  ? "Money: " + cost + " ≤ " + slots.budget + " → ok."',
-  '  : "Money: " + cost + " > " + slots.budget + " → no.";',
-  'const arrivalPlus = slots.arrival + slots.walkMinutes;',
-  'const minutesLeft = slots.closesAt - arrivalPlus;',
-  'const minutesText = minutesLeft === 1 ? "1 minute" : minutesLeft + " minutes";',
-  'const timeOk = slots.shoppingMinutes !== null && slots.shoppingMinutes <= minutesLeft;',
-  'const timeClause = "Time: " + toClock(slots.arrival) + "+" + slots.walkMinutes + " min=" + toClock(arrivalPlus) + ", close " + toClock(slots.closesAt) + " — " + minutesText + " in the shop, " + (timeOk ? "enough." : "not given as enough.");',
-  'const verdict = moneyOk && timeOk',
+  'const verdict = $money.moneyOk && $time.timeOk',
   '  ? "The synthesis is a sure yes: both time and money suffice."',
-  '  : (timeOk ? "The synthesis is not a sure yes: money is not secured." : "The synthesis is not a sure yes: time is not secured.");',
-  'return moneyClause + " " + timeClause + " " + verdict;'
+  '  : ($time.timeOk ? "The synthesis is not a sure yes: money is not secured." : "The synthesis is not a sure yes: time is not secured.");',
+  'return $money.moneyClause + " " + $time.timeClause + " " + verdict;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -118,6 +136,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

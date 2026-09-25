@@ -149,17 +149,27 @@ function render(solution) {
   return `The minimum-cost robust action is ${solution.action}, cost ${solution.cost}.`;
 }
 
+const WIRES = [
+  {
+    name: 'action',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const labels = [...new Set(slots.labels)];',
+      'const covering = slots.actions.filter((action) => {',
+      '  return labels.every((label) => action.repairs.includes(label));',
+      '});',
+      'probe(covering.length > 0, "no stated action repairs every fault that is still possible");',
+      'const cost = Math.min(...covering.map((action) => action.cost));',
+      'const cheapest = covering.filter((action) => action.cost === cost);',
+      'probe(cheapest.length === 1, "two actions must not tie for the minimum cost");',
+      'return { name: cheapest[0].name, cost: cost };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const labels = [...new Set(slots.labels)];',
-  'const covering = slots.actions.filter((action) => {',
-  '  return labels.every((label) => action.repairs.includes(label));',
-  '});',
-  'probe(covering.length > 0, "no stated action repairs every fault that is still possible");',
-  'const cost = Math.min(...covering.map((action) => action.cost));',
-  'const cheapest = covering.filter((action) => action.cost === cost);',
-  'probe(cheapest.length === 1, "two actions must not tie for the minimum cost");',
-  'return "The minimum-cost robust action is " + cheapest[0].name + ", cost " + cost + ".";'
+  'return "The minimum-cost robust action is " + $action.name + ", cost " + $action.cost + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -185,6 +195,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

@@ -96,21 +96,32 @@ function render(solution) {
   return `${solution.verdictClause} ${solution.boardingClause} ${solution.outcomeClause}`;
 }
 
+const WIRES = [
+  {
+    name: 'times',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const lastBoardingMinutes = slots.askedDepartureMinutes - slots.boardingMinutes;',
+      'probe(lastBoardingMinutes > 0, "the last boarding of the asked departure must fall inside the day");',
+      'const haltMinutes = slots.askedDepartureMinutes + slots.durationMinutes;',
+      'const catches = slots.arrivalMinutes <= lastBoardingMinutes;',
+      'const destinationWord = slots.destination.slice(slots.destination.lastIndexOf(" ") + 1);',
+      'return { catches, lastBoardingMinutes, haltMinutes, destinationWord };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
   'const slots = $slots;',
   'const formatTime = (totalMinutes) => {',
   '  const wrapped = ((totalMinutes % 1440) + 1440) % 1440;',
   '  return String(Math.floor(wrapped / 60)).padStart(2, "0") + ":" + String(wrapped % 60).padStart(2, "0");',
   '};',
-  'const lastBoardingMinutes = slots.askedDepartureMinutes - slots.boardingMinutes;',
-  'probe(lastBoardingMinutes > 0, "the last boarding of the asked departure must fall inside the day");',
-  'const haltMinutes = slots.askedDepartureMinutes + slots.durationMinutes;',
-  'const catches = slots.arrivalMinutes <= lastBoardingMinutes;',
-  'const destinationWord = slots.destination.slice(slots.destination.lastIndexOf(" ") + 1);',
-  'const verdictClause = catches ? "Yes." : "No.";',
-  'const boardingClause = "Last boarding " + formatTime(lastBoardingMinutes) + ".";',
-  'const outcomeClause = catches',
-  '  ? destinationWord + " arrival " + formatTime(haltMinutes) + "."',
+  'const verdictClause = $times.catches ? "Yes." : "No.";',
+  'const boardingClause = "Last boarding " + formatTime($times.lastBoardingMinutes) + ".";',
+  'const outcomeClause = $times.catches',
+  '  ? $times.destinationWord + " arrival " + formatTime($times.haltMinutes) + "."',
   '  : slots.arrivalTime + " is late. There is no " + slots.missingDeparture + " on Monday.";',
   'return verdictClause + " " + boardingClause + " " + outcomeClause;'
 ].join('\n');
@@ -136,6 +147,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

@@ -108,13 +108,13 @@ const WIRES = [
       '    changed = true;',
       '  }',
       '}',
-      'probe(reached.size > 0, "the changed node must reach at least one node of the network");',
       'return [...reached.values()];'
     ].join('\n')
   }
 ];
 
 const COMPUTE = [
+  'probe($reached.length > 0, "the changed node must reach at least one node of the network");',
   'return "The effect can propagate to: " + $reached.join(", ") + ".";'
 ].join('\n');
 

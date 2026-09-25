@@ -104,35 +104,47 @@ function render(solution) {
 
 const WIRES = [
   {
-    name: 'allocate',
+    name: 'feasible',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const depth = slots.programs.A.length;',
+      'const triples = [];',
+      'for (let a = 0; a <= slots.units; a += 1) {',
+      '  for (let b = 0; a + b <= slots.units; b += 1) {',
+      '    const c = slots.units - a - b;',
+      '    if (a <= depth && b <= depth && c <= depth) triples.push({ A: a, B: b, C: c });',
+      '  }',
+      '}',
+      'return triples;'
+    ].join('\n')
+  },
+  {
+    name: 'evaluate',
     command: 'jsEval',
     body: [
       'const slots = $slots;',
       'const names = ["A", "B", "C"];',
-      'const depth = slots.programs.A.length;',
       'const totalOf = (taken) => names.reduce((sum, name) => sum + slots.programs[name].slice(0, taken[name]).reduce((left, right) => left + right, 0), 0);',
       'let best = null;',
       'let optima = 0;',
       'let allocation = null;',
-      'for (let a = 0; a <= slots.units; a += 1) {',
-      '  for (let b = 0; a + b <= slots.units; b += 1) {',
-      '    const taken = { A: a, B: b, C: slots.units - a - b };',
-      '    if (names.some((name) => taken[name] > depth)) {',
-      '      continue;',
-      '    }',
-      '    const value = totalOf(taken);',
-      '    if (best === null || value > best) {',
-      '      best = value;',
-      '      optima = 1;',
-      '      allocation = taken;',
-      '    } else if (value === best) {',
-      '      optima += 1;',
-      '    }',
-      '  }',
+      'for (const taken of $feasible) {',
+      '  const value = totalOf(taken);',
+      '  if (best === null || value > best) { best = value; optima = 1; allocation = taken; }',
+      '  else if (value === best) optima += 1;',
       '}',
-      'probe(allocation !== null, "at least one allocation of the stated units must be feasible");',
-      'probe(best > 0, "the optimal allocation must have a positive total benefit");',
       'return { allocation, best, optima };'
+    ].join('\n')
+  },
+  {
+    name: 'allocate',
+    command: 'jsEval',
+    body: [
+      'const search = $evaluate;',
+      'probe(search.allocation !== null, "at least one allocation of the stated units must be feasible");',
+      'probe(search.best > 0, "the optimal allocation must have a positive total benefit");',
+      'return { allocation: search.allocation, best: search.best, optima: search.optima };'
     ].join('\n')
   }
 ];

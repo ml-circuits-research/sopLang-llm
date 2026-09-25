@@ -86,26 +86,28 @@ const WIRES = [
       'const slots = $slots;',
       'return { suffix: renderCrossDomain(slots.crossDomain) };'
     ].join('\n')
+  },
+  {
+    name: 'verdict',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const evidenceMet = slots.independentEvidence >= slots.requiredEvidence;',
+      'const responseMet = slots.responseOpportunity;',
+      'const authorized = evidenceMet && responseMet;',
+      'let condition;',
+      'if (authorized) { condition = "Both the evidence requirement and the right-to-respond condition are met."; }',
+      'else if (!evidenceMet && !responseMet) { condition = "Both the evidence requirement and the right-to-respond condition are not met."; }',
+      'else if (!evidenceMet) { condition = "The evidence requirement is not met."; }',
+      'else { condition = "The right-to-respond condition is not met."; }',
+      'probe(!authorized || (evidenceMet && responseMet), "the verdict must follow from the conjunctive procedure");',
+      'return { authorized, condition };'
+    ].join('\n')
   }
 ];
 
 const COMPUTE = [
-  'const slots = $slots;',
-  'const evidenceMet = slots.independentEvidence >= slots.requiredEvidence;',
-  'const responseMet = slots.responseOpportunity;',
-  'const authorized = evidenceMet && responseMet;',
-  'let condition;',
-  'if (authorized) {',
-  '  condition = "Both the evidence requirement and the right-to-respond condition are met.";',
-  '} else if (!evidenceMet && !responseMet) {',
-  '  condition = "Both the evidence requirement and the right-to-respond condition are not met.";',
-  '} else if (!evidenceMet) {',
-  '  condition = "The evidence requirement is not met.";',
-  '} else {',
-  '  condition = "The right-to-respond condition is not met.";',
-  '}',
-  'probe(!authorized || (evidenceMet && responseMet), "the verdict must follow from the conjunctive procedure");',
-  'const main = (authorized ? "Yes." : "No.") + " " + condition;',
+  'const main = ($verdict.authorized ? "Yes." : "No.") + " " + $verdict.condition;',
   'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 

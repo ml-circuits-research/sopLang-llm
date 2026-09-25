@@ -113,25 +113,53 @@ function render(solution) {
   return `${solution.signupClause} ${solution.withdrawClause}`;
 }
 
+const WIRES = [
+  {
+    name: 'days',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const WEEKDAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];',
+      'const start = WEEKDAY_NAMES.indexOf(slots.today);',
+      'const end = WEEKDAY_NAMES.indexOf(slots.tripDay);',
+      'const days = [];',
+      'for (let index = start + 1; index < end; index += 1) {',
+      '  if (slots.workingDays.indexOf(WEEKDAY_NAMES[index]) !== -1) { days.push(WEEKDAY_NAMES[index]); }',
+      '}',
+      'return days;'
+    ].join('\n')
+  },
+  {
+    name: 'signup',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const WEEKDAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];',
+      'const start = WEEKDAY_NAMES.indexOf(slots.today);',
+      'const open = start < WEEKDAY_NAMES.indexOf(slots.deadlineDay)',
+      '  || (start === WEEKDAY_NAMES.indexOf(slots.deadlineDay) && slots.todayMinutes <= slots.deadlineMinutes);',
+      'const signupClause = open',
+      '  ? "Sign-up is open until " + slots.deadlineDay + " " + slots.deadlineTime + "."',
+      '  : "Sign-up closed at " + slots.deadlineDay + " " + slots.deadlineTime + ".";',
+      'return signupClause;'
+    ].join('\n')
+  },
+  {
+    name: 'withdraw',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const recovered = $days.length >= slots.requiredDays ? slots.refundPercent : 0;',
+      'const qualifier = $days.length >= slots.requiredDays ? "has" : "has only";',
+      'const shortfall = $days.length >= slots.requiredDays ? "≥" : "<";',
+      'const withdrawClause = "Withdrawal from " + slots.today + " " + qualifier + " " + $days.join("+") + " (" + $days.length + ") " + shortfall + " " + slots.requiredDays + " → " + recovered + "%";',
+      'return withdrawClause;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const WEEKDAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];',
-  'const start = WEEKDAY_NAMES.indexOf(slots.today);',
-  'const end = WEEKDAY_NAMES.indexOf(slots.tripDay);',
-  'const days = [];',
-  'for (let index = start + 1; index < end; index += 1) {',
-  '  if (slots.workingDays.indexOf(WEEKDAY_NAMES[index]) !== -1) { days.push(WEEKDAY_NAMES[index]); }',
-  '}',
-  'const recovered = days.length >= slots.requiredDays ? slots.refundPercent : 0;',
-  'const open = start < WEEKDAY_NAMES.indexOf(slots.deadlineDay)',
-  '  || (start === WEEKDAY_NAMES.indexOf(slots.deadlineDay) && slots.todayMinutes <= slots.deadlineMinutes);',
-  'const signupClause = open',
-  '  ? "Sign-up is open until " + slots.deadlineDay + " " + slots.deadlineTime + "."',
-  '  : "Sign-up closed at " + slots.deadlineDay + " " + slots.deadlineTime + ".";',
-  'const qualifier = days.length >= slots.requiredDays ? "has" : "has only";',
-  'const shortfall = days.length >= slots.requiredDays ? "≥" : "<";',
-  'const withdrawClause = "Withdrawal from " + slots.today + " " + qualifier + " " + days.join("+") + " (" + days.length + ") " + shortfall + " " + slots.requiredDays + " → " + recovered + "%";',
-  'return signupClause + " " + withdrawClause;'
+  'return $signup + " " + $withdraw;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -152,6 +180,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

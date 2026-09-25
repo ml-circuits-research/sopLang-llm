@@ -62,21 +62,31 @@ function render(solution) {
   return `${solution.durationClause} ${solution.arrivalClause}`;
 }
 
+const WIRES = [
+  {
+    name: 'duration',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const durationMinutes = Math.round((slots.distanceKm / slots.speedKmh) * 60);',
+      'probe(Number.isInteger(durationMinutes) && durationMinutes > 0, "the sheet must give a positive walking duration");',
+      'probe(Math.abs(durationMinutes / 60 - slots.distanceKm / slots.speedKmh) < 1 / 120, "the duration must be the distance divided by the speed");',
+      'probe(durationMinutes < 1440, "the walk must fit inside one day for the printed arrival hour");',
+      'const formatTime = (totalMinutes) => {',
+      '  const wrapped = ((totalMinutes % 1440) + 1440) % 1440;',
+      '  return String(Math.floor(wrapped / 60)).padStart(2, "0") + ":" + String(wrapped % 60).padStart(2, "0");',
+      '};',
+      'const hours = Math.floor(durationMinutes / 60);',
+      'const minutes = durationMinutes % 60;',
+      'const durationClause = (durationMinutes / 60).toFixed(2) + " h ≈ " + hours + " h " + minutes + " min.";',
+      'const arrivalClause = "Arrival " + formatTime(slots.startMinutes + durationMinutes) + ".";',
+      'return { durationClause, arrivalClause };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const durationMinutes = Math.round((slots.distanceKm / slots.speedKmh) * 60);',
-  'probe(Number.isInteger(durationMinutes) && durationMinutes > 0, "the sheet must give a positive walking duration");',
-  'probe(Math.abs(durationMinutes / 60 - slots.distanceKm / slots.speedKmh) < 1 / 120, "the duration must be the distance divided by the speed");',
-  'probe(durationMinutes < 1440, "the walk must fit inside one day for the printed arrival hour");',
-  'const formatTime = (totalMinutes) => {',
-  '  const wrapped = ((totalMinutes % 1440) + 1440) % 1440;',
-  '  return String(Math.floor(wrapped / 60)).padStart(2, "0") + ":" + String(wrapped % 60).padStart(2, "0");',
-  '};',
-  'const hours = Math.floor(durationMinutes / 60);',
-  'const minutes = durationMinutes % 60;',
-  'const durationClause = (durationMinutes / 60).toFixed(2) + " h ≈ " + hours + " h " + minutes + " min.";',
-  'const arrivalClause = "Arrival " + formatTime(slots.startMinutes + durationMinutes) + ".";',
-  'return durationClause + " " + arrivalClause;'
+  'return $duration.durationClause + " " + $duration.arrivalClause;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -99,6 +109,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

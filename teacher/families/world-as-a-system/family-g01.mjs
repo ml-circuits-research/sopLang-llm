@@ -119,10 +119,9 @@ function render(solution) {
 
 const WIRES = [
   {
-    name: 'position',
+    name: 'adjacency',
     command: 'jsEval',
     body: [
-      'const slots = $slots;',
       'const vectors = { east: [1, 0], west: [-1, 0], north: [0, 1], south: [0, -1] };',
       'const adjacency = new Map();',
       'const link = (from, to, vector) => {',
@@ -131,29 +130,32 @@ const WIRES = [
       '  }',
       '  adjacency.get(from).push({ to, vector });',
       '};',
-      'for (const relation of slots.relations) {',
+      'for (const relation of $slots.relations) {',
       '  const vector = vectors[relation.direction];',
       '  const step = [vector[0] * relation.units, vector[1] * relation.units];',
       '  link(relation.place, relation.reference, [-step[0], -step[1]]);',
       '  link(relation.reference, relation.place, step);',
       '}',
-      'const seen = new Set([slots.origin]);',
-      'const queue = [{ name: slots.origin, position: [0, 0] }];',
-      'let position = null;',
-      'while (queue.length > 0 && position === null) {',
-      '  const current = queue.shift();',
-      '  if (current.name === slots.target) {',
-      '    position = current.position;',
-      '    break;',
-      '  }',
-      '  for (const edge of adjacency.get(current.name) || []) {',
-      '    if (seen.has(edge.to)) {',
-      '      continue;',
+      'return adjacency;'
+    ].join('\n')
+  },
+  {
+    name: 'position',
+    command: 'jsEval',
+    body: [
+      'const positions = new Map([[$slots.origin, [0, 0]]]);',
+      'const queue = [$slots.origin];',
+      'while (queue.length > 0) {',
+      '  const name = queue.shift();',
+      '  for (const edge of $adjacency.get(name) || []) {',
+      '    if (!positions.has(edge.to)) {',
+      '      const pos = positions.get(name);',
+      '      positions.set(edge.to, [pos[0] + edge.vector[0], pos[1] + edge.vector[1]]);',
+      '      queue.push(edge.to);',
       '    }',
-      '    seen.add(edge.to);',
-      '    queue.push({ name: edge.to, position: [current.position[0] + edge.vector[0], current.position[1] + edge.vector[1]] });',
       '  }',
       '}',
+      'const position = positions.get($slots.target) ?? null;',
       'probe(position !== null, "the target must be reachable from the origin through the stated moves");',
       'return position;'
     ].join('\n')

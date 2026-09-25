@@ -360,10 +360,9 @@ export const cases = [
     },
     wires: [
       {
-        name: 'best', command: 'jsEval', body: [
+        name: 'plans', command: 'jsEval', body: [
           'const slots = $slots;',
-          'let best = null;',
-          'for (let mask = 0; mask < (1 << slots.tasks.length); mask += 1) {',
+          'return Array.from({ length: 1 << slots.tasks.length }, (unused, mask) => {',
           '  const chosen = slots.tasks.filter((task, index) => (mask & (1 << index)) !== 0);',
           '  const names = chosen.map((task) => task.name);',
           '  let feasible = true;',
@@ -374,9 +373,18 @@ export const cases = [
           '    value += task.value;',
           '    if (task.requires !== null && !names.includes(task.requires)) { feasible = false; }',
           '  }',
-          '  if (!feasible || time > slots.budget) { continue; }',
-          '  if (best === null || value > best.value || (value === best.value && time < best.time)) {',
-          '    best = { names: names, time: time, value: value };',
+          '  return { names, time, value, feasible };',
+          '});'
+        ].join('\n')
+      },
+      {
+        name: 'best', command: 'jsEval', body: [
+          'const slots = $slots;',
+          'let best = null;',
+          'for (const plan of $plans) {',
+          '  if (!plan.feasible || plan.time > slots.budget) { continue; }',
+          '  if (best === null || plan.value > best.value || (plan.value === best.value && plan.time < best.time)) {',
+          '    best = { names: plan.names, time: plan.time, value: plan.value };',
           '  }',
           '}',
           'return best;'
