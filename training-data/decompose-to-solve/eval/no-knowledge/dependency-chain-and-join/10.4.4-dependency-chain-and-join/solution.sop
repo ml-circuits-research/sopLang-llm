@@ -9,9 +9,19 @@
   "limitMinutes": 41
 }
 
-@answer jsEval
+@join jsEval
 const slots = $slots;
 const joinMinutes = Math.max(slots.bMinutes, slots.cMinutes);
-const minutes = slots.aMinutes + joinMinutes + slots.dMinutes + slots.eMinutes + slots.bufferMinutes;
-return "The earliest safe completion time is " + minutes + " minutes, so the plan is " + (minutes <= slots.limitMinutes ? "feasible" : "not feasible") + ". The critical insight is that B and C are parallel branches whose maximum duration controls the join.";
+probe(Number.isInteger(joinMinutes) && joinMinutes > 0, "the parallel join must be a positive whole number of minutes");
+return joinMinutes;
+
+@minutes jsEval
+const slots = $slots;
+const minutes = slots.aMinutes + $join + slots.dMinutes + slots.eMinutes + slots.bufferMinutes;
+probe(Number.isInteger(minutes) && minutes > 0, "the earliest safe completion time must be a positive whole number of minutes");
+return minutes;
+
+@answer jsEval
+const slots = $slots;
+return "The earliest safe completion time is " + $minutes + " minutes, so the plan is " + ($minutes <= slots.limitMinutes ? "feasible" : "not feasible") + ". The critical insight is that B and C are parallel branches whose maximum duration controls the join.";
 

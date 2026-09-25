@@ -87,12 +87,30 @@ function render(solution) {
   return `The first four weeks provide ${solution.observational} evidence; the randomized comparison provides ${solution.randomized}, but not absolute certainty.`;
 }
 
+const WIRES = [
+  {
+    name: 'verdict',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'probe(slots.randomized === true, "the statement does not state a randomized comparison");',
+      'probe(slots.treatmentSize === slots.treatment.total && slots.controlSize === slots.control.total, "the stated group sizes disagree with the reported outcomes");',
+      'probe(slots.treatmentSize + slots.controlSize === slots.total, "the two groups do not account for the assigned cases");',
+      'probe(slots.treatment.successes >= 0 && slots.treatment.successes <= slots.treatment.total && slots.treatment.total > 0, "the X group must report a success count between zero and its size");',
+      'probe(slots.control.successes >= 0 && slots.control.successes <= slots.control.total && slots.control.total > 0, "the control group must report a success count between zero and its size");',
+      'const tenths = (successes, total) => { const scaled = successes * 1000; const quotient = Math.floor(scaled / total); const remainder = scaled - quotient * total; return quotient + (2 * remainder >= total ? 1 : 0); };',
+      'const treatmentRate = tenths(slots.treatment.successes, slots.treatment.total);',
+      'const controlRate = tenths(slots.control.successes, slots.control.total);',
+      'const observational = "correlational";',
+      'const randomized = "stronger causal evidence";',
+      'probe(observational !== randomized, "the observational and randomized phases must not be conflated");',
+      'return { observational, randomized, treatmentRate, controlRate };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const observational = "correlational";',
-  'const randomized = "stronger causal evidence";',
-  'probe(observational !== randomized, "the observational and randomized phases must not be conflated");',
-  'return "The first four weeks provide " + observational + " evidence; the randomized comparison provides " + randomized + ", but not absolute certainty.";'
+  'return "The first four weeks provide " + $verdict.observational + " evidence; the randomized comparison provides " + $verdict.randomized + ", but not absolute certainty.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -115,6 +133,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

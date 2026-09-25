@@ -73,13 +73,33 @@ function render(solution) {
   return `The operation needs ${solution.containers} capacity units and is ${solution.feasible ? 'feasible' : 'not feasible'}. The decomposition follows the semantic transformations: normalize → adjust for loss → discretize into containers → compare with availability.`;
 }
 
+const WIRES = [
+  {
+    name: 'need',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const need = slots.rawRequirement * slots.unitFactorNumerator * 100;',
+      'probe(Number.isInteger(need) && need > 0, "the loss-adjusted requirement must be a positive whole numerator");',
+      'return need;'
+    ].join('\n')
+  },
+  {
+    name: 'containers',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const lossAdjusted = slots.unitFactorDenominator * (100 - slots.lossPercent) * slots.containerCapacity;',
+      'const containers = Math.ceil($need / lossAdjusted);',
+      'probe(Number.isInteger(containers) && containers > 0, "the requirement must need a positive whole number of containers");',
+      'return containers;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
   'const slots = $slots;',
-  'const need = slots.rawRequirement * slots.unitFactorNumerator * 100;',
-  'const lossAdjusted = slots.unitFactorDenominator * (100 - slots.lossPercent) * slots.containerCapacity;',
-  'const containers = Math.ceil(need / lossAdjusted);',
-  'const feasible = containers <= slots.availableContainers;',
-  'return "The operation needs " + containers + " capacity units and is " + (feasible ? "feasible" : "not feasible") + ". The decomposition follows the semantic transformations: normalize → adjust for loss → discretize into containers → compare with availability.";'
+  'return "The operation needs " + $containers + " capacity units and is " + ($containers <= slots.availableContainers ? "feasible" : "not feasible") + ". The decomposition follows the semantic transformations: normalize → adjust for loss → discretize into containers → compare with availability.";'
 ].join('\n');
 
 /** Prints an exact rational as a trimmed decimal for the prose explanation. */
@@ -108,6 +128,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

@@ -21,12 +21,16 @@
   ]
 }
 
-@answer jsEval
+@choice jsEval
 const slots = $slots;
 const stratified = slots.methods.filter((method) => method.kind === "stratified");
+probe(stratified.length === 1, "exactly one stated method must select randomly within each area");
 const chosen = stratified[0];
 const planned = chosen.size * slots.areas;
 probe(planned > 0, "the chosen method must plan to select a positive number of people");
 probe(planned < slots.population, "the chosen sample cannot exceed the target population");
-return chosen.label + ", because it begins with random selection stratified by area and makes nonresponse observable.";
+return chosen.label;
+
+@answer jsEval
+return $choice + ", because it begins with random selection stratified by area and makes nonresponse observable.";
 

@@ -45,11 +45,32 @@ function render(solution) {
   return `The correct answer is ${solution.feasible ? 'yes' : 'no'}. First compress the operational details into one number (${solution.minutes} minutes), then compare that output with the deadline. The large problem becomes a workload calculation followed by a pure constraint test.`;
 }
 
+const WIRES = [
+  {
+    name: 'blocks',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const blocks = Math.ceil(slots.workload / slots.blockCapacity);',
+      'probe(Number.isInteger(blocks) && blocks > 0, "the workload must require a positive whole number of blocks");',
+      'return blocks;'
+    ].join('\n')
+  },
+  {
+    name: 'minutes',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const minutes = $blocks * slots.blockMinutes + slots.setupMinutes;',
+      'probe(Number.isInteger(minutes) && minutes > 0, "the compressed completion time must be a positive whole number of minutes");',
+      'return minutes;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
   'const slots = $slots;',
-  'const blocks = Math.ceil(slots.workload / slots.blockCapacity);',
-  'const minutes = blocks * slots.blockMinutes + slots.setupMinutes;',
-  'return "The correct answer is " + (minutes <= slots.limitMinutes ? "yes" : "no") + ". First compress the operational details into one number (" + minutes + " minutes), then compare that output with the deadline. The large problem becomes a workload calculation followed by a pure constraint test.";'
+  'return "The correct answer is " + ($minutes <= slots.limitMinutes ? "yes" : "no") + ". First compress the operational details into one number (" + $minutes + " minutes), then compare that output with the deadline. The large problem becomes a workload calculation followed by a pure constraint test.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -70,6 +91,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

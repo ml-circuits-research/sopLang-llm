@@ -54,13 +54,32 @@ function render(solution) {
   return `The best representation is a single constraint-satisfaction subproblem, yielding x=${solution.x}. The apparent subproblems are merely clauses of one predicate over the same variable.`;
 }
 
+const WIRES = [
+  {
+    name: 'cap',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const cap = Math.min(slots.upperBound, slots.resourceLimit - slots.reserve);',
+      'probe(cap >= slots.lowerBound, "the resource clause must not exclude every value above the lower bound");',
+      'return cap;'
+    ].join('\n')
+  },
+  {
+    name: 'x',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const x = Math.floor($cap / slots.divisor) * slots.divisor;',
+      'probe(x >= slots.lowerBound, "the clauses must admit at least one multiple of the divisor");',
+      'probe(x % slots.divisor === 0 && x >= slots.lowerBound && x <= slots.upperBound && x + slots.reserve <= slots.resourceLimit, "x must satisfy every clause of the one predicate");',
+      'return x;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const effectiveUpper = Math.min(slots.upperBound, slots.resourceLimit - slots.reserve);',
-  'const x = Math.floor(effectiveUpper / slots.divisor) * slots.divisor;',
-  'probe(x >= slots.lowerBound, "the clauses must admit at least one multiple of the divisor");',
-  'probe(x % slots.divisor === 0 && x >= slots.lowerBound && x <= slots.upperBound && x + slots.reserve <= slots.resourceLimit, "x must satisfy every clause of the one predicate");',
-  'return "The best representation is a single constraint-satisfaction subproblem, yielding x=" + x + ". The apparent subproblems are merely clauses of one predicate over the same variable.";'
+  'return "The best representation is a single constraint-satisfaction subproblem, yielding x=" + $x + ". The apparent subproblems are merely clauses of one predicate over the same variable.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -82,6 +101,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

@@ -9,11 +9,20 @@
   "availableContainers": 5
 }
 
-@answer jsEval
+@need jsEval
 const slots = $slots;
 const need = slots.rawRequirement * slots.unitFactorNumerator * 100;
+probe(Number.isInteger(need) && need > 0, "the loss-adjusted requirement must be a positive whole numerator");
+return need;
+
+@containers jsEval
+const slots = $slots;
 const lossAdjusted = slots.unitFactorDenominator * (100 - slots.lossPercent) * slots.containerCapacity;
-const containers = Math.ceil(need / lossAdjusted);
-const feasible = containers <= slots.availableContainers;
-return "The operation needs " + containers + " capacity units and is " + (feasible ? "feasible" : "not feasible") + ". The decomposition follows the semantic transformations: normalize → adjust for loss → discretize into containers → compare with availability.";
+const containers = Math.ceil($need / lossAdjusted);
+probe(Number.isInteger(containers) && containers > 0, "the requirement must need a positive whole number of containers");
+return containers;
+
+@answer jsEval
+const slots = $slots;
+return "The operation needs " + $containers + " capacity units and is " + ($containers <= slots.availableContainers ? "feasible" : "not feasible") + ". The decomposition follows the semantic transformations: normalize → adjust for loss → discretize into containers → compare with availability.";
 

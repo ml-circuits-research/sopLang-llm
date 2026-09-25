@@ -88,14 +88,25 @@ function render(solution) {
   return `${solution.method}, because it begins with random selection stratified by area and makes nonresponse observable.`;
 }
 
+const WIRES = [
+  {
+    name: 'choice',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const stratified = slots.methods.filter((method) => method.kind === "stratified");',
+      'probe(stratified.length === 1, "exactly one stated method must select randomly within each area");',
+      'const chosen = stratified[0];',
+      'const planned = chosen.size * slots.areas;',
+      'probe(planned > 0, "the chosen method must plan to select a positive number of people");',
+      'probe(planned < slots.population, "the chosen sample cannot exceed the target population");',
+      'return chosen.label;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const stratified = slots.methods.filter((method) => method.kind === "stratified");',
-  'const chosen = stratified[0];',
-  'const planned = chosen.size * slots.areas;',
-  'probe(planned > 0, "the chosen method must plan to select a positive number of people");',
-  'probe(planned < slots.population, "the chosen sample cannot exceed the target population");',
-  'return chosen.label + ", because it begins with random selection stratified by area and makes nonresponse observable.";'
+  'return $choice + ", because it begins with random selection stratified by area and makes nonresponse observable.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -118,6 +129,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

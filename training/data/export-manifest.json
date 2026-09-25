@@ -4,7 +4,7 @@
     "id": "compiled-plan-chat-4",
     "systemPromptSha256": "c2967d80d31eeb8a8f1605e75ece90edd16a0f0338a7b24bf15442bbf9287a74"
   },
-  "snapshot": "6cdb6e6ec3582242812a5a985c243b2651f23499a862f511cd1b830e522b40d4",
+  "snapshot": "6e5605dabfb574329072bae37c6cd0cb2e20a2fe3ebb77b144df82e7d165fa9d",
   "rows": 9935,
   "books": {
     "adult-reasoning": {
@@ -87,13 +87,13 @@
       "rows": 990
     },
     "common-sense.jsonl": {
-      "sha256": "2c737be2f1e95ff6b8fbe6c81913a4cab4a434c078b75d92b61fcc3a99d971b8",
-      "bytes": 3884284,
+      "sha256": "6848dca954d4a4184806a73d33df476586755eecee9c58065ac74bda846e93b4",
+      "bytes": 3955184,
       "rows": 950
     },
     "decompose-to-solve.jsonl": {
-      "sha256": "0cc3dd097a7ae226314e71f35cbb988e42efaef645840358e013205ea0381658",
-      "bytes": 4112283,
+      "sha256": "cef59fe13307f2fb54734ce21a45ed10d71d7d48850c68dd28daecf9dfdd5c70",
+      "bytes": 4192483,
       "rows": 900
     },
     "logical-reasoning.jsonl": {
@@ -122,13 +122,13 @@
       "rows": 980
     },
     "all-books.jsonl": {
-      "sha256": "edc319172bb0a9171c935280f3057844108c8f6f0982907ac125cef51de325c2",
-      "bytes": 36958424,
+      "sha256": "50733d1c4ace81b891b34d80bdb1c4bdd1d138ff9f50403791294d4782eee926",
+      "bytes": 37109524,
       "rows": 9935
     },
     "preservation-10.jsonl": {
-      "sha256": "9d7ffa5f251dcb9d1be7b93bd239abead23fa7937f390af5e6e3f4cfa1e7fafb",
-      "bytes": 3265157,
+      "sha256": "a271419675dbb240b3be255ff12dd02525a5c1335294f5670dde3e43b78bb202",
+      "bytes": 3286907,
       "rows": 994
     }
   },
@@ -148,10 +148,10 @@
     "ratio": 0.1,
     "stride": 10,
     "rows": 994,
-    "sourceSnapshot": "6cdb6e6ec3582242812a5a985c243b2651f23499a862f511cd1b830e522b40d4",
+    "sourceSnapshot": "6e5605dabfb574329072bae37c6cd0cb2e20a2fe3ebb77b144df82e7d165fa9d",
     "derivation": "training/preservation.mjs 1.0.0: each sampled circuit is re-emitted as standalone JavaScript with the same wires bound as constants and the answer printed by console.log",
     "file": "preservation-10.jsonl",
-    "sha256": "9d7ffa5f251dcb9d1be7b93bd239abead23fa7937f390af5e6e3f4cfa1e7fafb",
-    "bytes": 3265157
+    "sha256": "a271419675dbb240b3be255ff12dd02525a5c1335294f5670dde3e43b78bb202",
+    "bytes": 3286907
   }
 }
