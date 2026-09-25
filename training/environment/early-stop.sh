@@ -53,32 +53,43 @@ print(stale)
 PY
 }
 
+score_one() {
+  local name="$1"
+  if grep -q "\"checkpoint\":\"$name\"" "$scores" 2>/dev/null; then
+    return 0
+  fi
+  newest="$(find "$checkpoints/$name" -type f -mmin -1.5 -print -quit 2>/dev/null || true)"
+  if [ -n "$newest" ]; then
+    return 0
+  fi
+  echo "early-stop: scoring $name ($(date -u +%H:%M:%SZ))"
+  if node "$root/evaluation/select-checkpoint.mjs" --experiment "$experiment" --only "$name" --port "$port" --concurrency 4; then
+    verdict="$(tail -1 "$scores" | python3 -c 'import json,sys; r=json.loads(sys.stdin.read()); print(f"oracle {r[\"oracle\"]*100:.1f}% parse {r[\"parse\"]*100:.1f}% of {r[\"items\"]}")')"
+    echo "early-stop: $name scored: $verdict"
+  else
+    printf '{"checkpoint":"%s","oracle":null,"scoredUtc":"%s","error":"scoring failed"}\n' \
+      "$name" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$scores"
+  fi
+}
+
 echo "early-stop: watching $checkpoints, patience $patience, port $port"
 while :; do
   if ! supervisor_alive; then
-    echo "early-stop: the trainer and its supervisor are gone; exiting"
+    # The last saves often land in the final minutes, when the supervisor dies
+    # right after: one final pass scores every settled checkpoint the watcher
+    # has not scored yet, so the chain never pays to re-score them.
+    echo "early-stop: the trainer and its supervisor are gone; final pass over the unsettled saves"
+    for dir in "$checkpoints"/checkpoint-*; do
+      [ -d "$dir" ] || continue
+      score_one "$(basename "$dir")"
+    done
+    echo "early-stop: final pass done; exiting"
     exit 0
   fi
   for dir in "$checkpoints"/checkpoint-*; do
     [ -d "$dir" ] || continue
     name="$(basename "$dir")"
-    if grep -q "\"checkpoint\":\"$name\"" "$scores" 2>/dev/null; then
-      continue
-    fi
-    newest="$(find "$dir" -type f -mmin -1.5 -print -quit 2>/dev/null || true)"
-    if [ -n "$newest" ]; then
-      continue
-    fi
-    echo "early-stop: scoring $name ($(date -u +%H:%M:%SZ))"
-    if node "$root/evaluation/select-checkpoint.mjs" --experiment "$experiment" --only "$name" --port "$port" --concurrency 4; then
-      verdict="$(tail -1 "$scores" | python3 -c 'import json,sys; r=json.loads(sys.stdin.read()); print(f"oracle {r[\"oracle\"]*100:.1f}% parse {r[\"parse\"]*100:.1f}% of {r[\"items\"]}")')"
-      echo "early-stop: $name scored: $verdict"
-    else
-      # A broken save must not be retried forever: record the failure and move on.
-      echo "early-stop: scoring $name failed; recording the failure and continuing"
-      printf '{"checkpoint":"%s","oracle":null,"scoredUtc":"%s","error":"scoring failed"}\n' \
-        "$name" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$scores"
-    fi
+    score_one "$name"
     stale="$(staleness)"
     echo "early-stop: $stale save(s) without a new best (patience $patience)"
     if [ "$stale" -ge "$patience" ]; then
