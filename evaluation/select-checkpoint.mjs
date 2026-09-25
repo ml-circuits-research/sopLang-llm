@@ -24,7 +24,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRuntime } from '../runtime/kernel.mjs';
 import { generate } from './client.mjs';
-import { aggregate, resolveSlice, runSlice } from './run-eval.mjs';
+import { aggregate, resolveSlice, runSlice, sliceIdentityOf } from './run-eval.mjs';
 import { withServer } from './server.mjs';
 
 const REPOSITORY_ROOT = fileURLToPath(new URL('..', import.meta.url));
@@ -193,6 +193,10 @@ function storedScore(checkpoint) {
       const record = JSON.parse(line);
       if (record.checkpoint !== checkpoint.name || record.items !== items.length) continue;
       if (record.oracle === null || record.parse === null) continue;
+      // The score is only reusable when it came from this exact slice: a score
+      // from an earlier dataset version would rank checkpoints against answers
+      // the trainer never saw.
+      if (typeof record.slice === 'string' && record.slice !== sliceIdentityOf(items)) continue;
       return record;
     }
   } catch {
@@ -309,6 +313,7 @@ if (options.only !== null) {
   const scoreLine = {
     checkpoint: winner.checkpoint,
     step: winner.step,
+    slice: sliceIdentityOf(items),
     oracle: winner.metrics.rates.oracle_match ?? null,
     parse: winner.metrics.rates.parse_validity ?? null,
     graph: winner.metrics.rates.graph_validity ?? null,

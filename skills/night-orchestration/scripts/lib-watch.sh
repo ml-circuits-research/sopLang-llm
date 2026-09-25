@@ -11,6 +11,7 @@
 wait_chain() {
   local job="$1"
   local waited=0
+  local seen_selection_lines="${seen_selection_lines:-$(grep -c "$SELECTION_MARKER" "$RESULTS_DIR/$job/series.log" 2>/dev/null || echo 0)}"
   RESULTS_DIR="${RESULTS_DIR:-$PROJECT_ROOT/.results}"
   FAILURE_MARKER="${FAILURE_MARKER:-failed}"
   SELECTION_MARKER="${SELECTION_MARKER:-selection}"
@@ -33,7 +34,11 @@ wait_chain() {
 
     sleep 180
     waited=$((waited + 3))
-    if [ "$waited" -ge 12 ] && ! grep -q "$SELECTION_MARKER" "$RESULTS_DIR/$job/series.log" 2>/dev/null \
+    # The gate compares against the line count seen when the wait began: a stale
+    # selection line from an earlier failed chain must not suppress the manual
+    # start forever (exp-016's first chain left one, and the watcher could never
+    # relaunch).
+    if [ "$waited" -ge 12 ] && [ "$(grep -c "$SELECTION_MARKER" "$RESULTS_DIR/$job/series.log" 2>/dev/null || echo 0)" -le "${seen_selection_lines:-0}" ] \
       && { [ -z "$CHAIN_PATTERN" ] || ! pgrep -f "$CHAIN_PATTERN" > /dev/null; } \
       && [ -n "$CHAIN_LAUNCHER" ]; then
       note "no $job chain after ${waited}min; starting it manually"

@@ -79,9 +79,22 @@ while :; do
     # right after: one final pass scores every settled checkpoint the watcher
     # has not scored yet, so the chain never pays to re-score them.
     echo "early-stop: the trainer and its supervisor are gone; final pass over the unsettled saves"
-    for dir in "$checkpoints"/checkpoint-*; do
-      [ -d "$dir" ] || continue
-      score_one "$(basename "$dir")"
+    for attempt in 1 2 3 4 5; do
+      unsettled=0
+      for dir in "$checkpoints"/checkpoint-*; do
+        [ -d "$dir" ] || continue
+        name="$(basename "$dir")"
+        grep -q "\"checkpoint\":\"$name\"" "$scores" 2>/dev/null && continue
+        newest="$(find "$checkpoints/$name" -type f -mmin -1.5 -print -quit 2>/dev/null || true)"
+        if [ -n "$newest" ]; then
+          unsettled=1
+          continue
+        fi
+        score_one "$name"
+      done
+      [ "$unsettled" -eq 0 ] && break
+      echo "early-stop: waiting for the last saves to settle (attempt $attempt)"
+      sleep 60
     done
     echo "early-stop: final pass done; exiting"
     exit 0

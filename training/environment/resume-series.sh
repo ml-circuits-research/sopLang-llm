@@ -58,8 +58,10 @@ nohup bash "$recipe" >> "$checkpoints/overnight.log" 2>&1 &
 sleep 5
 echo "resume-series: supervisor pid $!"
 
-echo "resume-series: evaluation chain after the trainer stops"
-nohup bash "$root/evaluation/start-chain.sh" "$experiment" >> "$root/evaluation/registry/$experiment/series.log" 2>&1 &
-sleep 2
-echo "resume-series: chain pid $!"
+# The chain must run after the trainer STOPS: start-chain refuses while the
+# trainer lives, and calling it five seconds after launch discards the promise.
+# A waiter queues the chain for when the supervisor exits.
+echo "resume-series: queueing the evaluation chain for when the trainer stops"
+nohup bash -c "while pgrep -f 'overnight.sh --experiment $experiment' > /dev/null; do sleep 120; done; bash '$root/evaluation/start-chain.sh' '$experiment' >> '$root/evaluation/registry/$experiment/series.log' 2>&1" > /dev/null 2>&1 &
+echo "resume-series: chain waiter pid $!"
 echo "resume-series: watch with bash training/environment/work-status.sh"

@@ -165,8 +165,22 @@ function winnerByBase({ pins15 }) {
         }
       }
     }
-    const pinned = String(basePath ?? '').includes('1.5b');
-    if (pinned !== pins15) continue;
+    // The size class comes from the pinned manifest's repo name (the path can
+    // be size-less, like the 0.5B coder's base-model.json).
+    let identity = String(basePath ?? '');
+    const pinnedPath = basePath.startsWith('/') ? basePath : `${REPOSITORY_ROOT}/${basePath}`;
+    if (existsSync(pinnedPath)) {
+      try {
+        const repo = JSON.parse(readFileSync(pinnedPath, 'utf8')).repo;
+        if (typeof repo === 'string' && repo !== '') identity = repo;
+      } catch {
+        // fall back to the path
+      }
+    }
+    const identityLower = identity.toLowerCase();
+    const is15 = identityLower.includes('1.5b') && !identityLower.includes('0.5b');
+    const is05 = identityLower.includes('0.5b');
+    if (pins15 ? !is15 : !is05) continue;
     const selected = JSON.parse(readFileSync(selection, 'utf8'));
     const row = selected.rows.find((entry) => entry.checkpoint === selected.winner);
     if (row === undefined) continue;
@@ -185,6 +199,53 @@ function winnerByBase({ pins15 }) {
  */
 export function winner15() {
   return winnerByBase({ pins15: true });
+}
+
+/**
+ * The newest winner outside the 0.5B class - the chat's second student, which
+ * today is the Qwen3-1.7B arm and would fall back to the 1.5B coder when no
+ * other base exists. The block label shows its true size.
+ */
+export function winnerSecondary() {
+  const fifteen = winnerByBase({ pins15: true });
+  const byNewest = (a, b) => b.experiment.localeCompare(a.experiment);
+  const others = [];
+  for (const name of readdirSync(`${REPOSITORY_ROOT}/evaluation/registry`)) {
+    const selection = join(`${REPOSITORY_ROOT}/evaluation/registry`, name, 'selection.json');
+    const manifest = join(`${REPOSITORY_ROOT}/evaluation/registry`, name, 'run-manifest.json');
+    if (!existsSync(selection) || !existsSync(manifest)) continue;
+    try {
+      const record = JSON.parse(readFileSync(manifest, 'utf8'));
+      let basePath = record.base_model_manifest?.path ?? null;
+      if (basePath === null) {
+        const trainerManifestPath = join(REPOSITORY_ROOT, 'training/checkpoints', name, 'run-manifest.json');
+        if (existsSync(trainerManifestPath)) {
+          basePath = JSON.parse(readFileSync(trainerManifestPath, 'utf8')).base_model_manifest?.path ?? null;
+        }
+      }
+      let identity = String(basePath ?? '');
+      const pinnedPath = basePath?.startsWith('/') ? basePath : `${REPOSITORY_ROOT}/${basePath}`;
+      if (basePath !== null && existsSync(pinnedPath)) {
+        const repo = JSON.parse(readFileSync(pinnedPath, 'utf8')).repo;
+        if (typeof repo === 'string' && repo !== '') identity = repo;
+      }
+      const lower = identity.toLowerCase();
+      if (lower.includes('0.5b')) continue;
+      const selected = JSON.parse(readFileSync(selection, 'utf8'));
+      const row = selected.rows.find((entry) => entry.checkpoint === selected.winner);
+      if (row === undefined) continue;
+      const gguf = resolveArtifactPath(row.gguf);
+      if (!existsSync(gguf)) continue;
+      others.push({ experiment: selected.experiment, winner: selected.winner, gguf });
+    } catch {
+      // skip unreadable experiments
+    }
+  }
+  others.sort(byNewest);
+  if (others.length > 0 && (fifteen === null || byNewest(others[0], fifteen) < 0)) {
+    return others[0];
+  }
+  return fifteen;
 }
 
 /**

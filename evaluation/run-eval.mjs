@@ -424,23 +424,44 @@ export async function main(argv) {
     capabilityProbes: capabilityProbes === null
       ? null
       : { profile: capabilityProbes.profile, systemPromptSha256: capabilityProbes.systemPromptSha256, items: capabilityProbes.items, passed: capabilityProbes.passed },
-    dataset: {
-      exportManifest: relative(REPO_ROOT, EXPORT_MANIFEST).split(sep).join('/'),
-      snapshot: exportManifest?.snapshot ?? null,
-      dataVersion: (() => {
-        const path = join(REPO_ROOT, 'training-data', 'VERSION');
-        if (!existsSync(path)) return null;
+    dataset: (() => {
+      // The data identity comes from the TRAINER's record, not from the files on
+      // disk at scoring time: an old experiment evaluated after a rebuild must
+      // keep the version it trained on, not inherit the newer one.
+      let trainerSnapshot = null;
+      const trainerManifestPath = join(REPO_ROOT, 'training/checkpoints', options.experiment, 'run-manifest.json');
+      if (existsSync(trainerManifestPath)) {
         try {
-          const number = readFileSync(path, 'utf8').trim();
-          const labelPath = join(REPO_ROOT, 'training-data', 'VERSION.label');
-          const label = existsSync(labelPath) ? readFileSync(labelPath, 'utf8').trim() : null;
-          return { number, label };
+          trainerSnapshot = JSON.parse(readFileSync(trainerManifestPath, 'utf8')).dataset_snapshot ?? null;
         } catch {
-          return null;
+          trainerSnapshot = null;
         }
-      })(),
-      validationSlice: relative(REPO_ROOT, DEFAULT_VALIDATION_SLICE).split(sep).join('/')
-    },
+      }
+      const snapshot = trainerSnapshot ?? exportManifest?.snapshot ?? null;
+      // The version label is only honest when the trained snapshot is the one
+      // the VERSION file describes; after a rebuild the two diverge.
+      const currentSnapshot = exportManifest?.snapshot ?? null;
+      let dataVersion = null;
+      if (snapshot !== null && currentSnapshot !== null && snapshot === currentSnapshot) {
+        const path = join(REPO_ROOT, 'training-data', 'VERSION');
+        try {
+          if (existsSync(path)) {
+            const number = readFileSync(path, 'utf8').trim();
+            const labelPath = join(REPO_ROOT, 'training-data', 'VERSION.label');
+            const label = existsSync(labelPath) ? readFileSync(labelPath, 'utf8').trim() : null;
+            dataVersion = { number, label };
+          }
+        } catch {
+          dataVersion = null;
+        }
+      }
+      return {
+        exportManifest: relative(REPO_ROOT, EXPORT_MANIFEST).split(sep).join('/'),
+        snapshot,
+        dataVersion,
+        validationSlice: relative(REPO_ROOT, DEFAULT_VALIDATION_SLICE).split(sep).join('/')
+      };
+    })(),
     environment: existsSync(ENVIRONMENT_MANIFEST)
       ? {
           manifest: relative(REPO_ROOT, ENVIRONMENT_MANIFEST).split(sep).join('/'),

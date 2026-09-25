@@ -35,7 +35,7 @@ import { createInterface } from 'node:readline';
 import { pathToFileURL } from 'node:url';
 
 import { buildMessages, extractProgram, generate } from './client.mjs';
-import { LLAMA_SERVER, REPOSITORY_ROOT, aliasFor, serverArguments, waitForServer, winner05, winner15 } from './server.mjs';
+import { LLAMA_SERVER, REPOSITORY_ROOT, aliasFor, serverArguments, waitForServer, winner05, winner15, winnerSecondary } from './server.mjs';
 import { artifactFor } from './artifacts.mjs';
 import { CHAT_PROFILE_ID } from '../training/export.mjs';
 import { parseCircuit } from '../runtime/parser.mjs';
@@ -1130,7 +1130,10 @@ async function main() {
   process.on('exit', stopServer);
 
   const runtime = createRuntime();
-  const { student15, base15 } = select15Lanes(winner15(), options);
+  // The second student is the newest trained winner outside the 0.5B class -
+  // the Qwen3-1.7B arm today, the 1.5B coder when no other base exists. The
+  // block header labels it with its real size.
+  const { student15, base15 } = select15Lanes(winnerSecondary(), options);
   const session = {
     artifact,
     base,

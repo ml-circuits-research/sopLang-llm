@@ -40,7 +40,10 @@ case "$mode" in
       # In-loop validation with early stopping: the watcher scores every settled
       # save beside the trainer and stops it after N stale ones; the chain then
       # runs against the whole checkpoint set, exactly as it would have.
-      setsid nohup bash -c "bash '$recipe' >> '$checkpoints/overnight.log' 2>&1 & TP=\$!; bash '$root/training/environment/early-stop.sh' '$experiment' '$patience' >> '$checkpoints/early-stop.log' 2>&1 & WP=\$!; wait \$TP; kill \$WP 2>/dev/null; bash '$root/evaluation/start-chain.sh' '$experiment' >> '$root/evaluation/registry/$experiment/series.log' 2>&1" \
+      # After the trainer stops, the early-stop watcher runs one final pass to
+      # score the last saves; the wrapper waits up to 30 minutes for it, then
+      # kills it and starts the chain (which re-scores whatever is left).
+      setsid nohup bash -c "bash '$recipe' >> '$checkpoints/overnight.log' 2>&1 & TP=\$!; bash '$root/training/environment/early-stop.sh' '$experiment' '$patience' >> '$checkpoints/early-stop.log' 2>&1 & WP=\$!; wait \$TP; for tick in \$(seq 1 90); do kill -0 \$WP 2>/dev/null || break; sleep 20; done; kill \$WP 2>/dev/null; bash '$root/evaluation/start-chain.sh' '$experiment' >> '$root/evaluation/registry/$experiment/series.log' 2>&1" \
         > /dev/null 2>&1 < /dev/null &
     else
       setsid nohup bash -c "bash '$recipe' >> '$checkpoints/overnight.log' 2>&1; bash '$root/evaluation/start-chain.sh' '$experiment' >> '$root/evaluation/registry/$experiment/series.log' 2>&1" \

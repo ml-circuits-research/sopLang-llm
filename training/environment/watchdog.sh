@@ -75,7 +75,10 @@ pass() {
           && ! pgrep -f "[r]un-series.sh $name" >/dev/null \
           && ! pgrep -f "[s]elect-checkpoint.mjs --experiment $name" >/dev/null \
           && ! pgrep -f "[r]un-eval.mjs --experiment $name" >/dev/null \
-          && ! pgrep -f "[l]lama-server -m .*$name" >/dev/null; then
+          && ! pgrep -f "[l]lama-server -m .*$name" >/dev/null \
+          && ! pgrep -f "[s]elect-checkpoint.mjs --experiment" >/dev/null \
+          && ! pgrep -f "[r]un-eval.mjs --experiment" >/dev/null \
+          && ! pgrep -f "[l]lama-server -m " >/dev/null; then
           # Nothing of this experiment is running, so the chain starts and takes
           # the GPU by itself. When another experiment holds it, the pass after
           # that one finishes starts this chain instead, and the note says so.
