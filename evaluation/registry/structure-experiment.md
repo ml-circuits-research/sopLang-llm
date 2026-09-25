@@ -42,3 +42,17 @@ indicator and measures whether the holdout follows.
 - dv7 baseline: exp-021 training (measured at its holdout).
 - dv8 refactor: queued after exp-021's chain closes.
 - exp-022: queued after the dv8 rebuild and verification.
+
+
+## VERDICT — measured 2026-09-25
+
+dv7 monolithic (exp-021): 460/705 (65.2%), books 22/225, exec_errors 57, runtime completion 91.9%.
+dv8 modular (exp-022): 448/705 (63.5%), books 20/225, exec_errors 135, runtime completion 80.9%.
+
+Same base (qwen3-1.7b), same recipe, only the training-target structure differs. The modular arm
+moves the bloat indicator (2.81 wires/plan, 5.5 jsEval lines/wire vs 2.19 / 7.0) and parse/graph
+validity stay 100%, but the model loses 12 answers and execution errors double: more wires widen
+the execution-failure surface. The measured sweet spot is the compact plan (2-3 wires, few lines),
+which is exactly the container-family style that lifted world-as-a-system to 20/20 under dv7.
+Conclusion for the article: structure is real but gratuitous splitting costs; new families are
+written compact (small stages, few wires), never over-split.

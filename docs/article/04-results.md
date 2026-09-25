@@ -64,5 +64,5 @@ The pending comparison — monolithic dv7 against modular dv8 — will report th
 ## Pending numbers
 
 - `460/705 (65.2%), world-as-a-system 20/20` — the monolithic-structure dv7 baseline.
-- `{{TODO: exp-022 dv8 holdout}}` — the modular multi-wire refactor of the same content.
+- `448/705 (63.5%) vs the monolithic arm's 460/705 (65.2%); parse/graph validity 100% on both, execution errors 135 vs 57` — the modular multi-wire refactor of the same content.
 - `{{TODO: exp-021 container-arm holdout}}` — the container-shape arm (two families trained, one withheld whole).
