@@ -250,14 +250,12 @@ for (const checkpoint of checkpoints) {
 
 // A reused winner has no GGUF yet: the holdout serves the winner's artifact,
 // so exactly the winner is converted now instead of every checkpoint.
-const winner = (() => {
-  const ranked = [...rows].sort((left, right) => {
+const ranked = [...rows].sort((left, right) => {
   const oracle = (right.metrics.rates.oracle_match ?? 0) - (left.metrics.rates.oracle_match ?? 0);
   if (oracle !== 0) return oracle;
-    return (right.metrics.rates.parse_validity ?? 0) - (left.metrics.rates.parse_validity ?? 0);
-  });
-  return ranked[0];
-})();
+  return (right.metrics.rates.parse_validity ?? 0) - (left.metrics.rates.parse_validity ?? 0);
+});
+const winner = ranked[0];
 if (winner.gguf === null) {
   const winnerCheckpoint = checkpoints.find((checkpoint) => checkpoint.name === winner.checkpoint);
   if (winnerCheckpoint !== undefined) {
