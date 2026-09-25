@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>containerAdd — Wire types — sopLang-llm Documentation</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <div data-include="../partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel">
+      <p class="breadcrumbs"><a href="../index.html">Home</a> &rarr; <a href="../wire-types.html">Wire types</a> &rarr; <a href="containers.html">Containers</a></p>
+      <p class="kicker">Wire types</p>
+      <h1><code>containerAdd</code></h1>
+      <p class="lede"><code>containerAdd</code> stages one or more new records against a target container.</p>
+
+      <h2>What it does</h2>
+      <p>Use it when reading a source chunk and contributing new records to a declared container. The body names a <code>target</code> and an <code>items</code> list — either inline records or a <code>$wire</code> reference to a computed list. It does not replace an existing keyed record; use <code>containerUpsert</code> for that.</p>
+
+      <h2>How it works</h2>
+      <p>The command produces a validated container patch against the revision visible at the start of the epoch; it never mutates the target while it executes. At the epoch barrier the runtime groups patches by target container, validates conflicts, orders them deterministically, and commits one new revision — a 500-chunk book produces 500 independent additions in one revision instead of 500. The analyzer records the target as a container write and, when <code>items</code> is a <code>$wire</code> reference, that wire as a value dependency. The effect class is <code>container_patch</code> and the command is deterministic (version 1.1.0).</p>
+
+      <h2>Body syntax</h2>
+      <pre><code>@chunk042_events containerAdd
+target: events
+items:
+  - id: event_042_01
+    actors: [char_hamlet]</code></pre>
+      <p>A patch may instead depend on a computed wire:</p>
+      <pre><code>@addNormalized containerAdd
+target: observations
+items: $normalizedRows</code></pre>
+
+      <h2>Worked example</h2>
+      <p>Ingesting one event into the <code>events</code> sequence:</p>
+      <pre><code>@chunk042_events containerAdd
+target: events
+items:
+  - id: event_042_01
+    actors: [char_hamlet]
+    placeId: place_castle
+    action: "Hamlet confronts the implication of the apparition's claim."
+    temporalHint: "after the encounter"
+    causes: [event_017_03]
+    consequences: []
+    sourceSpans:
+      - { sourceId: bookA, chunkId: chunk042, start: 830, end: 1011 }</code></pre>
+      <p>The patch stages against the revision visible now and commits at the barrier. For a sequence, every item carries an ordering key (document order, chunk order, source offset, local index) so the merged sequence is deterministic regardless of parallel completion order.</p>
+
+      <p><a href="../wire-types.html">&larr; All wire types</a> &middot; <a href="containers.html">Containers overview</a></p>
+    </div>
+  </main>
+  <div data-include="../partials/footer.html"></div>
+  <script src="../partials-loader.js"></script>
+</body>
+</html>

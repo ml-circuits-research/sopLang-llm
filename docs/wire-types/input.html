@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>input — Wire types — sopLang-llm Documentation</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <div data-include="../partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel">
+      <p class="breadcrumbs"><a href="../index.html">Home</a> &rarr; <a href="../wire-types.html">Wire types</a></p>
+      <p class="kicker">Wire types</p>
+      <h1><code>input</code></h1>
+      <p class="lede"><code>input</code> binds a value supplied by the wrapper — the current problem, a source chunk, or a runtime parameter — so a circuit reads an external value through a named wire instead of embedding it.</p>
+
+      <h2>What it does</h2>
+      <p>An input wire declares a name the wrapper fills for one request. Its body is empty and its value is immutable for the request snapshot. The runtime reads the binding from the request inputs rather than from the wire body, so the executor never runs and there is no computation to schedule.</p>
+      <p>Inputs are normally injected by the wrapper rather than invented by the student. A problem call may bind <code>problem</code>, <code>sourceChunk</code>, <code>requestedOutputSchema</code>, or a selected state projection. The model sees their names and contracts in the control plane, which keeps the boundary between data and executable code explicit and prevents a generated circuit from smuggling source text into program syntax.</p>
+
+      <h2>How it works</h2>
+      <p>The analyzer reports no value dependencies: the wire reads from the request inputs, not from another wire. The validator requires the body to be empty; any non-whitespace body is a <code>validation_error</code>. The executor returns <code>undefined</code> because the binding is read by the runtime, never produced by the body. The command is pure and deterministic (version 1.0.0).</p>
+      <p>A binding whose name has no declared wire becomes an implicit input node, so the circuit does not need a separate declaration to read a wrapper-supplied value.</p>
+
+      <h2>Body syntax</h2>
+      <p>The body is empty. The wire name is the binding name.</p>
+      <pre><code>@problem input</code></pre>
+
+      <h2>Worked example</h2>
+      <p>A circuit that counts the words in the injected problem and publishes the count:</p>
+      <pre><code>@problem input
+
+@wordCount jsEval
+return $problem.trim().split(/\s+/).length;
+
+@answer jsEval
+return { count: $wordCount };</code></pre>
+      <p>The wrapper supplies <code>problem</code>; <code>wordCount</code> reads it as a <code>$wire</code> dependency, and <code>answer</code> publishes the result. Nothing in the circuit embeds the problem text — it arrives as data.</p>
+
+      <p><a href="../wire-types.html">&larr; All wire types</a></p>
+    </div>
+  </main>
+  <div data-include="../partials/footer.html"></div>
+  <script src="../partials-loader.js"></script>
+</body>
+</html>

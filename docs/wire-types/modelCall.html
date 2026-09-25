@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>modelCall — Wire types — sopLang-llm Documentation</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <div data-include="../partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel">
+      <p class="breadcrumbs"><a href="../index.html">Home</a> &rarr; <a href="../wire-types.html">Wire types</a></p>
+      <p class="kicker">Wire types</p>
+      <h1><code>modelCall</code></h1>
+      <p class="lede"><code>modelCall</code> invokes the configured neural model for a local semantic judgment or generation step — the explicit, fully logged neural effect.</p>
+
+      <h2>What it does</h2>
+      <p>Recursive neural reasoning is made explicit: a wire body carries the local instruction and refers to dependency values with <code>$name</code>. Use it for semantic decisions, interpretation, synthesis, or generation that no symbolic command can decide; do not use it for arithmetic, sorting, counting, filtering, or formatting, which belong in <code>jsEval</code>.</p>
+
+      <h2>How it works</h2>
+      <p>An instruction is prose rather than code, so its dependency analysis reads a <code>$name</code> token wherever it appears and an apostrophe never hides an input. The analyzer reports those references as value dependencies, and the validator requires a non-empty instruction body.</p>
+      <p>The call is fully logged: the trace records the prompt, the generation, the model revision, the sampling parameters, and the latency together with the definition hash and the dependency value hashes. In replay mode a recorded generation is substituted only when those identities match, and the substitution is recorded with the provenance of the entry it replayed. Every invocation is a visible cost center that can be ablated. The command's effect class is neural and its determinism is not guaranteed (version 1.1.0).</p>
+
+      <h2>Body syntax</h2>
+      <p>The body is prose with <code>$name</code> value references:</p>
+      <pre><code>@judgment modelCall
+Are $left and $right semantically equivalent? Answer yes or no.</code></pre>
+
+      <h2>Worked example</h2>
+      <p>A circuit that asks the model whether two injected claims agree:</p>
+      <pre><code>@claimA input
+
+@claimB input
+
+@equivalent modelCall
+Are $claimA and $claimB semantically equivalent? Answer yes or no.</code></pre>
+      <p>The analyzer reads <code>$claimA</code> and <code>$claimB</code> as dependencies, and the trace records the model revision, the generation, and the hashes of the two claim values, so the judgment can be replayed or audited.</p>
+
+      <p><a href="../wire-types.html">&larr; All wire types</a></p>
+    </div>
+  </main>
+  <div data-include="../partials/footer.html"></div>
+  <script src="../partials-loader.js"></script>
+</body>
+</html>

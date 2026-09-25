@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>containerFilter — Wire types — sopLang-llm Documentation</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <div data-include="../partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel">
+      <p class="breadcrumbs"><a href="../index.html">Home</a> &rarr; <a href="../wire-types.html">Wire types</a> &rarr; <a href="containers.html">Containers</a></p>
+      <p class="kicker">Wire types</p>
+      <h1><code>containerFilter</code></h1>
+      <p class="lede"><code>containerFilter</code> defines a pure derived view of a source container while retaining provenance.</p>
+
+      <h2>What it does</h2>
+      <p>Use it to select the records a later step should read, keeping the source revision visible. The body names a <code>source</code> container value and a <code>predicate</code> that runs over a <code>row</code>. It never changes the source container; filters produce derived views only.</p>
+
+      <h2>How it works</h2>
+      <p>The view's value depends on the source container revision and on any predicate dependencies (the <code>$name</code> references other than <code>row</code>). The predicate runs per row in the isolated guest realm, and the returned view references source record identities and the revision it was computed from, so provenance stays traceable. A filter may read another derived view, so filters compose as ordinary dependency chains, and every link is invalidated by the base commit. The effect class is pure and the command is deterministic (version 1.1.0).</p>
+
+      <h2>Body syntax</h2>
+      <pre><code>@highConfidenceClaims containerFilter
+source: $claims
+predicate:
+  return row.confidence &gt;= $threshold &amp;&amp; row.status !== "superseded";</code></pre>
+
+      <h2>Worked example</h2>
+      <p>A derived view of high-confidence, non-superseded claims:</p>
+      <pre><code>@highConfidenceClaims containerFilter
+source: $claims
+predicate:
+  return row.confidence &gt;= $threshold &amp;&amp; row.status !== "superseded";</code></pre>
+      <p>The analyzer records <code>$claims</code> as the container read and <code>$threshold</code> as a value dependency. When either the source container or the threshold changes, the view becomes dirty and downstream wires become dirty transitively — a correction that adds a previously missed legal exception creates a new base revision, invalidates the filter, and invalidates the JavaScript wire that groups the kept records.</p>
+
+      <p><a href="../wire-types.html">&larr; All wire types</a> &middot; <a href="containers.html">Containers overview</a></p>
+    </div>
+  </main>
+  <div data-include="../partials/footer.html"></div>
+  <script src="../partials-loader.js"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>containerUpsert — Wire types — sopLang-llm Documentation</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <div data-include="../partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel">
+      <p class="breadcrumbs"><a href="../index.html">Home</a> &rarr; <a href="../wire-types.html">Wire types</a> &rarr; <a href="containers.html">Containers</a></p>
+      <p class="kicker">Wire types</p>
+      <h1><code>containerUpsert</code></h1>
+      <p class="lede"><code>containerUpsert</code> stages keyed inserts or replacements under a declared merge policy.</p>
+
+      <h2>What it does</h2>
+      <p>Use it when a record identity is known and the update may replace, merge, or preserve a competing assertion. The body names a <code>target</code>, an optional <code>mergePolicy</code>, and an <code>items</code> list of keyed records or a <code>$wire</code> reference to a computed list.</p>
+
+      <h2>How it works</h2>
+      <p>The command requires a declared identity rule, and the default <code>reject</code> policy rejects a conflicting replacement instead of silently selecting a winner. An explicit merge policy may permit replacement when the source record version is unchanged, merge non-conflicting fields, or create a competing assertion instead of overwriting — for information extracted from books, two passages that describe a character differently are not collapsed merely because they share an identifier. The patch is staged against the revision visible at the start of the epoch and committed with the other compatible patches at the barrier. The effect class is <code>container_patch</code> and the command is deterministic (version 1.1.0).</p>
+
+      <h2>Body syntax</h2>
+      <pre><code>@resolve_characters containerUpsert
+target: characters
+mergePolicy: competing-assertion
+items: $resolvedRecords</code></pre>
+
+      <h2>Worked example</h2>
+      <p>A computed reconciliation that preserves competing assertions rather than picking a winner:</p>
+      <pre><code>@resolve_characters containerUpsert
+target: characters
+mergePolicy: competing-assertion
+items: $resolvedRecords</code></pre>
+      <p><code>$resolvedRecords</code> is a value produced by an upstream wire; the patch executes after that wire is available and still stages its update for the epoch commit. With the <code>competing-assertion</code> policy, a conflicting description becomes a second retained assertion instead of an overwrite.</p>
+
+      <p><a href="../wire-types.html">&larr; All wire types</a> &middot; <a href="containers.html">Containers overview</a></p>
+    </div>
+  </main>
+  <div data-include="../partials/footer.html"></div>
+  <script src="../partials-loader.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>aggregate — Wire types — sopLang-llm Documentation</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <div data-include="../partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel">
+      <p class="breadcrumbs"><a href="../index.html">Home</a> &rarr; <a href="../wire-types.html">Wire types</a></p>
+      <p class="kicker">Wire types</p>
+      <h1><code>aggregate</code></h1>
+      <p class="lede"><code>aggregate</code> filters a source list by a declared predicate and reduces the kept records to one scalar — sum, count, min, max, or average — in a single command.</p>
+
+      <h2>What it does</h2>
+      <p>A filter-then-summarize plan names its predicate and aggregate instead of writing a filter and a reduce. The source is a list of whole numbers; the kept records are the elements that pass the predicate, and the command reduces them to one number.</p>
+
+      <h2>How it works</h2>
+      <p>The predicate is a tiny declarative form, never a second JavaScript: a comparison against a threshold (<code>above</code>, <code>atLeast</code>, <code>below</code>, <code>atMost</code>) or a divisibility test (<code>divisibleBy</code>), named by exactly one key in the body. A <code>field</code> names which field to compare and reduce for a list of records; without it, the element itself is the value.</p>
+      <p>The command owns the non-empty and whole-number contract: <code>sum</code> and <code>count</code> reduce an empty kept list to zero, while <code>min</code>, <code>max</code>, and <code>average</code> reject an empty kept list as a structured <code>execution_error</code>. Every reduction runs over numbers and returns a whole number for whole inputs; <code>average</code> returns the exact mean. A malformed predicate or an unknown operation is a <code>validation_error</code> before execution. The command is pure and deterministic (version 1.0.0).</p>
+
+      <h2>Body syntax</h2>
+      <pre><code>@average aggregate
+source: $slots.scores
+op: average
+predicate:
+  atLeast: $slots.minimum</code></pre>
+
+      <h2>Worked example</h2>
+      <p>A qualifying average over the scores at or above a threshold:</p>
+      <pre><code>@scores literal
+[7, 12, 3, 18, 9]
+
+@minimum literal
+5
+
+@qualifying aggregate
+source: $scores
+op: average
+predicate:
+  atLeast: $minimum</code></pre>
+      <p>The predicate keeps <code>[7, 12, 18, 9]</code>, and <code>average</code> returns the exact mean <code>11.5</code>. A <code>sum</code> over the same kept list would return <code>46</code>, and a <code>count</code> would return <code>4</code>.</p>
+
+      <p><a href="../wire-types.html">&larr; All wire types</a></p>
+    </div>
+  </main>
+  <div data-include="../partials/footer.html"></div>
+  <script src="../partials-loader.js"></script>
+</body>
+</html>

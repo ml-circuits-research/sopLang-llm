@@ -19,19 +19,36 @@
       <p>The value-producing computation surface is <code>literal</code> plus <code>jsEval</code>; three declarative commands absorb the recurring micro-algorithms; <code>modelCall</code> is the explicit neural effect; <code>input</code> is a binding; and the five <code>container*</code> commands stage typed persistent state.</p>
       <table>
         <tr><th>Command</th><th>What it does</th><th>How it works</th></tr>
-        <tr><td><code>literal</code></td><td>Produces a literal scalar, JSON value, or text body.</td><td>Pure: the body is parsed as the value and published unchanged. No dependencies, no execution.</td></tr>
-        <tr><td><code>jsEval</code></td><td>Executes JavaScript over declared <code>$wire</code> dependencies in an isolated realm.</td><td>Pure unless it stages effects. The sandbox asserts the input/output contract itself (defined dependencies, non-empty slots record, non-null non-undefined non-empty result) and provides the <code>probe(condition, message)</code> helper. Bounded by a JavaScript deadline, charged cumulatively against the request budget.</td></tr>
-        <tr><td><code>graphPath</code></td><td>Answers a reachability or neighbour question over a stated undirected edge list.</td><td>Pure; bounded deterministic breadth-first search in host code. The body names the edges, the start node, and either a target (<code>yes</code>/<code>no</code>) or a count request (the degree). The command owns the whole-number and yes/no contract; the model never writes a queue or a seen set.</td></tr>
-        <tr><td><code>aggregate</code></td><td>Filters a source list by a declared predicate and reduces the kept records to one scalar: sum, count, min, max, or average.</td><td>Pure; owns the non-empty and whole-number contract. The predicate is a tiny declarative form (a threshold comparison or a divisibility test), never a second JavaScript.</td></tr>
-        <tr><td><code>fraction</code></td><td>Reduces a ratio to a reduced fraction or a whole number.</td><td>Pure; runs the greatest-common-divisor in the command. The body names numerator and denominator, or a source list plus a divisor; the command owns the reduced-fraction contract.</td></tr>
-        <tr><td><code>modelCall</code></td><td>Invokes the configured neural model for a local semantic judgment or generation step.</td><td>Explicit non-deterministic neural effect, fully logged: the trace records the definition hash and the dependency value hashes. Instruction text is prose; every invocation is a visible cost center that can be ablated.</td></tr>
-        <tr><td><code>input</code></td><td>Binds a value supplied by the wrapper, such as the current problem or a runtime parameter.</td><td>Immutable for one request or declared snapshot. A binding whose name has no declared wire becomes an implicit input node.</td></tr>
-        <tr><td><code>container</code></td><td>Declares a typed persistent collection with its schema and identity policy.</td><td>Structural state declaration: the schema and identity policy become trusted runtime state; the wire's value is the container snapshot; a commit invalidates the declaration wire so the next epoch returns the new revision.</td></tr>
-        <tr><td><code>containerAdd</code></td><td>Stages one or more new records against a target container.</td><td>Batched container patch, committed at the epoch barrier together with the other compatible patches; the revision increments once per grouped commit.</td></tr>
-        <tr><td><code>containerUpsert</code></td><td>Stages keyed inserts or replacements under a declared merge policy.</td><td>Batched container patch against the revision visible at the start of the epoch.</td></tr>
-        <tr><td><code>containerRemove</code></td><td>Stages deletion or tombstone operations under an explicit identity contract.</td><td>Batched container patch; history stays auditable.</td></tr>
-        <tr><td><code>containerFilter</code></td><td>Defines a pure derived view of a source container.</td><td>The predicate runs over a <code>row</code>; the view keeps the source revision through a filter chain, so provenance stays traceable and every link is invalidated by the base commit.</td></tr>
+        <tr><td><a href="wire-types/literal.html"><code>literal</code></a></td><td>Produces a literal scalar, JSON value, or text body.</td><td>Pure: the body is parsed as the value and published unchanged. No dependencies, no execution.</td></tr>
+        <tr><td><a href="wire-types/jsEval.html"><code>jsEval</code></a></td><td>Executes JavaScript over declared <code>$wire</code> dependencies in an isolated realm.</td><td>Pure unless it stages effects. The sandbox asserts the input/output contract itself (defined dependencies, non-empty slots record, non-null non-undefined non-empty result) and provides the <code>probe(condition, message)</code> helper. Bounded by a JavaScript deadline, charged cumulatively against the request budget.</td></tr>
+        <tr><td><a href="wire-types/graphPath.html"><code>graphPath</code></a></td><td>Answers a reachability or neighbour question over a stated undirected edge list.</td><td>Pure; bounded deterministic breadth-first search in host code. The body names the edges, the start node, and either a target (<code>yes</code>/<code>no</code>) or a count request (the degree). The command owns the whole-number and yes/no contract; the model never writes a queue or a seen set.</td></tr>
+        <tr><td><a href="wire-types/aggregate.html"><code>aggregate</code></a></td><td>Filters a source list by a declared predicate and reduces the kept records to one scalar: sum, count, min, max, or average.</td><td>Pure; owns the non-empty and whole-number contract. The predicate is a tiny declarative form (a threshold comparison or a divisibility test), never a second JavaScript.</td></tr>
+        <tr><td><a href="wire-types/fraction.html"><code>fraction</code></a></td><td>Reduces a ratio to a reduced fraction or a whole number.</td><td>Pure; runs the greatest-common-divisor in the command. The body names numerator and denominator, or a source list plus a divisor; the command owns the reduced-fraction contract.</td></tr>
+        <tr><td><a href="wire-types/modelCall.html"><code>modelCall</code></a></td><td>Invokes the configured neural model for a local semantic judgment or generation step.</td><td>Explicit non-deterministic neural effect, fully logged: the trace records the definition hash and the dependency value hashes. Instruction text is prose; every invocation is a visible cost center that can be ablated.</td></tr>
+        <tr><td><a href="wire-types/input.html"><code>input</code></a></td><td>Binds a value supplied by the wrapper, such as the current problem or a runtime parameter.</td><td>Immutable for one request or declared snapshot. A binding whose name has no declared wire becomes an implicit input node.</td></tr>
+        <tr><td><a href="wire-types/container.html"><code>container</code></a></td><td>Declares a typed persistent collection with its schema and identity policy.</td><td>Structural state declaration: the schema and identity policy become trusted runtime state; the wire's value is the container snapshot; a commit invalidates the declaration wire so the next epoch returns the new revision.</td></tr>
+        <tr><td><a href="wire-types/containerAdd.html"><code>containerAdd</code></a></td><td>Stages one or more new records against a target container.</td><td>Batched container patch, committed at the epoch barrier together with the other compatible patches; the revision increments once per grouped commit.</td></tr>
+        <tr><td><a href="wire-types/containerUpsert.html"><code>containerUpsert</code></a></td><td>Stages keyed inserts or replacements under a declared merge policy.</td><td>Batched container patch against the revision visible at the start of the epoch.</td></tr>
+        <tr><td><a href="wire-types/containerRemove.html"><code>containerRemove</code></a></td><td>Stages deletion or tombstone operations under an explicit identity contract.</td><td>Batched container patch; history stays auditable.</td></tr>
+        <tr><td><a href="wire-types/containerFilter.html"><code>containerFilter</code></a></td><td>Defines a pure derived view of a source container.</td><td>The predicate runs over a <code>row</code>; the view keeps the source revision through a filter chain, so provenance stays traceable and every link is invalidated by the base commit.</td></tr>
       </table>
+
+      <h2>Detail pages</h2>
+      <ul>
+        <li><a href="wire-types/input.html"><code>input</code></a></li>
+        <li><a href="wire-types/literal.html"><code>literal</code></a></li>
+        <li><a href="wire-types/jsEval.html"><code>jsEval</code></a></li>
+        <li><a href="wire-types/graphPath.html"><code>graphPath</code></a></li>
+        <li><a href="wire-types/aggregate.html"><code>aggregate</code></a></li>
+        <li><a href="wire-types/fraction.html"><code>fraction</code></a></li>
+        <li><a href="wire-types/modelCall.html"><code>modelCall</code></a></li>
+        <li><a href="wire-types/container.html"><code>container</code></a></li>
+        <li><a href="wire-types/containerAdd.html"><code>containerAdd</code></a></li>
+        <li><a href="wire-types/containerUpsert.html"><code>containerUpsert</code></a></li>
+        <li><a href="wire-types/containerRemove.html"><code>containerRemove</code></a></li>
+        <li><a href="wire-types/containerFilter.html"><code>containerFilter</code></a></li>
+      </ul>
+      <p>The five container commands share a <a href="wire-types/containers.html">containers overview</a>.</p>
 
       <h2>The jsEval sandbox: the abstractions generated code may use</h2>
       <p>A <code>jsEval</code> body runs in a private guest realm inside a worker thread: a fresh ECMAScript context per call, holding only ECMAScript intrinsics, so generated code cannot reach <code>process</code>, the module loader, or any host object. Values enter and leave as transfer-profile copies. On top of that isolation, the sandbox injects a small set of composable abstractions — the same idea as the declarative wires, at the helper level:</p>
@@ -68,5 +85,7 @@
       <p>Every command carries a version in its manifest; the version flows into the trace as <code>commandVersion</code> and into the cache key. A new command, or a behavior change to an existing one, is a parser/runtime change: the specifications (<a href="specsLoader.html?spec=DS002-sop-lang-core.md">DS002</a>, <a href="specsLoader.html?spec=DS004-wire-types.md">DS004</a>, <a href="specsLoader.html?spec=DS008-training-data.md">DS008</a>) and this page are updated in the same commit, and the dataset is regenerated. The rules are recorded in <code>AGENTS.md</code>.</p>
     </div>
   </main>
+  <div data-include="partials/footer.html"></div>
+  <script src="partials-loader.js"></script>
 </body>
 </html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>graphPath — Wire types — sopLang-llm Documentation</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <div data-include="../partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel">
+      <p class="breadcrumbs"><a href="../index.html">Home</a> &rarr; <a href="../wire-types.html">Wire types</a></p>
+      <p class="kicker">Wire types</p>
+      <h1><code>graphPath</code></h1>
+      <p class="lede"><code>graphPath</code> answers a reachability or neighbour question over a stated undirected edge list without writing a traversal: whether a path joins two named nodes, or the degree of a named node.</p>
+
+      <h2>What it does</h2>
+      <p>The body names an edge list (<code>edges</code>), a start node (<code>from</code>), and either a target node (<code>to</code>) for a reachability verdict or <code>count: true</code> for the degree of the start node. A compiled plan never writes an adjacency map, a queue, or a seen set — the command builds the structure and runs the traversal.</p>
+
+      <h2>How it works</h2>
+      <p>The command builds the adjacency structure in edge order and runs a bounded, deterministic breadth-first search in host code. Reachability returns exactly the strings <code>yes</code> or <code>no</code>; a neighbour count returns the whole degree of the start node. The command owns the whole-number and yes/no contract.</p>
+      <p>Malformed edges, an edge list whose entries are not <code>[a, b]</code> pairs of comparable scalars, a start node that appears in no edge, a target node that appears in no edge, and a start equal to the target are structured <code>execution_error</code>s naming the wire and the contract clause. The executor is deterministic: the verdict depends only on the declared edges and nodes, never on object key ordering or runtime iteration order. The command is pure and deterministic (version 1.0.0).</p>
+
+      <h2>Body syntax</h2>
+      <p>Exactly one of <code>to</code> or <code>count: true</code> is required.</p>
+      <pre><code>@reachable graphPath
+from: $largest
+to: $slots.target
+edges: $slots.edges</code></pre>
+      <pre><code>@degree graphPath
+from: $node
+edges: $slots.edges
+count: true</code></pre>
+
+      <h2>Worked example</h2>
+      <p>An edge list and a reachability question, followed by a degree question:</p>
+      <pre><code>@edges literal
+[["a", "b"], ["b", "c"], ["c", "d"], ["x", "y"]]
+
+@reachable graphPath
+from: "a"
+to: "d"
+edges: $edges
+
+@degree graphPath
+from: "b"
+edges: $edges
+count: true</code></pre>
+      <p><code>reachable</code> returns <code>"yes"</code> because <code>a&rarr;b&rarr;c&rarr;d</code> is a path; <code>degree</code> returns <code>2</code> because <code>b</code> is named by the edges <code>[a, b]</code> and <code>[b, c]</code>. Changing <code>to</code> to <code>"y"</code> would return <code>"no"</code>.</p>
+
+      <p><a href="../wire-types.html">&larr; All wire types</a></p>
+    </div>
+  </main>
+  <div data-include="../partials/footer.html"></div>
+  <script src="../partials-loader.js"></script>
+</body>
+</html>

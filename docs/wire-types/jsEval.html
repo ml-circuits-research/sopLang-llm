@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>jsEval — Wire types — sopLang-llm Documentation</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <div data-include="../partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel">
+      <p class="breadcrumbs"><a href="../index.html">Home</a> &rarr; <a href="../wire-types.html">Wire types</a></p>
+      <p class="kicker">Wire types</p>
+      <h1><code>jsEval</code></h1>
+      <p class="lede"><code>jsEval</code> is the universal deterministic escape hatch: it executes JavaScript over declared <code>$wire</code> dependencies in an isolated realm, and may stage graph or container transactions through the runtime API.</p>
+
+      <h2>What it does</h2>
+      <p>When the remaining subproblem is mechanical — arithmetic, sorting, joins, filtering, aggregation, validation, or serialization — it belongs in a <code>jsEval</code> body. The body runs as an async function body with the declared dependencies as parameters, plus a <code>circuit</code> parameter that exposes the transactional graph API without permitting a hidden value read.</p>
+
+      <h2>How it works</h2>
+      <p>The body runs in a private guest realm inside a worker thread: a fresh ECMAScript context per call holding only ECMAScript intrinsics, so generated code cannot reach <code>process</code>, the module loader, or any host object. Dependency values arrive as copies, so a guest mutation never reaches a stored value.</p>
+      <p>The command owns its input/output contract, so a compiled plan never restates it. Before the body runs, the sandbox asserts that every declared dependency is defined and that a dependency named <code>slots</code> carrying a compiled record is a non-empty object. After the body runs, it asserts the result is not <code>null</code>, <code>undefined</code>, or the empty string — the values a downstream wire would read as "nothing was computed". Failures are structured <code>execution_error</code>s naming the wire and the contract clause.</p>
+      <p>Version 2.1 adds the <code>probe(condition, message)</code> helper: the sandbox defines it in guest scope, so a body writes its own domain assertions as bare <code>probe(...)</code> calls instead of carrying the helper's definition. A failed probe throws and ends the wire as an <code>execution_error</code>.</p>
+      <p>The transactional <code>circuit</code> API — <code>addWire</code>, <code>redefineWire</code>, <code>invalidateWire</code>, <code>invalidateDownstream</code>, <code>getDefinition</code>, <code>listDefinitions</code>, and <code>commit</code> — records operations in the guest realm and replays them onto the real transaction after the call; an uncommitted transaction never publishes.</p>
+      <p>Every call is bounded by a JavaScript deadline (default 2000&nbsp;ms, charged cumulatively against the request budget) and a transaction operation cap. Exhaustion is a structured <code>budget_exceeded</code> outcome; failures are typed <code>validation_error</code> (syntax), <code>execution_error</code> (body failure), and <code>unsupported_value</code> (non-transferable). The command is pure by default but may stage a structural transaction or a container patch (version 2.1.0).</p>
+
+      <h2>Body syntax</h2>
+      <p>The body is JavaScript; references to other wires use the <code>$name</code> form outside strings and comments.</p>
+      <pre><code>@selected jsEval
+return $rows.filter(row =&gt; row.enabled === true);</code></pre>
+
+      <h2>Worked example</h2>
+      <p>A summarization step that keeps passing rows and asserts at least one survived:</p>
+      <pre><code>@rows input
+
+@summary jsEval
+const kept = $rows.filter((row) =&gt; row.score &gt;= 50);
+probe(kept.length &gt; 0, "no row reached the passing score");
+return { count: kept.length, total: kept.reduce((s, r) =&gt; s + r.score, 0) };</code></pre>
+      <p>The analyzer reads <code>$rows</code> as a dependency, the sandbox asserts the input contract before the body runs, and the <code>probe</code> turns a domain-specific impossibility into a typed failure instead of a wrong-looking value.</p>
+
+      <p><a href="../wire-types.html">&larr; All wire types</a></p>
+    </div>
+  </main>
+  <div data-include="../partials/footer.html"></div>
+  <script src="../partials-loader.js"></script>
+</body>
+</html>

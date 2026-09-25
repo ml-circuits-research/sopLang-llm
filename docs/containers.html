@@ -3,122 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>sopLang-llm Documentation</title>
+  <title>Containers — sopLang-llm Documentation</title>
   <link rel="stylesheet" href="styles.css">
-  <script type="module">
-    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
-    mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
-  </script>
 </head>
 <body>
   <div data-include="partials/header.html"></div>
   <main class="page">
     <div class="page__panel">
       <p class="breadcrumbs"><a href="index.html">Home</a></p>
-      <p class="kicker">Execution</p>
+      <p class="kicker">Wire types</p>
       <h1>Containers</h1>
-      <p class="lede">Long-document reasoning needs state that is more structured than a list of chunks and less brittle than a succession of prose summaries. A <a href="wiki.html#definition-container">container</a> is a typed persistent collection declared as a first-class wire value with an explicit schema, identity policy, provenance, and revision semantics.</p>
-
-      <h2>Collection kinds</h2>
-      <p>The reference profile supports three collection semantics. A table is a collection of JSON-like records governed by a record schema and, optionally, primary or candidate keys. A set is a collection whose membership is defined by a stable identity function or canonical hash. A sequence is an ordered collection whose order is meaningful, such as a chronology of events or the order of passages in a narrative. Graph relations are ordinary tables whose fields act as foreign keys, which keeps storage and validation simple while allowing graph algorithms in JavaScript.</p>
-
-      <p>A planning call for a novel may declare containers before any source chunk is read:</p>
-
-      <pre><code>@characters container
-kind: table
-primaryKey: id
-schema:
-  type: object
-  required: [id, name, sourceSpans]
-  properties:
-    id: { type: string }
-    name: { type: string }
-    aliases: { type: array, items: { type: string } }
-    traits: { type: array, items: { type: string } }
-    sourceSpans: { type: array }
-
-@events container
-kind: sequence
-schema:
-  type: object
-  required: [id, actors, action, sourceSpans]
-  properties:
-    id: { type: string }
-    actors: { type: array, items: { type: string } }
-    placeId: { type: [string, "null"] }
-    action: { type: string }
-    temporalHint: { type: [string, "null"] }
-    causes: { type: array, items: { type: string } }
-    consequences: { type: array, items: { type: string } }
-    sourceSpans: { type: array }</code></pre>
-
-      <p>After the planning call these definitions become part of the trusted runtime state supplied to ingestion calls. The source chunk remains data, and the schema is a system capability and contract.</p>
-
-      <h2>Patch-based updates</h2>
-      <p>A naive implementation would turn every appended record into a graph rewrite and restart the scheduler constantly. Container mutation commands avoid that by not mutating the target while they execute. <code>containerAdd</code>, <code>containerUpsert</code>, and <code>containerRemove</code> produce validated <a href="wiki.html#definition-container-patch">container patches</a> against the revision visible at the start of the epoch, and compatible patches that become ready during the epoch are computed in parallel.</p>
-
-      <pre><code>@chunk042_events containerAdd
-target: events
-items:
-  - id: event_042_01
-    actors: [char_hamlet]
-    placeId: place_castle
-    action: "Hamlet confronts the implication of the apparition's claim."
-    temporalHint: "after the encounter"
-    causes: [event_017_03]
-    consequences: []
-    sourceSpans:
-      - { sourceId: bookA, chunkId: chunk042, start: 830, end: 1011 }</code></pre>
-
-      <p>A patch may instead depend on a computed wire, in which case it executes after that wire is available and still stages its update for the <a href="wiki.html#definition-epoch-commit">epoch commit</a>:</p>
-
-      <pre><code>@normalizedRows jsEval
-return $rawRows.map(normalizeRow);
-
-@addNormalized containerAdd
-target: observations
-items: $normalizedRows</code></pre>
-
-      <p>At the barrier the runtime groups patches by target container, validates conflicts, orders them deterministically, and commits one new revision. A 500-chunk book produces 500 independent additions that commit in one revision instead of 500. For a sequence, completion order must not define semantic order because parallel scheduling would make it nondeterministic, so every item carries an ordering key such as source document order, chunk order, source offset, and local index, and the merged sequence is sorted by that key.</p>
-
-      <h2>Identity, merge policy, and history</h2>
-      <p><code>containerUpsert</code> requires a declared identity rule, and the default rejects a conflicting replacement instead of silently selecting a winner. An explicit merge policy may permit replacement when the source record version is unchanged, merging non-conflicting fields, or creating a competing assertion instead of overwriting. For information extracted from books, preserving competing assertions is often preferable: two passages that describe a character differently are not collapsed merely because they share an identifier. <code>containerRemove</code> normally creates a tombstone or a new revision rather than erasing history, so replay and audit remain possible. Every accepted item is also recorded in an append-only history with the record it replaced, so an earlier assertion and its source spans stay retrievable by revision after a replacement or a merge, while the canonical view may change. A patch that the store rejects as part of a group publishes nothing: each group is applied to a working copy and replaces the live state only when the whole group is accepted, and a set is defined by membership identity, so a repeated member never inflates a downstream count.</p>
-
-      <h2>Derived views and invalidation</h2>
-      <p><a href="wiki.html#definition-container-filter">containerFilter</a> defines a pure derived view of a source container. Its value depends on the source container revision and on any additional predicate dependencies, and it preserves provenance by referencing source record identities and the revision it was computed from.</p>
-
-      <pre><code>@highConfidenceClaims containerFilter
-source: $claims
-predicate:
-  return row.confidence &gt;= $threshold &amp;&amp; row.status !== "superseded";</code></pre>
-
-      <p>When either the source container or the threshold changes, the view becomes dirty and downstream wires become dirty transitively. The rule holds through composition: a correction that adds a previously missed legal exception creates a new base revision, invalidates the filter that selects exceptions by date, and invalidates the JavaScript wire that groups them by jurisdiction. Incremental maintenance is allowed as an optimization only when it produces the same result and trace-equivalent provenance.</p>
-
-      <figure class="diagram">
-        <pre class="mermaid">flowchart TB
-  subgraph Ingest[Ingestion epoch]
-    Add1[containerAdd wire A] --> PatchA[Patch against revision N]
-    Add2[containerAdd wire B] --> PatchB[Patch against revision N]
-    Upsert[containerUpsert wire] --> PatchC[Patch against revision N]
-  end
-  PatchA --> Barrier[Epoch barrier]
-  PatchB --> Barrier
-  PatchC --> Barrier
-  Barrier --> Commit[Grouped deterministic commit]
-  Commit --> Rev[Container revision N plus 1]
-  Rev --> View[containerFilter view recomputed]
-  View --> Downstream[Downstream wires recomputed]</pre>
-        <figcaption><em>Batched container commit and invalidation</em></figcaption>
-      </figure>
-
-      <h2>Interaction with metaprogramming</h2>
-      <p>A <code>jsEval</code> wire may decide that a new container or view is required and define it through the circuit API. That is a structural transaction and produces a new circuit revision. Ordinary additions use container patches and are batched within the current epoch. The distinction gives the student a clear planning rule: container mutation commands handle data, and the circuit API handles changes to computational structure.</p>
-
-      <h2>Containers as evaluation substrate</h2>
-      <p>Containers support controlled summarization and <a href="wiki.html#definition-anti-smoothing">anti-smoothing</a> measurement. The system compiles claims, exceptions, events, positions, and evidence into containers, marks which records are mandatory for the requested summary policy, generates prose, and measures coverage against those records. The container state serves as working memory and as evaluation substrate at the same time.</p>
-
-      <h2>Where the contract lives</h2>
-      <p>The full container contract, including patch records, merge policies, tombstones, and invalidation rules, is specified in <a href="specsLoader.html?spec=DS005-containers.md">DS005-containers</a>. The epoch semantics that make batched commits possible are specified in <a href="specsLoader.html?spec=DS002-sop-lang-core.md">DS002-sop-lang-core</a>, and the planning and ingestion flow that fills containers is specified in <a href="specsLoader.html?spec=DS006-context-adapter.md">DS006-context-adapter</a>.</p>
+      <p class="lede">The containers documentation has moved. See <a href="wire-types/containers.html">Containers</a> under Wire types for the overview of the five container commands, or <a href="wire-types.html">Wire types</a> for the full command vocabulary.</p>
     </div>
   </main>
   <div data-include="partials/footer.html"></div>

@@ -150,3 +150,14 @@ tools/
 *.gguf
 __pycache__/
 *.pyc
+# >>> ploinky default-skills >>>
+.agents/skills/achilles-specs/
+.agents/skills/article-build/
+.agents/skills/detect-main-behaviors/
+.agents/skills/gamp-specs/
+.agents/skills/node-coding-style/
+.agents/skills/review-specs/
+.agents/skills/unslop/
+.agents
+.claude
+# <<< ploinky default-skills <<<

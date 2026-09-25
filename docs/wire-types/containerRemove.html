@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>containerRemove — Wire types — sopLang-llm Documentation</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <div data-include="../partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel">
+      <p class="breadcrumbs"><a href="../index.html">Home</a> &rarr; <a href="../wire-types.html">Wire types</a> &rarr; <a href="containers.html">Containers</a></p>
+      <p class="kicker">Wire types</p>
+      <h1><code>containerRemove</code></h1>
+      <p class="lede"><code>containerRemove</code> stages deletion or tombstone operations under an explicit identity contract.</p>
+
+      <h2>What it does</h2>
+      <p>Use it when a record leaves the current canonical view but history must remain auditable. The body names a <code>target</code> and the <code>items</code> (by identity) to remove or tombstone.</p>
+
+      <h2>How it works</h2>
+      <p>The command normally creates a tombstone or a new revision rather than erasing history, so replay and audit remain possible; it does not rewrite the past. Every accepted item is recorded in an append-only history with the record it replaced, so an earlier assertion and its source spans stay retrievable by revision after a replacement, while the canonical view may change. The patch is staged against the revision visible at the start of the epoch and committed at the barrier. The effect class is <code>container_patch</code> and the command is deterministic (version 1.1.0).</p>
+
+      <h2>Body syntax</h2>
+      <pre><code>@retract containerRemove
+target: claims
+items:
+  - id: claim_017</code></pre>
+
+      <h2>Worked example</h2>
+      <p>Retracting a superseded claim from the canonical view without erasing it:</p>
+      <pre><code>@retract containerRemove
+target: claims
+items:
+  - id: claim_017</code></pre>
+      <p>The patch tombstones <code>claim_017</code> in the current revision; the record and its source spans remain retrievable by revision for audit, and downstream views that depended on the claim are invalidated transitively.</p>
+
+      <p><a href="../wire-types.html">&larr; All wire types</a> &middot; <a href="containers.html">Containers overview</a></p>
+    </div>
+  </main>
+  <div data-include="../partials/footer.html"></div>
+  <script src="../partials-loader.js"></script>
+</body>
+</html>

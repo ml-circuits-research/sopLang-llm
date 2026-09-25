@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>literal — Wire types — sopLang-llm Documentation</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <div data-include="../partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel">
+      <p class="breadcrumbs"><a href="../index.html">Home</a> &rarr; <a href="../wire-types.html">Wire types</a></p>
+      <p class="kicker">Wire types</p>
+      <h1><code>literal</code></h1>
+      <p class="lede"><code>literal</code> produces a literal scalar, JSON value, or text body: the body <em>is</em> the value, published unchanged.</p>
+
+      <h2>What it does</h2>
+      <p>A literal wire publishes its body as a value. It is useful for constants and small structured values embedded in the circuit. Large source documents do not belong in a literal body; they stay in the source store and are referenced through an input wire or a source identifier, so the circuit never duplicates large text and provenance stays stable.</p>
+
+      <h2>How it works</h2>
+      <p>The executor parses the body once: it trims whitespace, returns the empty string for an empty body, and otherwise attempts <code>JSON.parse</code>. A body that parses as valid JSON becomes that JSON value (a number, string, boolean, array, or object); a body that does not parse is returned as text. The command is pure and deterministic (version 1.0.0): no dependencies and no execution beyond parsing.</p>
+
+      <h2>Body syntax</h2>
+      <p>Either a scalar or a JSON value:</p>
+      <pre><code>@answer literal
+42</code></pre>
+      <pre><code>@config literal
+{ "threshold": 0.8, "labels": ["yes", "no"] }</code></pre>
+
+      <h2>Worked example</h2>
+      <p>A literal threshold feeding a <code>jsEval</code> filter:</p>
+      <pre><code>@minimum literal
+3
+
+@answer jsEval
+return [1, 2, 3, 4, 5].filter((n) =&gt; n &gt;= $minimum);</code></pre>
+      <p><code>$minimum</code> is bound to <code>3</code>, so the filter keeps <code>[3, 4, 5]</code>. The threshold is a named constant rather than a value buried inside the JavaScript.</p>
+
+      <p><a href="../wire-types.html">&larr; All wire types</a></p>
+    </div>
+  </main>
+  <div data-include="../partials/footer.html"></div>
+  <script src="../partials-loader.js"></script>
+</body>
+</html>

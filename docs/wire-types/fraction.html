@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fraction — Wire types — sopLang-llm Documentation</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <div data-include="../partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel">
+      <p class="breadcrumbs"><a href="../index.html">Home</a> &rarr; <a href="../wire-types.html">Wire types</a></p>
+      <p class="kicker">Wire types</p>
+      <h1><code>fraction</code></h1>
+      <p class="lede"><code>fraction</code> reduces a ratio to a reduced fraction or a whole number, running Euclid's greatest-common-divisor in the command.</p>
+
+      <h2>What it does</h2>
+      <p>The body names either a favourable count and a total (<code>numerator</code> and <code>denominator</code>), or a source list and a divisibility divisor (<code>source</code> and <code>divisibleBy</code>, which counts the elements the divisor divides). The command reduces the ratio and returns <code>numerator/denominator</code>, or the whole integer when the denominator reduces to one — exactly the form a generated probability body previously computed with its own gcd loop and re-asserted with a regex probe.</p>
+
+      <h2>How it works</h2>
+      <p>The command owns the reduced-fraction contract: a zero or non-positive total, a negative favourable count, and a favourable count above the total are structured <code>execution_error</code>s. The result is always a whole number or a reduced <code>a/b</code> string, so the model names the operation and the runtime owns the gcd. The command is pure and deterministic (version 1.0.0).</p>
+
+      <h2>Body syntax</h2>
+      <pre><code>@ratio fraction
+numerator: $favourable
+denominator: $total</code></pre>
+      <pre><code>@chance fraction
+source: $kept
+divisibleBy: $slots.favourableDivisor</code></pre>
+
+      <h2>Worked example</h2>
+      <p>A success rate over a stated attempt count:</p>
+      <pre><code>@attempts literal
+12
+
+@successes literal
+8
+
+@successRate fraction
+numerator: $successes
+denominator: $attempts</code></pre>
+      <p>The greatest common divisor of <code>8</code> and <code>12</code> is <code>4</code>, so <code>successRate</code> returns <code>"2/3"</code>. The list form counts favourable elements and divides by the list length:</p>
+      <pre><code>@values literal
+[2, 4, 5, 6, 8]
+
+@evens fraction
+source: $values
+divisibleBy: 2</code></pre>
+      <p>Four of five values are divisible by <code>2</code>, so <code>evens</code> returns <code>"4/5"</code>.</p>
+
+      <p><a href="../wire-types.html">&larr; All wire types</a></p>
+    </div>
+  </main>
+  <div data-include="../partials/footer.html"></div>
+  <script src="../partials-loader.js"></script>
+</body>
+</html>
