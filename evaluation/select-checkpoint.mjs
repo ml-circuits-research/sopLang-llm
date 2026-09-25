@@ -179,7 +179,51 @@ const runtime = createRuntime();
 const trainingPlans = options.slice === 'validation' ? trainingPlanFingerprints() : null;
 const rows = [];
 
+// The early-stop watcher already scored every save during training on this very
+// slice (select-checkpoint --only). Re-scoring those checkpoints again would
+// convert, boot, and score the same models a second time - about an hour per
+// arm. A stored score for the same checkpoint and the same item count is
+// reused verbatim; only the checkpoints the watcher never saw are scored here.
+function storedScore(checkpoint) {
+  const scoresPath = join(REPOSITORY_ROOT, 'training/checkpoints', options.experiment, 'validation-scores.jsonl');
+  if (!existsSync(scoresPath)) return null;
+  try {
+    for (const line of readFileSync(scoresPath, 'utf8').split('\n')) {
+      if (line.trim() === '') continue;
+      const record = JSON.parse(line);
+      if (record.checkpoint !== checkpoint.name || record.items !== items.length) continue;
+      if (record.oracle === null || record.parse === null) continue;
+      return record;
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
+
 for (const checkpoint of checkpoints) {
+  const stored = storedScore(checkpoint);
+  if (stored !== null) {
+    console.log(`\n=== ${checkpoint.name}: reusing the in-loop validation score (${stored.items} items)`);
+    rows.push({
+      checkpoint: checkpoint.name,
+      step: stored.step ?? checkpoint.step,
+      gguf: null,
+      metrics: {
+        items: stored.items,
+        classes: { reused: stored.items },
+        rates: {
+          oracle_match: stored.oracle,
+          parse_validity: stored.parse,
+          graph_validity: stored.graph ?? null,
+          runtime_completion: stored.completion ?? null
+        }
+      },
+      planSplit: null,
+      reused: true
+    });
+    continue;
+  }
   const ggufPath = join(ggufDir, `${checkpoint.name}.gguf`);
   console.log(`\n=== ${checkpoint.name} (${items.length} validation items)`);
   const convertSource = await servableCheckpoint(checkpoint, join(ggufDir, `${checkpoint.name}-merge.log`));
@@ -204,12 +248,25 @@ for (const checkpoint of checkpoints) {
   );
 }
 
-const ranked = [...rows].sort((left, right) => {
+// A reused winner has no GGUF yet: the holdout serves the winner's artifact,
+// so exactly the winner is converted now instead of every checkpoint.
+const winner = (() => {
+  const ranked = [...rows].sort((left, right) => {
   const oracle = (right.metrics.rates.oracle_match ?? 0) - (left.metrics.rates.oracle_match ?? 0);
   if (oracle !== 0) return oracle;
-  return (right.metrics.rates.parse_validity ?? 0) - (left.metrics.rates.parse_validity ?? 0);
-});
-const winner = ranked[0];
+    return (right.metrics.rates.parse_validity ?? 0) - (left.metrics.rates.parse_validity ?? 0);
+  });
+  return ranked[0];
+})();
+if (winner.gguf === null) {
+  const winnerCheckpoint = checkpoints.find((checkpoint) => checkpoint.name === winner.checkpoint);
+  if (winnerCheckpoint !== undefined) {
+    console.log(`\n=== converting the winner ${winner.checkpoint} for the holdout`);
+    const convertSource = await servableCheckpoint(winnerCheckpoint, join(ggufDir, `${winner.checkpoint}-merge.log`));
+    await convertCheckpoint(convertSource, join(ggufDir, `${winner.checkpoint}.gguf`), join(ggufDir, `${winner.checkpoint}-convert.log`));
+    winner.gguf = join(ggufDir, `${winner.checkpoint}.gguf`).replace(`${REPOSITORY_ROOT}/`, '');
+  }
+}
 
 const lines = [];
 lines.push(`# Checkpoint selection, ${options.experiment}`);
@@ -237,8 +294,12 @@ lines.push(`Selected: **${winner.checkpoint}** (highest oracle match, parse vali
 lines.push('');
 lines.push('| class | items (selected checkpoint) |');
 lines.push('| --- | --- |');
-for (const [className, count] of Object.entries(winner.metrics.classes)) {
-  lines.push(`| ${className} | ${count} |`);
+if (winner.reused === true) {
+  lines.push('| _reused in-loop score_ | _the holdout is the authoritative class table_ |');
+} else {
+  for (const [className, count] of Object.entries(winner.metrics.classes)) {
+    lines.push(`| ${className} | ${count} |`);
+  }
 }
 lines.push('');
 lines.push('Per-item records: `selection/<checkpoint>.jsonl`.');
