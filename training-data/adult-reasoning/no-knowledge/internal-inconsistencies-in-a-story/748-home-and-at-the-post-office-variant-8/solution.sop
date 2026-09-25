@@ -12,15 +12,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.speaker === "string" && slots.speaker.length > 0, "the account must belong to a named speaker");
-probe(typeof slots.absentPlace === "string" && slots.absentPlace.length > 0, "the account must name the place it denies being in");
-probe(typeof slots.meetingPlace === "string" && slots.meetingPlace.length > 0, "the account must name the place of the meeting");
-probe(slots.absentPlace === slots.meetingPlace, "the meeting must fall inside the place the account denies");
-probe(typeof slots.metPerson === "string" && slots.metPerson.length > 0, "the account must name the person it met");
-probe(/^\d{1,2}:\d{2}$/.test(slots.time), "the meeting must be given at a clock time");
-probe(Number.isInteger(slots.minutes) && slots.minutes > 0, "the meeting must last a positive whole number of minutes");
-probe(slots.claimsNobody === true, "the account must claim to have spoken to nobody");
-probe(slots.houseHasNoPostOffice === true, "the account must state that the house has no post office in front");
 const placeClause = "Absence from the place vs the meeting at the post office in the place.";
 const nobodyClause = "“Nobody” vs the " + slots.minutes + "-minute meeting.";
 return placeClause + " " + nobodyClause;

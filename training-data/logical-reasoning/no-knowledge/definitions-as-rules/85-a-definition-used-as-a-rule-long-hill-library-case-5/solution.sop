@@ -11,12 +11,5 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Number.isInteger(slots.threshold) && slots.threshold > 0, "the charter must state a positive number of months");
-probe(Number.isInteger(slots.actual) && slots.actual >= 0, "the case must state the borrower's listing in whole months");
-probe(slots.actual < slots.threshold, "the case must fall short of the charter threshold");
-probe(typeof slots.subject === "string" && slots.subject.length > 0, "the case must name the borrower");
-probe(slots.namedBorrower === slots.subject, "the exception must be asked for the borrower the case records");
-probe(typeof slots.applier === "string" && slots.applier.length > 0, "the case must name the person applying the definition");
-probe(typeof slots.sayer === "string" && slots.sayer.length > 0, "the case must name the person asking for the exception");
 return "No. " + slots.actual + " is less than " + slots.threshold + ". Carefulness is not a listed substitute. " + slots.applier + " is doing deduction. " + slots.sayer + " is writing a second charter.";
 

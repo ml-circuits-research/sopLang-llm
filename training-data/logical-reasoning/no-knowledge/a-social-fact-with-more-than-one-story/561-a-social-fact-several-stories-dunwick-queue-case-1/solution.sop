@@ -9,14 +9,8 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the queue");
-probe(typeof slots.sign === "string" && slots.sign.length > 0, "the case must quote the listed sign");
 const scarcity = /^last (\d+) pies$/.exec(String(slots.sign));
-probe(scarcity !== null, "the listed sign must state how many pies are left");
 const pies = Number(scarcity[1]);
-probe(Number.isInteger(pies) && pies > 0, "the listed sign must claim a positive number of pies");
 const speakers = [slots.rumourSayer, slots.signSayer, slots.crowdSayer];
-probe(speakers.every((name) => typeof name === "string" && name.length > 0), "the case must name the person behind each story");
-probe(new Set(speakers).size === speakers.length, "the three stories must come from three different people");
 return "The listed sign. Secret danger is extra. Crowds show demand or fear of missing pies, not a hidden oracle.";
 

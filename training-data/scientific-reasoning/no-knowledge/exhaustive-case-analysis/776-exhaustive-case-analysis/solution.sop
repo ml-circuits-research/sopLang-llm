@@ -23,14 +23,8 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Array.isArray(slots.variables) && slots.variables.length >= 2, "the statement must name at least two conditions");
 for (const variable of slots.variables) {
-  probe(typeof variable.letter === "string" && variable.letter.length === 1, "every condition must carry a one-letter name");
-  probe(typeof variable.meaning === "string" && variable.meaning.length > 0, "every condition must state what it means");
 }
-probe(slots.rule !== null && typeof slots.rule === "object", "the statement must state the rule of the target result");
-probe(["count", "firstOrBothOthers", "firstAndAnyOther"].indexOf(slots.rule.kind) !== -1, "the stated rule must be one of the supported case rules");
-probe(slots.rule.kind !== "count" || slots.rule.exactly !== undefined || slots.rule.atLeast !== undefined, "a counting rule must carry its threshold");
 const total = Math.pow(2, slots.variables.length);
 const favorable = [];
 for (let index = 0; index < total; index += 1) {

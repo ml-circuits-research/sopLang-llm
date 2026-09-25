@@ -11,10 +11,5 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the teaching card");
-probe(typeof slots.claim === "string" && /^all\b/.test(slots.claim), "the card must record a strict universal for one miss to refute");
-probe(typeof slots.counterexample === "string" && slots.counterexample.length > 0, "the case must name the counterexample the later page shows");
-probe(typeof slots.overreach === "string" && /^most\b/.test(slots.overreach), "the overreach must be a statistical sentence the card never made");
-probe(slots.finishedSpeaker !== slots.proudSpeaker && slots.proudSpeaker !== slots.panicSpeaker && slots.finishedSpeaker !== slots.panicSpeaker, "the three speakers must be three different people");
 return "The strict universal “" + slots.claim + ".” It does not, by itself, refute a statistical sentence that was not on the card.";
 

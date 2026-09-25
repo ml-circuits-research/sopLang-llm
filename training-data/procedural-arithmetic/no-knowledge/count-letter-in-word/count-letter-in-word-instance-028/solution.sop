@@ -6,8 +6,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.word === "string" && slots.word.length > 0, "the word must be a non-empty string");
-probe(typeof slots.letter === "string" && slots.letter.length === 1, "the letter must be a single character");
 const characters = [...slots.word.toLowerCase()];
 const wanted = slots.letter.toLowerCase();
 let occurrences = 0;

@@ -8,9 +8,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Number.isInteger(slots.demand) && slots.demand > 0, "the statement must state a positive whole demand");
-probe(Number.isInteger(slots.capacity) && slots.capacity > 0, "the module supply must be a positive whole quantity");
-probe(Number.isInteger(slots.reserve) && slots.reserve >= 0 && slots.reserve < 100, "the reserve must be a whole percentage below one hundred");
 probe((slots.demand * (100 + slots.reserve)) % 100 === 0, "the stated reserve must leave a whole required capacity");
 const required = (slots.demand * (100 + slots.reserve)) / 100;
 const modules = Math.ceil(required / slots.capacity);

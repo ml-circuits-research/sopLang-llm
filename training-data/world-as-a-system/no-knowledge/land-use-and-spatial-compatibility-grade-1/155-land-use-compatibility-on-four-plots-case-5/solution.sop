@@ -68,10 +68,6 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
-probe(Array.isArray(slots.plots) && slots.plots.length > 0, "the statement must lay out at least one plot");
-probe(Array.isArray(slots.uses) && slots.uses.length === slots.plots.length, "each plot must receive exactly one of the stated uses");
-probe(slots.forbidden.length + slots.adjacent.length + slots.ends.length > 0, "the statement must state at least one placement constraint");
-probe(Number.isInteger(slots.caseNumber) && slots.caseNumber >= 1, "the statement must state a positive case number");
 const holds = (order) => {
   const position = new Map(slots.plots.map((plot, index) => [order[index], index]));
   const last = slots.plots.length - 1;

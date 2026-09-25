@@ -42,11 +42,6 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
-probe(Number.isInteger(slots.members) && slots.members > 0, "the committee must have a positive whole number of members");
-probe(Number.isInteger(slots.present) && slots.present >= 0 && slots.present <= slots.members, "the number present must be a whole number within the committee");
-probe([slots.yes, slots.no, slots.abstain].every((count) => Number.isInteger(count) && count >= 0), "the yes, no, and abstain counts must be non-negative whole numbers");
-probe(slots.yes + slots.no + slots.abstain === slots.present, "the stated votes must add up to the number present");
-probe(Number.isInteger(slots.quorumPercent) && slots.quorumPercent > 0 && slots.quorumPercent <= 100, "the quorum share must be a stated percentage of all members");
 const threshold = Math.ceil((slots.quorumPercent * slots.members) / 100);
 probe(threshold > 0 && threshold <= slots.members, "the quorum threshold must fall inside the committee");
 const quorumMet = slots.present >= threshold;

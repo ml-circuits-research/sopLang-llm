@@ -44,19 +44,12 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Array.isArray(slots.edges) && slots.edges.length > 1, "the statement must state at least two edges of the network");
 for (const edge of slots.edges) {
-  probe(typeof edge.from === "string" && edge.from.length > 0 && typeof edge.to === "string" && edge.to.length > 0, "every edge must join two named nodes");
-  probe(Number.isInteger(edge.cost) && edge.cost > 0, "every edge must carry a positive whole cost: " + edge.from);
 }
 const nodes = [];
 for (const edge of slots.edges) {
   for (const node of [edge.from, edge.to]) { if (!nodes.includes(node)) nodes.push(node); }
 }
-probe(nodes.includes(slots.start), "the starting point must be a node of the network");
-probe(nodes.includes(slots.destination), "the destination must be a node of the network");
-probe(slots.start !== slots.destination, "the starting point and the destination must be different nodes");
-probe(slots.edges.filter((edge) => edge.closed === true).length === 1, "exactly one stated link must be closed");
 const adjacency = new Map();
 slots.edges.forEach((edge, index) => {
   if (edge.closed === true) return;

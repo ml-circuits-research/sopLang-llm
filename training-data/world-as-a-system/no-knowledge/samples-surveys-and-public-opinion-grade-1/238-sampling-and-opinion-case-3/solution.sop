@@ -39,10 +39,6 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
-probe(typeof slots.biased === "boolean", "the compiled bias verdict must be a boolean flag");
-probe(typeof slots.appraisal === "string" && slots.appraisal.length > 0, "the appraisal of the sampling design must be stated");
-probe(/[.;]$/.test(slots.appraisal), "the appraisal of the sampling design must be a complete sentence");
-probe(typeof slots.design === "string" && slots.design.length > 0, "the described sampling design must be non-empty");
 const verdict = slots.biased ? "Likely biased" : "Not obviously biased under the stated design";
 const main = verdict + ". " + slots.appraisal;
 const suffix = renderCrossDomain(slots.crossDomain);

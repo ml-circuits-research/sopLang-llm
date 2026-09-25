@@ -14,15 +14,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the minutes must record the district they belong to");
-probe(typeof slots.proposer === "string" && slots.proposer.length > 0, "the minutes must name the person who proposed the painting");
-probe(typeof slots.objector === "string" && slots.objector.length > 0, "the minutes must name the person who objected");
-probe(typeof slots.conditionalVoter === "string" && slots.conditionalVoter.length > 0, "the minutes must name the person who promised a conditional vote");
-probe(slots.proposer !== slots.objector && slots.proposer !== slots.conditionalVoter && slots.objector !== slots.conditionalVoter, "the three people named in the minutes must be different");
-probe(Number.isInteger(slots.priceCeiling) && slots.priceCeiling > 0, "the conditional vote must state a positive price ceiling");
-probe(slots.theirsSpeaker === slots.proposer, "the “theirs” request must come from the speaker who proposed the painting");
-probe(slots.voteRecorded === true, "the minutes must record that a vote was held");
-probe(slots.quotesOnlyNoted === true, "the three quotes must appear only in the note");
 const voted = "Today " + slots.proposer + "’s proposal (the painting) was voted.";
 const deferred = "“This” (" + slots.conditionalVoter + "’s conditional proposal) is deferred.";
 const referent = "“He” = " + slots.conditionalVoter + ".";

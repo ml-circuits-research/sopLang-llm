@@ -30,13 +30,7 @@
 const slots = $slots;
 const VECTORS = { north: [0, 1], south: [0, -1], east: [1, 0], west: [-1, 0], northeast: [1, 1], northwest: [-1, 1], southeast: [1, -1], southwest: [-1, -1] };
 const COMPASS = new Map(Object.entries(VECTORS).map(([word, step]) => [step[0] + "," + step[1], word]));
-probe(Array.isArray(slots.relations) && slots.relations.length > 0, "the map must state at least one spatial relation");
-probe(typeof slots.target === "string" && slots.target.length > 0, "the question must name the place it asks about");
-probe(typeof slots.anchor === "string" && slots.anchor.length > 0, "the question must name the reference place");
-probe(slots.target !== slots.anchor, "the asked place must differ from the reference place");
 for (const relation of slots.relations) {
-  probe(VECTORS[relation.direction] !== undefined, "every relation must use a compass direction: " + relation.direction);
-  probe(relation.subject !== relation.object, "a relation must connect two different places");
 }
 const reached = new Map([[slots.anchor, { x: 0, y: 0, steps: 0 }]]);
 let frontier = [slots.anchor];

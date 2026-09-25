@@ -11,14 +11,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.name === "string" && slots.name.length > 0, "the message must be addressed to a named recipient");
-probe(Number.isInteger(slots.minutes) && slots.minutes > 0, "the message must give a positive whole number of minutes");
-probe(Number.isInteger(slots.urgencyMinutes) && slots.urgencyMinutes > 0, "the guide must state a positive urgency threshold");
-probe(slots.minutes < slots.urgencyMinutes, "the deadline must fall under the threshold the guide calls manufactured urgency");
-probe(slots.asksPassword === true, "the message must ask for the password");
-probe(slots.demandsSecrecy === true, "the message must demand secrecy");
-probe(typeof slots.link === "string" && slots.link.length > 0, "the message must carry the link the guide warns about");
-probe(slots.checkTypedByHand === true, "the guide must tell the reader to check on a site typed by hand");
 const signs = [];
 if (slots.asksPassword) { signs.push("the password request"); }
 if (slots.minutes < slots.urgencyMinutes) { signs.push("the urgency"); }

@@ -12,16 +12,9 @@
 const slots = $slots;
 const facts = (typeof $facts === "object" && $facts !== null) ? $facts : JSON.parse(String($facts));
 const key = (text) => String(text).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().split(" ").filter((word) => word !== "" && word !== "the" && word !== "a" && word !== "an").sort().join(" ");
-probe(typeof slots.observation === "string" && slots.observation.length > 0, "the statement must report the observation already made");
-probe(typeof slots.hypothesis1 === "string" && slots.hypothesis1.length > 0, "the first hypothesis must carry its printed text");
-probe(typeof slots.hypothesis2 === "string" && slots.hypothesis2.length > 0, "the second hypothesis must carry its printed text");
 const table = facts.predictions;
-probe(typeof table === "object" && table !== null && !Array.isArray(table), "the fact wire must carry the prediction table keyed by hypothesis");
-probe(Object.keys(table).length > 0, "the prediction table must not be empty");
 const predictions1 = table[key(slots.hypothesis1)];
 const predictions2 = table[key(slots.hypothesis2)];
-probe(Array.isArray(predictions1) && predictions1.length > 0, "the first hypothesis must have a prediction set in the fact table");
-probe(Array.isArray(predictions2) && predictions2.length > 0, "the second hypothesis must have a prediction set in the fact table");
 probe((predictions1.indexOf(slots.observation) !== -1) === (predictions2.indexOf(slots.observation) !== -1), "the observation already made must be compatible with both hypotheses");
 const first = predictions1.find((prediction) => predictions2.indexOf(prediction) === -1);
 const second = predictions2.find((prediction) => predictions1.indexOf(prediction) === -1);

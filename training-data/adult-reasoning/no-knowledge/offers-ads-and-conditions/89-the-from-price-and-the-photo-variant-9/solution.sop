@@ -21,18 +21,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the leaflet must name the town it belongs to");
-probe(typeof slots.buyer === "object" && slots.buyer !== null, "the leaflet must name the buyer");
-probe(typeof slots.buyer.name === "string" && slots.buyer.name.length > 0, "the buyer name must be on record");
-probe(Number.isInteger(slots.stock) && slots.stock > 0, "the small type must state a positive stock");
-probe(Number.isInteger(slots.fromPrice) && slots.fromPrice > 0, "the large type must advertise a positive price");
-probe(Number.isInteger(slots.plusPrice) && slots.plusPrice > slots.fromPrice, "the Plus model with its case must cost more than the advertised from-price");
-probe(Number.isInteger(slots.discountPercent) && slots.discountPercent > 0, "the store-card discount must be a positive percentage");
-probe(slots.deliveryUnder >= 0 && slots.deliveryFrom >= 0, "the delivery fees must not be negative");
-probe(Number.isInteger(slots.deliveryThreshold) && slots.deliveryThreshold > 0, "the delivery threshold must be a positive order value");
-probe(slots.discountStacks === false, "the card discount must not stack with the from-price");
-probe(slots.buyer.expectedPrice === slots.fromPrice, "the buyer expects the advertised from-price");
-probe(slots.buyer.expectedDiscount === slots.discountPercent, "the buyer expects the advertised card discount");
 const price = slots.plusPrice;
 const delivery = price < slots.deliveryThreshold ? slots.deliveryUnder : slots.deliveryFrom;
 probe(delivery === slots.deliveryUnder || delivery === slots.deliveryFrom, "the delivery fee must be one of the two printed fees");

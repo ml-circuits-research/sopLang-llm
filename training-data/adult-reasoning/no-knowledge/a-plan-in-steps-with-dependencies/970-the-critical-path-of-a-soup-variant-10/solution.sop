@@ -12,14 +12,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots === "object" && slots !== null, "the plan must carry the parsed steps");
-probe(typeof slots.cook === "string" && slots.cook.length > 0, "the reordered plan must name the cook");
-probe(Number.isInteger(slots.shopping) && slots.shopping > 0, "shopping must last a positive whole number of minutes");
-probe(Number.isInteger(slots.prep) && slots.prep > 0, "prep must last a positive whole number of minutes");
-probe(Number.isInteger(slots.boil) && slots.boil > 0, "boiling must last a positive whole number of minutes");
-probe(Number.isInteger(slots.table) && slots.table > 0, "the table step must last a positive whole number of minutes");
-probe(slots.tableOverlap > 0 && slots.tableOverlap <= slots.table, "the table step must overlap the tail of the boil");
-probe(Number.isInteger(slots.wanted) && slots.wanted > 0, "the cook must state a whole target in minutes");
 const chain = slots.shopping + "+" + slots.prep + "+" + slots.boil;
 const total = slots.shopping + slots.prep + slots.boil;
 const tableClause = slots.tableOverlap === slots.table

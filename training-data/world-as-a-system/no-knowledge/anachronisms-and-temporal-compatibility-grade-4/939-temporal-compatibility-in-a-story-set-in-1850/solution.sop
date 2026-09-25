@@ -74,14 +74,10 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
-probe(Array.isArray(slots.intervals) && slots.intervals.length > 0, "the statement must supply at least one availability interval");
-probe(Array.isArray(slots.mentioned) && slots.mentioned.length > 0, "the statement must name the mentioned items");
-probe(typeof slots.year === "number", "the statement must set a story year");
 const byName = new Map(slots.intervals.map((interval) => [interval.name, interval]));
 const anachronistic = [];
 for (const item of slots.mentioned) {
   const interval = byName.get(item);
-  probe(interval !== undefined, "every mentioned item must have a stated availability interval");
   if (!(slots.year >= interval.start && slots.year <= interval.end)) {
     anachronistic.push(item);
   }

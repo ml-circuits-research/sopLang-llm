@@ -258,6 +258,25 @@ export function perturbedSlotBodies(source, { maxCandidates = 16 } = {}) {
     add(withEdits(numbers, (number) => number * 2 + 1));
     add(withEdits(numbers, () => 0));
   }
+  // A computation that reduces a list (a funding shortfall, a score total) must
+  // react when an ELEMENT changes, not only when a scalar beside the list does:
+  // the scalar edits above leave the list untouched, so an honest zero shortfall
+  // would look stored. Zeroing and bumping a few elements provably moves the
+  // reduction.
+  const listNumbers = numbers.filter((leaf) => leaf.path.some((key) => typeof key === 'number'));
+  // Zeroing the whole list is the strongest provable change: a reduction whose
+  // inputs all go to zero must produce its zero-input answer, so a circuit that
+  // still prints the funded answer stored it. Single elements follow for the
+  // cases where the whole-list edit is absorbed by a maximum.
+  add(withEdits(listNumbers, () => 0));
+  for (const leaf of sampleOf(listNumbers, 4)) {
+    const zeroed = cloneSlots();
+    writeAtPath(zeroed, leaf.path, 0);
+    add(zeroed);
+    const bumped = cloneSlots();
+    writeAtPath(bumped, leaf.path, (readAtPath(bumped, leaf.path) ?? 0) + 1);
+    add(bumped);
+  }
   if (booleans.length > 0) {
     add(withEdits(booleans, (value) => !value));
   }
@@ -271,6 +290,21 @@ export function perturbedSlotBodies(source, { maxCandidates = 16 } = {}) {
     // It goes first because the candidate list is bounded.
     add(withEdits(strings, (value) => contentChanged(value)));
     add(withEdits(strings, mirroredString));
+    // A computation over one string must react when a character from another
+    // string leaf is introduced into it: the honest zero answer ("0 times." for
+    // a word that does not hold the asked letter) stays zero under deletions and
+    // substitutions, but must change when the letter appears. Replacing the last
+    // character with the other string's last character proves the circuit reads
+    // the word's content rather than a stored constant.
+    for (const [first, second] of sampleOf(allPairs(strings), 4)) {
+      const injected = cloneSlots();
+      const firstValue = String(readAtPath(injected, first.path));
+      const secondValue = String(readAtPath(injected, second.path));
+      if (firstValue.length > 0 && secondValue.length > 0 && firstValue !== secondValue) {
+        writeAtPath(injected, first.path, `${firstValue.slice(0, -1)}${secondValue.at(-1)}`);
+        add(injected);
+      }
+    }
   }
   if (numbers.length > 0 && strings.length > 0) {
     const combined = cloneSlots();

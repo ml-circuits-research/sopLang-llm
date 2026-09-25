@@ -19,7 +19,6 @@
 @answer jsEval
 const slots = $slots;
 const values = slots.values;
-probe(Array.isArray(values) && values.length > 0, "the records must be a non-empty list");
 let current = values;
 // stage 1: keepBelow
 const kept0 = current.filter((value) => value < slots.threshold);

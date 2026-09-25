@@ -8,8 +8,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Number.isInteger(slots.totalUnits) && slots.totalUnits > 0, "the produced units must be a positive whole number");
-probe(Number.isInteger(slots.unitsPerCrate) && slots.unitsPerCrate > 1, "the crate capacity must be a whole number greater than one");
 let crates = 0;
 let packed = 0;
 while (packed < slots.totalUnits) {

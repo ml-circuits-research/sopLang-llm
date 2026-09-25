@@ -14,16 +14,7 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Array.isArray(slots.rungs) && slots.rungs.length >= 2, "the rules must print a ladder of at least two rungs");
-probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the employee");
-probe(typeof slots.priorAct === "string" && slots.priorAct.length > 0, "the case must name the act already sanctioned");
-probe(typeof slots.otherAct === "string" && slots.otherAct.length > 0, "the case must name the act of the day");
-probe(typeof slots.conductVerb === "string" && slots.conductVerb.length > 0, "the case must describe the conduct of the day");
 const priorIndex = slots.rungs.indexOf(slots.priorSanction);
-probe(priorIndex !== -1, "the prior sanction must be one of the printed rungs");
-probe(priorIndex + 1 < slots.rungs.length, "the ladder must have a rung above the prior sanction");
-probe(slots.otherAct.toLowerCase().slice(0, 4) === slots.conductVerb.slice(0, 4), "the day’s conduct must be the act the rules call the other type");
-probe(slots.otherAct !== slots.priorAct.charAt(0).toUpperCase() + slots.priorAct.slice(1), "the two acts must be of different types");
 const nextIndex = priorIndex + 1;
 const lastRungWord = slots.rungs[slots.rungs.length - 1].split(" ")[0];
 const sameActClause = slots.priorAct.charAt(0).toUpperCase() + slots.priorAct.slice(1) + ": same act → rung " + (nextIndex + 1) + " (" + slots.rungs[nextIndex] + ").";

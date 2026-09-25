@@ -10,13 +10,9 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the poster");
 const percent = Number(slots.percent);
-probe(Number.isInteger(percent) && percent > 0 && percent < 100, "the poster must announce a percentage cut between zero and one hundred");
 const inventedBase = Number(slots.inventedBase);
 probe(Number.isInteger(inventedBase) && inventedBase > 0, "the helpful story must invent a positive whole-number base");
 const people = [slots.finisher, slots.baseFinder, slots.inventor];
-probe(people.every((name) => typeof name === "string" && name.length > 0), "the case must name the person behind each reaction");
-probe(new Set(people).size === people.length, "the three reactions must come from three different people");
 return "Only a bare percent. Inventing " + inventedBase + " writes a second poster.";
 

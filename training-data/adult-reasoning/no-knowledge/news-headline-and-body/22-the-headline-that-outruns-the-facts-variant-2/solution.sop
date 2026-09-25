@@ -16,14 +16,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots === "object" && slots !== null, "the case must carry the parsed story");
-probe(typeof slots.place === "string" && slots.place.length > 0, "the headline must name the market town");
-probe(typeof slots.author === "string" && slots.author.length > 0, "the body must be signed");
-probe(Number.isInteger(slots.stallsVisited) && Number.isInteger(slots.stallsTotal), "the sample must count whole stalls");
-probe(slots.stallsVisited > 0 && slots.stallsVisited < slots.stallsTotal, "the sample must visit some, not all, of the stalls");
-probe(slots.lowPrice < slots.highPrice, "the field prices must form a range, not one price");
-probe(slots.deckPrice === slots.bowlPrice, "the deck must quote the single tasting bowl");
-probe(slots.commentOnePrice === slots.bowlPrice, "the first comment must repeat the deck price");
 const words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
 const sample = words[slots.stallsTotal] ?? String(slots.stallsTotal);
 const bodyClause = "Body: a sample of " + sample + " stalls, one day; " + slots.lowPrice + "–" + slots.highPrice + " a kilo for field fruit; one " + slots.bowlGrams + " g tasting bowl at " + slots.bowlPrice + " a kilo.";

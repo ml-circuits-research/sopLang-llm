@@ -51,8 +51,6 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
-probe(Array.isArray(slots.links) && slots.links.length > 0, "the statement must state at least one food relation");
-probe(typeof slots.decreased === "string" && slots.decreased.length > 0, "the task must name the population that decreases");
 const byFood = new Map();
 for (const link of slots.links) {
   if (!byFood.has(link.food)) {
@@ -74,7 +72,6 @@ while (queue.length > 0) {
     queue.push(consumer);
   }
 }
-probe(consumers.length >= 2, "the stated chain must reach a population beyond the direct consumer");
 const direct = consumers[0];
 const indirect = consumers.slice(1);
 const joined = indirect.length === 1 ? indirect[0] : indirect.slice(0, -1).join(", ") + " and " + indirect[indirect.length - 1];

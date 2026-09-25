@@ -1,1 +1,1 @@
-scheduling tranche: critical path, deadline feasibility, prerequisite count, route bottleneck (2026-09-24)
+probe cleanup: parameter checks, boilerplate, and false guards removed from the emitted circuits

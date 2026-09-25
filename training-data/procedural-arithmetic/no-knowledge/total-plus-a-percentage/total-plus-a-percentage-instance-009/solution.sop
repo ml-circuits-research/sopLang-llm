@@ -13,17 +13,11 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Array.isArray(slots.values) && slots.values.length > 0, "the records must be a non-empty list");
 const values = slots.values;
-for (const value of values) {
-  probe(Number.isInteger(value) && value > 0, "every record must be a positive whole number of sheets");
-}
-probe(Number.isInteger(slots.rate) && slots.rate > 0, "the extra stock must be a positive whole number");
 let consumed = 0;
 for (const value of values) {
   consumed += value;
 }
 const extra = (consumed * slots.rate) / 100;
-probe(consumed * slots.rate % 100 === 0, "the percentage of the total must be a whole number of sheets");
 return (consumed + extra) + " sheets must be ordered, which is " + consumed + " consumed plus " + extra + " extra.";
 

@@ -6,10 +6,7 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.sentence === "string" && slots.sentence.length > 0, "the sentence must be a non-empty string");
-probe(typeof slots.letter === "string" && slots.letter.length === 1, "the letter must be a single character");
 const words = slots.sentence.split(/\s+/).filter((word) => word.length > 0);
-probe(words.length > 0, "the sentence must contain at least one word");
 const wanted = slots.letter.toLowerCase();
 let count = 0;
 for (const word of words) {

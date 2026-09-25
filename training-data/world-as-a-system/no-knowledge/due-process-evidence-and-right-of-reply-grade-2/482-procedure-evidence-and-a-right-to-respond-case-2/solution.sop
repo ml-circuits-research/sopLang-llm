@@ -46,9 +46,6 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
-probe(Number.isInteger(slots.requiredEvidence) && slots.requiredEvidence >= 1, "the procedure must state how many independent pieces of evidence it requires");
-probe(Number.isInteger(slots.independentEvidence) && slots.independentEvidence >= 0, "the case must state how many independent sources support the allegation");
-probe(typeof slots.responseOpportunity === "boolean", "the case must state whether a chance to respond was given");
 const evidenceMet = slots.independentEvidence >= slots.requiredEvidence;
 const responseMet = slots.responseOpportunity;
 const authorized = evidenceMet && responseMet;

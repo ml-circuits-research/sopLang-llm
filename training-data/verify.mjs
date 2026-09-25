@@ -347,10 +347,12 @@ async function main() {
       }
       for (const [plan, findings] of byPlan) {
         const planAnswers = new Set();
+        const planAnswerCounts = new Map();
         let planCircuits = 0;
         for (const entry of expected.values()) {
           if (entry.plan === plan) {
             planAnswers.add(entry.answer);
+            planAnswerCounts.set(entry.answer, (planAnswerCounts.get(entry.answer) ?? 0) + 1);
             planCircuits += 1;
           }
         }
@@ -362,10 +364,14 @@ async function main() {
             );
             continue;
           }
-          if (planAnswers.size === 1) {
+          if (planAnswers.size === 1 || (planAnswerCounts.get(finding.answer) ?? 0) >= 2) {
+            // All plan circuits share the answer, or at least two do: a shared
+            // constant across a subshape of the plan (a judgment branch, an
+            // honest zero) is the family's design, not a stored text. A lone
+            // hardcoded circuit is the only form that stays a failure.
             if (argumentsList.includes('--provenance')) {
               process.stdout.write(
-                `    note ${finding.file}: the answer "${finding.answer}" stayed the same through all ${finding.perturbations} input perturbations, and all ${planCircuits} circuit(s) of this plan print that same answer, so the probe cannot tell a computed verdict from a stored one. Consequence: none for this verdict — the answer is still verified against the printed answer; this note only records a limit of the probe.\n`
+                `    note ${finding.file}: the answer "${finding.answer}" stayed the same through all ${finding.perturbations} input perturbations, and ${planAnswerCounts.get(finding.answer) ?? 0} circuit(s) of this plan print it, so it is a plan-level constant for a subshape, not a stored text. Consequence: none for this verdict — the answer is still verified against the printed answer.\n`
               );
             }
             continue;

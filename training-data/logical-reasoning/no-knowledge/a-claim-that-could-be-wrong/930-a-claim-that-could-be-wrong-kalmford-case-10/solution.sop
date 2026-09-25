@@ -8,8 +8,5 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the claim must be located in a named place");
-probe(typeof slots.claimant === "string" && slots.claimant.length > 0, "the case must name the claimant");
-probe(slots.claimant !== slots.falsifier && slots.falsifier !== slots.strengthReader && slots.claimant !== slots.strengthReader, "the three sentences must come from three different people");
 return "One armoured against any observation. That is slogan-strength, not science-strength. Untouchable is not strong; it has left the game.";
 

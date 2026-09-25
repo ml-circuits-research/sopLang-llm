@@ -71,10 +71,6 @@ const renderCrossDomain = function renderCrossDomain(checks) {
 };
 const ROLE_TOPICS = [{"role":"Public Works Office","keywords":["road","roads","street","streets","bridge","bridges","pavement","maintain","maintains","maintenance","repair","repairs","infrastructure"]},{"role":"Local Court","keywords":["dispute","disputes","law","laws","legal","court","courts","hearing","hearings","judge","judges","justice"]},{"role":"Town Council","keywords":["budget","budgets","policy","tax","taxes","fund","funds","funding","levy"]},{"role":"Election Committee","keywords":["election","elections","ballot","ballots","vote","votes","voting","count","counting","tally"]},{"role":"School Board","keywords":["school","schools","calendar","calendars","curriculum","class","classes","student","students","pupil","pupils"]}];
 const slots = $slots;
-probe(Array.isArray(slots.roles) && slots.roles.length > 0, "the statement must define at least one institutional role");
-probe(slots.roles.every((role) => typeof role.name === "string" && role.name.length > 0 && typeof role.definition === "string" && role.definition.length > 0), "every role must carry a name and a stated function");
-probe(Array.isArray(slots.options) && slots.options.length === 2, "the task must offer exactly two candidate institutions");
-probe(typeof slots.action === "string" && slots.action.length > 0, "the statement must name the requested action");
 const tokens = slots.action.toLowerCase().split(/[^a-z]+/).filter((token) => token !== "");
 let matched = null; let bestScore = 0; let tied = false;
 for (const entry of ROLE_TOPICS) { const score = entry.keywords.filter((keyword) => tokens.includes(keyword)).length; if (score > bestScore) { matched = entry.role; bestScore = score; tied = false; } else if (score > 0 && score === bestScore) { tied = true; } }

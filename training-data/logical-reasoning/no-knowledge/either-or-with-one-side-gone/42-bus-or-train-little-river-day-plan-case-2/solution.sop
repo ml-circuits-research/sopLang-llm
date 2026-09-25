@@ -17,15 +17,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the plan must name the place it is printed in");
-probe(Array.isArray(slots.listedMeans) && slots.listedMeans.length === 2, "the plan must list exactly two means");
-probe(slots.listedMeans[0] !== slots.listedMeans[1], "the two listed means must differ");
-probe(slots.listedMeans.indexOf(slots.cancelledMeans) !== -1, "the cancelled means must be a listed side");
 const survivor = slots.listedMeans.find((means) => means !== slots.cancelledMeans);
-probe(survivor === slots.runningMeans, "the side still running must be the listed side the cancellation leaves");
-probe(slots.keeperMeans === survivor, "the first reading must claim the surviving mean");
-probe(slots.listedMeans.indexOf(slots.walkMeans) === -1, "the walking reading must name a means the plan never lists");
-probe(slots.restoredMeans === slots.cancelledMeans, "the third reading must cling to the cancelled mean");
-probe(new Set([slots.keeper, slots.walker, slots.restorer]).size === 3, "the three readings must come from three different speakers");
 return slots.keeper + " is right inside the plan. " + slots.walker + " invents a third means. " + slots.restorer + " restores a cancelled option the plan cannot restore.";
 

@@ -8,9 +8,5 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.railWearer === "string" && slots.railWearer.length > 0, "the case must name the person wearing a rail vest");
-probe(typeof slots.homeMade === "string" && slots.homeMade.length > 0, "the case must name the person wearing a home-made vest");
-probe(typeof slots.scopeHolder === "string" && slots.scopeHolder.length > 0, "the case must name the person who reads the requirement");
-probe(new Set([slots.railWearer, slots.homeMade, slots.scopeHolder]).size === 3, "the three reactions must come from three different people");
 return "The rail vest is necessary. A home-made vest fails the named source. Wearing the rail vest is not yet shown to be sufficient. " + slots.scopeHolder + " has the scope right.";
 

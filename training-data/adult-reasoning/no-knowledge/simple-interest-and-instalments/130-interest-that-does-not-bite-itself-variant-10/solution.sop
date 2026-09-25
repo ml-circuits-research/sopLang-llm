@@ -11,13 +11,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.ward === "string" && slots.ward.trim().length > 0, "the case must name the ward of the poster");
-probe(typeof slots.borrower === "string" && /^[A-Z][a-z]+$/.test(slots.borrower), "the case must name the borrower");
-probe(Number.isInteger(slots.capitalCents) && slots.capitalCents > 0, "the capital must be a positive whole number of cents");
-probe(Number.isInteger(slots.months) && slots.months > 0 && slots.months <= 12, "the term must be a whole number of months within one year");
-probe(typeof slots.ratePercent === "number" && slots.ratePercent > 0 && slots.ratePercent < 100, "the yearly rate must be a positive percent below 100");
-probe(typeof slots.latePercent === "number" && slots.latePercent > 0, "the late charge must be a positive percent of the capital");
-probe(slots.onTime === true, "the case must bring the money exactly on time");
 const format = (cents) => Math.trunc(cents / 100) + "." + String(cents % 100).padStart(2, "0");
 const interestCents = Math.round((slots.capitalCents * Math.round(slots.ratePercent * 100) * slots.months) / 120000);
 const termCents = slots.capitalCents + interestCents;

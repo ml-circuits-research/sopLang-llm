@@ -69,17 +69,10 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Array.isArray(slots.letters) && slots.letters.length === 2, "the statement must name exactly two conditions");
-probe(Array.isArray(slots.meanings) && slots.meanings.length === 2 && slots.meanings.every((meaning) => typeof meaning.meaning === "string" && meaning.meaning.length > 0), "the statement must say what each condition means");
-probe(Array.isArray(slots.examples) && slots.examples.length > 0, "the statement must show at least one example");
 for (const example of slots.examples) {
-  probe(Array.isArray(example.values) && example.values.length === 2, "every example must give both input values");
-  probe(typeof example.result === "boolean", "every example must give its output");
 }
-probe(Array.isArray(slots.candidates) && slots.candidates.length > 1, "the statement must offer several candidate rules");
 const kinds = ["and", "or", "xor", "nor"];
 for (const candidate of slots.candidates) {
-  probe(kinds.indexOf(candidate.kind) !== -1, "every candidate must be one of the four stated logical rules");
 }
 const applies = (kind, values) => {
   if (kind === "and") { return values[0] && values[1]; }

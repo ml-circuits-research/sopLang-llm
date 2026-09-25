@@ -12,10 +12,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place that prints the handbook");
-probe(typeof slots.conclusion === "string" && slots.conclusion.length > 0, "the case must quote the claim of the sentence");
-probe(typeof slots.ground === "string" && slots.ground.length > 0, "the case must quote the ground the sentence gives");
-probe(typeof slots.claimTerm === "string" && slots.claimTerm.length > 0, "the claim must carry a term the ground can lean on");
 const restates = slots.ground.includes(slots.claimTerm);
 probe(restates === true, "the stated ground must hand the claim back as its own reason");
 const independentSupport = restates === false;

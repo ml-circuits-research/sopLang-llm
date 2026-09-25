@@ -9,11 +9,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person");
-probe(typeof slots.warmWetSponge === "boolean", "the case must state where the sponge was put");
-probe(typeof slots.washedBeforeYoghurt === "boolean", "the case must state whether the person washed");
-probe(Number.isInteger(slots.boilMinutes) && slots.boilMinutes > 0, "the boil length must be a positive whole number of minutes");
-probe(Number.isInteger(slots.sheetBoilMinutes) && slots.sheetBoilMinutes > 0, "the sheet must state its own boil method");
 const boilClause = slots.boilMinutes === slots.sheetBoilMinutes
   ? "The boil is aligned."
   : "A " + slots.boilMinutes + "-minute boil does not match the sheet.";

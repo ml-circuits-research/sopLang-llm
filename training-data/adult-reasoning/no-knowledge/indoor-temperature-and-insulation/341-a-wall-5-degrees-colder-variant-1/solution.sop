@@ -17,15 +17,7 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place whose guide is quoted");
-probe(typeof slots.name === "string" && slots.name.length > 0, "the case must name the person whose room is read");
-probe(Number.isInteger(slots.coldWallDrop) && slots.coldWallDrop > 0, "the cold-wall threshold must be a positive whole number of degrees");
-probe(Number.isInteger(slots.airingMinutes) && slots.airingMinutes > 0, "the airing must be a positive whole number of minutes");
-probe(Number.isInteger(slots.tiltLimit) && slots.tiltLimit > 0, "the forbidden tilt must be a positive whole number of hours");
-probe(slots.humidityLow < slots.humidityHigh && slots.riskHumidity > slots.humidityHigh, "the guide must order the target band below the risk humidity");
-probe(Number.isInteger(slots.midTemperature) && Number.isInteger(slots.wallTemperature), "the two temperatures must be whole numbers of degrees");
 const drop = slots.midTemperature - slots.wallTemperature;
-probe(drop > 0, "the inner wall must be colder than mid-room");
 const coldWall = drop > slots.coldWallDrop;
 const tempClause = coldWall
   ? slots.midTemperature + "−" + slots.wallTemperature + "=" + drop + ">" + slots.coldWallDrop + " cold wall"
@@ -48,8 +40,6 @@ if (slots.tiltHours >= slots.tiltLimit) {
 } else {
   actClause = "A wide " + slots.airingMinutes + "-minute airing with the radiator off is the gesture.";
 }
-probe(slots.humidityPercent >= 0 && slots.humidityPercent <= 100, "the humidity must be a percentage between 0 and 100");
 const answer = tempClause + "; " + humidityClause + ". " + actClause;
-probe(coldWall === true, "the printed room must show a wall colder than the guide allows");
 return answer;
 

@@ -9,12 +9,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots === "object" && slots !== null, "the tank case must carry its parsed values");
-probe(typeof slots.gardener === "string" && slots.gardener.length > 0, "the garden must belong to a named person");
-probe(typeof slots.place === "string" && slots.place.length > 0, "the tank must stand in a named place");
-probe(Number.isInteger(slots.available) && slots.available > 0, "the tank level must be a positive whole number of litres");
-probe(Number.isInteger(slots.dose) && slots.dose > 0, "the daily dose must be a positive whole number of litres");
-probe(Number.isInteger(slots.days) && slots.days > 0, "the days until the rain must be a positive whole number");
 const needed = slots.dose * slots.days;
 probe(needed <= slots.available, "the current dose must last until the rain for this answer");
 const answer = "Yes. " + slots.dose + "×" + slots.days + "=" + needed + " ≤ " + slots.available + ". Left " + (slots.available - needed) + " l.";

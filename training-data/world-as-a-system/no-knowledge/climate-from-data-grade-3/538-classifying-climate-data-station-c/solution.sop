@@ -59,15 +59,9 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
-probe(Array.isArray(slots.stations) && slots.stations.length > 1, "the task must state the classified station and at least one other station");
-probe(typeof slots.target === "string" && slots.target.length > 0, "the task must name the station to classify");
-probe(slots.thresholds !== null && typeof slots.thresholds === "object", "the statement must state the classification thresholds");
-probe(slots.thresholds.warmAbove > slots.thresholds.coolBelow, "the temperature thresholds must be ordered cool < warm");
-probe(slots.thresholds.dryBelow > 0, "the precipitation threshold must be a positive amount");
 const temperatureLabel = (value) => value < slots.thresholds.coolBelow ? "cool" : value > slots.thresholds.warmAbove ? "warm" : "mild";
 const precipitationLabel = (value) => value < slots.thresholds.dryBelow ? "dry" : "wet";
 const target = slots.stations.find((station) => station.id === slots.target);
-probe(target !== undefined, "the station named by the task must be one of the stated stations");
 const temperature = temperatureLabel(target.temperature);
 const precipitation = precipitationLabel(target.precipitation);
 probe(["cool", "mild", "warm"].indexOf(temperature) >= 0 && ["dry", "wet"].indexOf(precipitation) >= 0, "every station must receive one stated temperature label and one stated precipitation label");

@@ -12,10 +12,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Number.isInteger(slots.firstMinutes) && slots.firstMinutes > 0, "the first track must take a positive whole number of minutes");
-probe(Number.isInteger(slots.secondMinutes) && slots.secondMinutes > 0, "the second track must take a positive whole number of minutes");
-probe(Number.isInteger(slots.serialMinutes) && slots.serialMinutes > 0, "the serial step must take a positive whole number of minutes");
-probe(Number.isInteger(slots.limitMinutes) && slots.limitMinutes > 0, "the window must be a positive whole number of minutes");
 const tracks = [slots.firstMinutes, slots.secondMinutes].sort((left, right) => right - left);
 const joinMinutes = tracks[0];
 probe(joinMinutes >= tracks[1], "the join must wait for the slower parallel track");

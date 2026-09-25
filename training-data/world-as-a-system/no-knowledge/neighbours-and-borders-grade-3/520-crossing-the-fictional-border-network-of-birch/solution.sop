@@ -37,14 +37,10 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Array.isArray(slots.pairs) && slots.pairs.length > 0, "the statement must list at least one shared border");
-probe(typeof slots.from === "string" && slots.from.length > 0 && typeof slots.to === "string" && slots.to.length > 0, "the two endpoints of the crossing question must be named");
-probe(typeof slots.candidate === "string" && slots.candidate.length > 0, "the unavoidability question must name one state");
 const adjacency = new Map();
 for (const pair of slots.pairs) {
   const left = pair[0];
   const right = pair[1];
-  probe(typeof left === "string" && typeof right === "string" && left !== right, "every shared border must join two different states");
   if (!adjacency.has(left)) {
     adjacency.set(left, new Set());
   }
@@ -54,8 +50,6 @@ for (const pair of slots.pairs) {
   adjacency.get(left).add(right);
   adjacency.get(right).add(left);
 }
-probe(adjacency.has(slots.from) && adjacency.has(slots.to), "both endpoints of the crossing question must appear in the stated borders");
-probe(slots.from !== slots.to, "the crossing question must name two different states");
 const seen = new Set([slots.from]);
 let frontier = [slots.from];
 let distance = 0;

@@ -21,15 +21,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place whose bins are used");
-probe(typeof slots.holder === "string" && slots.holder.length > 0, "the case must name the person sorting the objects");
-probe(Array.isArray(slots.objects) && slots.objects.length === 5, "the case must list five objects");
-probe(slots.objects.every((object) => typeof object === "string" && object.length > 0), "every object must be a non-empty description");
-probe(new Set(slots.objects).size === slots.objects.length, "the five objects must be different");
-probe(slots.bins.yellow.length > 0 && slots.bins.blue.length > 0 && slots.bins.brown.length > 0, "the legend must define the yellow, blue, and brown bins");
-probe(slots.bins.black === "the rest", "the black bin must take what no other bin takes");
-probe(slots.unseparableToBlack === true, "two materials that cannot be separated by hand must go to black");
-probe(slots.separatesLidFromGlass === true, "the plastic lid and the glass jar must separate");
 const rules = [
   { test: /greasy pizza box/, clause: "Pizza box black" },
   { test: /jar with a plastic lid/, clause: "jar green + lid yellow" },

@@ -14,15 +14,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.person === "string" && slots.person.length > 0, "the statement must name the person whose tray it is");
-probe(Number.isInteger(slots.sideStandard) && slots.sideStandard > 0, "the guide side weight must be a positive whole number of grams");
-probe(Number.isInteger(slots.proteinStandard) && slots.proteinStandard > 0, "the guide protein weight must be a positive whole number of grams");
-probe(Number.isInteger(slots.breadSlice) && slots.breadSlice > 0, "the guide bread slice must be a positive weight in grams");
-probe(Number.isInteger(slots.protein) && slots.protein > 0, "the tray protein must be a positive whole number of grams");
-probe(Number.isInteger(slots.side) && slots.side > 0, "the tray side must be a positive whole number of grams");
-probe(Number.isInteger(slots.slices) && slots.slices > 0, "the tray must carry a positive whole number of bread slices");
-probe(slots.side > slots.sideStandard, "the stem states the side exceeds the guide portion");
-probe(slots.slices > 1, "the stem states the tray carries more than the single guide slice");
 const lines = [];
 const proteinExcess = slots.protein - slots.proteinStandard;
 lines.push(proteinExcess > 0 ? "protein +" + proteinExcess + " g" : "Protein fine");

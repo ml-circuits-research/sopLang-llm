@@ -13,12 +13,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.name === "string" && slots.name.length > 0, "the case must name the person who reuses the photo");
-probe(slots.changed === true, "the reuse changes the photo");
-probe(slots.commercial === true, "the reuse serves a commercial purpose");
-probe(slots.changingForbidden === true && slots.commercialForbidden === true, "the note forbids changing and commercial use");
-probe(slots.unchangedRequired === true && slots.attributionRequired === true, "the note allows only unchanged copies that keep the author name");
-probe(slots.attributionStated === false, "the action paragraph does not say the author is named");
 const definite = [];
 if (slots.changed && slots.changingForbidden) { definite.push("Changes"); }
 if (slots.commercial && slots.commercialForbidden) { definite.push("uses commercially"); }

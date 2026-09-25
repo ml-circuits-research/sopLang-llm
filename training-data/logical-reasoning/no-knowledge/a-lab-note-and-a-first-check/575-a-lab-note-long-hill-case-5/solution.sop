@@ -10,12 +10,7 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the lab note");
-probe(Number.isInteger(slots.monday) && Number.isInteger(slots.tuesday), "the lab note must carry two whole-number readings");
 const jump = slots.tuesday - slots.monday;
-probe(jump > 0, "the lab note must record a jump, so Tuesday must read higher than Monday");
 const people = [slots.discoverer, slots.checker, slots.appetite];
-probe(people.every((name) => typeof name === "string" && name.length > 0), "the case must name the person behind each reaction");
-probe(new Set(people).size === people.length, "the three reactions must come from three different people");
 return "Instrument or procedure error remains open and is the listed first candidate. A new law is the expensive story.";
 

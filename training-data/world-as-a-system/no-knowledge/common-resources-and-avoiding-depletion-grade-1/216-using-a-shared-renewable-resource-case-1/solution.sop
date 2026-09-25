@@ -40,10 +40,6 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
-probe(Number.isFinite(slots.start) && slots.start >= 0, "the starting stock must be a stated non-negative number");
-probe(Number.isFinite(slots.regeneration) && slots.regeneration >= 0, "the regeneration must be a stated non-negative number");
-probe(Number.isInteger(slots.users) && slots.users > 0, "the number of users must be a positive integer");
-probe(Number.isFinite(slots.withdrawalPerUser) && slots.withdrawalPerUser >= 0, "the per-user withdrawal must be a stated non-negative number");
 const totalHarvest = slots.users * slots.withdrawalPerUser;
 const endStock = slots.start + slots.regeneration - totalHarvest;
 probe(endStock >= 0, "the stated stock equation must not drive the stock below zero");

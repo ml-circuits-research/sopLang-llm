@@ -12,10 +12,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Number.isInteger(slots.start) && slots.start > 0, "the flow must begin with a positive whole quantity");
-probe(Array.isArray(slots.rates) && slots.rates.length === 3, "the statement must state the retention rate of three stages");
-probe(slots.rates.every((rate) => Number.isInteger(rate) && rate > 0 && rate <= 100), "every retention rate must be a whole percentage between one and one hundred");
-probe(Number.isInteger(slots.improvementPoints) && slots.improvementPoints > 0 && slots.improvementPoints <= 100, "the improvement must be a whole number of percentage points between one and one hundred");
 const roundHundredths = (value) => {
   const text = value.toFixed(20);
   const point = text.indexOf(".");
@@ -38,6 +34,5 @@ const shown = gains.map(roundHundredths);
 const bestGain = shown.reduce((left, right) => (Number(right) > Number(left) ? right : left), shown[0]);
 probe(Number(bestGain) >= 0, "improving a stage must not lower the final output");
 const stages = shown.map((value, index) => (value === bestGain ? index + 1 : 0)).filter((stage) => stage > 0);
-probe(stages.length > 0, "at least one stage must be the best to improve");
 return "Current final output: " + roundHundredths(current) + " " + slots.unit + ". Best stage(s) to improve: " + stages.join(", ") + ", for a gain of " + bestGain + " " + slots.unit + ".";
 

@@ -11,12 +11,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.actor === "string" && slots.actor.length > 0, "the case must name the actor");
-probe(/^[A-Z][a-z]+$/.test(slots.actor), "the actor must be a plain capitalised name");
-probe(slots.lightTravelsStraight === true, "the sheet must keep light straight in uniform air");
-probe(slots.shadowRequiresLight === true, "the sheet must require the object to be lit");
-probe(slots.screenOpaque === true && slots.screenBetween === true, "the case must put an opaque screen between lamp and mug");
-probe(slots.shadowVanishes === true, "the case must report that the mug shadow vanished");
 const mugLit = !(slots.screenOpaque && slots.screenBetween);
 const litClause = slots.shadowRequiresLight && !mugLit
   ? "The mug is no longer lit."

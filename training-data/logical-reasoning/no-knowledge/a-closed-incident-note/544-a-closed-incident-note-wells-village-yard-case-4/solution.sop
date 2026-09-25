@@ -8,10 +8,5 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the yard note");
-probe(typeof slots.forced === "string" && slots.forced.length > 0, "the case must name the speaker of the forced-entry story");
-probe(typeof slots.keyStory === "string" && slots.keyStory.length > 0, "the case must name the speaker of the key story");
-probe(typeof slots.cinematic === "string" && slots.cinematic.length > 0, "the case must name the speaker who prefers the cinematic story");
-probe(slots.forced !== slots.keyStory && slots.forced !== slots.cinematic && slots.keyStory !== slots.cinematic, "the three speakers must be different people");
 return slots.keyStory + "\u2019s family of stories. Tool-forced entry would ordinarily leave marks the note says are absent.";
 

@@ -11,11 +11,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Number.isInteger(slots.budget) && slots.budget > 0, "the total budget must be a positive integer");
-probe(Number.isInteger(slots.fixedCost) && slots.fixedCost >= 0 && slots.fixedCost < slots.budget, "the fixed cost must be affordable");
-probe(Number.isInteger(slots.unitCost) && slots.unitCost > 0 && Number.isInteger(slots.unitBenefit) && slots.unitBenefit > 0, "each unit must cost and yield a positive integer");
-probe(Number.isInteger(slots.minimumUnits) && slots.minimumUnits > 0, "the minimum-unit requirement must be a positive integer");
-probe(Number.isInteger(slots.addOnCost) && slots.addOnCost > 0 && Number.isInteger(slots.addOnBenefit) && slots.addOnBenefit > 0, "the add-on must cost and add positive integers");
 const affordableUnits = (remaining, unitCost) => (remaining < 0 ? 0 : Math.floor(remaining / unitCost));
 const unitsWithout = affordableUnits(slots.budget - slots.fixedCost, slots.unitCost);
 const unitsWith = affordableUnits(slots.budget - slots.fixedCost - slots.addOnCost, slots.unitCost);

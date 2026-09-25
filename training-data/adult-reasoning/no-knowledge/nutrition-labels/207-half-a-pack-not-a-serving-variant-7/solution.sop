@@ -13,14 +13,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the label must name the place");
-probe(typeof slots.eater === "string" && slots.eater.length > 0, "the case must name the person eating");
-probe(Number.isInteger(slots.kcalPer100) && slots.kcalPer100 > 0, "the label must give a positive energy per 100 g");
-probe(Number.isInteger(slots.saltPer100Hundredths) && slots.saltPer100Hundredths > 0, "the label must give a positive salt amount per 100 g");
-probe(Number.isInteger(slots.meanHundredths) && slots.meanHundredths > 0, "the back must print a positive category mean");
-probe(Number.isInteger(slots.serving) && slots.serving > 0, "the label must recommend a positive serving");
-probe(Number.isInteger(slots.pack) && slots.pack > 0, "the pack must weigh a positive number of grams");
-probe(typeof slots.saltLabel === "string" && typeof slots.meanLabel === "string", "the printed salt figures must be carried as text");
 const roundHalfEven = (value) => {
   const whole = Math.floor(value);
   const rest = value - whole;

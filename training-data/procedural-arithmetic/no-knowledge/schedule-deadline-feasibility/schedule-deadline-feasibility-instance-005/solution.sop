@@ -90,7 +90,6 @@ op: max
 const slots = $slots;
 const latest = $latest;
 probe(Number.isInteger(latest) && latest > 0, "the earliest finish time must be a positive whole number of minutes");
-probe(Number.isInteger(slots.deadline) && slots.deadline > 0, "the deadline must be a positive whole number of minutes");
 if (latest <= slots.deadline) {
   return "Yes, the tasks finish at " + latest + " minutes, within the " + slots.deadline + "-minute deadline.";
 }

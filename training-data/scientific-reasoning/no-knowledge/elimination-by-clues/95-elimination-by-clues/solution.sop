@@ -56,11 +56,7 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Array.isArray(slots.cases) && slots.cases.length > 0, "the statement must list at least one case");
-probe(Array.isArray(slots.clues) && slots.clues.length > 0, "the question must state at least one clue");
 for (const entry of slots.cases) {
-  probe(typeof entry.label === "string" && entry.label.length > 0, "every case must carry a label");
-  probe(slots.clues.every((clue) => clue.property in entry.properties), "case " + entry.label + " must record every clue property");
 }
 let compatible = slots.cases.slice();
 for (const clue of slots.clues) {

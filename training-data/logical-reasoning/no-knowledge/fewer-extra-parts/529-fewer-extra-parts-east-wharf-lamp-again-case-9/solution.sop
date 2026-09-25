@@ -8,11 +8,5 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the dark lamp");
-probe(typeof slots.shortStory === "string" && slots.shortStory.length > 0, "the case must name the speaker of the bulb-only story");
-probe(typeof slots.longStory === "string" && slots.longStory.length > 0, "the case must name the speaker of the long story");
-probe(typeof slots.ranker === "string" && slots.ranker.length > 0, "the case must name the speaker who ranks the shorter story");
-probe(slots.shortStory !== slots.longStory && slots.shortStory !== slots.ranker && slots.longStory !== slots.ranker, "the three speakers must be different people");
-probe(slots.shortStory !== slots.longStory, "the bulb-only story and the long story come from two speakers");
 return "Prefer the bulb-only story as a start; it adds less unlisted machinery. Ranking is not proof. Then do the cheap test.";
 

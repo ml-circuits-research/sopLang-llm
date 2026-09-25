@@ -8,9 +8,5 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.town === "string" && slots.town.length > 0, "the case must name the town of the lesson");
-probe(typeof slots.mapper === "string" && slots.mapper.length > 0, "the case must name the speaker who draws the mapping");
-probe(typeof slots.wetness === "string" && slots.wetness.length > 0, "the case must name the speaker who transfers the wetness");
-probe(slots.mapper !== slots.wetness && slots.mapper !== slots.third && slots.wetness !== slots.third, "the case must name three different speakers");
 return "The structure: break the path, the working stops. Wetness is decorative.";
 

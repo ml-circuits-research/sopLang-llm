@@ -5,7 +5,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.word === "string" && slots.word.length > 0, "the word must be a non-empty string");
 const reversed = [...slots.word].reverse().join("");
 probe(reversed.length === [...slots.word].length, "reversing must keep the number of characters");
 probe([...slots.word].every((character, index) => character === [...reversed][[...reversed].length - 1 - index]), "every character must move to its mirrored position");

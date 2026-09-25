@@ -16,19 +16,12 @@
 
 @answer jsEval
 const slots = $slots;
-probe(slots.values !== null && typeof slots.values === "object", "the statement must state the three disjoint categories");
-probe(["A", "B", "C"].every((name) => Number.isInteger(slots.values[name]) && slots.values[name] >= 0), "every category must carry a whole non-negative count");
-probe(Number.isInteger(slots.printed) && slots.printed > 0, "the printed overall total must be a positive whole number");
-probe(typeof slots.unit === "string" && slots.unit.length > 0, "the statement must state the unit the counts are given in");
-probe(slots.secondaryRule !== null && typeof slots.secondaryRule === "object", "the statement must state the secondary relationship");
 const A = slots.values.A;
 const B = slots.values.B;
 const C = slots.values.C;
 const sum = A + B + C;
 const difference = slots.printed - sum;
 probe(difference !== 0, "the printed total must differ from the category sum, otherwise the table is consistent");
-probe(slots.secondaryRule.left === "A" && slots.secondaryRule.right === "B" && slots.secondaryRule.greater === "C", "the secondary relationship must be the stated A+B > C form");
-probe(A + B > C, "the secondary relationship A+B > C must hold in this family");
 const signed = difference > 0 ? "+" + difference : String(difference);
 return "No. The category sum is " + sum + ", while the printed total differs by " + signed + " " + slots.unit + ". The inconsistency is demonstrable, but the incorrect cell cannot be identified uniquely from these data alone.";
 

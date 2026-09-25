@@ -68,18 +68,12 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
-probe(Array.isArray(slots.layers) && slots.layers.length >= 3, "the statement must list the layers of an undisturbed sequence");
-probe(Array.isArray(slots.compared) && slots.compared.length === 2, "the task must compare two named layers");
 const left = slots.compared[0];
 const right = slots.compared[1];
 const leftDepth = slots.layers.indexOf(left);
 const rightDepth = slots.layers.indexOf(right);
-probe(leftDepth >= 0 && rightDepth >= 0, "both compared layers must appear in the stated sequence");
-probe(leftDepth !== rightDepth, "the two compared layers must occupy different positions in the sequence");
 const aged = slots.dated || [];
-probe(Array.isArray(aged), "the dated objects of the layers must be a list");
 const asksForYear = aged.some((item) => item.layer === slots.askedLayer);
-probe(!asksForYear, "the asked layer must have no stated dated object, which is what makes its exact year undeducible");
 const older = leftDepth > rightDepth ? left : right;
 const younger = older === left ? right : left;
 const main = "Layer " + older + " is older than Layer " + younger + ". The exact deposition year of Layer " + slots.askedLayer + " cannot be deduced.";

@@ -16,25 +16,16 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Array.isArray(slots.compartments) && slots.compartments.length === 3, "the statement must name three compartments");
-probe(Number.isInteger(slots.total) && slots.total > 0, "the conserved total must be a positive whole quantity");
-probe(typeof slots.unit === "string" && slots.unit.length > 0, "the conserved total must carry its unit");
 let values;
 if (slots.shape === "initial") {
-  probe(Array.isArray(slots.values) && slots.values.length === 3, "the initial state must give three values");
-  probe(Array.isArray(slots.moves) && slots.moves.length > 0, "the data block must state the transfers to apply");
   values = slots.values.slice();
   for (const move of slots.moves) {
     const from = slots.compartments.indexOf(move.from);
     const to = slots.compartments.indexOf(move.to);
-    probe(from !== -1 && to !== -1, "every transfer must name two tracked compartments");
-    probe(from !== to && Number.isInteger(move.amount) && move.amount > 0, "every transfer must move a positive quantity between two different compartments");
     values[from] -= move.amount;
     values[to] += move.amount;
   }
 } else {
-  probe(slots.shape === "after", "the statement must state either the initial state or the state after the transfers");
-  probe(Array.isArray(slots.values) && slots.values.length === 2, "the state after the transfers must give the two known compartments");
   values = [slots.values[0], slots.values[1], slots.total - slots.values[0] - slots.values[1]];
 }
 probe(values.length === 3, "the final state must report three compartments");

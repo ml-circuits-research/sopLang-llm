@@ -9,10 +9,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the walker");
-probe(typeof slots.speedKmh === "number" && slots.speedKmh > 0, "the walking speed must be a positive number");
-probe(typeof slots.distanceKm === "number" && slots.distanceKm > 0, "the walked distance must be a positive number");
-probe(Number.isInteger(slots.startMinutes) && slots.startMinutes >= 0 && slots.startMinutes < 1440, "the start hour must be a whole minute of the day");
 const durationMinutes = Math.round((slots.distanceKm / slots.speedKmh) * 60);
 probe(Number.isInteger(durationMinutes) && durationMinutes > 0, "the sheet must give a positive walking duration");
 probe(Math.abs(durationMinutes / 60 - slots.distanceKm / slots.speedKmh) < 1 / 120, "the duration must be the distance divided by the speed");

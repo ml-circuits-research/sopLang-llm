@@ -9,12 +9,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person who measures");
-probe(Number.isInteger(slots.denominator) && slots.denominator > 1, "the scale denominator must be a whole number larger than one");
-probe(typeof slots.metresPerCm === "number" && slots.metresPerCm > 0, "one map centimetre must carry a positive real length");
-probe(slots.kilometresPerCm === slots.metresPerCm / 1000, "the printed kilometre reading must be the metre reading divided by a thousand");
-probe(slots.metresPerCm === slots.denominator / 100, "one map centimetre must be the scale denominator in centimetres");
-probe(typeof slots.measuredCm === "number" && slots.measuredCm > 0, "the measured length on the map must be positive");
 const kilometres = slots.measuredCm * slots.kilometresPerCm;
 const metres = slots.measuredCm * slots.metresPerCm;
 probe(kilometres > 0 && metres > 0, "the real distance must be a positive quantity");

@@ -55,10 +55,6 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
-probe(Number.isFinite(slots.threshold) && slots.threshold >= 0, "the statement must state a provision threshold in tokens");
-probe(Array.isArray(slots.contributions) && slots.contributions.length > 0, "the statement must list the household contributions");
-probe(slots.contributions.length === slots.households, "the listed contributions must match the stated number of households");
-probe(slots.contributions.every((value) => Number.isFinite(value) && value >= 0), "a contribution must be a non-negative number");
 const total = slots.contributions.reduce((sum, value) => sum + value, 0);
 probe(Number.isFinite(total), "the summed contribution must be a finite number");
 const built = total >= slots.threshold;

@@ -20,12 +20,7 @@ const formatScore = (scaled) => {
 };
 const timeWeightScales = { 1: 10, 1.5: 15, 2: 20 };
 const timeScale = timeWeightScales[slots.timeWeight];
-probe(timeScale !== undefined, "the stated time weight must be one of 1, 1.5, 2");
-probe(Number.isInteger(slots.qualityWeight) && slots.qualityWeight > 0, "the stated quality weight must be a positive whole number");
 for (const side of ["A", "B"]) {
-  probe(Number.isInteger(slots["cost" + side]) && slots["cost" + side] > 0, "the cost of configuration " + side + " must be a positive whole number");
-  probe(Number.isInteger(slots["time" + side]) && slots["time" + side] > 0, "the time of configuration " + side + " must be a positive whole number");
-  probe(Number.isInteger(slots["quality" + side]) && slots["quality" + side] >= 0 && slots["quality" + side] <= 100, "the quality score of configuration " + side + " must be a percentage");
 }
 const scoreA = slots.costA * 10 + timeScale * slots.timeA - slots.qualityWeight * 10 * slots.qualityA;
 const scoreB = slots.costB * 10 + timeScale * slots.timeB - slots.qualityWeight * 10 * slots.qualityB;

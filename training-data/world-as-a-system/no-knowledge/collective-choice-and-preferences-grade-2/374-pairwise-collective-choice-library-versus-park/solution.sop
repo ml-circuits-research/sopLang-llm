@@ -66,14 +66,11 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
-probe(Array.isArray(slots.options) && slots.options.length === 2, "the task must name exactly two options of the contest");
-probe(Array.isArray(slots.groups) && slots.groups.length > 0, "the statement must state at least one voter group");
 let firstVotes = 0;
 let secondVotes = 0;
 for (const group of slots.groups) {
   const left = group.ranking.indexOf(slots.options[0]);
   const right = group.ranking.indexOf(slots.options[1]);
-  probe(left !== -1 && right !== -1, "every voter group must rank both options of the contest");
   if (left < right) {
     firstVotes += group.voters;
   } else {

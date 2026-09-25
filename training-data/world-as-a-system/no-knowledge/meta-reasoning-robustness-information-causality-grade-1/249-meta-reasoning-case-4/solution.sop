@@ -40,14 +40,10 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
-probe(typeof slots.kind === "string" && slots.kind.length > 0, "the compiled slots must name the meta-reasoning criterion");
 let main;
 if (slots.kind === "balance") {
   const locations = slots.locations;
   const questions = slots.questions;
-  probe(Array.isArray(locations) && locations.length >= 2, "the statement must leave at least two possible locations");
-  probe(Array.isArray(questions) && questions.length >= 2, "the statement must compare at least two questions");
-  probe(questions.every((question) => question.options.length > 0 && question.options.every((option) => locations.includes(option))), "every question must ask about the stated possible locations");
   let best = questions[0];
   for (const question of questions.slice(1)) {
     const balance = Math.abs(2 * question.options.length - locations.length);
@@ -59,16 +55,12 @@ if (slots.kind === "balance") {
   main = best.name + ".";
 } else if (slots.kind === "robustness") {
   const intervals = slots.intervals;
-  probe(Array.isArray(intervals) && intervals.length === 2, "the statement must state two score ranges");
-  probe(intervals.every((interval) => interval.low <= interval.high), "every stated score range must be ordered");
   const robust = intervals[0].low > intervals[1].high;
   main = robust
     ? "Yes; the ranking " + intervals[0].name + ">" + intervals[1].name + " is robust across the stated ranges."
     : "No; the ranking is sensitive to the uncertainty.";
 } else if (slots.kind === "counterexample") {
   const towns = slots.towns;
-  probe(Array.isArray(towns) && towns.length >= 2, "the statement must describe at least two towns");
-  probe(towns.every((town) => Number.isInteger(town.roads) && town.roads >= 0), "every town must state a road count");
   let pair = null;
   for (let i = 0; i < towns.length && pair === null; i += 1) {
     for (let j = i + 1; j < towns.length && pair === null; j += 1) {
@@ -83,13 +75,9 @@ if (slots.kind === "balance") {
   }
   main = pair === null ? "No; the stated towns agree with the claim." : "Yes. " + pair[0] + " and " + pair[1] + " form a counterexample.";
 } else if (slots.kind === "causality") {
-  probe(typeof slots.cause === "string" && slots.cause.length > 0, "the task must name the suspected cause");
-  probe(typeof slots.effect === "string" && slots.effect.length > 0, "the task must name the suspected effect");
-  probe(slots.intervention === false, "the family answers only the variant that describes no intervention");
   main = "No. The association alone does not establish that " + slots.cause + " cause " + slots.effect + ".";
 } else if (slots.kind === "dominance") {
   const plans = slots.plans;
-  probe(Array.isArray(plans) && plans.length === 2, "the statement must compare exactly two plans");
   const first = plans[0];
   const second = plans[1];
   const atLeast = (left, right) => left.cost <= right.cost && left.minutes <= right.minutes && left.safety >= right.safety;

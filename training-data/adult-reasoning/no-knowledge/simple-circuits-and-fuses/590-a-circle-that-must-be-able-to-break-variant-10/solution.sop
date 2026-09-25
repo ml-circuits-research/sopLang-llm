@@ -12,12 +12,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person");
-probe(Number.isInteger(slots.bulbsInSeries) && slots.bulbsInSeries >= 2, "the case must put at least two bulbs in series");
-probe(Number.isInteger(slots.burntBulbs) && slots.burntBulbs >= 1, "the case must burn at least one bulb");
-probe(slots.burntBulbs < slots.bulbsInSeries, "a burnt bulb is not a working bulb");
-probe(typeof slots.wireClaim === "string" && slots.wireClaim.length > 0, "the case must quote the reason for the wire");
-probe(slots.sheetSeriesRule === true && slots.sheetFuseRule === true && slots.sheetBan === true, "the sheet must state the series rule, the fuse rule, and the ban");
 const outClause = "Series = one path; one break cuts all.";
 const wireClause = slots.wiredAround
   ? "The wire cancels protection; the ban is direct, even if it “" + (/light/.test(slots.wireClaim) ? "would light" : slots.wireClaim) + "”."

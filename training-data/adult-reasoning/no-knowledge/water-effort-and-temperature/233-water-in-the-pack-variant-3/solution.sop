@@ -15,11 +15,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.hiker === "string" && slots.hiker.length > 0, "the case must name the hiker");
-probe(Number.isInteger(slots.massKg) && slots.massKg > 0, "the body mass must be a positive whole number of kilograms");
-probe(Number.isInteger(slots.roundingKg) && slots.roundingKg > 0, "the guide must round the body mass up to a positive step");
-probe(Number.isInteger(slots.rateTenths) && slots.rateTenths > 0, "the guide must state a positive rate of litres per mass step");
-probe(slots.routeKm > 0 && slots.overKm > 0, "the route length and the effort threshold must be positive");
 const tenths = (value) => (value / 10).toFixed(1);
 const blocks = Math.ceil(slots.massKg / slots.roundingKg);
 const baseTenths = blocks * slots.rateTenths;

@@ -13,17 +13,13 @@
 
 @kept jsEval
 const slots = $slots;
-probe(Array.isArray(slots.values) && slots.values.length > 0, "the values must be a non-empty list");
-probe(Number.isInteger(slots.threshold), "the threshold must be a whole number");
 const kept = slots.values.filter((value) => value > slots.threshold);
-probe(slots.values.every((value) => Number.isInteger(value)), "every value must be a whole number");
 probe(kept.every((value) => value > slots.threshold), "only the values above the threshold may be kept");
 probe(kept.length <= slots.values.length, "the kept list cannot be longer than the recorded list");
 return kept;
 
 @answer jsEval
 const slots = $slots;
-probe(Array.isArray($kept), "the kept stage must publish a list");
 probe($kept.every((value) => value > slots.threshold), "the published list must hold only values above the threshold");
 const total = $kept.reduce((sum, value) => sum + value, 0);
 probe(total >= 0, "the total cannot be negative for positive values");

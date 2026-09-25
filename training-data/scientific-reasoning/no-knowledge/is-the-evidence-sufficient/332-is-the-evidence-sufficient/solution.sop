@@ -23,12 +23,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.known === "string" && slots.known.length > 0, "the statement must name the observation known so far");
-probe(Array.isArray(slots.hypotheses) && slots.hypotheses.length === 2, "the statement must state exactly two hypotheses");
-probe(slots.hypotheses.every((hypothesis) => typeof hypothesis.label === "string" && hypothesis.label.length > 0), "every hypothesis must be described");
-probe(slots.hypotheses.every((hypothesis) => Array.isArray(hypothesis.predictions) && hypothesis.predictions.length > 0), "every hypothesis must list the observations it predicts");
 const discriminating = slots.hypotheses.map((hypothesis) => hypothesis.predictions.find((value) => value !== slots.known));
-probe(discriminating.every((value) => typeof value === "string" && value.length > 0), "every hypothesis must predict something beyond the known observation");
-probe(discriminating[0] !== discriminating[1], "the two discriminating predictions must differ, otherwise nothing separates the hypotheses");
 return "No. We need a discriminating observation, for example \u201c" + discriminating[0] + "\u201d versus \u201c" + discriminating[1] + "\u201d.";
 

@@ -15,16 +15,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the fete place");
-probe(Number.isInteger(slots.stakeOne) && slots.stakeOne > 0, "Game One must charge a positive stake");
-probe(Number.isInteger(slots.stakeTwo) && slots.stakeTwo > 0, "Game Two must charge a positive stake");
-probe(Number.isInteger(slots.prizeOne) && slots.prizeOne > 0, "Game One must print a positive prize");
-probe(Number.isInteger(slots.prizeTwo) && slots.prizeTwo > 0, "Game Two must print a positive prize");
-probe(Number.isInteger(slots.drawSize) && slots.drawSize > 1, "Game Two must print a draw of more than one ticket");
-probe(typeof slots.prizeChaser === "string" && slots.prizeChaser.length > 0, "the case must name the voice that chases the prize");
-probe(typeof slots.comparer === "string" && slots.comparer.length > 0, "the case must name the voice that compares the fractions");
-probe(typeof slots.feeler === "string" && slots.feeler.length > 0, "the case must name the voice that calls the feeling a number");
-probe(slots.prizeChaser !== slots.comparer && slots.comparer !== slots.feeler && slots.prizeChaser !== slots.feeler, "the three voices must be different people");
 const totalShare = slots.winShareOne + slots.loseShareOne;
 probe(Number.isInteger(totalShare) && totalShare > 0, "the printed shares of Game One must cover the tickets");
 probe((slots.prizeOne * slots.loseShareOne) % totalShare === 0, "Game One must divide into whole hundredths");

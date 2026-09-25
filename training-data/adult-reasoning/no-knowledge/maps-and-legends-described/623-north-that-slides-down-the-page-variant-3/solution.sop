@@ -14,13 +14,6 @@
 const slots = $slots;
 const PAGE_DIRECTIONS = ["UP", "RIGHT", "DOWN", "LEFT"];
 const COMPASS = ["NORTH", "EAST", "SOUTH", "WEST"];
-probe(typeof slots.place === "string" && slots.place.length > 0, "the legend must name the place it belongs to");
-probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person who turns the map");
-probe(PAGE_DIRECTIONS.indexOf(slots.rotation) >= 0, "the statement must place north on one side of the rotated page");
-probe(PAGE_DIRECTIONS.indexOf(slots.side) >= 0, "the walked side must be a direction of the page");
-probe(slots.rotation !== "UP", "a map that is not turned has no rotation to reason about");
-probe(COMPASS.indexOf(slots.firstLeg) >= 0 && COMPASS.indexOf(slots.secondLeg) >= 0, "both legs of the route must be cardinal directions");
-probe(slots.firstLeg !== slots.secondLeg, "the two legs of the route must run on different cardinals");
 const rotationPage = PAGE_DIRECTIONS.indexOf(slots.rotation);
 const sidePage = PAGE_DIRECTIONS.indexOf(slots.side);
 const walkingIndex = (((sidePage - rotationPage) % 4) + 4) % 4;

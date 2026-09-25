@@ -73,17 +73,10 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Array.isArray(slots.cases) && slots.cases.length > 0, "the data block must list at least one case");
-probe(Array.isArray(slots.statements) && slots.statements.length > 0, "the question must state at least one quantified statement");
 const holds = (entry, property) => entry.properties.indexOf(property) !== -1;
 for (const entry of slots.cases) {
-  probe(typeof entry.label === "string" && entry.label.length > 0, "every case must carry a label");
-  probe(Array.isArray(entry.properties) && entry.properties.length > 0, "every case must carry at least one property: " + entry.label);
 }
 for (const statement of slots.statements) {
-  probe(statement.properties.length === 2, "every quantified statement must name two properties");
-  probe(["all", "some", "no"].indexOf(statement.quantifier) !== -1, "a quantifier must be all, some, or no: " + statement.quantifier);
-  probe(statement.properties.every((property) => slots.cases.some((entry) => holds(entry, property))), "every named property must appear in the observations");
 }
 const verdicts = slots.statements.map((statement) => {
   const subject = statement.properties[0];

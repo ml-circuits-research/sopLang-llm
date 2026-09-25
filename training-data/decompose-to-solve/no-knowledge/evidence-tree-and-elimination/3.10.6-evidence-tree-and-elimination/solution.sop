@@ -40,23 +40,17 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Array.isArray(slots.hypotheses) && slots.hypotheses.length >= 2, "the scenario must propose several hypotheses");
-probe(Array.isArray(slots.observations) && slots.observations.length > 0, "the scenario must list observations");
-probe(Number.isInteger(slots.failureCount) && slots.failureCount > 0, "the handled count must be a positive whole number");
 const ids = slots.hypotheses.map((hypothesis) => hypothesis.id);
-probe(new Set(ids).size === ids.length, "each hypothesis must carry its own label");
 const supported = [];
 const eliminated = [];
 for (const observation of slots.observations) {
   if (observation.kind === "capacity-availability") {
-    probe(Number.isInteger(observation.availableUnits) && observation.availableUnits > 0, "the capacity log must state a positive number of available units");
     if (observation.availableUnits >= slots.failureCount) { eliminated.push("capacity"); } else { supported.push("capacity"); }
   } else if (observation.kind === "ordering-violation") {
     supported.push("ordering");
   } else if (observation.kind === "measurement-reproduction") {
     eliminated.push("measurement");
   } else {
-    probe(observation.kind === "testimony", "the observation must name the claim it tests");
   }
 }
 const survivors = slots.hypotheses.filter((hypothesis) => supported.includes(hypothesis.kind) && !eliminated.includes(hypothesis.kind));

@@ -18,13 +18,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.shopper === "string" && slots.shopper.length > 0, "the case must name the shopper");
-probe(Number.isInteger(slots.threshold) && slots.threshold > 0, "the note threshold must be a positive amount");
-probe(Number.isInteger(slots.a.price) && slots.a.price > 0, "box A must cost a positive amount");
-probe(Number.isInteger(slots.b.price) && slots.b.price > 0, "box B must cost a positive amount");
-probe(Number.isInteger(slots.a.washes) && slots.a.washes > 0 && Number.isInteger(slots.b.washes) && slots.b.washes > 0, "both boxes must promise a positive number of washes");
-probe(Number.isInteger(slots.a.delivery) && slots.a.delivery >= 0 && Number.isInteger(slots.b.delivery) && slots.b.delivery >= 0, "both delivery charges must be non-negative");
-probe(slots.a.weight > 0 && slots.b.weight > 0 && slots.a.weight !== slots.b.weight, "the two boxes must carry different positive weights");
 const perHundredCents = (box) => ((box.price + box.delivery) * 10000) / box.washes;
 const aCents = perHundredCents(slots.a);
 const bCents = perHundredCents(slots.b);

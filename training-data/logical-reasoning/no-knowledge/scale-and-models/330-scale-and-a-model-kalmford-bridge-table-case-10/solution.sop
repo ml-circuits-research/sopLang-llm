@@ -13,10 +13,5 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the modelled bridge");
-probe(typeof slots.modelNoun === "string" && slots.modelNoun.length > 0, "the case must name the load the model holds");
-probe(typeof slots.sharedName === "string" && slots.sharedName.length > 0, "the case must name the word the two structures share");
-probe(typeof slots.realLoad === "string" && slots.realLoad.length > 0, "the case must name the load the real structure is asked to hold");
-probe(slots.modelNoun !== slots.realLoad, "the real load must differ from the load the model holds");
 return "A limited analogy. Size can introduce stresses the " + slots.modelNoun + " never met. Shared name is not shared mechanics.";
 

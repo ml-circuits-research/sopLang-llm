@@ -10,12 +10,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the earlier lamp problem");
-probe(typeof slots.earlierRank === "string" && slots.earlierRank.length > 0, "the case must quote the earlier rank");
-probe(typeof slots.keptRank === "string" && slots.keptRank.length > 0, "the case must quote the rank the keeper defends");
-probe(slots.keptRank !== slots.earlierRank, "keeping a rank must defend an old winner, not restate the earlier rank");
 const people = [slots.keeper, slots.mover, slots.shamer];
-probe(people.every((name) => typeof name === "string" && name.length > 0), "the case must name the person behind each reaction");
-probe(new Set(people).size === people.length, "the three reactions must come from three different people");
 return "Reorder. The new fact fights \u201Cthis bulb only\u201D and supports \u201Cthis socket.\u201D Updating is the method working.";
 

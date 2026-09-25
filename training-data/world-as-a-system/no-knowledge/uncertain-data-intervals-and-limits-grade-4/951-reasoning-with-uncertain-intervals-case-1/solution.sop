@@ -44,10 +44,6 @@ const renderCrossDomain = function renderCrossDomain(checks) {
   return parts.join(' ');
 };
 const slots = $slots;
-probe(slots.a !== undefined && slots.b !== undefined, "the statement must state the intervals A and B");
-probe(Number.isFinite(slots.a.minimum) && Number.isFinite(slots.a.maximum), "the interval A must have finite bounds");
-probe(Number.isFinite(slots.b.minimum) && Number.isFinite(slots.b.maximum), "the interval B must have finite bounds");
-probe(slots.a.minimum <= slots.a.maximum && slots.b.minimum <= slots.b.maximum, "an interval minimum must not exceed its maximum");
 const definitelyGreater = slots.a.minimum > slots.b.maximum;
 probe(typeof definitelyGreater === "boolean", "the worst-case comparison must yield a verdict");
 const main = definitelyGreater

@@ -24,12 +24,8 @@
 @answer jsEval
 const slots = $slots;
 const nodeKey = (text) => String(text).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().split(" ").filter((word) => word !== "").sort().join(" ");
-probe(Array.isArray(slots.arrows) && slots.arrows.length > 0, "the statement must state at least one dependency arrow");
-probe(typeof slots.start === "string" && slots.start.length > 0, "the statement must name the node the model changes");
 for (const arrow of slots.arrows) {
-  probe(Array.isArray(arrow) && arrow.length === 2 && arrow[0].length > 0 && arrow[1].length > 0, "every dependency must be printed as one source arrow one destination");
 }
-probe(slots.arrows.some((arrow) => nodeKey(arrow[0]) === nodeKey(slots.start)), "the changed node must be the source of a stated arrow");
 const seen = new Set([nodeKey(slots.start)]);
 const reached = new Map();
 let changed = true;

@@ -16,11 +16,5 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person taking the course");
-probe(Number.isInteger(slots.adultDoseMl) && slots.adultDoseMl > 0, "the adult dose must be a positive whole number of millilitres");
-probe(Number.isInteger(slots.weightKg) && slots.weightKg > 0, "the body weight must be a positive whole number of kilograms");
-probe(slots.takenMl === slots.adultDoseMl, "the taken amount must equal the leaflet dose");
-probe(slots.wantedMl > slots.adultDoseMl, "the wanted amount must exceed the leaflet dose for this section pattern");
-probe(slots.adultDoseMl * slots.adultMaxDoses <= slots.adultMaxMl, "the leaflet dose times the dose cap must respect the 24-hour cap");
 return "At most " + slots.adultDoseMl + " ml (not " + slots.wantedMl + "). Weight is not a parameter of the adult schedule.";
 

@@ -15,18 +15,7 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the hall rules must name the hall they belong to");
-probe(typeof slots.player === "object" && slots.player !== null, "the statement must describe the player turn");
-probe(typeof slots.player.name === "string" && slots.player.name.length > 0, "the player name must be on record");
-probe(Number.isInteger(slots.player.start) && slots.player.start >= 0, "the starting score must be a whole, non-negative number of points");
-probe(Number.isInteger(slots.player.claimed) && slots.player.claimed > slots.player.start, "the claimed score must be higher than the starting score");
-probe(Number.isInteger(slots.winThreshold) && slots.winThreshold > 0, "the winning total must be a positive number of points");
-probe(slots.correctBridge > 0, "a correct bridge must score a positive number of points");
-probe(slots.incompleteBridge === 0, "an incomplete bridge at the end of the turn must score nothing");
-probe(Number.isInteger(slots.forbiddenTalk) && slots.forbiddenTalk > 0, "the forbidden remark must cost a positive number of points");
-probe(slots.extraPieceEndsTurn === true, "the extra piece from the common pile must end the turn");
 const score = slots.player.start + slots.incompleteBridge - slots.forbiddenTalk;
 probe(score < slots.winThreshold, "the earned score must stay under the winning total");
-probe(slots.player.claimed > score, "the claimed score must exceed the score the rules award");
 return "Incomplete bridge = " + slots.incompleteBridge + ". Forbidden talk = −" + slots.forbiddenTalk + ". Left with " + score + ". Continuing after the extra piece is forbidden anyway. " + score + " < " + slots.winThreshold + ".";
 

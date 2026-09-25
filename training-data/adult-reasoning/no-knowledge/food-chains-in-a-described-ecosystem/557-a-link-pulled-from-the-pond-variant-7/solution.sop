@@ -17,13 +17,7 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the pond location");
-probe(Array.isArray(slots.chain) && slots.chain.length >= 3, "the case must describe a chain of at least three links");
-probe(slots.chain.every((link) => typeof link === "string" && link.length > 0), "every link of the chain must be a non-empty name");
 const index = slots.chain.indexOf(slots.removed);
-probe(index >= 1 && index < slots.chain.length - 1, "the removed link must sit below the top of the chain");
-probe(slots.sheetProducer === slots.chain[index - 1] && slots.sheetConsumer === slots.chain[index], "the sheet must describe the starvation of the removed link");
-probe(slots.chain.some((link) => link === slots.reason) === false, "the reason of the proposal must not be a link of the chain");
 const prey = slots.chain[index + 1];
 const eater = slots.chain[index + 2];
 const preyHead = prey.split(" ").pop();

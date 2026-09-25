@@ -20,16 +20,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.person === "string" && slots.person.length > 0, "the statement must name the person the bill belongs to");
-probe(typeof slots.district === "string" && slots.district.length > 0, "the statement must name the ward or district");
-probe(Number.isInteger(slots.useKwh) && slots.useKwh > 0, "the billed consumption must be a positive whole number of kWh");
-probe(Number.isInteger(slots.rateCents) && slots.rateCents > 0, "the energy rate must be a positive amount");
-probe(Number.isInteger(slots.standingCents) && slots.standingCents > 0, "the standing charge must be a positive amount");
-probe(Number.isInteger(slots.levyCents) && slots.levyCents > 0, "the environment levy must be a positive amount");
-probe(slots.newIndex - slots.oldIndex === slots.useKwh, "the index readings must confirm the billed consumption");
-probe(slots.payer === slots.person, "the payer must be the person the bill belongs to");
-probe(slots.daysLate === slots.paidOnDay - slots.freeUntilDay, "the late days must follow from the payment day and the free-until day");
-probe(slots.askedDaysLate === slots.daysLate, "the question must ask about the late days the statement states");
 const totalCents = slots.useKwh * slots.rateCents + slots.standingCents + slots.levyCents;
 const penaltyTenThousandths = Math.round((totalCents * slots.daysLate * slots.dailyPenaltyPercentHundredths) / 100);
 const totalText = Math.floor(totalCents / 100) + "." + String(totalCents % 100).padStart(2, "0");

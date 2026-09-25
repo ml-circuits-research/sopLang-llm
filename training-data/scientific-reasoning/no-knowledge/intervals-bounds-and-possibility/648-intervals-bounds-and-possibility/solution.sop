@@ -31,12 +31,7 @@
 
 @answer jsEval
 const slots = $slots;
-probe(slots.zone !== null && typeof slots.zone === "object", "the statement must state an accepted zone");
-probe(Number.isInteger(slots.zone.low) && Number.isInteger(slots.zone.high) && slots.zone.low <= slots.zone.high, "the accepted zone must be an increasing closed interval");
-probe(Array.isArray(slots.samples) && slots.samples.length >= 2, "the statement must state at least two samples");
 for (const sample of slots.samples) {
-  probe(typeof sample.label === "string" && sample.label.length > 0, "every sample must carry a label");
-  probe(Number.isInteger(sample.low) && Number.isInteger(sample.high) && sample.low <= sample.high, "every sample must be an increasing closed interval: " + sample.label);
 }
 const entries = slots.samples.map((sample) => {
   const verdict = sample.low >= slots.zone.low && sample.high <= slots.zone.high ? "certainly accepted" : (sample.high < slots.zone.low || sample.low > slots.zone.high ? "certainly rejected" : "uncertain");

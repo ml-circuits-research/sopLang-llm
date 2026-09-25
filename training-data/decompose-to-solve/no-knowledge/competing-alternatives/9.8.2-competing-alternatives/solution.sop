@@ -21,17 +21,10 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Number.isInteger(slots.items) && slots.items > 0, "the workload must be a positive whole number of items");
 const optionFields = ["A", "B"];
 for (const label of optionFields) {
   const option = slots["option" + label];
-  probe(Number.isInteger(option.setupMinutes) && option.setupMinutes > 0, "the setup time of Option " + label + " must be a positive whole number");
-  probe(Number.isInteger(option.itemsPerCycle) && option.itemsPerCycle > 0, "the cycle capacity of Option " + label + " must be a positive whole number");
-  probe(Number.isInteger(option.fixedCents) && option.fixedCents >= 0, "the fixed cost of Option " + label + " must be a whole number of units");
-  probe(Number.isInteger(option.itemCents) && option.itemCents > 0, "the per-item cost of Option " + label + " must be a positive whole number of units");
 }
-probe(Number.isInteger(slots.limitMinutes) && slots.limitMinutes > 0, "the completion limit must be a positive whole number of minutes");
-probe(Number.isInteger(slots.budgetCents) && slots.budgetCents > 0, "the cost ceiling must be a positive number of units");
 const evaluate = (option) => ({ label: option.label, minutes: option.setupMinutes + Math.ceil(slots.items / option.itemsPerCycle) * 6, costCents: option.fixedCents + option.itemCents * slots.items });
 const evaluated = [evaluate(slots.optionA), evaluate(slots.optionB)];
 for (const option of evaluated) {

@@ -8,10 +8,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person the gross belongs to");
-probe(Number.isInteger(slots.allowance) && slots.allowance > 0, "the scenario must print a positive allowance");
-probe(Number.isInteger(slots.ratePercent) && slots.ratePercent > 0 && slots.ratePercent < 100, "the scenario must print a rate between 0 and 100 percent");
-probe(Number.isInteger(slots.gross) && slots.gross > slots.allowance, "the gross must be a whole amount above the allowance");
 const base = slots.gross - slots.allowance;
 probe(base > 0, "the taxable base must be positive");
 const hundredths = base * slots.ratePercent;

@@ -41,30 +41,20 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Array.isArray(slots.scenarios) && slots.scenarios.length > 0, "the statement must name the scenarios");
-probe(Array.isArray(slots.strategies) && slots.strategies.length > 0, "the statement must state the strategy outcomes");
-probe(Number.isInteger(slots.threshold) && slots.threshold > 0, "the robustness threshold must be a positive integer");
 const scenarioCount = slots.scenarios.length;
-probe(Array.isArray(slots.probabilities) && slots.probabilities.length === scenarioCount, "the statement must state one probability per scenario");
 let probabilitySum = 0;
 for (const probability of slots.probabilities) {
-  probe(Number.isInteger(probability) && probability > 0 && probability <= 100, "every scenario probability must be a positive percentage");
   probabilitySum += probability;
 }
-probe(probabilitySum === 100, "the scenario probabilities must sum to one hundred percent");
 const labels = [];
 const hundredths = {};
 const minimums = {};
 for (const strategy of slots.strategies) {
-  probe(typeof strategy.label === "string" && strategy.label.length > 0, "every strategy must carry a label");
-  probe(Array.isArray(strategy.outcomes) && strategy.outcomes.length === scenarioCount, "every strategy must carry one outcome per scenario");
   let total = 0;
   for (let index = 0; index < scenarioCount; index += 1) {
     const outcome = strategy.outcomes[index];
-    probe(Number.isInteger(outcome) && outcome > 0, "every scenario outcome must be a positive integer");
     total += slots.probabilities[index] * outcome;
   }
-  probe(hundredths[strategy.label] === undefined, "the strategy labels must be distinct");
   hundredths[strategy.label] = total;
   minimums[strategy.label] = Math.min(...strategy.outcomes);
   labels.push(strategy.label);

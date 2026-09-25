@@ -28,11 +28,7 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Array.isArray(slots.causes) && slots.causes.length > 0, "the statement must list at least one possible cause");
-probe(typeof slots.observed === "string" && slots.observed.length > 0, "the statement must report the observed sign");
 for (const entry of slots.causes) {
-  probe(typeof entry.cause === "string" && entry.cause.length > 0, "every cause must carry a name");
-  probe(Array.isArray(entry.signs) && entry.signs.length > 0, "every cause must list the signs it can produce: " + entry.cause);
 }
 const matching = slots.causes.filter((entry) => entry.signs.indexOf(slots.observed) !== -1);
 probe(matching.length > 0, "at least one declared cause must produce the observed sign");

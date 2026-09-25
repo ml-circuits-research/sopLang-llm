@@ -22,10 +22,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Array.isArray(slots.rules) && slots.rules.length === 2, "the card must post exactly two instructions");
-probe(slots.rules.every((rule) => typeof rule.act === "string" && rule.act.length > 0), "each instruction must name an act");
-probe(slots.needleInRedBand === true, "the case must place the needle in the red band");
-probe(slots.draining === false, "the case must report no draining, so the whenever rule has no occasion");
 const satisfied = { "red-band": slots.needleInRedBand, draining: slots.draining };
 const forced = slots.rules.filter((rule) => satisfied[rule.triggerKind] === true);
 probe(forced.length === 1, "exactly one of the two instructions must have its trigger satisfied");

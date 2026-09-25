@@ -24,10 +24,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.start === "string" && slots.start.length > 0, "the statement must name the cause the normal world starts from");
-probe(typeof slots.blocked === "string" && slots.blocked.length > 0, "the statement must name the blocked node");
-probe(Array.isArray(slots.edges) && slots.edges.length > 0, "the statement must state at least one causal link");
-probe(slots.edges.every((edge) => typeof edge.from === "string" && edge.from.length > 0 && typeof edge.to === "string" && edge.to.length > 0), "every causal link must connect two named nodes");
 const key = (name) => name.toLowerCase().split(/\s+/).sort().join(" ");
 const walk = (skip) => {
   const reached = [];
@@ -48,7 +44,6 @@ const walk = (skip) => {
   return reached;
 };
 const normal = walk(null);
-probe(normal.some((name) => key(name) === key(slots.blocked)), "the blocked node must lie on the path from the stated start");
 const surviving = walk(key(slots.blocked));
 const lost = normal.filter((name) => !surviving.some((other) => key(other) === key(name)));
 probe(lost.length > 0, "blocking the node must lose at least one effect");

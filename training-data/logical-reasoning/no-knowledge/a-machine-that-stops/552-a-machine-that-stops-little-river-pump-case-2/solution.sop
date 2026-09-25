@@ -8,10 +8,5 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the stopped pump");
-probe(typeof slots.fitter === "string" && slots.fitter.length > 0, "the case must name the speaker who calls the fitter");
-probe(typeof slots.reset === "string" && slots.reset.length > 0, "the case must name the speaker who presses reset");
-probe(typeof slots.sceptic === "string" && slots.sceptic.length > 0, "the case must name the speaker who dismisses the manual");
-probe(slots.fitter !== slots.reset && slots.fitter !== slots.sceptic && slots.reset !== slots.sceptic, "the three speakers must be different people");
 return "Try the reset. It is the listed cheap test that fits the listed signs. A burnt motor is an extra engine.";
 

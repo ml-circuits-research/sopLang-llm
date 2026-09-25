@@ -8,10 +8,5 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the late bus");
-probe(typeof slots.inventor === "string" && slots.inventor.length > 0, "the case must name the speaker who invents the secret crash");
-probe(typeof slots.sticker === "string" && slots.sticker.length > 0, "the case must name the speaker who stays with what is listed");
-probe(typeof slots.booster === "string" && slots.booster.length > 0, "the case must name the speaker who calls the invention better science");
-probe(slots.inventor !== slots.sticker && slots.inventor !== slots.booster && slots.sticker !== slots.booster, "the three speakers must be different people");
 return "Listed facts. A secret crash is a new premise. Neatness does not mint facts. " + slots.sticker + " stops where the text stops.";
 

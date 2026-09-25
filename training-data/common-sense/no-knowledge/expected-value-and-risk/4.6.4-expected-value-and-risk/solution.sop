@@ -9,11 +9,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Number.isInteger(slots.probabilityPercent) && slots.probabilityPercent > 0 && slots.probabilityPercent < 100, "the probability must be a percentage below one hundred");
-probe(Number.isInteger(slots.loss) && slots.loss > 0, "the loss must be a positive amount");
-probe(Number.isInteger(slots.protectionCost) && slots.protectionCost > 0, "the protective measure must have a certain positive cost");
-probe(Number.isInteger(slots.reductionPercent) && slots.reductionPercent > 0 && slots.reductionPercent < 100, "the reduction must keep part of the loss");
-probe(Number.isInteger(slots.riskLimit) && slots.riskLimit > 0, "the risk limit must be a positive amount");
 const roundHundredths = (numerator, denominator) => {
   let hundredths = Math.floor((numerator * 100) / denominator);
   const remainder = (numerator * 100) % denominator;

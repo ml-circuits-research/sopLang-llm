@@ -20,12 +20,6 @@
 const slots = $slots;
 const propertyOfCause = { "less dense than liquid water": "density compared with the liquid" };
 const stateOfOutcome = { sinks: "sinking", floats: "floating" };
-probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the stall");
-probe(typeof slots.floatingThing === "string" && slots.floatingThing.length > 0, "the card must name the object that floats");
-probe(propertyOfCause[slots.cardCause] !== undefined, "the card must state a cause this section covers");
-probe(stateOfOutcome[slots.droppedOutcome] !== undefined, "the case must state an outcome this section covers");
-probe(slots.droppedThing !== slots.floatingThing, "the dropped object must differ from the object the card floats");
-probe(slots.comparedThings[1] === slots.floatingThing && slots.comparedThings[0] === slots.droppedThing, "the unshared-property reader must compare the dropped object with the card object");
 const object = slots.droppedThing.charAt(0).toUpperCase() + slots.droppedThing.slice(1);
 return "No. The relevant property is " + propertyOfCause[slots.cardCause] + ". " + object + "\u2019s " + stateOfOutcome[slots.droppedOutcome] + " is a different object.";
 

@@ -9,9 +9,5 @@
 @answer jsEval
 const slots = $slots;
 const repairer = slots.repairer;
-probe(typeof repairer === "string" && repairer.length > 0, "the case must name the person who writes the opposite headline");
-probe(typeof slots.keeper === "string" && slots.keeper.length > 0, "the case must name the person who keeps only the agreeable clippings");
-probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place");
-probe(repairer !== slots.keeper && repairer !== slots.enthusiast && slots.keeper !== slots.enthusiast, "the case must name three different speakers");
 return repairer + "’s. Hunting only for friends of a view is confirmation bias as a filing system.";
 

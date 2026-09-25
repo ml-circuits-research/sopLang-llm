@@ -27,9 +27,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.origin === "string" && slots.origin.length > 0, "the origin of the relation chain must be named");
-probe(typeof slots.target === "string" && slots.target.length > 0, "the target of the relation chain must be named");
-probe(Array.isArray(slots.relations) && slots.relations.length > 0, "the statement must state at least one relative move");
 const vectors = { east: [1, 0], west: [-1, 0], north: [0, 1], south: [0, -1] };
 const adjacency = new Map();
 const link = (from, to, vector) => {
@@ -40,7 +37,6 @@ const link = (from, to, vector) => {
 };
 for (const relation of slots.relations) {
   const vector = vectors[relation.direction];
-  probe(vector !== undefined, "every stated direction must be one of east, west, north, south");
   const step = [vector[0] * relation.units, vector[1] * relation.units];
   link(relation.place, relation.reference, [-step[0], -step[1]]);
   link(relation.reference, relation.place, step);

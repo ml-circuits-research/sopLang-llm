@@ -11,10 +11,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place");
-probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person");
-probe(slots.sheetAxis === true && slots.sheetReflection === true && slots.sheetOrder === true, "the sheet must state the tilt, the reflection, and the full-moon order");
-probe(typeof slots.distanceClaim === "boolean" && typeof slots.bulbClaim === "boolean", "the case must report the two claims");
 const axisClause = slots.distanceClaim
   ? "Tilt of the axis (distance is not an ingredient of this model)."
   : "Tilt of the axis.";

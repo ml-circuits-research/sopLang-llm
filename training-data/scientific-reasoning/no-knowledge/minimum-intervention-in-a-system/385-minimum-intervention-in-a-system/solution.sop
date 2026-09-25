@@ -48,17 +48,9 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Array.isArray(slots.targets) && slots.targets.length > 0, "the statement must name at least one target");
-probe(Array.isArray(slots.forbidden) && slots.forbidden.length > 0, "the statement must name the forbidden effects");
-probe(Array.isArray(slots.interventions) && slots.interventions.length > 0, "the statement must list its interventions");
 for (const entry of slots.interventions) {
-  probe(typeof entry.name === "string" && entry.name.length > 0, "every intervention must carry a name");
-  probe(Number.isInteger(entry.cost) && entry.cost > 0, "every intervention must have a positive cost: " + entry.name);
-  probe(Array.isArray(entry.effects) && entry.effects.length > 0, "every intervention must state the effects it produces: " + entry.name);
-  probe(Array.isArray(entry.undesired), "every intervention must state its undesired effects, possibly none: " + entry.name);
 }
 const count = slots.interventions.length;
-probe(count <= 20, "the catalogue must be small enough for an exhaustive search");
 const optima = [];
 for (let mask = 1; mask < 1 << count; mask += 1) {
   const chosen = slots.interventions.filter((entry, index) => (mask & (1 << index)) !== 0);

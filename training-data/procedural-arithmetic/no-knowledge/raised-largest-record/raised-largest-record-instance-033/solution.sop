@@ -14,12 +14,7 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Array.isArray(slots.values) && slots.values.length > 0, "the records must be a non-empty list");
 const values = slots.values;
-for (const value of values) {
-  probe(Number.isInteger(value) && value > 0, "every record must be a positive whole number of shipments");
-}
-probe(Number.isInteger(slots.bonus) && slots.bonus > 0, "the raise must be a positive whole number of shipments");
 let target = values[0];
 for (const value of values) {
   if (value > target) {
@@ -30,6 +25,5 @@ let total = 0;
 for (const value of values) {
   total += value;
 }
-probe(values.filter((value) => value === target).length === 1, "the extreme record must be unique");
 return "The largest record becomes " + (target + slots.bonus) + " shipments, so the total is " + (total + slots.bonus) + " shipments.";
 

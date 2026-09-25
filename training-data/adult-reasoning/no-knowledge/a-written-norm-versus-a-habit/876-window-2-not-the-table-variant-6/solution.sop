@@ -10,11 +10,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.place === "string" && slots.place.length > 0, "the case must name the place of the canteen rule");
-probe(typeof slots.norm === "string" && slots.norm.length > 0, "the rule must name where the trays go");
-probe(typeof slots.person === "string" && slots.person.length > 0, "the case must name the person leaving the tray");
-probe(slots.habitSurface === slots.usedSurface, "the person must repeat the surface the habit describes");
-probe(slots.workerCollects === true, "the habit must be the practice of a worker collecting the trays");
 const normLabel = slots.norm.charAt(0).toUpperCase() + slots.norm.slice(1);
 return normLabel + ". The habit is recognised as a habit, not as authorisation.";
 

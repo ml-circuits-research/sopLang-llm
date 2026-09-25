@@ -11,12 +11,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.keeper === "string" && slots.keeper.length > 0, "the sheet must name the keeper of the pot");
-probe(slots.actor === slots.keeper, "the cupboard episode must be about the keeper of the pot");
-probe(Number.isInteger(slots.daysInDark) && slots.daysInDark > 0, "the cupboard stay must be a positive whole number of days");
-probe(slots.inDark === true, "the case must place the plant in the dark");
-probe(slots.productionStopsInDark === true, "the sheet must stop production in prolonged dark");
-probe(slots.claimsGreenMakesOxygen === true, "the case must state the claim that green makes oxygen");
 const productionClause = slots.inDark && slots.productionStopsInDark
   ? "Light production is off."
   : "Light production continues.";

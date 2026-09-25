@@ -31,15 +31,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots === "object" && slots !== null, "the case must carry the parsed recipe");
-probe(typeof slots.baker === "string" && slots.baker.length > 0, "the episode must name the baker");
-probe(slots.flour > 0 && slots.water > 0, "the recipe must carry positive amounts");
-probe(Number.isInteger(slots.kneadMinutes) && slots.kneadMinutes > 0, "the kneading time must be a whole number of minutes");
-probe(Number.isInteger(slots.riseMinutes) && slots.riseMinutes > 0, "the rise time must be a whole number of minutes");
-probe(slots.roomTemp < slots.coldBelow, "the workroom must be below the temperature that lengthens the rise");
-probe(slots.coldRise > slots.riseMinutes, "the cold-room rise must be longer than the warm rise");
-probe(slots.observedKnead === slots.kneadMinutes / 2, "the baker must have halved the kneading time");
-probe(slots.observedRise === slots.riseMinutes / 2, "the baker must have halved the rise time");
 const effectiveRise = slots.roomTemp < slots.coldBelow ? slots.coldRise : slots.riseMinutes;
 const respectClause = "Halved ingredients: " + (slots.halvesEverything ? "yes" : "no") + ".";
 const breaches = [];

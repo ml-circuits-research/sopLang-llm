@@ -26,13 +26,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.passColour === "string" && slots.passColour.length > 0, "the slip must name the pass colour");
-probe(Number.isInteger(slots.threshold) && slots.threshold > 0 && slots.threshold < 1440, "the slip must state a clock threshold within the day");
-probe(Array.isArray(slots.researchers) && slots.researchers.length === 3, "the case must record three researchers");
-probe(slots.researchers.every((r) => typeof r.name === "string" && r.name.length > 0), "every researcher must have a name");
-probe(slots.researchers.every((r) => Number.isInteger(r.minutes) && r.minutes >= 0 && r.minutes < 1440), "every clock reading must be a time of the day");
-probe(slots.researchers.every((r) => (r.holds ? r.pass === slots.passColour : r.pass === null)), "every pass holder must hold the pass the slip names");
-probe(new Set(slots.researchers.map((r) => r.name)).size === slots.researchers.length, "the three researchers must be different people");
 const allowed = slots.researchers.filter((r) => r.holds && r.minutes > slots.threshold);
 const passWithoutHour = slots.researchers.filter((r) => r.holds && r.minutes <= slots.threshold);
 const hourWithoutPass = slots.researchers.filter((r) => !r.holds && r.minutes > slots.threshold);

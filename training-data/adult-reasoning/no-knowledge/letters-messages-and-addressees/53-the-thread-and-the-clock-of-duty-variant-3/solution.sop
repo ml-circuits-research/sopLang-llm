@@ -25,14 +25,6 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots === "object" && slots !== null, "the case must carry the parsed thread");
-probe(typeof slots.owner === "string" && slots.owner.length > 0, "the thread must belong to a phone owner");
-probe(typeof slots.asker === "string" && slots.asker.length > 0, "the thread must name the person who asked for bread");
-probe(slots.runner !== slots.owner, "the volunteer who passes the shop must not be the phone owner");
-probe(slots.milkRunner === slots.runner && slots.reportRunner === slots.runner, "the milk errand and its report must belong to the volunteer");
-probe(Number.isInteger(slots.milkLimit) && slots.milkLimit > 0, "the milk limit must be a positive price");
-probe(slots.sentTime === slots.reportTime, "the report must be sent from the car park");
-probe(slots.unreadTime === slots.stopTime, "the unread message must be the last message of the thread");
 const holder = slots.ownerWithdrew ? slots.runner : slots.owner;
 const holderClause = holder + " stays on bread.";
 const conditionMet = slots.shopFloor < slots.milkLimit;

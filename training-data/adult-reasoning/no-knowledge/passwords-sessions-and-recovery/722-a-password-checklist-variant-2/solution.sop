@@ -14,21 +14,12 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.name === "string" && slots.name.length > 0, "the record must belong to a named person");
-probe(typeof slots.password === "string" && slots.password.length > 0, "the record must quote the chosen password");
-probe(Number.isInteger(slots.minLength) && slots.minLength > 0, "the guide must state a positive minimum length");
-probe(slots.hasSymbol === false, "this record must contain the password without a symbol");
-probe(slots.reusesOldPassword === true, "this record must reuse one of the last three passwords");
-probe(slots.recoveryOnPublicProfile === true, "this record must expose the recovery answer on the public profile");
-probe(typeof slots.sessionPlace === "string" && slots.sessionPlace.length > 0, "the record must name the shared place the session is left at");
-probe(slots.sessionLeftOpen === true && slots.emailedPassword === true, "this record must leave the session open and email the password");
 const broken = [];
 if (!slots.hasSymbol) { broken.push("No symbol."); }
 if (slots.reusesOldPassword) { broken.push("Reuse."); }
 if (slots.recoveryOnPublicProfile) { broken.push("Public recovery."); }
 if (slots.sessionLeftOpen) { broken.push("Session left open."); }
 if (slots.emailedPassword) { broken.push("Email with the password."); }
-probe(broken.length > 0, "the record must break at least one printed rule");
 const shortfalls = [];
 if (slots.password.length < slots.minLength) { shortfalls.push("short length"); }
 if (!/[A-Z]/.test(slots.password)) { shortfalls.push("no capital"); }

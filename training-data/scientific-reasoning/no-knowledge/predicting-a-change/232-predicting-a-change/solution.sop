@@ -23,11 +23,7 @@
 
 @answer jsEval
 const slots = $slots;
-probe(typeof slots.change === "string" && slots.change.length > 0, "the statement must name the activated change");
-probe(Array.isArray(slots.rules) && slots.rules.length > 0, "the statement must list at least one causal rule");
 for (const rule of slots.rules) {
-  probe(typeof rule.from === "string" && rule.from.length > 0, "every rule must name the state it requires");
-  probe(typeof rule.to === "string" && rule.to.length > 0, "every rule must name the effect it produces");
 }
 const filler = ["the", "a", "an"];
 const stateKey = (text) => [...new Set(text.toLowerCase().replace(/\s+/g, " ").trim().split(" ").filter((word) => filler.indexOf(word) === -1))].sort().join(" ");

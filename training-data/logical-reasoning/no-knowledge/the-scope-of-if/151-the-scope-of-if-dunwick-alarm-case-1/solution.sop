@@ -11,9 +11,5 @@
 
 @answer jsEval
 const slots = $slots;
-probe(Number.isInteger(slots.seconds) && slots.seconds > 0, "the card must state a whole, positive number of seconds");
-probe(Number.isInteger(slots.burstSeconds) && slots.burstSeconds === slots.seconds, "the case must report an intermittent alarm that never sustains the duration the card writes");
-probe(typeof slots.gate === "string" && slots.gate.length > 0, "the card must name the exit gate");
-probe(new Set([slots.leaver, slots.silent, slots.widener]).size === 3, "the three reactions must come from three different people");
 return "Only a continuous alarm longer than " + slots.seconds + " seconds. The intermittent pattern is not covered. \u201cThe text is silent\u201d is the adult line.";
 
