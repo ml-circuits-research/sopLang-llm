@@ -243,26 +243,31 @@ export const cases = [
     render(solution) {
       return `${solution.text}.`;
     },
-    compute: [
-      'const slots = $slots;',
-      'const entries = Object.entries(slots.codes);',
-      'const target = String(slots.target);',
-      'const results = [];',
-      'const walk = (index, path) => {',
-      '  if (index === target.length) {',
-      '    results.push(path.join(""));',
-      '    return;',
-      '  }',
-      '  for (const [symbol, code] of entries) {',
-      '    if (code !== "" && target.startsWith(code, index)) {',
-      '      walk(index + code.length, path.concat(symbol));',
-      '    }',
-      '  }',
-      '};',
-      'walk(0, []);',
-      'if (results.length !== 1) throw new Error("the message does not decode uniquely");',
-      'return results[0] + ".";'
-    ].join('\n'),
+    wires: [
+      {
+        name: 'decoded', command: 'jsEval', body: [
+          'const slots = $slots;',
+          'const entries = Object.entries(slots.codes);',
+          'const target = String(slots.target);',
+          'const results = [];',
+          'const walk = (index, path) => {',
+          '  if (index === target.length) {',
+          '    results.push(path.join(""));',
+          '    return;',
+          '  }',
+          '  for (const [symbol, code] of entries) {',
+          '    if (code !== "" && target.startsWith(code, index)) {',
+          '      walk(index + code.length, path.concat(symbol));',
+          '    }',
+          '  }',
+          '};',
+          'walk(0, []);',
+          'if (results.length !== 1) throw new Error("the message does not decode uniquely");',
+          'return results[0];'
+        ].join('\n')
+      }
+    ],
+    compute: ['return $decoded + ".";'].join('\n'),
     explain(slots, solution) {
       return [
         'Because no codeword is the beginning of another, reading from left to right never leaves a choice: exactly one codeword can start at each position.',
@@ -295,26 +300,33 @@ export const cases = [
       }
       return `Ambiguity occurs: ${solution.target} can be ${solution.readings.join(' or ')}.`;
     },
+    wires: [
+      {
+        name: 'decoded', command: 'jsEval', body: [
+          'const slots = $slots;',
+          'const entries = Object.entries(slots.codes);',
+          'const target = String(slots.target);',
+          'const results = [];',
+          'const walk = (index, path) => {',
+          '  if (index === target.length) {',
+          '    results.push(path.join(""));',
+          '    return;',
+          '  }',
+          '  for (const [symbol, code] of entries) {',
+          '    if (code !== "" && target.startsWith(code, index)) {',
+          '      walk(index + code.length, path.concat(symbol));',
+          '    }',
+          '  }',
+          '};',
+          'walk(0, []);',
+          'return { readings: results, target: target };'
+        ].join('\n')
+      }
+    ],
     compute: [
-      'const slots = $slots;',
-      'const entries = Object.entries(slots.codes);',
-      'const target = String(slots.target);',
-      'const results = [];',
-      'const walk = (index, path) => {',
-      '  if (index === target.length) {',
-      '    results.push(path.join(""));',
-      '    return;',
-      '  }',
-      '  for (const [symbol, code] of entries) {',
-      '    if (code !== "" && target.startsWith(code, index)) {',
-      '      walk(index + code.length, path.concat(symbol));',
-      '    }',
-      '  }',
-      '};',
-      'walk(0, []);',
-      'if (results.length <= 1) return "No ambiguity: " + (results[0] ?? "") + " is the only reading.";',
-      'const ordered = results.slice().sort((left, right) => left.length - right.length || (left < right ? -1 : 1));',
-      'return "Ambiguity occurs: " + target + " can be " + ordered.join(" or ") + ".";'
+      'if ($decoded.readings.length <= 1) return "No ambiguity: " + ($decoded.readings[0] ?? "") + " is the only reading.";',
+      'const ordered = $decoded.readings.slice().sort((left, right) => left.length - right.length || (left < right ? -1 : 1));',
+      'return "Ambiguity occurs: " + $decoded.target + " can be " + ordered.join(" or ") + ".";'
     ].join('\n'),
     explain(slots, solution) {
       return [

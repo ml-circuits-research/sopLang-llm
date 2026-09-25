@@ -110,23 +110,28 @@ export const cases = [
     render(solution) {
       return `${solution.codes.join(', ')}.`;
     },
-    compute: [
-      'const slots = $slots;',
-      'if (!Number.isInteger(slots.positions) || slots.positions < 1) { throw new Error("invalid position count"); }',
-      'const symbols = slots.symbols;',
-      'const codes = [];',
-      'const total = Math.pow(symbols.length, slots.positions);',
-      'for (let value = 0; value < total; value += 1) {',
-      '  let rest = value;',
-      '  const digits = [];',
-      '  for (let index = 0; index < slots.positions; index += 1) {',
-      '    digits.unshift(symbols[rest % symbols.length]);',
-      '    rest = Math.floor(rest / symbols.length);',
-      '  }',
-      '  codes.push(digits.join(""));',
-      '}',
-      'return codes.join(", ") + ".";'
-    ].join('\n'),
+    wires: [
+      {
+        name: 'codes', command: 'jsEval', body: [
+          'const slots = $slots;',
+          'if (!Number.isInteger(slots.positions) || slots.positions < 1) { throw new Error("invalid position count"); }',
+          'const symbols = slots.symbols;',
+          'const codes = [];',
+          'const total = Math.pow(symbols.length, slots.positions);',
+          'for (let value = 0; value < total; value += 1) {',
+          '  let rest = value;',
+          '  const digits = [];',
+          '  for (let index = 0; index < slots.positions; index += 1) {',
+          '    digits.unshift(symbols[rest % symbols.length]);',
+          '    rest = Math.floor(rest / symbols.length);',
+          '  }',
+          '  codes.push(digits.join(""));',
+          '}',
+          'return codes;'
+        ].join('\n')
+      }
+    ],
+    compute: ['return $codes.join(", ") + ".";'].join('\n'),
     explain(slots, solution) {
       return [
         `The code has ${slots.positions} positions and each position can take ${slots.symbols.length} symbols, so the choices are independent.`,

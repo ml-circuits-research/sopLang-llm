@@ -138,50 +138,56 @@ function render(solution) {
   return `${body}.`;
 }
 
+const WIRES = [
+  {
+    name: 'results',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const INTERSECTION = String.fromCharCode(8745);',
+      'const UNION = String.fromCharCode(8746);',
+      'const DIFFERENCE = String.fromCharCode(92);',
+      'const EMPTY = String.fromCharCode(8709);',
+      'const OPERATORS = [INTERSECTION, UNION, DIFFERENCE];',
+      'const sets = {};',
+      'for (const letter of Object.keys(slots.labels)) {',
+      '  sets[letter] = slots.cases.filter((entry) => entry.properties.indexOf(slots.labels[letter]) !== -1).map((entry) => entry.name);',
+      '  probe(sets[letter].length > 0, "the labelled property must appear in the observations: " + slots.labels[letter]);',
+      '}',
+      'const results = slots.ops.map((op) => {',
+      '  const parts = [];',
+      '  let current = "";',
+      '  for (const character of op) {',
+      '    if (OPERATORS.indexOf(character) !== -1) {',
+      '      parts.push(current.trim());',
+      '      parts.push(character);',
+      '      current = "";',
+      '    } else {',
+      '      current += character;',
+      '    }',
+      '  }',
+      '  parts.push(current.trim());',
+      '  let members = sets[parts[0]].slice();',
+      '  for (let index = 1; index < parts.length; index += 2) {',
+      '    const other = sets[parts[index + 1]];',
+      '    if (parts[index] === INTERSECTION) {',
+      '      members = members.filter((name) => other.indexOf(name) !== -1);',
+      '    } else if (parts[index] === UNION) {',
+      '      members = members.concat(other.filter((name) => members.indexOf(name) === -1));',
+      '    } else {',
+      '      members = members.filter((name) => other.indexOf(name) === -1);',
+      '    }',
+      '  }',
+      '  probe(members.length <= slots.cases.length, "an operation must not invent members: " + op);',
+      '  return op + "=" + (members.length === 0 ? EMPTY : "{" + members.join(", ") + "}");',
+      '});',
+      'return results;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const INTERSECTION = String.fromCharCode(8745);',
-  'const UNION = String.fromCharCode(8746);',
-  'const DIFFERENCE = String.fromCharCode(92);',
-  'const EMPTY = String.fromCharCode(8709);',
-  'const OPERATORS = [INTERSECTION, UNION, DIFFERENCE];',
-  'for (const entry of slots.cases) {',
-  '}',
-  'const sets = {};',
-  'for (const letter of Object.keys(slots.labels)) {',
-  '  sets[letter] = slots.cases.filter((entry) => entry.properties.indexOf(slots.labels[letter]) !== -1).map((entry) => entry.name);',
-  '  probe(sets[letter].length > 0, "the labelled property must appear in the observations: " + slots.labels[letter]);',
-  '}',
-  'const results = slots.ops.map((op) => {',
-  '  const parts = [];',
-  '  let current = "";',
-  '  for (const character of op) {',
-  '    if (OPERATORS.indexOf(character) !== -1) {',
-  '      parts.push(current.trim());',
-  '      parts.push(character);',
-  '      current = "";',
-  '    } else {',
-  '      current += character;',
-  '    }',
-  '  }',
-  '  parts.push(current.trim());',
-  '  for (let index = 0; index < parts.length; index += 2) {',
-  '  }',
-  '  let members = sets[parts[0]].slice();',
-  '  for (let index = 1; index < parts.length; index += 2) {',
-  '    const other = sets[parts[index + 1]];',
-  '    if (parts[index] === INTERSECTION) {',
-  '      members = members.filter((name) => other.indexOf(name) !== -1);',
-  '    } else if (parts[index] === UNION) {',
-  '      members = members.concat(other.filter((name) => members.indexOf(name) === -1));',
-  '    } else {',
-  '      members = members.filter((name) => other.indexOf(name) === -1);',
-  '    }',
-  '  }',
-  '  probe(members.length <= slots.cases.length, "an operation must not invent members: " + op);',
-  '  return op + "=" + (members.length === 0 ? EMPTY : "{" + members.join(", ") + "}");',
-  '});',
-  'return results.join("; ") + ".";'
+  'return $results.join("; ") + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -206,6 +212,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

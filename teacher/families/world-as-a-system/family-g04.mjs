@@ -75,58 +75,86 @@ function render(solution) {
   return `${solution.distance} border crossing(s); ${solution.candidate} is ${solution.unavoidable ? '' : 'not '}unavoidable.`;
 }
 
+const WIRES = [
+  {
+    name: 'adjacency',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const adjacency = {};',
+      'for (const pair of slots.pairs) {',
+      '  const left = pair[0];',
+      '  const right = pair[1];',
+      '  if (!adjacency[left]) {',
+      '    adjacency[left] = [];',
+      '  }',
+      '  if (!adjacency[right]) {',
+      '    adjacency[right] = [];',
+      '  }',
+      '  adjacency[left].push(right);',
+      '  adjacency[right].push(left);',
+      '}',
+      'return adjacency;'
+    ].join('\n')
+  },
+  {
+    name: 'distance',
+    command: 'jsEval',
+    body: [
+      'const adjacency = $adjacency;',
+      'const slots = $slots;',
+      'const seen = new Set([slots.from]);',
+      'let frontier = [slots.from];',
+      'let distance = 0;',
+      'let found = false;',
+      'while (frontier.length > 0 && !found) {',
+      '  distance += 1;',
+      '  const next = [];',
+      '  for (const state of frontier) {',
+      '    for (const neighbour of adjacency[state] ?? []) {',
+      '      if (neighbour === slots.to) {',
+      '        found = true;',
+      '      } else if (!seen.has(neighbour)) {',
+      '        seen.add(neighbour);',
+      '        next.push(neighbour);',
+      '      }',
+      '    }',
+      '  }',
+      '  frontier = found ? [] : next;',
+      '}',
+      'probe(found, "the stated borders must connect the two endpoints of the crossing question");',
+      'return distance;'
+    ].join('\n')
+  },
+  {
+    name: 'unavoidable',
+    command: 'jsEval',
+    body: [
+      'const adjacency = $adjacency;',
+      'const slots = $slots;',
+      'const visited = new Set([slots.from]);',
+      'const queue = [slots.from];',
+      'let reachable = false;',
+      'while (queue.length > 0) {',
+      '  const state = queue.shift();',
+      '  if (state === slots.to) {',
+      '    reachable = true;',
+      '    break;',
+      '  }',
+      '  for (const neighbour of adjacency[state] ?? []) {',
+      '    if (neighbour !== slots.candidate && !visited.has(neighbour)) {',
+      '      visited.add(neighbour);',
+      '      queue.push(neighbour);',
+      '    }',
+      '  }',
+      '}',
+      'return reachable;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const adjacency = new Map();',
-  'for (const pair of slots.pairs) {',
-  '  const left = pair[0];',
-  '  const right = pair[1];',
-  '  if (!adjacency.has(left)) {',
-  '    adjacency.set(left, new Set());',
-  '  }',
-  '  if (!adjacency.has(right)) {',
-  '    adjacency.set(right, new Set());',
-  '  }',
-  '  adjacency.get(left).add(right);',
-  '  adjacency.get(right).add(left);',
-  '}',
-  'const seen = new Set([slots.from]);',
-  'let frontier = [slots.from];',
-  'let distance = 0;',
-  'let found = false;',
-  'while (frontier.length > 0 && !found) {',
-  '  distance += 1;',
-  '  const next = [];',
-  '  for (const state of frontier) {',
-  '    for (const neighbour of adjacency.get(state) ?? []) {',
-  '      if (neighbour === slots.to) {',
-  '        found = true;',
-  '      } else if (!seen.has(neighbour)) {',
-  '        seen.add(neighbour);',
-  '        next.push(neighbour);',
-  '      }',
-  '    }',
-  '  }',
-  '  frontier = found ? [] : next;',
-  '}',
-  'probe(found, "the stated borders must connect the two endpoints of the crossing question");',
-  'const visited = new Set([slots.from]);',
-  'const queue = [slots.from];',
-  'let reachable = false;',
-  'while (queue.length > 0) {',
-  '  const state = queue.shift();',
-  '  if (state === slots.to) {',
-  '    reachable = true;',
-  '    break;',
-  '  }',
-  '  for (const neighbour of adjacency.get(state) ?? []) {',
-  '    if (neighbour !== slots.candidate && !visited.has(neighbour)) {',
-  '      visited.add(neighbour);',
-  '      queue.push(neighbour);',
-  '    }',
-  '  }',
-  '}',
-  'return distance + " border crossing(s); " + slots.candidate + (reachable ? " is not unavoidable." : " is unavoidable.");'
+  'return $distance + " border crossing(s); " + $slots.candidate + ($unavoidable ? " is not unavoidable." : " is unavoidable.");'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -146,6 +174,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

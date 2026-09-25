@@ -101,31 +101,41 @@ function render(solution) {
   return `Current final output: ${solution.current} ${solution.unit}. Best stage(s) to improve: ${solution.stages.join(', ')}, for a gain of ${solution.gain} ${solution.unit}.`;
 }
 
+const WIRES = [
+  {
+    name: 'yields',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const roundHundredths = (value) => {',
+      '  const text = value.toFixed(20);',
+      '  const point = text.indexOf(".");',
+      '  const kept = text.slice(point + 1, point + 3);',
+      '  const rest = text.slice(point + 3);',
+      '  let hundredths = Number(text.slice(0, point) + kept);',
+      '  const half = "5" + "0".repeat(rest.length - 1);',
+      '  if (rest > half || (rest === half && Number(kept[1]) % 2 === 1)) {',
+      '    hundredths += 1;',
+      '  }',
+      '  return String(hundredths / 100);',
+      '};',
+      'const outputOf = (rates) => slots.start * (rates[0] / 100) * (rates[1] / 100) * (rates[2] / 100);',
+      'const current = outputOf(slots.rates);',
+      'const gains = slots.rates.map((rate, index) => {',
+      '  const improved = slots.rates.map((other, position) => (position === index ? Math.min(100, other + slots.improvementPoints) : other));',
+      '  return outputOf(improved) - current;',
+      '});',
+      'const shown = gains.map(roundHundredths);',
+      'const bestGain = shown.reduce((left, right) => (Number(right) > Number(left) ? right : left), shown[0]);',
+      'probe(Number(bestGain) >= 0, "improving a stage must not lower the final output");',
+      'const stages = shown.map((value, index) => (value === bestGain ? index + 1 : 0)).filter((stage) => stage > 0);',
+      'return { current: roundHundredths(current), stages, bestGain };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const roundHundredths = (value) => {',
-  '  const text = value.toFixed(20);',
-  '  const point = text.indexOf(".");',
-  '  const kept = text.slice(point + 1, point + 3);',
-  '  const rest = text.slice(point + 3);',
-  '  let hundredths = Number(text.slice(0, point) + kept);',
-  '  const half = "5" + "0".repeat(rest.length - 1);',
-  '  if (rest > half || (rest === half && Number(kept[1]) % 2 === 1)) {',
-  '    hundredths += 1;',
-  '  }',
-  '  return String(hundredths / 100);',
-  '};',
-  'const outputOf = (rates) => slots.start * (rates[0] / 100) * (rates[1] / 100) * (rates[2] / 100);',
-  'const current = outputOf(slots.rates);',
-  'const gains = slots.rates.map((rate, index) => {',
-  '  const improved = slots.rates.map((other, position) => (position === index ? Math.min(100, other + slots.improvementPoints) : other));',
-  '  return outputOf(improved) - current;',
-  '});',
-  'const shown = gains.map(roundHundredths);',
-  'const bestGain = shown.reduce((left, right) => (Number(right) > Number(left) ? right : left), shown[0]);',
-  'probe(Number(bestGain) >= 0, "improving a stage must not lower the final output");',
-  'const stages = shown.map((value, index) => (value === bestGain ? index + 1 : 0)).filter((stage) => stage > 0);',
-  'return "Current final output: " + roundHundredths(current) + " " + slots.unit + ". Best stage(s) to improve: " + stages.join(", ") + ", for a gain of " + bestGain + " " + slots.unit + ".";'
+  'return "Current final output: " + $yields.current + " " + $slots.unit + ". Best stage(s) to improve: " + $yields.stages.join(", ") + ", for a gain of " + $yields.bestGain + " " + $slots.unit + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -156,6 +166,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

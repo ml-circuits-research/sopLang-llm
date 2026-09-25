@@ -66,8 +66,19 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
   'const totalHarvest = slots.users * slots.withdrawalPerUser;',
   'const endStock = slots.start + slots.regeneration - totalHarvest;',
@@ -75,8 +86,7 @@ const COMPUTE = [
   'const equalShare = slots.regeneration / slots.users;',
   'const verdict = endStock >= slots.start ? "non-depleting" : "depleting";',
   'const main = "End stock " + endStock + "; " + verdict + ". Equal regeneration-matching share: " + equalShare.toFixed(2) + " each.";',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -97,6 +107,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

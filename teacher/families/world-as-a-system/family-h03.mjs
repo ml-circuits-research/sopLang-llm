@@ -65,14 +65,31 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'verdict',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const sameContent = (left, right) => String(left).toLowerCase().replace(/[.]/g, "").replace(/\\s+/g, " ").trim() === String(right).toLowerCase().replace(/[.]/g, "").replace(/\\s+/g, " ").trim();',
+      'const supported = slots.claims.findIndex((claim) => sameContent(claim, slots.evidence));',
+      'const main = "C" + (supported + 1) + " is supported. C" + (supported === 0 ? 2 : 1) + " is not justified by the source alone.";',
+      'return { main: main };'
+    ].join('\n')
+  },
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
-  'const slots = $slots;',
-  'const sameContent = (left, right) => String(left).toLowerCase().replace(/[.]/g, "").replace(/\\s+/g, " ").trim() === String(right).toLowerCase().replace(/[.]/g, "").replace(/\\s+/g, " ").trim();',
-  'const supported = slots.claims.findIndex((claim) => sameContent(claim, slots.evidence));',
-  'const main = "C" + (supported + 1) + " is supported. C" + (supported === 0 ? 2 : 1) + " is not justified by the source alone.";',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'return $cross.suffix === "" ? $verdict.main : $verdict.main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -93,6 +110,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

@@ -105,29 +105,35 @@ function render(solution) {
   return `In order: ${verdicts.join(', ')}.`;
 }
 
+const WIRES = [
+  {
+    name: 'verdicts',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const holds = (entry, property) => entry.properties.indexOf(property) !== -1;',
+      'const verdicts = slots.statements.map((statement) => {',
+      '  const subject = statement.properties[0];',
+      '  const predicate = statement.properties[1];',
+      '  if (statement.quantifier === "all") {',
+      '    const holders = slots.cases.filter((entry) => holds(entry, subject));',
+      '    return holders.every((entry) => holds(entry, predicate) === !statement.negative);',
+      '  }',
+      '  if (statement.quantifier === "some") {',
+      '    const holders = slots.cases.filter((entry) => holds(entry, subject));',
+      '    return holders.some((entry) => holds(entry, predicate) === !statement.negative);',
+      '  }',
+      '  return !slots.cases.some((entry) => holds(entry, subject) && holds(entry, predicate));',
+      '});',
+      'probe(verdicts.length === slots.statements.length, "every statement must receive a truth value");',
+      'probe(verdicts.every((verdict) => typeof verdict === "boolean"), "every verdict must be true or false");',
+      'return verdicts;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const holds = (entry, property) => entry.properties.indexOf(property) !== -1;',
-  'for (const entry of slots.cases) {',
-  '}',
-  'for (const statement of slots.statements) {',
-  '}',
-  'const verdicts = slots.statements.map((statement) => {',
-  '  const subject = statement.properties[0];',
-  '  const predicate = statement.properties[1];',
-  '  if (statement.quantifier === "all") {',
-  '    const holders = slots.cases.filter((entry) => holds(entry, subject));',
-  '    return holders.every((entry) => holds(entry, predicate) === !statement.negative);',
-  '  }',
-  '  if (statement.quantifier === "some") {',
-  '    const holders = slots.cases.filter((entry) => holds(entry, subject));',
-  '    return holders.some((entry) => holds(entry, predicate) === !statement.negative);',
-  '  }',
-  '  return !slots.cases.some((entry) => holds(entry, subject) && holds(entry, predicate));',
-  '});',
-  'probe(verdicts.length === slots.statements.length, "every statement must receive a truth value");',
-  'probe(verdicts.every((verdict) => typeof verdict === "boolean"), "every verdict must be true or false");',
-  'return "In order: " + verdicts.map((verdict) => (verdict ? "true" : "false")).join(", ") + ".";'
+  'return "In order: " + $verdicts.map((verdict) => (verdict ? "true" : "false")).join(", ") + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -167,6 +173,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

@@ -54,13 +54,30 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'matching',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const matching = slots.cells.filter((cell) => slots.required.every((attribute) => cell.attributes.includes(attribute))).map((cell) => cell.id);',
+      'probe(matching.length > 0, "at least one cell must have every required attribute");',
+      'return matching;'
+    ].join('\n')
+  },
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'return { suffix: renderCrossDomain($slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
-  'const slots = $slots;',
-  'const matching = slots.cells.filter((cell) => slots.required.every((attribute) => cell.attributes.includes(attribute))).map((cell) => cell.id);',
-  'probe(matching.length > 0, "at least one cell must have every required attribute");',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? matching.join(", ") : matching.join(", ") + " " + suffix;'
+  'const suffix = $cross.suffix;',
+  'return suffix === "" ? $matching.join(", ") : $matching.join(", ") + " " + suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -79,6 +96,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

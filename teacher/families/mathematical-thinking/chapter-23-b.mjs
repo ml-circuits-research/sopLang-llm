@@ -172,8 +172,7 @@ function questionValue(option, description, flatFaces) {
   return propertyValue(word, description);
 }
 
-const FILTER_SOURCE = [
-  'const slots = $slots;',
+const MATCHES_SOURCE = [
   'const matches = (value, predicate) => {',
   '  if (predicate.op === "and") { return predicate.of.every((part) => matches(value, part)); }',
   '  if (predicate.op === "eq") { return Number(value) === predicate.value; }',
@@ -185,8 +184,12 @@ const FILTER_SOURCE = [
   '  if (predicate.op === "odd") { return Math.abs(Number(value) % 2) === 1; }',
   '  if (predicate.op === "lacks") { return !String(value).includes(predicate.word); }',
   '  throw new Error("unsupported predicate " + predicate.op);',
-  '};',
-  'const keep = (candidates, predicate) => candidates.filter((value) => matches(value, predicate));',
+  '};'
+].join('\n');
+
+const KEEP_SOURCE = 'const keep = (candidates, predicate) => candidates.filter((value) => matches(value, predicate));';
+
+const JOINLIST_SOURCE = [
   'const joinList = (items) => {',
   '  const parts = items.map(String);',
   '  if (parts.length === 1) { return parts[0]; }',
@@ -194,10 +197,6 @@ const FILTER_SOURCE = [
   '  return parts.slice(0, -1).join(", ") + ", and " + parts[parts.length - 1];',
   '};'
 ].join('\n');
-
-function body(lines) {
-  return [FILTER_SOURCE, ...lines].join('\n');
-}
 
 export const cases = [
   {
@@ -227,18 +226,28 @@ export const cases = [
     render(solution) {
       return `${solution.code}.`;
     },
-    compute: body([
-      'const code = slots.questions.map((question) => {',
-      '  const word = question.replace("is it ", "").replace("?", "").trim().toLowerCase();',
-      '  const words = slots.object.toLowerCase().split(/\\s+/);',
-      '  const opposites = { large: "small", small: "large" };',
-      '  let value = words.includes(word) ? true : null;',
-      '  if (value === null && opposites[word] !== undefined && words.includes(opposites[word])) { value = false; }',
-      '  if (value === null) { throw new Error("the object does not state " + word); }',
-      '  return value ? slots.digits.yes : slots.digits.no;',
-      '});',
-      'return code.join("") + ".";'
-    ]),
+    wires: [
+      {
+        name: 'code',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'const code = slots.questions.map((question) => {',
+          '  const word = question.replace("is it ", "").replace("?", "").trim().toLowerCase();',
+          '  const words = slots.object.toLowerCase().split(/\\s+/);',
+          '  const opposites = { large: "small", small: "large" };',
+          '  let value = words.includes(word) ? true : null;',
+          '  if (value === null && opposites[word] !== undefined && words.includes(opposites[word])) { value = false; }',
+          '  if (value === null) { throw new Error("the object does not state " + word); }',
+          '  return value ? slots.digits.yes : slots.digits.no;',
+          '});',
+          'return code;'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'return $code.join("") + ".";'
+    ].join('\n'),
     explain(slots) {
       return [
         'Each question is answered from the described object and the answer is written with the agreed digits, in the order the questions are asked.',
@@ -278,20 +287,30 @@ export const cases = [
       return 'Yes; the codes differ.';
     },
     facts: '{"yes": 1, "no": 0}',
-    compute: body([
-      'const codeOf = (description) => slots.questions.map((question) => {',
-      '  const word = question.replace("is it ", "").replace("?", "").trim().toLowerCase();',
-      '  const words = description.toLowerCase().split(/\\s+/);',
-      '  const opposites = { large: "small", small: "large" };',
-      '  let value = words.includes(word) ? true : null;',
-      '  if (value === null && opposites[word] !== undefined && words.includes(opposites[word])) { value = false; }',
-      '  if (value === null) { throw new Error("the description does not state " + word); }',
-      '  return value ? String($facts.yes) : String($facts.no);',
-      '}).join("");',
-      'const codes = slots.objects.map((object) => codeOf(object.description));',
-      'const same = codes.every((code) => code === codes[0]);',
-      'return same ? "No; both have code " + codes[0] + "." : "Yes; the codes differ.";'
-    ]),
+    wires: [
+      {
+        name: 'codes',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'const codeOf = (description) => slots.questions.map((question) => {',
+          '  const word = question.replace("is it ", "").replace("?", "").trim().toLowerCase();',
+          '  const words = description.toLowerCase().split(/\\s+/);',
+          '  const opposites = { large: "small", small: "large" };',
+          '  let value = words.includes(word) ? true : null;',
+          '  if (value === null && opposites[word] !== undefined && words.includes(opposites[word])) { value = false; }',
+          '  if (value === null) { throw new Error("the description does not state " + word); }',
+          '  return value ? String($facts.yes) : String($facts.no);',
+          '}).join("");',
+          'const codes = slots.objects.map((object) => codeOf(object.description));',
+          'return codes;'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'const same = $codes.every((code) => code === $codes[0]);',
+      'return same ? "No; both have code " + $codes[0] + "." : "Yes; the codes differ.";'
+    ].join('\n'),
     explain(slots, solution) {
       return [
         'Both objects are coded with the same two questions, so the codes are compared field by field.',
@@ -329,28 +348,38 @@ export const cases = [
     render(solution) {
       return `“${capitalizeFirst(solution.text)}”.`;
     },
-    compute: body([
-      'let separating = null;',
-      'for (const option of slots.options) {',
-      '  const word = option.toLowerCase().replace("does it have ", "").replace("is it ", "").replace("does it ", "").replace("?", "").trim();',
-      '  const values = slots.possibilities.map((description) => {',
-      '    const words = description.toLowerCase().split(/\\s+/);',
-      '    if (word === "flat faces" || word === "flat face") {',
-      '      if (words.includes(slots.flatFaces.yes)) { return true; }',
-      '      if (words.includes(slots.flatFaces.no)) { return false; }',
-      '      return null;',
-      '    }',
-      '    const opposites = { large: "small", small: "large" };',
-      '    if (words.includes(word)) { return true; }',
-      '    if (opposites[word] !== undefined && words.includes(opposites[word])) { return false; }',
-      '    return null;',
-      '  });',
-      '  if (values.some((value) => value === null)) { throw new Error("the descriptions do not answer " + option); }',
-      '  if (values[0] !== values[1]) { separating = option; break; }',
-      '}',
-      'const first = separating.charAt(0).toUpperCase() + separating.slice(1);',
+    wires: [
+      {
+        name: 'separating',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'let separating = null;',
+          'for (const option of slots.options) {',
+          '  const word = option.toLowerCase().replace("does it have ", "").replace("is it ", "").replace("does it ", "").replace("?", "").trim();',
+          '  const values = slots.possibilities.map((description) => {',
+          '    const words = description.toLowerCase().split(/\\s+/);',
+          '    if (word === "flat faces" || word === "flat face") {',
+          '      if (words.includes(slots.flatFaces.yes)) { return true; }',
+          '      if (words.includes(slots.flatFaces.no)) { return false; }',
+          '      return null;',
+          '    }',
+          '    const opposites = { large: "small", small: "large" };',
+          '    if (words.includes(word)) { return true; }',
+          '    if (opposites[word] !== undefined && words.includes(opposites[word])) { return false; }',
+          '    return null;',
+          '  });',
+          '  if (values.some((value) => value === null)) { throw new Error("the descriptions do not answer " + option); }',
+          '  if (values[0] !== values[1]) { separating = option; break; }',
+          '}',
+          'return separating;'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'const first = $separating.charAt(0).toUpperCase() + $separating.slice(1);',
       'return "“" + first + "”.";'
-    ]),
+    ].join('\n'),
     explain(slots, solution) {
       return [
         'A question separates the two possibilities only when it has a different answer for each of them.',
@@ -375,9 +404,19 @@ export const cases = [
     render(solution) {
       return `No; ${solution.missing} is missing.`;
     },
-    compute: body([
-      'return "No; " + slots.owner + "\'s quantity is missing.";'
-    ]),
+    wires: [
+      {
+        name: 'missing',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'return slots.owner + "\'s quantity";'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'return "No; " + $missing + " is missing.";'
+    ].join('\n'),
     explain(slots) {
       return [
         `The message computes a value relative to what ${slots.owner} has, so the result would be that quantity plus ${slots.amount}.`,
@@ -402,10 +441,19 @@ export const cases = [
     render(solution) {
       return `${solution.left} marbles; only ${solution.start} and ${solution.given} are relevant.`;
     },
-    compute: body([
-      'const left = slots.start - slots.given;',
-      'return left + " marbles; only " + slots.start + " and " + slots.given + " are relevant.";'
-    ]),
+    wires: [
+      {
+        name: 'left',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'return slots.start - slots.given;'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'return $left + " marbles; only " + $slots.start + " and " + $slots.given + " are relevant.";'
+    ].join('\n'),
     explain(slots) {
       return [
         `Only the starting number ${slots.start} and the number given away ${slots.given} enter the calculation, which is a subtraction.`,
@@ -437,13 +485,25 @@ export const cases = [
       }
       return `No; {${solution.first.join(',')}} and {${solution.second.join(',')}}.`;
     },
-    compute: body([
-      'const first = keep(keep(slots.candidates, slots.clues[0]), slots.clues[1]);',
-      'const second = keep(keep(slots.candidates, slots.clues[1]), slots.clues[0]);',
-      'const same = first.length === second.length && first.every((value, index) => value === second[index]);',
-      'if (same) { return "Yes; {" + first.join(",") + "}."; }',
-      'return "No; {" + first.join(",") + "} and {" + second.join(",") + "}.";'
-    ]),
+    wires: [
+      {
+        name: 'orders',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          MATCHES_SOURCE,
+          KEEP_SOURCE,
+          'const first = keep(keep(slots.candidates, slots.clues[0]), slots.clues[1]);',
+          'const second = keep(keep(slots.candidates, slots.clues[1]), slots.clues[0]);',
+          'return { first, second };'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'const same = $orders.first.length === $orders.second.length && $orders.first.every((value, index) => value === $orders.second[index]);',
+      'if (same) { return "Yes; {" + $orders.first.join(",") + "}."; }',
+      'return "No; {" + $orders.first.join(",") + "} and {" + $orders.second.join(",") + "}.";'
+    ].join('\n'),
     explain(slots, solution) {
       return [
         'Each order applies the same two filters, only one after the other, so the same candidates are removed either way.',
@@ -480,15 +540,27 @@ export const cases = [
     render(solution) {
       return `“${capitalizeFirst(solution.text)}”.`;
     },
-    compute: body([
-      'let best = null;',
-      'for (const clue of slots.clues) {',
-      '  const remaining = keep(slots.candidates, clue.predicate).length;',
-      '  if (best === null || remaining < best.remaining) { best = { text: clue.text, remaining }; }',
-      '}',
-      'const first = best.text.charAt(0).toUpperCase() + best.text.slice(1);',
+    wires: [
+      {
+        name: 'strongest',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          MATCHES_SOURCE,
+          KEEP_SOURCE,
+          'let best = null;',
+          'for (const clue of slots.clues) {',
+          '  const remaining = keep(slots.candidates, clue.predicate).length;',
+          '  if (best === null || remaining < best.remaining) { best = { text: clue.text, remaining }; }',
+          '}',
+          'return best;'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'const first = $strongest.text.charAt(0).toUpperCase() + $strongest.text.slice(1);',
       'return "“" + first + "”.";'
-    ]),
+    ].join('\n'),
     explain(slots, solution) {
       return [
         'Each negative clue is applied as a filter that drops every candidate containing the excluded property.',
@@ -515,10 +587,19 @@ export const cases = [
     render(solution) {
       return solution.follows ? 'Yes.' : 'No.';
     },
-    compute: body([
-      'const follows = slots.rule && slots.observed && !slots.otherRedObjects;',
-      'return follows ? "Yes." : "No.";'
-    ]),
+    wires: [
+      {
+        name: 'follows',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'return slots.rule && slots.observed && !slots.otherRedObjects;'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'return ($follows ? "Yes" : "No") + ".";'
+    ].join('\n'),
     explain(slots) {
       return [
         'The rule tells us that a flower from the flowerpot is red, but it does not tell us that every red object is such a flower.',
@@ -544,10 +625,19 @@ export const cases = [
     render(solution) {
       return `We know it is not ${solution.tested}; it could be ${joinOr(solution.remaining)}.`;
     },
-    compute: body([
-      'const remaining = slots.boxes.filter((box) => box !== slots.tested);',
-      'return "We know it is not " + slots.tested + "; it could be " + remaining.join(" or ") + ".";'
-    ]),
+    wires: [
+      {
+        name: 'remaining',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'return slots.boxes.filter((box) => box !== slots.tested);'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'return "We know it is not " + $slots.tested + "; it could be " + $remaining.join(" or ") + ".";'
+    ].join('\n'),
     explain(slots, solution) {
       return [
         'A failed test is information: the key does not open that box, so that box leaves the list of possibilities.',

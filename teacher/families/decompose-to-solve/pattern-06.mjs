@@ -141,27 +141,43 @@ function render(solution) {
   return `${solution.hypothesisId}, the ${solution.label}, is the best-supported explanation. The decomposition is evidential: each observation is sent only to the hypothesis it can actually discriminate, then the hypothesis-level results are recombined.`;
 }
 
+const WIRES = [
+  {
+    name: 'verdicts',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const supported = [];',
+      'const eliminated = [];',
+      'for (const observation of slots.observations) {',
+      '  if (observation.kind === "capacity-availability") {',
+      '    if (observation.availableUnits >= slots.failureCount) { eliminated.push("capacity"); } else { supported.push("capacity"); }',
+      '  } else if (observation.kind === "ordering-violation") {',
+      '    supported.push("ordering");',
+      '  } else if (observation.kind === "measurement-reproduction") {',
+      '    eliminated.push("measurement");',
+      '  }',
+      '}',
+      'return { supported: supported, eliminated: eliminated };'
+    ].join('\n')
+  },
+  {
+    name: 'winner',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const survivors = slots.hypotheses.filter((hypothesis) => $verdicts.supported.includes(hypothesis.kind) && !$verdicts.eliminated.includes(hypothesis.kind));',
+      'probe(survivors.length === 1, "exactly one hypothesis must survive the discriminating observations");',
+      'const labels = { capacity: "capacity shortfall", ordering: "dependency/order mistake", measurement: "measurement error" };',
+      'const winner = survivors[0];',
+      'probe(typeof labels[winner.kind] === "string", "the surviving hypothesis must be a known claim");',
+      'return { id: winner.id, label: labels[winner.kind] };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const ids = slots.hypotheses.map((hypothesis) => hypothesis.id);',
-  'const supported = [];',
-  'const eliminated = [];',
-  'for (const observation of slots.observations) {',
-  '  if (observation.kind === "capacity-availability") {',
-  '    if (observation.availableUnits >= slots.failureCount) { eliminated.push("capacity"); } else { supported.push("capacity"); }',
-  '  } else if (observation.kind === "ordering-violation") {',
-  '    supported.push("ordering");',
-  '  } else if (observation.kind === "measurement-reproduction") {',
-  '    eliminated.push("measurement");',
-  '  } else {',
-  '  }',
-  '}',
-  'const survivors = slots.hypotheses.filter((hypothesis) => supported.includes(hypothesis.kind) && !eliminated.includes(hypothesis.kind));',
-  'probe(survivors.length === 1, "exactly one hypothesis must survive the discriminating observations");',
-  'const labels = { capacity: "capacity shortfall", ordering: "dependency/order mistake", measurement: "measurement error" };',
-  'const winner = survivors[0];',
-  'probe(typeof labels[winner.kind] === "string", "the surviving hypothesis must be a known claim");',
-  'return winner.id + ", the " + labels[winner.kind] + ", is the best-supported explanation. The decomposition is evidential: each observation is sent only to the hypothesis it can actually discriminate, then the hypothesis-level results are recombined.";'
+  'return $winner.id + ", the " + $winner.label + ", is the best-supported explanation. The decomposition is evidential: each observation is sent only to the hypothesis it can actually discriminate, then the hypothesis-level results are recombined.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -185,6 +201,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

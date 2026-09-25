@@ -212,58 +212,83 @@ function suffixOf(solution) {
   return suffix === '' ? '' : ` ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'derive',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const trueKeys = new Set(slots.facts.filter((fact) => fact.positive).map((fact) => fact.key));',
+      'const falseKeys = new Set(slots.facts.filter((fact) => !fact.positive).map((fact) => fact.key));',
+      'const derived = [];',
+      'const derivedKeys = new Set();',
+      'const holds = (condition) => condition.positive ? trueKeys.has(condition.key) || derivedKeys.has(condition.key) : falseKeys.has(condition.key);',
+      'let changed = true;',
+      'while (changed) {',
+      '  changed = false;',
+      '  for (const rule of slots.rules) {',
+      '    if (trueKeys.has(rule.consequent) || derivedKeys.has(rule.consequent)) {',
+      '      continue;',
+      '    }',
+      '    const satisfied = rule.connector === "OR" ? rule.conditions.some(holds) : rule.conditions.every(holds);',
+      '    if (satisfied) {',
+      '      derived.push(rule.consequent);',
+      '      derivedKeys.add(rule.consequent);',
+      '      changed = true;',
+      '    }',
+      '  }',
+      '}',
+      'probe(derived.length > 0, "at least one rule must fire on the given facts");',
+      'const heads = slots.rules.map((rule) => rule.consequent);',
+      'const givenHeads = heads.filter((head) => trueKeys.has(head));',
+      'const missingHeads = heads.filter((head) => !trueKeys.has(head) && !derivedKeys.has(head));',
+      'return { derived: derived, givenHeads: givenHeads, missingHeads: missingHeads };'
+    ].join('\n')
+  },
+  {
+    name: 'appraisal',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const names = { flooding: "flooding", "road closure": "road closure", warning: "a warning", "field muddy": "the field becomes muddy", "bus rerouting": "bus rerouting" };',
+      'const nameOf = (key) => { const name = names[key]; if (name === undefined) { throw new Error("unknown consequence " + key); } return name; };',
+      'const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1);',
+      'const joinList = (items) => items.length === 1 ? items[0] : items.length === 2 ? items[0] + " and " + items[1] : items.slice(0, -1).join(", ") + ", and " + items[items.length - 1];',
+      'const deduced = capitalize(joinList($derive.derived.map(nameOf)));',
+      'let main;',
+      'if ($derive.givenHeads.length > 0) {',
+      '  main = deduced + " can be deduced; " + nameOf($derive.givenHeads[0]) + " is already given as a fact.";',
+      '} else if (slots.rules.some((rule) => rule.connector === "OR")) {',
+      '  const clauses = $derive.derived.map((key) => key === "warning" ? "the warning follows from the working siren" : capitalize(nameOf(key)));',
+      '  main = clauses.slice(0, -1).join(", ") + (clauses.length === 1 ? "" : ", and ") + clauses[clauses.length - 1] + ".";',
+      '} else if ($derive.missingHeads.length > 0) {',
+      '  main = deduced + " can be deduced, but " + joinList($derive.missingHeads.map(nameOf)) + " cannot be deduced.";',
+      '} else {',
+      '  let chain = true;',
+      '  for (let index = 1; index < $derive.derived.length; index += 1) {',
+      '    const rule = slots.rules.filter((candidate) => candidate.consequent === $derive.derived[index])[0];',
+      '    if (!rule.conditions.some((condition) => $derive.derived.slice(0, index).includes(condition.key))) {',
+      '      chain = false;',
+      '    }',
+      '  }',
+      '  main = deduced + " can" + (chain ? " all" : "") + " be deduced.";',
+      '}',
+      'return { main: main };'
+    ].join('\n')
+  },
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
-  'const slots = $slots;',
-  'const names = { flooding: "flooding", "road closure": "road closure", warning: "a warning", "field muddy": "the field becomes muddy", "bus rerouting": "bus rerouting" };',
-  'const nameOf = (key) => { const name = names[key]; if (name === undefined) { throw new Error("unknown consequence " + key); } return name; };',
-  'const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1);',
-  'const joinList = (items) => items.length === 1 ? items[0] : items.length === 2 ? items[0] + " and " + items[1] : items.slice(0, -1).join(", ") + ", and " + items[items.length - 1];',
-  'const trueKeys = new Set(slots.facts.filter((fact) => fact.positive).map((fact) => fact.key));',
-  'const falseKeys = new Set(slots.facts.filter((fact) => !fact.positive).map((fact) => fact.key));',
-  'const derived = [];',
-  'const derivedKeys = new Set();',
-  'const holds = (condition) => condition.positive ? trueKeys.has(condition.key) || derivedKeys.has(condition.key) : falseKeys.has(condition.key);',
-  'let changed = true;',
-  'while (changed) {',
-  '  changed = false;',
-  '  for (const rule of slots.rules) {',
-  '    if (trueKeys.has(rule.consequent) || derivedKeys.has(rule.consequent)) {',
-  '      continue;',
-  '    }',
-  '    const satisfied = rule.connector === "OR" ? rule.conditions.some(holds) : rule.conditions.every(holds);',
-  '    if (satisfied) {',
-  '      derived.push(rule.consequent);',
-  '      derivedKeys.add(rule.consequent);',
-  '      changed = true;',
-  '    }',
-  '  }',
-  '}',
-  'probe(derived.length > 0, "at least one rule must fire on the given facts");',
-  'const heads = slots.rules.map((rule) => rule.consequent);',
-  'const givenHeads = heads.filter((head) => trueKeys.has(head));',
-  'const missingHeads = heads.filter((head) => !trueKeys.has(head) && !derivedKeys.has(head));',
-  'const deduced = capitalize(joinList(derived.map(nameOf)));',
-  'let main;',
-  'if (givenHeads.length > 0) {',
-  '  main = deduced + " can be deduced; " + nameOf(givenHeads[0]) + " is already given as a fact.";',
-  '} else if (slots.rules.some((rule) => rule.connector === "OR")) {',
-  '  const clauses = derived.map((key) => key === "warning" ? "the warning follows from the working siren" : capitalize(nameOf(key)));',
-  '  main = clauses.slice(0, -1).join(", ") + (clauses.length === 1 ? "" : ", and ") + clauses[clauses.length - 1] + ".";',
-  '} else if (missingHeads.length > 0) {',
-  '  main = deduced + " can be deduced, but " + joinList(missingHeads.map(nameOf)) + " cannot be deduced.";',
-  '} else {',
-  '  let chain = true;',
-  '  for (let index = 1; index < derived.length; index += 1) {',
-  '    const rule = slots.rules.filter((candidate) => candidate.consequent === derived[index])[0];',
-  '    if (!rule.conditions.some((condition) => derived.slice(0, index).includes(condition.key))) {',
-  '      chain = false;',
-  '    }',
-  '  }',
-  '  main = deduced + " can" + (chain ? " all" : "") + " be deduced.";',
-  '}',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'return $cross.suffix === "" ? $appraisal.main : $appraisal.main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -294,6 +319,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

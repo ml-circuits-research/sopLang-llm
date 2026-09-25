@@ -183,22 +183,31 @@ export const cases = [
     render(solution) {
       return `Q${solution.best.index}: “${solution.best.question}”.`;
     },
+    wires: [
+      {
+        name: 'best',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'const parts = slots.questions.map(function (question, index) {',
+          '  const atMost = question.match(/at most (\\d+)/);',
+          '  const exact = question.match(/the number (\\d+)/);',
+          '  if (atMost === null && exact === null) { throw new Error("unsupported question \\"" + question + "\\""); }',
+          '  const yes = slots.candidates.filter(function (value) {',
+          '    if (atMost !== null) { return value <= Number(atMost[1]); }',
+          '    return value === Number(exact[1]);',
+          '  });',
+          '  const remaining = Math.max(yes.length, slots.candidates.length - yes.length);',
+          '  return { index: index + 1, question, remaining };',
+          '});',
+          'let best = parts[0];',
+          'for (const part of parts) { if (part.remaining < best.remaining) { best = part; } }',
+          'return { index: best.index, question: best.question };'
+        ].join('\n')
+      }
+    ],
     compute: [
-      'const slots = $slots;',
-      'const parts = slots.questions.map(function (question, index) {',
-      '  const atMost = question.match(/at most (\\d+)/);',
-      '  const exact = question.match(/the number (\\d+)/);',
-      '  if (atMost === null && exact === null) { throw new Error("unsupported question \\"" + question + "\\""); }',
-      '  const yes = slots.candidates.filter(function (value) {',
-      '    if (atMost !== null) { return value <= Number(atMost[1]); }',
-      '    return value === Number(exact[1]);',
-      '  });',
-      '  const remaining = Math.max(yes.length, slots.candidates.length - yes.length);',
-      '  return { index: index + 1, question, remaining };',
-      '});',
-      'let best = parts[0];',
-      'for (const part of parts) { if (part.remaining < best.remaining) { best = part; } }',
-      'return "Q" + best.index + ": “" + best.question + "”.";'
+      'return "Q" + $best.index + ": “" + $best.question + "”.";'
     ].join('\n'),
     explain(slots, solution) {
       return [
@@ -248,20 +257,29 @@ export const cases = [
     render(solution) {
       return `The rule for ${solution.box.name} must be limited to ${solution.box.lo}–${solution.box.hi}.`;
     },
+    wires: [
+      {
+        name: 'offending',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'let offending = null;',
+          'for (const rule of slots.proposed) {',
+          '  const intended = slots.boxes.filter(function (box) { return box.name === rule.box; })[0];',
+          '  let overflow = false;',
+          '  for (let value = slots.low; value <= slots.high; value += 1) {',
+          '    const inside = rule.op === "greater" ? value > rule.value : value < rule.value;',
+          '    if (inside && (value < intended.lo || value > intended.hi)) { overflow = true; }',
+          '  }',
+          '  if (overflow) { offending = intended; break; }',
+          '}',
+          'if (offending === null) { throw new Error("no proposed rule overflows its box"); }',
+          'return offending;'
+        ].join('\n')
+      }
+    ],
     compute: [
-      'const slots = $slots;',
-      'let offending = null;',
-      'for (const rule of slots.proposed) {',
-      '  const intended = slots.boxes.filter(function (box) { return box.name === rule.box; })[0];',
-      '  let overflow = false;',
-      '  for (let value = slots.low; value <= slots.high; value += 1) {',
-      '    const inside = rule.op === "greater" ? value > rule.value : value < rule.value;',
-      '    if (inside && (value < intended.lo || value > intended.hi)) { overflow = true; }',
-      '  }',
-      '  if (overflow) { offending = intended; break; }',
-      '}',
-      'if (offending === null) { throw new Error("no proposed rule overflows its box"); }',
-      'return "The rule for " + offending.name + " must be limited to " + offending.lo + "–" + offending.hi + ".";'
+      'return "The rule for " + $offending.name + " must be limited to " + $offending.lo + "–" + $offending.hi + ".";'
     ].join('\n'),
     explain(slots, solution) {
       return [

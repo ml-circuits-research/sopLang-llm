@@ -67,18 +67,29 @@ function render(solution) {
   return `${tenths(solution.baseTenths)} + ${heat} (heat) + ${effort} (${solution.routeKm}${comparison}${solution.overKm}) = ${tenths(solution.totalTenths)} l. Morning water is explicitly excluded.`;
 }
 
+const WIRES = [
+  {
+    name: 'sum',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const blocks = Math.ceil(slots.massKg / slots.roundingKg);',
+      'const baseTenths = blocks * slots.rateTenths;',
+      'const heatTenths = slots.noonC > slots.heatAboveC ? slots.heatTenths : 0;',
+      'const effortTenths = slots.routeKm > slots.overKm ? slots.effortTenths : 0;',
+      'const totalTenths = baseTenths + heatTenths + effortTenths;',
+      'return { baseTenths, heatTenths, effortTenths, totalTenths };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
   'const slots = $slots;',
   'const tenths = (value) => (value / 10).toFixed(1);',
-  'const blocks = Math.ceil(slots.massKg / slots.roundingKg);',
-  'const baseTenths = blocks * slots.rateTenths;',
-  'const heatTenths = slots.noonC > slots.heatAboveC ? slots.heatTenths : 0;',
-  'const effortTenths = slots.routeKm > slots.overKm ? slots.effortTenths : 0;',
-  'const totalTenths = baseTenths + heatTenths + effortTenths;',
-  'const heat = heatTenths > 0 ? tenths(heatTenths) : "0";',
-  'const effort = effortTenths > 0 ? tenths(effortTenths) : "0";',
+  'const heat = $sum.heatTenths > 0 ? tenths($sum.heatTenths) : "0";',
+  'const effort = $sum.effortTenths > 0 ? tenths($sum.effortTenths) : "0";',
   'const comparison = slots.routeKm > slots.overKm ? ">" : "\u2264";',
-  'return tenths(baseTenths) + " + " + heat + " (heat) + " + effort + " (" + slots.routeKm + comparison + slots.overKm + ") = " + tenths(totalTenths) + " l. Morning water is explicitly excluded.";'
+  'return tenths($sum.baseTenths) + " + " + heat + " (heat) + " + effort + " (" + slots.routeKm + comparison + slots.overKm + ") = " + tenths($sum.totalTenths) + " l. Morning water is explicitly excluded.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -100,6 +111,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

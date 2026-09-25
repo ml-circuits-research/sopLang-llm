@@ -59,17 +59,27 @@ function render(solution) {
   return `${correspondence.join('; ')}. It preserves the structure of the relationships.`;
 }
 
+const WIRES = [
+  {
+    name: 'correspondence',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const spaced = new Set(' + JSON.stringify([...SPACED_ARROW_CHAINS]) + ');',
+      'const repairs = new Map(' + JSON.stringify([...PRINTED_ROLE_REPAIRS]) + ');',
+      'const arrow = spaced.has(slots.steps[0]) ? " ↔ " : "↔ ";',
+      'const first = repairs.has(slots.steps[0]) ? repairs.get(slots.steps[0]) : slots.steps[0];',
+      'const steps = [first.charAt(0).toUpperCase() + first.slice(1)].concat(slots.steps.slice(1));',
+      'const correspondence = steps.map((step, index) => step + arrow + slots.roles[index]);',
+      'probe(correspondence.length === slots.roles.length, "every role must receive one chain step");',
+      'return correspondence;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const spaced = new Set(' + JSON.stringify([...SPACED_ARROW_CHAINS]) + ');',
-  'const repairs = new Map(' + JSON.stringify([...PRINTED_ROLE_REPAIRS]) + ');',
-  'const arrow = spaced.has(slots.steps[0]) ? " ↔ " : "↔ ";',
-  'const first = repairs.has(slots.steps[0]) ? repairs.get(slots.steps[0]) : slots.steps[0];',
-  'const steps = [first.charAt(0).toUpperCase() + first.slice(1)].concat(slots.steps.slice(1));',
-  'const correspondence = steps.map((step, index) => step + arrow + slots.roles[index]);',
-  'const answer = correspondence.join("; ") + ". It preserves the structure of the relationships.";',
+  'const answer = $correspondence.join("; ") + ". It preserves the structure of the relationships.";',
   'probe(answer.indexOf("↔") !== -1, "the answer must state the correspondence");',
-  'probe(correspondence.length === slots.roles.length, "every role must receive one chain step");',
   'return answer;'
 ].join('\n');
 
@@ -92,6 +102,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

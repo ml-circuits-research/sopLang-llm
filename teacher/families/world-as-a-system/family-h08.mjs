@@ -92,20 +92,35 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'ages',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const left = slots.compared[0];',
+      'const right = slots.compared[1];',
+      'const leftDepth = slots.layers.indexOf(left);',
+      'const rightDepth = slots.layers.indexOf(right);',
+      'const older = leftDepth > rightDepth ? left : right;',
+      'const younger = older === left ? right : left;',
+      'return { older: older, younger: younger };'
+    ].join('\n')
+  },
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
-  'const slots = $slots;',
-  'const left = slots.compared[0];',
-  'const right = slots.compared[1];',
-  'const leftDepth = slots.layers.indexOf(left);',
-  'const rightDepth = slots.layers.indexOf(right);',
-  'const aged = slots.dated || [];',
-  'const asksForYear = aged.some((item) => item.layer === slots.askedLayer);',
-  'const older = leftDepth > rightDepth ? left : right;',
-  'const younger = older === left ? right : left;',
-  'const main = "Layer " + older + " is older than Layer " + younger + ". The exact deposition year of Layer " + slots.askedLayer + " cannot be deduced.";',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'const main = "Layer " + $ages.older + " is older than Layer " + $ages.younger + ". The exact deposition year of Layer " + $slots.askedLayer + " cannot be deduced.";',
+  'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -128,6 +143,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

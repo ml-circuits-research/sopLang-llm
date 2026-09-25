@@ -78,27 +78,32 @@ function render(solution) {
   return `Plan by levels: ${solution.plan.map((level) => level.join(', ')).join(' | ')}.`;
 }
 
+const WIRES = [
+  {
+    name: 'plan',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const completed = new Set();',
+      'const plan = [];',
+      'let remaining = slots.tasks;',
+      'while (remaining.length > 0) {',
+      '  const level = remaining.filter((task) => task.after.every((name) => completed.has(name)));',
+      '  for (const task of level) {',
+      '    completed.add(task.name);',
+      '  }',
+      '  plan.push(level.map((task) => task.name));',
+      '  remaining = remaining.filter((task) => !completed.has(task.name));',
+      '}',
+      'probe(plan.length > 0, "the plan must have at least one level");',
+      'probe(plan.reduce((total, level) => total + level.length, 0) === slots.tasks.length, "every task must appear exactly once in the plan");',
+      'return plan;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const names = new Set(slots.tasks.map((task) => task.name));',
-  'for (const task of slots.tasks) {',
-  '  for (const dependency of task.after) {',
-  '  }',
-  '}',
-  'const completed = new Set();',
-  'const plan = [];',
-  'let remaining = slots.tasks;',
-  'while (remaining.length > 0) {',
-  '  const level = remaining.filter((task) => task.after.every((name) => completed.has(name)));',
-  '  for (const task of level) {',
-  '    completed.add(task.name);',
-  '  }',
-  '  plan.push(level.map((task) => task.name));',
-  '  remaining = remaining.filter((task) => !completed.has(task.name));',
-  '}',
-  'probe(plan.length > 0, "the plan must have at least one level");',
-  'probe(plan.reduce((total, level) => total + level.length, 0) === slots.tasks.length, "every task must appear exactly once in the plan");',
-  'return "Plan by levels: " + plan.map((level) => level.join(", ")).join(" | ") + ".";'
+  'return "Plan by levels: " + $plan.map((level) => level.join(", ")).join(" | ") + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -123,6 +128,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

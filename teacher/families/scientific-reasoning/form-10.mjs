@@ -70,16 +70,25 @@ function render(solution) {
   return `In the levels tested, when “${solution.factor}” changes from ${solution.first} to ${solution.last}, the result ${solution.verdict}; the data support this relationship only for the conditions of the experiment.`;
 }
 
+const WIRES = [
+  {
+    name: 'pattern',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const ordered = [...slots.points].sort((left, right) => left[0] - right[0]);',
+      'const results = ordered.map((point) => point[1]);',
+      'const rising = results.every((value, index) => index === 0 || value > results[index - 1]);',
+      'const falling = results.every((value, index) => index === 0 || value < results[index - 1]);',
+      'probe(results.length === slots.points.length && results.length >= 2, "the results must cover every tested level");',
+      'const verdict = rising ? "increases" : falling ? "decreases" : "does not change monotonically";',
+      'return { factor: slots.factor, first: ordered[0][0], last: ordered[ordered.length - 1][0], verdict: verdict };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const levels = slots.points.map((point) => point[0]);',
-  'const ordered = [...slots.points].sort((left, right) => left[0] - right[0]);',
-  'const results = ordered.map((point) => point[1]);',
-  'const rising = results.every((value, index) => index === 0 || value > results[index - 1]);',
-  'const falling = results.every((value, index) => index === 0 || value < results[index - 1]);',
-  'probe(results.length === slots.points.length && results.length >= 2, "the results must cover every tested level");',
-  'const verdict = rising ? "increases" : falling ? "decreases" : "does not change monotonically";',
-  'return "In the levels tested, when \\u201c" + slots.factor + "\\u201d changes from " + ordered[0][0] + " to " + ordered[ordered.length - 1][0] + ", the result " + verdict + "; the data support this relationship only for the conditions of the experiment.";'
+  'return "In the levels tested, when \\u201c" + $pattern.factor + "\\u201d changes from " + $pattern.first + " to " + $pattern.last + ", the result " + $pattern.verdict + "; the data support this relationship only for the conditions of the experiment.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -103,6 +112,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

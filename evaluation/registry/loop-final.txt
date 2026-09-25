@@ -1,0 +1,5 @@
+=== abstraction loop after exp-021 (dv7, containers) ===
+solution.sop files scanned: 10640
+distinct shapes found:     1012
+wire commands across the shipped dataset:
+grep: skills/data-quality/last-report.md: binary file matches

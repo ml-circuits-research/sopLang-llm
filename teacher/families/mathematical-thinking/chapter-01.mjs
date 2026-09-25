@@ -63,32 +63,41 @@ export const cases = [
     render(solution) {
       return `${solution.order.join(', ')}.`;
     },
+    wires: [
+      {
+        name: 'order',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'const ancestors = new Map(slots.people.map((name) => [name, new Set()]));',
+          'for (const [before, after] of slots.clues) {',
+          '  ancestors.get(after).add(before);',
+          '}',
+          'let changed = true;',
+          'while (changed) {',
+          '  changed = false;',
+          '  for (const name of slots.people) {',
+          '    for (const ancestor of [...ancestors.get(name)]) {',
+          '      for (const earlier of ancestors.get(ancestor)) {',
+          '        if (!ancestors.get(name).has(earlier)) {',
+          '          ancestors.get(name).add(earlier);',
+          '          changed = true;',
+          '        }',
+          '      }',
+          '    }',
+          '  }',
+          '}',
+          'const order = [...slots.people].sort((left, right) => ancestors.get(left).size - ancestors.get(right).size);',
+          'const ranks = new Set(order.map((name) => ancestors.get(name).size));',
+          'if (ranks.size !== order.length) {',
+          '  throw new Error("the clues do not determine a single order");',
+          '}',
+          'return order;'
+        ].join('\n')
+      }
+    ],
     compute: [
-      'const slots = $slots;',
-      'const ancestors = new Map(slots.people.map((name) => [name, new Set()]));',
-      'for (const [before, after] of slots.clues) {',
-      '  ancestors.get(after).add(before);',
-      '}',
-      'let changed = true;',
-      'while (changed) {',
-      '  changed = false;',
-      '  for (const name of slots.people) {',
-      '    for (const ancestor of [...ancestors.get(name)]) {',
-      '      for (const earlier of ancestors.get(ancestor)) {',
-      '        if (!ancestors.get(name).has(earlier)) {',
-      '          ancestors.get(name).add(earlier);',
-      '          changed = true;',
-      '        }',
-      '      }',
-      '    }',
-      '  }',
-      '}',
-      'const order = [...slots.people].sort((left, right) => ancestors.get(left).size - ancestors.get(right).size);',
-      'const ranks = new Set(order.map((name) => ancestors.get(name).size));',
-      'if (ranks.size !== order.length) {',
-      '  throw new Error("the clues do not determine a single order");',
-      '}',
-      'return order.join(", ") + ".";'
+      'return $order.join(", ") + ".";'
     ].join('\n'),
     explain(slots, solution) {
       const first = solution.order[0];
@@ -161,37 +170,46 @@ export const cases = [
     render(solution) {
       return `Longest: ${solution.longest}. Shortest: ${solution.shortest}.`;
     },
+    wires: [
+      {
+        name: 'owners',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'const greater = new Map(slots.people.map((name) => [name, new Set()]));',
+          'for (const [left, direction, right] of slots.comparisons) {',
+          '  if (direction === "longer") {',
+          '    greater.get(left).add(right);',
+          '  } else {',
+          '    greater.get(right).add(left);',
+          '  }',
+          '}',
+          'let changed = true;',
+          'while (changed) {',
+          '  changed = false;',
+          '  for (const name of slots.people) {',
+          '    for (const other of [...greater.get(name)]) {',
+          '      for (const further of greater.get(other)) {',
+          '        if (!greater.get(name).has(further)) {',
+          '          greater.get(name).add(further);',
+          '          changed = true;',
+          '        }',
+          '      }',
+          '    }',
+          '  }',
+          '}',
+          'const total = slots.people.length;',
+          'const longest = slots.people.find((name) => greater.get(name).size === total - 1);',
+          'const shortest = slots.people.find((name) => slots.people.every((other) => other === name || greater.get(other).has(name)));',
+          'if (longest === undefined || shortest === undefined || longest === shortest) {',
+          '  throw new Error("the comparisons do not determine a single longest and shortest owner");',
+          '}',
+          'return { longest: longest, shortest: shortest };'
+        ].join('\n')
+      }
+    ],
     compute: [
-      'const slots = $slots;',
-      'const greater = new Map(slots.people.map((name) => [name, new Set()]));',
-      'for (const [left, direction, right] of slots.comparisons) {',
-      '  if (direction === "longer") {',
-      '    greater.get(left).add(right);',
-      '  } else {',
-      '    greater.get(right).add(left);',
-      '  }',
-      '}',
-      'let changed = true;',
-      'while (changed) {',
-      '  changed = false;',
-      '  for (const name of slots.people) {',
-      '    for (const other of [...greater.get(name)]) {',
-      '      for (const further of greater.get(other)) {',
-      '        if (!greater.get(name).has(further)) {',
-      '          greater.get(name).add(further);',
-      '          changed = true;',
-      '        }',
-      '      }',
-      '    }',
-      '  }',
-      '}',
-      'const total = slots.people.length;',
-      'const longest = slots.people.find((name) => greater.get(name).size === total - 1);',
-      'const shortest = slots.people.find((name) => slots.people.every((other) => other === name || greater.get(other).has(name)));',
-      'if (longest === undefined || shortest === undefined || longest === shortest) {',
-      '  throw new Error("the comparisons do not determine a single longest and shortest owner");',
-      '}',
-      'return "Longest: " + longest + ". Shortest: " + shortest + ".";'
+      'return "Longest: " + $owners.longest + ". Shortest: " + $owners.shortest + ".";'
     ].join('\n'),
     explain(slots) {
       return [

@@ -165,18 +165,26 @@ export const cases = [
     render(solution) {
       return `Maxima: ${solution.maxima.join(' and ')}; minimum: ${solution.minimum}.`;
     },
+    wires: [
+      {
+        name: 'extrema',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'const entries = [["A", slots.a], ["B", slots.b], ["C", slots.c], ["D", slots.d]];',
+          'const highest = Math.max(...entries.map((entry) => entry[1]));',
+          'const lowest = Math.min(...entries.map((entry) => entry[1]));',
+          'const maxima = entries.filter((entry) => entry[1] === highest).map((entry) => entry[0]);',
+          'const minima = entries.filter((entry) => entry[1] === lowest).map((entry) => entry[0]);',
+          'if (minima.length !== 1) {',
+          '  throw new Error("the minimum is not unique");',
+          '}',
+          'return { maxima: maxima, minimum: entries.find((entry) => entry[1] === lowest)[0] };'
+        ].join('\n')
+      }
+    ],
     compute: [
-      'const slots = $slots;',
-      'const entries = [["A", slots.a], ["B", slots.b], ["C", slots.c], ["D", slots.d]];',
-      'const highest = Math.max(...entries.map((entry) => entry[1]));',
-      'const lowest = Math.min(...entries.map((entry) => entry[1]));',
-      'const maxima = entries.filter((entry) => entry[1] === highest).map((entry) => entry[0]);',
-      'const minima = entries.filter((entry) => entry[1] === lowest).map((entry) => entry[0]);',
-      'if (minima.length !== 1) {',
-      '  throw new Error("the minimum is not unique");',
-      '}',
-      'const minimum = entries.find((entry) => entry[1] === lowest)[0];',
-      'return "Maxima: " + maxima.join(" and ") + "; minimum: " + minimum + ".";'
+      'return "Maxima: " + $extrema.maxima.join(" and ") + "; minimum: " + $extrema.minimum + ".";'
     ].join('\n'),
     explain(slots, solution) {
       return [

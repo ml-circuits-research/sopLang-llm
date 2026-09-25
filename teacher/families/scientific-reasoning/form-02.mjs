@@ -170,22 +170,32 @@ function render(solution) {
   return `${chain.charAt(0).toUpperCase()}${chain.slice(1)}.`;
 }
 
+const WIRES = [
+  {
+    name: 'chain',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const facts = (typeof $facts === "object" && $facts !== null) ? $facts : JSON.parse(String($facts));',
+      'const sheets = facts.sheets;',
+      'const normalize = (text) => String(text).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().split(" ").filter((word) => word !== "" && word !== "the" && word !== "a" && word !== "an").join(" ");',
+      'const wanted = slots.stages.map(normalize).sort().join(" | ");',
+      'const candidates = sheets.filter((sheet) => sheet.length === slots.stages.length && sheet.map(normalize).sort().join(" | ") === wanted);',
+      'probe(candidates.length > 0, "the stages of the case must match a knowledge sheet");',
+      'probe(candidates.length === 1, "the stages of the case must match exactly one knowledge sheet, not " + candidates.length);',
+      'const sheet = candidates[0];',
+      'const rank = new Map(sheet.map((step, index) => [normalize(step), index]));',
+      'const positions = slots.stages.map((stage) => rank.get(normalize(stage)));',
+      'probe(positions.every((index) => typeof index === "number"), "every stage must be one step of the sheet");',
+      'const chain = positions.slice().sort((left, right) => left - right).map((index) => sheet[index]);',
+      'probe(chain.length === slots.stages.length, "the ordered chain must keep every stage of the case");',
+      'return chain;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const facts = (typeof $facts === "object" && $facts !== null) ? $facts : JSON.parse(String($facts));',
-  'const sheets = facts.sheets;',
-  'const normalize = (text) => String(text).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().split(" ").filter((word) => word !== "" && word !== "the" && word !== "a" && word !== "an").join(" ");',
-  'const wanted = slots.stages.map(normalize).sort().join(" | ");',
-  'const candidates = sheets.filter((sheet) => sheet.length === slots.stages.length && sheet.map(normalize).sort().join(" | ") === wanted);',
-  'probe(candidates.length > 0, "the stages of the case must match a knowledge sheet");',
-  'probe(candidates.length === 1, "the stages of the case must match exactly one knowledge sheet, not " + candidates.length);',
-  'const sheet = candidates[0];',
-  'const rank = new Map(sheet.map((step, index) => [normalize(step), index]));',
-  'const positions = slots.stages.map((stage) => rank.get(normalize(stage)));',
-  'probe(positions.every((index) => typeof index === "number"), "every stage must be one step of the sheet");',
-  'const chain = positions.slice().sort((left, right) => left - right).map((index) => sheet[index]);',
-  'probe(chain.length === slots.stages.length, "the ordered chain must keep every stage of the case");',
-  'const text = chain.join(" → ");',
+  'const text = $chain.join(" → ");',
   'return text.charAt(0).toUpperCase() + text.slice(1) + ".";'
 ].join('\n');
 
@@ -209,6 +219,7 @@ export const cases = [
     solve,
     render,
     facts: { sheets: KNOWLEDGE_SHEETS },
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

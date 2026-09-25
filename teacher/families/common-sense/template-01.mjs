@@ -68,29 +68,37 @@ function render(solution) {
   return `The weighted mean is ${formatHundredths(solution.weightedHundredths)}, compared with a simple mean-of-means of ${formatHundredths(solution.simpleHundredths)}.`;
 }
 
+const WIRES = [
+  {
+    name: 'means',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const roundHundredths = (numerator, denominator) => {',
+      '  let hundredths = Math.floor((numerator * 100) / denominator);',
+      '  const remainder = (numerator * 100) % denominator;',
+      '  if (2 * remainder > denominator || (2 * remainder === denominator && hundredths % 2 === 1)) {',
+      '    hundredths += 1;',
+      '  }',
+      '  return hundredths;',
+      '};',
+      'const totalA = slots.countA * slots.meanA;',
+      'const totalB = slots.countB * slots.meanB;',
+      'const cases = slots.countA + slots.countB;',
+      'return { weighted: roundHundredths(totalA + totalB, cases), simple: roundHundredths(slots.meanA + slots.meanB, 2) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const roundHundredths = (numerator, denominator) => {',
-  '  let hundredths = Math.floor((numerator * 100) / denominator);',
-  '  const remainder = (numerator * 100) % denominator;',
-  '  if (2 * remainder > denominator || (2 * remainder === denominator && hundredths % 2 === 1)) {',
-  '    hundredths += 1;',
-  '  }',
-  '  return hundredths;',
-  '};',
   'const formatHundredths = (hundredths) => {',
   '  const whole = Math.floor(hundredths / 100);',
   '  const rest = hundredths % 100;',
   '  if (rest === 0) { return String(whole); }',
   '  return whole + "." + String(rest).padStart(2, "0").replace(/0$/, "");',
   '};',
-  'const totalA = slots.countA * slots.meanA;',
-  'const totalB = slots.countB * slots.meanB;',
-  'const cases = slots.countA + slots.countB;',
-  'const weighted = roundHundredths(totalA + totalB, cases);',
-  'const simple = roundHundredths(slots.meanA + slots.meanB, 2);',
-  'probe(weighted > 0 && simple > 0, "both combined means must be positive");',
-  'return "The weighted mean is " + formatHundredths(weighted) + ", compared with a simple mean-of-means of " + formatHundredths(simple) + ".";'
+  'probe($means.weighted > 0 && $means.simple > 0, "both combined means must be positive");',
+  'return "The weighted mean is " + formatHundredths($means.weighted) + ", compared with a simple mean-of-means of " + formatHundredths($means.simple) + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -114,6 +122,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

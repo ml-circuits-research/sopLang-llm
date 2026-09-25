@@ -117,36 +117,60 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'split',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const isSound = (source) => /independent|on the day|eyewitness/.test(source.description);',
+      'const sound = slots.sources.filter(isSound);',
+      'probe(sound.length === 2, "two sources must be close to the event and independent");',
+      'const derivative = slots.sources.filter((source) => !isSound(source));',
+      'probe(derivative.length === 1, "one source must be the late or derivative account");',
+      'return { sound: sound, derivative: derivative };'
+    ].join('\n')
+  },
+  {
+    name: 'appraisal',
+    command: 'jsEval',
+    body: [
+      'const valueOf = (claim) => {',
+      '  const counted = /(\\d+)\\s+([a-z]+)/.exec(claim);',
+      '  if (counted !== null) {',
+      '    return { text: counted[1], number: Number(counted[1]), unit: counted[2] };',
+      '  }',
+      '  const day = /(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)/.exec(claim);',
+      '  return day === null ? null : { text: day[1], number: null, unit: null };',
+      '};',
+      'const values = $split.sound.map((source) => valueOf(source.claim));',
+      'const outlier = valueOf($split.derivative[0].claim);',
+      'const texts = values.map((value) => value.text);',
+      'let main;',
+      'if (texts.every((text) => text === texts[0])) {',
+      '  main = texts[0] + " is better supported, while remaining a historical conclusion rather than absolute proof.";',
+      '} else {',
+      '  const numbers = values.map((value) => value.number);',
+      '  const low = Math.min.apply(null, numbers);',
+      '  const high = Math.max.apply(null, numbers);',
+      '  main = "An arrival count near " + low + "\\u2013" + high + " " + values[0].unit + " is better supported than " + outlier.number + ".";',
+      '}',
+      'return { main: main };'
+    ].join('\n')
+  },
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
-  'const slots = $slots;',
-  'const isSound = (source) => /independent|on the day|eyewitness/.test(source.description);',
-  'const sound = slots.sources.filter(isSound);',
-  'probe(sound.length === 2, "two sources must be close to the event and independent");',
-  'const derivative = slots.sources.filter((source) => !isSound(source));',
-  'probe(derivative.length === 1, "one source must be the late or derivative account");',
-  'const valueOf = (claim) => {',
-  '  const counted = /(\\d+)\\s+([a-z]+)/.exec(claim);',
-  '  if (counted !== null) {',
-  '    return { text: counted[1], number: Number(counted[1]), unit: counted[2] };',
-  '  }',
-  '  const day = /(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)/.exec(claim);',
-  '  return day === null ? null : { text: day[1], number: null, unit: null };',
-  '};',
-  'const values = sound.map((source) => valueOf(source.claim));',
-  'const outlier = valueOf(derivative[0].claim);',
-  'const texts = values.map((value) => value.text);',
-  'let main;',
-  'if (texts.every((text) => text === texts[0])) {',
-  '  main = texts[0] + " is better supported, while remaining a historical conclusion rather than absolute proof.";',
-  '} else {',
-  '  const numbers = values.map((value) => value.number);',
-  '  const low = Math.min.apply(null, numbers);',
-  '  const high = Math.max.apply(null, numbers);',
-  '  main = "An arrival count near " + low + "\\u2013" + high + " " + values[0].unit + " is better supported than " + outlier.number + ".";',
-  '}',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'return $cross.suffix === "" ? $appraisal.main : $appraisal.main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -173,6 +197,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

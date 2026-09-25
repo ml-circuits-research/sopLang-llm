@@ -115,14 +115,25 @@ function render(solution) {
     + `so it is ${verdict} under the stated threshold.`;
 }
 
+const WIRES = [
+  {
+    name: 'values',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const numerator = slots.start * (100 + slots.increasePercent) * (100 - slots.decreasePercent);',
+      'probe(numerator % 100 === 0, "the successive percentages must produce a whole number of hundredths");',
+      'const finalHundredths = numerator / 100;',
+      'const simplifiedHundredths = slots.start * (100 + slots.increasePercent - slots.decreasePercent);',
+      'const differenceHundredths = simplifiedHundredths - finalHundredths;',
+      'probe(differenceHundredths === slots.start * slots.increasePercent * slots.decreasePercent / 100, "the difference must be the original value times the product of the two percentages");',
+      'const verdict = differenceHundredths <= slots.threshold * 100 ? "acceptable" : "not acceptable";',
+      'return { finalHundredths, simplifiedHundredths, differenceHundredths, verdict };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const numerator = slots.start * (100 + slots.increasePercent) * (100 - slots.decreasePercent);',
-  'probe(numerator % 100 === 0, "the successive percentages must produce a whole number of hundredths");',
-  'const finalHundredths = numerator / 100;',
-  'const simplifiedHundredths = slots.start * (100 + slots.increasePercent - slots.decreasePercent);',
-  'const differenceHundredths = simplifiedHundredths - finalHundredths;',
-  'probe(differenceHundredths === slots.start * slots.increasePercent * slots.decreasePercent / 100, "the difference must be the original value times the product of the two percentages");',
   'const format = (value) => {',
   '  const whole = Math.floor(value / 100);',
   '  const fraction = value % 100;',
@@ -130,8 +141,7 @@ const COMPUTE = [
   '  if (fraction % 10 === 0) { return whole + "." + (fraction / 10); }',
   '  return whole + "." + (fraction < 10 ? "0" + fraction : String(fraction));',
   '};',
-  'const verdict = differenceHundredths <= slots.threshold * 100 ? "acceptable" : "not acceptable";',
-  'return "Correct final value: " + format(finalHundredths) + " " + slots.unit + ". The simplified method gives " + format(simplifiedHundredths) + ", a difference of " + format(differenceHundredths) + " " + slots.unit + ", so it is " + verdict + " under the stated threshold.";'
+  'return "Correct final value: " + format($values.finalHundredths) + " " + $slots.unit + ". The simplified method gives " + format($values.simplifiedHundredths) + ", a difference of " + format($values.differenceHundredths) + " " + $slots.unit + ", so it is " + $values.verdict + " under the stated threshold.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -158,6 +168,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

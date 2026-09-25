@@ -53,8 +53,19 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
   'const natural = slots.births - slots.deaths;',
   'const migration = slots.movingIn - slots.movingOut;',
@@ -62,8 +73,7 @@ const COMPUTE = [
   'probe(Number.isFinite(end) && end > 0, "the year-end population must be a positive number");',
   'const sign = (value) => value >= 0 ? "+" + value : String(value);',
   'const main = "Natural change " + sign(natural) + "; migration change " + sign(migration) + "; end population " + end + ".";',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -83,6 +93,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

@@ -172,8 +172,7 @@ function questionValue(option, description, flatFaces) {
   return propertyValue(word, description);
 }
 
-const FILTER_SOURCE = [
-  'const slots = $slots;',
+const MATCHES_SOURCE = [
   'const matches = (value, predicate) => {',
   '  if (predicate.op === "and") { return predicate.of.every((part) => matches(value, part)); }',
   '  if (predicate.op === "eq") { return Number(value) === predicate.value; }',
@@ -185,8 +184,12 @@ const FILTER_SOURCE = [
   '  if (predicate.op === "odd") { return Math.abs(Number(value) % 2) === 1; }',
   '  if (predicate.op === "lacks") { return !String(value).includes(predicate.word); }',
   '  throw new Error("unsupported predicate " + predicate.op);',
-  '};',
-  'const keep = (candidates, predicate) => candidates.filter((value) => matches(value, predicate));',
+  '};'
+].join('\n');
+
+const KEEP_SOURCE = 'const keep = (candidates, predicate) => candidates.filter((value) => matches(value, predicate));';
+
+const JOINLIST_SOURCE = [
   'const joinList = (items) => {',
   '  const parts = items.map(String);',
   '  if (parts.length === 1) { return parts[0]; }',
@@ -194,10 +197,6 @@ const FILTER_SOURCE = [
   '  return parts.slice(0, -1).join(", ") + ", and " + parts[parts.length - 1];',
   '};'
 ].join('\n');
-
-function body(lines) {
-  return [FILTER_SOURCE, ...lines].join('\n');
-}
 
 function propertyCase(template, type) {
   return {
@@ -226,13 +225,24 @@ function propertyCase(template, type) {
       }
       return `It is certainly not ${solution.property}.`;
     },
-    compute: body([
-      'const certain = slots.candidates.every((value) => matches(value, slots.predicate));',
-      'const possible = slots.candidates.some((value) => matches(value, slots.predicate));',
-      'if (certain) { return "Yes, it is certainly " + slots.property + "."; }',
-      'if (possible) { return "It is not certainly " + slots.property + ", but it may be " + slots.property + "."; }',
-      'return "It is certainly not " + slots.property + ".";'
-    ]),
+    wires: [
+      {
+        name: 'verdict',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          MATCHES_SOURCE,
+          'const certain = slots.candidates.every((value) => matches(value, slots.predicate));',
+          'const possible = slots.candidates.some((value) => matches(value, slots.predicate));',
+          'return { certain, possible };'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'if ($verdict.certain) { return "Yes, it is certainly " + $slots.property + "."; }',
+      'if ($verdict.possible) { return "It is not certainly " + $slots.property + ", but it may be " + $slots.property + "."; }',
+      'return "It is certainly not " + $slots.property + ".";'
+    ].join('\n'),
     explain(slots, solution) {
       return [
         `The candidates are ${joinList(slots.candidates)}, and the property "${slots.property}" is tested on each of them.`,
@@ -267,11 +277,20 @@ export const cases = [
       }
       return `It could be ${joinOr(solution.remaining)}.`;
     },
-    compute: body([
-      'const remaining = slots.boxes.filter((box) => slots.failed.indexOf(box) === -1);',
-      'if (remaining.length === 1) { return "The key opens box " + remaining[0] + "."; }',
-      'return "It could be " + remaining.join(" or ") + ".";'
-    ]),
+    wires: [
+      {
+        name: 'remaining',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'return slots.boxes.filter((box) => slots.failed.indexOf(box) === -1);'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'if ($remaining.length === 1) { return "The key opens box " + $remaining[0] + "."; }',
+      'return "It could be " + $remaining.join(" or ") + ".";'
+    ].join('\n'),
     explain(slots) {
       return [
         'Each failed test removes one box, and the key is known to open exactly one of the listed boxes.',
@@ -306,13 +325,25 @@ export const cases = [
     render(solution) {
       return `${solution.winners.map((clue) => clue.label).join(', ')}.`;
     },
-    compute: body([
-      'const winners = slots.clues.filter((clue) => {',
-      '  const remaining = keep(slots.candidates, clue.predicate);',
-      '  return remaining.length === 1 && remaining[0] === slots.target;',
-      '});',
-      'return winners.map((clue) => clue.label).join(", ") + ".";'
-    ]),
+    wires: [
+      {
+        name: 'winners',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          MATCHES_SOURCE,
+          KEEP_SOURCE,
+          'const winners = slots.clues.filter((clue) => {',
+          '  const remaining = keep(slots.candidates, clue.predicate);',
+          '  return remaining.length === 1 && remaining[0] === slots.target;',
+          '});',
+          'return winners;'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'return $winners.map((clue) => clue.label).join(", ") + ".";'
+    ].join('\n'),
     explain(slots, solution) {
       return [
         'A clue identifies the number by itself only when the only candidate it keeps is the wanted number.',
@@ -344,12 +375,23 @@ export const cases = [
       }
       return `No; {${solution.first.join(',')}} and {${solution.second.join(',')}}.`;
     },
-    compute: body([
-      'const sets = slots.clues.map((clue) => keep(slots.candidates, clue.predicate));',
-      'const same = sets[0].length === sets[1].length && sets[0].every((value, index) => value === sets[1][index]);',
-      'if (same) { return "Yes; both keep {" + sets[0].join(",") + "}."; }',
-      'return "No; {" + sets[0].join(",") + "} and {" + sets[1].join(",") + "}.";'
-    ]),
+    wires: [
+      {
+        name: 'sets',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          MATCHES_SOURCE,
+          KEEP_SOURCE,
+          'return slots.clues.map((clue) => keep(slots.candidates, clue.predicate));'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'const same = $sets[0].length === $sets[1].length && $sets[0].every((value, index) => value === $sets[1][index]);',
+      'if (same) { return "Yes; both keep {" + $sets[0].join(",") + "}."; }',
+      'return "No; {" + $sets[0].join(",") + "} and {" + $sets[1].join(",") + "}.";'
+    ].join('\n'),
     explain(slots, solution) {
       return [
         'The two clues are compared by the candidates they keep, not by their wording.',
@@ -376,10 +418,19 @@ export const cases = [
     render(solution) {
       return `At least ${solution.needed} questions are necessary; ${solution.needed} can be sufficient.`;
     },
-    compute: body([
-      'const needed = Math.ceil(Math.log(slots.boxes.length) / Math.log(2));',
-      'return "At least " + needed + " questions are necessary; " + needed + " can be sufficient.";'
-    ]),
+    wires: [
+      {
+        name: 'needed',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'return Math.ceil(Math.log(slots.boxes.length) / Math.log(2));'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'return "At least " + $needed + " questions are necessary; " + $needed + " can be sufficient.";'
+    ].join('\n'),
     explain(slots) {
       return [
         `Each yes/no question has two answers, so one question can separate at most two of the ${slots.boxes.length} boxes.`,
@@ -411,14 +462,24 @@ export const cases = [
       const category = ATTRIBUTE_CATEGORIES[solution.differing[0]] ?? 'attribute';
       return `We can say with certainty that it is ${joinList(solution.shared)}; the ${category} is not determined.`;
     },
-    compute: body([
-      'const tokenSets = slots.descriptions.map((description) => new Set(description.toLowerCase().split(/\\s+/)));',
-      'const all = slots.descriptions[0].toLowerCase().split(/\\s+/);',
-      'const shared = all.filter((token) => tokenSets.every((set) => set.has(token)));',
-      'const differing = all.filter((token) => !tokenSets.every((set) => set.has(token)));',
-      'const category = slots.categories[differing[0]] !== undefined ? slots.categories[differing[0]] : "attribute";',
-      'return "We can say with certainty that it is " + shared.join(" and ") + "; the " + category + " is not determined.";'
-    ]),
+    wires: [
+      {
+        name: 'tokens',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'const tokenSets = slots.descriptions.map((description) => new Set(description.toLowerCase().split(/\\s+/)));',
+          'const all = slots.descriptions[0].toLowerCase().split(/\\s+/);',
+          'const shared = all.filter((token) => tokenSets.every((set) => set.has(token)));',
+          'const differing = all.filter((token) => !tokenSets.every((set) => set.has(token)));',
+          'return { shared, differing };'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'const category = $slots.categories[$tokens.differing[0]] !== undefined ? $slots.categories[$tokens.differing[0]] : "attribute";',
+      'return "We can say with certainty that it is " + $tokens.shared.join(" and ") + "; the " + category + " is not determined.";'
+    ].join('\n'),
     explain(slots, solution) {
       return [
         'A property is certain when every remaining possibility has it, and it is undetermined when the possibilities differ on it.',

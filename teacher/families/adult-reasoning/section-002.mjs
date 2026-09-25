@@ -101,17 +101,27 @@ function render(solution) {
   ].join(' ');
 }
 
+const WIRES = [
+  {
+    name: 'verdicts',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const lateTotal = slots.lateDays * slots.latePerDay;',
+      'const lateClause = "Late fee " + slots.lateDays + "×" + slots.latePerDay + "=" + lateTotal + ".";',
+      'const batteryClause = slots.batteryPercent < slots.batteryLimit',
+      '  ? "Battery " + slots.batteryPercent + "%<" + slots.batteryLimit + "% → " + slots.batteryKeep + " from the deposit."',
+      '  : "Battery " + slots.batteryPercent + "%≥" + slots.batteryLimit + "% → nothing kept from the deposit.";',
+      'const depositClause = "The scratch cancels the duty to return the deposit in full (Art. " + slots.depositArticle + ").";',
+      'const speechClause = "Speech does not amend Art. " + slots.changeArticle + ".";',
+      'const cashClause = "Return is not “same day cash”.";',
+      'return { lateClause, batteryClause, depositClause, speechClause, cashClause };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const lateTotal = slots.lateDays * slots.latePerDay;',
-  'const lateClause = "Late fee " + slots.lateDays + "×" + slots.latePerDay + "=" + lateTotal + ".";',
-  'const batteryClause = slots.batteryPercent < slots.batteryLimit',
-  '  ? "Battery " + slots.batteryPercent + "%<" + slots.batteryLimit + "% → " + slots.batteryKeep + " from the deposit."',
-  '  : "Battery " + slots.batteryPercent + "%≥" + slots.batteryLimit + "% → nothing kept from the deposit.";',
-  'const depositClause = "The scratch cancels the duty to return the deposit in full (Art. " + slots.depositArticle + ").";',
-  'const speechClause = "Speech does not amend Art. " + slots.changeArticle + ".";',
-  'const cashClause = "Return is not “same day cash”.";',
-  'return [lateClause, batteryClause, depositClause, speechClause, cashClause].join(" ");'
+  'return [$verdicts.lateClause, $verdicts.batteryClause, $verdicts.depositClause, $verdicts.speechClause, $verdicts.cashClause].join(" ");'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -133,6 +143,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

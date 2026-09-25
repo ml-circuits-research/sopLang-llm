@@ -86,26 +86,38 @@ function render(solution) {
   return `The optimal feasible plan is without the add-on: ${solution.units} units for ${solution.benefit} benefit points.`;
 }
 
+const WIRES = [
+  {
+    name: 'plan',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const affordableUnits = (remaining, unitCost) => (remaining < 0 ? 0 : Math.floor(remaining / unitCost));',
+      'const unitsWithout = affordableUnits(slots.budget - slots.fixedCost, slots.unitCost);',
+      'const unitsWith = affordableUnits(slots.budget - slots.fixedCost - slots.addOnCost, slots.unitCost);',
+      'probe(unitsWithout >= unitsWith, "the add-on must not increase the number of affordable units");',
+      'const benefitWithout = unitsWithout * slots.unitBenefit;',
+      'const benefitWith = unitsWith * slots.unitBenefit + slots.addOnBenefit;',
+      'const feasibleWithout = unitsWithout >= slots.minimumUnits;',
+      'const feasibleWith = unitsWith >= slots.minimumUnits;',
+      'return { unitsWithout, unitsWith, benefitWithout, benefitWith, feasibleWithout, feasibleWith };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
   'const slots = $slots;',
-  'const affordableUnits = (remaining, unitCost) => (remaining < 0 ? 0 : Math.floor(remaining / unitCost));',
-  'const unitsWithout = affordableUnits(slots.budget - slots.fixedCost, slots.unitCost);',
-  'const unitsWith = affordableUnits(slots.budget - slots.fixedCost - slots.addOnCost, slots.unitCost);',
-  'probe(unitsWithout >= unitsWith, "the add-on must not increase the number of affordable units");',
-  'const benefitWithout = unitsWithout * slots.unitBenefit;',
-  'const benefitWith = unitsWith * slots.unitBenefit + slots.addOnBenefit;',
-  'const feasibleWithout = unitsWithout >= slots.minimumUnits;',
-  'const feasibleWith = unitsWith >= slots.minimumUnits;',
-  'if (!feasibleWithout && !feasibleWith) {',
-  '  return "Neither plan is feasible: the maximum is " + unitsWithout + " units without the add-on and " + unitsWith + " with it, both below the required " + slots.minimumUnits + ".";',
+  'const plan = $plan;',
+  'if (!plan.feasibleWithout && !plan.feasibleWith) {',
+  '  return "Neither plan is feasible: the maximum is " + plan.unitsWithout + " units without the add-on and " + plan.unitsWith + " with it, both below the required " + slots.minimumUnits + ".";',
   '}',
-  'if (feasibleWithout && feasibleWith && benefitWith > benefitWithout) {',
-  '  return "The optimal feasible plan uses the add-on: " + unitsWith + " units plus the module for " + benefitWith + " benefit points.";',
+  'if (plan.feasibleWithout && plan.feasibleWith && plan.benefitWith > plan.benefitWithout) {',
+  '  return "The optimal feasible plan uses the add-on: " + plan.unitsWith + " units plus the module for " + plan.benefitWith + " benefit points.";',
   '}',
-  'if (!feasibleWithout) {',
-  '  return "The optimal feasible plan uses the add-on: " + unitsWith + " units plus the module for " + benefitWith + " benefit points.";',
+  'if (!plan.feasibleWithout) {',
+  '  return "The optimal feasible plan uses the add-on: " + plan.unitsWith + " units plus the module for " + plan.benefitWith + " benefit points.";',
   '}',
-  'return "The optimal feasible plan is without the add-on: " + unitsWithout + " units for " + benefitWithout + " benefit points.";'
+  'return "The optimal feasible plan is without the add-on: " + plan.unitsWithout + " units for " + plan.benefitWithout + " benefit points.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -129,6 +141,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

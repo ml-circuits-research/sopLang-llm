@@ -90,24 +90,34 @@ function render(solution) {
   return `The states are ${solution.states.join(', ')}. ${note}`;
 }
 
+const WIRES = [
+  {
+    name: 'series',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const states = [];',
+      'let value = slots.start;',
+      'let firstCapped = null;',
+      'for (let cycle = 1; cycle <= slots.cycles; cycle += 1) {',
+      '  const uncapped = value + slots.add - slots.subtract;',
+      '  if (uncapped > slots.cap && firstCapped === null) { firstCapped = cycle; }',
+      '  value = Math.min(slots.cap, uncapped);',
+      '  states.push(value);',
+      '}',
+      'probe(states.length === slots.cycles, "the evolution must produce one state per cycle");',
+      'probe(states.every((state) => state <= slots.cap), "no state may exceed the cap");',
+      'probe(states[states.length - 1] <= slots.cap, "the last state must respect the cap");',
+      'return { states: states, firstCapped: firstCapped };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const states = [];',
-  'let value = slots.start;',
-  'let firstCapped = null;',
-  'for (let cycle = 1; cycle <= slots.cycles; cycle += 1) {',
-  '  const uncapped = value + slots.add - slots.subtract;',
-  '  if (uncapped > slots.cap && firstCapped === null) { firstCapped = cycle; }',
-  '  value = Math.min(slots.cap, uncapped);',
-  '  states.push(value);',
-  '}',
-  'probe(states.length === slots.cycles, "the evolution must produce one state per cycle");',
-  'probe(states.every((state) => state <= slots.cap), "no state may exceed the cap");',
-  'probe(states[states.length - 1] <= slots.cap, "the last state must respect the cap");',
   'const words = { 1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight", 9: "nine", 10: "ten" };',
-  'const span = words[slots.cycles] === undefined ? String(slots.cycles) : words[slots.cycles];',
-  'const note = firstCapped === null ? "The cap does not intervene in the first " + span + " cycles." : "The cap intervenes at cycle " + firstCapped + ".";',
-  'return "The states are " + states.join(", ") + ". " + note;'
+  'const span = words[$slots.cycles] === undefined ? String($slots.cycles) : words[$slots.cycles];',
+  'const note = $series.firstCapped === null ? "The cap does not intervene in the first " + span + " cycles." : "The cap intervenes at cycle " + $series.firstCapped + ".";',
+  'return "The states are " + $series.states.join(", ") + ". " + note;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -132,6 +142,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

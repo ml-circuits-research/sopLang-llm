@@ -103,30 +103,38 @@ function render(solution) {
   return `Favorable cases: ${solution.favorableCases.join(', ')}.`;
 }
 
+const WIRES = [
+  {
+    name: 'favorable',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const total = Math.pow(2, slots.variables.length);',
+      'const favorable = [];',
+      'for (let index = 0; index < total; index += 1) {',
+      '  const values = slots.variables.map((_, position) => ((index >> (slots.variables.length - 1 - position)) & 1) === 1);',
+      '  const yes = values.filter(Boolean).length;',
+      '  let holds;',
+      '  if (slots.rule.kind === "count") {',
+      '    holds = slots.rule.exactly === undefined ? yes >= slots.rule.atLeast : yes === slots.rule.exactly;',
+      '  } else if (slots.rule.kind === "firstOrBothOthers") {',
+      '    holds = values[0] || (values[1] && values[2]);',
+      '  } else {',
+      '    holds = values[0] && (values[1] || values[2]);',
+      '  }',
+      '  if (holds) {',
+      '    favorable.push(values.map((value) => (value ? "Y" : "N")).join(""));',
+      '  }',
+      '}',
+      'probe(favorable.length > 0, "the stated rule must leave at least one favorable combination");',
+      'probe(favorable.length < total, "a rule that accepts every combination is not a case analysis");',
+      'return favorable;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'for (const variable of slots.variables) {',
-  '}',
-  'const total = Math.pow(2, slots.variables.length);',
-  'const favorable = [];',
-  'for (let index = 0; index < total; index += 1) {',
-  '  const values = slots.variables.map((_, position) => ((index >> (slots.variables.length - 1 - position)) & 1) === 1);',
-  '  const yes = values.filter(Boolean).length;',
-  '  let holds;',
-  '  if (slots.rule.kind === "count") {',
-  '    holds = slots.rule.exactly === undefined ? yes >= slots.rule.atLeast : yes === slots.rule.exactly;',
-  '  } else if (slots.rule.kind === "firstOrBothOthers") {',
-  '    holds = values[0] || (values[1] && values[2]);',
-  '  } else {',
-  '    holds = values[0] && (values[1] || values[2]);',
-  '  }',
-  '  if (holds) {',
-  '    favorable.push(values.map((value) => (value ? "Y" : "N")).join(""));',
-  '  }',
-  '}',
-  'probe(favorable.length > 0, "the stated rule must leave at least one favorable combination");',
-  'probe(favorable.length < total, "a rule that accepts every combination is not a case analysis");',
-  'return "Favorable cases: " + favorable.join(", ") + ".";'
+  'return "Favorable cases: " + $favorable.join(", ") + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -149,6 +157,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

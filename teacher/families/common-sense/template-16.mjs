@@ -84,24 +84,34 @@ function render(solution) {
   return `Mean = ${solution.mean}; median = ${solution.median}. Use the mean for total amount per observation and the median for a more robust 'typical' value.`;
 }
 
+const WIRES = [
+  {
+    name: 'stats',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const hundredthsOf = (sum, count) => {',
+      '  const scaled = sum * 100;',
+      '  const quotient = Math.floor(scaled / count);',
+      '  const remainder = scaled % count;',
+      '  return remainder * 2 > count || (remainder * 2 === count && quotient % 2 === 1) ? quotient + 1 : quotient;',
+      '};',
+      'const sorted = slots.values.slice().sort((left, right) => left - right);',
+      'const sum = slots.values.reduce((total, value) => total + value, 0);',
+      'probe(sum > 0, "the observations must carry a positive total");',
+      'const median = sorted[Math.floor(sorted.length / 2)];',
+      'const rest = slots.values.slice(0, -1);',
+      'const restSum = rest.reduce((total, value) => total + value, 0);',
+      'const mean = hundredthsOf(sum, slots.values.length);',
+      'const withoutExtreme = hundredthsOf(restSum, rest.length);',
+      'probe(mean >= withoutExtreme, "the extreme value must not pull the mean below the mean without it");',
+      'return { mean, median };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const hundredthsOf = (sum, count) => {',
-  '  const scaled = sum * 100;',
-  '  const quotient = Math.floor(scaled / count);',
-  '  const remainder = scaled % count;',
-  '  return remainder * 2 > count || (remainder * 2 === count && quotient % 2 === 1) ? quotient + 1 : quotient;',
-  '};',
-  'const sorted = slots.values.slice().sort((left, right) => left - right);',
-  'const sum = slots.values.reduce((total, value) => total + value, 0);',
-  'probe(sum > 0, "the observations must carry a positive total");',
-  'const median = sorted[Math.floor(sorted.length / 2)];',
-  'const rest = slots.values.slice(0, -1);',
-  'const restSum = rest.reduce((total, value) => total + value, 0);',
-  'const mean = hundredthsOf(sum, slots.values.length);',
-  'const withoutExtreme = hundredthsOf(restSum, rest.length);',
-  'probe(mean >= withoutExtreme, "the extreme value must not pull the mean below the mean without it");',
-  'return "Mean = " + String(mean / 100) + "; median = " + median + ". Use the mean for total amount per observation and the median for a more robust \'typical\' value.";'
+  'return "Mean = " + String($stats.mean / 100) + "; median = " + $stats.median + ". Use the mean for total amount per observation and the median for a more robust \'typical\' value.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -124,6 +134,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

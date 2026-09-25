@@ -98,32 +98,42 @@ function render(solution) {
   return `By blocking “${solution.blocked}”, we lose along the given path: ${solution.lost.join(', ')}.`;
 }
 
+const WIRES = [
+  {
+    name: 'lost',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const key = (name) => name.toLowerCase().split(/\\s+/).sort().join(" ");',
+      'const walk = (skip) => {',
+      '  const reached = [];',
+      '  const queue = [key(slots.start)];',
+      '  const visited = new Set(queue);',
+      '  while (queue.length > 0) {',
+      '    const node = queue.shift();',
+      '    for (const edge of slots.edges) {',
+      '      const to = key(edge.to);',
+      '      if (key(edge.from) !== node || to === skip || visited.has(to)) {',
+      '        continue;',
+      '      }',
+      '      visited.add(to);',
+      '      reached.push(edge.to);',
+      '      queue.push(to);',
+      '    }',
+      '  }',
+      '  return reached;',
+      '};',
+      'const normal = walk(null);',
+      'const surviving = walk(key(slots.blocked));',
+      'const lost = normal.filter((name) => !surviving.some((other) => key(other) === key(name)));',
+      'probe(lost.length > 0, "blocking the node must lose at least one effect");',
+      'return lost;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const key = (name) => name.toLowerCase().split(/\\s+/).sort().join(" ");',
-  'const walk = (skip) => {',
-  '  const reached = [];',
-  '  const queue = [key(slots.start)];',
-  '  const visited = new Set(queue);',
-  '  while (queue.length > 0) {',
-  '    const node = queue.shift();',
-  '    for (const edge of slots.edges) {',
-  '      const to = key(edge.to);',
-  '      if (key(edge.from) !== node || to === skip || visited.has(to)) {',
-  '        continue;',
-  '      }',
-  '      visited.add(to);',
-  '      reached.push(edge.to);',
-  '      queue.push(to);',
-  '    }',
-  '  }',
-  '  return reached;',
-  '};',
-  'const normal = walk(null);',
-  'const surviving = walk(key(slots.blocked));',
-  'const lost = normal.filter((name) => !surviving.some((other) => key(other) === key(name)));',
-  'probe(lost.length > 0, "blocking the node must lose at least one effect");',
-  'return "By blocking \\u201c" + slots.blocked + "\\u201d, we lose along the given path: " + lost.join(", ") + ".";'
+  'return "By blocking \\u201c" + $slots.blocked + "\\u201d, we lose along the given path: " + $lost.join(", ") + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -145,6 +155,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

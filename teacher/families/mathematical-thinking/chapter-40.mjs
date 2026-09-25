@@ -370,20 +370,25 @@ export const cases = [
     render(solution) {
       return `${solution.names.join('+')}, ${solution.value} points.`;
     },
-    compute: [
-      'const slots = $slots;',
-      'let best = null;',
-      'for (let mask = 0; mask < (1 << slots.tasks.length); mask += 1) {',
-      '  const chosen = slots.tasks.filter((task, index) => (mask & (1 << index)) !== 0);',
-      '  const time = chosen.reduce((sum, task) => sum + task.time, 0);',
-      '  const value = chosen.reduce((sum, task) => sum + task.value, 0);',
-      '  if (time > slots.budget) { continue; }',
-      '  if (best === null || value > best.value || (value === best.value && time < best.time)) {',
-      '    best = { names: chosen.map((task) => task.name), time: time, value: value };',
-      '  }',
-      '}',
-      'return best.names.join("+") + ", " + best.value + " points.";'
-    ].join('\n'),
+    wires: [
+      {
+        name: 'best', command: 'jsEval', body: [
+          'const slots = $slots;',
+          'let best = null;',
+          'for (let mask = 0; mask < (1 << slots.tasks.length); mask += 1) {',
+          '  const chosen = slots.tasks.filter((task, index) => (mask & (1 << index)) !== 0);',
+          '  const time = chosen.reduce((sum, task) => sum + task.time, 0);',
+          '  const value = chosen.reduce((sum, task) => sum + task.value, 0);',
+          '  if (time > slots.budget) { continue; }',
+          '  if (best === null || value > best.value || (value === best.value && time < best.time)) {',
+          '    best = { names: chosen.map((task) => task.name), time: time, value: value };',
+          '  }',
+          '}',
+          'return best;'
+        ].join('\n')
+      }
+    ],
+    compute: ['return $best.names.join("+") + ", " + $best.value + " points.";'].join('\n'),
     explain(slots, solution) {
       return [
         `Every subset of the tasks that fits in ${slots.budget} minutes is a legal schedule, because whole tasks are done at most once each.`,

@@ -96,34 +96,44 @@ function render(solution) {
   return `Yes; water from ${solution.source} can reach ${solution.target}.`;
 }
 
+const WIRES = [
+  {
+    name: 'reach',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const adjacency = new Map();',
+      'for (const flow of slots.flows) {',
+      '  if (!adjacency.has(flow.from)) {',
+      '    adjacency.set(flow.from, []);',
+      '  }',
+      '  adjacency.get(flow.from).push(flow.to);',
+      '}',
+      'const seen = new Set([slots.source]);',
+      'const queue = [slots.source];',
+      'let reachable = false;',
+      'while (queue.length > 0) {',
+      '  const river = queue.shift();',
+      '  if (river === slots.target) {',
+      '    reachable = true;',
+      '    break;',
+      '  }',
+      '  for (const next of adjacency.get(river) ?? []) {',
+      '    if (!seen.has(next)) {',
+      '      seen.add(next);',
+      '      queue.push(next);',
+      '    }',
+      '  }',
+      '}',
+      'return reachable;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const adjacency = new Map();',
-  'for (const flow of slots.flows) {',
-  '  if (!adjacency.has(flow.from)) {',
-  '    adjacency.set(flow.from, []);',
-  '  }',
-  '  adjacency.get(flow.from).push(flow.to);',
-  '}',
-  'const seen = new Set([slots.source]);',
-  'const queue = [slots.source];',
-  'let reachable = false;',
-  'while (queue.length > 0) {',
-  '  const river = queue.shift();',
-  '  if (river === slots.target) {',
-  '    reachable = true;',
-  '    break;',
-  '  }',
-  '  for (const next of adjacency.get(river) ?? []) {',
-  '    if (!seen.has(next)) {',
-  '      seen.add(next);',
-  '      queue.push(next);',
-  '    }',
-  '  }',
-  '}',
-  'return reachable',
-  '  ? "Yes; water from " + slots.source + " can reach " + slots.target + "."',
-  '  : "No; water from " + slots.source + " cannot reach " + slots.target + ".";'
+  'return $reach',
+  '  ? "Yes; water from " + $slots.source + " can reach " + $slots.target + "."',
+  '  : "No; water from " + $slots.source + " cannot reach " + $slots.target + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -144,6 +154,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

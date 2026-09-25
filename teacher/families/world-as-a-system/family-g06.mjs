@@ -73,19 +73,36 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'best',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const valid = slots.sites.filter((site) => (!slots.requiresWater || site.water) && (!slots.requiresRoad || site.road) && (!slots.forbidsFloodZone || !site.floodZone));',
+      'probe(valid.length > 0, "at least one candidate site must satisfy the mandatory conditions");',
+      'let best = valid[0];',
+      'for (const site of valid.slice(1)) {',
+      '  if (site.farmland > best.farmland) {',
+      '    best = site;',
+      '  }',
+      '}',
+      'return best;'
+    ].join('\n')
+  },
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'return { suffix: renderCrossDomain($slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
-  'const slots = $slots;',
-  'const valid = slots.sites.filter((site) => (!slots.requiresWater || site.water) && (!slots.requiresRoad || site.road) && (!slots.forbidsFloodZone || !site.floodZone));',
-  'probe(valid.length > 0, "at least one candidate site must satisfy the mandatory conditions");',
-  'let best = valid[0];',
-  'for (const site of valid.slice(1)) {',
-  '  if (site.farmland > best.farmland) {',
-  '    best = site;',
-  '  }',
-  '}',
-  'const main = "Site " + best.id + ".";',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
+  'const main = "Site " + $best.id + ".";',
+  'const suffix = $cross.suffix;',
   'return suffix === "" ? main : main + " " + suffix;'
 ].join('\n');
 
@@ -120,6 +137,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

@@ -104,10 +104,20 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
   'let main;',
   'if (slots.kind === "timezone") {',
   '  const totalMinutes = slots.baseHour * 60 + slots.baseMinute + slots.shiftHours * 60;',
@@ -118,7 +128,7 @@ const COMPUTE = [
   '} else {',
   '  main = slots.longer + " has longer daylight; rainfall cannot be determined from this fact alone.";',
   '}',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -145,6 +155,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

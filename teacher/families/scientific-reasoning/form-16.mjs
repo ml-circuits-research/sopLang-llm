@@ -87,23 +87,31 @@ function render(solution) {
   return `The data support ${solution.supported.label}: ${solution.supported.name} and are incompatible with ${solution.eliminated.label}: ${solution.eliminated.name} in the given model.`;
 }
 
+const WIRES = [
+  {
+    name: 'verdict',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const key = (text) => String(text).toLowerCase().replace(/\\s+/g, " ").trim();',
+      'const supporting = slots.hypotheses.filter((hypothesis) => hypothesis.predictions.some((prediction) => key(prediction) === key(slots.observation)));',
+      'probe(supporting.length > 0, "at least one hypothesis must predict the observed result");',
+      'probe(supporting.length === 1, "exactly one hypothesis must predict the observed result, not " + supporting.length);',
+      'const supported = supporting[0];',
+      'const eliminated = slots.hypotheses.find((hypothesis) => hypothesis !== supported);',
+      'probe(eliminated !== undefined, "the observation must leave one competing hypothesis");',
+      'probe(!eliminated.predictions.some((prediction) => key(prediction) === key(slots.observation)), "the eliminated hypothesis must not predict the observed result");',
+      'return { supported: supported, eliminated: eliminated };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const key = (text) => String(text).toLowerCase().replace(/\\s+/g, " ").trim();',
-  'for (const hypothesis of slots.hypotheses) {',
-  '}',
-  'const supporting = slots.hypotheses.filter((hypothesis) => hypothesis.predictions.some((prediction) => key(prediction) === key(slots.observation)));',
-  'probe(supporting.length > 0, "at least one hypothesis must predict the observed result");',
-  'probe(supporting.length === 1, "exactly one hypothesis must predict the observed result, not " + supporting.length);',
-  'const supported = supporting[0];',
-  'const eliminated = slots.hypotheses.find((hypothesis) => hypothesis !== supported);',
-  'probe(eliminated !== undefined, "the observation must leave one competing hypothesis");',
-  'probe(!eliminated.predictions.some((prediction) => key(prediction) === key(slots.observation)), "the eliminated hypothesis must not predict the observed result");',
-  'const quoted = supported.name.toLowerCase() === "the problem is a lack of air";',
+  'const quoted = $verdict.supported.name.toLowerCase() === "the problem is a lack of air";',
   'if (quoted) {',
-  '  return "The data support " + supported.label + ", “" + supported.name + ",” and are incompatible with " + eliminated.label + ", " + eliminated.name + " in the given model.";',
+  '  return "The data support " + $verdict.supported.label + ", “" + $verdict.supported.name + ",” and are incompatible with " + $verdict.eliminated.label + ", " + $verdict.eliminated.name + " in the given model.";',
   '}',
-  'return "The data support " + supported.label + ": " + supported.name + " and are incompatible with " + eliminated.label + ": " + eliminated.name + " in the given model.";'
+  'return "The data support " + $verdict.supported.label + ": " + $verdict.supported.name + " and are incompatible with " + $verdict.eliminated.label + ": " + $verdict.eliminated.name + " in the given model.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -126,6 +134,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

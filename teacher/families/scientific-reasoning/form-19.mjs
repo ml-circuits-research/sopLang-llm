@@ -243,19 +243,29 @@ function render(solution) {
   return `We check “${solution.first}” (or equivalently “${solution.second}”), because the result separates the two hypotheses.`;
 }
 
+const WIRES = [
+  {
+    name: 'pair',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const facts = (typeof $facts === "object" && $facts !== null) ? $facts : JSON.parse(String($facts));',
+      'const key = (text) => String(text).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().split(" ").filter((word) => word !== "" && word !== "the" && word !== "a" && word !== "an").sort().join(" ");',
+      'const table = facts.predictions;',
+      'const predictions1 = table[key(slots.hypothesis1)];',
+      'const predictions2 = table[key(slots.hypothesis2)];',
+      'probe((predictions1.indexOf(slots.observation) !== -1) === (predictions2.indexOf(slots.observation) !== -1), "the observation already made must be compatible with both hypotheses");',
+      'const first = predictions1.find((prediction) => predictions2.indexOf(prediction) === -1);',
+      'const second = predictions2.find((prediction) => predictions1.indexOf(prediction) === -1);',
+      'probe(first !== undefined, "the first hypothesis must predict something the second does not");',
+      'probe(second !== undefined, "the second hypothesis must predict something the first does not");',
+      'return { first: first, second: second };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const facts = (typeof $facts === "object" && $facts !== null) ? $facts : JSON.parse(String($facts));',
-  'const key = (text) => String(text).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().split(" ").filter((word) => word !== "" && word !== "the" && word !== "a" && word !== "an").sort().join(" ");',
-  'const table = facts.predictions;',
-  'const predictions1 = table[key(slots.hypothesis1)];',
-  'const predictions2 = table[key(slots.hypothesis2)];',
-  'probe((predictions1.indexOf(slots.observation) !== -1) === (predictions2.indexOf(slots.observation) !== -1), "the observation already made must be compatible with both hypotheses");',
-  'const first = predictions1.find((prediction) => predictions2.indexOf(prediction) === -1);',
-  'const second = predictions2.find((prediction) => predictions1.indexOf(prediction) === -1);',
-  'probe(first !== undefined, "the first hypothesis must predict something the second does not");',
-  'probe(second !== undefined, "the second hypothesis must predict something the first does not");',
-  'return "We check “" + first + "” (or equivalently “" + second + "”), because the result separates the two hypotheses.";'
+  'return "We check “" + $pair.first + "” (or equivalently “" + $pair.second + "”), because the result separates the two hypotheses.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -282,6 +292,7 @@ export const cases = [
     solve,
     render,
     facts: { predictions: PREDICTIONS },
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

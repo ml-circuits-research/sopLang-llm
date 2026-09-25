@@ -125,19 +125,36 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'role',
+    command: 'jsEval',
+    body: [
+      `const ROLE_TOPICS = ${JSON.stringify(ROLE_TOPICS)};`,
+      'const slots = $slots;',
+      'const tokens = slots.action.toLowerCase().split(/[^a-z]+/).filter((token) => token !== "");',
+      'let matched = null; let bestScore = 0; let tied = false;',
+      'for (const entry of ROLE_TOPICS) { const score = entry.keywords.filter((keyword) => tokens.includes(keyword)).length; if (score > bestScore) { matched = entry.role; bestScore = score; tied = false; } else if (score > 0 && score === bestScore) { tied = true; } }',
+      'probe(matched !== null, "one stated role must cover the requested action");',
+      'probe(tied === false, "exactly one stated role must cover the requested action");',
+      'probe(slots.options.includes(matched), "the matched institution must be one of the two offered candidates");',
+      'return matched;'
+    ].join('\n')
+  },
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
-  `const ROLE_TOPICS = ${JSON.stringify(ROLE_TOPICS)};`,
-  'const slots = $slots;',
-  'const tokens = slots.action.toLowerCase().split(/[^a-z]+/).filter((token) => token !== "");',
-  'let matched = null; let bestScore = 0; let tied = false;',
-  'for (const entry of ROLE_TOPICS) { const score = entry.keywords.filter((keyword) => tokens.includes(keyword)).length; if (score > bestScore) { matched = entry.role; bestScore = score; tied = false; } else if (score > 0 && score === bestScore) { tied = true; } }',
-  'probe(matched !== null, "one stated role must cover the requested action");',
-  'probe(tied === false, "exactly one stated role must cover the requested action");',
-  'probe(slots.options.includes(matched), "the matched institution must be one of the two offered candidates");',
-  'const main = "The request should go first to the " + matched + ".";',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'const main = "The request should go first to the " + $role + ".";',
+  'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -159,6 +176,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

@@ -97,39 +97,56 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'order',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const edges = new Map();',
+      'for (const pair of slots.pairs) {',
+      '  if (!edges.has(pair.earlier)) {',
+      '    edges.set(pair.earlier, []);',
+      '  }',
+      '  edges.get(pair.earlier).push(pair.later);',
+      '}',
+      'const reaches = (from, to) => {',
+      '  const seen = new Set([from]);',
+      '  const queue = [from];',
+      '  while (queue.length > 0) {',
+      '    const node = queue.shift();',
+      '    for (const next of edges.get(node) || []) {',
+      '      if (next === to) {',
+      '        return true;',
+      '      }',
+      '      if (!seen.has(next)) {',
+      '        seen.add(next);',
+      '        queue.push(next);',
+      '      }',
+      '    }',
+      '  }',
+      '  return false;',
+      '};',
+      'const earlier = reaches(slots.must.first, slots.must.second) ? slots.must.first : reaches(slots.must.second, slots.must.first) ? slots.must.second : null;',
+      'probe(earlier !== null, "the first questioned pair must be ordered by the stated facts");',
+      'probe(!reaches(slots.determined.first, slots.determined.second) && !reaches(slots.determined.second, slots.determined.first), "the second questioned pair must stay undetermined");',
+      'return { earlier: earlier, later: earlier === slots.must.first ? slots.must.second : slots.must.first };'
+    ].join('\n')
+  },
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
-  'const slots = $slots;',
-  'const edges = new Map();',
-  'for (const pair of slots.pairs) {',
-  '  if (!edges.has(pair.earlier)) {',
-  '    edges.set(pair.earlier, []);',
-  '  }',
-  '  edges.get(pair.earlier).push(pair.later);',
-  '}',
-  'const reaches = (from, to) => {',
-  '  const seen = new Set([from]);',
-  '  const queue = [from];',
-  '  while (queue.length > 0) {',
-  '    const node = queue.shift();',
-  '    for (const next of edges.get(node) || []) {',
-  '      if (next === to) {',
-  '        return true;',
-  '      }',
-  '      if (!seen.has(next)) {',
-  '        seen.add(next);',
-  '        queue.push(next);',
-  '      }',
-  '    }',
-  '  }',
-  '  return false;',
-  '};',
-  'const earlier = reaches(slots.must.first, slots.must.second) ? slots.must.first : reaches(slots.must.second, slots.must.first) ? slots.must.second : null;',
-  'probe(earlier !== null, "the first questioned pair must be ordered by the stated facts");',
-  'probe(!reaches(slots.determined.first, slots.determined.second) && !reaches(slots.determined.second, slots.determined.first), "the second questioned pair must stay undetermined");',
-  'const main = earlier + " must be before " + (earlier === slots.must.first ? slots.must.second : slots.must.first) + ". The relative order of " + slots.determined.first + " and " + slots.determined.second + " cannot be determined from the given facts.";',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'const main = $order.earlier + " must be before " + $order.later + ". The relative order of " + $slots.determined.first + " and " + $slots.determined.second + " cannot be determined from the given facts.";',
+  'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -150,6 +167,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

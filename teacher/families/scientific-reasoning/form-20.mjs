@@ -126,39 +126,47 @@ function render(solution) {
   return `The minimum intervention is ${solution.names.map(printedName).join(', ')}, with total cost ${solution.cost}.`;
 }
 
+const WIRES = [
+  {
+    name: 'optimum',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const count = slots.interventions.length;',
+      'const optima = [];',
+      'for (let mask = 1; mask < 1 << count; mask += 1) {',
+      '  const chosen = slots.interventions.filter((entry, index) => (mask & (1 << index)) !== 0);',
+      '  const effects = new Set(chosen.flatMap((entry) => entry.effects));',
+      '  if (chosen.flatMap((entry) => entry.undesired).some((effect) => slots.forbidden.includes(effect))) {',
+      '    continue;',
+      '  }',
+      '  if (!slots.targets.every((target) => effects.has(target))) {',
+      '    continue;',
+      '  }',
+      '  const cost = chosen.reduce((total, entry) => total + entry.cost, 0);',
+      '  const candidate = { cost: cost, count: chosen.length, names: chosen.map((entry) => entry.name) };',
+      '  const best = optima[0];',
+      '  if (best === undefined || cost < best.cost || (cost === best.cost && candidate.count < best.count)) {',
+      '    optima.length = 0;',
+      '    optima.push(candidate);',
+      '  } else if (cost === best.cost && candidate.count === best.count) {',
+      '    optima.push(candidate);',
+      '  }',
+      '}',
+      'probe(optima.length > 0, "some combination must cover the targets without a forbidden effect");',
+      'probe(new Set(optima.map((entry) => entry.names.join(" | "))).size === 1, "the stated goals must leave exactly one minimum intervention");',
+      'const best = optima[0];',
+      'probe(Number.isInteger(best.cost) && best.cost > 0, "the minimum total cost must be a positive number");',
+      'probe(best.names.length > 0, "the minimum intervention must contain at least one action");',
+      'const printed = new Map(' + JSON.stringify([...PRINTED_NAMES]) + ');',
+      'const names = best.names.map((name) => printed.get(String(name).toLowerCase()) || String(name).toLowerCase());',
+      'return { names: names, cost: best.cost };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'for (const entry of slots.interventions) {',
-  '}',
-  'const count = slots.interventions.length;',
-  'const optima = [];',
-  'for (let mask = 1; mask < 1 << count; mask += 1) {',
-  '  const chosen = slots.interventions.filter((entry, index) => (mask & (1 << index)) !== 0);',
-  '  const effects = new Set(chosen.flatMap((entry) => entry.effects));',
-  '  if (chosen.flatMap((entry) => entry.undesired).some((effect) => slots.forbidden.includes(effect))) {',
-  '    continue;',
-  '  }',
-  '  if (!slots.targets.every((target) => effects.has(target))) {',
-  '    continue;',
-  '  }',
-  '  const cost = chosen.reduce((total, entry) => total + entry.cost, 0);',
-  '  const candidate = { cost: cost, count: chosen.length, names: chosen.map((entry) => entry.name) };',
-  '  const best = optima[0];',
-  '  if (best === undefined || cost < best.cost || (cost === best.cost && candidate.count < best.count)) {',
-  '    optima.length = 0;',
-  '    optima.push(candidate);',
-  '  } else if (cost === best.cost && candidate.count === best.count) {',
-  '    optima.push(candidate);',
-  '  }',
-  '}',
-  'probe(optima.length > 0, "some combination must cover the targets without a forbidden effect");',
-  'probe(new Set(optima.map((entry) => entry.names.join(" | "))).size === 1, "the stated goals must leave exactly one minimum intervention");',
-  'const best = optima[0];',
-  'probe(Number.isInteger(best.cost) && best.cost > 0, "the minimum total cost must be a positive number");',
-  'probe(best.names.length > 0, "the minimum intervention must contain at least one action");',
-  'const printed = new Map(' + JSON.stringify([...PRINTED_NAMES]) + ');',
-  'const names = best.names.map((name) => printed.get(String(name).toLowerCase()) || String(name).toLowerCase());',
-  'return "The minimum intervention is " + names.join(", ") + ", with total cost " + best.cost + ".";'
+  'return "The minimum intervention is " + $optimum.names.join(", ") + ", with total cost " + $optimum.cost + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -181,6 +189,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

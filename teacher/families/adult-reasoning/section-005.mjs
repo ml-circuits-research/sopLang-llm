@@ -74,17 +74,24 @@ function render(solution) {
   return `${solution.vanClause} ${solution.carClause} ${solution.bicycleClause}`;
 }
 
+const WIRES = [
+  {
+    name: 'window',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const label = (hour, minute) => (minute === "00" ? String(Number(hour)) : Number(hour) + ":" + minute);',
+      'const windowLabel = label(slots.window.from.hour, slots.window.from.minute) + "–" + label(slots.window.until.hour, slots.window.until.minute);',
+      'const parkingBanned = slots.parkingPlateCancelled && !slots.exceptionAmendsParking;',
+      'return { windowLabel, parkingBanned };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
   'const slots = $slots;',
-  'const toMinutes = (hour, minute) => hour * 60 + minute;',
-  'const label = (hour, minute) => (minute === "00" ? String(Number(hour)) : Number(hour) + ":" + minute);',
-  'const from = toMinutes(slots.window.from.hour, slots.window.from.minute);',
-  'const until = toMinutes(slots.window.until.hour, slots.window.until.minute);',
-  'const arrival = toMinutes(slots.arrival.hour, slots.arrival.minute);',
-  'const windowLabel = label(slots.window.from.hour, slots.window.from.minute) + "–" + label(slots.window.until.hour, slots.window.until.minute);',
-  'const parkingBanned = slots.parkingPlateCancelled && !slots.exceptionAmendsParking;',
-  'const vanClause = "The van may move in the " + windowLabel + " window but may not stand (cancelled P).";',
-  'const carClause = "The car is not a lorry, but it " + (parkingBanned ? "may not park" : "may park") + ".";',
+  'const vanClause = "The van may move in the " + $window.windowLabel + " window but may not stand (cancelled P).";',
+  'const carClause = "The car is not a lorry, but it " + ($window.parkingBanned ? "may not park" : "may park") + ".";',
   'const bicycleClause = "The bicycle " + (slots.bicyclesAreGoodsVehicles ? "may not pass" : "may pass") + "; the register is silent on P for bicycles — do not fill the silence.";',
   'return vanClause + " " + carClause + " " + bicycleClause;'
 ].join('\n');
@@ -109,6 +116,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

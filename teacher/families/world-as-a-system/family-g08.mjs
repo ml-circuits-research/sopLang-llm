@@ -101,19 +101,36 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'classify',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const temperatureLabel = (value) => value < slots.thresholds.coolBelow ? "cool" : value > slots.thresholds.warmAbove ? "warm" : "mild";',
+      'const precipitationLabel = (value) => value < slots.thresholds.dryBelow ? "dry" : "wet";',
+      'const target = slots.stations.find((station) => station.id === slots.target);',
+      'const temperature = temperatureLabel(target.temperature);',
+      'const precipitation = precipitationLabel(target.precipitation);',
+      'probe(["cool", "mild", "warm"].indexOf(temperature) >= 0 && ["dry", "wet"].indexOf(precipitation) >= 0, "every station must receive one stated temperature label and one stated precipitation label");',
+      'const matches = slots.stations.filter((station) => station.id !== slots.target && temperatureLabel(station.temperature) === temperature && precipitationLabel(station.precipitation) === precipitation).map((station) => station.id);',
+      'probe(matches.length < slots.stations.length, "the shared-class list must exclude the classified station itself");',
+      'return { temperature, precipitation, matches };'
+    ].join('\n')
+  },
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'return { suffix: renderCrossDomain($slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
-  'const slots = $slots;',
-  'const temperatureLabel = (value) => value < slots.thresholds.coolBelow ? "cool" : value > slots.thresholds.warmAbove ? "warm" : "mild";',
-  'const precipitationLabel = (value) => value < slots.thresholds.dryBelow ? "dry" : "wet";',
-  'const target = slots.stations.find((station) => station.id === slots.target);',
-  'const temperature = temperatureLabel(target.temperature);',
-  'const precipitation = precipitationLabel(target.precipitation);',
-  'probe(["cool", "mild", "warm"].indexOf(temperature) >= 0 && ["dry", "wet"].indexOf(precipitation) >= 0, "every station must receive one stated temperature label and one stated precipitation label");',
-  'const matches = slots.stations.filter((station) => station.id !== slots.target && temperatureLabel(station.temperature) === temperature && precipitationLabel(station.precipitation) === precipitation).map((station) => station.id);',
-  'probe(matches.length < slots.stations.length, "the shared-class list must exclude the classified station itself");',
-  'const main = slots.target + " is " + temperature + " and " + precipitation + "; " + (matches.length === 0 ? "no other station has the same class." : "same class: " + matches.join(", ") + ".");',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
+  'const main = $slots.target + " is " + $classify.temperature + " and " + $classify.precipitation + "; " + ($classify.matches.length === 0 ? "no other station has the same class." : "same class: " + $classify.matches.join(", ") + ".");',
+  'const suffix = $cross.suffix;',
   'return suffix === "" ? main : main + " " + suffix;'
 ].join('\n');
 
@@ -139,6 +156,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

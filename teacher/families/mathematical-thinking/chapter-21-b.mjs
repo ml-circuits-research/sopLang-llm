@@ -121,28 +121,37 @@ export const cases = [
     render(solution) {
       return `The second question can be “Is it ${solution.property}?”.`;
     },
+    wires: [
+      {
+        name: 'property',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'const groups = {};',
+          'for (const piece of slots.pieces) {',
+          '  const key = piece.properties.includes(slots.firstProperty) ? "yes" : "no";',
+          '  groups[key] = (groups[key] || []).concat([piece]);',
+          '}',
+          'let candidates = null;',
+          'for (const key of Object.keys(groups)) {',
+          '  const group = groups[key];',
+          '  const usable = [];',
+          '  for (let index = 0; index < group[0].properties.length; index += 1) {',
+          '    let differs = false;',
+          '    for (const piece of group) {',
+          '      if (piece.properties[index] !== group[0].properties[index]) { differs = true; }',
+          '    }',
+          '    if (differs) { usable.push(index); }',
+          '  }',
+          '  candidates = candidates === null ? usable : candidates.filter(function (index) { return usable.indexOf(index) !== -1; });',
+          '}',
+          'if (candidates === null || candidates.length === 0) { throw new Error("no second question separates the remaining pieces"); }',
+          'return slots.pieces[0].properties[candidates[0]];'
+        ].join('\n')
+      }
+    ],
     compute: [
-      'const slots = $slots;',
-      'const groups = {};',
-      'for (const piece of slots.pieces) {',
-      '  const key = piece.properties.includes(slots.firstProperty) ? "yes" : "no";',
-      '  groups[key] = (groups[key] || []).concat([piece]);',
-      '}',
-      'let candidates = null;',
-      'for (const key of Object.keys(groups)) {',
-      '  const group = groups[key];',
-      '  const usable = [];',
-      '  for (let index = 0; index < group[0].properties.length; index += 1) {',
-      '    let differs = false;',
-      '    for (const piece of group) {',
-      '      if (piece.properties[index] !== group[0].properties[index]) { differs = true; }',
-      '    }',
-      '    if (differs) { usable.push(index); }',
-      '  }',
-      '  candidates = candidates === null ? usable : candidates.filter(function (index) { return usable.indexOf(index) !== -1; });',
-      '}',
-      'if (candidates === null || candidates.length === 0) { throw new Error("no second question separates the remaining pieces"); }',
-      'return "The second question can be “Is it " + slots.pieces[0].properties[candidates[0]] + "?”.";'
+      'return "The second question can be “Is it " + $property + "?”.";'
     ].join('\n'),
     explain(slots, solution) {
       return [

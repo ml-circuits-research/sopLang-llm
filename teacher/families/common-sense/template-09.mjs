@@ -72,16 +72,26 @@ function render(solution) {
   return `No. The category sum is ${solution.sum}, while the printed total differs by ${signed(solution.difference)} ${solution.unit}. The inconsistency is demonstrable, but the incorrect cell cannot be identified uniquely from these data alone.`;
 }
 
+const WIRES = [
+  {
+    name: 'totals',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const A = slots.values.A;',
+      'const B = slots.values.B;',
+      'const C = slots.values.C;',
+      'const sum = A + B + C;',
+      'const difference = slots.printed - sum;',
+      'probe(difference !== 0, "the printed total must differ from the category sum, otherwise the table is consistent");',
+      'const signed = difference > 0 ? "+" + difference : String(difference);',
+      'return { sum, signed };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const A = slots.values.A;',
-  'const B = slots.values.B;',
-  'const C = slots.values.C;',
-  'const sum = A + B + C;',
-  'const difference = slots.printed - sum;',
-  'probe(difference !== 0, "the printed total must differ from the category sum, otherwise the table is consistent");',
-  'const signed = difference > 0 ? "+" + difference : String(difference);',
-  'return "No. The category sum is " + sum + ", while the printed total differs by " + signed + " " + slots.unit + ". The inconsistency is demonstrable, but the incorrect cell cannot be identified uniquely from these data alone.";'
+  'return "No. The category sum is " + $totals.sum + ", while the printed total differs by " + $totals.signed + " " + $slots.unit + ". The inconsistency is demonstrable, but the incorrect cell cannot be identified uniquely from these data alone.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -103,6 +113,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

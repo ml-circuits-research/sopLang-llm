@@ -60,17 +60,27 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
   'const dailyNet = slots.inflow - slots.outflow;',
   'const end = slots.start + slots.days * dailyNet;',
   'probe(Number.isInteger(end), "the end stock must be a whole number of units");',
   'const verdict = dailyNet > 0 ? "increasing" : dailyNet < 0 ? "decreasing" : "unchanged";',
   'probe(verdict === "increasing" || verdict === "decreasing" || verdict === "unchanged", "the verdict must follow the sign of the daily net change");',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
   'const main = end + " units; the stock is " + verdict + ".";',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -90,6 +100,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

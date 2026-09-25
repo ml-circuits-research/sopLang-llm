@@ -71,17 +71,27 @@ function render(solution) {
   return `Initial capacity: ${solution.initial} ${solution.unit}/hour. After the improvement: ${formatHundredths(solution.after)} ${solution.unit}/hour. Final bottleneck stage(s): ${solution.bottlenecks.join(', ')}.`;
 }
 
+const WIRES = [
+  {
+    name: 'plan',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const stages = ["A", "B", "C", "D"];',
+      'const initial = Math.min(...stages.map((stage) => slots.capacities[stage]));',
+      'const improved = {};',
+      'for (const stage of stages) {',
+      '  improved[stage] = stage === slots.stage ? slots.capacities[stage] * (100 + slots.percent) : slots.capacities[stage] * 100;',
+      '}',
+      'const after = Math.min(...stages.map((stage) => improved[stage]));',
+      'const bottlenecks = stages.filter((stage) => improved[stage] === after);',
+      'return { initial, after, bottlenecks };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const stages = ["A", "B", "C", "D"];',
-  'const initial = Math.min(...stages.map((stage) => slots.capacities[stage]));',
-  'const improved = {};',
-  'for (const stage of stages) {',
-  '  improved[stage] = stage === slots.stage ? slots.capacities[stage] * (100 + slots.percent) : slots.capacities[stage] * 100;',
-  '}',
-  'const after = Math.min(...stages.map((stage) => improved[stage]));',
-  'const bottlenecks = stages.filter((stage) => improved[stage] === after);',
-  'return "Initial capacity: " + initial + " " + slots.unit + "/hour. After the improvement: " + String(after / 100) + " " + slots.unit + "/hour. Final bottleneck stage(s): " + bottlenecks.join(", ") + ".";'
+  'return "Initial capacity: " + $plan.initial + " " + $slots.unit + "/hour. After the improvement: " + String($plan.after / 100) + " " + $slots.unit + "/hour. Final bottleneck stage(s): " + $plan.bottlenecks.join(", ") + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -104,6 +114,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

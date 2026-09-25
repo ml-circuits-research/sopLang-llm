@@ -131,8 +131,19 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
   'const count = slots.labels.length;',
   'const proportional = (weights) => {',
@@ -163,8 +174,7 @@ const COMPUTE = [
   '}',
   'probe(amounts.length === count && amounts.every((amount) => Number.isFinite(amount)), "every district must receive a finite share");',
   'const main = slots.labels.map((label, index) => label + "=" + amounts[index].toFixed(2)).join(", ") + ".";',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -206,6 +216,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

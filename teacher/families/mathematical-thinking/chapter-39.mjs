@@ -293,20 +293,25 @@ export const cases = [
     parse(statement) { const match = capture(statement, /formulas ([^ ]+) and ([^ ]+) appear/, 'the two formulas'); return { formulas: [match[1], match[2]] }; },
     solve(slots) { const left = coefficientsOf(slots.formulas[0]); const right = coefficientsOf(slots.formulas[1]); return { equal: [...new Set([...Object.keys(left), ...Object.keys(right)])].every((term) => (left[term] ?? 0) === (right[term] ?? 0)) }; },
     render(solution) { return solution.equal ? 'The formulas are equivalent.' : 'The formulas are not equivalent.'; },
-    compute: [
-      'const slots = $slots;',
-      'const coefficients = (formula) => {',
-      '  const product = formula.match(/^(\\d*)\\((.*)\\)$/);',
-      '  const factor = product === null || product[1] === "" ? 1 : Number(product[1]);',
-      '  const counts = {};',
-      '  for (const term of (product === null ? formula : product[2]).split("+")) { counts[term] = (counts[term] || 0) + factor; }',
-      '  return counts;',
-      '};',
-      'const left = coefficients(slots.formulas[0]);',
-      'const right = coefficients(slots.formulas[1]);',
-      'const terms = [...new Set([...Object.keys(left), ...Object.keys(right)])];',
-      'return terms.every((term) => (left[term] || 0) === (right[term] || 0)) ? "The formulas are equivalent." : "The formulas are not equivalent.";'
-    ].join('\n'),
+    wires: [
+      {
+        name: 'equivalent', command: 'jsEval', body: [
+          'const slots = $slots;',
+          'const coefficients = (formula) => {',
+          '  const product = formula.match(/^(\\d*)\\((.*)\\)$/);',
+          '  const factor = product === null || product[1] === "" ? 1 : Number(product[1]);',
+          '  const counts = {};',
+          '  for (const term of (product === null ? formula : product[2]).split("+")) { counts[term] = (counts[term] || 0) + factor; }',
+          '  return counts;',
+          '};',
+          'const left = coefficients(slots.formulas[0]);',
+          'const right = coefficients(slots.formulas[1]);',
+          'const terms = [...new Set([...Object.keys(left), ...Object.keys(right)])];',
+          'return terms.every((term) => (left[term] || 0) === (right[term] || 0));'
+        ].join('\n')
+      }
+    ],
+    compute: ['return $equivalent ? "The formulas are equivalent." : "The formulas are not equivalent.";'].join('\n'),
     explain(slots) { return ['Grouping equal terms turns the first sum into twice the first length plus twice the second length.', 'Factoring out the common 2 gives exactly the second formula, so the two formulas agree for all side lengths.']; }
   },
   {

@@ -128,33 +128,38 @@ function render(solution) {
   return `${RULE_PHRASES[solution.kind](solution.letters)}; for ${newCase.first.letter}=${newCase.first.value}, ${newCase.second.letter}=${newCase.second.value} the result is ${solution.result ? 'YES' : 'NO'}.`;
 }
 
+const WIRES = [
+  {
+    name: 'rule',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const applies = (kind, values) => {',
+      '  if (kind === "and") { return values[0] && values[1]; }',
+      '  if (kind === "or") { return values[0] || values[1]; }',
+      '  if (kind === "xor") { return values[0] !== values[1]; }',
+      '  return !values[0] && !values[1];',
+      '};',
+      'const surviving = slots.candidates.filter((candidate) => slots.examples.every((example) => applies(candidate.kind, example.values) === example.result));',
+      'probe(surviving.length > 0, "at least one candidate rule must reproduce the examples");',
+      'probe(surviving.length === 1, "the examples must leave exactly one candidate rule, not " + surviving.length);',
+      'const kind = surviving[0].kind;',
+      'const first = slots.newCase.first;',
+      'const second = slots.newCase.second;',
+      'const result = applies(kind, [first.value === "YES", second.value === "YES"]);',
+      'return { kind: kind, first: first, second: second, result: result };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'for (const example of slots.examples) {',
-  '}',
-  'const kinds = ["and", "or", "xor", "nor"];',
-  'for (const candidate of slots.candidates) {',
-  '}',
-  'const applies = (kind, values) => {',
-  '  if (kind === "and") { return values[0] && values[1]; }',
-  '  if (kind === "or") { return values[0] || values[1]; }',
-  '  if (kind === "xor") { return values[0] !== values[1]; }',
-  '  return !values[0] && !values[1];',
-  '};',
-  'const surviving = slots.candidates.filter((candidate) => slots.examples.every((example) => applies(candidate.kind, example.values) === example.result));',
-  'probe(surviving.length > 0, "at least one candidate rule must reproduce the examples");',
-  'probe(surviving.length === 1, "the examples must leave exactly one candidate rule, not " + surviving.length);',
-  'const kind = surviving[0].kind;',
-  'const first = slots.newCase.first;',
-  'const second = slots.newCase.second;',
-  'const result = applies(kind, [first.value === "YES", second.value === "YES"]);',
   'const prefixes = {',
-  '  and: "The rule is " + slots.letters[0] + " AND " + slots.letters[1],',
-  '  or: "Rule is " + slots.letters[0] + " or " + slots.letters[1] + " (at least one)",',
-  '  xor: "Rule is exactly one of " + slots.letters[0] + " and " + slots.letters[1],',
-  '  nor: "Rule is neither " + slots.letters[0] + " nor " + slots.letters[1]',
+  '  and: "The rule is " + $slots.letters[0] + " AND " + $slots.letters[1],',
+  '  or: "Rule is " + $slots.letters[0] + " or " + $slots.letters[1] + " (at least one)",',
+  '  xor: "Rule is exactly one of " + $slots.letters[0] + " and " + $slots.letters[1],',
+  '  nor: "Rule is neither " + $slots.letters[0] + " nor " + $slots.letters[1]',
   '};',
-  'return prefixes[kind] + "; for " + first.letter + "=" + first.value + ", " + second.letter + "=" + second.value + " the result is " + (result ? "YES" : "NO") + ".";'
+  'return prefixes[$rule.kind] + "; for " + $rule.first.letter + "=" + $rule.first.value + ", " + $rule.second.letter + "=" + $rule.second.value + " the result is " + ($rule.result ? "YES" : "NO") + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -182,6 +187,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

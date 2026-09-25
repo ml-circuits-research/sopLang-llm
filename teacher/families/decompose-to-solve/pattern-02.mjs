@@ -76,24 +76,37 @@ function render(solution) {
   return `Choose Option ${solution.chosen.label}. The important architecture is “evaluate each option locally, then compare summaries under shared constraints,” rather than interleaving the arithmetic of both options.`;
 }
 
+const WIRES = [
+  {
+    name: 'evaluated',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const evaluate = (option) => ({ label: option.label, minutes: option.setupMinutes + Math.ceil(slots.items / option.itemsPerCycle) * 6, costCents: option.fixedCents + option.itemCents * slots.items });',
+      'const evaluated = [evaluate(slots.optionA), evaluate(slots.optionB)];',
+      'for (const option of evaluated) {',
+      '  option.feasible = option.minutes <= slots.limitMinutes && option.costCents <= slots.budgetCents;',
+      '}',
+      'return evaluated;'
+    ].join('\n')
+  },
+  {
+    name: 'chosen',
+    command: 'jsEval',
+    body: [
+      'const feasible = $evaluated.filter((option) => option.feasible);',
+      'probe(feasible.length > 0, "the scenario asks for a selection, so at least one option must satisfy both shared constraints");',
+      'const chosen = feasible.reduce((best, option) => (option.costCents < best.costCents ? option : best));',
+      'probe(chosen.feasible, "the selected option must stay within the stated time limit and cost ceiling");',
+      'probe(feasible.every((option) => option.costCents >= chosen.costCents), "the selected option must be the cheapest feasible one");',
+      'probe(feasible.filter((option) => option.costCents === chosen.costCents).length === 1, "the preference rule needs a unique cheapest feasible option");',
+      'return chosen;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const optionFields = ["A", "B"];',
-  'for (const label of optionFields) {',
-  '  const option = slots["option" + label];',
-  '}',
-  'const evaluate = (option) => ({ label: option.label, minutes: option.setupMinutes + Math.ceil(slots.items / option.itemsPerCycle) * 6, costCents: option.fixedCents + option.itemCents * slots.items });',
-  'const evaluated = [evaluate(slots.optionA), evaluate(slots.optionB)];',
-  'for (const option of evaluated) {',
-  '  option.feasible = option.minutes <= slots.limitMinutes && option.costCents <= slots.budgetCents;',
-  '}',
-  'const feasible = evaluated.filter((option) => option.feasible);',
-  'probe(feasible.length > 0, "the scenario asks for a selection, so at least one option must satisfy both shared constraints");',
-  'const chosen = feasible.reduce((best, option) => (option.costCents < best.costCents ? option : best));',
-  'probe(chosen.feasible, "the selected option must stay within the stated time limit and cost ceiling");',
-  'probe(feasible.every((option) => option.costCents >= chosen.costCents), "the selected option must be the cheapest feasible one");',
-  'probe(feasible.filter((option) => option.costCents === chosen.costCents).length === 1, "the preference rule needs a unique cheapest feasible option");',
-  'return "Choose Option " + chosen.label + ". The important architecture is “evaluate each option locally, then compare summaries under shared constraints,” rather than interleaving the arithmetic of both options.";'
+  'return "Choose Option " + $chosen.label + ". The important architecture is “evaluate each option locally, then compare summaries under shared constraints,” rather than interleaving the arithmetic of both options.";'
 ].join('\n');
 
 function minutesText(minutes) {
@@ -124,6 +137,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

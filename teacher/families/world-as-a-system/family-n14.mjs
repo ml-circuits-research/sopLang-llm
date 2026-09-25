@@ -115,8 +115,19 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
   'const ordered = [...slots.steps].sort((left, right) => left.day - right.day);',
   'let holder = null;',
@@ -140,8 +151,7 @@ const COMPUTE = [
   '  : gap.kind === "link"',
   '    ? "The chain is incomplete because the day-" + gap.day + " handoff does not connect to the previous holder."',
   '    : "The chain is incomplete because the day-" + gap.day + " " + gap.kind + " is missing.";',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -166,6 +176,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

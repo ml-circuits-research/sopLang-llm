@@ -111,29 +111,37 @@ function render(solution) {
   return `${solution.names.join(', ')}, total cost ${solution.cost}.`;
 }
 
+const WIRES = [
+  {
+    name: 'choice',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const printedName = (name) => {',
+      '  const key = String(name).toLowerCase();',
+      '  const renamed = {"protecting of the spring": "protecting the spring", "protecting of the eggs": "protecting the eggs", "changing of orientation": "changing the orientation", "increasing the contrast": "increasing of the contrast", "adding insulation": "adding of insulation", "close the lid": "closing of the lid", "add a protein source": "adding a protein source", "add vegetables": "adding vegetables"};',
+      '  return Object.prototype.hasOwnProperty.call(renamed, key) ? renamed[key] : name;',
+      '};',
+      'const usable = slots.options.filter((option) => !option.undesired.some((effect) => slots.forbidden.includes(effect)));',
+      'probe(usable.length > 0, "at least one option must avoid every forbidden effect");',
+      'const covers = [];',
+      'for (let mask = 1; mask < 2 ** usable.length; mask += 1) {',
+      '  const chosen = usable.filter((option, index) => (mask & (1 << index)) !== 0);',
+      '  const effects = new Set(chosen.flatMap((option) => option.effects));',
+      '  if (!slots.target.every((condition) => effects.has(condition))) continue;',
+      '  covers.push({ chosen: chosen, cost: chosen.reduce((total, option) => total + option.cost, 0) });',
+      '}',
+      'probe(covers.length > 0, "some combination of usable options must cover every target condition");',
+      'const cheapest = Math.min(...covers.map((cover) => cover.cost));',
+      'const winners = covers.filter((cover) => cover.cost === cheapest);',
+      'probe(winners.length === 1, "the stated prices must leave exactly one cheapest combination, not " + winners.length);',
+      'return { names: winners[0].chosen.map((option) => printedName(option.name)), cost: cheapest };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const printedName = (name) => {',
-  '  const key = String(name).toLowerCase();',
-  '  const renamed = {"protecting of the spring": "protecting the spring", "protecting of the eggs": "protecting the eggs", "changing of orientation": "changing the orientation", "increasing the contrast": "increasing of the contrast", "adding insulation": "adding of insulation", "close the lid": "closing of the lid", "add a protein source": "adding a protein source", "add vegetables": "adding vegetables"};',
-  '  return Object.prototype.hasOwnProperty.call(renamed, key) ? renamed[key] : name;',
-  '};',
-  'for (const option of slots.options) {',
-  '}',
-  'const usable = slots.options.filter((option) => !option.undesired.some((effect) => slots.forbidden.includes(effect)));',
-  'probe(usable.length > 0, "at least one option must avoid every forbidden effect");',
-  'const covers = [];',
-  'for (let mask = 1; mask < 2 ** usable.length; mask += 1) {',
-  '  const chosen = usable.filter((option, index) => (mask & (1 << index)) !== 0);',
-  '  const effects = new Set(chosen.flatMap((option) => option.effects));',
-  '  if (!slots.target.every((condition) => effects.has(condition))) continue;',
-  '  covers.push({ chosen: chosen, cost: chosen.reduce((total, option) => total + option.cost, 0) });',
-  '}',
-  'probe(covers.length > 0, "some combination of usable options must cover every target condition");',
-  'const cheapest = Math.min(...covers.map((cover) => cover.cost));',
-  'const winners = covers.filter((cover) => cover.cost === cheapest);',
-  'probe(winners.length === 1, "the stated prices must leave exactly one cheapest combination, not " + winners.length);',
-  'return winners[0].chosen.map((option) => printedName(option.name)).join(", ") + ", total cost " + cheapest + ".";'
+  'return $choice.names.join(", ") + ", total cost " + $choice.cost + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -160,6 +168,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

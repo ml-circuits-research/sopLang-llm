@@ -79,27 +79,43 @@ function render(solution) {
   return `Choose Route ${solution.chosen.name}. The decomposition uses different aggregation operators for different meanings: sequential times add, serial capacities take a minimum, then shared constraints filter entire-route summaries.`;
 }
 
+const WIRES = [
+  {
+    name: 'summaries',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const summaries = slots.routes.map((route) => ({',
+      '  name: route.name,',
+      '  timeMinutes: route.times.reduce((total, minutes) => total + minutes, 0),',
+      '  bottleneck: Math.min(...route.capacities)',
+      '}));',
+      'return summaries;'
+    ].join('\n')
+  },
+  {
+    name: 'chosen',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const feasible = $summaries.filter((summary) => summary.bottleneck >= slots.requiredFlow && summary.timeMinutes <= slots.limitMinutes);',
+      'probe(feasible.length > 0, "at least one route must carry the required flow within the time limit");',
+      'let chosen = feasible[0];',
+      'for (const summary of feasible) {',
+      '  if (summary.timeMinutes < chosen.timeMinutes) {',
+      '    chosen = summary;',
+      '  }',
+      '}',
+      'probe(chosen.bottleneck >= slots.requiredFlow, "the chosen route must carry the required flow");',
+      'probe(chosen.timeMinutes <= slots.limitMinutes, "the chosen route must stay within the time limit");',
+      'probe(feasible.every((summary) => summary.timeMinutes >= chosen.timeMinutes), "no feasible route may be faster than the chosen route");',
+      'return chosen;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'for (const route of slots.routes) {',
-  '}',
-  'const summaries = slots.routes.map((route) => ({',
-  '  name: route.name,',
-  '  timeMinutes: route.times.reduce((total, minutes) => total + minutes, 0),',
-  '  bottleneck: Math.min(...route.capacities)',
-  '}));',
-  'const feasible = summaries.filter((summary) => summary.bottleneck >= slots.requiredFlow && summary.timeMinutes <= slots.limitMinutes);',
-  'probe(feasible.length > 0, "at least one route must carry the required flow within the time limit");',
-  'let chosen = feasible[0];',
-  'for (const summary of feasible) {',
-  '  if (summary.timeMinutes < chosen.timeMinutes) {',
-  '    chosen = summary;',
-  '  }',
-  '}',
-  'probe(chosen.bottleneck >= slots.requiredFlow, "the chosen route must carry the required flow");',
-  'probe(chosen.timeMinutes <= slots.limitMinutes, "the chosen route must stay within the time limit");',
-  'probe(feasible.every((summary) => summary.timeMinutes >= chosen.timeMinutes), "no feasible route may be faster than the chosen route");',
-  'return "Choose Route " + chosen.name + ". The decomposition uses different aggregation operators for different meanings: sequential times add, serial capacities take a minimum, then shared constraints filter entire-route summaries.";'
+  'return "Choose Route " + $chosen.name + ". The decomposition uses different aggregation operators for different meanings: sequential times add, serial capacities take a minimum, then shared constraints filter entire-route summaries.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -126,6 +142,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

@@ -72,25 +72,33 @@ function render(solution) {
   return `This is intentionally a false-decomposition case. The best formulation is one optimization subproblem, not three independent choices. Configuration ${solution.winner} wins because the predetermined combined score is ${formatScore(solution.winnerScore)} versus ${formatScore(solution.loserScore)}.`;
 }
 
+const WIRES = [
+  {
+    name: 'scores',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const timeWeightScales = { 1: 10, 1.5: 15, 2: 20 };',
+      'const timeScale = timeWeightScales[slots.timeWeight];',
+      'const scoreA = slots.costA * 10 + timeScale * slots.timeA - slots.qualityWeight * 10 * slots.qualityA;',
+      'const scoreB = slots.costB * 10 + timeScale * slots.timeB - slots.qualityWeight * 10 * slots.qualityB;',
+      'const winner = scoreA <= scoreB ? "A" : "B";',
+      'const winnerScore = winner === "A" ? scoreA : scoreB;',
+      'const loserScore = winner === "A" ? scoreB : scoreA;',
+      'probe(winnerScore <= loserScore, "the winning coupled score must not exceed the losing one");',
+      'probe(Number.isInteger(winnerScore) && Number.isInteger(loserScore), "both coupled scores must be exact in tenths");',
+      'return { winner: winner, winnerScore: winnerScore, loserScore: loserScore };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
   'const formatScore = (scaled) => {',
   '  const sign = scaled < 0 ? "-" : "";',
   '  const magnitude = Math.abs(scaled);',
   '  return sign + Math.floor(magnitude / 10) + "." + (magnitude % 10);',
   '};',
-  'const timeWeightScales = { 1: 10, 1.5: 15, 2: 20 };',
-  'const timeScale = timeWeightScales[slots.timeWeight];',
-  'for (const side of ["A", "B"]) {',
-  '}',
-  'const scoreA = slots.costA * 10 + timeScale * slots.timeA - slots.qualityWeight * 10 * slots.qualityA;',
-  'const scoreB = slots.costB * 10 + timeScale * slots.timeB - slots.qualityWeight * 10 * slots.qualityB;',
-  'const winner = scoreA <= scoreB ? "A" : "B";',
-  'const winnerScore = winner === "A" ? scoreA : scoreB;',
-  'const loserScore = winner === "A" ? scoreB : scoreA;',
-  'probe(winnerScore <= loserScore, "the winning coupled score must not exceed the losing one");',
-  'probe(Number.isInteger(winnerScore) && Number.isInteger(loserScore), "both coupled scores must be exact in tenths");',
-  'return "This is intentionally a false-decomposition case. The best formulation is one optimization subproblem, not three independent choices. Configuration " + winner + " wins because the predetermined combined score is " + formatScore(winnerScore) + " versus " + formatScore(loserScore) + ".";'
+  'return "This is intentionally a false-decomposition case. The best formulation is one optimization subproblem, not three independent choices. Configuration " + $scores.winner + " wins because the predetermined combined score is " + formatScore($scores.winnerScore) + " versus " + formatScore($scores.loserScore) + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -114,6 +122,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

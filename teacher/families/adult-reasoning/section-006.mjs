@@ -102,19 +102,29 @@ function render(solution) {
   return `${solution.holderClause} ${solution.milkClause} ${solution.stopClause}`;
 }
 
+const WIRES = [
+  {
+    name: 'verdicts',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const holder = slots.ownerWithdrew ? slots.runner : slots.owner;',
+      'const holderClause = holder + " stays on bread.";',
+      'const conditionMet = slots.shopFloor < slots.milkLimit;',
+      'const boughtMilk = !slots.tookOnlyLoaves;',
+      'const milkClause = conditionMet',
+      '  ? "Milk: the condition is true, so " + (boughtMilk ? "it was correctly bought" : "it should have been bought") + "."',
+      '  : "Milk: the condition is false, so " + (boughtMilk ? "buying it broke the rule" : "correctly not bought") + ".";',
+      'const order = slots.stopSaysBuy ? "buy" : "don’t buy";',
+      'const respected = boughtMilk === slots.stopSaysBuy;',
+      'const stopClause = slots.unreadTime + " was unread and, in any case, said “" + order + "” — " + (respected ? "already respected" : "still open") + ".";',
+      'return { holderClause, milkClause, stopClause };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const holder = slots.ownerWithdrew ? slots.runner : slots.owner;',
-  'const holderClause = holder + " stays on bread.";',
-  'const conditionMet = slots.shopFloor < slots.milkLimit;',
-  'const boughtMilk = !slots.tookOnlyLoaves;',
-  'const milkClause = conditionMet',
-  '  ? "Milk: the condition is true, so " + (boughtMilk ? "it was correctly bought" : "it should have been bought") + "."',
-  '  : "Milk: the condition is false, so " + (boughtMilk ? "buying it broke the rule" : "correctly not bought") + ".";',
-  'const order = slots.stopSaysBuy ? "buy" : "don’t buy";',
-  'const respected = boughtMilk === slots.stopSaysBuy;',
-  'const stopClause = slots.unreadTime + " was unread and, in any case, said “" + order + "” — " + (respected ? "already respected" : "still open") + ".";',
-  'return holderClause + " " + milkClause + " " + stopClause;'
+  'return $verdicts.holderClause + " " + $verdicts.milkClause + " " + $verdicts.stopClause;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -136,6 +146,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

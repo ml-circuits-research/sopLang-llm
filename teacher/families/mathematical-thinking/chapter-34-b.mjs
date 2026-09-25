@@ -103,12 +103,16 @@ export const cases = [
       return { order, ascending: cost(order), descending: cost([...order].reverse()) };
     },
     render(solution) { return `Order ${solution.order.map((task) => task.name).join(',')}.`; },
-    compute: circuit([
-      'const order = slots.tasks.slice().sort((left, right) => left.minutes - right.minutes);',
-      'const cost = (list) => list.reduce((sum, task, index) => sum + list.slice(0, index + 1).reduce((inner, other) => inner + other.minutes, 0), 0);',
-      'const chosen = cost(order) <= cost(order.slice().reverse()) ? order : order.slice().reverse();',
-      'return "Order " + chosen.map((task) => task.name).join(",") + ".";'
-    ]),
+    wires: [
+      {
+        name: 'chosen', command: 'jsEval', body: circuit([
+          'const order = slots.tasks.slice().sort((left, right) => left.minutes - right.minutes);',
+          'const cost = (list) => list.reduce((sum, task, index) => sum + list.slice(0, index + 1).reduce((inner, other) => inner + other.minutes, 0), 0);',
+          'return cost(order) <= cost(order.slice().reverse()) ? order : order.slice().reverse();'
+        ])
+      }
+    ],
+    compute: ['return "Order " + $chosen.map((task) => task.name).join(",") + ".";'].join('\n'),
     explain(slots, solution) {
       return [
         `A task's completion time counts every task done before it, so an early short task is charged to all later tasks.`,
@@ -259,24 +263,29 @@ export const cases = [
       return best;
     },
     render(solution) { return `${solution.names.join('+')}, value ${solution.value}.`; },
-    compute: circuit([
-      'let best = null;',
-      'for (let mask = 0; mask < (1 << slots.items.length); mask += 1) {',
-      '  let weight = 0;',
-      '  let value = 0;',
-      '  const names = [];',
-      '  for (let index = 0; index < slots.items.length; index += 1) {',
-      '    if ((mask >> index) & 1) {',
-      '      weight += slots.items[index].weight;',
-      '      value += slots.items[index].value;',
-      '      names.push(slots.items[index].name);',
-      '    }',
-      '  }',
-      '  if (weight > slots.capacity) { continue; }',
-      '  if (best === null || value > best.value || (value === best.value && names.length < best.names.length)) { best = { names, value }; }',
-      '}',
-      'return best.names.join("+") + ", value " + best.value + ".";'
-    ]),
+    wires: [
+      {
+        name: 'best', command: 'jsEval', body: circuit([
+          'let best = null;',
+          'for (let mask = 0; mask < (1 << slots.items.length); mask += 1) {',
+          '  let weight = 0;',
+          '  let value = 0;',
+          '  const names = [];',
+          '  for (let index = 0; index < slots.items.length; index += 1) {',
+          '    if ((mask >> index) & 1) {',
+          '      weight += slots.items[index].weight;',
+          '      value += slots.items[index].value;',
+          '      names.push(slots.items[index].name);',
+          '    }',
+          '  }',
+          '  if (weight > slots.capacity) { continue; }',
+          '  if (best === null || value > best.value || (value === best.value && names.length < best.names.length)) { best = { names, value }; }',
+          '}',
+          'return best;'
+        ])
+      }
+    ],
+    compute: ['return $best.names.join("+") + ", value " + $best.value + ".";'].join('\n'),
     explain(slots, solution) {
       return [
         `Each object is either taken or left, so the search tries every combination and discards the ones heavier than ${slots.capacity} kg.`,
@@ -313,19 +322,24 @@ export const cases = [
       return best;
     },
     render(solution) { return `${plural(solution.a, 'package')} A, cost ${solution.cost}.`; },
-    compute: circuit([
-      'let best = null;',
-      'const limitA = Math.ceil(slots.need / slots.unitsA) + 1;',
-      'const limitB = Math.ceil(slots.need / slots.unitsB) + 1;',
-      'for (let a = 0; a <= limitA; a += 1) {',
-      '  for (let b = 0; b <= limitB; b += 1) {',
-      '    if (a * slots.unitsA + b * slots.unitsB < slots.need) { continue; }',
-      '    const cost = a * slots.costA + b * slots.costB;',
-      '    if (best === null || cost < best.cost || (cost === best.cost && a + b < best.a + best.b)) { best = { a, b, cost, units: a * slots.unitsA + b * slots.unitsB }; }',
-      '  }',
-      '}',
-      'return best.a + " package" + (best.a === 1 ? "" : "s") + " A, cost " + best.cost + ".";'
-    ]),
+    wires: [
+      {
+        name: 'best', command: 'jsEval', body: circuit([
+          'let best = null;',
+          'const limitA = Math.ceil(slots.need / slots.unitsA) + 1;',
+          'const limitB = Math.ceil(slots.need / slots.unitsB) + 1;',
+          'for (let a = 0; a <= limitA; a += 1) {',
+          '  for (let b = 0; b <= limitB; b += 1) {',
+          '    if (a * slots.unitsA + b * slots.unitsB < slots.need) { continue; }',
+          '    const cost = a * slots.costA + b * slots.costB;',
+          '    if (best === null || cost < best.cost || (cost === best.cost && a + b < best.a + best.b)) { best = { a, b, cost, units: a * slots.unitsA + b * slots.unitsB }; }',
+          '  }',
+          '}',
+          'return best;'
+        ])
+      }
+    ],
+    compute: ['return $best.a + " package" + ($best.a === 1 ? "" : "s") + " A, cost " + $best.cost + ".";'].join('\n'),
     explain(slots, solution) {
       return [
         `Every purchase is a count of packages A and B, and only purchases reaching ${slots.need} units qualify.`,

@@ -150,28 +150,38 @@ function render(solution) {
   return `The optimal question is “${solution.phrase}”, with split ${solution.yes}/${solution.no}.`;
 }
 
+const WIRES = [
+  {
+    name: 'question',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const counts = new Map();',
+      'const order = [];',
+      'for (const entry of slots.cases) {',
+      '  for (const property of entry.properties) {',
+      '    if (!counts.has(property)) { counts.set(property, 0); order.push(property); }',
+      '    counts.set(property, counts.get(property) + 1);',
+      '  }',
+      '}',
+      'const questions = order.map((property) => ({ property: property, yes: counts.get(property), no: slots.cases.length - counts.get(property) }));',
+      'let best = null;',
+      'let tied = 0;',
+      'for (const candidate of questions) {',
+      '  const worst = Math.max(candidate.yes, candidate.no);',
+      '  if (best === null || worst < best.worst) { best = { property: candidate.property, yes: candidate.yes, no: candidate.no, worst: worst }; tied = 1; }',
+      '  else if (worst === best.worst) { tied += 1; }',
+      '}',
+      'probe(tied === 1, "the stated properties must leave exactly one most informative question");',
+      'probe(best.yes + best.no === slots.cases.length, "the split must count every candidate");',
+      'const phrase = slots.questions[best.property];',
+      'return { phrase: phrase, yes: best.yes, no: best.no };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const counts = new Map();',
-  'const order = [];',
-  'for (const entry of slots.cases) {',
-  '  for (const property of entry.properties) {',
-  '    if (!counts.has(property)) { counts.set(property, 0); order.push(property); }',
-  '    counts.set(property, counts.get(property) + 1);',
-  '  }',
-  '}',
-  'const questions = order.map((property) => ({ property: property, yes: counts.get(property), no: slots.cases.length - counts.get(property) }));',
-  'let best = null;',
-  'let tied = 0;',
-  'for (const candidate of questions) {',
-  '  const worst = Math.max(candidate.yes, candidate.no);',
-  '  if (best === null || worst < best.worst) { best = { property: candidate.property, yes: candidate.yes, no: candidate.no, worst: worst }; tied = 1; }',
-  '  else if (worst === best.worst) { tied += 1; }',
-  '}',
-  'probe(tied === 1, "the stated properties must leave exactly one most informative question");',
-  'probe(best.yes + best.no === slots.cases.length, "the split must count every candidate");',
-  'const phrase = slots.questions[best.property];',
-  'return "The optimal question is “" + phrase + "”, with split " + best.yes + "/" + best.no + ".";'
+  'return "The optimal question is “" + $question.phrase + "”, with split " + $question.yes + "/" + $question.no + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -193,6 +203,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

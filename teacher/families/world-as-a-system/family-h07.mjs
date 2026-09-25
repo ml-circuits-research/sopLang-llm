@@ -61,19 +61,36 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'sets',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const continuities = slots.period1.filter((feature) => slots.period2.includes(feature));',
+      'const disappearances = slots.period1.filter((feature) => !slots.period2.includes(feature));',
+      'const appearances = slots.period2.filter((feature) => !slots.period1.includes(feature));',
+      'probe(continuities.length > 0, "the two periods must share at least one feature, otherwise the comparison has no continuity");',
+      'probe(continuities.length + disappearances.length === slots.period1.length, "every Period 1 feature must be either a continuity or a disappearance");',
+      'probe(continuities.length + appearances.length === slots.period2.length, "every Period 2 feature must be either a continuity or an appearance");',
+      'return { continuities: continuities, disappearances: disappearances, appearances: appearances };'
+    ].join('\n')
+  },
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
-  'const slots = $slots;',
   'const quoted = (items) => "[" + items.map((item) => "\'" + item + "\'").join(", ") + "]";',
-  'const continuities = slots.period1.filter((feature) => slots.period2.includes(feature));',
-  'const disappearances = slots.period1.filter((feature) => !slots.period2.includes(feature));',
-  'const appearances = slots.period2.filter((feature) => !slots.period1.includes(feature));',
-  'probe(continuities.length > 0, "the two periods must share at least one feature, otherwise the comparison has no continuity");',
-  'probe(continuities.length + disappearances.length === slots.period1.length, "every Period 1 feature must be either a continuity or a disappearance");',
-  'probe(continuities.length + appearances.length === slots.period2.length, "every Period 2 feature must be either a continuity or an appearance");',
-  'const main = "Continuities: " + quoted(continuities) + "; disappearances: " + quoted(disappearances) + "; appearances: " + quoted(appearances) + ".";',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'const main = "Continuities: " + quoted($sets.continuities) + "; disappearances: " + quoted($sets.disappearances) + "; appearances: " + quoted($sets.appearances) + ".";',
+  'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -94,6 +111,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

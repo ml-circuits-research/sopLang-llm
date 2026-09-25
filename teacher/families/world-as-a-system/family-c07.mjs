@@ -83,28 +83,46 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'tally',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'let firstVotes = 0;',
+      'let secondVotes = 0;',
+      'for (const group of slots.groups) {',
+      '  const left = group.ranking.indexOf(slots.options[0]);',
+      '  const right = group.ranking.indexOf(slots.options[1]);',
+      '  if (left < right) {',
+      '    firstVotes += group.voters;',
+      '  } else {',
+      '    secondVotes += group.voters;',
+      '  }',
+      '}',
+      'probe(firstVotes + secondVotes > 0, "the contest must count at least one voter");',
+      'return { firstVotes, secondVotes };'
+    ].join('\n')
+  },
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
-  'let firstVotes = 0;',
-  'let secondVotes = 0;',
-  'for (const group of slots.groups) {',
-  '  const left = group.ranking.indexOf(slots.options[0]);',
-  '  const right = group.ranking.indexOf(slots.options[1]);',
-  '  if (left < right) {',
-  '    firstVotes += group.voters;',
-  '  } else {',
-  '    secondVotes += group.voters;',
-  '  }',
-  '}',
-  'probe(firstVotes + secondVotes > 0, "the contest must count at least one voter");',
-  'const main = firstVotes === secondVotes',
-  '  ? "tie " + firstVotes + "–" + secondVotes + "."',
-  '  : firstVotes > secondVotes',
-  '    ? slots.options[0] + " wins " + firstVotes + " to " + secondVotes + "."',
-  '    : slots.options[1] + " wins " + secondVotes + " to " + firstVotes + ".";',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'const main = $tally.firstVotes === $tally.secondVotes',
+  '  ? "tie " + $tally.firstVotes + "–" + $tally.secondVotes + "."',
+  '  : $tally.firstVotes > $tally.secondVotes',
+  '    ? slots.options[0] + " wins " + $tally.firstVotes + " to " + $tally.secondVotes + "."',
+  '    : slots.options[1] + " wins " + $tally.secondVotes + " to " + $tally.firstVotes + ".";',
+  'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -125,6 +143,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

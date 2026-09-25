@@ -1,0 +1,7 @@
+=== exp-021 (Qwen3-1.7B, dv7 containers) ===
+parse validity 100.0%, graph validity 100.0%, runtime completion 91.9%, oracle match 65.2%
+capability probes 1/10 (capability-probes-1.0.0)
+=== books ===
+books 22/225
+=== container families on the holdout ===
+{}

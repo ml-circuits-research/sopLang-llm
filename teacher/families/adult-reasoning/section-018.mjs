@@ -63,17 +63,27 @@ function render(solution) {
   return `A ${solution.a}, B ${solution.b}, difference ${solution.difference}. Chooses ${solution.choice}.`;
 }
 
+const WIRES = [
+  {
+    name: 'costs',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const perHundredCents = (box) => ((box.price + box.delivery) * 10000) / box.washes;',
+      'const aCents = perHundredCents(slots.a);',
+      'const bCents = perHundredCents(slots.b);',
+      'probe(Number.isInteger(aCents) && Number.isInteger(bCents), "both costs per 100 washes must be whole cents");',
+      'const differenceCents = Math.abs(aCents - bCents);',
+      'const useWeight = differenceCents < slots.threshold * 100;',
+      'const choice = useWeight ? (slots.a.weight <= slots.b.weight ? "A" : "B") : (aCents <= bCents ? "A" : "B");',
+      'return { aCents, bCents, differenceCents, choice };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const perHundredCents = (box) => ((box.price + box.delivery) * 10000) / box.washes;',
-  'const aCents = perHundredCents(slots.a);',
-  'const bCents = perHundredCents(slots.b);',
-  'probe(Number.isInteger(aCents) && Number.isInteger(bCents), "both costs per 100 washes must be whole cents");',
-  'const differenceCents = Math.abs(aCents - bCents);',
-  'const useWeight = differenceCents < slots.threshold * 100;',
-  'const choice = useWeight ? (slots.a.weight <= slots.b.weight ? "A" : "B") : (aCents <= bCents ? "A" : "B");',
   'const money = (cents) => (cents / 100).toFixed(2);',
-  'return "A " + money(aCents) + ", B " + money(bCents) + ", difference " + money(differenceCents) + ". Chooses " + choice + ".";'
+  'return "A " + money($costs.aCents) + ", B " + money($costs.bCents) + ", difference " + money($costs.differenceCents) + ". Chooses " + $costs.choice + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -99,6 +109,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

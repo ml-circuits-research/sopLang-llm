@@ -210,21 +210,29 @@ return String(Math.max(...slots.values) - Math.min(...slots.values)) + ".";`,
       return `The mean is ${solution.sameMean ? 'the same' : 'not the same'}; the range is ${solution.sameRange ? 'the same' : 'not'}.`;
     },
     facts: JSON.stringify({ meanRule: { numerator: 'sum', denominator: 'count' }, rangeRule: { from: 'max', to: 'min', combine: 'difference' } }),
-    compute: `const slots = $slots;
-const meanRule = $facts.meanRule;
-const rangeRule = $facts.rangeRule;
-const mean = (values) => {
-  const numerator = meanRule.numerator === "sum" ? values.reduce((sum, value) => sum + value, 0) : (() => { throw new Error("unsupported numerator " + meanRule.numerator); })();
-  const denominator = meanRule.denominator === "count" ? values.length : (() => { throw new Error("unsupported denominator " + meanRule.denominator); })();
-  return numerator / denominator;
-};
-const range = (values) => {
-  const from = rangeRule.from === "max" ? Math.max(...values) : (() => { throw new Error("unsupported range from " + rangeRule.from); })();
-  const to = rangeRule.to === "min" ? Math.min(...values) : (() => { throw new Error("unsupported range to " + rangeRule.to); })();
-  return rangeRule.combine === "difference" ? from - to : (() => { throw new Error("unsupported range combine " + rangeRule.combine); })();
-};
-return "The mean is " + (mean(slots.setA) === mean(slots.setB) ? "the same" : "not the same") +
-  "; the range is " + (range(slots.setA) === range(slots.setB) ? "the same" : "not") + ".";`,
+    wires: [
+      {
+        name: 'comparison', command: 'jsEval', body: [
+          'const slots = $slots;',
+          'const meanRule = $facts.meanRule;',
+          'const rangeRule = $facts.rangeRule;',
+          'const mean = (values) => {',
+          '  const numerator = meanRule.numerator === "sum" ? values.reduce((sum, value) => sum + value, 0) : (() => { throw new Error("unsupported numerator " + meanRule.numerator); })();',
+          '  const denominator = meanRule.denominator === "count" ? values.length : (() => { throw new Error("unsupported denominator " + meanRule.denominator); })();',
+          '  return numerator / denominator;',
+          '};',
+          'const range = (values) => {',
+          '  const from = rangeRule.from === "max" ? Math.max(...values) : (() => { throw new Error("unsupported range from " + rangeRule.from); })();',
+          '  const to = rangeRule.to === "min" ? Math.min(...values) : (() => { throw new Error("unsupported range to " + rangeRule.to); })();',
+          '  return rangeRule.combine === "difference" ? from - to : (() => { throw new Error("unsupported range combine " + rangeRule.combine); })();',
+          '};',
+          'return { sameMean: mean(slots.setA) === mean(slots.setB), sameRange: range(slots.setA) === range(slots.setB) };'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'return "The mean is " + ($comparison.sameMean ? "the same" : "not the same") + "; the range is " + ($comparison.sameRange ? "the same" : "not") + ".";'
+    ].join('\n'),
     explain(slots, solution) {
       return [
         'The two statistics are not defined here, so the solution uses the mean as sum divided by count and the range as maximum minus minimum.',
@@ -341,18 +349,27 @@ return String(median) + ".";`,
       return `${fractionText(solution.total, solution.count)}.`;
     },
     facts: MEAN_RULE,
-    compute: `${FRACTION_UTILS}
-const slots = $slots;
-const rule = $facts.meanRule;
-const values = [];
-for (const entry of slots.grades) {
-  for (let index = 0; index < entry[1]; index += 1) {
-    values.push(entry[0]);
-  }
-}
-const numerator = rule.numerator === "sum" ? values.reduce((sum, value) => sum + value, 0) : (() => { throw new Error("unsupported numerator " + rule.numerator); })();
-const denominator = rule.denominator === "count" ? values.length : (() => { throw new Error("unsupported denominator " + rule.denominator); })();
-return fractionText(numerator, denominator) + ".";`,
+    wires: [
+      {
+        name: 'mean', command: 'jsEval', body: [
+          'const slots = $slots;',
+          'const rule = $facts.meanRule;',
+          'const values = [];',
+          'for (const entry of slots.grades) {',
+          '  for (let index = 0; index < entry[1]; index += 1) {',
+          '    values.push(entry[0]);',
+          '  }',
+          '}',
+          'const numerator = rule.numerator === "sum" ? values.reduce((sum, value) => sum + value, 0) : (() => { throw new Error("unsupported numerator " + rule.numerator); })();',
+          'const denominator = rule.denominator === "count" ? values.length : (() => { throw new Error("unsupported denominator " + rule.denominator); })();',
+          'return { numerator: numerator, denominator: denominator };'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      FRACTION_UTILS,
+      'return fractionText($mean.numerator, $mean.denominator) + ".";'
+    ].join('\n'),
     explain(slots, solution) {
       return [
         'Each grade is treated as equally weighted, which means the grade is written once for every time it occurs.',
@@ -380,11 +397,20 @@ return fractionText(numerator, denominator) + ".";`,
     render(solution) {
       return `${fractionText(solution.weighted, solution.weights)}.`;
     },
-    compute: `${FRACTION_UTILS}
-const slots = $slots;
-const weighted = slots.entries.reduce((sum, entry) => sum + entry[0] * entry[1], 0);
-const weights = slots.entries.reduce((sum, entry) => sum + entry[1], 0);
-return fractionText(weighted, weights) + ".";`,
+    wires: [
+      {
+        name: 'mean', command: 'jsEval', body: [
+          'const slots = $slots;',
+          'const weighted = slots.entries.reduce((sum, entry) => sum + entry[0] * entry[1], 0);',
+          'const weights = slots.entries.reduce((sum, entry) => sum + entry[1], 0);',
+          'return { weighted: weighted, weights: weights };'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      FRACTION_UTILS,
+      'return fractionText($mean.weighted, $mean.weights) + ".";'
+    ].join('\n'),
     explain(slots, solution) {
       return [
         'The statement defines the weighted mean as the sum of value×weight divided by the sum of the weights.',

@@ -60,8 +60,19 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
   'const total = slots.contributions.reduce((sum, value) => sum + value, 0);',
   'probe(Number.isFinite(total), "the summed contribution must be a finite number");',
@@ -69,8 +80,7 @@ const COMPUTE = [
   'const additional = Math.max(0, slots.threshold - total);',
   'probe(built || additional > 0, "a project short of the threshold must still need tokens");',
   'const main = (built ? "The project is built." : "The project is not built.") + " Additional tokens needed: " + additional + ".";',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -91,6 +101,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

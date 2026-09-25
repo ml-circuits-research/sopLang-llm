@@ -38,8 +38,8 @@ function weekdayCompute(lines) {
  * problem text does not list. The fact table travels on a `@facts literal` wire,
  * so the circuit materializes the fact instead of hiding it in code.
  */
-function weekdayCase({ template, type, parse, solve, render, compute, explain, sharedPremise }) {
-  return {
+function weekdayCase({ template, type, parse, solve, render, compute, explain, sharedPremise, wires }) {
+  const entry = {
     template,
     type,
     category: 'knowledge',
@@ -51,6 +51,10 @@ function weekdayCase({ template, type, parse, solve, render, compute, explain, s
     sharedPremise,
     explain
   };
+  if (wires !== undefined) {
+    entry.wires = wires;
+  }
+  return entry;
 }
 
 // Part A of three: 8 chapter 26 cases, with the helpers they reference.

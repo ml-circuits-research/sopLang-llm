@@ -75,14 +75,24 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
   'const majority = slots.yes > slots.no;',
   'const blocked = slots.removesRight === true && slots.protectsRights === true;',
   'const main = majority ? (blocked ? "It received a majority, but it may not take effect under the stated rights rule." : "It received a majority, and it may take effect under the stated constitution.") : blocked ? "It did not receive a majority, and it may not take effect under the stated rights rule." : "It did not receive a majority, so it may not take effect.";',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -103,6 +113,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

@@ -71,6 +71,44 @@ function ratioCompute(favorableExpression, totalExpression) {
   ].join('\n');
 }
 
+const CERTAIN_WIRES = [
+  {
+    name: 'ratio',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      GCD_LINE,
+      'const factor = gcd(slots.favorable, slots.total);',
+      'const n = slots.favorable / factor;',
+      'const d = slots.total / factor;',
+      'return d === 1 ? String(n) : n + "/" + d;'
+    ].join('\n')
+  }
+];
+
+const CERTAIN_COMPUTE = [
+  'return ($slots.favorable === $slots.total ? "Yes; the probability is " : "No; the probability is ") + $ratio + ".";'
+].join('\n');
+
+const EVEN_WIRES = [
+  {
+    name: 'reduced',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      GCD_LINE,
+      'const factor = gcd(slots.favorable, slots.total);',
+      'const n = slots.favorable / factor;',
+      'const d = slots.total / factor;',
+      'return d === 1 ? String(n) : n + "/" + d;'
+    ].join('\n')
+  }
+];
+
+const EVEN_COMPUTE = [
+  'return $slots.favorable + "/" + $slots.total + "=" + $reduced;'
+].join('\n');
+
 export const cases = [
   {
     template: 'Equally likely outcomes',
@@ -126,17 +164,8 @@ export const cases = [
         ? `Yes; the probability is ${fraction(solution.total, solution.total)}.`
         : `No; the probability is ${fraction(solution.favorable, solution.total)}.`;
     },
-    compute: [
-      'const slots = $slots;',
-      GCD_LINE,
-      'const favorable = slots.favorable;',
-      'const total = slots.total;',
-      'const factor = gcd(favorable, total);',
-      'const n = favorable / factor;',
-      'const d = total / factor;',
-      'const chance = d === 1 ? String(n) : n + "/" + d;',
-      'return (favorable === total ? "Yes; the probability is " : "No; the probability is ") + chance + ".";'
-    ].join('\n'),
+    wires: CERTAIN_WIRES,
+    compute: CERTAIN_COMPUTE,
     explain(slots, solution) {
       return [
         'An event is certain when every possible outcome satisfies it, so certainty is decided by comparing the favorable outcomes with the whole outcome space.',
@@ -307,17 +336,8 @@ export const cases = [
     render(solution) {
       return `${solution.favorable}/${solution.total}=${fraction(solution.favorable, solution.total)}.`;
     },
-    compute: [
-      'const slots = $slots;',
-      GCD_LINE,
-      'const favorable = slots.favorable;',
-      'const total = slots.total;',
-      'const factor = gcd(favorable, total);',
-      'const n = favorable / factor;',
-      'const d = total / factor;',
-      'const reduced = d === 1 ? String(n) : n + "/" + d;',
-      'return favorable + "/" + total + "=" + reduced;'
-    ].join('\n'),
+    wires: EVEN_WIRES,
+    compute: EVEN_COMPUTE,
     explain(slots, solution) {
       return [
         'An event made of several outcomes is counted by listing exactly the outcomes that satisfy it, then sharing the total number of equally likely outcomes.',

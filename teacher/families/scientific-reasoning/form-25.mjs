@@ -103,35 +103,43 @@ function render(solution) {
   return `"${solution.target}" is ${solution.direction} of "${solution.anchor}"; the given route has ${solution.steps} steps.`;
 }
 
+const WIRES = [
+  {
+    name: 'place',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const VECTORS = { north: [0, 1], south: [0, -1], east: [1, 0], west: [-1, 0], northeast: [1, 1], northwest: [-1, 1], southeast: [1, -1], southwest: [-1, -1] };',
+      'const COMPASS = new Map(Object.entries(VECTORS).map(([word, step]) => [step[0] + "," + step[1], word]));',
+      'const reached = new Map([[slots.anchor, { x: 0, y: 0, steps: 0 }]]);',
+      'let frontier = [slots.anchor];',
+      'while (frontier.length > 0 && !reached.has(slots.target)) {',
+      '  const next = [];',
+      '  for (const place of frontier) {',
+      '    const here = reached.get(place);',
+      '    for (const relation of slots.relations) {',
+      '      if (relation.object !== place || reached.has(relation.subject)) {',
+      '        continue;',
+      '      }',
+      '      const step = VECTORS[relation.direction];',
+      '      reached.set(relation.subject, { x: here.x + step[0], y: here.y + step[1], steps: here.steps + 1 });',
+      '      next.push(relation.subject);',
+      '    }',
+      '  }',
+      '  frontier = next;',
+      '}',
+      'probe(reached.has(slots.target), "the described route must reach the asked place");',
+      'const place = reached.get(slots.target);',
+      'const word = COMPASS.get(place.x + "," + place.y);',
+      'probe(typeof word === "string" && word.length > 0, "the net displacement must be a compass direction");',
+      'probe(place.steps > 0 && place.steps < slots.relations.length + 1, "the route must use at least one and fewer than all the stated relations");',
+      'return { word: word, steps: place.steps };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const VECTORS = { north: [0, 1], south: [0, -1], east: [1, 0], west: [-1, 0], northeast: [1, 1], northwest: [-1, 1], southeast: [1, -1], southwest: [-1, -1] };',
-  'const COMPASS = new Map(Object.entries(VECTORS).map(([word, step]) => [step[0] + "," + step[1], word]));',
-  'for (const relation of slots.relations) {',
-  '}',
-  'const reached = new Map([[slots.anchor, { x: 0, y: 0, steps: 0 }]]);',
-  'let frontier = [slots.anchor];',
-  'while (frontier.length > 0 && !reached.has(slots.target)) {',
-  '  const next = [];',
-  '  for (const place of frontier) {',
-  '    const here = reached.get(place);',
-  '    for (const relation of slots.relations) {',
-  '      if (relation.object !== place || reached.has(relation.subject)) {',
-  '        continue;',
-  '      }',
-  '      const step = VECTORS[relation.direction];',
-  '      reached.set(relation.subject, { x: here.x + step[0], y: here.y + step[1], steps: here.steps + 1 });',
-  '      next.push(relation.subject);',
-  '    }',
-  '  }',
-  '  frontier = next;',
-  '}',
-  'probe(reached.has(slots.target), "the described route must reach the asked place");',
-  'const place = reached.get(slots.target);',
-  'const word = COMPASS.get(place.x + "," + place.y);',
-  'probe(typeof word === "string" && word.length > 0, "the net displacement must be a compass direction");',
-  'probe(place.steps > 0 && place.steps < slots.relations.length + 1, "the route must use at least one and fewer than all the stated relations");',
-  'return "\\"" + slots.target + "\\" is " + word + " of \\"" + slots.anchor + "\\"; the given route has " + place.steps + " steps.";'
+  'return "\\"" + $slots.target + "\\" is " + $place.word + " of \\"" + $slots.anchor + "\\"; the given route has " + $place.steps + " steps.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -153,6 +161,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

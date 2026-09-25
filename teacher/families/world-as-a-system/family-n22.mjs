@@ -77,8 +77,19 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
   'const evidenceMet = slots.independentEvidence >= slots.requiredEvidence;',
   'const responseMet = slots.responseOpportunity;',
@@ -95,8 +106,7 @@ const COMPUTE = [
   '}',
   'probe(!authorized || (evidenceMet && responseMet), "the verdict must follow from the conjunctive procedure");',
   'const main = (authorized ? "Yes." : "No.") + " " + condition;',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -121,6 +131,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

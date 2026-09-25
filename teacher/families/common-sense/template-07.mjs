@@ -154,41 +154,51 @@ function render(solution) {
   return `${conclusions}. Rule ${solution.askedRule.index} is not needed for these ${NUMBER_WORDS[solution.values.length]} conclusions in this case.`;
 }
 
+const WIRES = [
+  {
+    name: 'deduce',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const facts = new Map();',
+      'for (const fact of slots.observed) {',
+      '  facts.set(fact.name, fact.value);',
+      '}',
+      'const applied = [];',
+      'let progressed = true;',
+      'while (progressed) {',
+      '  progressed = false;',
+      '  for (const rule of slots.rules) {',
+      '    if (applied.indexOf(rule.index) !== -1) {',
+      '      continue;',
+      '    }',
+      '    const holds = rule.conditions.every((condition) => facts.get(condition.name) === condition.value);',
+      '    if (!holds) {',
+      '      continue;',
+      '    }',
+      '    const known = facts.get(rule.conclusion.name);',
+      '    if (known !== undefined) {',
+      '      if (known !== rule.conclusion.value) {',
+      '        throw new Error("rule " + rule.index + " contradicts the known value of " + rule.conclusion.name);',
+      '      }',
+      '      continue;',
+      '    }',
+      '    facts.set(rule.conclusion.name, rule.conclusion.value);',
+      '    applied.push(rule.index);',
+      '    progressed = true;',
+      '  }',
+      '}',
+      'probe(slots.query.every((name) => facts.get(name) !== undefined), "the stated rules must pin down every queried value");',
+      'probe(applied.indexOf(slots.askedRule) === -1, "the asked rule must not be needed in this family");',
+      'const conclusions = slots.query.map((name) => name + " must be " + facts.get(name));',
+      'return { conclusions, askedRule: slots.askedRule };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
   'const words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];',
-  'const facts = new Map();',
-  'for (const fact of slots.observed) {',
-  '  facts.set(fact.name, fact.value);',
-  '}',
-  'const applied = [];',
-  'let progressed = true;',
-  'while (progressed) {',
-  '  progressed = false;',
-  '  for (const rule of slots.rules) {',
-  '    if (applied.indexOf(rule.index) !== -1) {',
-  '      continue;',
-  '    }',
-  '    const holds = rule.conditions.every((condition) => facts.get(condition.name) === condition.value);',
-  '    if (!holds) {',
-  '      continue;',
-  '    }',
-  '    const known = facts.get(rule.conclusion.name);',
-  '    if (known !== undefined) {',
-  '      if (known !== rule.conclusion.value) {',
-  '        throw new Error("rule " + rule.index + " contradicts the known value of " + rule.conclusion.name);',
-  '      }',
-  '      continue;',
-  '    }',
-  '    facts.set(rule.conclusion.name, rule.conclusion.value);',
-  '    applied.push(rule.index);',
-  '    progressed = true;',
-  '  }',
-  '}',
-  'probe(slots.query.every((name) => facts.get(name) !== undefined), "the stated rules must pin down every queried value");',
-  'probe(applied.indexOf(slots.askedRule) === -1, "the asked rule must not be needed in this family");',
-  'const conclusions = slots.query.map((name) => name + " must be " + facts.get(name)).join("; ");',
-  'return conclusions + ". Rule " + slots.askedRule + " is not needed for these " + words[slots.query.length] + " conclusions in this case.";'
+  'return $deduce.conclusions.join("; ") + ". Rule " + $deduce.askedRule + " is not needed for these " + words[$deduce.conclusions.length] + " conclusions in this case.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -215,6 +225,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

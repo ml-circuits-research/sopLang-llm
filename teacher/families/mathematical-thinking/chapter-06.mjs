@@ -122,25 +122,34 @@ export const cases = [
     render(solution) {
       return String(solution.value);
     },
+    wires: [
+      {
+        name: 'candidates',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'const candidates = [];',
+          'for (const tens of slots.digits) {',
+          '  for (const ones of slots.digits) {',
+          '    if (tens === ones || tens === 0) {',
+          '      continue;',
+          '    }',
+          '    const value = 10 * tens + ones;',
+          '    if (value > slots.lower && value < slots.upper) {',
+          '      candidates.push(value);',
+          '    }',
+          '  }',
+          '}',
+          'if (candidates.length === 0) {',
+          '  throw new Error("no two-digit number from the allowed digits fits between the limits");',
+          '}',
+          'candidates.sort((left, right) => left - right);',
+          'return candidates;'
+        ].join('\n')
+      }
+    ],
     compute: [
-      'const slots = $slots;',
-      'const candidates = [];',
-      'for (const tens of slots.digits) {',
-      '  for (const ones of slots.digits) {',
-      '    if (tens === ones || tens === 0) {',
-      '      continue;',
-      '    }',
-      '    const value = 10 * tens + ones;',
-      '    if (value > slots.lower && value < slots.upper) {',
-      '      candidates.push(value);',
-      '    }',
-      '  }',
-      '}',
-      'if (candidates.length === 0) {',
-      '  throw new Error("no two-digit number from the allowed digits fits between the limits");',
-      '}',
-      'candidates.sort((left, right) => left - right);',
-      'return String(candidates[0]);'
+      'return String($candidates[0]);'
     ].join('\n'),
     explain(slots, solution) {
       return [

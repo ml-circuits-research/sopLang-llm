@@ -95,32 +95,40 @@ function render(solution) {
   return `Direct effect: ${solution.direct}. Downstream effects: ${solution.effects.join(', ')}.`;
 }
 
+const WIRES = [
+  {
+    name: 'effects',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const filler = ["the", "a", "an"];',
+      'const stateKey = (text) => [...new Set(text.toLowerCase().replace(/\\s+/g, " ").trim().split(" ").filter((word) => filler.indexOf(word) === -1))].sort().join(" ");',
+      'const activated = [stateKey(slots.change)];',
+      'const effects = [];',
+      'let grown = true;',
+      'while (grown) {',
+      '  grown = false;',
+      '  for (const rule of slots.rules) {',
+      '    if (activated.indexOf(stateKey(rule.from)) === -1) {',
+      '      continue;',
+      '    }',
+      '    const effected = stateKey(rule.to);',
+      '    if (activated.indexOf(effected) !== -1) {',
+      '      continue;',
+      '    }',
+      '    activated.push(effected);',
+      '    effects.push(rule.to);',
+      '    grown = true;',
+      '  }',
+      '}',
+      'probe(effects.length > 0, "the activated change must trigger at least one rule");',
+      'return effects;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'for (const rule of slots.rules) {',
-  '}',
-  'const filler = ["the", "a", "an"];',
-  'const stateKey = (text) => [...new Set(text.toLowerCase().replace(/\\s+/g, " ").trim().split(" ").filter((word) => filler.indexOf(word) === -1))].sort().join(" ");',
-  'const activated = [stateKey(slots.change)];',
-  'const effects = [];',
-  'let grown = true;',
-  'while (grown) {',
-  '  grown = false;',
-  '  for (const rule of slots.rules) {',
-  '    if (activated.indexOf(stateKey(rule.from)) === -1) {',
-  '      continue;',
-  '    }',
-  '    const effected = stateKey(rule.to);',
-  '    if (activated.indexOf(effected) !== -1) {',
-  '      continue;',
-  '    }',
-  '    activated.push(effected);',
-  '    effects.push(rule.to);',
-  '    grown = true;',
-  '  }',
-  '}',
-  'probe(effects.length > 0, "the activated change must trigger at least one rule");',
-  'return "Direct effect: " + effects[0] + ". Downstream effects: " + effects.join(", ") + ".";'
+  'return "Direct effect: " + $effects[0] + ". Downstream effects: " + $effects.join(", ") + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -144,6 +152,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

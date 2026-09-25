@@ -129,6 +129,31 @@ function intervalOf(condition, domain) {
   throw new Error(`the condition "${condition}" cannot be read as an interval`);
 }
 
+const EVERY_STATE_WIRES = [
+  {
+    name: 'matching',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'let states = [[]];',
+      'for (let index = 0; index < slots.count; index += 1) {',
+      '  const next = [];',
+      '  for (const state of states) {',
+      '    for (const option of slots.options) next.push(state.concat([option]));',
+      '  }',
+      '  states = next;',
+      '}',
+      'return states.filter((state) => state.filter((value) => value === slots.onValue).length === slots.required).map((state) => "(" + state.join(",") + ")");'
+    ].join('\n')
+  }
+];
+
+const EVERY_STATE_COMPUTE = [
+  'const matching = $matching;',
+  'if (matching.length === 2) return "In states " + matching[0] + " and " + matching[1] + ".";',
+  'return "In states " + matching.slice(0, -1).join(", ") + ", and " + matching[matching.length - 1] + ".";'
+].join('\n');
+
 export const cases = [
   {
     template: 'The “and” condition requires both rules',
@@ -321,20 +346,8 @@ export const cases = [
     render(solution) {
       return `In states ${formatList(solution.matching)}.`;
     },
-    compute: [
-      'const slots = $slots;',
-      'let states = [[]];',
-      'for (let index = 0; index < slots.count; index += 1) {',
-      '  const next = [];',
-      '  for (const state of states) {',
-      '    for (const option of slots.options) next.push(state.concat([option]));',
-      '  }',
-      '  states = next;',
-      '}',
-      'const matching = states.filter((state) => state.filter((value) => value === slots.onValue).length === slots.required).map((state) => "(" + state.join(",") + ")");',
-      'if (matching.length === 2) return "In states " + matching[0] + " and " + matching[1] + ".";',
-      'return "In states " + matching.slice(0, -1).join(", ") + ", and " + matching[matching.length - 1] + ".";'
-    ].join('\n'),
+    wires: EVERY_STATE_WIRES,
+    compute: EVERY_STATE_COMPUTE,
     explain(slots) {
       return [
         `The alarm condition is "exactly ${slots.required} of the lamps is on", which is true only for the states whose number of on lamps equals ${slots.required}.`,

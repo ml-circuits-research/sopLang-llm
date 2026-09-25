@@ -211,24 +211,33 @@ export const cases = [
     render(solution) {
       return `“${solution.verb} ${solution.amount}.”`;
     },
+    wires: [
+      {
+        name: 'success',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'const successes = [];',
+          'for (const candidate of slots.candidates) {',
+          '  const step = candidate.match(/^(add|subtract) (\\d+)$/i);',
+          '  if (step === null) {',
+          '    continue;',
+          '  }',
+          '  const amount = Number(step[2]);',
+          '  const result = step[1].toLowerCase() === "add" ? slots.start + amount : slots.start - amount;',
+          '  if (result === slots.target) {',
+          '    successes.push({ verb: step[1].toLowerCase() === "add" ? "Add" : "Subtract", amount });',
+          '  }',
+          '}',
+          'if (successes.length !== 1) {',
+          '  throw new Error(successes.length + " candidate instructions reach the target");',
+          '}',
+          'return successes[0];'
+        ].join('\n')
+      }
+    ],
     compute: [
-      'const slots = $slots;',
-      'const successes = [];',
-      'for (const candidate of slots.candidates) {',
-      '  const step = candidate.match(/^(add|subtract) (\\d+)$/i);',
-      '  if (step === null) {',
-      '    continue;',
-      '  }',
-      '  const amount = Number(step[2]);',
-      '  const result = step[1].toLowerCase() === "add" ? slots.start + amount : slots.start - amount;',
-      '  if (result === slots.target) {',
-      '    successes.push({ verb: step[1].toLowerCase() === "add" ? "Add" : "Subtract", amount });',
-      '  }',
-      '}',
-      'if (successes.length !== 1) {',
-      '  throw new Error(successes.length + " candidate instructions reach the target");',
-      '}',
-      'return "\\u201c" + successes[0].verb + " " + successes[0].amount + ".\\u201d";'
+      'return "\\u201c" + $success.verb + " " + $success.amount + ".\\u201d";'
     ].join('\n'),
     explain(slots, solution) {
       return [

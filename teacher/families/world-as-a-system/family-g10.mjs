@@ -124,43 +124,60 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'main',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const parent = new Map(slots.pairs.map((pair) => [pair.inner, pair.outer]));',
+      'const chainOf = (start) => {',
+      '  const chain = [];',
+      '  const seen = new Set([start]);',
+      '  let node = start;',
+      '  while (parent.has(node)) {',
+      '    node = parent.get(node);',
+      '    if (seen.has(node)) {',
+      '      break;',
+      '    }',
+      '    seen.add(node);',
+      '    chain.push(node);',
+      '  }',
+      '  return chain;',
+      '};',
+      'const contains = (inner, outer) => chainOf(inner).indexOf(outer) >= 0;',
+      'const listPhrase = (items) => items.length === 1 ? items[0] : items.length === 2 ? items[0] + " and " + items[1] : items.slice(0, -1).join(", ") + ", and " + items[items.length - 1];',
+      'const question = slots.question;',
+      'let main;',
+      'if (question.kind === "membership") {',
+      '  probe(contains(question.subject, question.object), "the asked membership must follow from the stated containment");',
+      '  main = "Yes, " + question.subject + " is in " + question.object + ".";',
+      '} else if (question.kind === "reversal") {',
+      '  probe(contains(question.object, question.subject), "the reversed question must reverse a containment the facts state");',
+      '  main = "No. The containment relation cannot be reversed.";',
+      '} else if (question.kind === "ancestors") {',
+      '  const chain = chainOf(question.subject);',
+      '  probe(chain.length > 0, "the facts must state a larger unit for the asked place");',
+      '  main = listPhrase(chain) + ".";',
+      '} else {',
+      '  main = "No. Country membership alone is insufficient to identify the region.";',
+      '}',
+      'return main;'
+    ].join('\n')
+  },
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'return { suffix: renderCrossDomain($slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
-  'const slots = $slots;',
-  'const parent = new Map(slots.pairs.map((pair) => [pair.inner, pair.outer]));',
-  'const chainOf = (start) => {',
-  '  const chain = [];',
-  '  const seen = new Set([start]);',
-  '  let node = start;',
-  '  while (parent.has(node)) {',
-  '    node = parent.get(node);',
-  '    if (seen.has(node)) {',
-  '      break;',
-  '    }',
-  '    seen.add(node);',
-  '    chain.push(node);',
-  '  }',
-  '  return chain;',
-  '};',
-  'const contains = (inner, outer) => chainOf(inner).indexOf(outer) >= 0;',
-  'const listPhrase = (items) => items.length === 1 ? items[0] : items.length === 2 ? items[0] + " and " + items[1] : items.slice(0, -1).join(", ") + ", and " + items[items.length - 1];',
-  'const question = slots.question;',
-  'let main;',
-  'if (question.kind === "membership") {',
-  '  probe(contains(question.subject, question.object), "the asked membership must follow from the stated containment");',
-  '  main = "Yes, " + question.subject + " is in " + question.object + ".";',
-  '} else if (question.kind === "reversal") {',
-  '  probe(contains(question.object, question.subject), "the reversed question must reverse a containment the facts state");',
-  '  main = "No. The containment relation cannot be reversed.";',
-  '} else if (question.kind === "ancestors") {',
-  '  const chain = chainOf(question.subject);',
-  '  probe(chain.length > 0, "the facts must state a larger unit for the asked place");',
-  '  main = listPhrase(chain) + ".";',
-  '} else {',
-  '  main = "No. Country membership alone is insufficient to identify the region.";',
-  '}',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'const suffix = $cross.suffix;',
+  'return suffix === "" ? $main : $main + " " + suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -202,6 +219,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

@@ -102,36 +102,46 @@ function render(solution) {
   return `One optimal allocation is ${allocation}, with ${solution.total} points. There are ${solution.optima} tied optimal allocations.`;
 }
 
+const WIRES = [
+  {
+    name: 'allocate',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const names = ["A", "B", "C"];',
+      'const depth = slots.programs.A.length;',
+      'const totalOf = (taken) => names.reduce((sum, name) => sum + slots.programs[name].slice(0, taken[name]).reduce((left, right) => left + right, 0), 0);',
+      'let best = null;',
+      'let optima = 0;',
+      'let allocation = null;',
+      'for (let a = 0; a <= slots.units; a += 1) {',
+      '  for (let b = 0; a + b <= slots.units; b += 1) {',
+      '    const taken = { A: a, B: b, C: slots.units - a - b };',
+      '    if (names.some((name) => taken[name] > depth)) {',
+      '      continue;',
+      '    }',
+      '    const value = totalOf(taken);',
+      '    if (best === null || value > best) {',
+      '      best = value;',
+      '      optima = 1;',
+      '      allocation = taken;',
+      '    } else if (value === best) {',
+      '      optima += 1;',
+      '    }',
+      '  }',
+      '}',
+      'probe(allocation !== null, "at least one allocation of the stated units must be feasible");',
+      'probe(best > 0, "the optimal allocation must have a positive total benefit");',
+      'return { allocation, best, optima };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const names = ["A", "B", "C"];',
-  'const depth = slots.programs.A.length;',
-  'const totalOf = (taken) => names.reduce((sum, name) => sum + slots.programs[name].slice(0, taken[name]).reduce((left, right) => left + right, 0), 0);',
-  'let best = null;',
-  'let optima = 0;',
-  'let allocation = null;',
-  'for (let a = 0; a <= slots.units; a += 1) {',
-  '  for (let b = 0; a + b <= slots.units; b += 1) {',
-  '    const taken = { A: a, B: b, C: slots.units - a - b };',
-  '    if (names.some((name) => taken[name] > depth)) {',
-  '      continue;',
-  '    }',
-  '    const value = totalOf(taken);',
-  '    if (best === null || value > best) {',
-  '      best = value;',
-  '      optima = 1;',
-  '      allocation = taken;',
-  '    } else if (value === best) {',
-  '      optima += 1;',
-  '    }',
-  '  }',
-  '}',
-  'probe(allocation !== null, "at least one allocation of the stated units must be feasible");',
-  'probe(best > 0, "the optimal allocation must have a positive total benefit");',
-  'const chosen = "A=" + allocation.A + ", B=" + allocation.B + ", C=" + allocation.C;',
-  'return optima === 1',
-  '  ? chosen + "; maximum total benefit = " + best + " points."',
-  '  : "One optimal allocation is " + chosen + ", with " + best + " points. There are " + optima + " tied optimal allocations.";'
+  'const chosen = "A=" + $allocate.allocation.A + ", B=" + $allocate.allocation.B + ", C=" + $allocate.allocation.C;',
+  'return $allocate.optima === 1',
+  '  ? chosen + "; maximum total benefit = " + $allocate.best + " points."',
+  '  : "One optimal allocation is " + chosen + ", with " + $allocate.best + " points. There are " + $allocate.optima + " tied optimal allocations.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -157,6 +167,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

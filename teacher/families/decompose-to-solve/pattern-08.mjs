@@ -77,23 +77,39 @@ function render(solution) {
   return `The robust capacity requirement is ${formatTenths(solution.requirementTenths)}, and Option ${solution.chosen} is the lowest-cost option that meets it. The uncertainty interval and safety policy are separate transformations, which prevents double-counting the margin.`;
 }
 
+const WIRES = [
+  {
+    name: 'requirement',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const scaled = slots.demand * (100 + slots.errorPercent) * (100 + slots.marginPercent);',
+      'const requirementTenths = Math.floor((scaled + 500) / 1000);',
+      'probe(requirementTenths > slots.demand * 10, "the robust requirement must exceed the average forecast");',
+      'return requirementTenths;'
+    ].join('\n')
+  },
+  {
+    name: 'chosen',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const options = [',
+      '  { label: "A", capacity: slots.capacityA, cost: slots.costA },',
+      '  { label: "B", capacity: slots.capacityB, cost: slots.costB }',
+      '];',
+      'const feasible = options.filter((option) => option.capacity * 10 >= $requirement);',
+      'probe(feasible.length > 0, "at least one stated option must reach the robust requirement");',
+      'const chosen = feasible.reduce((best, option) => (option.cost < best.cost ? option : best));',
+      'probe(feasible.every((option) => option.cost >= chosen.cost), "the chosen option must have the lowest cost among the feasible ones");',
+      'return chosen.label;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
   'const formatTenths = (tenths) => Math.floor(tenths / 10) + "." + (tenths % 10);',
-  'for (const side of ["A", "B"]) {',
-  '}',
-  'const scaled = slots.demand * (100 + slots.errorPercent) * (100 + slots.marginPercent);',
-  'const requirementTenths = Math.floor((scaled + 500) / 1000);',
-  'probe(requirementTenths > slots.demand * 10, "the robust requirement must exceed the average forecast");',
-  'const options = [',
-  '  { label: "A", capacity: slots.capacityA, cost: slots.costA },',
-  '  { label: "B", capacity: slots.capacityB, cost: slots.costB }',
-  '];',
-  'const feasible = options.filter((option) => option.capacity * 10 >= requirementTenths);',
-  'probe(feasible.length > 0, "at least one stated option must reach the robust requirement");',
-  'const chosen = feasible.reduce((best, option) => (option.cost < best.cost ? option : best));',
-  'probe(feasible.every((option) => option.cost >= chosen.cost), "the chosen option must have the lowest cost among the feasible ones");',
-  'return "The robust capacity requirement is " + formatTenths(requirementTenths) + ", and Option " + chosen.label + " is the lowest-cost option that meets it. The uncertainty interval and safety policy are separate transformations, which prevents double-counting the margin.";'
+  'return "The robust capacity requirement is " + formatTenths($requirement) + ", and Option " + $chosen + " is the lowest-cost option that meets it. The uncertainty interval and safety policy are separate transformations, which prevents double-counting the margin.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -117,6 +133,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

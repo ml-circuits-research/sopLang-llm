@@ -89,18 +89,33 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'capacity',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const capacities = slots.branches.map((branch) => Math.min(...branch.edges.map((edge) => edge.capacity)));',
+      'const total = capacities.reduce((sum, capacity) => sum + capacity, 0);',
+      'probe(capacities.every((capacity) => capacity > 0), "every branch must be able to carry at least one unit");',
+      'const maximum = slots.destinationLimit === null ? total : Math.min(total, slots.destinationLimit);',
+      'probe(maximum <= total, "a destination limit can never raise what the branches carry");',
+      'return maximum;'
+    ].join('\n')
+  },
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'return { suffix: renderCrossDomain($slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
-  'const slots = $slots;',
-  'for (const branch of slots.branches) {',
-  '}',
-  'const capacities = slots.branches.map((branch) => Math.min(...branch.edges.map((edge) => edge.capacity)));',
-  'const total = capacities.reduce((sum, capacity) => sum + capacity, 0);',
-  'probe(capacities.every((capacity) => capacity > 0), "every branch must be able to carry at least one unit");',
-  'const maximum = slots.destinationLimit === null ? total : Math.min(total, slots.destinationLimit);',
-  'probe(maximum <= total, "a destination limit can never raise what the branches carry");',
-  'const main = maximum + " units.";',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
+  'const main = $capacity + " units.";',
+  'const suffix = $cross.suffix;',
   'return suffix === "" ? main : main + " " + suffix;'
 ].join('\n');
 
@@ -127,6 +142,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

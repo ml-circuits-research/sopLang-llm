@@ -159,38 +159,72 @@ function render(solution) {
     'the one quantity that every capacity and variable-cost step shares.';
 }
 
+const WIRES = [
+  {
+    name: 'demand',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const preLossTenthsOf = (preLoss) => {',
+      '  const scaled = preLoss * 10;',
+      '  const lower = Math.floor(scaled);',
+      '  if (Math.abs(scaled - lower - 0.5) < 1e-9 && lower % 2 === 0) {',
+      '    return lower;',
+      '  }',
+      '  return Math.round(scaled);',
+      '};',
+      'const preLoss = slots.localUnits * slots.factor / (1 - slots.lossPercent / 100);',
+      'probe(preLoss > 0, "the pre-loss demand must be positive");',
+      'const preLossTenths = preLossTenthsOf(preLoss);',
+      'return { preLoss: preLoss, preLossTenths: preLossTenths };'
+    ].join('\n')
+  },
+  {
+    name: 'batching',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const batches = Math.ceil($demand.preLossTenths / (slots.capacity * 10));',
+      'probe(batches === Math.ceil($demand.preLoss / slots.capacity), "the one-decimal display must not change the whole-batch requirement");',
+      'probe(batches > 0, "the demand must require at least one batch");',
+      'const waves = Math.ceil(batches / slots.parallelBatches);',
+      'probe(waves * slots.parallelBatches >= batches, "the waves must cover every batch");',
+      'const minutes = waves * slots.waveMinutes + slots.setupMinutes + slots.bufferMinutes;',
+      'probe(minutes >= slots.setupMinutes + slots.bufferMinutes, "the elapsed time must include the setup and the buffer");',
+      'return { batches: batches, waves: waves, minutes: minutes };'
+    ].join('\n')
+  },
+  {
+    name: 'cost',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const cost = slots.fixedCost + slots.ratePerUnit * $demand.preLoss;',
+      'probe(cost >= slots.fixedCost, "the cost must include the fixed charge");',
+      'return cost;'
+    ].join('\n')
+  },
+  {
+    name: 'verdict',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const capacityOk = $batching.batches <= slots.batchSlots;',
+      'const timeOk = $batching.minutes <= slots.deadlineMinutes;',
+      'const budgetOk = $cost <= slots.budgetUnits;',
+      'const feasible = capacityOk && timeOk && budgetOk;',
+      'const failing = (capacityOk ? 0 : 1) + (timeOk ? 0 : 1) + (budgetOk ? 0 : 1);',
+      'probe(feasible === (failing === 0), "the verdict must be feasible exactly when no hard constraint fails");',
+      'return { feasible: feasible, preLossTenths: $demand.preLossTenths, batches: $batching.batches, minutes: $batching.minutes, cost: $cost };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const preLossTenthsOf = (preLoss) => {',
-  '  const scaled = preLoss * 10;',
-  '  const lower = Math.floor(scaled);',
-  '  if (Math.abs(scaled - lower - 0.5) < 1e-9 && lower % 2 === 0) {',
-  '    return lower;',
-  '  }',
-  '  return Math.round(scaled);',
-  '};',
-  'const preLoss = slots.localUnits * slots.factor / (1 - slots.lossPercent / 100);',
-  'probe(preLoss > 0, "the pre-loss demand must be positive");',
-  'const preLossTenths = preLossTenthsOf(preLoss);',
-  'const batches = Math.ceil(preLossTenths / (slots.capacity * 10));',
-  'probe(batches === Math.ceil(preLoss / slots.capacity), "the one-decimal display must not change the whole-batch requirement");',
-  'probe(batches > 0, "the demand must require at least one batch");',
-  'const waves = Math.ceil(batches / slots.parallelBatches);',
-  'probe(waves * slots.parallelBatches >= batches, "the waves must cover every batch");',
-  'const minutes = waves * slots.waveMinutes + slots.setupMinutes + slots.bufferMinutes;',
-  'probe(minutes >= slots.setupMinutes + slots.bufferMinutes, "the elapsed time must include the setup and the buffer");',
-  'const cost = slots.fixedCost + slots.ratePerUnit * preLoss;',
-  'probe(cost >= slots.fixedCost, "the cost must include the fixed charge");',
-  'const capacityOk = batches <= slots.batchSlots;',
-  'const timeOk = minutes <= slots.deadlineMinutes;',
-  'const budgetOk = cost <= slots.budgetUnits;',
-  'const feasible = capacityOk && timeOk && budgetOk;',
-  'const failing = (capacityOk ? 0 : 1) + (timeOk ? 0 : 1) + (budgetOk ? 0 : 1);',
-  'probe(feasible === (failing === 0), "the verdict must be feasible exactly when no hard constraint fails");',
-  'const preLossText = Math.floor(preLossTenths / 10) + "." + (preLossTenths % 10);',
-  'const costText = cost.toFixed(2);',
-  'return "The plan is " + (feasible ? "feasible" : "not feasible") + ". Its key summaries are " + preLossText +',
-  '  " pre-loss standard units, " + batches + " batches, " + minutes + " minutes, and " + costText + " cost units. " +',
+  'const preLossText = Math.floor($verdict.preLossTenths / 10) + "." + ($verdict.preLossTenths % 10);',
+  'const costText = $verdict.cost.toFixed(2);',
+  'return "The plan is " + ($verdict.feasible ? "feasible" : "not feasible") + ". Its key summaries are " + preLossText +',
+  '  " pre-loss standard units, " + $verdict.batches + " batches, " + $verdict.minutes + " minutes, and " + costText + " cost units. " +',
   '  "The cost applies the stated per-unit rate to the pre-loss demand, the one quantity that every capacity " +',
   '  "and variable-cost step shares.";'
 ].join('\n');
@@ -272,6 +306,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

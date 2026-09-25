@@ -137,22 +137,40 @@ function render(solution) {
   return `Game One breaks even on average. Game Two returns ${formatHundredths(solution.averageTwoHundredths)} on average for a stake of ${solution.stakeTwo}, so ${formatHundredths(solution.percentHundredths)} percent of the stake. The huge prize is rare.`;
 }
 
+const WIRES = [
+  {
+    name: 'gameOne',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const totalShare = slots.winShareOne + slots.loseShareOne;',
+      'probe(Number.isInteger(totalShare) && totalShare > 0, "the printed shares of Game One must cover the tickets");',
+      'probe((slots.prizeOne * slots.loseShareOne) % totalShare === 0, "Game One must divide into whole hundredths");',
+      'const averageOneHundredths = (slots.prizeOne * slots.loseShareOne * 100) / totalShare;',
+      'probe(averageOneHundredths === slots.stakeOne * 100, "this section prints a first game whose average return is exactly its stake");',
+      'return { averageOneHundredths: averageOneHundredths };'
+    ].join('\n')
+  },
+  {
+    name: 'gameTwo',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'probe(slots.prizeTwo % slots.drawSize === 0, "Game Two must divide into whole hundredths");',
+      'const averageTwoHundredths = (slots.prizeTwo * 100) / slots.drawSize;',
+      'const stakeTwoHundredths = slots.stakeTwo * 100;',
+      'probe((averageTwoHundredths * 100) % slots.stakeTwo === 0, "the percent of the stake must be a whole hundredth");',
+      'const percentHundredths = (averageTwoHundredths * 100) / slots.stakeTwo;',
+      'const secondLoses = averageTwoHundredths < stakeTwoHundredths;',
+      'probe(secondLoses, "the rare prize must still lose on average against the stake");',
+      'return { averageTwoHundredths: averageTwoHundredths, percentHundredths: percentHundredths, stakeTwo: slots.stakeTwo, secondLoses: secondLoses };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const totalShare = slots.winShareOne + slots.loseShareOne;',
-  'probe(Number.isInteger(totalShare) && totalShare > 0, "the printed shares of Game One must cover the tickets");',
-  'probe((slots.prizeOne * slots.loseShareOne) % totalShare === 0, "Game One must divide into whole hundredths");',
-  'const averageOneHundredths = (slots.prizeOne * slots.loseShareOne * 100) / totalShare;',
-  'probe(averageOneHundredths === slots.stakeOne * 100, "this section prints a first game whose average return is exactly its stake");',
-  'probe(slots.prizeTwo % slots.drawSize === 0, "Game Two must divide into whole hundredths");',
-  'const averageTwoHundredths = (slots.prizeTwo * 100) / slots.drawSize;',
-  'const stakeTwoHundredths = slots.stakeTwo * 100;',
-  'probe((averageTwoHundredths * 100) % slots.stakeTwo === 0, "the percent of the stake must be a whole hundredth");',
-  'const percentHundredths = (averageTwoHundredths * 100) / slots.stakeTwo;',
   'const formatHundredths = (value) => (value % 100 === 0 ? String(value / 100) : (value / 100).toFixed(2));',
-  'const secondLoses = averageTwoHundredths < stakeTwoHundredths;',
-  'probe(secondLoses, "the rare prize must still lose on average against the stake");',
-  'return secondLoses ? "Game One breaks even on average. Game Two returns " + formatHundredths(averageTwoHundredths) + " on average for a stake of " + slots.stakeTwo + ", so " + formatHundredths(percentHundredths) + " percent of the stake. The huge prize is rare." : "Game Two returns " + formatHundredths(averageTwoHundredths) + " on average and beats its stake.";'
+  'return $gameTwo.secondLoses ? "Game One breaks even on average. Game Two returns " + formatHundredths($gameTwo.averageTwoHundredths) + " on average for a stake of " + $gameTwo.stakeTwo + ", so " + formatHundredths($gameTwo.percentHundredths) + " percent of the stake. The huge prize is rare." : "Game Two returns " + formatHundredths($gameTwo.averageTwoHundredths) + " on average and beats its stake.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -174,6 +192,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

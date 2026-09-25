@@ -213,37 +213,46 @@ export const cases = [
     render(solution) {
       return `${cap(solution.direction)} of the ${solution.reference}.`;
     },
+    wires: [
+      {
+        name: 'position',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'const names = new Set();',
+          'for (const r of slots.relations) { names.add(r.subject); names.add(r.reference); }',
+          'const east = {}; const north = {};',
+          'for (const n of names) { east[n] = new Set(); north[n] = new Set(); }',
+          'for (const r of slots.relations) {',
+          '  const alongEast = r.direction === "east" || r.direction === "west";',
+          '  const forward = r.direction === "east" || r.direction === "north";',
+          '  const map = alongEast ? east : north;',
+          '  const greater = forward ? r.subject : r.reference;',
+          '  const lesser = forward ? r.reference : r.subject;',
+          '  map[greater].add(lesser);',
+          '}',
+          'for (const n of names) {',
+          '  for (const map of [east, north]) {',
+          '    const stack = [...map[n]];',
+          '    while (stack.length) {',
+          '      const middle = stack.pop();',
+          '      for (const further of map[middle]) {',
+          '        if (!map[n].has(further)) { map[n].add(further); stack.push(further); }',
+          '      }',
+          '    }',
+          '  }',
+          '}',
+          'const s = slots.subject; const t = slots.reference;',
+          'if (east[s].has(t)) return "east";',
+          'if (east[t].has(s)) return "west";',
+          'if (north[s].has(t)) return "north";',
+          'if (north[t].has(s)) return "south";',
+          'throw new Error("the relations do not determine the relative position");'
+        ].join('\n')
+      }
+    ],
     compute: [
-      'const slots = $slots;',
-      'const names = new Set();',
-      'for (const r of slots.relations) { names.add(r.subject); names.add(r.reference); }',
-      'const east = {}; const north = {};',
-      'for (const n of names) { east[n] = new Set(); north[n] = new Set(); }',
-      'for (const r of slots.relations) {',
-      '  const alongEast = r.direction === "east" || r.direction === "west";',
-      '  const forward = r.direction === "east" || r.direction === "north";',
-      '  const map = alongEast ? east : north;',
-      '  const greater = forward ? r.subject : r.reference;',
-      '  const lesser = forward ? r.reference : r.subject;',
-      '  map[greater].add(lesser);',
-      '}',
-      'for (const n of names) {',
-      '  for (const map of [east, north]) {',
-      '    const stack = [...map[n]];',
-      '    while (stack.length) {',
-      '      const middle = stack.pop();',
-      '      for (const further of map[middle]) {',
-      '        if (!map[n].has(further)) { map[n].add(further); stack.push(further); }',
-      '      }',
-      '    }',
-      '  }',
-      '}',
-      'const s = slots.subject; const t = slots.reference;',
-      'if (east[s].has(t)) return "East of the " + t + ".";',
-      'if (east[t].has(s)) return "West of the " + t + ".";',
-      'if (north[s].has(t)) return "North of the " + t + ".";',
-      'if (north[t].has(s)) return "South of the " + t + ".";',
-      'throw new Error("the relations do not determine the relative position");'
+      'return $position.charAt(0).toUpperCase() + $position.slice(1) + " of the " + $slots.reference + ".";'
     ].join('\n'),
     explain(slots, solution) {
       return [
@@ -354,25 +363,33 @@ export const cases = [
       }
       return `Yes; both end ${describe(solution.dx, solution.dy)} of the start.`;
     },
+    wires: [
+      {
+        name: 'route',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'const walk = (moves) => {',
+          '  const d = { dx: 0, dy: 0 };',
+          '  for (const move of moves) {',
+          '    if (move === "E") d.dx += 1; else if (move === "W") d.dx -= 1;',
+          '    else if (move === "N") d.dy += 1; else if (move === "S") d.dy -= 1;',
+          '  }',
+          '  return d;',
+          '};',
+          'return { a: walk(slots.routeA), b: walk(slots.routeB) };'
+        ].join('\n')
+      }
+    ],
     compute: [
-      'const slots = $slots;',
-      'const walk = (moves) => {',
-      '  const d = { dx: 0, dy: 0 };',
-      '  for (const move of moves) {',
-      '    if (move === "E") d.dx += 1; else if (move === "W") d.dx -= 1;',
-      '    else if (move === "N") d.dy += 1; else if (move === "S") d.dy -= 1;',
-      '  }',
-      '  return d;',
-      '};',
-      'const a = walk(slots.routeA); const b = walk(slots.routeB);',
       'const show = (d) => {',
       '  const pieces = [];',
       '  if (d.dx !== 0) pieces.push(Math.abs(d.dx) + " squares " + (d.dx > 0 ? "east" : "west"));',
       '  if (d.dy !== 0) pieces.push(Math.abs(d.dy) + " squares " + (d.dy > 0 ? "north" : "south"));',
       '  return pieces.join(" and ");',
       '};',
-      'if (a.dx === b.dx && a.dy === b.dy) return "Yes; both end " + show(a) + " of the start.";',
-      'return "No; one route ends " + show(a) + " of the start and the other " + show(b) + " of the start.";'
+      'if ($route.a.dx === $route.b.dx && $route.a.dy === $route.b.dy) return "Yes; both end " + show($route.a) + " of the start.";',
+      'return "No; one route ends " + show($route.a) + " of the start and the other " + show($route.b) + " of the start.";'
     ].join('\n'),
     explain(slots, solution) {
       return [

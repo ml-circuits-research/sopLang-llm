@@ -98,32 +98,49 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'plan',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const mandatoryIndex = slots.mandatory === null ? -1 : slots.projects.findIndex((project) => project.name === slots.mandatory);',
+      'probe(slots.mandatory === null || mandatoryIndex !== -1, "a mandatory project must appear in the stated project list");',
+      'let best = null;',
+      'const total = 1 << slots.projects.length;',
+      'for (let mask = 0; mask < total; mask += 1) {',
+      '  if (mandatoryIndex !== -1 && (mask & (1 << mandatoryIndex)) === 0) {',
+      '    continue;',
+      '  }',
+      '  const chosen = slots.projects.filter((project, index) => (mask & (1 << index)) !== 0);',
+      '  const cost = chosen.reduce((sum, project) => sum + project.cost, 0);',
+      '  if (cost > slots.budget) {',
+      '    continue;',
+      '  }',
+      '  const benefit = chosen.reduce((sum, project) => sum + project.benefit, 0);',
+      '  const better = best === null || benefit > best.benefit || (benefit === best.benefit && (cost < best.cost || (cost === best.cost && mask < best.mask)));',
+      '  if (better) {',
+      '    best = { names: chosen.map((project) => project.name), cost, benefit, mask };',
+      '  }',
+      '}',
+      'probe(best !== null, "at least one project set must fit the stated budget");',
+      'return { names: best.names, cost: best.cost, benefit: best.benefit };'
+    ].join('\n')
+  },
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
-  'const slots = $slots;',
-  'const mandatoryIndex = slots.mandatory === null ? -1 : slots.projects.findIndex((project) => project.name === slots.mandatory);',
-  'probe(slots.mandatory === null || mandatoryIndex !== -1, "a mandatory project must appear in the stated project list");',
-  'let best = null;',
-  'const total = 1 << slots.projects.length;',
-  'for (let mask = 0; mask < total; mask += 1) {',
-  '  if (mandatoryIndex !== -1 && (mask & (1 << mandatoryIndex)) === 0) {',
-  '    continue;',
-  '  }',
-  '  const chosen = slots.projects.filter((project, index) => (mask & (1 << index)) !== 0);',
-  '  const cost = chosen.reduce((sum, project) => sum + project.cost, 0);',
-  '  if (cost > slots.budget) {',
-  '    continue;',
-  '  }',
-  '  const benefit = chosen.reduce((sum, project) => sum + project.benefit, 0);',
-  '  const better = best === null || benefit > best.benefit || (benefit === best.benefit && (cost < best.cost || (cost === best.cost && mask < best.mask)));',
-  '  if (better) {',
-  '    best = { names: chosen.map((project) => project.name), cost, benefit, mask };',
-  '  }',
-  '}',
-  'probe(best !== null, "at least one project set must fit the stated budget");',
-  'const main = "Choose " + best.names.join(", ") + "; cost " + best.cost + ", benefit " + best.benefit + ".";',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'const main = "Choose " + $plan.names.join(", ") + "; cost " + $plan.cost + ", benefit " + $plan.benefit + ".";',
+  'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -143,6 +160,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

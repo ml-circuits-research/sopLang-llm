@@ -84,24 +84,34 @@ function render(solution) {
   return `Route ${solution.name}, using ${solution.energy} energy units.`;
 }
 
+const WIRES = [
+  {
+    name: 'best',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const scored = slots.routes.map((route) => {',
+      '  let energy = 0;',
+      '  for (const terrain of route.terrains) {',
+      '    energy += slots.costs[terrain];',
+      '  }',
+      '  return { name: route.name, energy };',
+      '});',
+      'const feasible = scored.filter((route) => route.energy <= slots.limit);',
+      'probe(feasible.length > 0, "at least one listed route must stay within the energy limit");',
+      'let best = feasible[0];',
+      'for (const route of feasible.slice(1)) {',
+      '  if (route.energy < best.energy) {',
+      '    best = route;',
+      '  }',
+      '}',
+      'return { name: best.name, energy: best.energy };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const scored = slots.routes.map((route) => {',
-  '  let energy = 0;',
-  '  for (const terrain of route.terrains) {',
-  '    energy += slots.costs[terrain];',
-  '  }',
-  '  return { name: route.name, energy };',
-  '});',
-  'const feasible = scored.filter((route) => route.energy <= slots.limit);',
-  'probe(feasible.length > 0, "at least one listed route must stay within the energy limit");',
-  'let best = feasible[0];',
-  'for (const route of feasible.slice(1)) {',
-  '  if (route.energy < best.energy) {',
-  '    best = route;',
-  '  }',
-  '}',
-  'return "Route " + best.name + ", using " + best.energy + " energy units.";'
+  'return "Route " + $best.name + ", using " + $best.energy + " energy units.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -122,6 +132,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

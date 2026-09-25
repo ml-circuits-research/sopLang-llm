@@ -94,8 +94,19 @@ function render(solution) {
   return suffix === '' ? solution.verdict : `${solution.verdict} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
   'const phrase = slots.intervention.toLowerCase();',
   'const forms = [',
@@ -128,8 +139,7 @@ const COMPUTE = [
   '  throw new Error("the intervention changes no consequence of the stated model");',
   '}',
   'probe(typeof verdict === "string" && verdict.length > 0, "the recomputed model must yield a verdict");',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? verdict : verdict + " " + suffix;'
+  'return $cross.suffix === "" ? verdict : verdict + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -164,6 +174,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

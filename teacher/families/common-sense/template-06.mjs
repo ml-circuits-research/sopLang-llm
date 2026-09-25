@@ -73,17 +73,26 @@ function render(solution) {
   return `Approximately ${formatShare(solution.shareTenths)}% of positive alerts are true positives.`;
 }
 
+const WIRES = [
+  {
+    name: 'frequencies',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const present = slots.population * slots.prevalence / 100;',
+      'const absent = slots.population - present;',
+      'const truePositives = present * slots.sensitivity / 100;',
+      'const falsePositives = absent * (100 - slots.specificity) / 100;',
+      'probe(Number.isInteger(present) && Number.isInteger(absent) && Number.isInteger(truePositives) && Number.isInteger(falsePositives), "the stated rates must split the population into whole case counts");',
+      'const alerts = truePositives + falsePositives;',
+      'probe(alerts > 0, "the stated rates must produce at least one positive alert");',
+      'return Math.round(1000 * truePositives / alerts);'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const present = slots.population * slots.prevalence / 100;',
-  'const absent = slots.population - present;',
-  'const truePositives = present * slots.sensitivity / 100;',
-  'const falsePositives = absent * (100 - slots.specificity) / 100;',
-  'probe(Number.isInteger(present) && Number.isInteger(absent) && Number.isInteger(truePositives) && Number.isInteger(falsePositives), "the stated rates must split the population into whole case counts");',
-  'const alerts = truePositives + falsePositives;',
-  'probe(alerts > 0, "the stated rates must produce at least one positive alert");',
-  'const shareTenths = Math.round(1000 * truePositives / alerts);',
-  'return "Approximately " + (shareTenths / 10).toFixed(1) + "% of positive alerts are true positives.";'
+  'return "Approximately " + ($frequencies / 10).toFixed(1) + "% of positive alerts are true positives.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -106,6 +115,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

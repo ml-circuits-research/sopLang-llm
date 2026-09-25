@@ -59,33 +59,42 @@ export const cases = [
     render(solution) {
       return `${solution.order.join(', ')}.`;
     },
+    wires: [
+      {
+        name: 'order',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'const tasks = slots.tasks;',
+          'const before = new Map(tasks.map((task) => [task, new Set()]));',
+          'for (const [first, second] of slots.constraints) {',
+          '  before.get(second).add(first);',
+          '}',
+          'let changed = true;',
+          'while (changed) {',
+          '  changed = false;',
+          '  for (const task of tasks) {',
+          '    for (const earlier of [...before.get(task)]) {',
+          '      for (const evenEarlier of before.get(earlier)) {',
+          '        if (!before.get(task).has(evenEarlier)) {',
+          '          before.get(task).add(evenEarlier);',
+          '          changed = true;',
+          '        }',
+          '      }',
+          '    }',
+          '  }',
+          '}',
+          'const order = [...tasks].sort((left, right) => before.get(left).size - before.get(right).size);',
+          'const ranks = new Set(order.map((task) => before.get(task).size));',
+          'if (ranks.size !== order.length) {',
+          '  throw new Error("the rules do not determine a single order");',
+          '}',
+          'return order;'
+        ].join('\n')
+      }
+    ],
     compute: [
-      'const slots = $slots;',
-      'const tasks = slots.tasks;',
-      'const before = new Map(tasks.map((task) => [task, new Set()]));',
-      'for (const [first, second] of slots.constraints) {',
-      '  before.get(second).add(first);',
-      '}',
-      'let changed = true;',
-      'while (changed) {',
-      '  changed = false;',
-      '  for (const task of tasks) {',
-      '    for (const earlier of [...before.get(task)]) {',
-      '      for (const evenEarlier of before.get(earlier)) {',
-      '        if (!before.get(task).has(evenEarlier)) {',
-      '          before.get(task).add(evenEarlier);',
-      '          changed = true;',
-      '        }',
-      '      }',
-      '    }',
-      '  }',
-      '}',
-      'const order = [...tasks].sort((left, right) => before.get(left).size - before.get(right).size);',
-      'const ranks = new Set(order.map((task) => before.get(task).size));',
-      'if (ranks.size !== order.length) {',
-      '  throw new Error("the rules do not determine a single order");',
-      '}',
-      'return order.join(", ") + ".";'
+      'return $order.join(", ") + ".";'
     ].join('\n'),
     explain(slots, solution) {
       return [
@@ -141,24 +150,33 @@ export const cases = [
     render(solution) {
       return solution.code;
     },
+    wires: [
+      {
+        name: 'permutations',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'const digits = slots.digits.map(String);',
+          'const permutations = [];',
+          'const build = (prefix, rest) => {',
+          '  if (rest.length === 0) {',
+          '    permutations.push(prefix);',
+          '    return;',
+          '  }',
+          '  for (let index = 0; index < rest.length; index += 1) {',
+          '    build(prefix + rest[index], rest.slice(0, index).concat(rest.slice(index + 1)));',
+          '  }',
+          '};',
+          'build("", digits);',
+          'return permutations;'
+        ].join('\n')
+      }
+    ],
     compute: [
-      'const slots = $slots;',
-      'const digits = slots.digits.map(String);',
-      'const permutations = [];',
-      'const build = (prefix, rest) => {',
-      '  if (rest.length === 0) {',
-      '    permutations.push(prefix);',
-      '    return;',
-      '  }',
-      '  for (let index = 0; index < rest.length; index += 1) {',
-      '    build(prefix + rest[index], rest.slice(0, index).concat(rest.slice(index + 1)));',
-      '  }',
-      '};',
-      'build("", digits);',
-      'const first = String(slots.first);',
-      'const earlier = String(slots.earlier);',
-      'const later = String(slots.later);',
-      'const matching = permutations.filter((code) => code[0] === first && code.indexOf(earlier) < code.indexOf(later));',
+      'const first = String($slots.first);',
+      'const earlier = String($slots.earlier);',
+      'const later = String($slots.later);',
+      'const matching = $permutations.filter((code) => code[0] === first && code.indexOf(earlier) < code.indexOf(later));',
       'if (matching.length !== 1) {',
       '  throw new Error("the clues leave " + matching.length + " codes instead of one");',
       '}',

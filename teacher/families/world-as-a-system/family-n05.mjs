@@ -64,21 +64,38 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  },
+  {
+    name: 'density',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const densityText = (visitors, area) => {',
+      '  const scaled = visitors * 100;',
+      '  const quotient = Math.floor(scaled / area);',
+      '  const remainder = scaled - quotient * area;',
+      '  const twice = remainder * 2;',
+      '  const rounded = twice > area ? quotient + 1 : twice < area ? quotient : quotient % 2 === 0 ? quotient : quotient + 1;',
+      '  return String(Math.floor(rounded / 100)) + "." + String(rounded % 100).padStart(2, "0");',
+      '};',
+      'const above = slots.visitors > slots.threshold * slots.area;',
+      'return { density: densityText(slots.visitors, slots.area), above };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
-  'const slots = $slots;',
-  'const densityText = (visitors, area) => {',
-  '  const scaled = visitors * 100;',
-  '  const quotient = Math.floor(scaled / area);',
-  '  const remainder = scaled - quotient * area;',
-  '  const twice = remainder * 2;',
-  '  const rounded = twice > area ? quotient + 1 : twice < area ? quotient : quotient % 2 === 0 ? quotient : quotient + 1;',
-  '  return String(Math.floor(rounded / 100)) + "." + String(rounded % 100).padStart(2, "0");',
-  '};',
-  'const above = slots.visitors > slots.threshold * slots.area;',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'const main = densityText(slots.visitors, slots.area) + " visitors/hectare; " + (above ? "above" : "within") + " capacity.";',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'const main = $density.density + " visitors/hectare; " + ($density.above ? "above" : "within") + " capacity.";',
+  'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -99,6 +116,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

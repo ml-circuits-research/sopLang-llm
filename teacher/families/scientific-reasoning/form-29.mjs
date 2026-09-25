@@ -296,48 +296,60 @@ function verifyPrinted(parsedSlots, solution, printedText) {
   return total === solution.cost;
 }
 
+const WIRES = [
+  {
+    name: 'routes',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const adjacency = new Map();',
+      'slots.edges.forEach((edge, index) => {',
+      '  if (edge.closed === true) return;',
+      '  for (const pair of [[edge.from, edge.to], [edge.to, edge.from]]) {',
+      '    if (!adjacency.has(pair[0])) adjacency.set(pair[0], []);',
+      '    adjacency.get(pair[0]).push({ to: pair[1], cost: edge.cost, index: index });',
+      '  }',
+      '});',
+      'const routes = [];',
+      'const walk = (node, path, cost, indexes) => {',
+      '  if (node === slots.destination) { routes.push({ path: path.slice(), cost: cost, indexes: indexes.slice() }); return; }',
+      '  for (const step of adjacency.get(node) || []) {',
+      '    if (path.includes(step.to)) continue;',
+      '    path.push(step.to);',
+      '    walk(step.to, path, cost + step.cost, indexes.concat([step.index]));',
+      '    path.pop();',
+      '  }',
+      '};',
+      'walk(slots.start, [slots.start], 0, []);',
+      'probe(routes.length > 0, "the closed link must leave at least one allowed route");',
+      'return routes;'
+    ].join('\n')
+  },
+  {
+    name: 'best',
+    command: 'jsEval',
+    body: [
+      'const routes = $routes;',
+      'const cheapest = Math.min(...routes.map((route) => route.cost));',
+      'probe(Number.isInteger(cheapest) && cheapest > 0, "the cheapest allowed route must have a positive whole cost");',
+      'const winners = routes.filter((route) => route.cost === cheapest);',
+      'probe(winners.length >= 1, "the allowed routes must determine a cheapest cost");',
+      'const chosen = winners.slice().sort((left, right) => {',
+      '  const limit = Math.min(left.indexes.length, right.indexes.length);',
+      '  for (let position = 0; position < limit; position += 1) {',
+      '    if (left.indexes[position] !== right.indexes[position]) return left.indexes[position] - right.indexes[position];',
+      '  }',
+      '  return left.indexes.length - right.indexes.length;',
+      '})[0];',
+      'probe(chosen.path[0] === $slots.start && chosen.path[chosen.path.length - 1] === $slots.destination, "the reported route must run from the starting point to the destination");',
+      'probe(chosen.path.length > 1 && new Set(chosen.path).size === chosen.path.length, "the reported route must visit every node once");',
+      'return { path: chosen.path, cost: cheapest };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'for (const edge of slots.edges) {',
-  '}',
-  'const nodes = [];',
-  'for (const edge of slots.edges) {',
-  '  for (const node of [edge.from, edge.to]) { if (!nodes.includes(node)) nodes.push(node); }',
-  '}',
-  'const adjacency = new Map();',
-  'slots.edges.forEach((edge, index) => {',
-  '  if (edge.closed === true) return;',
-  '  for (const pair of [[edge.from, edge.to], [edge.to, edge.from]]) {',
-  '    if (!adjacency.has(pair[0])) adjacency.set(pair[0], []);',
-  '    adjacency.get(pair[0]).push({ to: pair[1], cost: edge.cost, index: index });',
-  '  }',
-  '});',
-  'const routes = [];',
-  'const walk = (node, path, cost, indexes) => {',
-  '  if (node === slots.destination) { routes.push({ path: path.slice(), cost: cost, indexes: indexes.slice() }); return; }',
-  '  for (const step of adjacency.get(node) || []) {',
-  '    if (path.includes(step.to)) continue;',
-  '    path.push(step.to);',
-  '    walk(step.to, path, cost + step.cost, indexes.concat([step.index]));',
-  '    path.pop();',
-  '  }',
-  '};',
-  'walk(slots.start, [slots.start], 0, []);',
-  'probe(routes.length > 0, "the closed link must leave at least one allowed route");',
-  'const cheapest = Math.min(...routes.map((route) => route.cost));',
-  'probe(Number.isInteger(cheapest) && cheapest > 0, "the cheapest allowed route must have a positive whole cost");',
-  'const winners = routes.filter((route) => route.cost === cheapest);',
-  'probe(winners.length >= 1, "the allowed routes must determine a cheapest cost");',
-  'const chosen = winners.slice().sort((left, right) => {',
-  '  const limit = Math.min(left.indexes.length, right.indexes.length);',
-  '  for (let position = 0; position < limit; position += 1) {',
-  '    if (left.indexes[position] !== right.indexes[position]) return left.indexes[position] - right.indexes[position];',
-  '  }',
-  '  return left.indexes.length - right.indexes.length;',
-  '})[0];',
-  'probe(chosen.path[0] === slots.start && chosen.path[chosen.path.length - 1] === slots.destination, "the reported route must run from the starting point to the destination");',
-  'probe(chosen.path.length > 1 && new Set(chosen.path).size === chosen.path.length, "the reported route must visit every node once");',
-  'return "The minimum-cost path is " + chosen.path.join(" → ") + ", total cost " + cheapest + ".";'
+  'return "The minimum-cost path is " + $best.path.join(" → ") + ", total cost " + $best.cost + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -368,6 +380,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain,
     printedAnswerStatus,

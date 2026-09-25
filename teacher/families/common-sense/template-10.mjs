@@ -81,24 +81,34 @@ function render(solution) {
   return `Break-even volume: ${formatHundredths(solution.threshold)} units. Below it, ${PLAN_LABELS[solution.cheaperBelow]} is cheaper; above it, ${PLAN_LABELS[solution.cheaperAbove]} is cheaper.`;
 }
 
+const WIRES = [
+  {
+    name: 'breakEven',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const plans = slots.plans;',
+      'let numerator = (plans.B.fixed - plans.A.fixed) * 100;',
+      'let denominator = plans.A.variable - plans.B.variable;',
+      'if (denominator < 0) {',
+      '  numerator = -numerator;',
+      '  denominator = -denominator;',
+      '}',
+      'const sign = numerator < 0 ? -1 : 1;',
+      'const magnitude = Math.abs(numerator);',
+      'const quotient = Math.floor(magnitude / denominator);',
+      'const remainder = magnitude - quotient * denominator;',
+      'const threshold = sign * (quotient + (2 * remainder >= denominator ? 1 : 0));',
+      'probe(threshold > 0, "the two plans must cross at a positive volume");',
+      'const cheaperBelow = plans.A.fixed < plans.B.fixed ? "A" : "B";',
+      'const cheaperAbove = plans.A.variable < plans.B.variable ? "A" : "B";',
+      'return { threshold, cheaperBelow, cheaperAbove };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const plans = slots.plans;',
-  'let numerator = (plans.B.fixed - plans.A.fixed) * 100;',
-  'let denominator = plans.A.variable - plans.B.variable;',
-  'if (denominator < 0) {',
-  '  numerator = -numerator;',
-  '  denominator = -denominator;',
-  '}',
-  'const sign = numerator < 0 ? -1 : 1;',
-  'const magnitude = Math.abs(numerator);',
-  'const quotient = Math.floor(magnitude / denominator);',
-  'const remainder = magnitude - quotient * denominator;',
-  'const threshold = sign * (quotient + (2 * remainder >= denominator ? 1 : 0));',
-  'probe(threshold > 0, "the two plans must cross at a positive volume");',
-  'const cheaperBelow = plans.A.fixed < plans.B.fixed ? "A" : "B";',
-  'const cheaperAbove = plans.A.variable < plans.B.variable ? "A" : "B";',
-  'return "Break-even volume: " + String(threshold / 100) + " units. Below it, Plan " + cheaperBelow + " is cheaper; above it, Plan " + cheaperAbove + " is cheaper.";'
+  'return "Break-even volume: " + String($breakEven.threshold / 100) + " units. Below it, Plan " + $breakEven.cheaperBelow + " is cheaper; above it, Plan " + $breakEven.cheaperAbove + " is cheaper.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -122,6 +132,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

@@ -161,9 +161,15 @@ export const cases = [
       const path = shortestPath(slots.nodes, slots.edges, slots.from, slots.to); if (path === null) throw new Error('the endpoints are not connected'); return { path };
     },
     render(solution) { return `Yes, through ${solution.path.slice(1, -1).join('-')}.`; },
-    compute: ['const slots = $slots;', source(adjacency, buildPath, searchPath, shortestPath),
-      'const path = shortestPath(slots.nodes, slots.edges, slots.from, slots.to);',
-      'if (path === null) { throw new Error("the endpoints are not connected"); }',
+    wires: [
+      {
+        name: 'route', command: 'jsEval', body: ['const slots = $slots;', source(adjacency, buildPath, searchPath, shortestPath),
+          'const path = shortestPath(slots.nodes, slots.edges, slots.from, slots.to);',
+          'if (path === null) { throw new Error("the endpoints are not connected"); }',
+          'return path;'].join('\n')
+      }
+    ],
+    compute: ['const path = $route;',
       'return "Yes, through " + path.slice(1, -1).join("-") + ".";'].join('\n'),
     explain(slots, solution) { return ['A direct link can be travelled in either direction, so the network is an undirected graph whose edges are the printed links.', `Breadth-first search from ${slots.from} reaches ${slots.to} in the fewest links, through ${solution.path.slice(1, -1).join('-')}.`]; }
   },
@@ -179,11 +185,16 @@ export const cases = [
     },
     render(solution) { return `${solution.direct ? 'They are direct neighbors' : 'They are not direct neighbors'}; ` +
       `${solution.connected ? 'yes, they are connected' : 'no, they are not connected'}.`; },
-    compute: ['const slots = $slots;', source(edgeKey, adjacency, buildPath, searchPath, shortestPath),
-      'const direct = slots.edges.some(([from, to]) => edgeKey(from, to) === edgeKey(slots.from, slots.to));',
-      'const path = shortestPath(slots.nodes, slots.edges, slots.from, slots.to);',
-      'const neighbours = direct ? "They are direct neighbors" : "They are not direct neighbors";',
-      'return neighbours + "; " + (path !== null ? "yes, they are connected" : "no, they are not connected") + ".";'].join('\n'),
+    wires: [
+      {
+        name: 'relation', command: 'jsEval', body: ['const slots = $slots;', source(edgeKey, adjacency, buildPath, searchPath, shortestPath),
+          'const direct = slots.edges.some(([from, to]) => edgeKey(from, to) === edgeKey(slots.from, slots.to));',
+          'const path = shortestPath(slots.nodes, slots.edges, slots.from, slots.to);',
+          'return { direct: direct, connected: path !== null };'].join('\n')
+      }
+    ],
+    compute: ['const neighbours = $relation.direct ? "They are direct neighbors" : "They are not direct neighbors";',
+      'return neighbours + "; " + ($relation.connected ? "yes, they are connected" : "no, they are not connected") + ".";'].join('\n'),
     explain(slots) { return [`A direct link between ${slots.from} and ${slots.to} would make them direct neighbors, so the edge list decides that part.`, 'Connectivity is weaker than adjacency: it asks only whether some chain of links joins the two nodes.']; }
   },
   {
@@ -219,9 +230,15 @@ export const cases = [
       const path = shortestPath(slots.nodes, slots.edges, slots.from, slots.to); if (path === null) throw new Error('the endpoints are not connected'); return { path };
     },
     render(solution) { return `${solution.path.join('-')}, with ${solution.path.length - 1} links.`; },
-    compute: ['const slots = $slots;', source(adjacency, buildPath, searchPath, shortestPath),
-      'const path = shortestPath(slots.nodes, slots.edges, slots.from, slots.to);',
-      'if (path === null) { throw new Error("the endpoints are not connected"); }',
+    wires: [
+      {
+        name: 'route', command: 'jsEval', body: ['const slots = $slots;', source(adjacency, buildPath, searchPath, shortestPath),
+          'const path = shortestPath(slots.nodes, slots.edges, slots.from, slots.to);',
+          'if (path === null) { throw new Error("the endpoints are not connected"); }',
+          'return path;'].join('\n')
+      }
+    ],
+    compute: ['const path = $route;',
       'return path.join("-") + ", with " + (path.length - 1) + " links.";'].join('\n'),
     explain(slots, solution) { return ['Counting links amounts to counting edges, so the shortest route is found by exploring the network in widening layers from the start.', `The first time ${slots.to} is reached its layer is ${solution.path.length - 1}, the fewest possible, along ${solution.path.join('-')}.`]; }
   },
@@ -234,8 +251,13 @@ export const cases = [
     },
     solve(slots) { return { connected: shortestPath(slots.nodes, slots.edges, slots.from, slots.to) !== null }; },
     render(solution) { return solution.connected ? 'Yes.' : 'No.'; },
-    compute: ['const slots = $slots;', source(adjacency, buildPath, searchPath, shortestPath),
-      'return shortestPath(slots.nodes, slots.edges, slots.from, slots.to) !== null ? "Yes." : "No.";'].join('\n'),
+    wires: [
+      {
+        name: 'reachable', command: 'jsEval', body: ['const slots = $slots;', source(adjacency, buildPath, searchPath, shortestPath),
+          'return shortestPath(slots.nodes, slots.edges, slots.from, slots.to) !== null;'].join('\n')
+      }
+    ],
+    compute: ['return $reachable ? "Yes." : "No.";'].join('\n'),
     explain(slots, solution) { return ['Removing one link deletes it from the edge set, so every route that used it disappears with it.', `After the removal the walk from ${slots.from} ${solution.connected ? 'still' : 'does not'} reach ${slots.to}.`]; }
   },
   {
@@ -249,9 +271,14 @@ export const cases = [
       const path = shortestPath(slots.nodes, slots.edges, slots.from, slots.to); return { connected: path !== null, path };
     },
     render(solution) { return solution.connected ? `Yes, ${solution.path.join('-')}.` : 'No.'; },
-    compute: ['const slots = $slots;', source(adjacency, buildPath, searchPath, shortestPath),
-      'const path = shortestPath(slots.nodes, slots.edges, slots.from, slots.to);',
-      'return path !== null ? "Yes, " + path.join("-") + "." : "No.";'].join('\n'),
+    wires: [
+      {
+        name: 'route', command: 'jsEval', body: ['const slots = $slots;', source(adjacency, buildPath, searchPath, shortestPath),
+          'const path = shortestPath(slots.nodes, slots.edges, slots.from, slots.to);',
+          'return { connected: path !== null, path: path };'].join('\n')
+      }
+    ],
+    compute: ['return $route.connected ? "Yes, " + $route.path.join("-") + "." : "No.";'].join('\n'),
     explain(slots, solution) { return ['Deleting the broken link leaves the other links in place, so any route that avoids it may still survive.', `Searching the remaining network shows that ${slots.from} still reaches ${slots.to} along ${solution.path.join('-')}.`]; }
   },
   {
@@ -262,8 +289,13 @@ export const cases = [
     },
     solve(slots) { return { groups: countComponents(slots.nodes, slots.edges) }; },
     render(solution) { return solution.groups === 1 ? 'Yes.' : 'No.'; },
-    compute: ['const slots = $slots;', source(adjacency, countComponents),
-      'return countComponents(slots.nodes, slots.edges) === 1 ? "Yes." : "No.";'].join('\n'),
+    wires: [
+      {
+        name: 'groups', command: 'jsEval', body: ['const slots = $slots;', source(adjacency, countComponents),
+          'return countComponents(slots.nodes, slots.edges);'].join('\n')
+      }
+    ],
+    compute: ['return $groups === 1 ? "Yes." : "No.";'].join('\n'),
     explain() { return ['A network is connected when every node is reachable from every other node, which is the same as having a single group of nodes.', 'Counting the groups of the printed links gives one group, so every node can be reached from every other node.']; }
   },
   {
@@ -273,8 +305,13 @@ export const cases = [
     },
     solve(slots) { return { groups: countComponents(slots.nodes, slots.edges) }; },
     render(solution) { return `${solution.groups} groups.`; },
-    compute: ['const slots = $slots;', source(adjacency, countComponents),
-      'return countComponents(slots.nodes, slots.edges) + " groups.";'].join('\n'),
+    wires: [
+      {
+        name: 'groups', command: 'jsEval', body: ['const slots = $slots;', source(adjacency, countComponents),
+          'return countComponents(slots.nodes, slots.edges);'].join('\n')
+      }
+    ],
+    compute: ['return $groups + " groups.";'].join('\n'),
     explain(slots, solution) { return ['A group holds nodes that can travel to each other along links, so two nodes share a group exactly when some path joins them.', `Walking the links from every unvisited node discovers ${solution.groups} groups, because no link crosses between them.`]; }
   },
   {
@@ -358,10 +395,15 @@ export const cases = [
       return { distance: path.length - 1 };
     },
     render(solution) { return `${solution.distance}.`; },
-    compute: ['const slots = $slots;', source(adjacency, buildPath, searchPath, shortestPath),
-      'const path = shortestPath(slots.nodes, slots.edges, slots.from, slots.to);',
-      'if (path === null) { throw new Error("the two nodes are not connected"); }',
-      'return String(path.length - 1) + ".";'].join('\n'),
+    wires: [
+      {
+        name: 'distance', command: 'jsEval', body: ['const slots = $slots;', source(adjacency, buildPath, searchPath, shortestPath),
+          'const path = shortestPath(slots.nodes, slots.edges, slots.from, slots.to);',
+          'if (path === null) { throw new Error("the two nodes are not connected"); }',
+          'return path.length - 1;'].join('\n')
+      }
+    ],
+    compute: ['return String($distance) + ".";'].join('\n'),
     explain(slots, solution) { return ['The distance is the minimum number of links between the two nodes, so it is the number of edges of a shortest path.', `Travelling along the chain from ${slots.from} to ${slots.to} takes ${solution.distance} links, and no route uses fewer.`]; }
   },
   {
@@ -378,10 +420,15 @@ export const cases = [
       return best;
     },
     render(solution) { return `${solution.node}.`; },
-    compute: ['const slots = $slots;', source(adjacency, buildPath, searchPath, shortestPath, eccentricity),
-      'let best = null;',
-      'for (const candidate of slots.candidates) { const d = eccentricity(slots.nodes, slots.edges, candidate); if (best === null || d < best.d) { best = { node: candidate, d }; } }',
-      'return best.node + ".";'].join('\n'),
+    wires: [
+      {
+        name: 'centre', command: 'jsEval', body: ['const slots = $slots;', source(adjacency, buildPath, searchPath, shortestPath, eccentricity),
+          'let best = null;',
+          'for (const candidate of slots.candidates) { const d = eccentricity(slots.nodes, slots.edges, candidate); if (best === null || d < best.d) { best = { node: candidate, d }; } }',
+          'return best;'].join('\n')
+      }
+    ],
+    compute: ['return $centre.node + ".";'].join('\n'),
     explain(slots, solution) { return ['For each candidate the important number is its eccentricity, the distance to the farthest node of the chain.', `The smallest farthest distance is ${solution.d}, reached at ${solution.node}, so that node is the best centre.`]; }
   },
   {
@@ -394,9 +441,13 @@ export const cases = [
       const path = hamiltonianPath(slots.nodes, slots.edges, slots.start); return { path };
     },
     render(solution) { return `Yes: ${solution.path.join('-')}.`; },
-    compute: ['const slots = $slots;', source(adjacency, hamiltonianPath),
-      'const path = hamiltonianPath(slots.nodes, slots.edges, slots.start);',
-      'return "Yes: " + path.join("-") + ".";'].join('\n'),
+    wires: [
+      {
+        name: 'tour', command: 'jsEval', body: ['const slots = $slots;', source(adjacency, hamiltonianPath),
+          'return hamiltonianPath(slots.nodes, slots.edges, slots.start);'].join('\n')
+      }
+    ],
+    compute: ['return "Yes: " + $tour.join("-") + ".";'].join('\n'),
     explain(slots, solution) { return ['Visiting every node exactly once is a path that uses all nodes and never repeats one, so a walk can be extended and backed out of dead ends.', `Starting at ${slots.start}, the search finds the visiting order ${solution.path.join('-')}, which covers all ${slots.nodes.length} nodes.`]; }
   },
   {
@@ -408,9 +459,13 @@ export const cases = [
     },
     solve(slots) { return { path: eulerianTrail(slots.edges, slots.start, true) }; },
     render(solution) { return `Yes: ${solution.path.join('-')}.`; },
-    compute: ['const slots = $slots;', source(eulerianTrail),
-      'const path = eulerianTrail(slots.edges, slots.start, true);',
-      'return "Yes: " + path.join("-") + ".";'].join('\n'),
+    wires: [
+      {
+        name: 'circuit', command: 'jsEval', body: ['const slots = $slots;', source(eulerianTrail),
+          'return eulerianTrail(slots.edges, slots.start, true);'].join('\n')
+      }
+    ],
+    compute: ['return "Yes: " + $circuit.join("-") + ".";'].join('\n'),
     explain(slots, solution) { return ['A closed walk that uses each link exactly once returns to its starting node after covering every link.', `Trying the links from ${slots.start} and never repeating one produces the circuit ${solution.path.join('-')}, which closes the tour.`]; }
   },
   {
@@ -421,8 +476,13 @@ export const cases = [
     },
     solve(slots) { return { possible: eulerianTrail(slots.edges, slots.nodes[0], false) !== null }; },
     render(solution) { return solution.possible ? 'Yes.' : 'No.'; },
-    compute: ['const slots = $slots;', source(eulerianTrail),
-      'return eulerianTrail(slots.edges, slots.nodes[0], false) !== null ? "Yes." : "No.";'].join('\n'),
+    wires: [
+      {
+        name: 'possible', command: 'jsEval', body: ['const slots = $slots;', source(eulerianTrail),
+          'return eulerianTrail(slots.edges, slots.nodes[0], false) !== null;'].join('\n')
+      }
+    ],
+    compute: ['return $possible ? "Yes." : "No.";'].join('\n'),
     explain(slots) { return ['A single trail must use every link of the chain once, without repeating any of them.', `Starting at one end and following the chain uses all ${slots.edges.length} links exactly once, so such a trail exists.`]; }
   },
   {
@@ -435,9 +495,13 @@ export const cases = [
       const path = shortestPathDirected(slots.nodes, slots.arcs, slots.from, slots.to); return { path };
     },
     render(solution) { return `Yes, through ${solution.path.slice(1, -1).join('-')}.`; },
-    compute: ['const slots = $slots;', source(buildPath, searchPath, shortestPathDirected),
-      'const path = shortestPathDirected(slots.nodes, slots.arcs, slots.from, slots.to);',
-      'return "Yes, through " + path.slice(1, -1).join("-") + ".";'].join('\n'),
+    wires: [
+      {
+        name: 'route', command: 'jsEval', body: ['const slots = $slots;', source(buildPath, searchPath, shortestPathDirected),
+          'return shortestPathDirected(slots.nodes, slots.arcs, slots.from, slots.to);'].join('\n')
+      }
+    ],
+    compute: ['return "Yes, through " + $route.slice(1, -1).join("-") + ".";'].join('\n'),
     explain(slots, solution) { return ['The arrows make the moves one-directional, so a road may be used only from its tail to its head.', `Following the arrows from ${slots.from} leads through ${solution.path.slice(1, -1).join('-')} to ${slots.to}.`]; }
   },
   {
@@ -451,9 +515,13 @@ export const cases = [
       return { queries: slots.queries, answers: slots.queries.map(([from, to]) => reachableIn(slots.arcs, from, to)) };
     },
     render(solution) { return `${solution.queries.map(([from, to], i) => `${from}→${to}: ${solution.answers[i] ? 'yes' : 'no'}`).join('; ')}.`; },
-    compute: ['const slots = $slots;', source(reachableIn),
-      'const answers = slots.queries.map(([from, to]) => from + "→" + to + ": " + (reachableIn(slots.arcs, from, to) ? "yes" : "no"));',
-      'return answers.join("; ") + ".";'].join('\n'),
+    wires: [
+      {
+        name: 'answers', command: 'jsEval', body: ['const slots = $slots;', source(reachableIn),
+          'return slots.queries.map(([from, to]) => from + "→" + to + ": " + (reachableIn(slots.arcs, from, to) ? "yes" : "no"));'].join('\n')
+      }
+    ],
+    compute: ['return $answers.join("; ") + ".";'].join('\n'),
     explain(slots) { return ['Because every road is one-way, a route exists only when its arrows allow travelling from the start to the destination.', `Searching along the arrows decides which of the questions ${slots.queries.map(([from, to]) => `${from}→${to}`).join(' and ')} can be answered yes.`]; }
   },
   {
@@ -469,11 +537,16 @@ export const cases = [
       if (best === null) throw new Error('the endpoints are not connected'); return best;
     },
     render(solution) { return `${solution.path.join('-')}, cost ${solution.cost}.`; },
-    compute: ['const slots = $slots;', source(edgeKey, adjacency, cheapestPath),
-      'const costs = new Map(Object.entries(slots.costs));',
-      'const best = cheapestPath(slots.nodes, slots.edges, costs, slots.from, slots.to);',
-      'if (best === null) { throw new Error("the endpoints are not connected"); }',
-      'return best.path.join("-") + ", cost " + best.cost + ".";'].join('\n'),
+    wires: [
+      {
+        name: 'best', command: 'jsEval', body: ['const slots = $slots;', source(edgeKey, adjacency, cheapestPath),
+          'const costs = new Map(Object.entries(slots.costs));',
+          'const best = cheapestPath(slots.nodes, slots.edges, costs, slots.from, slots.to);',
+          'if (best === null) { throw new Error("the endpoints are not connected"); }',
+          'return best;'].join('\n')
+      }
+    ],
+    compute: ['return $best.path.join("-") + ", cost " + $best.cost + ".";'].join('\n'),
     explain(slots, solution) { return ['With costs on the links the cheapest route is not always the one with the fewest links, so every simple route is compared by total cost.', `Adding the costs along each route shows ${solution.path.join('-')} is cheapest, at a total of ${solution.cost}.`]; }
   },
   {
@@ -527,10 +600,14 @@ export const cases = [
       return { unreachable, source: slots.source, targets: slots.targets };
     },
     render(solution) { return `No; ${solution.source} can no longer reach ${solution.unreachable.join(' or ')}.`; },
-    compute: ['const slots = $slots;', source(adjacency, buildPath, searchPath, shortestPath),
-      'const kept = slots.edges.filter(([a, b]) => a !== slots.removed && b !== slots.removed);',
-      'const unreachable = slots.targets.filter((target) => shortestPath(slots.nodes, kept, slots.source, target) === null);',
-      'return "No; " + slots.source + " can no longer reach " + unreachable.join(" or ") + ".";'].join('\n'),
+    wires: [
+      {
+        name: 'unreachable', command: 'jsEval', body: ['const slots = $slots;', source(adjacency, buildPath, searchPath, shortestPath),
+          'const kept = slots.edges.filter(([a, b]) => a !== slots.removed && b !== slots.removed);',
+          'return slots.targets.filter((target) => shortestPath(slots.nodes, kept, slots.source, target) === null);'].join('\n')
+      }
+    ],
+    compute: ['return "No; " + $slots.source + " can no longer reach " + $unreachable.join(" or ") + ".";'].join('\n'),
     explain(slots, solution) { return [`Removing ${slots.removed} also removes every link that touches it, so the network falls into separate pieces.`, `After the removal ${slots.source} can no longer reach ${solution.unreachable.join(' or ')}: ${slots.removed} was the only node joining them.`]; }
   }
 ];

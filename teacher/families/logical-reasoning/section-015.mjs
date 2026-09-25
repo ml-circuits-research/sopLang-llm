@@ -93,14 +93,24 @@ function render(solution) {
   return `${clauseHeading(solution.forcedAct)}. ${clauseHeading(solution.unforcedAct)} is not forced, because draining is not occurring.`;
 }
 
+const WIRES = [
+  {
+    name: 'selection',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const satisfied = { "red-band": slots.needleInRedBand, draining: slots.draining };',
+      'const forced = slots.rules.filter((rule) => satisfied[rule.triggerKind] === true);',
+      'probe(forced.length === 1, "exactly one of the two instructions must have its trigger satisfied");',
+      'const other = slots.rules.find((rule) => rule !== forced[0]);',
+      'return { forcedAct: forced[0].act, unforcedAct: other.act };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const satisfied = { "red-band": slots.needleInRedBand, draining: slots.draining };',
-  'const forced = slots.rules.filter((rule) => satisfied[rule.triggerKind] === true);',
-  'probe(forced.length === 1, "exactly one of the two instructions must have its trigger satisfied");',
-  'const other = slots.rules.find((rule) => rule !== forced[0]);',
   'const heading = (act) => { const parts = act.split(" "); const verb = parts[0]; const stem = verb.endsWith("e") && !verb.endsWith("ee") ? verb.slice(0, -1) : verb; const phrase = (stem + "ing " + parts.slice(1).join(" ")).trim(); return phrase.charAt(0).toUpperCase() + phrase.slice(1); };',
-  'return heading(forced[0].act) + ". " + heading(other.act) + " is not forced, because draining is not occurring.";'
+  'return heading($selection.forcedAct) + ". " + heading($selection.unforcedAct) + " is not forced, because draining is not occurring.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -122,6 +132,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

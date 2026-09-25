@@ -81,28 +81,38 @@ function render(solution) {
   return `${formatHundredths(solution.quantityHundredths)} useful ${solution.unit}.`;
 }
 
+const WIRES = [
+  {
+    name: 'quantity',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const roundHundredths = (numerator, denominator) => {',
+      '  let hundredths = Math.floor((numerator * 100) / denominator);',
+      '  const remainder = (numerator * 100) % denominator;',
+      '  if (2 * remainder > denominator || (2 * remainder === denominator && hundredths % 2 === 1)) {',
+      '    hundredths += 1;',
+      '  }',
+      '  return hundredths;',
+      '};',
+      'const usefulPercent = 100 - slots.overheadPercent;',
+      'const rate = roundHundredths(slots.throughput * usefulPercent, 100);',
+      'probe(rate > 0, "the useful rate must stay positive");',
+      'const quantity = roundHundredths(slots.throughput * usefulPercent * slots.minutes, 6000);',
+      'probe(quantity > 0, "the produced quantity must stay positive");',
+      'return quantity;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const roundHundredths = (numerator, denominator) => {',
-  '  let hundredths = Math.floor((numerator * 100) / denominator);',
-  '  const remainder = (numerator * 100) % denominator;',
-  '  if (2 * remainder > denominator || (2 * remainder === denominator && hundredths % 2 === 1)) {',
-  '    hundredths += 1;',
-  '  }',
-  '  return hundredths;',
-  '};',
   'const formatHundredths = (hundredths) => {',
   '  const whole = Math.floor(hundredths / 100);',
   '  const rest = hundredths % 100;',
   '  if (rest === 0) { return String(whole); }',
   '  return whole + "." + String(rest).padStart(2, "0").replace(/0$/, "");',
   '};',
-  'const usefulPercent = 100 - slots.overheadPercent;',
-  'const rate = roundHundredths(slots.throughput * usefulPercent, 100);',
-  'probe(rate > 0, "the useful rate must stay positive");',
-  'const quantity = roundHundredths(slots.throughput * usefulPercent * slots.minutes, 6000);',
-  'probe(quantity > 0, "the produced quantity must stay positive");',
-  'return formatHundredths(quantity) + " useful " + slots.unit + ".";'
+  'return formatHundredths($quantity) + " useful " + $slots.unit + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -126,6 +136,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

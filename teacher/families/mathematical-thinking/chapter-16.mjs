@@ -217,25 +217,34 @@ export const cases = [
     render(solution) {
       return String(solution.largest);
     },
+    wires: [
+      {
+        name: 'candidates',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'const results = [];',
+          'const walk = (used, prefix) => {',
+          '  if (prefix.length === slots.digits.length) {',
+          '    results.push(Number(prefix.join("")));',
+          '    return;',
+          '  }',
+          '  for (let index = 0; index < slots.digits.length; index += 1) {',
+          '    if (used[index] === true) { continue; }',
+          '    used[index] = true;',
+          '    prefix.push(slots.digits[index]);',
+          '    walk(used, prefix);',
+          '    prefix.pop();',
+          '    used[index] = false;',
+          '  }',
+          '};',
+          'walk(slots.digits.map(() => false), []);',
+          'return results;'
+        ].join('\n')
+      }
+    ],
     compute: [
-      'const slots = $slots;',
-      'const results = [];',
-      'const walk = (used, prefix) => {',
-      '  if (prefix.length === slots.digits.length) {',
-      '    results.push(Number(prefix.join("")));',
-      '    return;',
-      '  }',
-      '  for (let index = 0; index < slots.digits.length; index += 1) {',
-      '    if (used[index] === true) { continue; }',
-      '    used[index] = true;',
-      '    prefix.push(slots.digits[index]);',
-      '    walk(used, prefix);',
-      '    prefix.pop();',
-      '    used[index] = false;',
-      '  }',
-      '};',
-      'walk(slots.digits.map(() => false), []);',
-      'const allowed = results.filter((value) => value > slots.lower && value < slots.upper);',
+      'const allowed = $candidates.filter((value) => value > $slots.lower && value < $slots.upper);',
       'return String(Math.max(...allowed));'
     ].join('\n'),
     explain(slots, solution) {

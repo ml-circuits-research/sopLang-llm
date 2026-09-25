@@ -82,20 +82,44 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'quotas',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const total = slots.districts.reduce((sum, district) => sum + district.population, 0);',
+      'probe(total > 0, "the stated populations must add up to a positive total");',
+      'const quotas = slots.districts.map((district) => { const scaled = district.population * slots.seats; return { name: district.name, seats: Math.floor(scaled / total), remainder: scaled % total }; });',
+      'const remaining = slots.seats - quotas.reduce((sum, quota) => sum + quota.seats, 0);',
+      'probe(remaining >= 0 && remaining < quotas.length, "the whole-number parts must leave fewer seats than there are districts");',
+      'return { quotas, remaining };'
+    ].join('\n')
+  },
+  {
+    name: 'alloc',
+    command: 'jsEval',
+    body: [
+      'const quotas = $quotas.quotas;',
+      'const order = quotas.map((quota, index) => ({ index, remainder: quota.remainder })).sort((left, right) => right.remainder - left.remainder || right.index - left.index);',
+      'for (let assigned = 0; assigned < $quotas.remaining; assigned += 1) { quotas[order[assigned].index].seats += 1; }',
+      'probe(quotas.reduce((sum, quota) => sum + quota.seats, 0) === $slots.seats, "the final allocation must sum to the available seats");',
+      'return quotas.map((quota) => quota.name + "=" + quota.seats).join(", ") + " seats.";'
+    ].join('\n')
+  },
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
-  'const slots = $slots;',
-  'const total = slots.districts.reduce((sum, district) => sum + district.population, 0);',
-  'probe(total > 0, "the stated populations must add up to a positive total");',
-  'const quotas = slots.districts.map((district) => { const scaled = district.population * slots.seats; return { name: district.name, seats: Math.floor(scaled / total), remainder: scaled % total }; });',
-  'const remaining = slots.seats - quotas.reduce((sum, quota) => sum + quota.seats, 0);',
-  'probe(remaining >= 0 && remaining < quotas.length, "the whole-number parts must leave fewer seats than there are districts");',
-  'const order = quotas.map((quota, index) => ({ index, remainder: quota.remainder })).sort((left, right) => right.remainder - left.remainder || right.index - left.index);',
-  'for (let assigned = 0; assigned < remaining; assigned += 1) { quotas[order[assigned].index].seats += 1; }',
-  'probe(quotas.reduce((sum, quota) => sum + quota.seats, 0) === slots.seats, "the final allocation must sum to the available seats");',
-  'const main = quotas.map((quota) => quota.name + "=" + quota.seats).join(", ") + " seats.";',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'return $cross.suffix === "" ? $alloc : $alloc + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -119,6 +143,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

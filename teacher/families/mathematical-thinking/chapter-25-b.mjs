@@ -310,13 +310,22 @@ export const cases = [
     render(solution) {
       return solution.covers ? 'Yes.' : 'No.';
     },
+    wires: [
+      {
+        name: 'covers',
+        command: 'jsEval',
+        body: [
+          'const s = $slots;',
+          'const [gapRows, gapColumns] = s.gap;',
+          'const [pieceRows, pieceColumns] = s.piece;',
+          'const fits = (pieceRows <= gapRows && pieceColumns <= gapColumns) || (pieceColumns <= gapRows && pieceRows <= gapColumns);',
+          'const areaMatches = pieceRows * pieceColumns === gapRows * gapColumns;',
+          'return fits && areaMatches;'
+        ].join('\n')
+      }
+    ],
     compute: [
-      'const s = $slots;',
-      'const [gapRows, gapColumns] = s.gap;',
-      'const [pieceRows, pieceColumns] = s.piece;',
-      'const fits = (pieceRows <= gapRows && pieceColumns <= gapColumns) || (pieceColumns <= gapRows && pieceRows <= gapColumns);',
-      'const areaMatches = pieceRows * pieceColumns === gapRows * gapColumns;',
-      'return fits && areaMatches ? "Yes." : "No.";'
+      'return ($covers ? "Yes" : "No") + ".";'
     ].join('\n'),
     explain(slots, solution) {
       return [

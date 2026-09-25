@@ -96,36 +96,52 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  },
+  {
+    name: 'consumers',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const byFood = new Map();',
+      'for (const link of slots.links) {',
+      '  if (!byFood.has(link.food)) {',
+      '    byFood.set(link.food, []);',
+      '  }',
+      '  byFood.get(link.food).push(link.consumer);',
+      '}',
+      'const seen = new Set([slots.decreased]);',
+      'const queue = [slots.decreased];',
+      'const consumers = [];',
+      'while (queue.length > 0) {',
+      '  const current = queue.shift();',
+      '  for (const consumer of byFood.get(current) || []) {',
+      '    if (seen.has(consumer)) {',
+      '      continue;',
+      '    }',
+      '    seen.add(consumer);',
+      '    consumers.push(consumer);',
+      '    queue.push(consumer);',
+      '  }',
+      '}',
+      'return { direct: consumers[0], indirect: consumers.slice(1) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
-  'const slots = $slots;',
-  'const byFood = new Map();',
-  'for (const link of slots.links) {',
-  '  if (!byFood.has(link.food)) {',
-  '    byFood.set(link.food, []);',
-  '  }',
-  '  byFood.get(link.food).push(link.consumer);',
-  '}',
-  'const seen = new Set([slots.decreased]);',
-  'const queue = [slots.decreased];',
-  'const consumers = [];',
-  'while (queue.length > 0) {',
-  '  const current = queue.shift();',
-  '  for (const consumer of byFood.get(current) || []) {',
-  '    if (seen.has(consumer)) {',
-  '      continue;',
-  '    }',
-  '    seen.add(consumer);',
-  '    consumers.push(consumer);',
-  '    queue.push(consumer);',
-  '  }',
-  '}',
-  'const direct = consumers[0];',
-  'const indirect = consumers.slice(1);',
+  'const indirect = $consumers.indirect;',
   'const joined = indirect.length === 1 ? indirect[0] : indirect.slice(0, -1).join(", ") + " and " + indirect[indirect.length - 1];',
-  'const main = direct + " may decrease directly and " + joined + " may be affected indirectly.";',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'const main = $consumers.direct + " may decrease directly and " + joined + " may be affected indirectly.";',
+  'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -146,6 +162,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

@@ -71,6 +71,52 @@ function ratioCompute(favorableExpression, totalExpression) {
   ].join('\n');
 }
 
+const EXACTLY_ONE_WIRES = [
+  {
+    name: 'counts',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const facts = $facts;',
+      'let space = [""];',
+      'for (let step = 0; step < facts.trials; step += 1) {',
+      '  space = space.flatMap((prefix) => facts.outcomes.map((symbol) => prefix + symbol));',
+      '}',
+      'const favorable = space.filter((outcome) => outcome.split("").filter((letter) => letter === slots.success).length === 1).length;',
+      'return { favorable: favorable, total: space.length };'
+    ].join('\n')
+  }
+];
+
+const EXACTLY_ONE_COMPUTE = [
+  GCD_LINE,
+  'const factor = gcd($counts.favorable, $counts.total);',
+  'const n = $counts.favorable / factor;',
+  'const d = $counts.total / factor;',
+  'return d === 1 ? String(n) : n + "/" + d;'
+].join('\n');
+
+const DRAW_WIRES = [
+  {
+    name: 'counts',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const counts = { ...slots.counts };',
+      'if (!slots.replacement) counts[slots.drawnColor] -= 1;',
+      'return { favorable: counts.red, total: counts.red + counts.blue };'
+    ].join('\n')
+  }
+];
+
+const DRAW_COMPUTE = [
+  GCD_LINE,
+  'const factor = gcd($counts.favorable, $counts.total);',
+  'const n = $counts.favorable / factor;',
+  'const d = $counts.total / factor;',
+  'return d === 1 ? String(n) : n + "/" + d;'
+].join('\n');
+
 export const cases = [
   {
     template: 'At least one success',
@@ -123,20 +169,8 @@ export const cases = [
       return `${fraction(solution.favorable, solution.total)}.`;
     },
     facts: '{"trials":2,"outcomes":["A","B"]}',
-    compute: [
-      'const slots = $slots;',
-      'const facts = $facts;',
-      'let space = [""];',
-      'for (let step = 0; step < facts.trials; step += 1) {',
-      '  space = space.flatMap((prefix) => facts.outcomes.map((symbol) => prefix + symbol));',
-      '}',
-      'const favorable = space.filter((outcome) => outcome.split("").filter((letter) => letter === slots.success).length === 1).length;',
-      GCD_LINE,
-      'const factor = gcd(favorable, space.length);',
-      'const n = favorable / factor;',
-      'const d = space.length / factor;',
-      'return d === 1 ? String(n) : n + "/" + d;'
-    ].join('\n'),
+    wires: EXACTLY_ONE_WIRES,
+    compute: EXACTLY_ONE_COMPUTE,
     explain(slots, solution) {
       return [
         'The statement is the second half of a two-trial experiment whose setup was given just before it, so the two equally likely letters per trial are supplied as the setup fact.',
@@ -170,18 +204,8 @@ export const cases = [
     render(solution) {
       return `${fraction(solution.favorable, solution.total)}.`;
     },
-    compute: [
-      'const slots = $slots;',
-      'const counts = { ...slots.counts };',
-      'if (!slots.replacement) counts[slots.drawnColor] -= 1;',
-      'const favorable = counts.red;',
-      'const total = counts.red + counts.blue;',
-      GCD_LINE,
-      'const factor = gcd(favorable, total);',
-      'const n = favorable / factor;',
-      'const d = total / factor;',
-      'return d === 1 ? String(n) : n + "/" + d;'
-    ].join('\n'),
+    wires: DRAW_WIRES,
+    compute: DRAW_COMPUTE,
     explain(slots, solution) {
       return [
         'Drawing without replacement means the drawn ball leaves the bag, so both the favorable count and the total shrink.',
@@ -215,18 +239,8 @@ export const cases = [
     render(solution) {
       return `${fraction(solution.favorable, solution.total)}.`;
     },
-    compute: [
-      'const slots = $slots;',
-      'const counts = { ...slots.counts };',
-      'if (!slots.replacement) counts[slots.drawnColor] -= 1;',
-      'const favorable = counts.red;',
-      'const total = counts.red + counts.blue;',
-      GCD_LINE,
-      'const factor = gcd(favorable, total);',
-      'const n = favorable / factor;',
-      'const d = total / factor;',
-      'return d === 1 ? String(n) : n + "/" + d;'
-    ].join('\n'),
+    wires: DRAW_WIRES,
+    compute: DRAW_COMPUTE,
     explain(slots, solution) {
       return [
         'Returning the ball restores the bag to its original composition, so the second draw sees exactly the same bag as the first.',

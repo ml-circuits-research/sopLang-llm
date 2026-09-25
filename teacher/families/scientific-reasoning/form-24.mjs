@@ -117,24 +117,34 @@ function render(solution) {
   return `Consistent final state: "${solution.compartments[0]}"=${first}, "${solution.compartments[1]}"=${second}, "${solution.compartments[2]}"=${third} ${solution.unit}; the total is ${solution.total}.`;
 }
 
+const WIRES = [
+  {
+    name: 'values',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'let values;',
+      'if (slots.shape === "initial") {',
+      '  values = slots.values.slice();',
+      '  for (const move of slots.moves) {',
+      '    const from = slots.compartments.indexOf(move.from);',
+      '    const to = slots.compartments.indexOf(move.to);',
+      '    values[from] -= move.amount;',
+      '    values[to] += move.amount;',
+      '  }',
+      '} else {',
+      '  values = [slots.values[0], slots.values[1], slots.total - slots.values[0] - slots.values[1]];',
+      '}',
+      'probe(values.length === 3, "the final state must report three compartments");',
+      'probe(values.every((value) => Number.isInteger(value) && value >= 0), "every compartment must hold a non-negative whole quantity");',
+      'probe(values.reduce((sum, value) => sum + value, 0) === slots.total, "the three compartments must sum to the conserved total");',
+      'return values;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'let values;',
-  'if (slots.shape === "initial") {',
-  '  values = slots.values.slice();',
-  '  for (const move of slots.moves) {',
-  '    const from = slots.compartments.indexOf(move.from);',
-  '    const to = slots.compartments.indexOf(move.to);',
-  '    values[from] -= move.amount;',
-  '    values[to] += move.amount;',
-  '  }',
-  '} else {',
-  '  values = [slots.values[0], slots.values[1], slots.total - slots.values[0] - slots.values[1]];',
-  '}',
-  'probe(values.length === 3, "the final state must report three compartments");',
-  'probe(values.every((value) => Number.isInteger(value) && value >= 0), "every compartment must hold a non-negative whole quantity");',
-  'probe(values.reduce((sum, value) => sum + value, 0) === slots.total, "the three compartments must sum to the conserved total");',
-  'return "Consistent final state: \\"" + slots.compartments[0] + "\\"=" + values[0] + ", \\"" + slots.compartments[1] + "\\"=" + values[1] + ", \\"" + slots.compartments[2] + "\\"=" + values[2] + " " + slots.unit + "; the total is " + slots.total + ".";'
+  'return "Consistent final state: \\"" + $slots.compartments[0] + "\\"=" + $values[0] + ", \\"" + $slots.compartments[1] + "\\"=" + $values[1] + ", \\"" + $slots.compartments[2] + "\\"=" + $values[2] + " " + $slots.unit + "; the total is " + $slots.total + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -162,6 +172,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

@@ -71,6 +71,28 @@ function ratioCompute(favorableExpression, totalExpression) {
   ].join('\n');
 }
 
+const PROB_ZERO_WIRES = [
+  {
+    name: 'counts',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const facts = $facts;',
+      'const remaining = facts.cards.filter((card) => card.color === slots.condition);',
+      'const favorable = remaining.filter((card) => card.shape === slots.target).length;',
+      'return { favorable: favorable, total: remaining.length };'
+    ].join('\n')
+  }
+];
+
+const PROB_ZERO_COMPUTE = [
+  GCD_LINE,
+  'const factor = gcd($counts.favorable, $counts.total);',
+  'const n = $counts.favorable / factor;',
+  'const d = $counts.total / factor;',
+  'return d === 1 ? String(n) : n + "/" + d;'
+].join('\n');
+
 export const cases = [
   {
     template: 'Making the better choice in a game',
@@ -325,17 +347,8 @@ export const cases = [
       return `${fraction(solution.favorable, solution.total)}.`;
     },
     facts: '{"cards":[{"color":"red","shape":"circle"},{"color":"red","shape":"square"},{"color":"blue","shape":"circle"},{"color":"blue","shape":"triangle"}]}',
-    compute: [
-      'const slots = $slots;',
-      'const facts = $facts;',
-      'const remaining = facts.cards.filter((card) => card.color === slots.condition);',
-      'const favorable = remaining.filter((card) => card.shape === slots.target).length;',
-      GCD_LINE,
-      'const factor = gcd(favorable, remaining.length);',
-      'const n = favorable / factor;',
-      'const d = remaining.length / factor;',
-      'return d === 1 ? String(n) : n + "/" + d;'
-    ].join('\n'),
+    wires: PROB_ZERO_WIRES,
+    compute: PROB_ZERO_COMPUTE,
     explain(slots, solution) {
       return [
         'The statement continues the card problem that precedes it, so the deck it refers to is supplied as a setup fact rather than restated in the problem text.',

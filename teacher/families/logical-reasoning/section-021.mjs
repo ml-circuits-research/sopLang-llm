@@ -77,11 +77,20 @@ function render(solution) {
   return `A limited inductive claim about this carton, not a forced universal. ${solution.cautious} has the strength right. “So far” is the honest adverb.`;
 }
 
+const WIRES = [
+  {
+    name: 'cautious',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const cautious = slots.claims.filter((claim) => claim.stance === "cautious").map((claim) => claim.name);',
+      'return cautious;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const cautious = slots.claims.filter((claim) => claim.stance === "cautious").map((claim) => claim.name);',
-  'const universal = slots.claims.filter((claim) => claim.stance === "universal").map((claim) => claim.name);',
-  'return "A limited inductive claim about this carton, not a forced universal. " + cautious[0] + " has the strength right. \\u201cSo far\\u201d is the honest adverb.";'
+  'return "A limited inductive claim about this carton, not a forced universal. " + $cautious[0] + " has the strength right. \\u201cSo far\\u201d is the honest adverb.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -103,6 +112,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

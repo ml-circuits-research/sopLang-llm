@@ -120,36 +120,42 @@ function render(solution) {
   return `Weighted means: ${means}. After the robustness threshold, the choice is ${choice}.`;
 }
 
+const WIRES = [
+  {
+    name: 'means',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const scenarioCount = slots.scenarios.length;',
+      'const labels = [];',
+      'const hundredths = {};',
+      'const minimums = {};',
+      'for (const strategy of slots.strategies) {',
+      '  let total = 0;',
+      '  for (let index = 0; index < scenarioCount; index += 1) {',
+      '    const outcome = strategy.outcomes[index];',
+      '    total += slots.probabilities[index] * outcome;',
+      '  }',
+      '  hundredths[strategy.label] = total;',
+      '  minimums[strategy.label] = Math.min(...strategy.outcomes);',
+      '  labels.push(strategy.label);',
+      '}',
+      'const acceptable = labels.filter((label) => minimums[label] >= slots.threshold);',
+      'const bestMean = acceptable.length === 0 ? 0 : Math.max(...acceptable.map((label) => hundredths[label]));',
+      'const winner = acceptable.find((label) => hundredths[label] === bestMean);',
+      'probe(acceptable.length === 0 || winner !== undefined, "the acceptable strategies must attain a largest weighted mean");',
+      'return { labels, hundredths, winner };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const scenarioCount = slots.scenarios.length;',
-  'let probabilitySum = 0;',
-  'for (const probability of slots.probabilities) {',
-  '  probabilitySum += probability;',
-  '}',
-  'const labels = [];',
-  'const hundredths = {};',
-  'const minimums = {};',
-  'for (const strategy of slots.strategies) {',
-  '  let total = 0;',
-  '  for (let index = 0; index < scenarioCount; index += 1) {',
-  '    const outcome = strategy.outcomes[index];',
-  '    total += slots.probabilities[index] * outcome;',
-  '  }',
-  '  hundredths[strategy.label] = total;',
-  '  minimums[strategy.label] = Math.min(...strategy.outcomes);',
-  '  labels.push(strategy.label);',
-  '}',
-  'const acceptable = labels.filter((label) => minimums[label] >= slots.threshold);',
-  'const bestMean = acceptable.length === 0 ? 0 : Math.max(...acceptable.map((label) => hundredths[label]));',
-  'const winner = acceptable.find((label) => hundredths[label] === bestMean);',
-  'probe(acceptable.length === 0 || winner !== undefined, "the acceptable strategies must attain a largest weighted mean");',
   'const format = (value) => {',
   '  const tenths = Math.floor(value / 10);',
   '  return Math.floor(tenths / 10) + "." + (tenths % 10);',
   '};',
-  'const means = labels.map((label) => label + "=" + format(hundredths[label])).join(", ");',
-  'return "Weighted means: " + means + ". After the robustness threshold, the choice is " + (winner === undefined ? "none of the strategies" : winner) + ".";'
+  'const means = $means.labels.map((label) => label + "=" + format($means.hundredths[label])).join(", ");',
+  'return "Weighted means: " + means + ". After the robustness threshold, the choice is " + ($means.winner === undefined ? "none of the strategies" : $means.winner) + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -183,6 +189,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

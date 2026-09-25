@@ -129,6 +129,56 @@ function intervalOf(condition, domain) {
   throw new Error(`the condition "${condition}" cannot be read as an interval`);
 }
 
+const PARENS_WIRES = [
+  {
+    name: 'parts',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const evaluate = (tokens) => {',
+      '  let position = 0;',
+      '  const primary = () => {',
+      '    if (tokens[position] === "(") { position += 1; const value = or(); position += 1; return value; }',
+      '    const token = tokens[position]; position += 1;',
+      '    return slots.environment[token] === true;',
+      '  };',
+      '  const not = () => { if (tokens[position] === "NOT") { position += 1; return !not(); } return primary(); };',
+      '  const and = () => { let value = not(); while (tokens[position] === "AND") { position += 1; const right = not(); value = value && right; } return value; };',
+      '  const or = () => { let value = and(); while (tokens[position] === "OR") { position += 1; const right = and(); value = value || right; } return value; };',
+      '  return or();',
+      '};',
+      'return slots.rules.map((rule) => rule.name + " " + String(evaluate(rule.tokens)));'
+    ].join('\n')
+  }
+];
+
+const PARENS_COMPUTE = [
+  'return $parts.join("; ") + ".";'
+].join('\n');
+
+const TRUTH_TABLE_WIRES = [
+  {
+    name: 'initials',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'let states = [[]];',
+      'for (let index = 0; index < slots.count; index += 1) {',
+      '  const next = [];',
+      '  for (const state of states) {',
+      '    for (const option of slots.options) next.push(state.concat([option]));',
+      '  }',
+      '  states = next;',
+      '}',
+      'return states.map((state) => state.map((value) => $facts[value]).join(""));'
+    ].join('\n')
+  }
+];
+
+const TRUTH_TABLE_COMPUTE = [
+  'return $initials.join(", ") + " (on/off).";'
+].join('\n');
+
 export const cases = [
   {
     template: '“Exclusive or” means exactly one',
@@ -206,23 +256,8 @@ export const cases = [
     render(solution) {
       return `${solution.results.map((result) => `${result.name} ${result.value}`).join('; ')}.`;
     },
-    compute: [
-      'const slots = $slots;',
-      'const evaluate = (tokens) => {',
-      '  let position = 0;',
-      '  const primary = () => {',
-      '    if (tokens[position] === "(") { position += 1; const value = or(); position += 1; return value; }',
-      '    const token = tokens[position]; position += 1;',
-      '    return slots.environment[token] === true;',
-      '  };',
-      '  const not = () => { if (tokens[position] === "NOT") { position += 1; return !not(); } return primary(); };',
-      '  const and = () => { let value = not(); while (tokens[position] === "AND") { position += 1; const right = not(); value = value && right; } return value; };',
-      '  const or = () => { let value = and(); while (tokens[position] === "OR") { position += 1; const right = and(); value = value || right; } return value; };',
-      '  return or();',
-      '};',
-      'const parts = slots.rules.map((rule) => rule.name + " " + String(evaluate(rule.tokens)));',
-      'return parts.join("; ") + ".";'
-    ].join('\n'),
+    wires: PARENS_WIRES,
+    compute: PARENS_COMPUTE,
     explain(slots) {
       return [
         'Parentheses fix the order of evaluation, so the two rules are not the same expression even though they use the same properties.',
@@ -382,19 +417,8 @@ export const cases = [
       return `${solution.initials.join(', ')} (on/off).`;
     },
     facts: '{ "on": "O", "off": "F" }',
-    compute: [
-      'const slots = $slots;',
-      'let states = [[]];',
-      'for (let index = 0; index < slots.count; index += 1) {',
-      '  const next = [];',
-      '  for (const state of states) {',
-      '    for (const option of slots.options) next.push(state.concat([option]));',
-      '  }',
-      '  states = next;',
-      '}',
-      'const initials = states.map((state) => state.map((value) => $facts[value]).join(""));',
-      'return initials.join(", ") + " (on/off).";'
-    ].join('\n'),
+    wires: TRUTH_TABLE_WIRES,
+    compute: TRUTH_TABLE_COMPUTE,
     explain(slots) {
       return [
         `Each of the ${slots.count} lamps is an independent choice between two values, so the state is an ordered pair.`,

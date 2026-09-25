@@ -124,16 +124,26 @@ function render(solution) {
     : 'Only one poster describes this change.';
 }
 
+const WIRES = [
+  {
+    name: 'change',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const NUMBER_WORDS = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen","twenty"];',
+      'const word = (value) => NUMBER_WORDS[value] ?? String(value);',
+      'const relativeHalved = slots.after * 2 === slots.before;',
+      'const absoluteFall = slots.before - slots.after;',
+      'const relativeWord = "half";',
+      'const absoluteWord = word(absoluteFall) + " percentage point" + (absoluteFall === 1 ? "" : "s");',
+      'const bothTrue = relativeHalved && slots.beforeBase === 100 && absoluteFall === 1;',
+      'return { bothTrue: bothTrue, relativeWord: relativeWord, absoluteWord: absoluteWord };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const NUMBER_WORDS = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen","twenty"];',
-  'const word = (value) => NUMBER_WORDS[value] ?? String(value);',
-  'const relativeHalved = slots.after * 2 === slots.before;',
-  'const absoluteFall = slots.before - slots.after;',
-  'const relativeWord = "half";',
-  'const absoluteWord = word(absoluteFall) + " percentage point" + (absoluteFall === 1 ? "" : "s");',
-  'const bothTrue = relativeHalved && slots.beforeBase === 100 && absoluteFall === 1;',
-  'return bothTrue ? "Both, about the same change. Relative fall: " + relativeWord + ". Absolute fall: " + absoluteWord + "." : "Only one poster describes this change.";'
+  'return $change.bothTrue ? "Both, about the same change. Relative fall: " + $change.relativeWord + ". Absolute fall: " + $change.absoluteWord + "." : "Only one poster describes this change.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -155,6 +165,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

@@ -125,25 +125,43 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  },
+  {
+    name: 'candidates',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const candidates = [];',
+      'for (let x = slots.gridMin; x <= slots.gridMax; x += 1) {',
+      '  for (let y = slots.gridMin; y <= slots.gridMax; y += 1) {',
+      '    const satisfied = slots.constraints.every((constraint) => {',
+      '      const left = constraint.a * x + constraint.b * y;',
+      '      return constraint.op === "=" ? left === constraint.value : constraint.op === ">=" ? left >= constraint.value : left <= constraint.value;',
+      '    });',
+      '    if (satisfied) {',
+      '      candidates.push("(" + x + ", " + y + ")");',
+      '    }',
+      '  }',
+      '}',
+      'probe(candidates.length > 0, "the stated constraints must admit at least one point of the integer grid");',
+      'return candidates;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
-  'const slots = $slots;',
-  'const candidates = [];',
-  'for (let x = slots.gridMin; x <= slots.gridMax; x += 1) {',
-  '  for (let y = slots.gridMin; y <= slots.gridMax; y += 1) {',
-  '    const satisfied = slots.constraints.every((constraint) => {',
-  '      const left = constraint.a * x + constraint.b * y;',
-  '      return constraint.op === "=" ? left === constraint.value : constraint.op === ">=" ? left >= constraint.value : left <= constraint.value;',
-  '    });',
-  '    if (satisfied) {',
-  '      candidates.push("(" + x + ", " + y + ")");',
-  '    }',
-  '  }',
-  '}',
-  'probe(candidates.length > 0, "the stated constraints must admit at least one point of the integer grid");',
+  'const candidates = $candidates;',
   'const main = "P=" + candidates.join(", ") + "; the solution is " + (candidates.length === 1 ? "unique" : "not unique") + ".";',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -165,6 +183,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

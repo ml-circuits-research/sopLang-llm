@@ -52,16 +52,26 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
   'const definitelyGreater = slots.a.minimum > slots.b.maximum;',
   'probe(typeof definitelyGreater === "boolean", "the worst-case comparison must yield a verdict");',
   'const main = definitelyGreater',
   '  ? "Yes. A\'s minimum " + slots.a.minimum + " is greater than B\'s maximum " + slots.b.maximum + ", so A is definitely greater than B."',
   '  : "No. The intervals do not justify saying A is definitely greater than B.";',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -84,6 +94,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

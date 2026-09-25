@@ -17,17 +17,25 @@ export const unit = 5;
 
 const TIME_FACTS = Object.freeze({ minutesPerHour: 60, hoursPerDay: 24 });
 
+const TIMELINE_WIRES = [
+  {
+    name: 'clock',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const facts = $facts;',
+      'const minutesPerHour = facts.minutesPerHour;',
+      'const hoursPerDay = facts.hoursPerDay;',
+      'const day = hoursPerDay * minutesPerHour;',
+      'const start = slots.hour * minutesPerHour + slots.minute;',
+      'const end = ((start + slots.hours * minutesPerHour) % day + day) % day;',
+      'return { endHour: Math.floor(end / minutesPerHour), endMinute: end % minutesPerHour };'
+    ].join('\n')
+  }
+];
+
 const TIMELINE_COMPUTE = [
-  'const slots = $slots;',
-  'const facts = $facts;',
-  'const minutesPerHour = facts.minutesPerHour;',
-  'const hoursPerDay = facts.hoursPerDay;',
-  'const day = hoursPerDay * minutesPerHour;',
-  'const start = slots.hour * minutesPerHour + slots.minute;',
-  'const end = ((start + slots.hours * minutesPerHour) % day + day) % day;',
-  'const endHour = Math.floor(end / minutesPerHour);',
-  'const endMinute = end % minutesPerHour;',
-  'return endHour + ":" + (endMinute < 10 ? "0" + endMinute : String(endMinute));'
+  'return $clock.endHour + ":" + ($clock.endMinute < 10 ? "0" + $clock.endMinute : String($clock.endMinute));'
 ];
 
 export const cases = [
@@ -67,26 +75,35 @@ export const cases = [
       const coins = (count, value) => `${count} coin${count === 1 ? '' : 's'} worth ${value} lei`;
       return `${coins(solution.countFirst, solution.first)} and ${coins(solution.countSecond, solution.second)}.`;
     },
+    wires: [
+      {
+        name: 'best',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'if (slots.first <= 0 || slots.second <= 0) {',
+          '  throw new Error("coin values must be positive");',
+          '}',
+          'let best = null;',
+          'for (let countSecond = Math.floor(slots.total / slots.second); countSecond >= 0; countSecond -= 1) {',
+          '  const rest = slots.total - countSecond * slots.second;',
+          '  if (rest % slots.first === 0) {',
+          '    const countFirst = rest / slots.first;',
+          '    if (best === null || countFirst + countSecond < best.countFirst + best.countSecond) {',
+          '      best = { countFirst: countFirst, countSecond: countSecond };',
+          '    }',
+          '  }',
+          '}',
+          'if (best === null) {',
+          '  throw new Error(`no combination of ${slots.first} and ${slots.second} reaches ${slots.total}`);',
+          '}',
+          'return best;'
+        ].join('\n')
+      }
+    ],
     compute: [
-      'const slots = $slots;',
-      'if (slots.first <= 0 || slots.second <= 0) {',
-      '  throw new Error("coin values must be positive");',
-      '}',
-      'let best = null;',
-      'for (let countSecond = Math.floor(slots.total / slots.second); countSecond >= 0; countSecond -= 1) {',
-      '  const rest = slots.total - countSecond * slots.second;',
-      '  if (rest % slots.first === 0) {',
-      '    const countFirst = rest / slots.first;',
-      '    if (best === null || countFirst + countSecond < best.countFirst + best.countSecond) {',
-      '      best = { countFirst: countFirst, countSecond: countSecond };',
-      '    }',
-      '  }',
-      '}',
-      'if (best === null) {',
-      '  throw new Error(`no combination of ${slots.first} and ${slots.second} reaches ${slots.total}`);',
-      '}',
       'const coin = (count, value) => count + " coin" + (count === 1 ? "" : "s") + " worth " + value + " lei";',
-      'return coin(best.countFirst, slots.first) + " and " + coin(best.countSecond, slots.second) + ".";'
+      'return coin($best.countFirst, $slots.first) + " and " + coin($best.countSecond, $slots.second) + ".";'
     ].join('\n'),
     explain(slots, solution) {
       return [
@@ -123,6 +140,7 @@ export const cases = [
       return `${solution.endHour}:${String(solution.endMinute).padStart(2, '0')}`;
     },
     facts: JSON.stringify(TIME_FACTS),
+    wires: TIMELINE_WIRES,
     compute: TIMELINE_COMPUTE.join('\n'),
     explain(slots, solution) {
       return [

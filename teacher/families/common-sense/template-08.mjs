@@ -119,38 +119,57 @@ function render(solution) {
   return `The minimum duration is ${solution.duration} ${solution.unit}s. One critical chain is ${solution.chain.join('–')}.`;
 }
 
+const WIRES = [
+  {
+    name: 'schedule',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const start = {};',
+      'const finish = {};',
+      'const scheduled = [];',
+      'const remaining = slots.order.slice();',
+      'while (remaining.length > 0) {',
+      '  const ready = remaining.filter((name) => slots.prerequisites[name].every((prerequisite) => scheduled.indexOf(prerequisite) !== -1));',
+      '  if (ready.length === 0) {',
+      '    throw new Error("the stated prerequisites contain a cycle, so no schedule exists");',
+      '  }',
+      '  for (const name of ready) {',
+      '    const prerequisites = slots.prerequisites[name];',
+      '    start[name] = prerequisites.length === 0 ? 0 : Math.max(...prerequisites.map((prerequisite) => finish[prerequisite]));',
+      '    finish[name] = start[name] + slots.durations[name];',
+      '    scheduled.push(name);',
+      '    remaining.splice(remaining.indexOf(name), 1);',
+      '  }',
+      '}',
+      'return { start, finish, scheduled };'
+    ].join('\n')
+  },
+  {
+    name: 'critical',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const schedule = $schedule;',
+      'const last = schedule.scheduled.reduce((best, name) => (schedule.finish[name] > schedule.finish[best] ? name : best));',
+      'probe(schedule.finish[last] > 0, "the project must have a positive duration");',
+      'const chain = [last];',
+      'let task = last;',
+      'while (slots.prerequisites[task].length > 0) {',
+      '  const binding = slots.prerequisites[task].find((prerequisite) => schedule.finish[prerequisite] === schedule.start[task]);',
+      '  if (binding === undefined) {',
+      '    throw new Error("no stated prerequisite of task " + task + " fixes its start time");',
+      '  }',
+      '  chain.unshift(binding);',
+      '  task = binding;',
+      '}',
+      'return { chain, duration: schedule.finish[last] };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const start = {};',
-  'const finish = {};',
-  'const scheduled = [];',
-  'const remaining = slots.order.slice();',
-  'while (remaining.length > 0) {',
-  '  const ready = remaining.filter((name) => slots.prerequisites[name].every((prerequisite) => scheduled.indexOf(prerequisite) !== -1));',
-  '  if (ready.length === 0) {',
-  '    throw new Error("the stated prerequisites contain a cycle, so no schedule exists");',
-  '  }',
-  '  for (const name of ready) {',
-  '    const prerequisites = slots.prerequisites[name];',
-  '    start[name] = prerequisites.length === 0 ? 0 : Math.max(...prerequisites.map((prerequisite) => finish[prerequisite]));',
-  '    finish[name] = start[name] + slots.durations[name];',
-  '    scheduled.push(name);',
-  '    remaining.splice(remaining.indexOf(name), 1);',
-  '  }',
-  '}',
-  'const last = scheduled.reduce((best, name) => (finish[name] > finish[best] ? name : best));',
-  'probe(finish[last] > 0, "the project must have a positive duration");',
-  'const chain = [last];',
-  'let task = last;',
-  'while (slots.prerequisites[task].length > 0) {',
-  '  const binding = slots.prerequisites[task].find((prerequisite) => finish[prerequisite] === start[task]);',
-  '  if (binding === undefined) {',
-  '    throw new Error("no stated prerequisite of task " + task + " fixes its start time");',
-  '  }',
-  '  chain.unshift(binding);',
-  '  task = binding;',
-  '}',
-  'return "The minimum duration is " + finish[last] + " " + slots.unit + "s. One critical chain is " + chain.join("\\u2013") + ".";'
+  'return "The minimum duration is " + $critical.duration + " " + $slots.unit + "s. One critical chain is " + $critical.chain.join("\\u2013") + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -178,6 +197,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

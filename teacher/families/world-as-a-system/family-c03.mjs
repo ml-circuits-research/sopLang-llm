@@ -75,16 +75,26 @@ function render(solution) {
   return suffix === '' ? main : `${main} ${suffix}`;
 }
 
+const WIRES = [
+  {
+    name: 'cross',
+    command: 'jsEval',
+    body: [
+      CROSS_DOMAIN_SOURCE,
+      'const slots = $slots;',
+      'return { suffix: renderCrossDomain(slots.crossDomain) };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  CROSS_DOMAIN_SOURCE,
   'const slots = $slots;',
   'const threshold = Math.ceil((slots.quorumPercent * slots.members) / 100);',
   'probe(threshold > 0 && threshold <= slots.members, "the quorum threshold must fall inside the committee");',
   'const quorumMet = slots.present >= threshold;',
   'const passes = quorumMet && slots.yes > slots.no;',
   'const main = (quorumMet ? "Quorum is met" : "Quorum is not met") + "; " + (passes ? "the motion passes." : "the motion does not pass.");',
-  'const suffix = renderCrossDomain(slots.crossDomain);',
-  'return suffix === "" ? main : main + " " + suffix;'
+  'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -105,6 +115,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

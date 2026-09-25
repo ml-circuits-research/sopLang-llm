@@ -89,25 +89,33 @@ function render(solution) {
   return `The effect can propagate to: ${solution.reached.join(', ')}.`;
 }
 
+const WIRES = [
+  {
+    name: 'reached',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const nodeKey = (text) => String(text).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().split(" ").filter((word) => word !== "").sort().join(" ");',
+      'const seen = new Set([nodeKey(slots.start)]);',
+      'const reached = new Map();',
+      'let changed = true;',
+      'while (changed) {',
+      '  changed = false;',
+      '  for (const arrow of slots.arrows) {',
+      '    if (!seen.has(nodeKey(arrow[0])) || seen.has(nodeKey(arrow[1]))) continue;',
+      '    seen.add(nodeKey(arrow[1]));',
+      '    reached.set(nodeKey(arrow[1]), arrow[1]);',
+      '    changed = true;',
+      '  }',
+      '}',
+      'probe(reached.size > 0, "the changed node must reach at least one node of the network");',
+      'return [...reached.values()];'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const nodeKey = (text) => String(text).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().split(" ").filter((word) => word !== "").sort().join(" ");',
-  'for (const arrow of slots.arrows) {',
-  '}',
-  'const seen = new Set([nodeKey(slots.start)]);',
-  'const reached = new Map();',
-  'let changed = true;',
-  'while (changed) {',
-  '  changed = false;',
-  '  for (const arrow of slots.arrows) {',
-  '    if (!seen.has(nodeKey(arrow[0])) || seen.has(nodeKey(arrow[1]))) continue;',
-  '    seen.add(nodeKey(arrow[1]));',
-  '    reached.set(nodeKey(arrow[1]), arrow[1]);',
-  '    changed = true;',
-  '  }',
-  '}',
-  'probe(reached.size > 0, "the changed node must reach at least one node of the network");',
-  'return "The effect can propagate to: " + [...reached.values()].join(", ") + ".";'
+  'return "The effect can propagate to: " + $reached.join(", ") + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -129,6 +137,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

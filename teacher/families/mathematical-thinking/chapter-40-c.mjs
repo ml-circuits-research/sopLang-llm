@@ -235,20 +235,25 @@ export const cases = [
       return solution.guarantee >= solution.target ? 'Yes.' : 'No.';
     },
     facts: JSON.stringify({ payoffs: INFO_GAME, decisionRule: { worstCase: 'min', acrossActions: 'max' } }),
-    compute: [
-      READ_FACTS,
-      'if (slots.informed) { throw new Error("the template requires a choice made before observing the state"); }',
-      'const rule = facts.decisionRule;',
-      'let guarantee = -Infinity;',
-      'for (const action of slots.actions) {',
-      '  let worst = Infinity;',
-      '  for (const state of slots.states) {',
-      '    worst = rule.worstCase === "min" ? Math.min(worst, facts.payoffs[action][state]) : (() => { throw new Error("unsupported worst-case rule " + rule.worstCase); })();',
-      '  }',
-      '  guarantee = rule.acrossActions === "max" ? Math.max(guarantee, worst) : (() => { throw new Error("unsupported action rule " + rule.acrossActions); })();',
-      '}',
-      'return guarantee >= slots.target ? "Yes." : "No.";'
-    ].join('\n'),
+    wires: [
+      {
+        name: 'guarantee', command: 'jsEval', body: [
+          READ_FACTS,
+          'if (slots.informed) { throw new Error("the template requires a choice made before observing the state"); }',
+          'const rule = facts.decisionRule;',
+          'let guarantee = -Infinity;',
+          'for (const action of slots.actions) {',
+          '  let worst = Infinity;',
+          '  for (const state of slots.states) {',
+          '    worst = rule.worstCase === "min" ? Math.min(worst, facts.payoffs[action][state]) : (() => { throw new Error("unsupported worst-case rule " + rule.worstCase); })();',
+          '  }',
+          '  guarantee = rule.acrossActions === "max" ? Math.max(guarantee, worst) : (() => { throw new Error("unsupported action rule " + rule.acrossActions); })();',
+          '}',
+          'return guarantee;'
+        ].join('\n')
+      }
+    ],
+    compute: ['return $guarantee >= $slots.target ? "Yes." : "No.";'].join('\n'),
     explain(slots, solution) {
       return [
         'The payoff table of the previous problem is carried as an explicit fact: action A pays 10 in X and 0 in Y, and action B pays 0 in X and 10 in Y.',
@@ -353,27 +358,32 @@ export const cases = [
     render(solution) {
       return `${solution.names.join('+')}.`;
     },
-    compute: [
-      'const slots = $slots;',
-      'let best = null;',
-      'for (let mask = 0; mask < (1 << slots.tasks.length); mask += 1) {',
-      '  const chosen = slots.tasks.filter((task, index) => (mask & (1 << index)) !== 0);',
-      '  const names = chosen.map((task) => task.name);',
-      '  let feasible = true;',
-      '  let time = 0;',
-      '  let value = 0;',
-      '  for (const task of chosen) {',
-      '    time += task.time;',
-      '    value += task.value;',
-      '    if (task.requires !== null && !names.includes(task.requires)) { feasible = false; }',
-      '  }',
-      '  if (!feasible || time > slots.budget) { continue; }',
-      '  if (best === null || value > best.value || (value === best.value && time < best.time)) {',
-      '    best = { names: names, time: time, value: value };',
-      '  }',
-      '}',
-      'return best.names.join("+") + ".";'
-    ].join('\n'),
+    wires: [
+      {
+        name: 'best', command: 'jsEval', body: [
+          'const slots = $slots;',
+          'let best = null;',
+          'for (let mask = 0; mask < (1 << slots.tasks.length); mask += 1) {',
+          '  const chosen = slots.tasks.filter((task, index) => (mask & (1 << index)) !== 0);',
+          '  const names = chosen.map((task) => task.name);',
+          '  let feasible = true;',
+          '  let time = 0;',
+          '  let value = 0;',
+          '  for (const task of chosen) {',
+          '    time += task.time;',
+          '    value += task.value;',
+          '    if (task.requires !== null && !names.includes(task.requires)) { feasible = false; }',
+          '  }',
+          '  if (!feasible || time > slots.budget) { continue; }',
+          '  if (best === null || value > best.value || (value === best.value && time < best.time)) {',
+          '    best = { names: names, time: time, value: value };',
+          '  }',
+          '}',
+          'return best;'
+        ].join('\n')
+      }
+    ],
+    compute: ['return $best.names.join("+") + ".";'].join('\n'),
     explain(slots, solution) {
       return [
         `The budget is ${slots.budget} minutes, and a plan is feasible only when every chosen task fits and each prerequisite is chosen with it.`,

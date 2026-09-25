@@ -74,24 +74,42 @@ function render(solution) {
   return `${solution.half} g → ${solution.kcal} kcal and ${solution.salt} g salt. ${solution.claim}`;
 }
 
+const WIRES = [
+  {
+    name: 'half',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const roundHalfEven = (value) => {',
+      '  const whole = Math.floor(value);',
+      '  const rest = value - whole;',
+      '  if (rest > 0.5) { return whole + 1; }',
+      '  if (rest < 0.5) { return whole; }',
+      '  return whole % 2 === 0 ? whole : whole + 1;',
+      '};',
+      'const exactHalf = slots.pack / 2;',
+      'const half = roundHalfEven(exactHalf);',
+      'probe(half > 0 && half <= slots.pack, "the half pack must weigh no more than the pack");',
+      'return { half, exactHalf };'
+    ].join('\n')
+  },
+  {
+    name: 'nutrients',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const kcal = Math.round((slots.kcalPer100 * $half.exactHalf) / 100);',
+      'const saltHundredths = Math.round((slots.saltPer100Hundredths * $half.exactHalf) / 100);',
+      'const claim = slots.saltPer100Hundredths < slots.meanHundredths',
+      '  ? slots.saltLabel + "<" + slots.meanLabel + ", so the claim is consistent with the printed reference."',
+      '  : slots.saltLabel + " is not below " + slots.meanLabel + ", so the claim is not consistent with the printed reference.";',
+      'return { kcal, saltHundredths, claim };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const roundHalfEven = (value) => {',
-  '  const whole = Math.floor(value);',
-  '  const rest = value - whole;',
-  '  if (rest > 0.5) { return whole + 1; }',
-  '  if (rest < 0.5) { return whole; }',
-  '  return whole % 2 === 0 ? whole : whole + 1;',
-  '};',
-  'const exactHalf = slots.pack / 2;',
-  'const half = roundHalfEven(exactHalf);',
-  'probe(half > 0 && half <= slots.pack, "the half pack must weigh no more than the pack");',
-  'const kcal = Math.round((slots.kcalPer100 * exactHalf) / 100);',
-  'const saltHundredths = Math.round((slots.saltPer100Hundredths * exactHalf) / 100);',
-  'const claim = slots.saltPer100Hundredths < slots.meanHundredths',
-  '  ? slots.saltLabel + "<" + slots.meanLabel + ", so the claim is consistent with the printed reference."',
-  '  : slots.saltLabel + " is not below " + slots.meanLabel + ", so the claim is not consistent with the printed reference.";',
-  'return half + " g \u2192 " + kcal + " kcal and " + (saltHundredths / 100).toFixed(2) + " g salt. " + claim;'
+  'return $half.half + " g \u2192 " + $nutrients.kcal + " kcal and " + ($nutrients.saltHundredths / 100).toFixed(2) + " g salt. " + $nutrients.claim;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -112,6 +130,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

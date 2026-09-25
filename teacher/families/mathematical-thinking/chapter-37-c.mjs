@@ -154,12 +154,21 @@ export const cases = [
       return `${solution.total}/${solution.observations} = ${fractionText(solution.total, solution.observations)}.`;
     },
     facts: MEAN_RULE,
-    compute: `${FRACTION_UTILS}
-const slots = $slots;
-const rule = $facts.meanRule;
-const numerator = rule.numerator === "sum" ? slots.entries.reduce((sum, entry) => sum + entry[0] * entry[1], 0) : (() => { throw new Error("unsupported numerator " + rule.numerator); })();
-const denominator = rule.denominator === "count" ? slots.entries.reduce((sum, entry) => sum + entry[1], 0) : (() => { throw new Error("unsupported denominator " + rule.denominator); })();
-return numerator + "/" + denominator + " = " + fractionText(numerator, denominator) + ".";`,
+    wires: [
+      {
+        name: 'mean', command: 'jsEval', body: [
+          'const slots = $slots;',
+          'const rule = $facts.meanRule;',
+          'const numerator = rule.numerator === "sum" ? slots.entries.reduce((sum, entry) => sum + entry[0] * entry[1], 0) : (() => { throw new Error("unsupported numerator " + rule.numerator); })();',
+          'const denominator = rule.denominator === "count" ? slots.entries.reduce((sum, entry) => sum + entry[1], 0) : (() => { throw new Error("unsupported denominator " + rule.denominator); })();',
+          'return { numerator: numerator, denominator: denominator };'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      FRACTION_UTILS,
+      'return $mean.numerator + "/" + $mean.denominator + " = " + fractionText($mean.numerator, $mean.denominator) + ".";'
+    ].join('\n'),
     explain(slots, solution) {
       return [
         'The statement does not define the mean, so the solution uses the sum of the values divided by how many observations there are.',

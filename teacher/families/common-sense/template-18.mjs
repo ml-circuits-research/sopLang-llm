@@ -95,34 +95,39 @@ function render(solution) {
   return `Scores: ${scores}. Winner(s) under these weights: ${solution.winners.join(', ')}.`;
 }
 
+const WIRES = [
+  {
+    name: 'scores',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const criteria = slots.weights.length;',
+      'const labels = [];',
+      'const hundredths = {};',
+      'for (const option of slots.options) {',
+      '  let total = 0;',
+      '  for (let index = 0; index < criteria; index += 1) {',
+      '    const score = option.scores[index];',
+      '    total += slots.weights[index].percent * score;',
+      '  }',
+      '  hundredths[option.label] = total;',
+      '  labels.push(option.label);',
+      '}',
+      'const maximum = Math.max(...labels.map((label) => hundredths[label]));',
+      'const winners = labels.filter((label) => hundredths[label] === maximum);',
+      'probe(winners.length > 0, "the weighted scores must attain a maximum");',
+      'return { labels, hundredths, winners };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const scale = slots.scale;',
-  'const criteria = slots.weights.length;',
-  'let weightSum = 0;',
-  'for (const weight of slots.weights) {',
-  '  weightSum += weight.percent;',
-  '}',
-  'const labels = [];',
-  'const hundredths = {};',
-  'for (const option of slots.options) {',
-  '  let total = 0;',
-  '  for (let index = 0; index < criteria; index += 1) {',
-  '    const score = option.scores[index];',
-  '    total += slots.weights[index].percent * score;',
-  '  }',
-  '  hundredths[option.label] = total;',
-  '  labels.push(option.label);',
-  '}',
-  'const maximum = Math.max(...labels.map((label) => hundredths[label]));',
-  'const winners = labels.filter((label) => hundredths[label] === maximum);',
-  'probe(winners.length > 0, "the weighted scores must attain a maximum");',
   'const format = (value) => {',
   '  const whole = Math.floor(value / 100);',
   '  const fraction = value % 100;',
   '  return whole + "." + (fraction < 10 ? "0" + fraction : String(fraction));',
   '};',
-  'return "Scores: " + labels.map((label) => label + "=" + format(hundredths[label])).join(", ") + ". Winner(s) under these weights: " + winners.join(", ") + ".";'
+  'return "Scores: " + $scores.labels.map((label) => label + "=" + format($scores.hundredths[label])).join(", ") + ". Winner(s) under these weights: " + $scores.winners.join(", ") + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -148,6 +153,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

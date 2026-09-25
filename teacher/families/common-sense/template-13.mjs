@@ -83,23 +83,33 @@ function render(solution) {
   return verdict(solution.greater);
 }
 
+const WIRES = [
+  {
+    name: 'verdict',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const measurements = slots.measurements;',
+      'const intervals = {};',
+      'for (const name of ["A", "B"]) {',
+      '  const measurement = measurements[name];',
+      '  intervals[name] = { low: measurement.value - measurement.error, high: measurement.value + measurement.error };',
+      '}',
+      'probe(intervals.A.low <= intervals.A.high && intervals.B.low <= intervals.B.high, "every interval must run from its lower to its upper endpoint");',
+      'const greater = intervals.A.high < intervals.B.low ? "B" : intervals.B.high < intervals.A.low ? "A" : null;',
+      'if (greater === "B") {',
+      '  return "B is certainly greater than A.";',
+      '}',
+      'if (greater === "A") {',
+      '  return "A is certainly greater than B.";',
+      '}',
+      'return "The ordering cannot be established with certainty because the intervals overlap.";'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const measurements = slots.measurements;',
-  'const intervals = {};',
-  'for (const name of ["A", "B"]) {',
-  '  const measurement = measurements[name];',
-  '  intervals[name] = { low: measurement.value - measurement.error, high: measurement.value + measurement.error };',
-  '}',
-  'probe(intervals.A.low <= intervals.A.high && intervals.B.low <= intervals.B.high, "every interval must run from its lower to its upper endpoint");',
-  'const greater = intervals.A.high < intervals.B.low ? "B" : intervals.B.high < intervals.A.low ? "A" : null;',
-  'if (greater === "B") {',
-  '  return "B is certainly greater than A.";',
-  '}',
-  'if (greater === "A") {',
-  '  return "A is certainly greater than B.";',
-  '}',
-  'return "The ordering cannot be established with certainty because the intervals overlap.";'
+  'return $verdict;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -127,6 +137,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

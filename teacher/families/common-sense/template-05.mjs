@@ -121,40 +121,50 @@ function render(solution) {
   return `Expected cost without protection: ${formatHundredths(solution.expected.without)} CU; with protection: ${formatHundredths(solution.expected.with)} CU. Under the hard risk rule, the justified choice is ${justification}.`;
 }
 
+const WIRES = [
+  {
+    name: 'risk',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const roundHundredths = (numerator, denominator) => {',
+      '  let hundredths = Math.floor((numerator * 100) / denominator);',
+      '  const remainder = (numerator * 100) % denominator;',
+      '  if (2 * remainder > denominator || (2 * remainder === denominator && hundredths % 2 === 1)) {',
+      '    hundredths += 1;',
+      '  }',
+      '  return hundredths;',
+      '};',
+      'const expectedWithout = roundHundredths(slots.probabilityPercent * slots.loss, 100);',
+      'const expectedWith = roundHundredths(slots.protectionCost * 10000 + slots.probabilityPercent * slots.reductionPercent * slots.loss, 10000);',
+      'const adverseWithout = slots.loss * 100;',
+      'const adverseWith = slots.protectionCost * 100 + slots.reductionPercent * slots.loss;',
+      'const limit = slots.riskLimit * 100;',
+      'const acceptableWithout = adverseWithout <= limit;',
+      'const acceptableWith = adverseWith <= limit;',
+      'probe(adverseWith <= adverseWithout, "the protective measure must not increase the adverse-scenario loss");',
+      'probe(expectedWithout > 0 && expectedWith > 0, "both expected costs must be positive");',
+      'let justification = "neither option, because both violate the hard risk rule";',
+      'if (acceptableWithout && acceptableWith) {',
+      '  justification = expectedWith < expectedWithout ? "the protective measure" : "the option without protection";',
+      '} else if (acceptableWithout) {',
+      '  justification = "the option without protection";',
+      '} else if (acceptableWith) {',
+      '  justification = "the protective measure";',
+      '}',
+      'return { expectedWithout, expectedWith, justification };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const roundHundredths = (numerator, denominator) => {',
-  '  let hundredths = Math.floor((numerator * 100) / denominator);',
-  '  const remainder = (numerator * 100) % denominator;',
-  '  if (2 * remainder > denominator || (2 * remainder === denominator && hundredths % 2 === 1)) {',
-  '    hundredths += 1;',
-  '  }',
-  '  return hundredths;',
-  '};',
   'const formatHundredths = (hundredths) => {',
   '  const whole = Math.floor(hundredths / 100);',
   '  const rest = hundredths % 100;',
   '  if (rest === 0) { return String(whole); }',
   '  return whole + "." + String(rest).padStart(2, "0").replace(/0$/, "");',
   '};',
-  'const expectedWithout = roundHundredths(slots.probabilityPercent * slots.loss, 100);',
-  'const expectedWith = roundHundredths(slots.protectionCost * 10000 + slots.probabilityPercent * slots.reductionPercent * slots.loss, 10000);',
-  'const adverseWithout = slots.loss * 100;',
-  'const adverseWith = slots.protectionCost * 100 + slots.reductionPercent * slots.loss;',
-  'const limit = slots.riskLimit * 100;',
-  'const acceptableWithout = adverseWithout <= limit;',
-  'const acceptableWith = adverseWith <= limit;',
-  'probe(adverseWith <= adverseWithout, "the protective measure must not increase the adverse-scenario loss");',
-  'probe(expectedWithout > 0 && expectedWith > 0, "both expected costs must be positive");',
-  'let justification = "neither option, because both violate the hard risk rule";',
-  'if (acceptableWithout && acceptableWith) {',
-  '  justification = expectedWith < expectedWithout ? "the protective measure" : "the option without protection";',
-  '} else if (acceptableWithout) {',
-  '  justification = "the option without protection";',
-  '} else if (acceptableWith) {',
-  '  justification = "the protective measure";',
-  '}',
-  'return "Expected cost without protection: " + formatHundredths(expectedWithout) + " CU; with protection: " + formatHundredths(expectedWith) + " CU. Under the hard risk rule, the justified choice is " + justification + ".";'
+  'return "Expected cost without protection: " + formatHundredths($risk.expectedWithout) + " CU; with protection: " + formatHundredths($risk.expectedWith) + " CU. Under the hard risk rule, the justified choice is " + $risk.justification + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -182,6 +192,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }

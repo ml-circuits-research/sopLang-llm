@@ -67,14 +67,24 @@ function render(solution) {
   return `${solution.years} years; ${solution.start} is in the ${ordinal(solution.startCentury)} century and ${solution.end} in the ${ordinal(solution.endCentury)} century.`;
 }
 
+const WIRES = [
+  {
+    name: 'centuries',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const centuryOf = (year) => Math.floor((year - 1) / 100) + 1;',
+      'const startCentury = centuryOf(slots.start);',
+      'const endCentury = centuryOf(slots.end);',
+      'probe(startCentury >= 1 && endCentury >= startCentury, "the century rule must order the two labels consistently with the years");',
+      'return { start: startCentury, end: endCentury };'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const centuryOf = (year) => Math.floor((year - 1) / 100) + 1;',
   'const ordinal = (value) => { const remainder = value % 100; const suffix = remainder >= 11 && remainder <= 13 ? "th" : value % 10 === 1 ? "st" : value % 10 === 2 ? "nd" : value % 10 === 3 ? "rd" : "th"; return value + suffix; };',
-  'const startCentury = centuryOf(slots.start);',
-  'const endCentury = centuryOf(slots.end);',
-  'probe(startCentury >= 1 && endCentury >= startCentury, "the century rule must order the two labels consistently with the years");',
-  'return (slots.end - slots.start) + " years; " + slots.start + " is in the " + ordinal(startCentury) + " century and " + slots.end + " in the " + ordinal(endCentury) + " century.";'
+  'return ($slots.end - $slots.start) + " years; " + $slots.start + " is in the " + ordinal($centuries.start) + " century and " + $slots.end + " in the " + ordinal($centuries.end) + " century.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -94,6 +104,7 @@ function caseFor(grade) {
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   };

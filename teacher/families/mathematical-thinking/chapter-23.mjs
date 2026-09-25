@@ -172,8 +172,7 @@ function questionValue(option, description, flatFaces) {
   return propertyValue(word, description);
 }
 
-const FILTER_SOURCE = [
-  'const slots = $slots;',
+const MATCHES_SOURCE = [
   'const matches = (value, predicate) => {',
   '  if (predicate.op === "and") { return predicate.of.every((part) => matches(value, part)); }',
   '  if (predicate.op === "eq") { return Number(value) === predicate.value; }',
@@ -185,8 +184,12 @@ const FILTER_SOURCE = [
   '  if (predicate.op === "odd") { return Math.abs(Number(value) % 2) === 1; }',
   '  if (predicate.op === "lacks") { return !String(value).includes(predicate.word); }',
   '  throw new Error("unsupported predicate " + predicate.op);',
-  '};',
-  'const keep = (candidates, predicate) => candidates.filter((value) => matches(value, predicate));',
+  '};'
+].join('\n');
+
+const KEEP_SOURCE = 'const keep = (candidates, predicate) => candidates.filter((value) => matches(value, predicate));';
+
+const JOINLIST_SOURCE = [
   'const joinList = (items) => {',
   '  const parts = items.map(String);',
   '  if (parts.length === 1) { return parts[0]; }',
@@ -194,10 +197,6 @@ const FILTER_SOURCE = [
   '  return parts.slice(0, -1).join(", ") + ", and " + parts[parts.length - 1];',
   '};'
 ].join('\n');
-
-function body(lines) {
-  return [FILTER_SOURCE, ...lines].join('\n');
-}
 
 function truthCountCase(template, type) {
   return {
@@ -225,13 +224,24 @@ function truthCountCase(template, type) {
       }
       return `${joinList(solution.matching)}.`;
     },
-    compute: body([
-      'const matching = slots.candidates.filter((value) => slots.statements.filter((predicate) => matches(value, predicate)).length === slots.exactly);',
-      'if (matching.length === slots.candidates.length) {',
-      '  return "It cannot be determined; " + joinList(slots.candidates) + " are all compatible.";',
+    wires: [
+      {
+        name: 'matching',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          MATCHES_SOURCE,
+          'return slots.candidates.filter((value) => slots.statements.filter((predicate) => matches(value, predicate)).length === slots.exactly);'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      JOINLIST_SOURCE,
+      'if ($matching.length === $slots.candidates.length) {',
+      '  return "It cannot be determined; " + joinList($slots.candidates) + " are all compatible.";',
       '}',
-      'return matching.length === 1 ? String(matching[0]) + "." : joinList(matching) + ".";'
-    ]),
+      'return $matching.length === 1 ? String($matching[0]) + "." : joinList($matching) + ".";'
+    ].join('\n'),
     explain(slots, solution) {
       return [
         `Each candidate is checked against the ${slots.statements.length} labelled statements, and only the candidates whose number of true statements equals ${slots.exactly} survive.`,
@@ -270,15 +280,27 @@ export const cases = [
     render(solution) {
       return `“${solution.question}”.`;
     },
-    compute: body([
-      'let best = null;',
-      'for (const question of slots.questions) {',
-      '  const yes = keep(slots.candidates, question.predicate).length;',
-      '  const worst = Math.max(yes, slots.candidates.length - yes);',
-      '  if (best === null || worst < best.worst) { best = { text: question.text, worst }; }',
-      '}',
-      'return "“" + best.text + "”.";'
-    ]),
+    wires: [
+      {
+        name: 'best',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          MATCHES_SOURCE,
+          KEEP_SOURCE,
+          'let best = null;',
+          'for (const question of slots.questions) {',
+          '  const yes = keep(slots.candidates, question.predicate).length;',
+          '  const worst = Math.max(yes, slots.candidates.length - yes);',
+          '  if (best === null || worst < best.worst) { best = { text: question.text, worst }; }',
+          '}',
+          'return best;'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'return "“" + $best.text + "”.";'
+    ].join('\n'),
     explain(slots, solution) {
       return [
         'For a yes/no question the worst case is the larger of its two answer groups, because the unhelpful answer leaves that many candidates.',
@@ -317,17 +339,27 @@ export const cases = [
       return `${solution.name}.`;
     },
     facts: '{"round": "circle"}',
-    compute: body([
-      'let target = null;',
-      'for (const object of slots.objects) {',
-      '  if (slots.asks.every((ask) => {',
-      '    const key = $facts[ask.word] !== undefined ? $facts[ask.word] : ask.word;',
-      '    return object.attributes.includes(key) === ask.positive;',
-      '  })) { target = object; break; }',
-      '}',
-      'if (target === null) { throw new Error("no object matches the given answers"); }',
-      'return target.name + ".";'
-    ]),
+    wires: [
+      {
+        name: 'target',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          'let target = null;',
+          'for (const object of slots.objects) {',
+          '  if (slots.asks.every((ask) => {',
+          '    const key = $facts[ask.word] !== undefined ? $facts[ask.word] : ask.word;',
+          '    return object.attributes.includes(key) === ask.positive;',
+          '  })) { target = object; break; }',
+          '}',
+          'if (target === null) { throw new Error("no object matches the given answers"); }',
+          'return target;'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'return $target.name + ".";'
+    ].join('\n'),
     explain(slots, solution) {
       return [
         'The two answers form a code: the first answer tells whether the object is red and the second whether it is round.',
@@ -356,11 +388,21 @@ export const cases = [
       const parts = solution.texts.map((text, index) => `“${index === 0 ? capitalizeFirst(text) : text}”`);
       return `${parts.join(' and ')}.`;
     },
-    compute: body([
-      'const useless = slots.clues.filter((clue) => slots.candidates.every((value) => matches(value, clue.predicate)));',
-      'const parts = useless.map((clue, index) => "“" + (index === 0 ? clue.text.charAt(0).toUpperCase() + clue.text.slice(1) : clue.text) + "”");',
+    wires: [
+      {
+        name: 'useless',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          MATCHES_SOURCE,
+          'return slots.clues.filter((clue) => slots.candidates.every((value) => matches(value, clue.predicate)));'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'const parts = $useless.map((clue, index) => "“" + (index === 0 ? clue.text.charAt(0).toUpperCase() + clue.text.slice(1) : clue.text) + "”");',
       'return parts.join(" and ") + ".";'
-    ]),
+    ].join('\n'),
     explain(slots, solution) {
       return [
         'A clue is useless exactly when every candidate of the initial list satisfies it, so no candidate is removed.',
@@ -392,11 +434,22 @@ export const cases = [
     render(solution) {
       return `${solution.count} candidates.`;
     },
-    compute: body([
-      'const afterFirst = keep(slots.candidates, slots.first);',
-      'const eliminated = afterFirst.filter((value) => !matches(value, slots.second));',
-      'return eliminated.length + " candidates.";'
-    ]),
+    wires: [
+      {
+        name: 'eliminated',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          MATCHES_SOURCE,
+          KEEP_SOURCE,
+          'const afterFirst = keep(slots.candidates, slots.first);',
+          'return afterFirst.filter((value) => !matches(value, slots.second));'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'return $eliminated.length + " candidates.";'
+    ].join('\n'),
     explain(slots) {
       return [
         'The first clue is applied before the second one, so the second clue only removes candidates that survived the first.',
@@ -425,11 +478,22 @@ export const cases = [
       }
       return `No; it could be ${joinOr(solution.remaining)}.`;
     },
-    compute: body([
-      'const remaining = keep(slots.candidates, slots.predicate);',
-      'if (remaining.length === 1) { return "Yes; it is " + remaining[0] + "."; }',
-      'return "No; it could be " + remaining.map(String).join(" or ") + ".";'
-    ]),
+    wires: [
+      {
+        name: 'remaining',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          MATCHES_SOURCE,
+          KEEP_SOURCE,
+          'return keep(slots.candidates, slots.predicate);'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'if ($remaining.length === 1) { return "Yes; it is " + $remaining[0] + "."; }',
+      'return "No; it could be " + $remaining.map(String).join(" or ") + ".";'
+    ].join('\n'),
     explain(slots, solution) {
       return [
         'The only clue is turned into a filter over the candidates, and the candidates that satisfy it are the remaining possibilities.',
@@ -458,11 +522,22 @@ export const cases = [
       }
       return `${joinList(solution.remaining)}.`;
     },
-    compute: body([
-      'const remaining = slots.candidates.filter((value) => slots.clues.every((predicate) => matches(value, predicate)));',
-      'if (remaining.length === 0) { return "No such number exists."; }',
-      'return joinList(remaining) + ".";'
-    ]),
+    wires: [
+      {
+        name: 'remaining',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          MATCHES_SOURCE,
+          'return slots.candidates.filter((value) => slots.clues.every((predicate) => matches(value, predicate)));'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      JOINLIST_SOURCE,
+      'if ($remaining.length === 0) { return "No such number exists."; }',
+      'return joinList($remaining) + ".";'
+    ].join('\n'),
     explain(slots, solution) {
       return [
         'Both clues must hold at the same time, so a candidate survives only if it satisfies every filter.',
@@ -494,11 +569,22 @@ export const cases = [
       const first = solution.winners[0];
       return `${solution.winners.map((clue) => clue.label).join(', ')}: “${first.text}”.`;
     },
-    compute: body([
-      'const winners = slots.clues.filter((clue) => keep(slots.candidates, clue.predicate).length === 1);',
-      'const first = winners[0];',
-      'return winners.map((clue) => clue.label).join(", ") + ": “" + first.text + "”.";'
-    ]),
+    wires: [
+      {
+        name: 'winners',
+        command: 'jsEval',
+        body: [
+          'const slots = $slots;',
+          MATCHES_SOURCE,
+          KEEP_SOURCE,
+          'return slots.clues.filter((clue) => keep(slots.candidates, clue.predicate).length === 1);'
+        ].join('\n')
+      }
+    ],
+    compute: [
+      'const first = $winners[0];',
+      'return $winners.map((clue) => clue.label).join(", ") + ": “" + first.text + "”.";'
+    ].join('\n'),
     explain(slots, solution) {
       return [
         'A clue identifies the number only when exactly one of the remaining candidates satisfies it.',

@@ -122,21 +122,39 @@ function render(solution) {
   return `${solution.bodyClause} ${solution.headlineClause} ${solution.commentsClause}`;
 }
 
+const WIRES = [
+  {
+    name: 'body',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];',
+      'const sample = words[slots.stallsTotal] ?? String(slots.stallsTotal);',
+      'const bodyClause = "Body: a sample of " + sample + " stalls, one day; " + slots.lowPrice + "–" + slots.highPrice + " a kilo for field fruit; one " + slots.bowlGrams + " g tasting bowl at " + slots.bowlPrice + " a kilo.";',
+      'const headlineClause = "The headline generalises.";',
+      'return { bodyClause, headlineClause };'
+    ].join('\n')
+  },
+  {
+    name: 'comments',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
+      'const fieldIsUniform = slots.lowPrice === slots.highPrice;',
+      'const firstCommentFollows = fieldIsUniform && slots.commentOnePrice === slots.lowPrice;',
+      'const secondCommentFollows = /price/.test(slots.townHallQuote);',
+      'const reasons = [];',
+      'if (!firstCommentFollows) { reasons.push("the first treats the headline as the body"); }',
+      'if (!secondCommentFollows) { reasons.push("the second confuses “no complaints” with “no prices”"); }',
+      'const lead = !firstCommentFollows && !secondCommentFollows ? "Neither comment follows" : firstCommentFollows && secondCommentFollows ? "Both comments follow" : "One comment follows";',
+      'const commentsClause = reasons.length === 0 ? lead + "." : lead + ": " + reasons.join("; ") + ".";',
+      'return commentsClause;'
+    ].join('\n')
+  }
+];
+
 const COMPUTE = [
-  'const slots = $slots;',
-  'const words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];',
-  'const sample = words[slots.stallsTotal] ?? String(slots.stallsTotal);',
-  'const bodyClause = "Body: a sample of " + sample + " stalls, one day; " + slots.lowPrice + "–" + slots.highPrice + " a kilo for field fruit; one " + slots.bowlGrams + " g tasting bowl at " + slots.bowlPrice + " a kilo.";',
-  'const headlineClause = "The headline generalises.";',
-  'const fieldIsUniform = slots.lowPrice === slots.highPrice;',
-  'const firstCommentFollows = fieldIsUniform && slots.commentOnePrice === slots.lowPrice;',
-  'const secondCommentFollows = /price/.test(slots.townHallQuote);',
-  'const reasons = [];',
-  'if (!firstCommentFollows) { reasons.push("the first treats the headline as the body"); }',
-  'if (!secondCommentFollows) { reasons.push("the second confuses “no complaints” with “no prices”"); }',
-  'const lead = !firstCommentFollows && !secondCommentFollows ? "Neither comment follows" : firstCommentFollows && secondCommentFollows ? "Both comments follow" : "One comment follows";',
-  'const commentsClause = reasons.length === 0 ? lead + "." : lead + ": " + reasons.join("; ") + ".";',
-  'return bodyClause + " " + headlineClause + " " + commentsClause;'
+  'return $body.bodyClause + " " + $body.headlineClause + " " + $comments;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -158,6 +176,7 @@ export const cases = [
     parse,
     solve,
     render,
+    wires: WIRES,
     compute: COMPUTE,
     explain
   }
