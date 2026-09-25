@@ -83,3 +83,14 @@ matter how high it ranks.
 - `scripts/discover-wires.mjs` — the analyzer. `node --check` it after any edit; run it with
   `--help` for the flags. Node.js built-ins only; no GPU, no servers, no rebuild, English-only
   output.
+
+
+## The abstraction-learning loop (the standing goal)
+
+Each experiment feeds the loop: measure the shipped circuits (discover-wires.mjs), flag the
+monstrous jsEval bodies (the data-quality static checker), propose a wire with its contract and
+its measured line reduction and error elimination, validate through the family round-trip/oracle
+tests plus `node training-data/verify.mjs` (which executes every circuit and reproduces its
+printed answer - verification runs in every phase), and measure again on the next arm's holdout
+against the jsEval baseline. Only a measured win keeps the wire; the goal is an increasingly
+powerful vocabulary, experiment by experiment, beside the 90% benchmark hypothesis.

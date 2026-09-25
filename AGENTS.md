@@ -56,6 +56,10 @@ Report concretely. Name the thing, the run, and the number in the same sentence;
 
 Every dataset change bumps `training-data/VERSION` (number plus a human label in VERSION.label). New arms are named `exp-NNN-<size>-<base>-<dataVersion>` (e.g. `exp-018-1.7b-qwen3-dv3`). The evaluation chain records the training timestamps and the data version in its run-manifest, and reports and interfaces (the chat) state a model's identity as size, base, data version, and training finish time - never a bare checkpoint number.
 
+## Wire-type documentation discipline
+
+`docs/wire-types.html` is the live record of the wire vocabulary: what each command does and how it works. Any addition of a wire command, and any change to a wire's behavior, contract, version, or manifest MUST update `docs/wire-types.html` (and the affected specification, DS002/DS004/DS008) in the same commit — a wire change that ships without its documentation is incomplete work. The page also carries the abstraction-learning loop (measure, flag, propose, validate, measure again), which is the standing goal beside the benchmark: pass 90% on the holdout and grow an increasingly powerful wire vocabulary experiment by experiment.
+
 ## Launch discipline
 
 Every training launch passes `training/environment/preflight.sh` first, and a failed precondition is a refused launch, never a warning: no second trainer (one trainer at a time), no double supervision of the same experiment, at least 30 GiB free disk, and no resume from an incomplete checkpoint. The completion signal for a chain is `evaluation/registry/<exp>/metrics.json` — never the `series done` log line, which a failed chain also writes.
