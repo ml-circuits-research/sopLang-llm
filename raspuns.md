@@ -1,10 +1,15 @@
-# Status — 2026-09-26, 17:00 UTC
-
 ## What is running right now
-The training of Qwen3-1.7B (1.7 billion parameters) on the simplified-statement dataset is
-finishing its last steps. The holdout evaluation (705 problems the model has never seen in
-training) is expected around 17:45 UTC. The evaluation chain then measures how many problems
-the model solves correctly.
+1. The newly trained model (Qwen3-1.7B on the simplified statements) finished training.
+   Its evaluation chain is scoring checkpoints now; the holdout verdict is expected around
+   18:30 UTC. No number yet - nothing is invented before it is measured.
+2. In parallel, a new benchmark sanity experiment (agent-eval) is running. Design: one agent
+   receives the statements of 20 holdout problems from the two stuck books (without the
+   answers) and writes the circuits by hand, using the wire language and the documentation.
+   A second, independent agent will execute those circuits and score them against the
+   recorded answers. This answers the question: "if a competent writer is told how to make
+   circuits, does the benchmark pass?" If the agent solves them, the eval is fine and the
+   trained model is simply not learning. If the agent cannot solve them, the statements or
+   the eval have a real problem. Results pending - the solver agent is writing circuits now.
 
 ## Which model is which — stated plainly
 - The working model is Qwen3-1.7B. It is small on purpose: the whole research goal is to make
@@ -51,7 +56,11 @@ are the current attempt to fix that.
   was killed.
 
 ## What is next
-- 17:45 UTC: the verdict on simplified statements. If the two stuck books move, we continue
-  on this thread. If not, the session's conclusion is that dataset design is no longer the
-  lever, and the next hypothesis is teaching with in-context demonstrations.
-- The goal remains 90% correct on the benchmark. The current best is 65.2%.
+1. When the agent-eval experiment lands: score the 20 circuits with the independent verifier,
+   write the pass/fail result here, and report it.
+2. When the holdout of the newly trained model lands (~18:30 UTC): record the verdict. If the
+   simplified statements moved the two stuck books, the research thread continues there. If
+   not, the next hypothesis is teaching with in-context demonstrations, and the article gets
+   the session's conclusion: the dataset-design levers (structure, style, answers, statements)
+   are exhausted; only the container abstraction moved a book, and 65.2% remains the best run.
+3. The goal remains 90% correct on the benchmark. The current best is 65.2%.
