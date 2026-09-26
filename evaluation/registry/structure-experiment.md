@@ -69,3 +69,20 @@ moved under any target structure — the container idiom does not transfer to th
 units-and-rates shapes. The canonical generator is reverted to the dv7 bodies (VERSION 10); the next
 arm needs a different hypothesis for these two books (a dedicated chain/rate wire command or statement
 simplification), not another restructure of the existing bodies.
+
+
+## FINAL ARM — dv12 simplified statements, measured 2026-09-26
+
+dv12 (exp-025): the two stuck books' statements reduced to one number per sentence with no
+distractor clauses; parse updated in lockstep; computations and answers unchanged. Holdout
+432/705 (61.3%): common-sense 0/50 and decompose-to-solve 0/100 stay zero. The five measured
+arms: dv7 460 (65.2%) > dv8 448 (63.5%) > dv11 439 (62.3%) > dv12 432 (61.3%) > dv9 428 (60.7%).
+
+## THE BENCHMARK FINDING (agent-eval, 2026-09-26)
+
+A competent circuit-writer, given only the statements, computed about 18 of 20 holdout items
+of the two stuck books correctly, but scored 2 of 20 because the answer comparison is
+exact-phrase based and the recorded answers carry wording the statement does not determine.
+The zero-book scores therefore measure phrase reproduction, not computation. Fix proposed in
+proposal.md: value-based comparison (numbers plus verdict) or canonical recorded answers;
+re-test with a competent writer to 20/20 before any further training.

@@ -58,11 +58,14 @@ are the current attempt to fix that.
 - Two training processes were running at once after an accidental revival; the stale one
   was killed.
 
-## What is next
-1. The agent-eval experiment has failed and the stop rule applies: no further dataset-design
-   arms, no further training on restructured datasets. The exp-025 holdout (already launched)
-   still completes and its verdict will be recorded, but it does not change the stop.
-2. Next session, per proposal.md: make the books' answer comparison value-based or canonicalize
-   the recorded answers, then re-run the writer experiment until it reaches 20 of 20. Only
-   then reconsider training.
-3. The goal remains 90% correct on the benchmark. The current best is 65.2%.
+## Session close (both experiments measured)
+1. The simplified-statements run finished: 432 of 705 correct (61.3%). The two stuck books
+   remain at zero (common-sense 0/50, decompose-to-solve 0/100). That is the fifth dataset
+   arm to fail on them.
+2. The stop rule applies: the dataset-design line is closed. No further training arms.
+3. Next session, per proposal.md: make the books' answer comparison value-based (numbers plus
+   verdict) or canonicalize the recorded answers to statement-derivable forms, then re-run
+   the writer experiment until a competent writer reaches 20 of 20. Only then reconsider
+   training.
+4. The session's measured results stand: the container abstraction solved world-as-a-system
+   (20/20) and the best holdout is 460 of 705 (65.2%). The goal of 90% remains open.

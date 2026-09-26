@@ -1,6 +1,6 @@
 # data-quality: jsEval body complexity scan
 
-Run: 2026-09-26T01:31:59.449Z
+Run: 2026-09-26T17:14:33.165Z
 
 ## Thresholds in effect
 
