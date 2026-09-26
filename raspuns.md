@@ -26,3 +26,11 @@ latest arm). scientific-reasoning, adult-reasoning, and logical-reasoning stay n
 ## Bottom line
 One word: the comparator. The container arm reaches 77.2% once the scorer judges meaning
 instead of exact phrasing; only common-sense remains genuinely unsolved.
+
+## Common-sense: cause found (2026-09-26)
+The 50 common-sense holdout items are all units-and-rates, a three-step FRACTIONAL chain.
+Only exp-014-deep-chains trained on fractional-chain data (dataVersion 2, since removed),
+so it alone computes it (49/50 semantic). Later arms lost that data AND the model copies
+integer-only probes from other books onto this fractional book, turning correct math into
+execution errors. Fix (see evaluation/registry/common-sense-cause.md): restore the
+fractional-chain data, relax the integer probes, and adopt the value-based scorer.
