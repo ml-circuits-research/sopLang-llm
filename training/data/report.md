@@ -1,7 +1,7 @@
 # Trainer-view export report
 
 Derived by `training/export.mjs` from the shipped trees under `training-data/`;
-dataset snapshot `f66a469ccdb752ce655f7c8baeba3342f5600dfa904aca48445c649dbefaf2f8`. The report is deterministic and carries no timestamp.
+dataset snapshot `29b8675c2e163371cc0e5931bf3e75ede264531f4e1807d986b303163d90b511`. The report is deterministic and carries no timestamp.
 
 | book | rows | no-knowledge | knowledge | templates | plans |
 | --- | --- | --- | --- | --- | --- |
@@ -30,14 +30,14 @@ of the solution, `jsEval body lines` the non-empty lines after the `jsEval` decl
 | adult-reasoning | jsEval body lines | 2 | 8 | 18 | 26 | 26 |
 | adult-reasoning | $ dependencies | 1 | 1 | 1 | 3 | 3 |
 | common-sense | statement characters | 408 | 507 | 633 | 641 | 641 |
-| common-sense | target characters | 635 | 1226 | 2113 | 2649 | 2649 |
+| common-sense | target characters | 635 | 1181 | 2081 | 2649 | 2649 |
 | common-sense | wire declarations | 2 | 3 | 3 | 4 | 4 |
 | common-sense | jsEval body lines | 5 | 19 | 36 | 37 | 37 |
 | common-sense | $ dependencies | 1 | 2 | 2 | 3 | 3 |
 | decompose-to-solve | statement characters | 522 | 679 | 790 | 812 | 838 |
-| decompose-to-solve | target characters | 615 | 1522 | 2850 | 2854 | 2856 |
+| decompose-to-solve | target characters | 417 | 1345 | 2659 | 2663 | 2665 |
 | decompose-to-solve | wire declarations | 2 | 4 | 6 | 6 | 6 |
-| decompose-to-solve | jsEval body lines | 4 | 18 | 44 | 44 | 44 |
+| decompose-to-solve | jsEval body lines | 4 | 18 | 42 | 42 | 42 |
 | decompose-to-solve | $ dependencies | 1 | 3 | 5 | 5 | 5 |
 | logical-reasoning | statement characters | 221 | 352 | 419 | 510 | 519 |
 | logical-reasoning | target characters | 219 | 423 | 749 | 2086 | 2095 |
@@ -65,7 +65,7 @@ of the solution, `jsEval body lines` the non-empty lines after the `jsEval` decl
 | world-as-a-system | jsEval body lines | 4 | 46 | 70 | 98 | 98 |
 | world-as-a-system | $ dependencies | 1 | 2 | 3 | 4 | 4 |
 | all books | statement characters | 57 | 336 | 796 | 1217 | 1545 |
-| all books | target characters | 110 | 792 | 2187 | 3554 | 5522 |
+| all books | target characters | 110 | 763 | 2153 | 3554 | 5522 |
 | all books | wire declarations | 2 | 2 | 4 | 7 | 7 |
 | all books | jsEval body lines | 2 | 12 | 40 | 70 | 98 |
 | all books | $ dependencies | 1 | 1 | 3 | 5 | 5 |

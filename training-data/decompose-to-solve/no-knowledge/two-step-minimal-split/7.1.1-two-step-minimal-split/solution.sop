@@ -12,5 +12,5 @@
 const slots = $slots;
 const blocks = Math.ceil(slots.workload / slots.blockCapacity);
 const minutes = blocks * slots.blockMinutes + slots.setupMinutes;
-return "The correct answer is " + (minutes <= slots.limitMinutes ? "yes" : "no") + ". First compress the operational details into one number (" + minutes + " minutes), then compare that output with the deadline. The large problem becomes a workload calculation followed by a pure constraint test.";
+return minutes + " minutes: " + (minutes <= slots.limitMinutes ? "feasible" : "not feasible") + ".";
 

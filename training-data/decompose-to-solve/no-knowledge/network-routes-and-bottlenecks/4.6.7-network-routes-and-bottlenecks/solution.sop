@@ -71,5 +71,5 @@ probe(feasible.every((summary) => summary.timeMinutes >= chosen.timeMinutes), "n
 return chosen;
 
 @answer jsEval
-return "Choose Route " + $chosen.name + ". The decomposition uses different aggregation operators for different meanings: sequential times add, serial capacities take a minimum, then shared constraints filter entire-route summaries.";
+return "Choose Route " + $chosen.name + ".";
 

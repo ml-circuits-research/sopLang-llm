@@ -34,5 +34,5 @@ probe(mean >= withoutExtreme, "the extreme value must not pull the mean below th
 return { mean, median };
 
 @answer jsEval
-return "Mean = " + String($stats.mean / 100) + "; median = " + $stats.median + ". Use the mean for total amount per observation and the median for a more robust 'typical' value.";
+return "Mean = " + String($stats.mean / 100) + "; median = " + $stats.median + ".";
 

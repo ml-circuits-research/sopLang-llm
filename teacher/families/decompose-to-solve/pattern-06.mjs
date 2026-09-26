@@ -138,7 +138,7 @@ function solve(slots) {
 }
 
 function render(solution) {
-  return `${solution.hypothesisId}, the ${solution.label}, is the best-supported explanation. The decomposition is evidential: each observation is sent only to the hypothesis it can actually discriminate, then the hypothesis-level results are recombined.`;
+  return `${solution.hypothesisId}, the ${solution.label}.`;
 }
 
 const WIRES = [
@@ -177,7 +177,7 @@ const WIRES = [
 ];
 
 const COMPUTE = [
-  'return $winner.id + ", the " + $winner.label + ", is the best-supported explanation. The decomposition is evidential: each observation is sent only to the hypothesis it can actually discriminate, then the hypothesis-level results are recombined.";'
+  'return $winner.id + ", the " + $winner.label + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -187,8 +187,13 @@ function explain(slots, solution) {
     `The scenario handles ${slots.failureCount} ${slots.workNoun} under three hypotheses, so the evidence tree gives every observation one job instead of letting each one speak to all three claims.`,
     `The capacity log and the independent reproduction within tolerance are the discriminating records that eliminate ${eliminated}.`,
     `The time-stamped record of a dependent action taken before its prerequisite is the one observation that positively tests ${supported}, so that hypothesis survives.`,
-    `The remark that the team was busy tests nothing, and recombining the hypothesis-level verdicts leaves ${solution.hypothesisId} — the ${solution.label} — as the best-supported explanation; the domain phrase "${slots.domain}" does not change the method.`
+    `The remark that the team was busy tests nothing, and recombining the hypothesis-level verdicts leaves ${solution.hypothesisId} — the ${solution.label} — as the best-supported explanation; the domain phrase "${slots.domain}" does not change the method.`,
+    `The decomposition is evidential: each observation is sent only to the hypothesis it can actually discriminate, then the hypothesis-level results are recombined.`
   ];
+}
+
+function verifyPrinted(parsedSlots, solution, printedText) {
+  return printedText.includes(solution.hypothesisId) && printedText.includes(solution.label);
 }
 
 export const unit = 6;
@@ -203,6 +208,10 @@ export const cases = [
     render,
     wires: WIRES,
     compute: COMPUTE,
-    explain
+    explain,
+    printedAnswerStatus: 'alternative',
+    printedAnswerReason:
+      'the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.',
+    verifyPrinted
   }
 ];

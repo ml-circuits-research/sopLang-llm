@@ -70,7 +70,7 @@ function solve(slots) {
 }
 
 function render(solution) {
-  return `The operation needs ${solution.containers} capacity units and is ${solution.feasible ? 'feasible' : 'not feasible'}. The decomposition follows the semantic transformations: normalize → adjust for loss → discretize into containers → compare with availability.`;
+  return `${solution.containers} capacity units: ${solution.feasible ? 'feasible' : 'not feasible'}.`;
 }
 
 const COMPUTE = [
@@ -79,7 +79,7 @@ const COMPUTE = [
   'const lossAdjusted = slots.unitFactorDenominator * (100 - slots.lossPercent) * slots.containerCapacity;',
   'const containers = Math.ceil(need / lossAdjusted);',
   'const feasible = containers <= slots.availableContainers;',
-  'return "The operation needs " + containers + " capacity units and is " + (feasible ? "feasible" : "not feasible") + ". The decomposition follows the semantic transformations: normalize → adjust for loss → discretize into containers → compare with availability.";'
+  'return containers + " capacity units: " + (feasible ? "feasible" : "not feasible") + ".";'
 ].join('\n');
 
 /** Prints an exact rational as a trimmed decimal for the prose explanation. */
@@ -94,8 +94,13 @@ function explain(slots, solution) {
     `Normalizing first: ${slots.rawRequirement} ${slots.itemUnit} × ${decimal(slots.unitFactorNumerator, slots.unitFactorDenominator)} = ${normalized} standard units.`,
     `Adjusting for the ${slots.lossPercent}% loss, enough input must be supplied for ${normalized} / ${decimal(100 - slots.lossPercent, 100)} = ${adjusted} standard units.`,
     `Discretizing that need into containers of ${slots.containerCapacity} standard units gives ceil(${adjusted}/${slots.containerCapacity}) = ${solution.containers} capacity units.`,
-    `Comparing with the ${slots.availableContainers} available containers makes the plan ${solution.feasible ? 'feasible' : 'not feasible'}; the color-coding note does not affect capacity.`
+    `Comparing with the ${slots.availableContainers} available containers makes the plan ${solution.feasible ? 'feasible' : 'not feasible'}; the color-coding note does not affect capacity.`,
+    `The decomposition follows the semantic transformations: normalize → adjust for loss → discretize into containers → compare with availability.`
   ];
+}
+
+function verifyPrinted(parsedSlots, solution, printedText) {
+  return printedText.includes(`${solution.containers} capacity units`) && printedText.includes(solution.feasible ? 'feasible' : 'not feasible');
 }
 
 export const unit = 3;
@@ -109,6 +114,10 @@ export const cases = [
     solve,
     render,
     compute: COMPUTE,
-    explain
+    explain,
+    printedAnswerStatus: 'alternative',
+    printedAnswerReason:
+      'the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.',
+    verifyPrinted
   }
 ];

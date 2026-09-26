@@ -15,5 +15,5 @@ const need = slots.rawRequirement * slots.unitFactorNumerator * 100;
 const lossAdjusted = slots.unitFactorDenominator * (100 - slots.lossPercent) * slots.containerCapacity;
 const containers = Math.ceil(need / lossAdjusted);
 const feasible = containers <= slots.availableContainers;
-return "The operation needs " + containers + " capacity units and is " + (feasible ? "feasible" : "not feasible") + ". The decomposition follows the semantic transformations: normalize → adjust for loss → discretize into containers → compare with availability.";
+return containers + " capacity units: " + (feasible ? "feasible" : "not feasible") + ".";
 

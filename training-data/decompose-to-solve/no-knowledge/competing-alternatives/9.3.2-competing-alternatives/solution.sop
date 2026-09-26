@@ -38,5 +38,5 @@ probe(feasible.filter((option) => option.costCents === chosen.costCents).length 
 return chosen;
 
 @answer jsEval
-return "Choose Option " + $chosen.label + ". The important architecture is “evaluate each option locally, then compare summaries under shared constraints,” rather than interleaving the arithmetic of both options.";
+return "Choose Option " + $chosen.label + ".";
 

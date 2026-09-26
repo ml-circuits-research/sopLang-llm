@@ -6,11 +6,14 @@
 2. Adjusting for the 5% loss, enough input must be supplied for 142.5 / 0.95 = 150 standard units.
 3. Discretizing that need into containers of 19 standard units gives ceil(150/19) = 8 capacity units.
 4. Comparing with the 8 available containers makes the plan feasible; the color-coding note does not affect capacity.
+5. The decomposition follows the semantic transformations: normalize → adjust for loss → discretize into containers → compare with availability.
+
+**Source answer.** The operation needs 8 capacity units and is feasible. The decomposition follows the semantic transformations: normalize → adjust for loss → discretize into containers → compare with availability. — the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation. The shipped answer is computed from the statement, and this example is `computed_verified` rather than `exact_verified`.
 
 ## Result
 
-**Answer.** The operation needs 8 capacity units and is feasible. The decomposition follows the semantic transformations: normalize → adjust for loss → discretize into containers → compare with availability.
+**Answer.** 8 capacity units: feasible.
 
-**Verification.** exact_verified: the executed circuit produced this answer, and the family computation reproduced it from the statement. The independence limitation of this class is stated in `report.md`.
+**Verification.** computed_verified: the executed circuit produced this answer, and the family computation reproduced it from the statement. The independence limitation of this class is stated in `report.md`.
 
 **Program.** `solution.sop` (compiled values in `slots`, computation in `jsEval`).

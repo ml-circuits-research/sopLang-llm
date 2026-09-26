@@ -51,7 +51,7 @@ function solve(slots) {
 }
 
 function render(solution) {
-  return `The best representation is a single constraint-satisfaction subproblem, yielding x=${solution.x}. The apparent subproblems are merely clauses of one predicate over the same variable.`;
+  return `x = ${solution.x}.`;
 }
 
 const COMPUTE = [
@@ -60,7 +60,7 @@ const COMPUTE = [
   'const x = Math.floor(effectiveUpper / slots.divisor) * slots.divisor;',
   'probe(x >= slots.lowerBound, "the clauses must admit at least one multiple of the divisor");',
   'probe(x % slots.divisor === 0 && x >= slots.lowerBound && x <= slots.upperBound && x + slots.reserve <= slots.resourceLimit, "x must satisfy every clause of the one predicate");',
-  'return "The best representation is a single constraint-satisfaction subproblem, yielding x=" + x + ". The apparent subproblems are merely clauses of one predicate over the same variable.";'
+  'return "x = " + x + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -68,8 +68,13 @@ function explain(slots, solution) {
     `All four rules speak about the same variable: ${slots.lowerBound} ≤ x ≤ ${slots.upperBound}, x a multiple of ${slots.divisor}, and x + ${slots.reserve} ≤ ${slots.resourceLimit}.`,
     `The resource clause tightens the upper bound to min(${slots.upperBound}, ${slots.resourceLimit} − ${slots.reserve}) = ${solution.effectiveUpper}.`,
     `The largest multiple of ${slots.divisor} within the bounds is ${solution.x}, so the ${slots.subjectNoun} take that value.`,
-    `Because every rule constrains the same x, the apparent strands are clauses of one predicate, and decomposing them would only produce fragments that must be recombined immediately.`
+    `Because every rule constrains the same x, the apparent strands are clauses of one predicate, and decomposing them would only produce fragments that must be recombined immediately.`,
+    `The best representation is a single constraint-satisfaction subproblem, yielding x=${solution.x}. The apparent subproblems are merely clauses of one predicate over the same variable.`
   ];
+}
+
+function verifyPrinted(parsedSlots, solution, printedText) {
+  return printedText.includes(`x=${solution.x}`);
 }
 
 export const unit = 10;
@@ -83,6 +88,10 @@ export const cases = [
     solve,
     render,
     compute: COMPUTE,
-    explain
+    explain,
+    printedAnswerStatus: 'alternative',
+    printedAnswerReason:
+      'the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.',
+    verifyPrinted
   }
 ];

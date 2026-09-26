@@ -30,5 +30,5 @@ const formatScore = (scaled) => {
   const magnitude = Math.abs(scaled);
   return sign + Math.floor(magnitude / 10) + "." + (magnitude % 10);
 };
-return "This is intentionally a false-decomposition case. The best formulation is one optimization subproblem, not three independent choices. Configuration " + $scores.winner + " wins because the predetermined combined score is " + formatScore($scores.winnerScore) + " versus " + formatScore($scores.loserScore) + ".";
+return "Configuration " + $scores.winner + " wins: " + formatScore($scores.winnerScore) + " versus " + formatScore($scores.loserScore) + ".";
 

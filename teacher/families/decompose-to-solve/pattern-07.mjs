@@ -76,7 +76,7 @@ function solve(slots) {
 }
 
 function render(solution) {
-  return `Choose Route ${solution.chosen.name}. The decomposition uses different aggregation operators for different meanings: sequential times add, serial capacities take a minimum, then shared constraints filter entire-route summaries.`;
+  return `Choose Route ${solution.chosen.name}.`;
 }
 
 const WIRES = [
@@ -115,7 +115,7 @@ const WIRES = [
 ];
 
 const COMPUTE = [
-  'return "Choose Route " + $chosen.name + ". The decomposition uses different aggregation operators for different meanings: sequential times add, serial capacities take a minimum, then shared constraints filter entire-route summaries.";'
+  'return "Choose Route " + $chosen.name + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -128,8 +128,13 @@ function explain(slots, solution) {
   return [
     `The ${slots.subject} are decomposed into three route summaries: ${details}.`,
     'The two meanings are aggregated separately: the sequential link times add up, while the serial link capacities take a minimum because the narrowest link caps the whole route.',
-    `The shared constraints then filter the whole-route summaries, and among the feasible routes Route ${solution.chosen.name} is the fastest at ${solution.chosen.timeMinutes} minutes, so it is the answer; the sum of link capacities is a distractor.`
+    `The shared constraints then filter the whole-route summaries, and among the feasible routes Route ${solution.chosen.name} is the fastest at ${solution.chosen.timeMinutes} minutes, so it is the answer; the sum of link capacities is a distractor.`,
+    `The decomposition uses different aggregation operators for different meanings: sequential times add, serial capacities take a minimum, then shared constraints filter entire-route summaries.`
   ];
+}
+
+function verifyPrinted(parsedSlots, solution, printedText) {
+  return printedText.includes(`Choose Route ${solution.chosen.name}`);
 }
 
 export const unit = 7;
@@ -144,6 +149,10 @@ export const cases = [
     render,
     wires: WIRES,
     compute: COMPUTE,
-    explain
+    explain,
+    printedAnswerStatus: 'alternative',
+    printedAnswerReason:
+      'the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.',
+    verifyPrinted
   }
 ];

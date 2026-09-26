@@ -49,7 +49,12 @@ no-knowledge/time-dependencies (50), no-knowledge/units-and-rates (50), no-knowl
 
 ## Answers not shipped as printed
 
-Every accepted example ships the answer its source prints.
+
+200 accepted examples ship a computed answer because the statement does not determine the printed one; the printed answer stays in `explanation.md` as reference material and the class is `computed_verified`:
+- no-knowledge/data-consistency: 50 examples, printed answer alternative — the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.
+- no-knowledge/expected-value-and-risk: 50 examples, printed answer alternative — the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.
+- no-knowledge/mean-versus-median: 50 examples, printed answer alternative — the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.
+- no-knowledge/sampling: 50 examples, printed answer alternative — the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.
 
 ## Family integrity checks
 

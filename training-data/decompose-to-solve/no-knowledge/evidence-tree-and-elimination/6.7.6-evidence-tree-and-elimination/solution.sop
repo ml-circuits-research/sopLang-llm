@@ -63,5 +63,5 @@ probe(typeof labels[winner.kind] === "string", "the surviving hypothesis must be
 return { id: winner.id, label: labels[winner.kind] };
 
 @answer jsEval
-return $winner.id + ", the " + $winner.label + ", is the best-supported explanation. The decomposition is evidential: each observation is sent only to the hypothesis it can actually discriminate, then the hypothesis-level results are recombined.";
+return $winner.id + ", the " + $winner.label + ".";
 

@@ -69,7 +69,7 @@ function solve(slots) {
 }
 
 function render(solution) {
-  return `No. The category sum is ${solution.sum}, while the printed total differs by ${signed(solution.difference)} ${solution.unit}. The inconsistency is demonstrable, but the incorrect cell cannot be identified uniquely from these data alone.`;
+  return `No: category sum ${solution.sum}; printed total differs by ${signed(solution.difference)} ${solution.unit}.`;
 }
 
 const WIRES = [
@@ -91,7 +91,7 @@ const WIRES = [
 ];
 
 const COMPUTE = [
-  'return "No. The category sum is " + $totals.sum + ", while the printed total differs by " + $totals.signed + " " + $slots.unit + ". The inconsistency is demonstrable, but the incorrect cell cannot be identified uniquely from these data alone.";'
+  'return "No: category sum " + $totals.sum + "; printed total differs by " + $totals.signed + " " + $slots.unit + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -99,8 +99,13 @@ function explain(slots, solution) {
     `The three categories are disjoint and together cover every unit, so the partition rule forces the total to be ${solution.A} + ${solution.B} + ${solution.C} = ${solution.sum} ${solution.unit}.`,
     `The page prints ${solution.printed} ${solution.unit}, so printed minus calculated is ${signed(solution.difference)} ${solution.unit}; two numbers that must agree do not, so the table is not internally consistent.`,
     `The secondary relationship is satisfied (${solution.secondary} > ${solution.C}), so the total is the relationship the report breaks.`,
-    `Nothing in the statement fixes A, B, or C independently of the total, so the mismatch proves that some entry is wrong but cannot say which one, and any single category, the total, or a combination could carry the error.`
+    `Nothing in the statement fixes A, B, or C independently of the total, so the mismatch proves that some entry is wrong but cannot say which one, and any single category, the total, or a combination could carry the error.`,
+    `The inconsistency is demonstrable, but the incorrect cell cannot be identified uniquely from these data alone.`
   ];
+}
+
+function verifyPrinted(parsedSlots, solution, printedText) {
+  return printedText.includes(String(solution.sum)) && printedText.includes(signed(solution.difference));
 }
 
 export const unit = 9;
@@ -115,6 +120,10 @@ export const cases = [
     render,
     wires: WIRES,
     compute: COMPUTE,
-    explain
+    explain,
+    printedAnswerStatus: 'alternative',
+    printedAnswerReason:
+      'the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.',
+    verifyPrinted
   }
 ];

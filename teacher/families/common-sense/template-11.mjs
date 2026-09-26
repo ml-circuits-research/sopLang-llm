@@ -85,7 +85,7 @@ function solve(slots) {
 }
 
 function render(solution) {
-  return `${solution.method}, because it begins with random selection stratified by area and makes nonresponse observable.`;
+  return `${solution.method}.`;
 }
 
 const COMPUTE = [
@@ -95,7 +95,7 @@ const COMPUTE = [
   'const planned = chosen.size * slots.areas;',
   'probe(planned > 0, "the chosen method must plan to select a positive number of people");',
   'probe(planned < slots.population, "the chosen sample cannot exceed the target population");',
-  'return chosen.label + ", because it begins with random selection stratified by area and makes nonresponse observable.";'
+  'return chosen.label + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -104,8 +104,13 @@ function explain(slots, solution) {
     `The three stated methods are ${described}; only ${solution.method} selects people randomly inside every area, so only it gives each area a deliberate path into the sample.`,
     'An open link is filled by self-selection: whether someone sees it and chooses to answer is exactly what separates the sample from the population, so the larger voluntary group is still a group of volunteers.',
     'A single shopping center on a single Saturday draws from whoever visits that place at that time, so people who never go there cannot enter the sample no matter how many interviews are conducted.',
-    `${solution.method} randomly selects ${solution.perArea} people in each of the ${solution.areas} areas, a planned ${solution.planned} of ${solution.population} people, and tracks nonresponse separately, so nonresponse can be measured instead of hidden; a larger sample would mostly shrink random error and would not repair systematic selection bias.`
+    `${solution.method} randomly selects ${solution.perArea} people in each of the ${solution.areas} areas, a planned ${solution.planned} of ${solution.population} people, and tracks nonresponse separately, so nonresponse can be measured instead of hidden; a larger sample would mostly shrink random error and would not repair systematic selection bias.`,
+    `The chosen method is ${solution.method}, because it begins with random selection stratified by area and makes nonresponse observable.`
   ];
+}
+
+function verifyPrinted(parsedSlots, solution, printedText) {
+  return printedText.includes(solution.method);
 }
 
 export const unit = 11;
@@ -119,6 +124,10 @@ export const cases = [
     solve,
     render,
     compute: COMPUTE,
-    explain
+    explain,
+    printedAnswerStatus: 'alternative',
+    printedAnswerReason:
+      'the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.',
+    verifyPrinted
   }
 ];

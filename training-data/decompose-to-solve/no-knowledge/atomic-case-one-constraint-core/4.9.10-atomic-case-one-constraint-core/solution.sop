@@ -14,5 +14,5 @@ const effectiveUpper = Math.min(slots.upperBound, slots.resourceLimit - slots.re
 const x = Math.floor(effectiveUpper / slots.divisor) * slots.divisor;
 probe(x >= slots.lowerBound, "the clauses must admit at least one multiple of the divisor");
 probe(x % slots.divisor === 0 && x >= slots.lowerBound && x <= slots.upperBound && x + slots.reserve <= slots.resourceLimit, "x must satisfy every clause of the one predicate");
-return "The best representation is a single constraint-satisfaction subproblem, yielding x=" + x + ". The apparent subproblems are merely clauses of one predicate over the same variable.";
+return "x = " + x + ".";
 

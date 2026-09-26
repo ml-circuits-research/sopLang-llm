@@ -81,7 +81,7 @@ function solve(slots) {
 }
 
 function render(solution) {
-  return `Mean = ${solution.mean}; median = ${solution.median}. Use the mean for total amount per observation and the median for a more robust 'typical' value.`;
+  return `Mean = ${solution.mean}; median = ${solution.median}.`;
 }
 
 const WIRES = [
@@ -111,7 +111,7 @@ const WIRES = [
 ];
 
 const COMPUTE = [
-  'return "Mean = " + String($stats.mean / 100) + "; median = " + $stats.median + ". Use the mean for total amount per observation and the median for a more robust \'typical\' value.";'
+  'return "Mean = " + String($stats.mean / 100) + "; median = " + $stats.median + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -120,8 +120,13 @@ function explain(slots, solution) {
     `The mean includes every observation, so the total is ${values.join(' + ')} = ${solution.sum} and the mean is ${solution.sum}/${solution.count} = ${solution.mean}.`,
     `Ordering the nine observations puts the fifth, middle value at ${solution.median}, and that position is the median: four of the observations are listed before it and four after it, so the last value ${solution.extreme} cannot move it.`,
     `The first eight observations average ${solution.withoutExtreme}, so including the extreme value raises the mean by ${solution.shift}; the mean keeps the total honest while the median describes a typical observation.`,
-    `Both statistics are reported because they answer different questions: the extreme value is genuine and belongs in the total, so the mean is the right figure for an average amount per observation, and the median is the more robust description of what is typical.`
+    `Both statistics are reported because they answer different questions: the extreme value is genuine and belongs in the total, so the mean is the right figure for an average amount per observation, and the median is the more robust description of what is typical.`,
+    `Use the mean for total amount per observation and the median for a more robust 'typical' value.`
   ];
+}
+
+function verifyPrinted(parsedSlots, solution, printedText) {
+  return printedText.includes(solution.mean) && printedText.includes(String(solution.median));
 }
 
 export const unit = 16;
@@ -136,6 +141,10 @@ export const cases = [
     render,
     wires: WIRES,
     compute: COMPUTE,
-    explain
+    explain,
+    printedAnswerStatus: 'alternative',
+    printedAnswerReason:
+      'the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.',
+    verifyPrinted
   }
 ];

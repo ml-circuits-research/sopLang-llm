@@ -74,7 +74,7 @@ function solve(slots) {
 }
 
 function render(solution) {
-  return `The robust capacity requirement is ${formatTenths(solution.requirementTenths)}, and Option ${solution.chosen} is the lowest-cost option that meets it. The uncertainty interval and safety policy are separate transformations, which prevents double-counting the margin.`;
+  return `${formatTenths(solution.requirementTenths)} units: Option ${solution.chosen}.`;
 }
 
 const WIRES = [
@@ -109,7 +109,7 @@ const WIRES = [
 
 const COMPUTE = [
   'const formatTenths = (tenths) => Math.floor(tenths / 10) + "." + (tenths % 10);',
-  'return "The robust capacity requirement is " + formatTenths($requirement) + ", and Option " + $chosen + " is the lowest-cost option that meets it. The uncertainty interval and safety policy are separate transformations, which prevents double-counting the margin.";'
+  'return formatTenths($requirement) + " units: Option " + $chosen + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -119,8 +119,13 @@ function explain(slots, solution) {
     `The average forecast of ${slots.demand} ${slots.demandUnit} is widened first by the ±${slots.errorPercent}% error bound, which gives the high forecast ${formatHundredths(solution.highForecastHundredths)}.`,
     `The ${slots.marginPercent}% safety policy is applied to that high forecast and not to the average, so the robust requirement is ${requirement}.`,
     `Option A's capacity ${slots.capacityA} ${verdict(slots.capacityA)} ${requirement}, and Option B's capacity ${slots.capacityB} ${verdict(slots.capacityB)} ${requirement}.`,
-    `Comparing costs only among the options that satisfy the rule, Option ${solution.chosen} at cost ${solution.chosenCost} is the cheapest, so it is the robust choice.`
+    `Comparing costs only among the options that satisfy the rule, Option ${solution.chosen} at cost ${solution.chosenCost} is the cheapest, so it is the robust choice.`,
+    `The robust capacity requirement is ${formatTenths(solution.requirementTenths)}, and Option ${solution.chosen} is the lowest-cost option that meets it. The uncertainty interval and safety policy are separate transformations, which prevents double-counting the margin.`
   ];
+}
+
+function verifyPrinted(parsedSlots, solution, printedText) {
+  return printedText.includes(formatTenths(solution.requirementTenths)) && printedText.includes(`Option ${solution.chosen}`);
 }
 
 export const unit = 8;
@@ -135,6 +140,10 @@ export const cases = [
     render,
     wires: WIRES,
     compute: COMPUTE,
-    explain
+    explain,
+    printedAnswerStatus: 'alternative',
+    printedAnswerReason:
+      'the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.',
+    verifyPrinted
   }
 ];

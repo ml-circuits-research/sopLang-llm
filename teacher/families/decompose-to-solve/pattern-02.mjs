@@ -73,7 +73,7 @@ function solve(slots) {
 }
 
 function render(solution) {
-  return `Choose Option ${solution.chosen.label}. The important architecture is “evaluate each option locally, then compare summaries under shared constraints,” rather than interleaving the arithmetic of both options.`;
+  return `Choose Option ${solution.chosen.label}.`;
 }
 
 const WIRES = [
@@ -106,7 +106,7 @@ const WIRES = [
 ];
 
 const COMPUTE = [
-  'return "Choose Option " + $chosen.label + ". The important architecture is “evaluate each option locally, then compare summaries under shared constraints,” rather than interleaving the arithmetic of both options.";'
+  'return "Choose Option " + $chosen.label + ".";'
 ].join('\n');
 
 function minutesText(minutes) {
@@ -123,8 +123,13 @@ function explain(slots, solution) {
     `Each option is evaluated on its own: Option A finishes in ${minutesText(first.minutes)} and costs ${costText(first.costCents)}, while Option B finishes in ${minutesText(second.minutes)} and costs ${costText(second.costCents)}.`,
     `Both summaries are checked against the shared constraints of ${minutesText(solution.limitMinutes)} and ${costText(solution.budgetCents)}, and both options are feasible.`,
     `Comparing the two summaries under the lower-cost preference selects Option ${solution.chosen.label}: ${costText(solution.chosen.costCents)} is the cheaper feasible cost.`,
-    `Interleaving the arithmetic of the two options would hide that the local evaluations are independent; keeping them separate is what makes the comparison trustworthy.`
+    `Interleaving the arithmetic of the two options would hide that the local evaluations are independent; keeping them separate is what makes the comparison trustworthy.`,
+    `The important architecture is “evaluate each option locally, then compare summaries under shared constraints,” rather than interleaving the arithmetic of both options.`
   ];
+}
+
+function verifyPrinted(parsedSlots, solution, printedText) {
+  return printedText.includes(`Choose Option ${solution.chosen.label}`);
 }
 
 export const unit = 2;
@@ -139,6 +144,10 @@ export const cases = [
     render,
     wires: WIRES,
     compute: COMPUTE,
-    explain
+    explain,
+    printedAnswerStatus: 'alternative',
+    printedAnswerReason:
+      'the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.',
+    verifyPrinted
   }
 ];

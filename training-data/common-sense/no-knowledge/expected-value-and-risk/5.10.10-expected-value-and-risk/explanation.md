@@ -6,6 +6,7 @@
 2. With protection the 420 CU are paid for certain and the loss falls to 40% of 4500 CU, so the expected cost is 420 + 12/100 × 40/100 × 4500 = 636 CU.
 3. The hard risk rule is applied first: an option whose adverse-scenario total exceeds 2500 CU is rejected before any expected cost is compared.
 4. Without protection the adverse scenario exceeds the limit, so the protective measure is the only option that survives the hard risk rule.
+5. Under the hard risk rule, the justified choice is the protective measure.
 
 Reference solution as printed in the source (template 5, 4 steps):
 
@@ -14,10 +15,12 @@ Reference solution as printed in the source (template 5, 4 steps):
 3. In the adverse scenario with protection, total cost = 420 + 1800 = 2220 CU, so the risk limit is satisfied.
 4. The hard risk rule is applied before comparing expected costs among the options that remain acceptable.
 
+**Source answer.** Expected cost without protection: 540 CU; with protection: 636 CU. Under the hard risk rule, the justified choice is the protective measure. — the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation. The shipped answer is computed from the statement, and this example is `computed_verified` rather than `exact_verified`.
+
 ## Result
 
-**Answer.** Expected cost without protection: 540 CU; with protection: 636 CU. Under the hard risk rule, the justified choice is the protective measure.
+**Answer.** Expected cost without protection: 540 CU; with protection: 636 CU. Justified choice: the protective measure.
 
-**Verification.** exact_verified: the executed circuit produced this answer, and the family computation reproduced it from the statement. The independence limitation of this class is stated in `report.md`.
+**Verification.** computed_verified: the executed circuit produced this answer, and the family computation reproduced it from the statement. The independence limitation of this class is stated in `report.md`.
 
 **Program.** `solution.sop` (compiled values in `slots`, computation in `jsEval`).

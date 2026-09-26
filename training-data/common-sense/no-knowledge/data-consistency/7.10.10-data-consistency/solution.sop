@@ -26,5 +26,5 @@ const signed = difference > 0 ? "+" + difference : String(difference);
 return { sum, signed };
 
 @answer jsEval
-return "No. The category sum is " + $totals.sum + ", while the printed total differs by " + $totals.signed + " " + $slots.unit + ". The inconsistency is demonstrable, but the incorrect cell cannot be identified uniquely from these data alone.";
+return "No: category sum " + $totals.sum + "; printed total differs by " + $totals.signed + " " + $slots.unit + ".";
 

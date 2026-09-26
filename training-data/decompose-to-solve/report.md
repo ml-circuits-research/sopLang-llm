@@ -39,8 +39,17 @@ no-knowledge/uncertainty-and-robustness (100)
 ## Answers not shipped as printed
 
 
-100 accepted examples ship a computed answer because the statement does not determine the printed one; the printed answer stays in `explanation.md` as reference material and the class is `computed_verified`:
+1000 accepted examples ship a computed answer because the statement does not determine the printed one; the printed answer stays in `explanation.md` as reference material and the class is `computed_verified`:
+- no-knowledge/atomic-case-coupled-objective: 100 examples, printed answer alternative — the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.
+- no-knowledge/atomic-case-one-constraint-core: 100 examples, printed answer alternative — the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.
+- no-knowledge/competing-alternatives: 100 examples, printed answer alternative — the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.
+- no-knowledge/dependency-chain-and-join: 100 examples, printed answer alternative — the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.
+- no-knowledge/evidence-tree-and-elimination: 100 examples, printed answer alternative — the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.
+- no-knowledge/network-routes-and-bottlenecks: 100 examples, printed answer alternative — the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.
+- no-knowledge/normalization-and-capacity: 100 examples, printed answer alternative — the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.
 - no-knowledge/ten-part-integrated-decomposition: 100 examples, printed answer inconsistent — the statement prints the per-unit rate rounded to two decimals while the source computed the printed cost from an unrounded rate, so the printed cost agrees with the arithmetic the statement determines only inside the printed rate's rounding band.
+- no-knowledge/two-step-minimal-split: 100 examples, printed answer alternative — the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.
+- no-knowledge/uncertainty-and-robustness: 100 examples, printed answer alternative — the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.
 
 ## Family integrity checks
 

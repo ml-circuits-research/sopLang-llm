@@ -31,5 +31,5 @@ return chosen.label;
 
 @answer jsEval
 const formatTenths = (tenths) => Math.floor(tenths / 10) + "." + (tenths % 10);
-return "The robust capacity requirement is " + formatTenths($requirement) + ", and Option " + $chosen + " is the lowest-cost option that meets it. The uncertainty interval and safety policy are separate transformations, which prevents double-counting the margin.";
+return formatTenths($requirement) + " units: Option " + $chosen + ".";
 

@@ -69,7 +69,7 @@ function solve(slots) {
 }
 
 function render(solution) {
-  return `This is intentionally a false-decomposition case. The best formulation is one optimization subproblem, not three independent choices. Configuration ${solution.winner} wins because the predetermined combined score is ${formatScore(solution.winnerScore)} versus ${formatScore(solution.loserScore)}.`;
+  return `Configuration ${solution.winner} wins: ${formatScore(solution.winnerScore)} versus ${formatScore(solution.loserScore)}.`;
 }
 
 const WIRES = [
@@ -98,7 +98,7 @@ const COMPUTE = [
   '  const magnitude = Math.abs(scaled);',
   '  return sign + Math.floor(magnitude / 10) + "." + (magnitude % 10);',
   '};',
-  'return "This is intentionally a false-decomposition case. The best formulation is one optimization subproblem, not three independent choices. Configuration " + $scores.winner + " wins because the predetermined combined score is " + formatScore($scores.winnerScore) + " versus " + formatScore($scores.loserScore) + ".";'
+  'return "Configuration " + $scores.winner + " wins: " + formatScore($scores.winnerScore) + " versus " + formatScore($scores.loserScore) + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -108,8 +108,17 @@ function explain(slots, solution) {
     `The scenario is ${slots.context}, and the three quantities of each configuration are coupled by the rule fixed in advance: S = cost + ${slots.timeWeight}×time − ${slots.qualityWeight}×quality.`,
     `For configuration A that gives ${slots.costA} + ${slots.timeWeight}×${slots.timeA} − ${slots.qualityWeight}×${slots.qualityA} = ${aScore}, and for configuration B it gives ${slots.costB} + ${slots.timeWeight}×${slots.timeB} − ${slots.qualityWeight}×${slots.qualityB} = ${bScore}.`,
     `Because the objective is one coupled expression, the honest formulation is a single optimization subproblem, not three separate cost, time, and quality problems whose winners are then voted on.`,
-    `Configuration ${solution.winner} therefore wins with ${formatScore(solution.winnerScore)} against ${formatScore(solution.loserScore)}.`
+    `Configuration ${solution.winner} therefore wins with ${formatScore(solution.winnerScore)} against ${formatScore(solution.loserScore)}.`,
+    `This is intentionally a false-decomposition case. The best formulation is one optimization subproblem, not three independent choices.`
   ];
+}
+
+function verifyPrinted(parsedSlots, solution, printedText) {
+  return (
+    printedText.includes(`Configuration ${solution.winner} wins`) &&
+    printedText.includes(formatScore(solution.winnerScore)) &&
+    printedText.includes(formatScore(solution.loserScore))
+  );
 }
 
 export const unit = 5;
@@ -124,6 +133,10 @@ export const cases = [
     render,
     wires: WIRES,
     compute: COMPUTE,
-    explain
+    explain,
+    printedAnswerStatus: 'alternative',
+    printedAnswerReason:
+      'the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.',
+    verifyPrinted
   }
 ];

@@ -42,22 +42,27 @@ function solve(slots) {
 }
 
 function render(solution) {
-  return `The correct answer is ${solution.feasible ? 'yes' : 'no'}. First compress the operational details into one number (${solution.minutes} minutes), then compare that output with the deadline. The large problem becomes a workload calculation followed by a pure constraint test.`;
+  return `${solution.minutes} minutes: ${solution.feasible ? 'feasible' : 'not feasible'}.`;
 }
 
 const COMPUTE = [
   'const slots = $slots;',
   'const blocks = Math.ceil(slots.workload / slots.blockCapacity);',
   'const minutes = blocks * slots.blockMinutes + slots.setupMinutes;',
-  'return "The correct answer is " + (minutes <= slots.limitMinutes ? "yes" : "no") + ". First compress the operational details into one number (" + minutes + " minutes), then compare that output with the deadline. The large problem becomes a workload calculation followed by a pure constraint test.";'
+  'return minutes + " minutes: " + (minutes <= slots.limitMinutes ? "feasible" : "not feasible") + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
   return [
     `The workload is compressed first: ${slots.workload} ${slots.workUnit} need ceil(${slots.workload}/${slots.blockCapacity}) = ${solution.blocks} blocks.`,
     `The block time and the one-time setup give ${solution.blocks} × ${slots.blockMinutes} + ${slots.setupMinutes} = ${solution.minutes} minutes.`,
-    `That single number is then compared with the limit of ${slots.limitMinutes} minutes, so the plan is ${solution.feasible ? 'feasible' : 'not feasible'}; the staffing count is a distractor because the block rate is fixed.`
+    `That single number is then compared with the limit of ${slots.limitMinutes} minutes, so the plan is ${solution.feasible ? 'feasible' : 'not feasible'}; the staffing count is a distractor because the block rate is fixed.`,
+    `First compress the operational details into one number (${solution.minutes} minutes), then compare that output with the deadline. The large problem becomes a workload calculation followed by a pure constraint test.`
   ];
+}
+
+function verifyPrinted(parsedSlots, solution, printedText) {
+  return printedText.includes(`${solution.minutes} minutes`) && printedText.includes(solution.feasible ? 'yes' : 'no');
 }
 
 export const unit = 1;
@@ -71,6 +76,10 @@ export const cases = [
     solve,
     render,
     compute: COMPUTE,
-    explain
+    explain,
+    printedAnswerStatus: 'alternative',
+    printedAnswerReason:
+      'the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.',
+    verifyPrinted
   }
 ];

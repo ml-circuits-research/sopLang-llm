@@ -153,10 +153,9 @@ function solve(slots) {
 }
 
 function render(solution) {
-  return `The plan is ${solution.feasible ? 'feasible' : 'not feasible'}. Its key summaries are ` +
+  return `${solution.feasible ? 'feasible' : 'not feasible'}: ` +
     `${solution.preLossText} pre-loss standard units, ${solution.batches} batches, ${solution.minutes} minutes, ` +
-    `and ${solution.costText} cost units. The cost applies the stated per-unit rate to the pre-loss demand, ` +
-    'the one quantity that every capacity and variable-cost step shares.';
+    `${solution.costText} cost units.`;
 }
 
 const WIRES = [
@@ -223,10 +222,8 @@ const WIRES = [
 const COMPUTE = [
   'const preLossText = Math.floor($verdict.preLossTenths / 10) + "." + ($verdict.preLossTenths % 10);',
   'const costText = $verdict.cost.toFixed(2);',
-  'return "The plan is " + ($verdict.feasible ? "feasible" : "not feasible") + ". Its key summaries are " + preLossText +',
-  '  " pre-loss standard units, " + $verdict.batches + " batches, " + $verdict.minutes + " minutes, and " + costText + " cost units. " +',
-  '  "The cost applies the stated per-unit rate to the pre-loss demand, the one quantity that every capacity " +',
-  '  "and variable-cost step shares.";'
+  'return ($verdict.feasible ? "feasible" : "not feasible") + ": " + preLossText + " pre-loss standard units, " +',
+  '  $verdict.batches + " batches, " + $verdict.minutes + " minutes, " + costText + " cost units.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -251,6 +248,7 @@ function explain(slots, solution) {
       `${slots.budgetUnits} (SP7, SP9).`,
     `The three hard constraints are recombined as a conjunction: ${constraints.join(', ')}, so the overall verdict is ` +
       `${solution.feasible ? 'feasible' : 'not feasible'} (SP8, SP10).`,
+    'The cost applies the stated per-unit rate to the pre-loss demand, the one quantity that every capacity and variable-cost step shares.',
     'The printed cost is a two-decimal rounding of a charge the source computed from an unrounded rate, so it sits ' +
       'inside the rounding band of the printed rate rather than at the value the printed rate yields.'
   ];

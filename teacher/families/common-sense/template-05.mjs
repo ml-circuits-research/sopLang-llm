@@ -118,7 +118,7 @@ function render(solution) {
     without: 'the option without protection',
     neither: 'neither option, because both violate the hard risk rule'
   }[solution.choice];
-  return `Expected cost without protection: ${formatHundredths(solution.expected.without)} CU; with protection: ${formatHundredths(solution.expected.with)} CU. Under the hard risk rule, the justified choice is ${justification}.`;
+  return `Expected cost without protection: ${formatHundredths(solution.expected.without)} CU; with protection: ${formatHundredths(solution.expected.with)} CU. Justified choice: ${justification}.`;
 }
 
 const WIRES = [
@@ -164,7 +164,7 @@ const COMPUTE = [
   '  if (rest === 0) { return String(whole); }',
   '  return whole + "." + String(rest).padStart(2, "0").replace(/0$/, "");',
   '};',
-  'return "Expected cost without protection: " + formatHundredths($risk.expectedWithout) + " CU; with protection: " + formatHundredths($risk.expectedWith) + " CU. Under the hard risk rule, the justified choice is " + $risk.justification + ".";'
+  'return "Expected cost without protection: " + formatHundredths($risk.expectedWithout) + " CU; with protection: " + formatHundredths($risk.expectedWith) + " CU. Justified choice: " + $risk.justification + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -178,8 +178,20 @@ function explain(slots, solution) {
         ? 'Both options survive the risk rule, so the lower expected cost is the justified choice.'
         : solution.acceptable.with
           ? 'Without protection the adverse scenario exceeds the limit, so the protective measure is the only option that survives the hard risk rule.'
-          : 'Only the option without protection survives the risk rule, so it is the justified choice.'
+          : 'Only the option without protection survives the risk rule, so it is the justified choice.',
+    `Under the hard risk rule, the justified choice is ${{
+      with: 'the protective measure',
+      without: 'the option without protection',
+      neither: 'neither option, because both violate the hard risk rule'
+    }[solution.choice]}.`
   ];
+}
+
+function verifyPrinted(parsedSlots, solution, printedText) {
+  return (
+    printedText.includes(formatHundredths(solution.expected.without)) &&
+    printedText.includes(formatHundredths(solution.expected.with))
+  );
 }
 
 export const unit = 5;
@@ -194,6 +206,10 @@ export const cases = [
     render,
     wires: WIRES,
     compute: COMPUTE,
-    explain
+    explain,
+    printedAnswerStatus: 'alternative',
+    printedAnswerReason:
+      'the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.',
+    verifyPrinted
   }
 ];

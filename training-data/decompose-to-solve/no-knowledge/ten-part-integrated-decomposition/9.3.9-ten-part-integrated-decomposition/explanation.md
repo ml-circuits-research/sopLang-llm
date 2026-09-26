@@ -7,13 +7,14 @@
 3. Elapsed time is the waves only: 7 waves at 4 minutes plus the setup 14 and the buffer 10 give 52 minutes, which is compared with the 62-minute deadline (SP5-SP6, SP9).
 4. Cost is the fixed charge plus the rate per pre-loss unit: 41 plus 1.99 times 177.5568 gives 394.34 cost units, compared with the budget 415.13 (SP7, SP9).
 5. The three hard constraints are recombined as a conjunction: the physical capacity fails, the deadline holds, the budget holds, so the overall verdict is not feasible (SP8, SP10).
-6. The printed cost is a two-decimal rounding of a charge the source computed from an unrounded rate, so it sits inside the rounding band of the printed rate rather than at the value the printed rate yields.
+6. The cost applies the stated per-unit rate to the pre-loss demand, the one quantity that every capacity and variable-cost step shares.
+7. The printed cost is a two-decimal rounding of a charge the source computed from an unrounded rate, so it sits inside the rounding band of the printed rate rather than at the value the printed rate yields.
 
 **Source answer.** The plan is not feasible. Its key summaries are 177.6 pre-loss standard units, 13 batches, 52 minutes, and 395.13 cost units. This ten-part decomposition works because each intermediate output has a clear semantic type and is reused only where relevant. — the statement prints the per-unit rate rounded to two decimals while the source computed the printed cost from an unrounded rate, so the printed cost agrees with the arithmetic the statement determines only inside the printed rate's rounding band. The shipped answer is computed from the statement, and this example is `computed_verified` rather than `exact_verified`.
 
 ## Result
 
-**Answer.** The plan is not feasible. Its key summaries are 177.6 pre-loss standard units, 13 batches, 52 minutes, and 394.34 cost units. The cost applies the stated per-unit rate to the pre-loss demand, the one quantity that every capacity and variable-cost step shares.
+**Answer.** not feasible: 177.6 pre-loss standard units, 13 batches, 52 minutes, 394.34 cost units.
 
 **Verification.** computed_verified: the executed circuit produced this answer, and the family computation reproduced it from the statement. The independence limitation of this class is stated in `report.md`.
 

@@ -7,3 +7,4 @@
 7: container plans - store built in stages, store patched by upsert, kept-shipments query (2026-09-25)
 8: dv8 structure - the bloated book-family compute bodies become small multi-wire plans; statements/oracles/answers unchanged (2026-09-25)
 10: revert - the canonical generator returns to the dv7 monolithic book bodies (the measured best, 460/705); the dv8 modular arm (448/705) and the dv9 zero-book tranche (428/705) stay recorded as measured arms (2026-09-26)
+11: phrase compression - decompose-to-solve and common-sense answer strings shrink to value-bearing tokens; the removed prose moves into the explanation, and the families ship the computed answer as the oracle (book prose kept as reference) (2026-09-26)

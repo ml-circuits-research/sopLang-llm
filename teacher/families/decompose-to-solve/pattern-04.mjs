@@ -49,14 +49,14 @@ function solve(slots) {
 }
 
 function render(solution) {
-  return `The earliest safe completion time is ${solution.minutes} minutes, so the plan is ${solution.feasible ? 'feasible' : 'not feasible'}. The critical insight is that B and C are parallel branches whose maximum duration controls the join.`;
+  return `${solution.minutes} minutes: ${solution.feasible ? 'feasible' : 'not feasible'}.`;
 }
 
 const COMPUTE = [
   'const slots = $slots;',
   'const joinMinutes = Math.max(slots.bMinutes, slots.cMinutes);',
   'const minutes = slots.aMinutes + joinMinutes + slots.dMinutes + slots.eMinutes + slots.bufferMinutes;',
-  'return "The earliest safe completion time is " + minutes + " minutes, so the plan is " + (minutes <= slots.limitMinutes ? "feasible" : "not feasible") + ". The critical insight is that B and C are parallel branches whose maximum duration controls the join.";'
+  'return minutes + " minutes: " + (minutes <= slots.limitMinutes ? "feasible" : "not feasible") + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -64,8 +64,13 @@ function explain(slots, solution) {
     `The chain starts with A (${slots.aMinutes} minutes), and B and C run in parallel after it, so only the longer branch matters: max(${slots.bMinutes}, ${slots.cMinutes}) = ${solution.joinMinutes} minutes.`,
     `The join D (${slots.dMinutes} minutes) can start once both branches finish, and E (${slots.eMinutes} minutes) follows D.`,
     `Adding the mandatory buffer of ${slots.bufferMinutes} minutes gives ${slots.aMinutes} + ${solution.joinMinutes} + ${slots.dMinutes} + ${slots.eMinutes} + ${slots.bufferMinutes} = ${solution.minutes} minutes.`,
-    `Comparing that earliest safe time with the limit of ${slots.limitMinutes} minutes makes the plan ${solution.feasible ? 'feasible' : 'not feasible'}; the mentioned workload count is a distractor because the durations already include it.`
+    `Comparing that earliest safe time with the limit of ${slots.limitMinutes} minutes makes the plan ${solution.feasible ? 'feasible' : 'not feasible'}; the mentioned workload count is a distractor because the durations already include it.`,
+    `The critical insight is that B and C are parallel branches whose maximum duration controls the join.`
   ];
+}
+
+function verifyPrinted(parsedSlots, solution, printedText) {
+  return printedText.includes(`${solution.minutes} minutes`) && printedText.includes(solution.feasible ? 'feasible' : 'not feasible');
 }
 
 export const unit = 4;
@@ -79,6 +84,10 @@ export const cases = [
     solve,
     render,
     compute: COMPUTE,
-    explain
+    explain,
+    printedAnswerStatus: 'alternative',
+    printedAnswerReason:
+      'the source prints the answer in a prose sentence; the shipped answer keeps only the value-bearing tokens, and the removed prose moves into the explanation.',
+    verifyPrinted
   }
 ];
