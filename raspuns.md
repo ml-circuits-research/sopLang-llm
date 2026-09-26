@@ -75,3 +75,20 @@ Ordinea masurata: dv7 460 (65.2%) > dv8 448 (63.5%) > dv9 428 (60.7%). Generator
 corpurile dv7 (VERSION 10, rebuild + verify OK + export 9935 + suita 382/382). Concluzia: restructurarea
 corpurilor existente nu misca cele doua carti; urmatorul brat are nevoie de o alta ipoteza (comanda
 dedicata de lant/rata, sau simplificarea enunturilor).
+
+## Status — 2026-09-26, 09:00Z: exp-024 (dv11) antreneaza dupa o noapte grea
+
+Problema de noapte: cache-ul de pagini (99 GiB) bloca pool-ul unificat al GB10, asa ca
+guard-ul de memorie oprea exp-024 la pasul 0 si 7 desi host-ul avea 80-111 GiB disponibili.
+Am reparat in trei locuri si totul e comis:
+1. cache-squeeze.sh in skills/night-orchestration: detecteaza semnatura (driver free < 48 GiB
+   cu host disponibil >= 48) si stoarce cache-ul atingand pagini anonime la pas de 4K; ruleaza
+   automat in preflight si apare in health-check.
+2. Guard-ul de memorie (training/python/sft_train.py): pragul se judeca acum pe MemAvailable
+   (care numara cache-ul recuperabil), nu pe citirea soferului care exclude cache-ul; DS009
+   actualizat. A doua problema a noptii: doua antrenori rulau simultan (linia veche reinviata
+   prin resume + lansarea noua) - am ucis linia veche; una singura ruleaza acum.
+3. Setul de date e dv11 (compresia formularii celor doua carti la zero) - verify OK, export
+   9935, suita 382/382. exp-024 (Qwen3-1.7B) antreneaza pe el; holdout-ul vine ~13:45Z.
+
+Seriile masurate pana acum: dv7 460/705 (65.2%) > dv8 448 (63.5%) > dv9 428 (60.7%).
