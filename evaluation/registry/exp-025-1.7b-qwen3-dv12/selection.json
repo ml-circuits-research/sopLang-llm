@@ -1,0 +1,103 @@
+{
+  "experiment": "exp-025-1.7b-qwen3-dv12",
+  "slice": "validation",
+  "items": 339,
+  "winner": "checkpoint-450",
+  "rows": [
+    {
+      "checkpoint": "checkpoint-150",
+      "step": 150,
+      "gguf": null,
+      "metrics": {
+        "items": 339,
+        "classes": {
+          "reused": 339
+        },
+        "rates": {
+          "oracle_match": 0.702065,
+          "parse_validity": 1,
+          "graph_validity": 0.99115,
+          "runtime_completion": 0.926254
+        }
+      },
+      "planSplit": null,
+      "reused": true
+    },
+    {
+      "checkpoint": "checkpoint-300",
+      "step": 300,
+      "gguf": null,
+      "metrics": {
+        "items": 339,
+        "classes": {
+          "reused": 339
+        },
+        "rates": {
+          "oracle_match": 0.949853,
+          "parse_validity": 1,
+          "graph_validity": 1,
+          "runtime_completion": 0.988201
+        }
+      },
+      "planSplit": null,
+      "reused": true
+    },
+    {
+      "checkpoint": "checkpoint-450",
+      "step": 450,
+      "gguf": "/home/salboaie/work/sopLang-llm/evaluation/registry/exp-025-1.7b-qwen3-dv12/gguf/checkpoint-450.gguf",
+      "metrics": {
+        "items": 339,
+        "classes": {
+          "reused": 339
+        },
+        "rates": {
+          "oracle_match": 0.952802,
+          "parse_validity": 1,
+          "graph_validity": 1,
+          "runtime_completion": 0.99115
+        }
+      },
+      "planSplit": null,
+      "reused": true
+    },
+    {
+      "checkpoint": "checkpoint-600",
+      "step": 600,
+      "gguf": null,
+      "metrics": {
+        "items": 339,
+        "classes": {
+          "reused": 339
+        },
+        "rates": {
+          "oracle_match": 0.952802,
+          "parse_validity": 1,
+          "graph_validity": 1,
+          "runtime_completion": 0.9941
+        }
+      },
+      "planSplit": null,
+      "reused": true
+    },
+    {
+      "checkpoint": "checkpoint-660",
+      "step": 660,
+      "gguf": null,
+      "metrics": {
+        "items": 339,
+        "classes": {
+          "reused": 339
+        },
+        "rates": {
+          "oracle_match": 0.952802,
+          "parse_validity": 1,
+          "graph_validity": 1,
+          "runtime_completion": 0.9941
+        }
+      },
+      "planSplit": null,
+      "reused": true
+    }
+  ]
+}

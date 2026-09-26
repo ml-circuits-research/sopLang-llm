@@ -1,0 +1,58 @@
+{
+  "experiment": "exp-025-1.7b-qwen3-dv12",
+  "slice": {
+    "name": "holdout",
+    "spec": "holdout",
+    "source": "/home/salboaie/work/sopLang-llm/training-data/<book>/eval/**/solution.sop",
+    "count": 705,
+    "books": null,
+    "limit": null,
+    "itemsSha256": "b30551d38730be82ddcd3bb33b2bb0319f42ed1251470a25b74e29ba6e4ce069"
+  },
+  "checkpoint": {
+    "gguf": "evaluation/registry/exp-025-1.7b-qwen3-dv12/gguf/checkpoint-450.gguf"
+  },
+  "model": null,
+  "base": "http://127.0.0.1:8080",
+  "decoding": {
+    "temperature": 0,
+    "maxTokens": 2048,
+    "stream": false,
+    "timeoutMs": 600000,
+    "concurrency": 4,
+    "attemptsPerItem": 1,
+    "transportRetries": 1
+  },
+  "chatProfile": {
+    "id": "compiled-plan-chat-4",
+    "systemPromptSha256": "c2967d80d31eeb8a8f1605e75ece90edd16a0f0338a7b24bf15442bbf9287a74"
+  },
+  "base_model_manifest": {
+    "path": "/home/salboaie/work/sopLang-llm/training/environment/base-model-qwen3-17b.json"
+  },
+  "training": {
+    "createdUtc": "2026-09-26T13:29:22Z",
+    "finishedUtc": "2026-09-26T16:45:07Z",
+    "epochs": 2
+  },
+  "capabilityProbes": {
+    "profile": "capability-probes-1.0.0",
+    "systemPromptSha256": "3f0ff0bee57e51871d4c09dcf8e3e6ffb0ab414c41100199873dfd0fc5c69fe9",
+    "items": 10,
+    "passed": 0
+  },
+  "dataset": {
+    "exportManifest": "training/data/export-manifest.json",
+    "snapshot": "8aaf6b3aa4d0b32c8e63d3676584a56f082514c07fe70368981f85796827abe8",
+    "dataVersion": {
+      "number": "12",
+      "label": "statement simplification: the two zero books state their numbers plainly without distractors; parse updated in lockstep"
+    },
+    "validationSlice": "training/data/validation-slice.json"
+  },
+  "environment": {
+    "manifest": "training/environment/environment-manifest.json",
+    "sha256": "cacd40e3d24b0c41f44061afd77af9f7b8fdece0bf959dcaa2f577c4873fe180"
+  },
+  "startedAt": "2026-09-26T16:56:19.065Z"
+}
