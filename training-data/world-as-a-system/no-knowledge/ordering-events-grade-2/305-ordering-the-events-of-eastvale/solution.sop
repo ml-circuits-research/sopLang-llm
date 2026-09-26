@@ -29,30 +29,36 @@
   "crossDomain": null
 }
 
-@edges jsEval
+@order jsEval
+const slots = $slots;
 const edges = new Map();
-for (const pair of $slots.pairs) {
+for (const pair of slots.pairs) {
   if (!edges.has(pair.earlier)) {
     edges.set(pair.earlier, []);
   }
   edges.get(pair.earlier).push(pair.later);
 }
-return edges;
-
-@order jsEval
 const reaches = (from, to) => {
-  const seen = new Set();
-  const walk = (node) => {
-    if (seen.has(node)) return false;
-    seen.add(node);
-    return ($edges.get(node) || []).some((next) => next === to || walk(next));
-  };
-  return walk(from);
+  const seen = new Set([from]);
+  const queue = [from];
+  while (queue.length > 0) {
+    const node = queue.shift();
+    for (const next of edges.get(node) || []) {
+      if (next === to) {
+        return true;
+      }
+      if (!seen.has(next)) {
+        seen.add(next);
+        queue.push(next);
+      }
+    }
+  }
+  return false;
 };
-const earlier = reaches($slots.must.first, $slots.must.second) ? $slots.must.first : reaches($slots.must.second, $slots.must.first) ? $slots.must.second : null;
+const earlier = reaches(slots.must.first, slots.must.second) ? slots.must.first : reaches(slots.must.second, slots.must.first) ? slots.must.second : null;
 probe(earlier !== null, "the first questioned pair must be ordered by the stated facts");
-probe(!reaches($slots.determined.first, $slots.determined.second) && !reaches($slots.determined.second, $slots.determined.first), "the second questioned pair must stay undetermined");
-return { earlier: earlier, later: earlier === $slots.must.first ? $slots.must.second : $slots.must.first };
+probe(!reaches(slots.determined.first, slots.determined.second) && !reaches(slots.determined.second, slots.determined.first), "the second questioned pair must stay undetermined");
+return { earlier: earlier, later: earlier === slots.must.first ? slots.must.second : slots.must.first };
 
 @cross jsEval
 const describeCrossDomain = function describeCrossDomain(check) {

@@ -11,7 +11,7 @@
   "required": 3
 }
 
-@day jsEval
+@answer jsEval
 const slots = $slots;
 const facts = (typeof $facts === "object" && $facts !== null) ? $facts : JSON.parse(String($facts));
 const days = facts.weekdays;
@@ -26,8 +26,5 @@ while (counted < slots.required) {
   index = (index + 1) % days.length;
   if (working.includes(days[index])) { counted += 1; }
 }
-return days[index];
-
-@answer jsEval
-return $day + ".";
+return days[index] + ".";
 

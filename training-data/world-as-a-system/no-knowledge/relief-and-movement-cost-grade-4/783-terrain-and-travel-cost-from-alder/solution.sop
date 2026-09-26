@@ -34,18 +34,16 @@
   "limit": 11
 }
 
-@scored jsEval
-const scored = $slots.routes.map((route) => {
+@best jsEval
+const slots = $slots;
+const scored = slots.routes.map((route) => {
   let energy = 0;
   for (const terrain of route.terrains) {
-    energy += $slots.costs[terrain];
+    energy += slots.costs[terrain];
   }
   return { name: route.name, energy };
 });
-return scored;
-
-@best jsEval
-const feasible = $scored.filter((route) => route.energy <= $slots.limit);
+const feasible = scored.filter((route) => route.energy <= slots.limit);
 probe(feasible.length > 0, "at least one listed route must stay within the energy limit");
 let best = feasible[0];
 for (const route of feasible.slice(1)) {

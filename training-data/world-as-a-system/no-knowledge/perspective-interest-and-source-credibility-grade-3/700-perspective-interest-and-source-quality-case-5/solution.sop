@@ -58,7 +58,7 @@ const renderCrossDomain = function renderCrossDomain(checks) {
 const slots = $slots;
 return { suffix: renderCrossDomain(slots.crossDomain) };
 
-@roles jsEval
+@answer jsEval
 const slots = $slots;
 const roleTests = [
   { role: "secondhand", pattern: /rumor|hearsay|second-hand|secondhand|repeating/ },
@@ -68,21 +68,16 @@ const roleTests = [
 const roleOf = (description) => {
   const text = String(description).toLowerCase();
   for (const test of roleTests) {
-    if (test.pattern.test(text)) { return test.role; }
+    if (test.pattern.test(text)) {
+      return test.role;
+    }
   }
   throw new Error("the source description states no access to the claim: " + description);
 };
-return slots.sources.map((source) => ({ id: source.id, description: source.description, role: roleOf(source.description) }));
-
-@selection jsEval
-const roles = $roles;
+const roles = slots.sources.map((source) => ({ id: source.id, description: source.description, role: roleOf(source.description) }));
 const best = roles.find((source) => source.role === "evidence");
 const cautious = roles.find((source) => source.role === "secondhand");
 const claim = /estimates?\s+(?:the\s+)?([a-z]+)/.exec(String(best.description).toLowerCase());
-return { best, cautious, claim };
-
-@answer jsEval
-const best = $selection.best, cautious = $selection.cautious, claim = $selection.claim;
 const main = "Source " + best.id + " is best positioned for the " + claim[1] + " estimate; Source " + cautious.id + " should be treated most cautiously for that numerical claim.";
 return $cross.suffix === "" ? main : main + " " + $cross.suffix;
 

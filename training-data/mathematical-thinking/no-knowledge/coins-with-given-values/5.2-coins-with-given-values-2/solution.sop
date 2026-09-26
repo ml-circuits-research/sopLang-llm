@@ -20,12 +20,12 @@ for (let countSecond = Math.floor(slots.total / slots.second); countSecond >= 0;
     }
   }
 }
+if (best === null) {
+  throw new Error(`no combination of ${slots.first} and ${slots.second} reaches ${slots.total}`);
+}
 return best;
 
 @answer jsEval
 const coin = (count, value) => count + " coin" + (count === 1 ? "" : "s") + " worth " + value + " lei";
-if ($best === null) {
-  throw new Error(`no combination of ${$slots.first} and ${$slots.second} reaches ${$slots.total}`);
-}
 return coin($best.countFirst, $slots.first) + " and " + coin($best.countSecond, $slots.second) + ".";
 

@@ -24,7 +24,9 @@ const matches = (value, predicate) => {
   if (predicate.op === "lacks") { return !String(value).includes(predicate.word); }
   throw new Error("unsupported predicate " + predicate.op);
 };
-return { certain: slots.candidates.every((value) => matches(value, slots.predicate)), possible: slots.candidates.some((value) => matches(value, slots.predicate)) };
+const certain = slots.candidates.every((value) => matches(value, slots.predicate));
+const possible = slots.candidates.some((value) => matches(value, slots.predicate));
+return { certain, possible };
 
 @answer jsEval
 if ($verdict.certain) { return "Yes, it is certainly " + $slots.property + "."; }

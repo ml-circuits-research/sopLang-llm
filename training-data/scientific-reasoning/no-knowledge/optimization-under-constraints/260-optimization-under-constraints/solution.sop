@@ -46,8 +46,13 @@
   ]
 }
 
-@covers jsEval
+@choice jsEval
 const slots = $slots;
+const printedName = (name) => {
+  const key = String(name).toLowerCase();
+  const renamed = {"protecting of the spring": "protecting the spring", "protecting of the eggs": "protecting the eggs", "changing of orientation": "changing the orientation", "increasing the contrast": "increasing of the contrast", "adding insulation": "adding of insulation", "close the lid": "closing of the lid", "add a protein source": "adding a protein source", "add vegetables": "adding vegetables"};
+  return Object.prototype.hasOwnProperty.call(renamed, key) ? renamed[key] : name;
+};
 const usable = slots.options.filter((option) => !option.undesired.some((effect) => slots.forbidden.includes(effect)));
 probe(usable.length > 0, "at least one option must avoid every forbidden effect");
 const covers = [];
@@ -58,16 +63,8 @@ for (let mask = 1; mask < 2 ** usable.length; mask += 1) {
   covers.push({ chosen: chosen, cost: chosen.reduce((total, option) => total + option.cost, 0) });
 }
 probe(covers.length > 0, "some combination of usable options must cover every target condition");
-return covers;
-
-@choice jsEval
-const printedName = (name) => {
-  const key = String(name).toLowerCase();
-  const renamed = {"protecting of the spring": "protecting the spring", "protecting of the eggs": "protecting the eggs", "changing of orientation": "changing the orientation", "increasing the contrast": "increasing of the contrast", "adding insulation": "adding of insulation", "close the lid": "closing of the lid", "add a protein source": "adding a protein source", "add vegetables": "adding vegetables"};
-  return Object.prototype.hasOwnProperty.call(renamed, key) ? renamed[key] : name;
-};
-const cheapest = Math.min(...$covers.map((cover) => cover.cost));
-const winners = $covers.filter((cover) => cover.cost === cheapest);
+const cheapest = Math.min(...covers.map((cover) => cover.cost));
+const winners = covers.filter((cover) => cover.cost === cheapest);
 probe(winners.length === 1, "the stated prices must leave exactly one cheapest combination, not " + winners.length);
 return { names: winners[0].chosen.map((option) => printedName(option.name)), cost: cheapest };
 

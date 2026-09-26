@@ -55,64 +55,58 @@
   ]
 }
 
-@seed jsEval
-const trueKeys = new Set($slots.facts.filter((fact) => fact.positive).map((fact) => fact.key));
-const falseKeys = new Set($slots.facts.filter((fact) => !fact.positive).map((fact) => fact.key));
-return { trueKeys: trueKeys, falseKeys: falseKeys };
-
 @derive jsEval
+const slots = $slots;
+const trueKeys = new Set(slots.facts.filter((fact) => fact.positive).map((fact) => fact.key));
+const falseKeys = new Set(slots.facts.filter((fact) => !fact.positive).map((fact) => fact.key));
 const derived = [];
-const holds = (condition) => condition.positive ? $seed.trueKeys.has(condition.key) || derived.includes(condition.key) : $seed.falseKeys.has(condition.key);
+const derivedKeys = new Set();
+const holds = (condition) => condition.positive ? trueKeys.has(condition.key) || derivedKeys.has(condition.key) : falseKeys.has(condition.key);
 let changed = true;
 while (changed) {
   changed = false;
-  for (const rule of $slots.rules) {
-    const satisfied = !($seed.trueKeys.has(rule.consequent) || derived.includes(rule.consequent)) && (rule.connector === "OR" ? rule.conditions.some(holds) : rule.conditions.every(holds));
+  for (const rule of slots.rules) {
+    if (trueKeys.has(rule.consequent) || derivedKeys.has(rule.consequent)) {
+      continue;
+    }
+    const satisfied = rule.connector === "OR" ? rule.conditions.some(holds) : rule.conditions.every(holds);
     if (satisfied) {
       derived.push(rule.consequent);
+      derivedKeys.add(rule.consequent);
       changed = true;
     }
   }
 }
 probe(derived.length > 0, "at least one rule must fire on the given facts");
-return derived;
+const heads = slots.rules.map((rule) => rule.consequent);
+const givenHeads = heads.filter((head) => trueKeys.has(head));
+const missingHeads = heads.filter((head) => !trueKeys.has(head) && !derivedKeys.has(head));
+return { derived: derived, givenHeads: givenHeads, missingHeads: missingHeads };
 
-@heads jsEval
-const heads = $slots.rules.map((rule) => rule.consequent);
-return { givenHeads: heads.filter((head) => $seed.trueKeys.has(head)), missingHeads: heads.filter((head) => !$seed.trueKeys.has(head) && !$derive.includes(head)) };
-
-@chain jsEval
-let chain = true;
-for (let index = 1; index < $derive.length; index += 1) {
-  const rule = $slots.rules.filter((candidate) => candidate.consequent === $derive[index])[0];
-  if (!rule.conditions.some((condition) => $derive.slice(0, index).includes(condition.key))) {
-    chain = false;
-  }
-}
-return chain;
-
-@phrases jsEval
+@appraisal jsEval
+const slots = $slots;
 const names = { flooding: "flooding", "road closure": "road closure", warning: "a warning", "field muddy": "the field becomes muddy", "bus rerouting": "bus rerouting" };
 const nameOf = (key) => { const name = names[key]; if (name === undefined) { throw new Error("unknown consequence " + key); } return name; };
 const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 const joinList = (items) => items.length === 1 ? items[0] : items.length === 2 ? items[0] + " and " + items[1] : items.slice(0, -1).join(", ") + ", and " + items[items.length - 1];
-const deduced = capitalize(joinList($derive.map(nameOf)));
-const clauses = $derive.map((key) => key === "warning" ? "the warning follows from the working siren" : capitalize(nameOf(key)));
-return { deduced: deduced, clauses: clauses };
-
-@appraisal jsEval
-const names = { flooding: "flooding", "road closure": "road closure", warning: "a warning", "field muddy": "the field becomes muddy", "bus rerouting": "bus rerouting" };
-const nameOf = (key) => { const name = names[key]; if (name === undefined) { throw new Error("unknown consequence " + key); } return name; };
-const joinList = (items) => items.length === 1 ? items[0] : items.length === 2 ? items[0] + " and " + items[1] : items.slice(0, -1).join(", ") + ", and " + items[items.length - 1];
+const deduced = capitalize(joinList($derive.derived.map(nameOf)));
 let main;
-if ($heads.givenHeads.length > 0) {
-  main = $phrases.deduced + " can be deduced; " + nameOf($heads.givenHeads[0]) + " is already given as a fact.";
-} else if ($slots.rules.some((rule) => rule.connector === "OR")) {
-  main = $phrases.clauses.slice(0, -1).join(", ") + ($phrases.clauses.length === 1 ? "" : ", and ") + $phrases.clauses[$phrases.clauses.length - 1] + ".";
-} else if ($heads.missingHeads.length > 0) {
-  main = $phrases.deduced + " can be deduced, but " + joinList($heads.missingHeads.map(nameOf)) + " cannot be deduced.";
+if ($derive.givenHeads.length > 0) {
+  main = deduced + " can be deduced; " + nameOf($derive.givenHeads[0]) + " is already given as a fact.";
+} else if (slots.rules.some((rule) => rule.connector === "OR")) {
+  const clauses = $derive.derived.map((key) => key === "warning" ? "the warning follows from the working siren" : capitalize(nameOf(key)));
+  main = clauses.slice(0, -1).join(", ") + (clauses.length === 1 ? "" : ", and ") + clauses[clauses.length - 1] + ".";
+} else if ($derive.missingHeads.length > 0) {
+  main = deduced + " can be deduced, but " + joinList($derive.missingHeads.map(nameOf)) + " cannot be deduced.";
 } else {
-  main = $phrases.deduced + " can" + ($chain ? " all" : "") + " be deduced.";
+  let chain = true;
+  for (let index = 1; index < $derive.derived.length; index += 1) {
+    const rule = slots.rules.filter((candidate) => candidate.consequent === $derive.derived[index])[0];
+    if (!rule.conditions.some((condition) => $derive.derived.slice(0, index).includes(condition.key))) {
+      chain = false;
+    }
+  }
+  main = deduced + " can" + (chain ? " all" : "") + " be deduced.";
 }
 return { main: main };
 

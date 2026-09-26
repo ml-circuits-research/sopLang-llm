@@ -41,7 +41,7 @@ const derivative = slots.sources.filter((source) => !isSound(source));
 probe(derivative.length === 1, "one source must be the late or derivative account");
 return { sound: sound, derivative: derivative };
 
-@value jsEval
+@appraisal jsEval
 const valueOf = (claim) => {
   const counted = /(\d+)\s+([a-z]+)/.exec(claim);
   if (counted !== null) {
@@ -52,18 +52,15 @@ const valueOf = (claim) => {
 };
 const values = $split.sound.map((source) => valueOf(source.claim));
 const outlier = valueOf($split.derivative[0].claim);
-return { values: values, outlier: outlier, texts: values.map((value) => value.text) };
-
-@appraisal jsEval
-const texts = $value.texts;
+const texts = values.map((value) => value.text);
 let main;
 if (texts.every((text) => text === texts[0])) {
   main = texts[0] + " is better supported, while remaining a historical conclusion rather than absolute proof.";
 } else {
-  const numbers = $value.values.map((value) => value.number);
+  const numbers = values.map((value) => value.number);
   const low = Math.min.apply(null, numbers);
   const high = Math.max.apply(null, numbers);
-  main = "An arrival count near " + low + "\u2013" + high + " " + $value.values[0].unit + " is better supported than " + $value.outlier.number + ".";
+  main = "An arrival count near " + low + "\u2013" + high + " " + values[0].unit + " is better supported than " + outlier.number + ".";
 }
 return { main: main };
 

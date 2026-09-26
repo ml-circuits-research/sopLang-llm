@@ -12,7 +12,7 @@
   ]
 }
 
-@stats jsEval
+@answer jsEval
 const slots = $slots;
 const sorted = [...slots.values].sort((left, right) => left - right);
 const median = (list) => { const half = Math.floor(list.length / 2); return list.length % 2 === 1 ? list[half] : (list[half - 1] + list[half]) / 2; };
@@ -26,20 +26,13 @@ probe(suspicious.length <= 1, "the series must show at most one value beyond the
 probe(Number.isFinite(low) && Number.isFinite(high) && spread >= 0, "the fences of the series must be finite and ordered");
 probe(center >= low && center <= high, "the robust center must lie between the first and third quartiles");
 probe(suspicious.length === 0 || suspicious[0] !== center, "an isolated point must differ from the robust center");
-return { center: center, suspicious: suspicious };
-
-@diagnosis jsEval
-const slots = $slots;
 const steps = slots.values.slice(1).map((value, index) => value - slots.values[index]);
 const drifting = steps.every((step) => step === steps[0] && step !== 0);
-return { center: $stats.center, suspicious: $stats.suspicious, drifting: drifting };
-
-@answer jsEval
-if ($diagnosis.suspicious.length === 1) {
-  return "The series contains an isolated suspicious point: " + $diagnosis.suspicious[0] + "; verification must precede any correction. A robust center is the median " + $diagnosis.center + ".";
+if (suspicious.length === 1) {
+  return "The series contains an isolated suspicious point: " + suspicious[0] + "; verification must precede any correction. A robust center is the median " + center + ".";
 }
-if (!$diagnosis.drifting) {
-  return "The series shows no evident outlier in the model; verification must precede any correction. A robust center is the median " + $diagnosis.center + ".";
+if (!drifting) {
+  return "The series shows no evident outlier in the model; verification must precede any correction. A robust center is the median " + center + ".";
 }
-return "The diagnosis of the series: a gradual drift, not a single outlier; verification must precede any correction. A robust center is the median " + $diagnosis.center + ", but the series must also be analyzed in temporal order.";
+return "The diagnosis of the series: a gradual drift, not a single outlier; verification must precede any correction. A robust center is the median " + center + ", but the series must also be analyzed in temporal order.";
 

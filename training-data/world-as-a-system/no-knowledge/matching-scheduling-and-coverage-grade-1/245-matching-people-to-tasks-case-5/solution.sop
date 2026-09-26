@@ -75,24 +75,31 @@ const renderCrossDomain = function renderCrossDomain(checks) {
 const slots = $slots;
 return { suffix: renderCrossDomain(slots.crossDomain) };
 
-@assignment jsEval
+@answer jsEval
 const slots = $slots;
-const used = new Set(), assignment = new Map();
+const used = new Set();
+const assignment = new Map();
 const search = (index) => {
-  if (index === slots.students.length) { return true; }
+  if (index === slots.students.length) {
+    return true;
+  }
   const student = slots.students[index];
-  for (const task of slots.choices[student]) {
-    if (used.has(task)) { continue; }
-    used.add(task); assignment.set(student, task);
-    if (search(index + 1)) { return true; }
-    used.delete(task); assignment.delete(student);
+  const allowed = slots.choices[student];
+  for (const task of allowed) {
+    if (used.has(task)) {
+      continue;
+    }
+    used.add(task);
+    assignment.set(student, task);
+    if (search(index + 1)) {
+      return true;
+    }
+    used.delete(task);
+    assignment.delete(student);
   }
   return false;
 };
 probe(search(0), "the allowed tasks must admit at least one complete assignment");
-return { assignment };
-
-@answer jsEval
-const main = "Valid assignment: " + $slots.students.map((student) => student + "→" + $assignment.assignment.get(student)).join(", ") + ".";
+const main = "Valid assignment: " + slots.students.map((student) => student + "→" + assignment.get(student)).join(", ") + ".";
 return $cross.suffix === "" ? main : main + " " + $cross.suffix;
 

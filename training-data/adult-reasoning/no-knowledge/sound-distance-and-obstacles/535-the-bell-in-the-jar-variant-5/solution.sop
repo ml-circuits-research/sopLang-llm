@@ -8,26 +8,23 @@
   "lampSeen": true
 }
 
-@medium jsEval
-const slots = $slots;
-if (slots.soundNeedsMedium && !slots.soundHeard && slots.lampSeen) {
-  return "Sound needed air; light did not.";
-} else if (slots.soundHeard) {
-  return "Sound was carried by the air that was still in the jar.";
-} else {
-  return "Neither sound nor light crossed the jar.";
-}
-
-@bell jsEval
-const slots = $slots;
-if (slots.motionSeen && !slots.soundHeard) {
-  return "The bell is not “broken”: the motion is seen.";
-} else if (slots.motionSeen && slots.soundHeard) {
-  return "The bell works: it moves and it is heard.";
-} else {
-  return "The bell does not move, so the recording does not show it working.";
-}
-
 @answer jsEval
-return $medium + " " + $bell;
+const slots = $slots;
+let mediumClause;
+if (slots.soundNeedsMedium && !slots.soundHeard && slots.lampSeen) {
+  mediumClause = "Sound needed air; light did not.";
+} else if (slots.soundHeard) {
+  mediumClause = "Sound was carried by the air that was still in the jar.";
+} else {
+  mediumClause = "Neither sound nor light crossed the jar.";
+}
+let bellClause;
+if (slots.motionSeen && !slots.soundHeard) {
+  bellClause = "The bell is not “broken”: the motion is seen.";
+} else if (slots.motionSeen && slots.soundHeard) {
+  bellClause = "The bell works: it moves and it is heard.";
+} else {
+  bellClause = "The bell does not move, so the recording does not show it working.";
+}
+return mediumClause + " " + bellClause;
 

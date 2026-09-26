@@ -15,7 +15,7 @@
   "claimUntouched": "heron"
 }
 
-@chain jsEval
+@answer jsEval
 const slots = $slots;
 const index = slots.chain.indexOf(slots.removed);
 const prey = slots.chain[index + 1];
@@ -30,8 +30,5 @@ const touchedClause = eater === slots.claimUntouched
 const extraClause = slots.chain.includes(slots.reason)
   ? slots.reason + " is one of the links of the given chain."
   : "Pond " + slots.reason + " is not in the chain — do not add it.";
-return { loseClause, touchedClause, extraClause };
-
-@answer jsEval
-return $chain.loseClause + " " + $chain.touchedClause + " " + $chain.extraClause;
+return loseClause + " " + touchedClause + " " + extraClause;
 

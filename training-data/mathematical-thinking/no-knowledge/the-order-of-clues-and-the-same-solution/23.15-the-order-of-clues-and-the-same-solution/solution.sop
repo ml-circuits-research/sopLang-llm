@@ -32,8 +32,10 @@ const matches = (value, predicate) => {
   if (predicate.op === "lacks") { return !String(value).includes(predicate.word); }
   throw new Error("unsupported predicate " + predicate.op);
 };
-const apply = (a, b) => slots.candidates.filter((value) => matches(value, a)).filter((value) => matches(value, b));
-return { first: apply(slots.clues[0], slots.clues[1]), second: apply(slots.clues[1], slots.clues[0]) };
+const keep = (candidates, predicate) => candidates.filter((value) => matches(value, predicate));
+const first = keep(keep(slots.candidates, slots.clues[0]), slots.clues[1]);
+const second = keep(keep(slots.candidates, slots.clues[1]), slots.clues[0]);
+return { first, second };
 
 @answer jsEval
 const same = $orders.first.length === $orders.second.length && $orders.first.every((value, index) => value === $orders.second[index]);

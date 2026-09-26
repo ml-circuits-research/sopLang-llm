@@ -15,19 +15,15 @@
   "radiatorOn": true
 }
 
-@temp jsEval
+@answer jsEval
 const slots = $slots;
 const drop = slots.midTemperature - slots.wallTemperature;
 const coldWall = drop > slots.coldWallDrop;
 const tempClause = coldWall
   ? slots.midTemperature + "−" + slots.wallTemperature + "=" + drop + ">" + slots.coldWallDrop + " cold wall"
   : slots.midTemperature + "−" + slots.wallTemperature + "=" + drop + "≤" + slots.coldWallDrop + " no cold wall";
-return { tempClause, coldWall };
-
-@humidity jsEval
-const slots = $slots;
 let humidityClause;
-if ($temp.coldWall && slots.humidityPercent >= slots.riskHumidity) {
+if (coldWall && slots.humidityPercent >= slots.riskHumidity) {
   humidityClause = slots.humidityPercent + "% + cold wall = condensation risk";
 } else if (slots.humidityPercent > slots.humidityHigh) {
   humidityClause = slots.humidityPercent + "% is above the " + slots.humidityLow + "–" + slots.humidityHigh + "% target";
@@ -36,10 +32,6 @@ if ($temp.coldWall && slots.humidityPercent >= slots.riskHumidity) {
 } else {
   humidityClause = slots.humidityPercent + "% is inside the " + slots.humidityLow + "–" + slots.humidityHigh + "% target";
 }
-return humidityClause;
-
-@act jsEval
-const slots = $slots;
 let actClause;
 if (slots.tiltHours >= slots.tiltLimit) {
   actClause = "Long tilt breaks the " + slots.airingMinutes + "-minute airing.";
@@ -48,8 +40,6 @@ if (slots.tiltHours >= slots.tiltLimit) {
 } else {
   actClause = "A wide " + slots.airingMinutes + "-minute airing with the radiator off is the gesture.";
 }
-return actClause;
-
-@answer jsEval
-return $temp.tempClause + "; " + $humidity + ". " + $act;
+const answer = tempClause + "; " + humidityClause + ". " + actClause;
+return answer;
 

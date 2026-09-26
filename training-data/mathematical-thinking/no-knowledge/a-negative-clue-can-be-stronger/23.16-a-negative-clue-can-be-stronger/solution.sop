@@ -24,7 +24,7 @@
   ]
 }
 
-@counts jsEval
+@strongest jsEval
 const slots = $slots;
 const matches = (value, predicate) => {
   if (predicate.op === "and") { return predicate.of.every((part) => matches(value, part)); }
@@ -39,12 +39,10 @@ const matches = (value, predicate) => {
   throw new Error("unsupported predicate " + predicate.op);
 };
 const keep = (candidates, predicate) => candidates.filter((value) => matches(value, predicate));
-return slots.clues.map((clue) => ({ text: clue.text, remaining: keep(slots.candidates, clue.predicate).length }));
-
-@strongest jsEval
 let best = null;
-for (const entry of $counts) {
-  if (best === null || entry.remaining < best.remaining) { best = entry; }
+for (const clue of slots.clues) {
+  const remaining = keep(slots.candidates, clue.predicate).length;
+  if (best === null || remaining < best.remaining) { best = { text: clue.text, remaining }; }
 }
 return best;
 

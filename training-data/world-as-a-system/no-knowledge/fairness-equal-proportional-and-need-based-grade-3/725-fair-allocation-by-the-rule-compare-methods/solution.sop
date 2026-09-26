@@ -56,45 +56,36 @@ const renderCrossDomain = function renderCrossDomain(checks) {
 const slots = $slots;
 return { suffix: renderCrossDomain(slots.crossDomain) };
 
-@proportional jsEval
+@answer jsEval
 const slots = $slots;
-const share = (weights) => {
+const count = slots.labels.length;
+const proportional = (weights) => {
   const total = weights.reduce((sum, weight) => sum + weight, 0);
   probe(total > 0, "the stated weights must sum to a positive total");
   return weights.map((weight) => (slots.fund * weight) / total);
 };
-return { byPopulation: share(slots.populations), byNeed: share(slots.needScores) };
-
-@guarantee jsEval
-const slots = $slots;
-const count = slots.labels.length;
-const remainder = slots.fund - slots.minimum * count;
-probe(remainder >= 0, "the stated minimum guarantees must not exceed the fund");
-return { amounts: slots.labels.map(() => slots.minimum + remainder / count) };
-
-@compare jsEval
-const slots = $slots;
-const highest = slots.needScores.indexOf(Math.max(...slots.needScores));
-const byNeed = $proportional.byNeed;
-const byEqual = slots.labels.map(() => slots.fund / slots.labels.length);
-probe(byNeed[highest] !== byEqual[highest], "the two compared allocations must not tie at the highest-need district");
-return { amounts: byNeed[highest] > byEqual[highest] ? byNeed : byEqual };
-
-@amounts jsEval
-const slots = $slots;
-const count = slots.labels.length;
+const equal = () => slots.labels.map(() => slots.fund / count);
 let amounts;
-if (slots.method === "equal") { amounts = slots.labels.map(() => slots.fund / count); }
-else if (slots.method === "population") { amounts = $proportional.byPopulation; }
-else if (slots.method === "need") { amounts = $proportional.byNeed; }
-else if (slots.method === "guarantee") { amounts = $guarantee.amounts; }
-else if (slots.method === "compare") { amounts = $compare.amounts; }
-else { throw new Error("unknown fairness principle"); }
+if (slots.method === "equal") {
+  amounts = equal();
+} else if (slots.method === "population") {
+  amounts = proportional(slots.populations);
+} else if (slots.method === "need") {
+  amounts = proportional(slots.needScores);
+} else if (slots.method === "guarantee") {
+  const remainder = slots.fund - slots.minimum * count;
+  probe(remainder >= 0, "the stated minimum guarantees must not exceed the fund");
+  amounts = slots.labels.map(() => slots.minimum + remainder / count);
+} else if (slots.method === "compare") {
+  const highest = slots.needScores.indexOf(Math.max(...slots.needScores));
+  const byNeed = proportional(slots.needScores);
+  const byEqual = equal();
+  probe(byNeed[highest] !== byEqual[highest], "the two compared allocations must not tie at the highest-need district");
+  amounts = byNeed[highest] > byEqual[highest] ? byNeed : byEqual;
+} else {
+  throw new Error("unknown fairness principle");
+}
 probe(amounts.length === count && amounts.every((amount) => Number.isFinite(amount)), "every district must receive a finite share");
-return { amounts };
-
-@answer jsEval
-const amounts = $amounts.amounts;
-const main = $slots.labels.map((label, index) => label + "=" + amounts[index].toFixed(2)).join(", ") + ".";
+const main = slots.labels.map((label, index) => label + "=" + amounts[index].toFixed(2)).join(", ") + ".";
 return $cross.suffix === "" ? main : main + " " + $cross.suffix;
 

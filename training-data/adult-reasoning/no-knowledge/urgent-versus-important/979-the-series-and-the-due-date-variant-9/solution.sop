@@ -26,7 +26,7 @@
   ]
 }
 
-@classified jsEval
+@answer jsEval
 const slots = $slots;
 const classify = (tag) => {
   if (/i\+u/.test(tag)) return "both";
@@ -36,18 +36,11 @@ const classify = (tag) => {
   throw new Error("the item tag " + tag + " does not name a cell of the grid");
 };
 const rank = { both: 0, important: 1, urgent: 2, neither: 3 };
-return slots.items.map((item) => {
+const ordered = slots.items.map((item) => {
   const cls = classify(item.tag);
   return { n: item.n, rank: rank[cls], label: cls === "urgent" ? "short/delegated" : slots.grid[cls] };
-});
-
-@ordered jsEval
-const slots = $slots;
-const ordered = $classified.sort((left, right) => left.rank - right.rank);
+}).sort((left, right) => left.rank - right.rank);
 probe(ordered[0].label === slots.grid.both, "the first chore must sit in the both-cells of the grid");
 probe(ordered[3].label === slots.grid.neither, "the last chore must sit in the neither cell of the grid");
-return ordered;
-
-@answer jsEval
-return $ordered.map((item) => "(" + item.n + ") " + item.label).join("; ") + ".";
+return ordered.map((item) => "(" + item.n + ") " + item.label).join("; ") + ".";
 

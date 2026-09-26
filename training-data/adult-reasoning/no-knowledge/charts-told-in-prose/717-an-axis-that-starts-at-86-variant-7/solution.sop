@@ -18,7 +18,7 @@
   "titleIsJudgement": true
 }
 
-@growth jsEval
+@answer jsEval
 const slots = $slots;
 const first = slots.values[0];
 const last = slots.values[5];
@@ -26,15 +26,11 @@ const difference = last - first;
 const doubled = first * 2;
 probe(doubled !== last, "a plotted endpoint that really doubled would carry no defect to report");
 const growth = first + " → " + last + " is +" + difference + ", not ×2 (that would be " + doubled + ").";
-return growth;
-
-@answer jsEval
-const slots = $slots;
 const axisClause = slots.cutAxis
   ? "A cut axis makes the slope look steep."
   : "The axis starts at zero, so the slope is honest.";
 const titleClause = slots.titleIsJudgement
   ? "The title is a judgement."
   : "The title is neutral.";
-return $growth + " " + axisClause + " " + titleClause;
+return growth + " " + axisClause + " " + titleClause;
 

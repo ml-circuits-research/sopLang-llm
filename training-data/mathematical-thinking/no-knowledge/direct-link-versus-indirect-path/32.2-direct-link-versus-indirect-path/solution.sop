@@ -19,32 +19,38 @@
   "to": "C"
 }
 
-@direct jsEval
-function edgeKey(a, b) { return a < b ? `${a}-${b}` : `${b}-${a}`; }
-return $slots.edges.some(([from, to]) => edgeKey(from, to) === edgeKey($slots.from, $slots.to));
-
-@neighbours jsEval
+@relation jsEval
 const slots = $slots;
+function edgeKey(a, b) { return a < b ? `${a}-${b}` : `${b}-${a}`; }
 function adjacency(nodes, edges) {
   const map = new Map(nodes.map((node) => [node, []]));
   for (const [a, b] of edges) { map.get(a).push(b); map.get(b).push(a); }
   for (const list of map.values()) list.sort();
   return map;
 }
-return adjacency(slots.nodes, slots.edges);
-
-@connected jsEval
-const previous = new Map([[$slots.from, null]]);
-const queue = [$slots.from];
-while (queue.length > 0) {
-  const node = queue.shift();
-  for (const next of $neighbours.get(node)) {
-    if (!previous.has(next)) { previous.set(next, node); queue.push(next); }
-  }
+function buildPath(previous, to) {
+  if (!previous.has(to)) return null;
+  const path = [];
+  for (let node = to; node !== null; node = previous.get(node)) path.unshift(node);
+  return path;
 }
-return previous.has($slots.to);
+function searchPath(successorsOf, from, to) {
+  const previous = new Map([[from, null]]);
+  const queue = [from];
+  while (queue.length > 0) {
+    const node = queue.shift(); for (const next of successorsOf(node)) if (!previous.has(next)) { previous.set(next, node); queue.push(next); }
+  }
+  return buildPath(previous, to);
+}
+function shortestPath(nodes, edges, from, to) {
+  const neighbours = adjacency(nodes, edges);
+  return searchPath((node) => neighbours.get(node), from, to);
+}
+const direct = slots.edges.some(([from, to]) => edgeKey(from, to) === edgeKey(slots.from, slots.to));
+const path = shortestPath(slots.nodes, slots.edges, slots.from, slots.to);
+return { direct: direct, connected: path !== null };
 
 @answer jsEval
-const neighbours = $direct ? "They are direct neighbors" : "They are not direct neighbors";
-return neighbours + "; " + ($connected ? "yes, they are connected" : "no, they are not connected") + ".";
+const neighbours = $relation.direct ? "They are direct neighbors" : "They are not direct neighbors";
+return neighbours + "; " + ($relation.connected ? "yes, they are connected" : "no, they are not connected") + ".";
 

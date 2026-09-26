@@ -53,7 +53,7 @@
   ]
 }
 
-@action jsEval
+@answer jsEval
 const slots = $slots;
 const labels = [...new Set(slots.labels)];
 const covering = slots.actions.filter((action) => {
@@ -63,8 +63,5 @@ probe(covering.length > 0, "no stated action repairs every fault that is still p
 const cost = Math.min(...covering.map((action) => action.cost));
 const cheapest = covering.filter((action) => action.cost === cost);
 probe(cheapest.length === 1, "two actions must not tie for the minimum cost");
-return { name: cheapest[0].name, cost: cost };
-
-@answer jsEval
-return "The minimum-cost robust action is " + $action.name + ", cost " + $action.cost + ".";
+return "The minimum-cost robust action is " + cheapest[0].name + ", cost " + cost + ".";
 

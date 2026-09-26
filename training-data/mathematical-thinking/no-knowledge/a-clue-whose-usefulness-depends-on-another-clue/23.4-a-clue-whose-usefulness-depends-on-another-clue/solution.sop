@@ -32,7 +32,8 @@ const matches = (value, predicate) => {
   throw new Error("unsupported predicate " + predicate.op);
 };
 const keep = (candidates, predicate) => candidates.filter((value) => matches(value, predicate));
-return keep(slots.candidates, slots.first).filter((value) => !matches(value, slots.second));
+const afterFirst = keep(slots.candidates, slots.first);
+return afterFirst.filter((value) => !matches(value, slots.second));
 
 @answer jsEval
 return $eliminated.length + " candidates.";

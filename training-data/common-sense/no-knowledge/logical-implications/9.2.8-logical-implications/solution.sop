@@ -76,36 +76,40 @@
   "askedRule": 4
 }
 
-@seed jsEval
+@deduce jsEval
 const slots = $slots;
-const facts = {};
+const facts = new Map();
 for (const fact of slots.observed) {
-  facts[fact.name] = fact.value;
+  facts.set(fact.name, fact.value);
 }
-return facts;
-
-@closure jsEval
-const slots = $slots;
-const facts = Object.assign({}, $seed);
 const applied = [];
 let progressed = true;
 while (progressed) {
   progressed = false;
   for (const rule of slots.rules) {
-    if (applied.includes(rule.index) || !rule.conditions.every((c) => facts[c.name] === c.value)) continue;
-    const known = facts[rule.conclusion.name];
-    if (known !== undefined && known !== rule.conclusion.value) throw new Error("rule " + rule.index + " contradicts the known value of " + rule.conclusion.name);
-    if (known === undefined) { facts[rule.conclusion.name] = rule.conclusion.value; applied.push(rule.index); progressed = true; }
+    if (applied.indexOf(rule.index) !== -1) {
+      continue;
+    }
+    const holds = rule.conditions.every((condition) => facts.get(condition.name) === condition.value);
+    if (!holds) {
+      continue;
+    }
+    const known = facts.get(rule.conclusion.name);
+    if (known !== undefined) {
+      if (known !== rule.conclusion.value) {
+        throw new Error("rule " + rule.index + " contradicts the known value of " + rule.conclusion.name);
+      }
+      continue;
+    }
+    facts.set(rule.conclusion.name, rule.conclusion.value);
+    applied.push(rule.index);
+    progressed = true;
   }
 }
-return { applied, conclusions: slots.query.map((name) => name + " must be " + facts[name]), pinned: slots.query.every((name) => facts[name] !== undefined) };
-
-@deduce jsEval
-const slots = $slots;
-const closure = $closure;
-probe(closure.pinned, "the stated rules must pin down every queried value");
-probe(closure.applied.indexOf(slots.askedRule) === -1, "the asked rule must not be needed in this family");
-return { conclusions: closure.conclusions, askedRule: slots.askedRule };
+probe(slots.query.every((name) => facts.get(name) !== undefined), "the stated rules must pin down every queried value");
+probe(applied.indexOf(slots.askedRule) === -1, "the asked rule must not be needed in this family");
+const conclusions = slots.query.map((name) => name + " must be " + facts.get(name));
+return { conclusions, askedRule: slots.askedRule };
 
 @answer jsEval
 const words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
