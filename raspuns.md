@@ -66,3 +66,12 @@ Structura modulara a mutat indicatorul de bloat (2.81 fire/plan vs 2.19) dar a c
 si a dublat erorile de executie (135 vs 57). Punctul bun masurat: planul compact (2-3 fire, putine
 linii) — exact stilul familiilor de containere care au dus world-as-a-system la 20/20. Urmatoarele
 familii se scriu compact, niciodata supra-sparte. Verdictul e in articol (04/05) si in registry.
+
+## Status — 2026-09-26, 03:30Z: dv9 masurat, setul revenit la dv7
+
+dv9 (containerele pe cele doua carti inca la 0): 428/705 (60.7%) — common-sense 0/50 si
+decompose-to-solve 0/100 raman la 0, iar perturbarea a costat 28 de raspunsuri procedurale si 4 world.
+Ordinea masurata: dv7 460 (65.2%) > dv8 448 (63.5%) > dv9 428 (60.7%). Generatorul e REVENIT la
+corpurile dv7 (VERSION 10, rebuild + verify OK + export 9935 + suita 382/382). Concluzia: restructurarea
+corpurilor existente nu misca cele doua carti; urmatorul brat are nevoie de o alta ipoteza (comanda
+dedicata de lant/rata, sau simplificarea enunturilor).

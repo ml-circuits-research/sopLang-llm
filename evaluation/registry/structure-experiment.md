@@ -56,3 +56,16 @@ the execution-failure surface. The measured sweet spot is the compact plan (2-3 
 which is exactly the container-family style that lifted world-as-a-system to 20/20 under dv7.
 Conclusion for the article: structure is real but gratuitous splitting costs; new families are
 written compact (small stages, few wires), never over-split.
+
+
+## THIRD ARM — dv9 zero-book tranche, measured 2026-09-26
+
+dv9 (exp-023): the two still-zero books' compute moved to the compact container idiom (build-in-stages,
+whole-positive gates). Holdout 428/705 (60.7%): common-sense 0/50 and decompose-to-solve 0/100 stay zero,
+and the perturbation costs 28 procedural answers (438 -> 410) and 4 world answers (20 -> 16).
+
+The three measured arms: dv7 460 (65.2%) > dv8 448 (63.5%) > dv9 428 (60.7%). The zero books have not
+moved under any target structure — the container idiom does not transfer to the dependency-chain and
+units-and-rates shapes. The canonical generator is reverted to the dv7 bodies (VERSION 10); the next
+arm needs a different hypothesis for these two books (a dedicated chain/rate wire command or statement
+simplification), not another restructure of the existing bodies.
