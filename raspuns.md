@@ -1,35 +1,57 @@
-# Status — 2026-09-26, 16:50 — raspunsuri pe scurt
+# Status — 2026-09-26, 17:00 UTC
 
-## Da, am testat modelul de 17 miliarde
-- Model: Qwen3-17B (17 miliarde de parametri), antrenat de noi saptamana aceasta (fisierul de
-  evaluare: evaluation/registry/exp-017-qwen3-17b/metrics.json).
-- Rezultat: 442 din 705 corecte pe holdout.
-- Pe cele doua carti blocate: decompose-to-solve 0/100, common-sense 0/50 — TOT ZERO, ca la
-  modelul mic de 1,7 miliarde.
-- ATENTIE, onest: testul de 17 miliarde a fost pe setul de date de ATUNCI (inainte de containere);
-  enunturile celor doua carti erau practic identice cu cele de acum. Concluzia: nu marimea
-  modelului e problema, ci cele doua carti in sine.
+## What is running right now
+The training of Qwen3-1.7B (1.7 billion parameters) on the simplified-statement dataset is
+finishing its last steps. The holdout evaluation (705 problems the model has never seen in
+training) is expected around 17:45 UTC. The evaluation chain then measures how many problems
+the model solves correctly.
 
-## Sunt gresite seturile de date la cele doua carti?
-Nu sunt gresite tehnic: fiecare circuit din set trece poarta de validare (reproduce raspunsul
-tiparit, verifica reactivitatea). Gresite sunt ca PREDARE: niciun model nu invata maparea
-enunt -> circuit pe ele. Acum testez daca enunturile simplificate rezolva asta (verdict ~17:45).
+## Which model is which — stated plainly
+- The working model is Qwen3-1.7B. It is small on purpose: the whole research goal is to make
+  a small model compile problems into circuits.
+- We also trained Qwen3-17B once, as a control experiment, to check whether the failures came
+  from the model being too small. The 17B model scored 442 of 705 on the holdout, and it also
+  scored zero on the two stuck books (decompose-to-solve 0 of 100, common-sense 0 of 50).
+  Therefore model size is not the problem. We continue with the 1.7B model.
 
-## Succes si esec pe carti (cu cel mai bun set de pana acum, cel cu containere, 460/705 = 65,2%)
-- SUCCES: world-as-a-system 20/20 (100%, prima carte rezolvata complet), procedural-arithmetic
-  438/480 (91%).
-- ESEC: decompose-to-solve 0/100, common-sense 0/50, scientific-reasoning 0/25,
-  adult-reasoning 0/10, logical-reasoning 0/10, mathematical-thinking 2/10.
+## The benchmark, category by category (best measured run: 460 of 705 correct, 65.2%)
+The benchmark has 705 problems: 480 procedural arithmetic problems plus 225 problems from
+7 reasoning books.
+- Success: procedural-arithmetic 438 of 480 correct (91%); world-as-a-system 20 of 20 (100%,
+  the first book solved completely, achieved by the container abstraction).
+- Failure: the other five books are at zero — decompose-to-solve 0/100, common-sense 0/50,
+  scientific-reasoning 0/25, adult-reasoning 0/10, logical-reasoning 0/10.
+- Almost zero: mathematical-thinking 2 of 10 correct (20%). This is still a failure; "2 of 10"
+  means two correct answers out of ten problems.
 
-## Ce am incercat si ce a dat (toate masurate)
-- Containere (magazin construit in etape): SUCCES, a rezolvat cartea world 0 -> 20/20, 65,2% total.
-- Spargerea calculelor in fire mici: ESEC (63,5%, erori de executie dublate).
-- Container-stil aplicat pe cartile blocate: ESEC (60,7%, cartile tot 0).
-- Raspunsuri scurte, fara proza: NUL (62,3%, cartile tot 0).
-- Modelul de 10 ori mai mare: NUL pe cartile blocate.
-- Enunturi simplificate: IN TEST ACUM, verdict ~17:45.
+## What succeeded and what failed (all measured)
+1. Containers (building a data store in stages) — SUCCESS. This abstraction moved
+   world-as-a-system from 0 to 20 of 20 and produced the best run of the series (65.2%).
+2. Splitting computations into many small wires — FAILURE. 63.5%, with execution errors
+   doubled. Compact plans are better than over-split plans.
+3. Rewriting the two stuck books in the container style — FAILURE. 60.7%, the books stayed at zero.
+4. Shortening the printed answers to bare values — NO EFFECT on the stuck books. 62.3%.
+5. Training a 10x larger model (Qwen3-17B) — NO EFFECT on the stuck books.
+6. Simplifying the problem statements (one number per sentence, no distractor sentences) —
+   CURRENTLY BEING MEASURED, verdict expected around 17:45 UTC.
 
-## Ce urmeaza
-Daca enunturile simplificate nu misca cele doua carti, concluzia sesiunii: designul setului nu
-mai e parghia; urmatoarea ipoteza e predarea cu demonstratii in context. Obiectivul ramane 90%
-pe benchmark (maxim actual 65,2%).
+## Are the two stuck books' datasets wrong?
+Technically they are not wrong: every circuit in the dataset passes the validation gate (each
+circuit reproduces its printed answer and reacts to its inputs). The problem is pedagogical:
+no model has learned the mapping from those statements to circuits. The simplified statements
+are the current attempt to fix that.
+
+## Infrastructure repairs from tonight (committed)
+- The system page cache (99 GB) was blocking the GPU's shared memory pool and stopping
+  training runs at step 0. A new skill script (cache-squeeze) now detects and fixes this
+  automatically before every launch.
+- The memory guard now judges the floor by the kernel-visible available pool (MemAvailable)
+  instead of the driver's cache-excluding view; DS009 documents the change.
+- Two training processes were running at once after an accidental revival; the stale one
+  was killed.
+
+## What is next
+- 17:45 UTC: the verdict on simplified statements. If the two stuck books move, we continue
+  on this thread. If not, the session's conclusion is that dataset design is no longer the
+  lever, and the next hypothesis is teaching with in-context demonstrations.
+- The goal remains 90% correct on the benchmark. The current best is 65.2%.
