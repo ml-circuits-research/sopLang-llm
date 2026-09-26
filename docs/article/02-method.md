@@ -1,12 +1,37 @@
 # 2. Method
 
-The pipeline is a closed loop: data is *declared*, *verified*, *exported*, *taught*, and *measured*, and each measurement decides the next change. Every stage is reproducible from source, and every number below names the command that reproduces it.
+The pipeline is a closed loop: data is *declared*, *verified*, *exported*, *taught*, and *measured*, and each measurement decides the next change. The loop is run by a coding agent, and the procedure below — the gates and the skills — is itself part of the artifact, not an anecdote about it.
+
+## The abstraction-learning loop
+
+The series runs a standing cycle of five steps, each leaving a written record before the next begins.
+
+1. **Measure.** Every arm's holdout is decomposed into the seven-class outcome ladder, per book and per plan cluster, so a failure is read as a *class* and a *wire*, not a percentage.
+2. **Flag.** Two skills turn the raw failures into candidates. `wire-discovery` ranks every recurring `jsEval` shape in the shipped suite by (frequency × mean-lines × error-share); `data-quality` flags bodies that have outgrown a single wire (the bloat indicator: wires per plan against `jsEval` lines per plan).
+3. **Propose.** A wire is proposed with its contract, its measured line reduction, and the error class it makes impossible. A proposal that only renames a one-line expression is rejected as prettification.
+4. **Validate.** The proposal lands only after the family round-trip and oracle tests pass and `node training-data/verify.mjs` reproduces every printed answer and proves every circuit reacts to its inputs.
+5. **Measure again.** The next arm holds everything else fixed and measures the change against the prior baseline. A measured win keeps the command; a measured null or loss rejects it.
+
+Two results show the loop works in both directions. The container family shipped because it moved world-as-a-system 0 → 20/20. The gratuitous-modularity control (dv8) measured *worse* — execution errors doubled — and the conclusion was written accordingly: "structure is real but gratuitous splitting costs." A loop that only ever confirmed its hypotheses would not be distinguishable from a narrative.
+
+## The wire vocabulary
+
+A circuit is a set of named wires, each a value with declared dependencies; the runtime resolves the graph and executes in dependency order. The model composes from a small, fixed vocabulary, and every command below exists because a recurring transcription was moved out of the model's body:
+
+- `jsEval` — an isolated JavaScript stage, the catch-all from which everything else is carved.
+- `literal` — a declared value, typically the extracted problem `slots`.
+- `graphPath` — adjacency-map traversal (replaces a hand-written BFS).
+- `aggregate` — a filter-then-reduce pair (replaces hand-rolled list loops).
+- `fraction` — greatest-common-divisor reduction and proportional arithmetic.
+- the **container family** — `container` (schema + identity policy), `containerAdd` / `containerUpsert` / `containerRemove` (staged patches), and `containerFilter` (a provenance-keeping view). It replaces the hand-rolled lists, membership checks, and merge logic of the book families' longest bodies.
+
+The rule that governs growth is measured, not aesthetic: a candidate command must absorb a multi-line transcription that demonstrably produces errors. The one-line operations (division, modulo, unique-count) were proposed and rejected on that rule.
 
 ## The generator: declared operators, families, statements, oracles
 
 Training data does not come from scraping or from a human writing thousands of solutions. It comes from a generator with one authority per operator. Each operator declares its input type, output type, its computation, the sentence it renders, and the clause its sampler must satisfy; a composition is a declared chain of operators with a fixed depth, and each composition becomes one *family*. A family implements the full contract — `sample`, `statement`, `parse`, `solve`, `render`, `explain` — so the drawn statement round-trips through the family's own parse, and the emitted circuit agrees with a family oracle computed by an independent route.
 
-The book families (decompose-to-solve, world-as-a-system, scientific-reasoning, and the other seeded books) are treated the same way: their compute bodies are the reference solutions, and their printed answers are the oracle. The generated procedural-arithmetic families are the newest tranche, built on the declared composition inventory (`teacher/procedural/compositions.mjs`), which currently declares 53 operator-chain compositions and names 11 of them as held out.
+The book families (decompose-to-solve, world-as-a-system, scientific-reasoning, common-sense, and the other seeded books) are treated the same way: their compute bodies are the reference solutions, and their printed answers are the oracle. The generated procedural-arithmetic families are the newest tranche, built on the declared composition inventory (`teacher/procedural/compositions.mjs`), which declares operator-chain compositions and names a subset of them as held out.
 
 ## The verification contract
 
@@ -20,7 +45,7 @@ Reactivity is the property that distinguishes a plan from a template: a plan tha
 
 ## The structural splits: whole compositions held out
 
-A split is a *declaration*, never a filter applied after results. The composition inventory is the authority: held-out chains are named in `HELD_OUT` before any instance is rendered, reserved compositions get zero training rows, and the split is verified by count after every rebuild. The consequence is that the holdout rows are compositions the trainer never saw in any form — not unseen wording of a known plan, but unseen plan structure. A plan fingerprint is the `facts` body plus the compute structure, so two rows sharing a plan stay on one side of the split.
+A split is a *declaration*, never a filter applied after results. The composition inventory is the authority: held-out chains are named before any instance is rendered, reserved compositions get zero training rows, and the split is verified by count after every rebuild. The consequence is that the holdout rows are compositions the trainer never saw in any form — not unseen wording of a known plan, but unseen plan structure. A plan fingerprint is the `facts` body plus the compute structure, so two rows sharing a plan stay on one side of the split.
 
 ## The training recipe
 
@@ -30,13 +55,24 @@ Every full-fine-tuning arm shares one frozen recipe so that the only variable is
 
 Selection scores every saved checkpoint on a validation slice (the D11 slice, 339 rows, of which 323 sit on plan fingerprints that also occur in training and 16 do not) and picks a winner by primary metric, not by training loss. The winner then runs the sealed holdout, reported decomposed (reserved compositions, old families, real target data) rather than as one aggregate. Capability probes score the same served artifact for substrate loss: whether the narrow SOP Lang mixture cost the model its general instruction and JavaScript behavior.
 
+## The two scorers
+
+The benchmark's original answer comparison is exact-phrase based: a generated answer matches only if it reproduces the recorded answer's wording. The series' own sanity experiment (chapter 4) showed that a competent writer computes ~18/20 holdout items but scores 2/20 under this scorer, so every trained model's holdout was re-scored with a meaning-based judge: an answer counts as correct when it states the same values and the same verdict/selection as the oracle, regardless of wording, order, unit naming, punctuation, or explanatory prose. Execution errors are never rescued by either scorer.
+
 ## The prose baselines
 
 Each untrained base answers the eval statements *in prose*, and the completion is compared against the printed answers (numeric answers credited only when every printed number appears; non-numeric by normalized containment). Asking an untrained base to emit SOP Lang would be meaningless; the prose comparison is the honest floor.
 
-## The chat surface
+## The coding-agent procedure
 
-The deployed interface serves the newest winner and lets a user type a statement and receive a compiled circuit and its executed answer. A failed plan (parse, wrapper, or execution failure) is retried with the full numbered failure history fed back — retries are *deployment*, and the scored evaluations stay single-shot by contract. Every model block states its identity as the owner reads it: size, base, data version, and training finish time.
+The whole loop — generator, verification, training, evaluation, analysis, and the next proposal — is executed by a coding agent following the portable skills in `skills/`: `training-rules` (the measured laws), `training-runbook` (the end-to-end procedure), `wire-discovery` and `data-quality` (the flagging tools), and `night-orchestration` (the discipline for unattended runs). The gates are the load-bearing part:
+
+- **One worker at a time.** A second concurrent trainer corrupts the first's outputs; the launcher refuses rather than warns.
+- **A preflight gate** that checks for no other worker, no duplicate supervision, enough disk, and no resume from an incomplete checkpoint.
+- **The completion signal is an artifact, not a log line** — a failed chain also writes "done", so the watcher waits for the result artifact, never for a tail of the log.
+- **A disk guard** that warns below 40 GiB and stops work below 16 GiB, and a watcher that keeps waiting on a stale failure line instead of exiting (an exited watcher kills the queue silently).
+
+These gates are not administrative color; each one exists because a night was lost when it was absent (chapter 5).
 
 ## The loop
 
@@ -48,7 +84,7 @@ graph TD
   T -->|"selection"| S["Validation slice<br/>winner by metric"]
   S -->|"holdout"| H["Sealed holdout<br/>decomposed"]
   S -->|"probes"| P["Capability probes<br/>substrate loss"]
-  H -->|"read the failure"| A["Analysis<br/>mechanism + decision"]
+  H -->|"read the failure"| A["Analysis<br/>flag + propose + validate"]
   P --> A
   A -->|"next lever"| G
 ```
