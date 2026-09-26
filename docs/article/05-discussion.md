@@ -36,3 +36,18 @@ The fix is fourfold and all data-level: restore a fractional-chain tranche to th
 ## Operations as part of the method
 
 Two nights were lost to the machinery, and they are part of the result, not a footnote. The night of 2026-09-23 died on a full disk: base-model downloads plus checkpoint saves filled the drive mid-save, corrupting a checkpoint and killing an arm at step 160 of 630 — and one closed arm alone (exp-013) had held 116 GiB of dead checkpoints. Twice before that, three trainers were launched at once and both nights were lost to concurrent corruption. The fixes are now policy, and they encode the lessons: one worker at a time, a preflight gate that refuses rather than warns, the completion signal as a result artifact rather than a log line (a failed chain also writes "done"), a disk guard that warns below 40 GiB and stops work below 16 GiB, and a watcher that *keeps waiting* on a stale failure line instead of exiting — because an exited watcher kills the queue silently, which is exactly what happened to exp-016's first chain. The honest reading: unattended training is itself an experiment in discipline, and the discipline is now part of the artifact.
+
+### The size floor: the loop multiplies capacity, it does not create it
+
+The 0.5B result bounds the comparative claim from below. On the same repaired data, the 0.5B
+student reaches 51.2% while the 1.7B container arm reaches 65.2% (77.2% semantic), and the
+gap is not about knowledge: the 0.5B solves world-as-a-system 0/20 and decompose-to-solve
+0/100, and even the simple integer book drops to 360/480 (the 1.7B's 438/480). Compiling a
+statement into a multi-wire circuit demands holding the statement's values, the wire
+vocabulary, and the family's plan template in working memory at once; a 494M-parameter model
+with a 896-wide hidden state cannot sustain that, while the 1.7B can. The abstraction loop
+therefore acts as a multiplier on whatever base capacity the model already has, not as a
+substitute for it: below a measured size floor, adding higher-level wires adds structure the
+student cannot yet produce, and the books stay unsolved. The comparative headline is thus
+sharpened: the loop lets a 1.7B student beat a 17B on the reasoning books, but the same loop
+cannot lift a 0.5B student past the floor.
