@@ -32,4 +32,35 @@ if [ -d "$JOBS_DIR/$job" ] && compgen -G "$JOBS_DIR/$job/checkpoint-*" > /dev/nu
   fi
 fi
 
+# On unified-memory hosts (the GB10) the page cache and the CUDA driver share
+# one pool. A bloated cache leaves the driver under the trainer's memory floor
+# even though the host reports plenty available, and the floor guard refuses
+# the run at step 0 (the 2026-09-26 exp-024 restart loop). Touching anonymous
+# pages at a 4K stride forces the kernel to reclaim clean inactive file pages;
+# the pages are then released, so the pool returns to the driver. Nothing runs
+# when CUDA_PYTHON is unset or torch is unavailable.
+if [ "${SQUEEZE_CACHE:-1}" = "1" ] && [ -n "${CUDA_PYTHON:-}" ] && [ -x "$CUDA_PYTHON" ]; then
+  free="$("$CUDA_PYTHON" -c 'import torch; print(round(torch.cuda.mem_get_info()[0] / 2**30, 1))' 2>/dev/null || echo NA)"
+  if [ "$free" != "NA" ] && awk -v f="$free" -v t="${CUDA_MIN_FREE_GIB:-48}" 'BEGIN { exit !(f < t) }'; then
+    echo "preflight: page cache holds the unified pool (CUDA free ${free} GiB < ${CUDA_MIN_FREE_GIB:-48}); squeezing"
+    "$CUDA_PYTHON" - "${CUDA_MIN_FREE_GIB:-48}" <<'PY'
+import mmap, sys
+import torch
+target = float(sys.argv[1])
+rounds = 0
+while rounds < 8:
+    free = torch.cuda.mem_get_info()[0] / 2**30
+    if free >= target:
+        break
+    size = int(min(24, max(8, target - free + 4)) * 2**30)
+    buf = mmap.mmap(-1, size)
+    for off in range(0, size, 4096):
+        buf[off] = 1
+    buf.close()
+    rounds += 1
+print(f"preflight: after {rounds} squeeze round(s), CUDA free {torch.cuda.mem_get_info()[0] / 2**30:.1f} GiB")
+PY
+  fi
+fi
+
 echo "preflight OK: no other worker, disk ${free_gib} GiB free, $job free to launch"
