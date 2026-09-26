@@ -1,0 +1,58 @@
+{
+  "experiment": "exp-023-1.7b-qwen3-dv9",
+  "slice": {
+    "name": "holdout",
+    "spec": "holdout",
+    "source": "/home/salboaie/work/sopLang-llm/training-data/<book>/eval/**/solution.sop",
+    "count": 705,
+    "books": null,
+    "limit": null,
+    "itemsSha256": "4f951215a072b856f65ec93128884d40a8c549c4a7d3903b02bc63bb075335c8"
+  },
+  "checkpoint": {
+    "gguf": "evaluation/registry/exp-023-1.7b-qwen3-dv9/gguf/checkpoint-600.gguf"
+  },
+  "model": null,
+  "base": "http://127.0.0.1:8080",
+  "decoding": {
+    "temperature": 0,
+    "maxTokens": 2048,
+    "stream": false,
+    "timeoutMs": 600000,
+    "concurrency": 4,
+    "attemptsPerItem": 1,
+    "transportRetries": 1
+  },
+  "chatProfile": {
+    "id": "compiled-plan-chat-4",
+    "systemPromptSha256": "c2967d80d31eeb8a8f1605e75ece90edd16a0f0338a7b24bf15442bbf9287a74"
+  },
+  "base_model_manifest": {
+    "path": "/home/salboaie/work/sopLang-llm/training/environment/base-model-qwen3-17b.json"
+  },
+  "training": {
+    "createdUtc": "2026-09-25T21:36:36Z",
+    "finishedUtc": "2026-09-26T00:58:17Z",
+    "epochs": 2
+  },
+  "capabilityProbes": {
+    "profile": "capability-probes-1.0.0",
+    "systemPromptSha256": "3f0ff0bee57e51871d4c09dcf8e3e6ffb0ab414c41100199873dfd0fc5c69fe9",
+    "items": 10,
+    "passed": 3
+  },
+  "dataset": {
+    "exportManifest": "training/data/export-manifest.json",
+    "snapshot": "6e5605dabfb574329072bae37c6cd0cb2e20a2fe3ebb77b144df82e7d165fa9d",
+    "dataVersion": {
+      "number": "9",
+      "label": "zero-book tranche: decompose-to-solve and common-sense compute moves to the container idiom with whole-positive answer gates"
+    },
+    "validationSlice": "training/data/validation-slice.json"
+  },
+  "environment": {
+    "manifest": "training/environment/environment-manifest.json",
+    "sha256": "cacd40e3d24b0c41f44061afd77af9f7b8fdece0bf959dcaa2f577c4873fe180"
+  },
+  "startedAt": "2026-09-26T01:09:50.789Z"
+}

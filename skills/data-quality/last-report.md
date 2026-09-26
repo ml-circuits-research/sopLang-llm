@@ -1,6 +1,6 @@
 # data-quality: jsEval body complexity scan
 
-Run: 2026-09-25T21:09:56.344Z
+Run: 2026-09-26T01:24:30.164Z
 
 ## Thresholds in effect
 
@@ -15,10 +15,10 @@ Run: 2026-09-25T21:09:56.344Z
 ## Totals
 
 - solution.sop files scanned: **10640**
-- the bloat indicator: **2.81** wires per plan against **15.5** jsEval lines per plan (5.5 lines per wire); **290** plans carry `<= 3 wires but > 25 jsEval lines` — too few wires for the JavaScript mass
-- jsEval bodies scanned: **18401**
-- bodies flagged MONSTROUS: **3576** (19.4% of bodies)
-- files with a flagged body: **3204** (30.1% of files)
+- the bloat indicator: **2.90** wires per plan against **15.8** jsEval lines per plan (5.4 lines per wire); **290** plans carry `<= 3 wires but > 25 jsEval lines` — too few wires for the JavaScript mass
+- jsEval bodies scanned: **19301**
+- bodies flagged MONSTROUS: **3676** (19.0% of bodies)
+- files with a flagged body: **3304** (31.1% of files)
 - wire-discovery top shapes available for candidate matching: **0**
 - wire-discovery top shapes still present in the current dataset: **0** (0 bodies)
 
@@ -28,28 +28,28 @@ A body may exceed several thresholds; each row counts bodies that trip that one 
 
 | metric | threshold | bodies | share of all bodies |
 |---|---|---|---|
-| lines | `> 15` | 1640 | 8.9% |
+| lines | `> 15` | 1640 | 8.5% |
 | loops | `> 2` | 190 | 1.0% |
-| chains | `> 3` | 677 | 3.7% |
-| variables | `> 6` | 2984 | 16.2% |
+| chains | `> 3` | 677 | 3.5% |
+| variables | `> 6` | 3084 | 16.0% |
 | depth | `> 3` | 27 | 0.1% |
 
 ## Thresholds tripped per flagged body
 
 | tripped | bodies | share of flagged |
 |---|---|---|
-| 1 | 1812 | 50.7% |
-| 2 | 1586 | 44.4% |
-| 3 | 178 | 5.0% |
+| 1 | 1912 | 52.0% |
+| 2 | 1586 | 43.1% |
+| 3 | 178 | 4.8% |
 
 ## Suggestion distribution
 
 | suggestion | bodies | share of flagged |
 |---|---|---|
-| container | 2451 | 68.5% |
-| aggregate | 752 | 21.0% |
-| fraction | 203 | 5.7% |
-| graphPath | 170 | 4.8% |
+| container | 2601 | 70.8% |
+| aggregate | 752 | 20.5% |
+| graphPath | 170 | 4.6% |
+| fraction | 153 | 4.2% |
 | candidate | 0 | 0.0% |
 
 `candidate` matches a body's normalized shape against the top shapes in the current
@@ -61,16 +61,17 @@ the candidate bucket repopulates.
 
 ## Flagged bodies by family
 
-- affected families: **285**
+- affected families: **286**
 
 | family | flagged bodies |
 |---|---|
 | atomic-case-coupled-objective | 100 |
 | competing-alternatives | 100 |
-| units-and-rates | 50 |
+| ten-part-integrated-decomposition | 100 |
 | bottlenecks | 50 |
 | break-even-threshold | 50 |
 | budget-and-constraints | 50 |
+| causality | 50 |
 | chained-yields | 50 |
 | data-consistency | 50 |
 | expected-value-and-risk | 50 |
@@ -353,7 +354,7 @@ the candidate bucket repopulates.
 
 ## Flagged bodies (summary)
 
-The 3576 flagged bodies are summarized here: the 60 most
+The 3676 flagged bodies are summarized here: the 60 most
 severe by tripped thresholds, then line count, then chain count. The complete per-body
 list is printed to stdout by the tool.
 
