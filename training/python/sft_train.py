@@ -42,11 +42,14 @@ an exhausted pool freezes the whole desktop instead of failing the run. Every
 run therefore declares a device-memory budget: the process caps its own
 allocator at ``--memory-fraction`` of device memory (0.75 by default) and the
 memory guard stops the run at a step boundary, after saving a checkpoint, when
-the available memory falls below ``--memory-floor-gb`` (16 GiB by default), so
-``--resume auto`` continues the run on a machine that is still usable. A run
-stopped this way exits with code 3 and writes ``status: stopped_for_memory`` to
-the run manifest. ``--gradient-checkpointing`` trades compute for activations
-when the batch approaches the budget.
+the kernel-visible available pool falls below ``--memory-floor-gb`` (16 GiB by
+default), so ``--resume auto`` continues the run on a machine that is still
+usable. The floor uses MemAvailable, which counts the reclaimable page cache
+the kernel hands back on demand (the 2026-09-26 exp-024 false stops came from
+judging the driver's cache-excluding view instead). A run stopped this way
+exits with code 3 and writes ``status: stopped_for_memory`` to the run
+manifest. ``--gradient-checkpointing`` trades compute for activations when the
+batch approaches the budget.
 
 Typical runs::
 
@@ -526,11 +529,15 @@ class MemoryGuardCallback(TrainerCallback):
         return dict(self.last)
 
     def available_gib(self) -> float:
-        free = self.last["cuda_free_gib"]
-        candidates = [self.last["mem_available_gib"]]
-        if free is not None:
-            candidates.append(free)
-        return min(candidates)
+        # The floor protects the host pool, not the driver's view. On the GB10
+        # the page cache and the CUDA driver share the pool, and the kernel
+        # reclaims clean cache pages on demand (proven by the cache-squeeze
+        # preflight); MemAvailable already counts that reclaimable headroom,
+        # while the driver's free does not. Using the driver's free here made
+        # the guard stop healthy runs at step 0/7 (the 2026-09-26 exp-024
+        # restart loops) while the host reported 80+ GiB available. The driver
+        # free stays in the log columns for diagnosis.
+        return self.last["mem_available_gib"]
 
     def _check(self, control, step: int):
         snapshot = self.sample()
