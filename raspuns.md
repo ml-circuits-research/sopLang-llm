@@ -92,3 +92,10 @@ Am reparat in trei locuri si totul e comis:
    9935, suita 382/382. exp-024 (Qwen3-1.7B) antreneaza pe el; holdout-ul vine ~13:45Z.
 
 Seriile masurate pana acum: dv7 460/705 (65.2%) > dv8 448 (63.5%) > dv9 428 (60.7%).
+
+## Status — 2026-09-26, 13:00Z: dv11 masurat, verdictul: enunturile sunt problema
+
+exp-024 (dv11, formulari compacte): 439/705 (62.3%). Cele doua carti raman la 0/0. Dovada decisiva:
+qwen3-17b (exp-017) a luat TOT 0/100 si 0/50 pe ele - marimea modelului nu ajuta, setul de date e.
+Urmatorul brat (dv12): simplificarea ENUNTURILOR celor doua carti (propozitii scurte, fara distractori,
+numerele simple) cu parse-ul actualizat in acelasi pas; calculul si raspunsurile compacte raman.
