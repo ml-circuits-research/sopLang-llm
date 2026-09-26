@@ -58,3 +58,15 @@ for watcher in overnight-pipeline overnight-tail watchdog disk-guard night-watch
   count="$(pgrep -f "$watcher.sh" 2>/dev/null | wc -l | tr -d ' ')"
   [ "${count:-0}" -gt 0 ] 2>/dev/null && echo "    - $watcher: running"
 done
+# The unified pool: the cache-bloat signature that starves the trainer's memory
+# floor is reported here so a human or an agent sees it before the next launch.
+if [ -n "${CUDA_PYTHON:-}" ] && [ -x "$CUDA_PYTHON" ]; then
+  free="$("$CUDA_PYTHON" -c 'import torch; print(round(torch.cuda.mem_get_info()[0] / 2**30, 1))' 2>/dev/null || echo NA)"
+  host_avail="$(awk '/MemAvailable/ { printf "%.1f", $2 / 1024 / 1024 }' /proc/meminfo)"
+  if [ "$free" != "NA" ]; then
+    echo "  unified pool: CUDA free ${free} GiB, host available ${host_avail} GiB"
+    if awk -v f="$free" -v t="${CUDA_MIN_FREE_GIB:-48}" -v h="$host_avail" -v m="${HOST_MIN_AVAIL_GIB:-48}" 'BEGIN { exit !(f < t && h >= m) }'; then
+      echo "  CACHE BLOAT: run cache-squeeze.sh (the preflight does it automatically at launch)"
+    fi
+  fi
+fi

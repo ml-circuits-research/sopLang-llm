@@ -49,7 +49,16 @@ $RESULTS_DIR/<job>/metrics.json, and its log is $RESULTS_DIR/<job>/series.log.
 
 - scripts/preflight.sh <job> — the launch gate: refuses when any precondition fails (worker
   running, double supervision, disk below MIN_FREE_GIB, incomplete newest checkpoint).
-  Call it from every launcher, before anything else.
+  Call it from every launcher, before anything else. On unified-memory hosts it also runs
+  scripts/cache-squeeze.sh, so a bloated page cache is fixed before the launch, never after
+  the trainer's memory floor has refused it.
+- scripts/cache-squeeze.sh — detect and fix the unified-memory cache-bloat signature: the
+  CUDA driver free below CUDA_MIN_FREE_GIB while the host available stays above
+  HOST_MIN_AVAIL_GIB (the page cache ate the shared pool). Fixes by touching anonymous pages
+  at a 4K stride so the kernel reclaims the clean cache pages, then releases them. Exit 0
+  healthy or fixed, 1 still low (pinned memory, not cache), 2 cannot measure (no torch).
+  Needs CUDA_PYTHON (a python with torch). Run it by hand or via the preflight; the health
+  check reports the signature.
 - scripts/lib-watch.sh — `wait_chain <job>`: returns only when metrics.json exists; detects a
   really-failed chain (failure marker + no live worker/supervisor/chain), raises
   CHAIN-ALARM.txt, and keeps waiting; starts the chain manually when nothing did after a
