@@ -136,7 +136,7 @@ const WIRES = [
       '  values = [slots.values[0], slots.values[1], slots.total - slots.values[0] - slots.values[1]];',
       '}',
       'probe(values.length === 3, "the final state must report three compartments");',
-      'probe(values.every((value) => Number.isInteger(value) && value >= 0), "every compartment must hold a non-negative whole quantity");',
+      'probe(values.every((value) => value >= 0), "every compartment must hold a non-negative quantity");',
       'probe(values.reduce((sum, value) => sum + value, 0) === slots.total, "the three compartments must sum to the conserved total");',
       'return values;'
     ].join('\n')

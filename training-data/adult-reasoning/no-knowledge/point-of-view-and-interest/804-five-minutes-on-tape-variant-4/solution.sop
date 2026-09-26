@@ -19,7 +19,7 @@ const slots = $slots;
 const arrival = slots.arrivalHours * 60 + slots.arrivalMinutes;
 const departure = slots.departureHours * 60 + slots.departureMinutes;
 const duration = (departure - arrival + 1440) % 1440;
-probe(Number.isInteger(duration) && duration > 0, "the camera must record a positive standing time");
+probe(duration > 0, "the camera must record a positive standing time");
 probe(duration === slots.durationMinutes, "the reported duration matches the camera times");
 const visibility = slots.driverSaysHidden && slots.neighbourSaysVisible ? "Visibility of the tree remains disputed." : "Visibility of the tree is agreed.";
 return "The " + duration + "-minute duration contradicts " + slots.neighbourMinutes + " and is close to " + slots.driverMinutes + ". " + visibility;

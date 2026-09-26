@@ -65,7 +65,7 @@ function render(solution) {
 const COMPUTE = [
   'const slots = $slots;',
   'const durationMinutes = Math.round((slots.distanceKm / slots.speedKmh) * 60);',
-  'probe(Number.isInteger(durationMinutes) && durationMinutes > 0, "the sheet must give a positive walking duration");',
+  'probe(durationMinutes > 0, "the sheet must give a positive walking duration");',
   'probe(Math.abs(durationMinutes / 60 - slots.distanceKm / slots.speedKmh) < 1 / 120, "the duration must be the distance divided by the speed");',
   'probe(durationMinutes < 1440, "the walk must fit inside one day for the printed arrival hour");',
   'const formatTime = (totalMinutes) => {',

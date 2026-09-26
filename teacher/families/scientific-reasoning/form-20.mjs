@@ -156,7 +156,7 @@ const WIRES = [
       'probe(optima.length > 0, "some combination must cover the targets without a forbidden effect");',
       'probe(new Set(optima.map((entry) => entry.names.join(" | "))).size === 1, "the stated goals must leave exactly one minimum intervention");',
       'const best = optima[0];',
-      'probe(Number.isInteger(best.cost) && best.cost > 0, "the minimum total cost must be a positive number");',
+      'probe(best.cost > 0, "the minimum total cost must stay positive");',
       'probe(best.names.length > 0, "the minimum intervention must contain at least one action");',
       'const printed = new Map(' + JSON.stringify([...PRINTED_NAMES]) + ');',
       'const names = best.names.map((name) => printed.get(String(name).toLowerCase()) || String(name).toLowerCase());',

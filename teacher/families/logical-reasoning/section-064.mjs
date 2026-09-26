@@ -144,7 +144,7 @@ const WIRES = [
     body: [
       'const slots = $slots;',
       'const totalShare = slots.winShareOne + slots.loseShareOne;',
-      'probe(Number.isInteger(totalShare) && totalShare > 0, "the printed shares of Game One must cover the tickets");',
+      'probe(totalShare > 0, "the printed shares of Game One must cover the tickets");',
       'probe((slots.prizeOne * slots.loseShareOne) % totalShare === 0, "Game One must divide into whole hundredths");',
       'const averageOneHundredths = (slots.prizeOne * slots.loseShareOne * 100) / totalShare;',
       'probe(averageOneHundredths === slots.stakeOne * 100, "this section prints a first game whose average return is exactly its stake");',

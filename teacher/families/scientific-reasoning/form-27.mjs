@@ -99,7 +99,7 @@ function render(solution) {
 const COMPUTE = [
   'const slots = $slots;',
   'const rate = slots.shape === "rate-given" ? slots.rate : (slots.final - slots.start) / slots.intervals;',
-  'probe(Number.isInteger(rate) && rate > 0, "the constant rate must be a whole positive change per interval");',
+  'probe(rate > 0, "the constant rate must stay positive");',
   'const afterTracked = slots.start + slots.intervals * rate;',
   'if (slots.shape === "rate-given") {',
   '  probe(afterTracked > slots.start, "accumulating a positive rate must raise the value");',

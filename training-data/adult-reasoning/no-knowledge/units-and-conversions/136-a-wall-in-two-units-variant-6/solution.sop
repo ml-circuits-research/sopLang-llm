@@ -17,7 +17,7 @@ const format = (hundredths) => Math.trunc(hundredths / 100) + "." + String(hundr
 const heightCentimetres = Math.round(slots.wallHeightMeters * 100);
 const areaHundredths = Math.round((slots.wallWidthCm * heightCentimetres) / 100);
 const coverageHundredths = Math.round(slots.coverageSquareMeters * 100) * slots.coats;
-probe(Number.isInteger(areaHundredths) && areaHundredths > 0, "the primed wall must have a positive area in whole hundredths of a square metre");
+probe(areaHundredths > 0, "the primed wall must have a positive area in hundredths of a square metre");
 probe(slots.wallWidthCm * heightCentimetres === areaHundredths * 100, "the area must be the wall area in square centimetres divided by ten thousand");
 const enough = areaHundredths <= coverageHundredths;
 return slots.wallWidthCm + " cm = " + format(slots.wallWidthCm) + " m. Area " + format(areaHundredths) + " m\u00b2. " + (enough ? "Enough" : "Not enough") + " (threshold " + slots.coverageSquareMeters + " m\u00b2).";

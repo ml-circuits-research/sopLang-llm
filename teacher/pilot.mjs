@@ -401,6 +401,24 @@ export function selectEvalSplit(accepted) {
     }
   }
 
+  // A family whose plan shape is the only representative of a computation the
+  // trainer must see is reserved for training, the inverse of a held-out
+  // composition. The declaration lives on the family case
+  // (`reserveForTraining`): every variant of the reserved template stays in the
+  // training mix, so the holdout never tests a shape the trainer never saw in
+  // any form. The common-sense units-and-rates fractional chain is the case
+  // this exists for: it is the one decimal three-step chain in the book, and a
+  // hash walk that happened to hold it out would leave the fractional chain
+  // untaught (`evaluation/registry/common-sense-cause.md`). These groups are
+  // removed before the hash walk below, so a different cluster becomes the
+  // holdout; unlike a held-out composition they are not re-added to the chosen
+  // set, because their ids stay in the training mix.
+  for (const [key, group] of groups) {
+    if (group.items.every((item) => item.entry.reserveForTraining === true)) {
+      groups.delete(key);
+    }
+  }
+
   // Union template groups that share at least one circuit hash.
   const groupList = [...groups.values()];
   const parent = new Map(groupList.map((group) => [group, group]));

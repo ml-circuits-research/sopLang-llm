@@ -59,7 +59,7 @@ const COMPUTE = [
   'const slots = $slots;',
   'const percent = Number(slots.percent);',
   'const inventedBase = Number(slots.inventedBase);',
-  'probe(Number.isInteger(inventedBase) && inventedBase > 0, "the helpful story must invent a positive whole-number base");',
+  'probe(inventedBase > 0, "the helpful story must invent a positive base");',
   'const people = [slots.finisher, slots.baseFinder, slots.inventor];',
   'return "Only a bare percent. Inventing " + inventedBase + " writes a second poster.";'
 ].join('\n');

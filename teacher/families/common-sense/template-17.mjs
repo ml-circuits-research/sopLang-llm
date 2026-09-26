@@ -71,7 +71,7 @@ const COMPUTE = [
   'const required = (slots.demand * (100 + slots.reserve)) / 100;',
   'const modules = Math.ceil(required / slots.capacity);',
   'const installed = modules * slots.capacity;',
-  'probe(Number.isInteger(modules) && modules > 0, "the target capacity must need at least one module");',
+  'probe(modules > 0, "the target capacity must need at least one module");',
   'probe(installed >= required, "the installed capacity must cover the target capacity");',
   'probe(installed - slots.capacity < required, "one module fewer must fall short of the target capacity");',
   'return "At least " + modules + " modules are required.";'

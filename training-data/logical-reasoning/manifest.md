@@ -64,10 +64,10 @@ The manifest is split by section so a long table stays reviewable. Each section 
 | 58 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-058.md | 5210caf29af7 |
 | 59 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-059.md | ffceac3ee639 |
 | 60 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-060.md | c52f35cd00e9 |
-| 61 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-061.md | 2a3614212dfb |
+| 61 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-061.md | 6e7fa8587c21 |
 | 62 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-062.md | 366fdf5ed9f8 |
 | 63 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-063.md | abff9976bdf7 |
-| 64 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-064.md | 878ca8e2bc02 |
+| 64 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-064.md | aa11c4563361 |
 | 65 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-065.md | 21601bb6dc79 |
 | 66 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-066.md | 10f82eb67af6 |
 | 67 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-067.md | a5490b125f91 |

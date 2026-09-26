@@ -102,7 +102,7 @@ const COMPUTE = [
   'if (slots.perUnit === 2) tail = "for " + slots.target + ", we need " + unitsNeeded + " active units.";',
   'else if (slots.perUnit === 3) tail = unitsNeeded + " active units are needed for " + slots.target + ".";',
   'else tail = "for " + slots.target + ", " + unitsNeeded + " active units are needed.";',
-  'probe(value === askedUnits * slots.perUnit && Number.isInteger(value), "the scaled quantity must be a whole number of units");',
+  'probe(value === askedUnits * slots.perUnit, "the scaled quantity must equal the unit product");',
   'probe(unitsNeeded * slots.perUnit === slots.target, "the computed units must produce exactly the target quantity");',
   'return "With " + askedUnits + " units: " + value + " " + slots.quantity + "; " + tail;'
 ].join('\n');

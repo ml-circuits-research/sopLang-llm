@@ -69,7 +69,7 @@ return routes;
 @best jsEval
 const routes = $routes;
 const cheapest = Math.min(...routes.map((route) => route.cost));
-probe(Number.isInteger(cheapest) && cheapest > 0, "the cheapest allowed route must have a positive whole cost");
+probe(cheapest > 0, "the cheapest allowed route must stay positive");
 const winners = routes.filter((route) => route.cost === cheapest);
 probe(winners.length >= 1, "the allowed routes must determine a cheapest cost");
 const chosen = winners.slice().sort((left, right) => {

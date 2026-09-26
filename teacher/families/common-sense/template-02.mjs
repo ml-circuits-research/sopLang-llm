@@ -138,6 +138,13 @@ export const cases = [
     template: 'Units and rates',
     type: slugify('Units and rates'),
     category: 'no-knowledge',
+    // The one decimal three-step chain in the book (rate = throughput ×
+    // (100 − overhead%)/100, quantity = rate × minutes/60, rounded to
+    // hundredths). Its plan shape is unique, so the evaluation holdout must
+    // never pick it: the trainer has to see the fractional chain, and a
+    // different template becomes the holdout (`evaluation/registry/
+    // common-sense-cause.md`).
+    reserveForTraining: true,
     parse,
     statement,
     solve,

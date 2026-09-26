@@ -17,7 +17,7 @@ The manifest is split by section so a long table stays reviewable. Each section 
 | 11 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-011.md | 73b4ec6d7407 |
 | 12 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-012.md | 753486238582 |
 | 13 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-013.md | 0c613869bf03 |
-| 14 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-014.md | 660e88f133a7 |
+| 14 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-014.md | cddc801b7327 |
 | 15 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-015.md | ffdc9363e503 |
 | 16 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-016.md | c7ac29dd4618 |
 | 17 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-017.md | 0345b740764a |
@@ -67,7 +67,7 @@ The manifest is split by section so a long table stays reviewable. Each section 
 | 61 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-061.md | 1de0dfc29a80 |
 | 62 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-062.md | dd42ebefbc69 |
 | 63 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-063.md | f7a342435b28 |
-| 64 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-064.md | 9e7f2584b488 |
+| 64 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-064.md | 3b8b3cb1497e |
 | 65 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-065.md | 2f4e43bd63bd |
 | 66 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-066.md | 666d3993a3e7 |
 | 67 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-067.md | 0e3ab751e58e |
@@ -81,10 +81,10 @@ The manifest is split by section so a long table stays reviewable. Each section 
 | 75 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-075.md | bfcb4e6a5dd9 |
 | 76 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-076.md | 1efddf43289b |
 | 77 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-077.md | 7f2eda5a2097 |
-| 78 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-078.md | 8211e79c62dc |
+| 78 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-078.md | ea957b987ce0 |
 | 79 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-079.md | bc6271f08fa8 |
 | 80 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-080.md | 70dac467625c |
-| 81 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-081.md | 69f15014a0fc |
+| 81 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-081.md | 2d20c375176b |
 | 82 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-082.md | 2abcdad476c6 |
 | 83 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-083.md | 4cd8e91229e4 |
 | 84 | 10 | 10 | 0 | 0 | 10 | 1 | manifest/section-084.md | 86945cb0473e |
