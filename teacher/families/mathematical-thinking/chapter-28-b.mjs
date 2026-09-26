@@ -220,38 +220,23 @@ export const cases = [
     render(solution) {
       return `${solution.total} teams.`;
     },
-    wires: [
-      {
-        name: 'combos',
-        command: 'jsEval',
-        body: [
-          'const slots = $slots;',
-          'const teams = [];',
-          'const walk = (start, chosen) => {',
-          '  if (chosen.length === slots.size) {',
-          '    teams.push(chosen);',
-          '    return;',
-          '  }',
-          '  for (let index = start; index < slots.people.length; index += 1) {',
-          '    walk(index + 1, chosen.concat(slots.people[index]));',
-          '  }',
-          '};',
-          'walk(0, []);',
-          'return teams;'
-        ].join('\n')
-      },
-      {
-        name: 'teams',
-        command: 'jsEval',
-        body: [
-          'const slots = $slots;',
-          'const badKey = [slots.first, slots.second].sort().join("");',
-          'return $combos.filter((team) => team.slice().sort().join("") !== badKey).length;'
-        ].join('\n')
-      }
-    ],
     compute: [
-      'return String($teams) + " teams.";'
+      'const slots = $slots;',
+      'const badKey = [slots.first, slots.second].sort().join("");',
+      'let total = 0;',
+      'const walk = (start, chosen) => {',
+      '  if (chosen.length === slots.size) {',
+      '    if (chosen.slice().sort().join("") !== badKey) {',
+      '      total += 1;',
+      '    }',
+      '    return;',
+      '  }',
+      '  for (let index = start; index < slots.people.length; index += 1) {',
+      '    walk(index + 1, chosen.concat(slots.people[index]));',
+      '  }',
+      '};',
+      'walk(0, []);',
+      'return String(total) + " teams.";'
     ].join('\n'),
     explain(slots, solution) {
       return [
@@ -406,33 +391,25 @@ export const cases = [
     render(solution) {
       return `${proseList(solution.sums)}.`;
     },
-    wires: [
-      {
-        name: 'sums',
-        command: 'jsEval',
-        body: [
-          'const slots = $slots;',
-          'const sums = new Set();',
-          'const walk = (left, total) => {',
-          '  if (left === 0) {',
-          '    sums.add(total);',
-          '    return;',
-          '  }',
-          '  for (const face of slots.faces) {',
-          '    walk(left - 1, total + face);',
-          '  }',
-          '};',
-          'walk(slots.cubes, 0);',
-          'return [...sums].sort((left, right) => left - right);'
-        ].join('\n')
-      }
-    ],
     compute: [
+      'const slots = $slots;',
+      'const sums = new Set();',
+      'const walk = (left, total) => {',
+      '  if (left === 0) {',
+      '    sums.add(total);',
+      '    return;',
+      '  }',
+      '  for (const face of slots.faces) {',
+      '    walk(left - 1, total + face);',
+      '  }',
+      '};',
+      'walk(slots.cubes, 0);',
+      'const values = [...sums].sort((left, right) => left - right);',
       'let text;',
-      'if ($sums.length === 1) {',
-      '  text = String($sums[0]);',
+      'if (values.length === 1) {',
+      '  text = String(values[0]);',
       '} else {',
-      '  text = $sums.slice(0, -1).join(", ") + ", and " + $sums[$sums.length - 1];',
+      '  text = values.slice(0, -1).join(", ") + ", and " + values[values.length - 1];',
       '}',
       'return text + ".";'
     ].join('\n'),

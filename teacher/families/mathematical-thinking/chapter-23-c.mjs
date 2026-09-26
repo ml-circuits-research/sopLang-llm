@@ -232,7 +232,9 @@ function propertyCase(template, type) {
         body: [
           'const slots = $slots;',
           MATCHES_SOURCE,
-          'return { certain: slots.candidates.every((value) => matches(value, slots.predicate)), possible: slots.candidates.some((value) => matches(value, slots.predicate)) };'
+          'const certain = slots.candidates.every((value) => matches(value, slots.predicate));',
+          'const possible = slots.candidates.some((value) => matches(value, slots.predicate));',
+          'return { certain, possible };'
         ].join('\n')
       }
     ],
@@ -325,21 +327,17 @@ export const cases = [
     },
     wires: [
       {
-        name: 'kept',
+        name: 'winners',
         command: 'jsEval',
         body: [
           'const slots = $slots;',
           MATCHES_SOURCE,
           KEEP_SOURCE,
-          'return slots.clues.map((clue) => ({ clue, remaining: keep(slots.candidates, clue.predicate) }));'
-        ].join('\n')
-      },
-      {
-        name: 'winners',
-        command: 'jsEval',
-        body: [
-          'const slots = $slots;',
-          'return $kept.filter((entry) => entry.remaining.length === 1 && entry.remaining[0] === slots.target).map((entry) => entry.clue);'
+          'const winners = slots.clues.filter((clue) => {',
+          '  const remaining = keep(slots.candidates, clue.predicate);',
+          '  return remaining.length === 1 && remaining[0] === slots.target;',
+          '});',
+          'return winners;'
         ].join('\n')
       }
     ],

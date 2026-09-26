@@ -86,24 +86,18 @@ function render(solution) {
 
 const WIRES = [
   {
-    name: 'scored',
-    command: 'jsEval',
-    body: [
-      'const scored = $slots.routes.map((route) => {',
-      '  let energy = 0;',
-      '  for (const terrain of route.terrains) {',
-      '    energy += $slots.costs[terrain];',
-      '  }',
-      '  return { name: route.name, energy };',
-      '});',
-      'return scored;'
-    ].join('\n')
-  },
-  {
     name: 'best',
     command: 'jsEval',
     body: [
-      'const feasible = $scored.filter((route) => route.energy <= $slots.limit);',
+      'const slots = $slots;',
+      'const scored = slots.routes.map((route) => {',
+      '  let energy = 0;',
+      '  for (const terrain of route.terrains) {',
+      '    energy += slots.costs[terrain];',
+      '  }',
+      '  return { name: route.name, energy };',
+      '});',
+      'const feasible = scored.filter((route) => route.energy <= slots.limit);',
       'probe(feasible.length > 0, "at least one listed route must stay within the energy limit");',
       'let best = feasible[0];',
       'for (const route of feasible.slice(1)) {',

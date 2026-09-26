@@ -73,25 +73,15 @@ function render(solution) {
   return `${solution.sameActClause} ${solution.otherActClause} ${solution.warningClause}`;
 }
 
-const WIRES = [
-  {
-    name: 'rungs',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const priorIndex = slots.rungs.indexOf(slots.priorSanction);',
-      'const nextIndex = priorIndex + 1;',
-      'const lastRungWord = slots.rungs[slots.rungs.length - 1].split(" ")[0];',
-      'const sameActClause = slots.priorAct.charAt(0).toUpperCase() + slots.priorAct.slice(1) + ": same act → rung " + (nextIndex + 1) + " (" + slots.rungs[nextIndex] + ").";',
-      'const otherActClause = slots.otherAct + ": other type → rung 1 possible.";',
-      'const warningClause = "Do not jump to the " + lastRungWord + " for the " + slots.priorAct + ".";',
-      'return { sameActClause, otherActClause, warningClause };'
-    ].join('\n')
-  }
-];
-
 const COMPUTE = [
-  'return $rungs.sameActClause + " " + $rungs.otherActClause + " " + $rungs.warningClause;'
+  'const slots = $slots;',
+  'const priorIndex = slots.rungs.indexOf(slots.priorSanction);',
+  'const nextIndex = priorIndex + 1;',
+  'const lastRungWord = slots.rungs[slots.rungs.length - 1].split(" ")[0];',
+  'const sameActClause = slots.priorAct.charAt(0).toUpperCase() + slots.priorAct.slice(1) + ": same act → rung " + (nextIndex + 1) + " (" + slots.rungs[nextIndex] + ").";',
+  'const otherActClause = slots.otherAct + ": other type → rung 1 possible.";',
+  'const warningClause = "Do not jump to the " + lastRungWord + " for the " + slots.priorAct + ".";',
+  'return sameActClause + " " + otherActClause + " " + warningClause;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -113,7 +103,6 @@ export const cases = [
     parse,
     solve,
     render,
-    wires: WIRES,
     compute: COMPUTE,
     explain
   }

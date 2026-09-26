@@ -121,10 +121,12 @@ function render(solution) {
 
 const WIRES = [
   {
-    name: 'order',
+    name: 'schedule',
     command: 'jsEval',
     body: [
       'const slots = $slots;',
+      'const start = {};',
+      'const finish = {};',
       'const scheduled = [];',
       'const remaining = slots.order.slice();',
       'while (remaining.length > 0) {',
@@ -133,26 +135,14 @@ const WIRES = [
       '    throw new Error("the stated prerequisites contain a cycle, so no schedule exists");',
       '  }',
       '  for (const name of ready) {',
+      '    const prerequisites = slots.prerequisites[name];',
+      '    start[name] = prerequisites.length === 0 ? 0 : Math.max(...prerequisites.map((prerequisite) => finish[prerequisite]));',
+      '    finish[name] = start[name] + slots.durations[name];',
       '    scheduled.push(name);',
       '    remaining.splice(remaining.indexOf(name), 1);',
       '  }',
       '}',
-      'return scheduled;'
-    ].join('\n')
-  },
-  {
-    name: 'schedule',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const start = {};',
-      'const finish = {};',
-      'for (const name of $order) {',
-      '  const prerequisites = slots.prerequisites[name];',
-      '  start[name] = prerequisites.length === 0 ? 0 : Math.max(...prerequisites.map((prerequisite) => finish[prerequisite]));',
-      '  finish[name] = start[name] + slots.durations[name];',
-      '}',
-      'return { start, finish, scheduled: $order };'
+      'return { start, finish, scheduled };'
     ].join('\n')
   },
   {

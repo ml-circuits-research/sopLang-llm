@@ -88,34 +88,23 @@ function render(solution) {
   return `${solution.paidClause} ${solution.leaveClause}`;
 }
 
-const WIRES = [
-  {
-    name: 'working',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];',
-      'const start = WEEKDAYS.indexOf(slots.announceDay);',
-      'const end = WEEKDAYS.indexOf(slots.leaveDay);',
-      'const span = ((end - start) % 7 + 7) % 7;',
-      'let availableWorkingDays = 0;',
-      'for (let step = 1; step <= span; step += 1) {',
-      '  if ((start + step) % 7 <= 4) {',
-      '    availableWorkingDays += 1;',
-      '  }',
-      '}',
-      'return availableWorkingDays;'
-    ].join('\n')
-  }
-];
-
 const COMPUTE = [
   'const slots = $slots;',
+  'const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];',
+  'const start = WEEKDAYS.indexOf(slots.announceDay);',
+  'const end = WEEKDAYS.indexOf(slots.leaveDay);',
+  'const span = ((end - start) % 7 + 7) % 7;',
+  'let availableWorkingDays = 0;',
+  'for (let step = 1; step <= span; step += 1) {',
+  '  if ((start + step) % 7 <= 4) {',
+  '    availableWorkingDays += 1;',
+  '  }',
+  '}',
   'const paidClause = slots.orderedInWriting',
   '  ? "Yes: the " + slots.requestedHours + " h were ordered in writing beforehand."',
   '  : "No: the written order is missing.";',
-  'const leaveClause = $working >= slots.noticeDays',
-  '  ? "Yes: " + $working + " working days cover the " + slots.noticeDays + " the extract requires."',
+  'const leaveClause = availableWorkingDays >= slots.noticeDays',
+  '  ? "Yes: " + availableWorkingDays + " working days cover the " + slots.noticeDays + " the extract requires."',
   '  : "No: " + slots.noticeDays + " working days > " + slots.announceDay + "-" + slots.leaveDay + ".";',
   'return paidClause + " " + leaveClause;'
 ].join('\n');
@@ -141,7 +130,6 @@ export const cases = [
     parse,
     solve,
     render,
-    wires: WIRES,
     compute: COMPUTE,
     explain
   }

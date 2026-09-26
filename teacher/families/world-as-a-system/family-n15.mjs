@@ -95,42 +95,29 @@ const WIRES = [
       'const slots = $slots;',
       'return { suffix: renderCrossDomain(slots.crossDomain) };'
     ].join('\n')
-  },
-  {
-    name: 'roles',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const roleTests = [',
-      '  { role: "secondhand", pattern: /rumor|hearsay|second-hand|secondhand|repeating/ },',
-      '  { role: "evidence", pattern: /calculation|calculates|estimates|estimating|records|measured|data/ },',
-      '  { role: "interest", pattern: /would pay|interest|benefit|profit|argues/ }',
-      '];',
-      'const roleOf = (description) => {',
-      '  const text = String(description).toLowerCase();',
-      '  for (const test of roleTests) {',
-      '    if (test.pattern.test(text)) { return test.role; }',
-      '  }',
-      '  throw new Error("the source description states no access to the claim: " + description);',
-      '};',
-      'return slots.sources.map((source) => ({ id: source.id, description: source.description, role: roleOf(source.description) }));'
-    ].join('\n')
-  },
-  {
-    name: 'selection',
-    command: 'jsEval',
-    body: [
-      'const roles = $roles;',
-      'const best = roles.find((source) => source.role === "evidence");',
-      'const cautious = roles.find((source) => source.role === "secondhand");',
-      'const claim = /estimates?\\s+(?:the\\s+)?([a-z]+)/.exec(String(best.description).toLowerCase());',
-      'return { best, cautious, claim };'
-    ].join('\n')
   }
 ];
 
 const COMPUTE = [
-  'const best = $selection.best, cautious = $selection.cautious, claim = $selection.claim;',
+  'const slots = $slots;',
+  'const roleTests = [',
+  '  { role: "secondhand", pattern: /rumor|hearsay|second-hand|secondhand|repeating/ },',
+  '  { role: "evidence", pattern: /calculation|calculates|estimates|estimating|records|measured|data/ },',
+  '  { role: "interest", pattern: /would pay|interest|benefit|profit|argues/ }',
+  '];',
+  'const roleOf = (description) => {',
+  '  const text = String(description).toLowerCase();',
+  '  for (const test of roleTests) {',
+  '    if (test.pattern.test(text)) {',
+  '      return test.role;',
+  '    }',
+  '  }',
+  '  throw new Error("the source description states no access to the claim: " + description);',
+  '};',
+  'const roles = slots.sources.map((source) => ({ id: source.id, description: source.description, role: roleOf(source.description) }));',
+  'const best = roles.find((source) => source.role === "evidence");',
+  'const cautious = roles.find((source) => source.role === "secondhand");',
+  'const claim = /estimates?\\s+(?:the\\s+)?([a-z]+)/.exec(String(best.description).toLowerCase());',
   'const main = "Source " + best.id + " is best positioned for the " + claim[1] + " estimate; Source " + cautious.id + " should be treated most cautiously for that numerical claim.";',
   'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');

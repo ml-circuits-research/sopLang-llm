@@ -128,12 +128,12 @@ function render(solution) {
 
 const WIRES = [
   {
-    name: 'feasible',
+    name: 'optimum',
     command: 'jsEval',
     body: [
       'const slots = $slots;',
       'const count = slots.interventions.length;',
-      'const feasible = [];',
+      'const optima = [];',
       'for (let mask = 1; mask < 1 << count; mask += 1) {',
       '  const chosen = slots.interventions.filter((entry, index) => (mask & (1 << index)) !== 0);',
       '  const effects = new Set(chosen.flatMap((entry) => entry.effects));',
@@ -143,28 +143,19 @@ const WIRES = [
       '  if (!slots.targets.every((target) => effects.has(target))) {',
       '    continue;',
       '  }',
-      '  feasible.push({ cost: chosen.reduce((total, entry) => total + entry.cost, 0), count: chosen.length, names: chosen.map((entry) => entry.name) });',
+      '  const cost = chosen.reduce((total, entry) => total + entry.cost, 0);',
+      '  const candidate = { cost: cost, count: chosen.length, names: chosen.map((entry) => entry.name) };',
+      '  const best = optima[0];',
+      '  if (best === undefined || cost < best.cost || (cost === best.cost && candidate.count < best.count)) {',
+      '    optima.length = 0;',
+      '    optima.push(candidate);',
+      '  } else if (cost === best.cost && candidate.count === best.count) {',
+      '    optima.push(candidate);',
+      '  }',
       '}',
-      'return feasible;'
-    ].join('\n')
-  },
-  {
-    name: 'optima',
-    command: 'jsEval',
-    body: [
-      'const cheapest = Math.min(...$feasible.map((entry) => entry.cost));',
-      'const minCount = Math.min(...$feasible.filter((entry) => entry.cost === cheapest).map((entry) => entry.count));',
-      'const optima = $feasible.filter((entry) => entry.cost === cheapest && entry.count === minCount);',
       'probe(optima.length > 0, "some combination must cover the targets without a forbidden effect");',
       'probe(new Set(optima.map((entry) => entry.names.join(" | "))).size === 1, "the stated goals must leave exactly one minimum intervention");',
-      'return optima[0];'
-    ].join('\n')
-  },
-  {
-    name: 'optimum',
-    command: 'jsEval',
-    body: [
-      'const best = $optima;',
+      'const best = optima[0];',
       'probe(Number.isInteger(best.cost) && best.cost > 0, "the minimum total cost must be a positive number");',
       'probe(best.names.length > 0, "the minimum intervention must contain at least one action");',
       'const printed = new Map(' + JSON.stringify([...PRINTED_NAMES]) + ');',

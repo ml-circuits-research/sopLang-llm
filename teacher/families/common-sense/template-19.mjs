@@ -122,7 +122,7 @@ function render(solution) {
 
 const WIRES = [
   {
-    name: 'weighted',
+    name: 'means',
     command: 'jsEval',
     body: [
       'const slots = $slots;',
@@ -133,25 +133,18 @@ const WIRES = [
       'for (const strategy of slots.strategies) {',
       '  let total = 0;',
       '  for (let index = 0; index < scenarioCount; index += 1) {',
-      '    total += slots.probabilities[index] * strategy.outcomes[index];',
+      '    const outcome = strategy.outcomes[index];',
+      '    total += slots.probabilities[index] * outcome;',
       '  }',
       '  hundredths[strategy.label] = total;',
       '  minimums[strategy.label] = Math.min(...strategy.outcomes);',
       '  labels.push(strategy.label);',
       '}',
-      'return { labels, hundredths, minimums };'
-    ].join('\n')
-  },
-  {
-    name: 'means',
-    command: 'jsEval',
-    body: [
-      'const weighted = $weighted;',
-      'const acceptable = weighted.labels.filter((label) => weighted.minimums[label] >= $slots.threshold);',
-      'const bestMean = acceptable.length === 0 ? 0 : Math.max(...acceptable.map((label) => weighted.hundredths[label]));',
-      'const winner = acceptable.find((label) => weighted.hundredths[label] === bestMean);',
+      'const acceptable = labels.filter((label) => minimums[label] >= slots.threshold);',
+      'const bestMean = acceptable.length === 0 ? 0 : Math.max(...acceptable.map((label) => hundredths[label]));',
+      'const winner = acceptable.find((label) => hundredths[label] === bestMean);',
       'probe(acceptable.length === 0 || winner !== undefined, "the acceptable strategies must attain a largest weighted mean");',
-      'return { labels: weighted.labels, hundredths: weighted.hundredths, winner };'
+      'return { labels, hundredths, winner };'
     ].join('\n')
   }
 ];

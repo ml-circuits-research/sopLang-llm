@@ -93,48 +93,39 @@ const WIRES = [
       'const slots = $slots;',
       'return { suffix: renderCrossDomain(slots.crossDomain) };'
     ].join('\n')
-  },
-  {
-    name: 'subsets',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const subsets = [];',
-      'const build = (start, picked) => {',
-      '  if (picked.length > 0) { subsets.push(picked.slice()); }',
-      '  for (let index = start; index < slots.groups.length; index += 1) {',
-      '    picked.push(index);',
-      '    build(index + 1, picked);',
-      '    picked.pop();',
-      '  }',
-      '};',
-      'build(0, []);',
-      'return subsets;'
-    ].join('\n')
-  },
-  {
-    name: 'winning',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const winning = [];',
-      'for (const subset of $subsets) {',
-      '  let seats = 0;',
-      '  for (const index of subset) { seats += slots.groups[index].seats; }',
-      '  if (seats < slots.threshold) { continue; }',
-      '  const minimal = subset.every((index) => seats - slots.groups[index].seats < slots.threshold);',
-      '  if (minimal) {',
-      '    winning.push({ label: subset.map((index) => slots.groups[index].label).join(""), seats: seats });',
-      '  }',
-      '}',
-      'probe(winning.length > 0, "the stated seats must leave at least one minimal winning coalition");',
-      'return { winning };'
-    ].join('\n')
   }
 ];
 
 const COMPUTE = [
-  'const main = $winning.winning.map((coalition) => coalition.label + " with " + coalition.seats + " seats").join("; ") + ".";',
+  'const slots = $slots;',
+  'const subsets = [];',
+  'const build = (start, picked) => {',
+  '  if (picked.length > 0) {',
+  '    subsets.push(picked.slice());',
+  '  }',
+  '  for (let index = start; index < slots.groups.length; index += 1) {',
+  '    picked.push(index);',
+  '    build(index + 1, picked);',
+  '    picked.pop();',
+  '  }',
+  '};',
+  'build(0, []);',
+  'const winning = [];',
+  'for (const subset of subsets) {',
+  '  let seats = 0;',
+  '  for (const index of subset) {',
+  '    seats += slots.groups[index].seats;',
+  '  }',
+  '  if (seats < slots.threshold) {',
+  '    continue;',
+  '  }',
+  '  const minimal = subset.every((index) => seats - slots.groups[index].seats < slots.threshold);',
+  '  if (minimal) {',
+  '    winning.push({ label: subset.map((index) => slots.groups[index].label).join(""), seats: seats });',
+  '  }',
+  '}',
+  'probe(winning.length > 0, "the stated seats must leave at least one minimal winning coalition");',
+  'const main = winning.map((coalition) => coalition.label + " with " + coalition.seats + " seats").join("; ") + ".";',
   'return $cross.suffix === "" ? main : main + " " + $cross.suffix;'
 ].join('\n');
 

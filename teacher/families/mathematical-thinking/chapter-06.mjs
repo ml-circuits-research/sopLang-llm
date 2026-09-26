@@ -131,10 +131,17 @@ export const cases = [
           'const candidates = [];',
           'for (const tens of slots.digits) {',
           '  for (const ones of slots.digits) {',
-          '    if (tens === ones || tens === 0) { continue; }',
+          '    if (tens === ones || tens === 0) {',
+          '      continue;',
+          '    }',
           '    const value = 10 * tens + ones;',
-          '    if (value > slots.lower && value < slots.upper) { candidates.push(value); }',
+          '    if (value > slots.lower && value < slots.upper) {',
+          '      candidates.push(value);',
+          '    }',
           '  }',
+          '}',
+          'if (candidates.length === 0) {',
+          '  throw new Error("no two-digit number from the allowed digits fits between the limits");',
           '}',
           'candidates.sort((left, right) => left - right);',
           'return candidates;'
@@ -142,9 +149,6 @@ export const cases = [
       }
     ],
     compute: [
-      'if ($candidates.length === 0) {',
-      '  throw new Error("no two-digit number from the allowed digits fits between the limits");',
-      '}',
       'return String($candidates[0]);'
     ].join('\n'),
     explain(slots, solution) {

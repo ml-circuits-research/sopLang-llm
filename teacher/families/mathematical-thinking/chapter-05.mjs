@@ -94,15 +94,15 @@ export const cases = [
           '    }',
           '  }',
           '}',
+          'if (best === null) {',
+          '  throw new Error(`no combination of ${slots.first} and ${slots.second} reaches ${slots.total}`);',
+          '}',
           'return best;'
         ].join('\n')
       }
     ],
     compute: [
       'const coin = (count, value) => count + " coin" + (count === 1 ? "" : "s") + " worth " + value + " lei";',
-      'if ($best === null) {',
-      '  throw new Error(`no combination of ${$slots.first} and ${$slots.second} reaches ${$slots.total}`);',
-      '}',
       'return coin($best.countFirst, $slots.first) + " and " + coin($best.countSecond, $slots.second) + ".";'
     ].join('\n'),
     explain(slots, solution) {

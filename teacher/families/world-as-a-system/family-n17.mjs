@@ -103,64 +103,43 @@ const WIRES = [
       'const slots = $slots;',
       'return { suffix: renderCrossDomain(slots.crossDomain) };'
     ].join('\n')
-  },
-  {
-    name: 'plan',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const phrase = slots.intervention.toLowerCase();',
-      'const forms = [',
-      '  { variable: "gate", closed: true, pattern: /close (?:the )?gate/ },',
-      '  { variable: "gate", closed: false, pattern: /(?:keep|leave) (?:the )?gate open/ },',
-      '  { variable: "rain", occurs: false, pattern: /(?:remove|stop) (?:the )?heavy rain/ },',
-      '  { variable: "river", occurs: false, pattern: /(?:prevent|block) (?:the )?high river/ },',
-      '  { variable: "market", open: true, pattern: /(?:keep|hold) (?:the )?market open/ }',
-      '];',
-      'const plan = forms.find((candidate) => candidate.pattern.test(phrase));',
-      'return { plan };'
-    ].join('\n')
-  },
-  {
-    name: 'state',
-    command: 'jsEval',
-    body: [
-      'const plan = $plan.plan;',
-      'const rain = plan.variable === "rain" ? plan.occurs : true;',
-      'const river = plan.variable === "river" ? plan.occurs : rain;',
-      'const gateClosed = plan.variable === "gate" ? plan.closed : false;',
-      'const flood = river && !gateClosed;',
-      'const marketOpen = plan.variable === "market" ? true : !flood;',
-      'probe(flood === (river && !gateClosed), "the flood consequence must follow from the stated rule");',
-      'probe((plan.variable !== "river" || river === false) && (plan.variable !== "rain" || river === false), "the intervention must clear the river it addresses");',
-      'return { flood, marketOpen, rain, river, gateClosed };'
-    ].join('\n')
-  },
-  {
-    name: 'verdict',
-    command: 'jsEval',
-    body: [
-      'const state = $state;',
-      'let verdict;',
-      'if (state.flood && state.marketOpen) {',
-      '  verdict = "The square still floods; the market is held open only by the direct intervention.";',
-      '} else if (state.flood) {',
-      '  verdict = "The original chain remains: flood and market closure occur.";',
-      '} else if (!state.river) {',
-      '  verdict = state.rain ? "Preventing the high river blocks the flood and market closure in this model." : "Without heavy rain, the model generates neither high river, flood, nor market closure.";',
-      '} else if (state.gateClosed) {',
-      '  verdict = "With the gate closed, the model no longer implies flooding or market closure.";',
-      '} else {',
-      '  throw new Error("the intervention changes no consequence of the stated model");',
-      '}',
-      'probe(typeof verdict === "string" && verdict.length > 0, "the recomputed model must yield a verdict");',
-      'return verdict;'
-    ].join('\n')
   }
 ];
 
 const COMPUTE = [
-  'return $cross.suffix === "" ? $verdict : $verdict + " " + $cross.suffix;'
+  'const slots = $slots;',
+  'const phrase = slots.intervention.toLowerCase();',
+  'const forms = [',
+  '  { variable: "gate", closed: true, pattern: /close (?:the )?gate/ },',
+  '  { variable: "gate", closed: false, pattern: /(?:keep|leave) (?:the )?gate open/ },',
+  '  { variable: "rain", occurs: false, pattern: /(?:remove|stop) (?:the )?heavy rain/ },',
+  '  { variable: "river", occurs: false, pattern: /(?:prevent|block) (?:the )?high river/ },',
+  '  { variable: "market", open: true, pattern: /(?:keep|hold) (?:the )?market open/ }',
+  '];',
+  'const plan = forms.find((candidate) => candidate.pattern.test(phrase));',
+  'const rain = plan.variable === "rain" ? plan.occurs : true;',
+  'const river = plan.variable === "river" ? plan.occurs : rain;',
+  'const gateClosed = plan.variable === "gate" ? plan.closed : false;',
+  'const flood = river && !gateClosed;',
+  'const marketOpen = plan.variable === "market" ? true : !flood;',
+  'probe(flood === (river && !gateClosed), "the flood consequence must follow from the stated rule");',
+  'probe((plan.variable !== "river" || river === false) && (plan.variable !== "rain" || river === false), "the intervention must clear the river it addresses");',
+  'let verdict;',
+  'if (flood && marketOpen) {',
+  '  verdict = "The square still floods; the market is held open only by the direct intervention.";',
+  '} else if (flood) {',
+  '  verdict = "The original chain remains: flood and market closure occur.";',
+  '} else if (!river) {',
+  '  verdict = rain',
+  '    ? "Preventing the high river blocks the flood and market closure in this model."',
+  '    : "Without heavy rain, the model generates neither high river, flood, nor market closure.";',
+  '} else if (gateClosed) {',
+  '  verdict = "With the gate closed, the model no longer implies flooding or market closure.";',
+  '} else {',
+  '  throw new Error("the intervention changes no consequence of the stated model");',
+  '}',
+  'probe(typeof verdict === "string" && verdict.length > 0, "the recomputed model must yield a verdict");',
+  'return $cross.suffix === "" ? verdict : verdict + " " + $cross.suffix;'
 ].join('\n');
 
 function explain(slots, solution) {

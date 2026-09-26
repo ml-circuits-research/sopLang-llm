@@ -115,42 +115,31 @@ function render(solution) {
   return `${solution.text} ${solution.verdict}`;
 }
 
-const WIRES = [
-  {
-    name: 'checks',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const coffeeCutoff = slots.lightsOut - slots.coffeeHoursBeforeLightsOut * 60;',
-      'const screenCutoff = slots.lightsOut - slots.screenMinutesBeforeLightsOut;',
-      'const coffeeLate = slots.planCoffee > coffeeCutoff;',
-      'const screenLate = slots.planPhone > screenCutoff;',
-      'const bedtimeMoved = slots.planLightsOut !== slots.lightsOut;',
-      'const risingMoved = slots.planRise !== slots.rise;',
-      'const napLate = slots.planNap > slots.napDeadline;',
-      'const napLong = slots.planNapMinutes > slots.napMaxMinutes;',
-      'const breaches = [coffeeLate, screenLate, bedtimeMoved, risingMoved, napLate, napLong].filter(Boolean).length;',
-      'probe(breaches >= 4, "the plan must break at least four rules for this section pattern");',
-      'return { coffeeCutoff, screenCutoff, coffeeLate, screenLate, bedtimeMoved, risingMoved, napLate, napLong, breaches };'
-    ].join('\n')
-  }
-];
-
 const COMPUTE = [
   'const slots = $slots;',
   'const clock = (value) => String(Math.floor(value / 60)).padStart(2, "0") + ":" + String(value % 60).padStart(2, "0");',
+  'const coffeeCutoff = slots.lightsOut - slots.coffeeHoursBeforeLightsOut * 60;',
+  'const screenCutoff = slots.lightsOut - slots.screenMinutesBeforeLightsOut;',
+  'const coffeeLate = slots.planCoffee > coffeeCutoff;',
+  'const screenLate = slots.planPhone > screenCutoff;',
+  'const bedtimeMoved = slots.planLightsOut !== slots.lightsOut;',
+  'const risingMoved = slots.planRise !== slots.rise;',
+  'const napLate = slots.planNap > slots.napDeadline;',
+  'const napLong = slots.planNapMinutes > slots.napMaxMinutes;',
+  'const breaches = [coffeeLate, screenLate, bedtimeMoved, risingMoved, napLate, napLong].filter(Boolean).length;',
+  'probe(breaches >= 4, "the plan must break at least four rules for this section pattern");',
   'const clauses = [];',
-  'clauses.push($checks.coffeeLate ? "Coffee too late (last would be " + clock($checks.coffeeCutoff) + ")" : "Coffee at " + clock(slots.planCoffee) + " is inside the window");',
-  'clauses.push($checks.screenLate ? "screen after " + clock($checks.screenCutoff) : "screen within the window before lights out");',
-  'if ($checks.bedtimeMoved && $checks.risingMoved) { clauses.push("bedtime and rising moved"); }',
-  'else if ($checks.bedtimeMoved) { clauses.push("bedtime moved"); }',
-  'else if ($checks.risingMoved) { clauses.push("rising moved"); }',
+  'clauses.push(coffeeLate ? "Coffee too late (last would be " + clock(coffeeCutoff) + ")" : "Coffee at " + clock(slots.planCoffee) + " is inside the window");',
+  'clauses.push(screenLate ? "screen after " + clock(screenCutoff) : "screen within the window before lights out");',
+  'if (bedtimeMoved && risingMoved) { clauses.push("bedtime and rising moved"); }',
+  'else if (bedtimeMoved) { clauses.push("bedtime moved"); }',
+  'else if (risingMoved) { clauses.push("rising moved"); }',
   'else { clauses.push("bedtime and rising kept"); }',
-  'if ($checks.napLate && $checks.napLong) { clauses.push("nap after " + clock(slots.napDeadline) + " and too long"); }',
-  'else if ($checks.napLate) { clauses.push("nap after " + clock(slots.napDeadline)); }',
-  'else if ($checks.napLong) { clauses.push("nap too long"); }',
+  'if (napLate && napLong) { clauses.push("nap after " + clock(slots.napDeadline) + " and too long"); }',
+  'else if (napLate) { clauses.push("nap after " + clock(slots.napDeadline)); }',
+  'else if (napLong) { clauses.push("nap too long"); }',
   'else { clauses.push("nap inside the rules"); }',
-  'const verdict = $checks.breaches >= 4 ? "At least four breaches." : "At least " + $checks.breaches + " breaches.";',
+  'const verdict = breaches >= 4 ? "At least four breaches." : "At least " + breaches + " breaches.";',
   'return clauses.join("; ") + ". " + verdict;'
 ].join('\n');
 
@@ -173,7 +162,6 @@ export const cases = [
     parse,
     solve,
     render,
-    wires: WIRES,
     compute: COMPUTE,
     explain
   }

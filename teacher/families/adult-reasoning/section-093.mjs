@@ -76,31 +76,15 @@ function render(solution) {
   return `${solution.cost} (the ${solution.label}). ${solution.unvaluedLabel} has no sum on the chosen axis.`;
 }
 
-const WIRES = [
-  {
-    name: 'best',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const valued = slots.options.filter((option) => option.ordinal !== slots.chosen && option.value !== null);',
-      'const best = valued.reduce((leader, option) => (option.value > leader.value ? option : leader));',
-      'return { cost: best.value, label: best.label };'
-    ].join('\n')
-  },
-  {
-    name: 'unvalued',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const unvalued = slots.options.filter((option) => option.ordinal !== slots.chosen && option.value === null);',
-      'const unvaluedLabels = unvalued.map((option) => option.label.charAt(0).toUpperCase() + option.label.slice(1)).join(" and ");',
-      'return unvaluedLabels;'
-    ].join('\n')
-  }
-];
-
 const COMPUTE = [
-  'return $best.cost + " (the " + $best.label + "). " + $unvalued + " has no sum on the chosen axis.";'
+  'const slots = $slots;',
+  'const chosen = slots.options.find((option) => option.ordinal === slots.chosen);',
+  'const valued = slots.options.filter((option) => option.ordinal !== slots.chosen && option.value !== null);',
+  'const best = valued.reduce((leader, option) => (option.value > leader.value ? option : leader));',
+  'const unvalued = slots.options.filter((option) => option.ordinal !== slots.chosen && option.value === null);',
+  'const unvaluedLabels = unvalued.map((option) => option.label.charAt(0).toUpperCase() + option.label.slice(1)).join(" and ");',
+  'const answer = best.value + " (the " + best.label + "). " + unvaluedLabels + " has no sum on the chosen axis.";',
+  'return answer;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -121,7 +105,6 @@ export const cases = [
     parse,
     solve,
     render,
-    wires: WIRES,
     compute: COMPUTE,
     explain
   }

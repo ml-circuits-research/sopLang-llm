@@ -63,22 +63,15 @@ function render(solution) {
   return `${solution.orderClause} ${solution.trayClause} ${solution.alarmClause}`;
 }
 
-const WIRES = [
-  {
-    name: 'clauses',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const orderClause = (slots.oldTrayFat ? "Old tray" : "Burning tray") + " → smoke → alarm.";',
-      'const trayClause = slots.newTrayRaw ? "The new tray is raw, not burned." : "The new tray is burned.";',
-      'const alarmClause = slots.rivalAlarmClaim && slots.rivalBurnClaim ? "The alarm does not produce smoke." : "The alarm is the cause of the smoke.";',
-      'return { orderClause, trayClause, alarmClause };'
-    ].join('\n')
-  }
-];
-
 const COMPUTE = [
-  'return $clauses.orderClause + " " + $clauses.trayClause + " " + $clauses.alarmClause;'
+  'const slots = $slots;',
+  'const timeShape = /^[0-9]{1,2}:[0-9]{2}$/;',
+  'const minutesOf = (time) => { const parts = time.split(":"); return Number(parts[0]) * 60 + Number(parts[1]); };',
+  'const times = [slots.ovenOn, slots.trayIn, slots.alarmAt, slots.outAt].map(minutesOf);',
+  'const orderClause = (slots.oldTrayFat ? "Old tray" : "Burning tray") + " → smoke → alarm.";',
+  'const trayClause = slots.newTrayRaw ? "The new tray is raw, not burned." : "The new tray is burned.";',
+  'const alarmClause = slots.rivalAlarmClaim && slots.rivalBurnClaim ? "The alarm does not produce smoke." : "The alarm is the cause of the smoke.";',
+  'return orderClause + " " + trayClause + " " + alarmClause;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -100,7 +93,6 @@ export const cases = [
     parse,
     solve,
     render,
-    wires: WIRES,
     compute: COMPUTE,
     explain
   }

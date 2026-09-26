@@ -215,7 +215,7 @@ export const cases = [
     },
     wires: [
       {
-        name: 'axes',
+        name: 'position',
         command: 'jsEval',
         body: [
           'const slots = $slots;',
@@ -231,16 +231,6 @@ export const cases = [
           '  const lesser = forward ? r.reference : r.subject;',
           '  map[greater].add(lesser);',
           '}',
-          'return { east: east, north: north, names: [...names] };'
-        ].join('\n')
-      },
-      {
-        name: 'closure',
-        command: 'jsEval',
-        body: [
-          'const names = $axes.names;',
-          'const east = $axes.east;',
-          'const north = $axes.north;',
           'for (const n of names) {',
           '  for (const map of [east, north]) {',
           '    const stack = [...map[n]];',
@@ -252,16 +242,6 @@ export const cases = [
           '    }',
           '  }',
           '}',
-          'return { east: east, north: north };'
-        ].join('\n')
-      },
-      {
-        name: 'position',
-        command: 'jsEval',
-        body: [
-          'const slots = $slots;',
-          'const east = $closure.east;',
-          'const north = $closure.north;',
           'const s = slots.subject; const t = slots.reference;',
           'if (east[s].has(t)) return "east";',
           'if (east[t].has(s)) return "west";',

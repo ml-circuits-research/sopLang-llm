@@ -224,7 +224,7 @@ export const cases = [
     },
     wires: [
       {
-        name: 'bounds',
+        name: 'path',
         command: 'jsEval',
         body: [
           'const slots = $slots;',
@@ -235,26 +235,29 @@ export const cases = [
           '  throw new Error("the target is below the start");',
           '}',
           'const span = big - small;',
-          'return { small: small, big: big, increase: increase, span: span };'
-        ].join('\n')
-      },
-      {
-        name: 'path',
-        command: 'jsEval',
-        body: [
-          'const increase = $bounds.increase;',
-          'const span = $bounds.span;',
           'let found = null;',
           'for (let count = 1; count <= increase; count += 1) {',
-          '  const rest = increase - count * $bounds.small;',
-          '  if (rest < 0 || rest % span !== 0) { continue; }',
+          '  const rest = increase - count * small;',
+          '  if (rest < 0 || rest % span !== 0) {',
+          '    continue;',
+          '  }',
           '  const bigCount = rest / span;',
-          '  if (bigCount < 0 || bigCount > count) { continue; }',
-          '  const steps = new Array(count - bigCount).fill($bounds.small).concat(new Array(bigCount).fill($bounds.big));',
-          '  found = { moves: count, steps: steps };',
+          '  if (bigCount < 0 || bigCount > count) {',
+          '    continue;',
+          '  }',
+          '  const steps = [];',
+          '  for (let index = 0; index < count - bigCount; index += 1) {',
+          '    steps.push(small);',
+          '  }',
+          '  for (let index = 0; index < bigCount; index += 1) {',
+          '    steps.push(big);',
+          '  }',
+          '  found = { moves: count, steps };',
           '  break;',
           '}',
-          'if (found === null) { throw new Error("the target cannot be reached with the allowed increases"); }',
+          'if (found === null) {',
+          '  throw new Error("the target cannot be reached with the allowed increases");',
+          '}',
           'return found;'
         ].join('\n')
       }

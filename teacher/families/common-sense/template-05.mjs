@@ -123,7 +123,7 @@ function render(solution) {
 
 const WIRES = [
   {
-    name: 'costs',
+    name: 'risk',
     command: 'jsEval',
     body: [
       'const slots = $slots;',
@@ -140,25 +140,19 @@ const WIRES = [
       'const adverseWithout = slots.loss * 100;',
       'const adverseWith = slots.protectionCost * 100 + slots.reductionPercent * slots.loss;',
       'const limit = slots.riskLimit * 100;',
-      'return { expectedWithout, expectedWith, adverseWithout, adverseWith, acceptableWithout: adverseWithout <= limit, acceptableWith: adverseWith <= limit };'
-    ].join('\n')
-  },
-  {
-    name: 'risk',
-    command: 'jsEval',
-    body: [
-      'const costs = $costs;',
-      'probe(costs.adverseWith <= costs.adverseWithout, "the protective measure must not increase the adverse-scenario loss");',
-      'probe(costs.expectedWithout > 0 && costs.expectedWith > 0, "both expected costs must be positive");',
+      'const acceptableWithout = adverseWithout <= limit;',
+      'const acceptableWith = adverseWith <= limit;',
+      'probe(adverseWith <= adverseWithout, "the protective measure must not increase the adverse-scenario loss");',
+      'probe(expectedWithout > 0 && expectedWith > 0, "both expected costs must be positive");',
       'let justification = "neither option, because both violate the hard risk rule";',
-      'if (costs.acceptableWithout && costs.acceptableWith) {',
-      '  justification = costs.expectedWith < costs.expectedWithout ? "the protective measure" : "the option without protection";',
-      '} else if (costs.acceptableWithout) {',
+      'if (acceptableWithout && acceptableWith) {',
+      '  justification = expectedWith < expectedWithout ? "the protective measure" : "the option without protection";',
+      '} else if (acceptableWithout) {',
       '  justification = "the option without protection";',
-      '} else if (costs.acceptableWith) {',
+      '} else if (acceptableWith) {',
       '  justification = "the protective measure";',
       '}',
-      'return { expectedWithout: costs.expectedWithout, expectedWith: costs.expectedWith, justification };'
+      'return { expectedWithout, expectedWith, justification };'
     ].join('\n')
   }
 ];

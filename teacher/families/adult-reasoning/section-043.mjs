@@ -88,43 +88,27 @@ function render(solution) {
   return `${solution.countWord}: ${solution.lateDays.join(', ')}. ${solution.onTimeClocks.join(' and ')} ≤ ${solution.threshold}. ${solution.makeUpClause}`;
 }
 
-const WIRES = [
-  {
-    name: 'late',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const minutesOf = (clock) => {',
-      '  const parts = clock.split(":");',
-      '  return Number(parts[0]) * 60 + Number(parts[1]);',
-      '};',
-      'const threshold = minutesOf(slots.threshold);',
-      'const late = slots.punchIns.filter((entry) => minutesOf(entry.clock) > threshold);',
-      'const onTime = slots.punchIns.filter((entry) => minutesOf(entry.clock) <= threshold);',
-      'probe(late.length > 0 && onTime.length > 0, "the week must contain a late arrival and a clean arrival");',
-      'probe(late.length + onTime.length === slots.punchIns.length, "every punch-in is either late or clean against the threshold");',
-      'return { count: late.length, lateDays: late.map((entry) => entry.day).join(", "), cleanClocks: onTime.map((entry) => entry.clock).join(" and ") };'
-    ].join('\n')
-  },
-  {
-    name: 'words',
-    command: 'jsEval',
-    body: [
-      'const COUNT_WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];',
-      'const count = $late.count;',
-      'const rawWord = count < COUNT_WORDS.length ? COUNT_WORDS[count] : String(count);',
-      'const countWord = rawWord.charAt(0).toUpperCase() + rawWord.slice(1);',
-      'return countWord;'
-    ].join('\n')
-  }
-];
-
 const COMPUTE = [
   'const slots = $slots;',
+  'const minutesOf = (clock) => {',
+  '  const parts = clock.split(":");',
+  '  return Number(parts[0]) * 60 + Number(parts[1]);',
+  '};',
+  'const threshold = minutesOf(slots.threshold);',
+  'const late = slots.punchIns.filter((entry) => minutesOf(entry.clock) > threshold);',
+  'const onTime = slots.punchIns.filter((entry) => minutesOf(entry.clock) <= threshold);',
+  'probe(late.length > 0 && onTime.length > 0, "the week must contain a late arrival and a clean arrival");',
+  'probe(late.length + onTime.length === slots.punchIns.length, "every punch-in is either late or clean against the threshold");',
+  'const COUNT_WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];',
+  'const count = late.length;',
+  'const rawWord = count < COUNT_WORDS.length ? COUNT_WORDS[count] : String(count);',
+  'const countWord = rawWord.charAt(0).toUpperCase() + rawWord.slice(1);',
+  'const lateDays = late.map((entry) => entry.day).join(", ");',
+  'const cleanClocks = onTime.map((entry) => entry.clock).join(" and ");',
   'const makeUpClause = slots.makeUpDay === slots.restDay',
   '  ? slots.makeUpDay + " erases nothing: it is not a working day on this clock."',
   '  : slots.makeUpDay + " counts as a working day on this clock, so the offer is a real shift.";',
-  'return $words + ": " + $late.lateDays + ". " + $late.cleanClocks + " ≤ " + slots.threshold + ". " + makeUpClause;'
+  'return countWord + ": " + lateDays + ". " + cleanClocks + " ≤ " + slots.threshold + ". " + makeUpClause;'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -145,7 +129,6 @@ export const cases = [
     parse,
     solve,
     render,
-    wires: WIRES,
     compute: COMPUTE,
     explain
   }

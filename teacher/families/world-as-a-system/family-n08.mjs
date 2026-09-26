@@ -107,34 +107,29 @@ const WIRES = [
     ].join('\n')
   },
   {
-    name: 'foodMap',
+    name: 'consumers',
     command: 'jsEval',
     body: [
       'const slots = $slots;',
       'const byFood = new Map();',
       'for (const link of slots.links) {',
-      '  if (!byFood.has(link.food)) { byFood.set(link.food, []); }',
+      '  if (!byFood.has(link.food)) {',
+      '    byFood.set(link.food, []);',
+      '  }',
       '  byFood.get(link.food).push(link.consumer);',
       '}',
-      'return { byFood };'
-    ].join('\n')
-  },
-  {
-    name: 'consumers',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const byFood = $foodMap.byFood;',
-      'const queue = [slots.decreased], seen = new Set(queue);',
+      'const seen = new Set([slots.decreased]);',
+      'const queue = [slots.decreased];',
       'const consumers = [];',
       'while (queue.length > 0) {',
       '  const current = queue.shift();',
       '  for (const consumer of byFood.get(current) || []) {',
-      '    if (!seen.has(consumer)) {',
-      '      seen.add(consumer);',
-      '      consumers.push(consumer);',
-      '      queue.push(consumer);',
+      '    if (seen.has(consumer)) {',
+      '      continue;',
       '    }',
+      '    seen.add(consumer);',
+      '    consumers.push(consumer);',
+      '    queue.push(consumer);',
       '  }',
       '}',
       'return { direct: consumers[0], indirect: consumers.slice(1) };'

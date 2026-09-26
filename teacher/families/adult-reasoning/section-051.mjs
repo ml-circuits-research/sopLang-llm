@@ -80,30 +80,20 @@ function render(solution) {
   return `Cube ${solution.cube.clause}. Boat ${solution.boat.clause}.`;
 }
 
-const WIRES = [
-  {
-    name: 'fates',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const formatDensity = (value) => Number.isInteger(value) ? String(value) : value.toFixed(2);',
-      'const densityFate = (massGrams, volumeCm3) => {',
-      '  const density = massGrams / volumeCm3;',
-      '  const shown = density.toFixed(2);',
-      '  const water = formatDensity(slots.waterDensity);',
-      '  if (density > slots.waterDensity) { return shown + " > " + water + " → sinks"; }',
-      '  if (density < slots.waterDensity) { return shown + " < " + water + " → floats"; }',
-      '  return shown + " = " + water + " → suspended";',
-      '};',
-      'const cube = densityFate(slots.massGrams, slots.cubeVolumeCm3);',
-      'const boat = densityFate(slots.massGrams, slots.boatVolumeCm3);',
-      'return { cube, boat };'
-    ].join('\n')
-  }
-];
-
 const COMPUTE = [
-  'return "Cube " + $fates.cube + ". Boat " + $fates.boat + ".";'
+  'const slots = $slots;',
+  'const formatDensity = (value) => Number.isInteger(value) ? String(value) : value.toFixed(2);',
+  'const densityFate = (massGrams, volumeCm3) => {',
+  '  const density = massGrams / volumeCm3;',
+  '  const shown = density.toFixed(2);',
+  '  const water = formatDensity(slots.waterDensity);',
+  '  if (density > slots.waterDensity) { return shown + " > " + water + " → sinks"; }',
+  '  if (density < slots.waterDensity) { return shown + " < " + water + " → floats"; }',
+  '  return shown + " = " + water + " → suspended";',
+  '};',
+  'const cube = densityFate(slots.massGrams, slots.cubeVolumeCm3);',
+  'const boat = densityFate(slots.massGrams, slots.boatVolumeCm3);',
+  'return "Cube " + cube + ". Boat " + boat + ".";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -124,7 +114,6 @@ export const cases = [
     parse,
     solve,
     render,
-    wires: WIRES,
     compute: COMPUTE,
     explain
   }

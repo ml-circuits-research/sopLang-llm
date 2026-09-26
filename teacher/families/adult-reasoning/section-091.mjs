@@ -66,27 +66,16 @@ function render(solution) {
   return `P=${solution.probability}. Expected number in ${solution.draws} draws = ${solution.expected}, not certainty. Zero reds can occur.`;
 }
 
-const WIRES = [
-  {
-    name: 'prob',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const total = slots.white + slots.red;',
-      'let a = slots.red;',
-      'let b = total;',
-      'while (b !== 0) { const next = a % b; a = b; b = next; }',
-      'const probability = a === 1 ? slots.red + "/" + total : slots.red + "/" + total + "=" + (slots.red / a) + "/" + (total / a);',
-      'const expected = (slots.draws * slots.red) / total;',
-      'probe(Number.isInteger(expected), "the expected number of reds must be a whole number for the stated draws");',
-      'return { probability, expected };'
-    ].join('\n')
-  }
-];
-
 const COMPUTE = [
   'const slots = $slots;',
-  'return "P=" + $prob.probability + ". Expected number in " + slots.draws + " draws = " + $prob.expected + ", not certainty. Zero reds can occur.";'
+  'const total = slots.white + slots.red;',
+  'let a = slots.red;',
+  'let b = total;',
+  'while (b !== 0) { const next = a % b; a = b; b = next; }',
+  'const probability = a === 1 ? slots.red + "/" + total : slots.red + "/" + total + "=" + (slots.red / a) + "/" + (total / a);',
+  'const expected = (slots.draws * slots.red) / total;',
+  'probe(Number.isInteger(expected), "the expected number of reds must be a whole number for the stated draws");',
+  'return "P=" + probability + ". Expected number in " + slots.draws + " draws = " + expected + ", not certainty. Zero reds can occur.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -107,7 +96,6 @@ export const cases = [
     parse,
     solve,
     render,
-    wires: WIRES,
     compute: COMPUTE,
     explain
   }

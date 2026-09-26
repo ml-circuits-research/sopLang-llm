@@ -64,27 +64,17 @@ function render(solution) {
   return `Full ${solution.fullLitres} l. Water ${solution.waterLitres} l.`;
 }
 
-const WIRES = [
-  {
-    name: 'volume',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const fullCm3 = slots.tank.length * slots.tank.width * slots.tank.height;',
-      'const fullTenths = fullCm3 / 100;',
-      'const levelTenths = (fullTenths * slots.filledPercent) / 100;',
-      'const stonesTenths = slots.stonesLitres * 10;',
-      'probe(Number.isInteger(fullTenths) && Number.isInteger(levelTenths) && Number.isInteger(stonesTenths), "the tank and the stones must give whole tenths of a litre");',
-      'const waterTenths = levelTenths - stonesTenths;',
-      'probe(waterTenths > 0 && waterTenths < levelTenths, "the submerged stones must leave some water below the level");',
-      'return { fullTenths, waterTenths };'
-    ].join('\n')
-  }
-];
-
 const COMPUTE = [
+  'const slots = $slots;',
+  'const fullCm3 = slots.tank.length * slots.tank.width * slots.tank.height;',
+  'const fullTenths = fullCm3 / 100;',
+  'const levelTenths = (fullTenths * slots.filledPercent) / 100;',
+  'const stonesTenths = slots.stonesLitres * 10;',
+  'probe(Number.isInteger(fullTenths) && Number.isInteger(levelTenths) && Number.isInteger(stonesTenths), "the tank and the stones must give whole tenths of a litre");',
+  'const waterTenths = levelTenths - stonesTenths;',
+  'probe(waterTenths > 0 && waterTenths < levelTenths, "the submerged stones must leave some water below the level");',
   'const litres = (tenths) => (tenths / 10).toFixed(1);',
-  'return "Full " + litres($volume.fullTenths) + " l. Water " + litres($volume.waterTenths) + " l.";'
+  'return "Full " + litres(fullTenths) + " l. Water " + litres(waterTenths) + " l.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -106,7 +96,6 @@ export const cases = [
     parse,
     solve,
     render,
-    wires: WIRES,
     compute: COMPUTE,
     explain
   }

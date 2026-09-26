@@ -124,28 +124,28 @@ const WIRES = [
       'const slots = $slots;',
       'return { suffix: renderCrossDomain(slots.crossDomain) };'
     ].join('\n')
-  },
-  {
-    name: 'gap',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const ordered = [...slots.steps].sort((left, right) => left.day - right.day);',
-      'let holder = null;',
-      'let gap = slots.statedGap || null;',
-      'for (const step of ordered) {',
-      '  if (step.kind === "found") { holder = step.holder; continue; }',
-      '  if (step.receiver === null) { gap = gap || { day: step.day, kind: "receiver" }; continue; }',
-      '  if (step.sender !== null && holder !== null && step.sender !== holder) { gap = gap || { day: step.day, kind: "link" }; }',
-      '  holder = step.receiver;',
-      '}',
-      'return { gap };'
-    ].join('\n')
   }
 ];
 
 const COMPUTE = [
-  'const gap = $gap.gap;',
+  'const slots = $slots;',
+  'const ordered = [...slots.steps].sort((left, right) => left.day - right.day);',
+  'let holder = null;',
+  'let gap = slots.statedGap || null;',
+  'for (const step of ordered) {',
+  '  if (step.kind === "found") {',
+  '    holder = step.holder;',
+  '    continue;',
+  '  }',
+  '  if (step.receiver === null) {',
+  '    gap = gap || { day: step.day, kind: "receiver" };',
+  '    continue;',
+  '  }',
+  '  if (step.sender !== null && holder !== null && step.sender !== holder) {',
+  '    gap = gap || { day: step.day, kind: "link" };',
+  '  }',
+  '  holder = step.receiver;',
+  '}',
   'const main = gap === null',
   '  ? "The chain is complete under the stated rule."',
   '  : gap.kind === "link"',

@@ -108,6 +108,28 @@ function mostFrequent(values) {
   return [...counts.entries()].filter(([, count]) => count === highest).map(([value]) => value).sort((a, b) => a - b);
 }
 
+/** Sandbox copy of `fractionText`, because the compute body runs isolated. */
+const FRACTION_UTILS = `const VULGAR_FRACTION = new Map([["1/2", "½"], ["1/3", "⅓"], ["2/3", "⅔"], ["1/4", "¼"], ["3/4", "¾"], ["1/5", "⅕"], ["2/5", "⅖"], ["3/5", "⅗"], ["4/5", "⅘"], ["1/6", "⅙"], ["5/6", "⅚"], ["1/8", "⅛"], ["3/8", "⅜"], ["5/8", "⅝"], ["7/8", "⅞"]]);
+function fractionText(numerator, denominator) {
+  let a = Math.abs(numerator);
+  let b = Math.abs(denominator);
+  while (b !== 0) {
+    const remainder = a % b;
+    a = b;
+    b = remainder;
+  }
+  const num = numerator / a;
+  const den = denominator / a;
+  if (den === 1) {
+    return String(num);
+  }
+  const whole = Math.trunc(num / den);
+  const remainder = num - whole * den;
+  const glyph = VULGAR_FRACTION.get(remainder + "/" + den);
+  const tail = glyph === undefined ? remainder + "/" + den : glyph;
+  return whole === 0 ? tail : String(whole) + tail;
+}`;
+
 export const cases = [
   {
     template: 'Mean from a frequency table',
@@ -141,39 +163,11 @@ export const cases = [
           'const denominator = rule.denominator === "count" ? slots.entries.reduce((sum, entry) => sum + entry[1], 0) : (() => { throw new Error("unsupported denominator " + rule.denominator); })();',
           'return { numerator: numerator, denominator: denominator };'
         ].join('\n')
-      },
-      {
-        name: 'reduced', command: 'jsEval', body: [
-          'const numerator = $mean.numerator;',
-          'const denominator = $mean.denominator;',
-          'let a = Math.abs(numerator);',
-          'let b = Math.abs(denominator);',
-          'while (b !== 0) {',
-          '  const remainder = a % b;',
-          '  a = b;',
-          '  b = remainder;',
-          '}',
-          'return { num: numerator / a, den: denominator / a };'
-        ].join('\n')
-      },
-      {
-        name: 'fraction', command: 'jsEval', body: [
-          'const VULGAR_FRACTION = new Map([["1/2", "½"], ["1/3", "⅓"], ["2/3", "⅔"], ["1/4", "¼"], ["3/4", "¾"], ["1/5", "⅕"], ["2/5", "⅖"], ["3/5", "⅗"], ["4/5", "⅘"], ["1/6", "⅙"], ["5/6", "⅚"], ["1/8", "⅛"], ["3/8", "⅜"], ["5/8", "⅝"], ["7/8", "⅞"]]);',
-          'const num = $reduced.num;',
-          'const den = $reduced.den;',
-          'if (den === 1) {',
-          '  return String(num);',
-          '}',
-          'const whole = Math.trunc(num / den);',
-          'const remainder = num - whole * den;',
-          'const glyph = VULGAR_FRACTION.get(remainder + "/" + den);',
-          'const tail = glyph === undefined ? remainder + "/" + den : glyph;',
-          'return whole === 0 ? tail : String(whole) + tail;'
-        ].join('\n')
       }
     ],
     compute: [
-      'return $mean.numerator + "/" + $mean.denominator + " = " + $fraction + ".";'
+      FRACTION_UTILS,
+      'return $mean.numerator + "/" + $mean.denominator + " = " + fractionText($mean.numerator, $mean.denominator) + ".";'
     ].join('\n'),
     explain(slots, solution) {
       return [

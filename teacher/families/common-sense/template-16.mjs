@@ -86,7 +86,7 @@ function render(solution) {
 
 const WIRES = [
   {
-    name: 'means',
+    name: 'stats',
     command: 'jsEval',
     body: [
       'const slots = $slots;',
@@ -96,24 +96,16 @@ const WIRES = [
       '  const remainder = scaled % count;',
       '  return remainder * 2 > count || (remainder * 2 === count && quotient % 2 === 1) ? quotient + 1 : quotient;',
       '};',
+      'const sorted = slots.values.slice().sort((left, right) => left - right);',
       'const sum = slots.values.reduce((total, value) => total + value, 0);',
       'probe(sum > 0, "the observations must carry a positive total");',
+      'const median = sorted[Math.floor(sorted.length / 2)];',
       'const rest = slots.values.slice(0, -1);',
       'const restSum = rest.reduce((total, value) => total + value, 0);',
       'const mean = hundredthsOf(sum, slots.values.length);',
       'const withoutExtreme = hundredthsOf(restSum, rest.length);',
       'probe(mean >= withoutExtreme, "the extreme value must not pull the mean below the mean without it");',
-      'return mean;'
-    ].join('\n')
-  },
-  {
-    name: 'stats',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const sorted = slots.values.slice().sort((left, right) => left - right);',
-      'const median = sorted[Math.floor(sorted.length / 2)];',
-      'return { mean: $means, median };'
+      'return { mean, median };'
     ].join('\n')
   }
 ];

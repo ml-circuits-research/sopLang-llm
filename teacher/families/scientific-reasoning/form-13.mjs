@@ -100,66 +100,32 @@ function render(solution) {
 
 const WIRES = [
   {
-    name: 'edges',
+    name: 'lost',
     command: 'jsEval',
     body: [
       'const slots = $slots;',
       'const key = (name) => name.toLowerCase().split(/\\s+/).sort().join(" ");',
-      'const adj = new Map();',
-      'for (const edge of slots.edges) {',
-      '  const from = key(edge.from);',
-      '  if (!adj.has(from)) adj.set(from, []);',
-      '  adj.get(from).push({ to: key(edge.to), text: edge.to });',
-      '}',
-      'return { start: key(slots.start), adj: adj, blocked: key(slots.blocked) };'
-    ].join('\n')
-  },
-  {
-    name: 'normal',
-    command: 'jsEval',
-    body: [
-      'const { start, adj } = $edges;',
-      'const reached = [];',
-      'const queue = [start];',
-      'const visited = new Set(queue);',
-      'while (queue.length > 0) {',
-      '  const node = queue.shift();',
-      '  for (const edge of (adj.get(node) || [])) {',
-      '    if (visited.has(edge.to)) continue;',
-      '    visited.add(edge.to);',
-      '    reached.push(edge.text);',
-      '    queue.push(edge.to);',
+      'const walk = (skip) => {',
+      '  const reached = [];',
+      '  const queue = [key(slots.start)];',
+      '  const visited = new Set(queue);',
+      '  while (queue.length > 0) {',
+      '    const node = queue.shift();',
+      '    for (const edge of slots.edges) {',
+      '      const to = key(edge.to);',
+      '      if (key(edge.from) !== node || to === skip || visited.has(to)) {',
+      '        continue;',
+      '      }',
+      '      visited.add(to);',
+      '      reached.push(edge.to);',
+      '      queue.push(to);',
+      '    }',
       '  }',
-      '}',
-      'return reached;'
-    ].join('\n')
-  },
-  {
-    name: 'surviving',
-    command: 'jsEval',
-    body: [
-      'const { start, adj, blocked } = $edges;',
-      'const reached = [];',
-      'const queue = [start];',
-      'const visited = new Set(queue);',
-      'while (queue.length > 0) {',
-      '  const node = queue.shift();',
-      '  for (const edge of (adj.get(node) || [])) {',
-      '    if (edge.to === blocked || visited.has(edge.to)) continue;',
-      '    visited.add(edge.to);',
-      '    reached.push(edge.text);',
-      '    queue.push(edge.to);',
-      '  }',
-      '}',
-      'return reached;'
-    ].join('\n')
-  },
-  {
-    name: 'lost',
-    command: 'jsEval',
-    body: [
-      'const key = (name) => name.toLowerCase().split(/\\s+/).sort().join(" ");',
-      'const lost = $normal.filter((name) => !$surviving.some((other) => key(other) === key(name)));',
+      '  return reached;',
+      '};',
+      'const normal = walk(null);',
+      'const surviving = walk(key(slots.blocked));',
+      'const lost = normal.filter((name) => !surviving.some((other) => key(other) === key(name)));',
       'probe(lost.length > 0, "blocking the node must lose at least one effect");',
       'return lost;'
     ].join('\n')

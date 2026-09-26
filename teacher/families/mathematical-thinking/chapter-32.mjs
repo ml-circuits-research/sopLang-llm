@@ -163,22 +163,9 @@ export const cases = [
     render(solution) { return `Yes, through ${solution.path.slice(1, -1).join('-')}.`; },
     wires: [
       {
-        name: 'neighbours', command: 'jsEval', body: ['const slots = $slots;', source(adjacency),
-          'return adjacency(slots.nodes, slots.edges);'].join('\n')
-      },
-      {
-        name: 'route', command: 'jsEval', body: [
-          'const previous = new Map([[$slots.from, null]]);',
-          'const queue = [$slots.from];',
-          'while (queue.length > 0) {',
-          '  const node = queue.shift();',
-          '  for (const next of $neighbours.get(node)) {',
-          '    if (!previous.has(next)) { previous.set(next, node); queue.push(next); }',
-          '  }',
-          '}',
-          'if (!previous.has($slots.to)) { throw new Error("the endpoints are not connected"); }',
-          'const path = [];',
-          'for (let node = $slots.to; node !== null; node = previous.get(node)) { path.unshift(node); }',
+        name: 'route', command: 'jsEval', body: ['const slots = $slots;', source(adjacency, buildPath, searchPath, shortestPath),
+          'const path = shortestPath(slots.nodes, slots.edges, slots.from, slots.to);',
+          'if (path === null) { throw new Error("the endpoints are not connected"); }',
           'return path;'].join('\n')
       }
     ],
@@ -200,28 +187,14 @@ export const cases = [
       `${solution.connected ? 'yes, they are connected' : 'no, they are not connected'}.`; },
     wires: [
       {
-        name: 'direct', command: 'jsEval', body: [source(edgeKey),
-          'return $slots.edges.some(([from, to]) => edgeKey(from, to) === edgeKey($slots.from, $slots.to));'].join('\n')
-      },
-      {
-        name: 'neighbours', command: 'jsEval', body: ['const slots = $slots;', source(adjacency),
-          'return adjacency(slots.nodes, slots.edges);'].join('\n')
-      },
-      {
-        name: 'connected', command: 'jsEval', body: [
-          'const previous = new Map([[$slots.from, null]]);',
-          'const queue = [$slots.from];',
-          'while (queue.length > 0) {',
-          '  const node = queue.shift();',
-          '  for (const next of $neighbours.get(node)) {',
-          '    if (!previous.has(next)) { previous.set(next, node); queue.push(next); }',
-          '  }',
-          '}',
-          'return previous.has($slots.to);'].join('\n')
+        name: 'relation', command: 'jsEval', body: ['const slots = $slots;', source(edgeKey, adjacency, buildPath, searchPath, shortestPath),
+          'const direct = slots.edges.some(([from, to]) => edgeKey(from, to) === edgeKey(slots.from, slots.to));',
+          'const path = shortestPath(slots.nodes, slots.edges, slots.from, slots.to);',
+          'return { direct: direct, connected: path !== null };'].join('\n')
       }
     ],
-    compute: ['const neighbours = $direct ? "They are direct neighbors" : "They are not direct neighbors";',
-      'return neighbours + "; " + ($connected ? "yes, they are connected" : "no, they are not connected") + ".";'].join('\n'),
+    compute: ['const neighbours = $relation.direct ? "They are direct neighbors" : "They are not direct neighbors";',
+      'return neighbours + "; " + ($relation.connected ? "yes, they are connected" : "no, they are not connected") + ".";'].join('\n'),
     explain(slots) { return [`A direct link between ${slots.from} and ${slots.to} would make them direct neighbors, so the edge list decides that part.`, 'Connectivity is weaker than adjacency: it asks only whether some chain of links joins the two nodes.']; }
   },
   {
@@ -259,22 +232,9 @@ export const cases = [
     render(solution) { return `${solution.path.join('-')}, with ${solution.path.length - 1} links.`; },
     wires: [
       {
-        name: 'neighbours', command: 'jsEval', body: ['const slots = $slots;', source(adjacency),
-          'return adjacency(slots.nodes, slots.edges);'].join('\n')
-      },
-      {
-        name: 'route', command: 'jsEval', body: [
-          'const previous = new Map([[$slots.from, null]]);',
-          'const queue = [$slots.from];',
-          'while (queue.length > 0) {',
-          '  const node = queue.shift();',
-          '  for (const next of $neighbours.get(node)) {',
-          '    if (!previous.has(next)) { previous.set(next, node); queue.push(next); }',
-          '  }',
-          '}',
-          'if (!previous.has($slots.to)) { throw new Error("the endpoints are not connected"); }',
-          'const path = [];',
-          'for (let node = $slots.to; node !== null; node = previous.get(node)) { path.unshift(node); }',
+        name: 'route', command: 'jsEval', body: ['const slots = $slots;', source(adjacency, buildPath, searchPath, shortestPath),
+          'const path = shortestPath(slots.nodes, slots.edges, slots.from, slots.to);',
+          'if (path === null) { throw new Error("the endpoints are not connected"); }',
           'return path;'].join('\n')
       }
     ],
@@ -293,20 +253,8 @@ export const cases = [
     render(solution) { return solution.connected ? 'Yes.' : 'No.'; },
     wires: [
       {
-        name: 'neighbours', command: 'jsEval', body: ['const slots = $slots;', source(adjacency),
-          'return adjacency(slots.nodes, slots.edges);'].join('\n')
-      },
-      {
-        name: 'reachable', command: 'jsEval', body: [
-          'const previous = new Map([[$slots.from, null]]);',
-          'const queue = [$slots.from];',
-          'while (queue.length > 0) {',
-          '  const node = queue.shift();',
-          '  for (const next of $neighbours.get(node)) {',
-          '    if (!previous.has(next)) { previous.set(next, node); queue.push(next); }',
-          '  }',
-          '}',
-          'return previous.has($slots.to);'].join('\n')
+        name: 'reachable', command: 'jsEval', body: ['const slots = $slots;', source(adjacency, buildPath, searchPath, shortestPath),
+          'return shortestPath(slots.nodes, slots.edges, slots.from, slots.to) !== null;'].join('\n')
       }
     ],
     compute: ['return $reachable ? "Yes." : "No.";'].join('\n'),
@@ -325,23 +273,9 @@ export const cases = [
     render(solution) { return solution.connected ? `Yes, ${solution.path.join('-')}.` : 'No.'; },
     wires: [
       {
-        name: 'neighbours', command: 'jsEval', body: ['const slots = $slots;', source(adjacency),
-          'return adjacency(slots.nodes, slots.edges);'].join('\n')
-      },
-      {
-        name: 'route', command: 'jsEval', body: [
-          'const previous = new Map([[$slots.from, null]]);',
-          'const queue = [$slots.from];',
-          'while (queue.length > 0) {',
-          '  const node = queue.shift();',
-          '  for (const next of $neighbours.get(node)) {',
-          '    if (!previous.has(next)) { previous.set(next, node); queue.push(next); }',
-          '  }',
-          '}',
-          'if (!previous.has($slots.to)) { return { connected: false, path: null }; }',
-          'const path = [];',
-          'for (let node = $slots.to; node !== null; node = previous.get(node)) { path.unshift(node); }',
-          'return { connected: true, path: path };'].join('\n')
+        name: 'route', command: 'jsEval', body: ['const slots = $slots;', source(adjacency, buildPath, searchPath, shortestPath),
+          'const path = shortestPath(slots.nodes, slots.edges, slots.from, slots.to);',
+          'return { connected: path !== null, path: path };'].join('\n')
       }
     ],
     compute: ['return $route.connected ? "Yes, " + $route.path.join("-") + "." : "No.";'].join('\n'),
@@ -357,26 +291,8 @@ export const cases = [
     render(solution) { return solution.groups === 1 ? 'Yes.' : 'No.'; },
     wires: [
       {
-        name: 'neighbours', command: 'jsEval', body: ['const slots = $slots;', source(adjacency),
-          'return adjacency(slots.nodes, slots.edges);'].join('\n')
-      },
-      {
-        name: 'groups', command: 'jsEval', body: [
-          'const seen = new Set();',
-          'let count = 0;',
-          'for (const start of $slots.nodes) {',
-          '  if (seen.has(start)) { continue; }',
-          '  count += 1;',
-          '  const stack = [start];',
-          '  seen.add(start);',
-          '  while (stack.length > 0) {',
-          '    const node = stack.pop();',
-          '    for (const next of $neighbours.get(node)) {',
-          '      if (!seen.has(next)) { seen.add(next); stack.push(next); }',
-          '    }',
-          '  }',
-          '}',
-          'return count;'].join('\n')
+        name: 'groups', command: 'jsEval', body: ['const slots = $slots;', source(adjacency, countComponents),
+          'return countComponents(slots.nodes, slots.edges);'].join('\n')
       }
     ],
     compute: ['return $groups === 1 ? "Yes." : "No.";'].join('\n'),
@@ -391,26 +307,8 @@ export const cases = [
     render(solution) { return `${solution.groups} groups.`; },
     wires: [
       {
-        name: 'neighbours', command: 'jsEval', body: ['const slots = $slots;', source(adjacency),
-          'return adjacency(slots.nodes, slots.edges);'].join('\n')
-      },
-      {
-        name: 'groups', command: 'jsEval', body: [
-          'const seen = new Set();',
-          'let count = 0;',
-          'for (const start of $slots.nodes) {',
-          '  if (seen.has(start)) { continue; }',
-          '  count += 1;',
-          '  const stack = [start];',
-          '  seen.add(start);',
-          '  while (stack.length > 0) {',
-          '    const node = stack.pop();',
-          '    for (const next of $neighbours.get(node)) {',
-          '      if (!seen.has(next)) { seen.add(next); stack.push(next); }',
-          '    }',
-          '  }',
-          '}',
-          'return count;'].join('\n')
+        name: 'groups', command: 'jsEval', body: ['const slots = $slots;', source(adjacency, countComponents),
+          'return countComponents(slots.nodes, slots.edges);'].join('\n')
       }
     ],
     compute: ['return $groups + " groups.";'].join('\n'),
@@ -499,23 +397,10 @@ export const cases = [
     render(solution) { return `${solution.distance}.`; },
     wires: [
       {
-        name: 'neighbours', command: 'jsEval', body: ['const slots = $slots;', source(adjacency),
-          'return adjacency(slots.nodes, slots.edges);'].join('\n')
-      },
-      {
-        name: 'distance', command: 'jsEval', body: [
-          'const previous = new Map([[$slots.from, null]]);',
-          'const queue = [$slots.from];',
-          'while (queue.length > 0) {',
-          '  const node = queue.shift();',
-          '  for (const next of $neighbours.get(node)) {',
-          '    if (!previous.has(next)) { previous.set(next, node); queue.push(next); }',
-          '  }',
-          '}',
-          'if (!previous.has($slots.to)) { throw new Error("the two nodes are not connected"); }',
-          'let distance = 0;',
-          'for (let node = $slots.to; node !== null; node = previous.get(node)) { distance += 1; }',
-          'return distance - 1;'].join('\n')
+        name: 'distance', command: 'jsEval', body: ['const slots = $slots;', source(adjacency, buildPath, searchPath, shortestPath),
+          'const path = shortestPath(slots.nodes, slots.edges, slots.from, slots.to);',
+          'if (path === null) { throw new Error("the two nodes are not connected"); }',
+          'return path.length - 1;'].join('\n')
       }
     ],
     compute: ['return String($distance) + ".";'].join('\n'),
@@ -537,25 +422,9 @@ export const cases = [
     render(solution) { return `${solution.node}.`; },
     wires: [
       {
-        name: 'neighbours', command: 'jsEval', body: ['const slots = $slots;', source(adjacency),
-          'return adjacency(slots.nodes, slots.edges);'].join('\n')
-      },
-      {
-        name: 'centre', command: 'jsEval', body: [
+        name: 'centre', command: 'jsEval', body: ['const slots = $slots;', source(adjacency, buildPath, searchPath, shortestPath, eccentricity),
           'let best = null;',
-          'for (const candidate of $slots.candidates) {',
-          '  const dist = new Map([[candidate, 0]]);',
-          '  const queue = [candidate];',
-          '  while (queue.length > 0) {',
-          '    const node = queue.shift();',
-          '    for (const next of $neighbours.get(node)) {',
-          '      if (!dist.has(next)) { dist.set(next, dist.get(node) + 1); queue.push(next); }',
-          '    }',
-          '  }',
-          '  let d = 0;',
-          '  for (const other of $slots.nodes) { d = Math.max(d, dist.get(other)); }',
-          '  if (best === null || d < best.d) { best = { node: candidate, d }; }',
-          '}',
+          'for (const candidate of slots.candidates) { const d = eccentricity(slots.nodes, slots.edges, candidate); if (best === null || d < best.d) { best = { node: candidate, d }; } }',
           'return best;'].join('\n')
       }
     ],
@@ -574,24 +443,8 @@ export const cases = [
     render(solution) { return `Yes: ${solution.path.join('-')}.`; },
     wires: [
       {
-        name: 'neighbours', command: 'jsEval', body: ['const slots = $slots;', source(adjacency),
-          'return adjacency(slots.nodes, slots.edges);'].join('\n')
-      },
-      {
-        name: 'tour', command: 'jsEval', body: [
-          'const path = [$slots.start];',
-          'const used = new Set([$slots.start]);',
-          'const extend = () => {',
-          '  if (path.length === $slots.nodes.length) { return true; }',
-          '  for (const next of $neighbours.get(path.at(-1))) {',
-          '    if (used.has(next)) { continue; }',
-          '    path.push(next); used.add(next);',
-          '    if (extend()) { return true; }',
-          '    path.pop(); used.delete(next);',
-          '  }',
-          '  return false;',
-          '};',
-          'return extend() ? path : null;'].join('\n')
+        name: 'tour', command: 'jsEval', body: ['const slots = $slots;', source(adjacency, hamiltonianPath),
+          'return hamiltonianPath(slots.nodes, slots.edges, slots.start);'].join('\n')
       }
     ],
     compute: ['return "Yes: " + $tour.join("-") + ".";'].join('\n'),
@@ -644,26 +497,8 @@ export const cases = [
     render(solution) { return `Yes, through ${solution.path.slice(1, -1).join('-')}.`; },
     wires: [
       {
-        name: 'nexts', command: 'jsEval', body: [
-          'const nexts = new Map($slots.nodes.map((node) => [node, []]));',
-          'for (const [a, b] of $slots.arcs) { nexts.get(a).push(b); }',
-          'for (const list of nexts.values()) { list.sort(); }',
-          'return nexts;'].join('\n')
-      },
-      {
-        name: 'route', command: 'jsEval', body: [
-          'const previous = new Map([[$slots.from, null]]);',
-          'const queue = [$slots.from];',
-          'while (queue.length > 0) {',
-          '  const node = queue.shift();',
-          '  for (const next of $nexts.get(node)) {',
-          '    if (!previous.has(next)) { previous.set(next, node); queue.push(next); }',
-          '  }',
-          '}',
-          'if (!previous.has($slots.to)) { return null; }',
-          'const path = [];',
-          'for (let node = $slots.to; node !== null; node = previous.get(node)) { path.unshift(node); }',
-          'return path;'].join('\n')
+        name: 'route', command: 'jsEval', body: ['const slots = $slots;', source(buildPath, searchPath, shortestPathDirected),
+          'return shortestPathDirected(slots.nodes, slots.arcs, slots.from, slots.to);'].join('\n')
       }
     ],
     compute: ['return "Yes, through " + $route.slice(1, -1).join("-") + ".";'].join('\n'),
@@ -704,33 +539,9 @@ export const cases = [
     render(solution) { return `${solution.path.join('-')}, cost ${solution.cost}.`; },
     wires: [
       {
-        name: 'neighbours', command: 'jsEval', body: ['const slots = $slots;', source(adjacency),
-          'return adjacency(slots.nodes, slots.edges);'].join('\n')
-      },
-      {
-        name: 'paths', command: 'jsEval', body: [
-          'const all = [];',
-          'const path = [$slots.from];',
-          'const used = new Set([$slots.from]);',
-          'const walk = () => {',
-          '  const node = path.at(-1); if (node === $slots.to) { all.push([...path]); return; }',
-          '  for (const next of $neighbours.get(node)) {',
-          '    if (used.has(next)) { continue; } used.add(next); path.push(next); walk(); path.pop(); used.delete(next);',
-          '  }',
-          '};',
-          'walk();',
-          'return all;'].join('\n')
-      },
-      {
-        name: 'best', command: 'jsEval', body: [
-          'const edgeKey = (a, b) => a < b ? a + "-" + b : b + "-" + a;',
-          'const costs = new Map(Object.entries($slots.costs));',
-          'let best = null;',
-          'for (const path of $paths) {',
-          '  let cost = 0;',
-          '  for (let index = 1; index < path.length; index += 1) { cost += costs.get(edgeKey(path[index - 1], path[index])); }',
-          '  if (best === null || cost < best.cost) { best = { path: path, cost: cost }; }',
-          '}',
+        name: 'best', command: 'jsEval', body: ['const slots = $slots;', source(edgeKey, adjacency, cheapestPath),
+          'const costs = new Map(Object.entries(slots.costs));',
+          'const best = cheapestPath(slots.nodes, slots.edges, costs, slots.from, slots.to);',
           'if (best === null) { throw new Error("the endpoints are not connected"); }',
           'return best;'].join('\n')
       }
@@ -791,28 +602,9 @@ export const cases = [
     render(solution) { return `No; ${solution.source} can no longer reach ${solution.unreachable.join(' or ')}.`; },
     wires: [
       {
-        name: 'kept', command: 'jsEval', body: [
-          'return $slots.edges.filter(([a, b]) => a !== $slots.removed && b !== $slots.removed);'].join('\n')
-      },
-      {
-        name: 'neighbours', command: 'jsEval', body: ['const slots = $slots;', source(adjacency),
-          'return adjacency(slots.nodes, $kept);'].join('\n')
-      },
-      {
-        name: 'unreachable', command: 'jsEval', body: [
-          'const targets = [];',
-          'for (const target of $slots.targets) {',
-          '  const previous = new Map([[$slots.source, null]]);',
-          '  const queue = [$slots.source];',
-          '  while (queue.length > 0) {',
-          '    const node = queue.shift();',
-          '    for (const next of $neighbours.get(node)) {',
-          '      if (!previous.has(next)) { previous.set(next, node); queue.push(next); }',
-          '    }',
-          '  }',
-          '  if (!previous.has(target)) { targets.push(target); }',
-          '}',
-          'return targets;'].join('\n')
+        name: 'unreachable', command: 'jsEval', body: ['const slots = $slots;', source(adjacency, buildPath, searchPath, shortestPath),
+          'const kept = slots.edges.filter(([a, b]) => a !== slots.removed && b !== slots.removed);',
+          'return slots.targets.filter((target) => shortestPath(slots.nodes, kept, slots.source, target) === null);'].join('\n')
       }
     ],
     compute: ['return "No; " + $slots.source + " can no longer reach " + $unreachable.join(" or ") + ".";'].join('\n'),

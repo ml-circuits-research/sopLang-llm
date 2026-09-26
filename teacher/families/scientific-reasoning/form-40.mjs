@@ -85,26 +85,16 @@ function render(solution) {
   return `Eliminate ${solution.eliminated}; non-dominated frontier: ${solution.frontier.join(', ')}. There is no unique winner without additional criteria.`;
 }
 
-const WIRES = [
-  {
-    name: 'frontier',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const dominates = (left, right) => left.scores.every((score, index) => score >= right.scores[index]) && left.scores.some((score, index) => score > right.scores[index]);',
-      'const dominators = new Map(slots.options.map((option) => [option.label, slots.options.filter((other) => other.label !== option.label && dominates(other, option)).map((other) => other.label)]));',
-      'const eliminated = slots.options.filter((option) => dominators.get(option.label).length > 0);',
-      'const frontier = slots.options.filter((option) => dominators.get(option.label).length === 0);',
-      'probe(eliminated.length === 1, "exactly one option must be dominated, not " + eliminated.length);',
-      'probe(frontier.length > 1, "the frontier must keep several candidates, not " + frontier.length);',
-      'probe(frontier.length + eliminated.length === slots.options.length, "an option is either dominated or on the frontier");',
-      'return { eliminated: eliminated[0].label, frontier: frontier.map((option) => option.label) };'
-    ].join('\n')
-  }
-];
-
 const COMPUTE = [
-  'return "Eliminate " + $frontier.eliminated + "; non-dominated frontier: " + $frontier.frontier.join(", ") + ". There is no unique winner without additional criteria.";'
+  'const slots = $slots;',
+  'const dominates = (left, right) => left.scores.every((score, index) => score >= right.scores[index]) && left.scores.some((score, index) => score > right.scores[index]);',
+  'const dominators = new Map(slots.options.map((option) => [option.label, slots.options.filter((other) => other.label !== option.label && dominates(other, option)).map((other) => other.label)]));',
+  'const eliminated = slots.options.filter((option) => dominators.get(option.label).length > 0);',
+  'const frontier = slots.options.filter((option) => dominators.get(option.label).length === 0);',
+  'probe(eliminated.length === 1, "exactly one option must be dominated, not " + eliminated.length);',
+  'probe(frontier.length > 1, "the frontier must keep several candidates, not " + frontier.length);',
+  'probe(frontier.length + eliminated.length === slots.options.length, "an option is either dominated or on the frontier");',
+  'return "Eliminate " + eliminated[0].label + "; non-dominated frontier: " + frontier.map((option) => option.label).join(", ") + ". There is no unique winner without additional criteria.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -129,7 +119,6 @@ export const cases = [
     parse,
     solve,
     render,
-    wires: WIRES,
     compute: COMPUTE,
     explain
   }

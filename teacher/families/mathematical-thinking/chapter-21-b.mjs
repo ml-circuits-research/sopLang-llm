@@ -123,7 +123,7 @@ export const cases = [
     },
     wires: [
       {
-        name: 'groups',
+        name: 'property',
         command: 'jsEval',
         body: [
           'const slots = $slots;',
@@ -132,21 +132,15 @@ export const cases = [
           '  const key = piece.properties.includes(slots.firstProperty) ? "yes" : "no";',
           '  groups[key] = (groups[key] || []).concat([piece]);',
           '}',
-          'return groups;'
-        ].join('\n')
-      },
-      {
-        name: 'property',
-        command: 'jsEval',
-        body: [
-          'const slots = $slots;',
           'let candidates = null;',
-          'for (const key of Object.keys($groups)) {',
-          '  const group = $groups[key];',
+          'for (const key of Object.keys(groups)) {',
+          '  const group = groups[key];',
           '  const usable = [];',
           '  for (let index = 0; index < group[0].properties.length; index += 1) {',
           '    let differs = false;',
-          '    for (const piece of group) { if (piece.properties[index] !== group[0].properties[index]) { differs = true; } }',
+          '    for (const piece of group) {',
+          '      if (piece.properties[index] !== group[0].properties[index]) { differs = true; }',
+          '    }',
           '    if (differs) { usable.push(index); }',
           '  }',
           '  candidates = candidates === null ? usable : candidates.filter(function (index) { return usable.indexOf(index) !== -1; });',
