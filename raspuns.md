@@ -33,6 +33,13 @@ parallel the article agent rewrites docs/article; (3) then train qwen2.5-coder-0
 fixed data and compare it against the 1.7B. If the 0.5B disappoints, the 1.7B is retrained
 tomorrow.
 
+## 0.5B result (2026-09-26, night)
+qwen2.5-coder-0.5b on the repaired dv13 data: 361/705 (51.2%). world 0/20 and decompose 0/100
+(the 1.7B container arm solves them), so "small beats big" does NOT hold at 0.5B: there is a
+measured size floor. The comparison headline stays "the 1.7B beats the 17B on the reasoning
+books", now bounded below. Next per plan: re-train the 1.7B on the same dv13 data to make the
+size comparison clean and test whether the fractional/probe fix moves the 1.7B.
+
 ## Bottom line
 One word: the comparator. The container arm reaches 77.2% once the scorer judges meaning
 instead of exact phrasing; only common-sense remains genuinely unsolved.
