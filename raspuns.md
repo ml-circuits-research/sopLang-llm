@@ -23,6 +23,16 @@ book still effectively stuck is common-sense: 0 to 13 out of 50 across arms (0/5
 latest arm). scientific-reasoning, adult-reasoning, and logical-reasoning stay near zero
 (0-8 of 25 or 0-5 of 10).
 
+## New direction (night of 2026-09-26) — the comparison, not the 90% goal
+The 90% goal is dropped. The new aim: prove that a SMALL coding model, fine-tuned on SOP Lang
+through the abstraction-learning loop, beats a larger model on the reasoning books. The
+article headline is "the 1.7B trained by the loop beats our own 17B on the books", plus the
+coding-agent methodology. Tonight: (1) the data-fix agent repairs the training data (restore
+fractional-chain teaching, relax integer-probe contamination, scan other books); (2) in
+parallel the article agent rewrites docs/article; (3) then train qwen2.5-coder-0.5B on the
+fixed data and compare it against the 1.7B. If the 0.5B disappoints, the 1.7B is retrained
+tomorrow.
+
 ## Bottom line
 One word: the comparator. The container arm reaches 77.2% once the scorer judges meaning
 instead of exact phrasing; only common-sense remains genuinely unsolved.
