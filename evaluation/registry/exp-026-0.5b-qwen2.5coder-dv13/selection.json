@@ -1,0 +1,103 @@
+{
+  "experiment": "exp-026-0.5b-qwen2.5coder-dv13",
+  "slice": "validation",
+  "items": 339,
+  "winner": "checkpoint-660",
+  "rows": [
+    {
+      "checkpoint": "checkpoint-150",
+      "step": 150,
+      "gguf": null,
+      "metrics": {
+        "items": 339,
+        "classes": {
+          "reused": 339
+        },
+        "rates": {
+          "oracle_match": 0.486726,
+          "parse_validity": 0.99705,
+          "graph_validity": 0.988201,
+          "runtime_completion": 0.817109
+        }
+      },
+      "planSplit": null,
+      "reused": true
+    },
+    {
+      "checkpoint": "checkpoint-300",
+      "step": 300,
+      "gguf": null,
+      "metrics": {
+        "items": 339,
+        "classes": {
+          "reused": 339
+        },
+        "rates": {
+          "oracle_match": 0.908555,
+          "parse_validity": 1,
+          "graph_validity": 1,
+          "runtime_completion": 0.985251
+        }
+      },
+      "planSplit": null,
+      "reused": true
+    },
+    {
+      "checkpoint": "checkpoint-450",
+      "step": 450,
+      "gguf": null,
+      "metrics": {
+        "items": 339,
+        "classes": {
+          "reused": 339
+        },
+        "rates": {
+          "oracle_match": 0.929204,
+          "parse_validity": 1,
+          "graph_validity": 1,
+          "runtime_completion": 0.982301
+        }
+      },
+      "planSplit": null,
+      "reused": true
+    },
+    {
+      "checkpoint": "checkpoint-600",
+      "step": 600,
+      "gguf": null,
+      "metrics": {
+        "items": 339,
+        "classes": {
+          "reused": 339
+        },
+        "rates": {
+          "oracle_match": 0.932153,
+          "parse_validity": 1,
+          "graph_validity": 1,
+          "runtime_completion": 0.985251
+        }
+      },
+      "planSplit": null,
+      "reused": true
+    },
+    {
+      "checkpoint": "checkpoint-660",
+      "step": 660,
+      "gguf": "/home/salboaie/work/sopLang-llm/evaluation/registry/exp-026-0.5b-qwen2.5coder-dv13/gguf/checkpoint-660.gguf",
+      "metrics": {
+        "items": 339,
+        "classes": {
+          "reused": 339
+        },
+        "rates": {
+          "oracle_match": 0.935103,
+          "parse_validity": 1,
+          "graph_validity": 1,
+          "runtime_completion": 0.985251
+        }
+      },
+      "planSplit": null,
+      "reused": true
+    }
+  ]
+}
