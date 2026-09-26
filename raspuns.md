@@ -99,3 +99,20 @@ exp-024 (dv11, formulari compacte): 439/705 (62.3%). Cele doua carti raman la 0/
 qwen3-17b (exp-017) a luat TOT 0/100 si 0/50 pe ele - marimea modelului nu ajuta, setul de date e.
 Urmatorul brat (dv12): simplificarea ENUNTURILOR celor doua carti (propozitii scurte, fara distractori,
 numerele simple) cu parse-ul actualizat in acelasi pas; calculul si raspunsurile compacte raman.
+
+## Status — 2026-09-26, 16:30Z: exp-025 (dv12, enunturi simplificate) antreneaza
+
+Pe scurt: modelul invata acum pe enunturile simplificate ale celor doua carti blocate
+(un numar pe propozitie, fara propozitii-distractor), dupa ce structura (dv8), idiomul
+containerelor (dv9) si formatul raspunsului (dv11) au masurat toate 0/0 pe ele, iar
+qwen3-17b a dovedit ca nici marimea modelului nu e cauza. Antrenarea e la pasul 610/660
+(loss 0.0017); verdictul holdout-ului vine ~17:45Z si decide daca enunturile erau problema
+sau daca benchmarkul de 90% are nevoie de altceva.
+
+Concluzii partiale masurate pana acum: dv7 (containere) 460/705 (65.2%) e maximul, cu
+world-as-a-system 0->20/20; dv8 modular 448 (erorile de executie dublate); dv9 428;
+dv11 439. Proceduralul fluctueaza 410-438 pe aceleasi randuri = zgomot de pipeline.
+
+Reparat in noaptea asta: cache-squeeze.sh in skills (detecteaza si stoarce cache-ul de
+pagini care bloca pool-ul unificat), guard-ul de memorie judecat pe MemAvailable nu pe
+citirea soferului (DS009 actualizat), si doua antrenori simultani ucisi (linia veche).
