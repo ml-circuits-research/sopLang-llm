@@ -18,7 +18,7 @@
 
 import { slugify } from '../../naming.mjs';
 
-const SCENARIO_PATTERN = /^Scenario\. In (.+?), a failure occurred while handling (\d+) ([^.]+)\./;
+const SCENARIO_PATTERN = /^In (.+?), a failure occurred while handling (\d+) ([^.]+)\./;
 const HYPOTHESIS_PATTERN = /H(\d+)\s*[—–-]\s*([^;.]+)/g;
 const CAPACITY_RECORD_PATTERN = /The capacity log shows at least (\d+) units were available throughout\./;
 const ORDERING_RECORD = 'A time-stamped record shows a dependent action occurred before its prerequisite had been completed.';
@@ -94,6 +94,11 @@ function parse(statement) {
     hypotheses,
     observations: observations.map(({ at, ...observation }) => observation)
   };
+}
+
+/** The compact statement: drop the non-discriminating team-busy comment. */
+function statement(facts) {
+  return facts.replace(/\s*A separate comment says[\s\S]*$/, '');
 }
 
 function solve(slots) {
@@ -204,6 +209,7 @@ export const cases = [
     type: slugify('Evidence Tree and Elimination'),
     category: 'no-knowledge',
     parse,
+    statement,
     solve,
     render,
     wires: WIRES,

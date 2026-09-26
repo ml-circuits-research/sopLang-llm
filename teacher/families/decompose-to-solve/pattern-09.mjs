@@ -49,7 +49,7 @@
  */
 import { slugify } from '../../naming.mjs';
 
-const LOCAL_PATTERN = /a plan starts from (\d+) local units/;
+const LOCAL_PATTERN = /A plan starts from (\d+) local units/;
 const FACTOR_PATTERN = /Convert by ([\d.]+) to standard units/;
 const LOSS_PATTERN = /then allow (\d+)% process loss/;
 const CAPACITY_PATTERN = /Each batch handles (\d+) standard units/;
@@ -77,9 +77,6 @@ function field(pattern, statement, name) {
 }
 
 function parse(statement) {
-  if (!/Scenario\./.test(statement)) {
-    throw new Error('the statement does not carry the blocks this book prints for the template');
-  }
   return {
     localUnits: field(LOCAL_PATTERN, statement, 'the local demand'),
     factor: field(FACTOR_PATTERN, statement, 'the conversion factor'),
@@ -95,6 +92,14 @@ function parse(statement) {
     deadlineMinutes: field(DEADLINE_PATTERN, statement, 'the deadline'),
     budgetUnits: field(BUDGET_PATTERN, statement, 'the budget')
   };
+}
+
+/** The compact statement: drop the domain preamble and the data-mixing note. */
+function statement(facts) {
+  return facts
+    .replace(/^(?:In|For)\s+[\s\S]*?(?=a plan starts from)/, '')
+    .replace(/^a plan/, 'A plan')
+    .replace(/\s*The data are deliberately mixed[\s\S]*$/, '');
 }
 
 /**
@@ -302,6 +307,7 @@ export const cases = [
       "the printed rate's rounding band.",
     verifyPrinted,
     parse,
+    statement,
     solve,
     render,
     wires: WIRES,

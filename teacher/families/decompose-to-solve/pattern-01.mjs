@@ -12,9 +12,9 @@
 
 import { slugify } from '../../naming.mjs';
 
-const WORKLOAD_PATTERN = /a team must handle (\d+) ([a-z][a-z -]*)\./;
-const LIMIT_PATTERN = /The stated completion limit is (\d+) minutes\./;
-const BLOCK_PATTERN = /Each processing block can handle at most (\d+) [a-z][a-z -]*, and each block takes (\d+) minutes\./;
+const WORKLOAD_PATTERN = /A team must handle (\d+) ([a-z][a-z -]*)\./;
+const LIMIT_PATTERN = /The completion limit is (\d+) minutes\./;
+const BLOCK_PATTERN = /Each block handles at most (\d+) [a-z][a-z -]* and takes (\d+) minutes\./;
 const SETUP_PATTERN = /A one-time setup takes (\d+) minutes\./;
 
 function parse(statement) {
@@ -33,6 +33,23 @@ function parse(statement) {
     blockMinutes: Number(block[2]),
     setupMinutes: Number(setup[1])
   };
+}
+
+/**
+ * The compact statement a solver reads: one clause per number, no distractor
+ * sentences. It is re-rendered from the wordy source so the seed book's prose
+ * (the domain phrase, the staffing sentence, the out-of-order remark) never
+ * reaches the solver; `parse` reads the compact text back.
+ */
+function statement(facts) {
+  const workload = /a team must handle (\d+) ([a-z][a-z -]*)\./.exec(facts);
+  const limit = /The stated completion limit is (\d+) minutes\./.exec(facts);
+  const block = /Each processing block can handle at most (\d+) [a-z][a-z -]*, and each block takes (\d+) minutes\./.exec(facts);
+  const setup = /A one-time setup takes (\d+) minutes\./.exec(facts);
+  return `A team must handle ${workload[1]} ${workload[2].trim()}. ` +
+    `The completion limit is ${limit[1]} minutes. ` +
+    `Each block handles at most ${block[1]} ${workload[2].trim()} and takes ${block[2]} minutes. ` +
+    `A one-time setup takes ${setup[1]} minutes.`;
 }
 
 function solve(slots) {
@@ -73,6 +90,7 @@ export const cases = [
     type: slugify('Two-Step Minimal Split'),
     category: 'no-knowledge',
     parse,
+    statement,
     solve,
     render,
     compute: COMPUTE,

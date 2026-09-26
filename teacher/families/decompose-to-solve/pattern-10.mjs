@@ -16,7 +16,7 @@
 
 import { slugify } from '../../naming.mjs';
 
-const SUBJECT_PATTERN = /one integer decision x specifies the number of ([a-z][a-z -]*) to authorize\./;
+const SUBJECT_PATTERN = /One integer decision x specifies the number of ([a-z][a-z -]*) to authorize\./;
 const LOWER_PATTERN = /x must be at least (\d+);/;
 const UPPER_PATTERN = /it must not exceed (\d+);/;
 const DIVISOR_PATTERN = /operations require x to be a multiple of (\d+);/;
@@ -39,6 +39,14 @@ function parse(statement) {
     resourceLimit: Number(resource[1]),
     reserve: Number(resource[2])
   };
+}
+
+/** The compact statement: drop the domain preamble and the document-layout note. */
+function statement(facts) {
+  return facts
+    .replace(/^(?:In|For)\s+[\s\S]*?(?=one integer decision x)/, '')
+    .replace(/^one/, 'One')
+    .replace(/\s*The document layout[\s\S]*$/, '');
 }
 
 function solve(slots) {
@@ -85,6 +93,7 @@ export const cases = [
     type: slugify('Atomic Case: One Constraint Core'),
     category: 'no-knowledge',
     parse,
+    statement,
     solve,
     render,
     compute: COMPUTE,

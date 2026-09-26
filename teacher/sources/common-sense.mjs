@@ -20,6 +20,51 @@
  */
 
 import { slugify } from '../naming.mjs';
+import { cases as template01 } from '../families/common-sense/template-01.mjs';
+import { cases as template02 } from '../families/common-sense/template-02.mjs';
+import { cases as template03 } from '../families/common-sense/template-03.mjs';
+import { cases as template04 } from '../families/common-sense/template-04.mjs';
+import { cases as template05 } from '../families/common-sense/template-05.mjs';
+import { cases as template06 } from '../families/common-sense/template-06.mjs';
+import { cases as template07 } from '../families/common-sense/template-07.mjs';
+import { cases as template08 } from '../families/common-sense/template-08.mjs';
+import { cases as template09 } from '../families/common-sense/template-09.mjs';
+import { cases as template10 } from '../families/common-sense/template-10.mjs';
+import { cases as template11 } from '../families/common-sense/template-11.mjs';
+import { cases as template12 } from '../families/common-sense/template-12.mjs';
+import { cases as template13 } from '../families/common-sense/template-13.mjs';
+import { cases as template14 } from '../families/common-sense/template-14.mjs';
+import { cases as template15 } from '../families/common-sense/template-15.mjs';
+import { cases as template16 } from '../families/common-sense/template-16.mjs';
+import { cases as template17 } from '../families/common-sense/template-17.mjs';
+import { cases as template18 } from '../families/common-sense/template-18.mjs';
+import { cases as template19 } from '../families/common-sense/template-19.mjs';
+import { cases as template20 } from '../families/common-sense/template-20.mjs';
+
+const STATEMENT_BY_TEMPLATE = new Map(
+  [
+    ...template01,
+    ...template02,
+    ...template03,
+    ...template04,
+    ...template05,
+    ...template06,
+    ...template07,
+    ...template08,
+    ...template09,
+    ...template10,
+    ...template11,
+    ...template12,
+    ...template13,
+    ...template14,
+    ...template15,
+    ...template16,
+    ...template17,
+    ...template18,
+    ...template19,
+    ...template20
+  ].map((entry) => [entry.template, entry.statement])
+);
 
 const CHAPTER_PATTERN = /^Chapter (\d{1,2})\.\s+(.+)$/;
 const SECTION_PATTERN = /^(\d{1,2})\.(\d{1,2})\.\s+([A-Z].*)$/;
@@ -66,7 +111,9 @@ export function parseCommonSense(paragraphs) {
   const finish = () => {
     if (current !== null) {
       const body = current.statementParts.join(' ').trim();
-      current.statement = current.question === '' ? body : `${body}\n\nQuestion. ${current.question}`;
+      const render = STATEMENT_BY_TEMPLATE.get(current.title);
+      const facts = typeof render === 'function' ? render(body) : body;
+      current.statement = current.question === '' ? facts : `${facts}\n\nQuestion. ${current.question}`;
       current.question = current.question.trim();
       current.printedAnswer = current.printedAnswer.trim();
       current.steps = current.steps.map((step) => step.trim()).filter((step) => step !== '');

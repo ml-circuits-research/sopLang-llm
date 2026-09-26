@@ -15,7 +15,7 @@
 
 import { slugify } from '../../naming.mjs';
 
-const DEMAND_PATTERN = /expected demand is (\d+) ([a-z][a-z -]*?), but forecast error is estimated at ±(\d+)%\./;
+const DEMAND_PATTERN = /Expected demand is (\d+) ([a-z][a-z -]*?), but forecast error is estimated at ±(\d+)%\./;
 const MARGIN_PATTERN = /The policy adds a further (\d+)% safety margin to the high forecast before selecting capacity\./;
 const OPTIONS_PATTERN = /Option A provides capacity (\d+) for cost (\d+); Option B provides capacity (\d+) for cost (\d+)\./;
 
@@ -48,6 +48,14 @@ function parse(statement) {
     capacityB: Number(options[3]),
     costB: Number(options[4])
   };
+}
+
+/** The compact statement: drop the domain preamble and the average-forecast note. */
+function statement(facts) {
+  return facts
+    .replace(/^(?:In|For)\s+[\s\S]*?(?=expected demand is)/, '')
+    .replace(/^expected/, 'Expected')
+    .replace(/\s*The average forecast[\s\S]*$/, '');
 }
 
 function solve(slots) {
@@ -136,6 +144,7 @@ export const cases = [
     type: slugify('Uncertainty and Robustness'),
     category: 'no-knowledge',
     parse,
+    statement,
     solve,
     render,
     wires: WIRES,

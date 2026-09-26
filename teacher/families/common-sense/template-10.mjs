@@ -36,6 +36,11 @@ function parse(statement) {
   };
 }
 
+/** The compact statement: drop the continuous-vs-discrete note. */
+function statement(facts) {
+  return facts.replace(/\s*Treat volume as continuous[\s\S]*$/, '');
+}
+
 /**
  * Exact rounding of `numerator / denominator` to hundredths, half away from
  * zero. The printed answers contain halves and quarters (`162.5`, `56.25`), so
@@ -130,6 +135,7 @@ export const cases = [
     type: slugify('Break-even threshold'),
     category: 'no-knowledge',
     parse,
+    statement,
     solve,
     render,
     wires: WIRES,

@@ -45,6 +45,11 @@ function parse(statement) {
   return { values, extreme: Number(extreme[1]) };
 }
 
+/** The compact statement: drop the extreme-value commentary and the restated task. */
+function statement(facts) {
+  return facts.replace(/, but it is much larger than the others[\s\S]*$/, '.');
+}
+
 /**
  * The value of `sum / count` in whole hundredths: the exact quotient when it is
  * not a half, and the even hundredth when it is exactly a half.
@@ -137,6 +142,7 @@ export const cases = [
     type: slugify('Mean versus median'),
     category: 'no-knowledge',
     parse,
+    statement,
     solve,
     render,
     wires: WIRES,

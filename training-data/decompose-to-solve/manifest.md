@@ -4,15 +4,15 @@ The manifest is split by pattern so a long table stays reviewable. Each pattern 
 
 | pattern | examples | train | eval | knowledge | no-knowledge | distinct plans | file | hash |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | 100 | 100 | 0 | 0 | 100 | 1 | manifest/pattern-01.md | 67ea63dc2289 |
-| 2 | 100 | 100 | 0 | 0 | 100 | 1 | manifest/pattern-02.md | 28ceb711a153 |
-| 3 | 100 | 100 | 0 | 0 | 100 | 1 | manifest/pattern-03.md | 829f6b42209e |
-| 4 | 100 | 0 | 100 | 0 | 100 | 1 | manifest/pattern-04.md | ef2259150629 |
-| 5 | 100 | 100 | 0 | 0 | 100 | 1 | manifest/pattern-05.md | b0f55011dc2f |
-| 6 | 100 | 100 | 0 | 0 | 100 | 1 | manifest/pattern-06.md | f0e99768a2b7 |
-| 7 | 100 | 100 | 0 | 0 | 100 | 1 | manifest/pattern-07.md | 69968a85a3c1 |
-| 8 | 100 | 100 | 0 | 0 | 100 | 1 | manifest/pattern-08.md | f304283482b3 |
-| 9 | 100 | 100 | 0 | 0 | 100 | 1 | manifest/pattern-09.md | 21d2d27af413 |
-| 10 | 100 | 100 | 0 | 0 | 100 | 1 | manifest/pattern-10.md | 681f7f4599d1 |
+| 1 | 100 | 100 | 0 | 0 | 100 | 1 | manifest/pattern-01.md | 773ec9032413 |
+| 2 | 100 | 100 | 0 | 0 | 100 | 1 | manifest/pattern-02.md | a597c6fda1c9 |
+| 3 | 100 | 100 | 0 | 0 | 100 | 1 | manifest/pattern-03.md | abe6e6c9e7c5 |
+| 4 | 100 | 0 | 100 | 0 | 100 | 1 | manifest/pattern-04.md | c0d07cd942e2 |
+| 5 | 100 | 100 | 0 | 0 | 100 | 1 | manifest/pattern-05.md | 389dc4f1bb7b |
+| 6 | 100 | 100 | 0 | 0 | 100 | 1 | manifest/pattern-06.md | 808a0318451a |
+| 7 | 100 | 100 | 0 | 0 | 100 | 1 | manifest/pattern-07.md | 96b26554ab54 |
+| 8 | 100 | 100 | 0 | 0 | 100 | 1 | manifest/pattern-08.md | 969536e4d5f6 |
+| 9 | 100 | 100 | 0 | 0 | 100 | 1 | manifest/pattern-09.md | 17d6c2e60207 |
+| 10 | 100 | 100 | 0 | 0 | 100 | 1 | manifest/pattern-10.md | b0dfdab628b2 |
 
 Total accepted examples: 1000.

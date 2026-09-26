@@ -38,6 +38,11 @@ function parse(statement) {
   };
 }
 
+/** The compact statement: drop the treat-rates-as-exact note. */
+function statement(facts) {
+  return facts.replace(/\s*Treat these rates as exact for this exercise\.\s*$/, '');
+}
+
 /** The share of positive alerts that are true positives, in tenths of a percent. */
 function shareTenthsOf(truePositives, alerts) {
   return Math.round((1000 * truePositives) / alerts);
@@ -113,6 +118,7 @@ export const cases = [
     type: slugify('Base rates'),
     category: 'no-knowledge',
     parse,
+    statement,
     solve,
     render,
     wires: WIRES,

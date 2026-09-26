@@ -42,6 +42,14 @@ function parse(statement) {
   };
 }
 
+/** The compact statement: drop the domain preamble and the workload-count note. */
+function statement(facts) {
+  return facts
+    .replace(/^(?:In|For)\s+[\s\S]*?(?=five work packages)/, '')
+    .replace(/^five/, 'Five')
+    .replace(/\s*The description mentions[\s\S]*$/, '');
+}
+
 function solve(slots) {
   const joinMinutes = Math.max(slots.bMinutes, slots.cMinutes);
   const minutes = slots.aMinutes + joinMinutes + slots.dMinutes + slots.eMinutes + slots.bufferMinutes;
@@ -81,6 +89,7 @@ export const cases = [
     type: slugify('Dependency Chain and Join'),
     category: 'no-knowledge',
     parse,
+    statement,
     solve,
     render,
     compute: COMPUTE,

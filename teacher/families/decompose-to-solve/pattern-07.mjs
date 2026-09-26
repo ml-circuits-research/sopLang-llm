@@ -15,7 +15,7 @@
 
 import { slugify } from '../../naming.mjs';
 
-const SUBJECT_PATTERN = /three routes can move the same ([a-z][a-z -]*)\./;
+const SUBJECT_PATTERN = /Three routes can move the same ([a-z][a-z -]*)\./;
 const ROUTE_PATTERN = /([ABC]): times \[(\d+(?:, \d+)*)\] min, capacities \[(\d+(?:, \d+)*)\]/g;
 const FLOW_PATTERN = /The required flow is (\d+) units and total route time must not exceed (\d+) minutes\./;
 
@@ -47,6 +47,11 @@ function parse(statement) {
     limitMinutes: Number(flow[2]),
     routes
   };
+}
+
+/** The compact statement: drop the domain preamble. */
+function statement(facts) {
+  return facts.replace(/^(?:In|For)\s+[\s\S]*?(?=three routes can move)/, '').replace(/^three/, 'Three');
 }
 
 function summarize(routes) {
@@ -145,6 +150,7 @@ export const cases = [
     type: slugify('Network Routes and Bottlenecks'),
     category: 'no-knowledge',
     parse,
+    statement,
     solve,
     render,
     wires: WIRES,

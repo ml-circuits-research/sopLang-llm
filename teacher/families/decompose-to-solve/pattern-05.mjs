@@ -16,7 +16,7 @@
 
 import { slugify } from '../../naming.mjs';
 
-const CONTEXT_PATTERN = /Scenario\. In ([a-z][^.]*?), two configurations are being compared/;
+const CONTEXT_PATTERN = /In ([a-z][^.]*?), two configurations are being compared/;
 const A_PATTERN = /A costs (\d+) units, takes (\d+) minutes, and has an assessed quality score of (\d+)\/100\./;
 const B_PATTERN = /B costs (\d+) units, takes (\d+) minutes, and scores (\d+)\/100\./;
 const RULE_PATTERN = /minimize S = cost \+ ([0-9.]+)\s*[×x*]\s*time\s*[−-]\s*(\d+)\s*[×x*]\s*quality\./;
@@ -47,6 +47,11 @@ function parse(statement) {
     timeWeight: Number(rule[1]),
     qualityWeight: Number(rule[2])
   };
+}
+
+/** The compact statement: drop the "colleagues propose three problems" distractor. */
+function statement(facts) {
+  return facts.replace(/\s*Colleagues propose[\s\S]*$/, '');
 }
 
 function solve(slots) {
@@ -129,6 +134,7 @@ export const cases = [
     type: slugify('Atomic Case: Coupled Objective'),
     category: 'no-knowledge',
     parse,
+    statement,
     solve,
     render,
     wires: WIRES,

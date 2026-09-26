@@ -44,6 +44,11 @@ function parse(statement) {
   };
 }
 
+/** The compact statement: drop the uniform-overhead assumption note. */
+function statement(facts) {
+  return facts.replace(/\s*Assume the overhead applies uniformly[\s\S]*$/, '');
+}
+
 /**
  * The rounded value of the exact rational `numerator / denominator` in
  * hundredths. The rounding runs on the rational itself with round-half-to-even,
@@ -134,6 +139,7 @@ export const cases = [
     type: slugify('Units and rates'),
     category: 'no-knowledge',
     parse,
+    statement,
     solve,
     render,
     wires: WIRES,

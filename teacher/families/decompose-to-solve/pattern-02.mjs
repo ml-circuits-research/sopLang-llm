@@ -48,6 +48,11 @@ function parse(statement) {
   };
 }
 
+/** The compact statement: drop the domain preamble, keep every number clause verbatim. */
+function statement(facts) {
+  return facts.replace(/^(?:In|For)\s+[\s\S]*?(?=\d+ [a-z][a-z -]* must be handled\.)/, '');
+}
+
 function evaluate(option, items) {
   return {
     label: option.label,
@@ -140,6 +145,7 @@ export const cases = [
     type: slugify('Competing Alternatives'),
     category: 'no-knowledge',
     parse,
+    statement,
     solve,
     render,
     wires: WIRES,

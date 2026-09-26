@@ -42,6 +42,11 @@ function parse(statement) {
   };
 }
 
+/** The compact statement: drop the trailing "other capacities unchanged" note. */
+function statement(facts) {
+  return facts.replace(/;\s*all other capacities remain unchanged\.\s*$/, '.');
+}
+
 /**
  * The improved capacity in hundredths of a unit, so `c × (100 + p) / 100` is
  * computed exactly and the printed halves and quarters (`126.5`) never turn
@@ -112,6 +117,7 @@ export const cases = [
     type: slugify('Bottlenecks'),
     category: 'no-knowledge',
     parse,
+    statement,
     solve,
     render,
     wires: WIRES,

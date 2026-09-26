@@ -46,6 +46,11 @@ function parse(statement) {
   };
 }
 
+/** The compact statement: drop the interval-notation explanation. */
+function statement(facts) {
+  return facts.replace(/\s*For this exercise, the notation means only[\s\S]*$/, '');
+}
+
 function formatHundredths(hundredths) {
   return String(hundredths / 100);
 }
@@ -135,6 +140,7 @@ export const cases = [
     type: slugify('Measurement uncertainty'),
     category: 'no-knowledge',
     parse,
+    statement,
     solve,
     render,
     wires: WIRES,

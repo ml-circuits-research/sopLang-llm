@@ -48,9 +48,9 @@ test('the twenty reasoning patterns are the templates and each carries fifty var
   assert.equal(first.folder, '1.1.1-weighted-averages');
 });
 
-test('the statement is the printed text plus the question, and the answer stays out', () => {
+test('the statement is the compact facts plus the question, and the answer stays out', () => {
   const problem = book().problems[0];
-  assert.match(problem.statement, /^Two groups were evaluated on the same scale\./);
+  assert.match(problem.statement, /^Group A contains \d+ cases with a mean of \d+; Group B contains \d+ cases with a mean of \d+\./);
   assert.match(problem.statement, /\n\nQuestion\. Compute the correct combined mean/);
   assert.equal(problem.statement.includes('Answer.'), false);
   assert.equal(problem.statement.includes('Step-by-step'), false);

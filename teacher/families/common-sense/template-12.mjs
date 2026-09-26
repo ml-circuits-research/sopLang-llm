@@ -47,6 +47,11 @@ function parse(statement) {
   };
 }
 
+/** The compact statement: drop the no-other-differences note. */
+function statement(facts) {
+  return facts.replace(/\s*The model states no other known differences\.\s*$/, '');
+}
+
 /**
  * A success rate in tenths of a percent, rounded half away from zero, so the
  * explanation prints the book's `75.0%` without binary-float noise.
@@ -113,6 +118,7 @@ export const cases = [
     type: slugify('Causality'),
     category: 'no-knowledge',
     parse,
+    statement,
     solve,
     render,
     compute: COMPUTE,

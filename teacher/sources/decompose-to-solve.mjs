@@ -22,11 +22,39 @@
  */
 
 import { slugify } from '../naming.mjs';
+import { cases as pattern01 } from '../families/decompose-to-solve/pattern-01.mjs';
+import { cases as pattern02 } from '../families/decompose-to-solve/pattern-02.mjs';
+import { cases as pattern03 } from '../families/decompose-to-solve/pattern-03.mjs';
+import { cases as pattern04 } from '../families/decompose-to-solve/pattern-04.mjs';
+import { cases as pattern05 } from '../families/decompose-to-solve/pattern-05.mjs';
+import { cases as pattern06 } from '../families/decompose-to-solve/pattern-06.mjs';
+import { cases as pattern07 } from '../families/decompose-to-solve/pattern-07.mjs';
+import { cases as pattern08 } from '../families/decompose-to-solve/pattern-08.mjs';
+import { cases as pattern09 } from '../families/decompose-to-solve/pattern-09.mjs';
+import { cases as pattern10 } from '../families/decompose-to-solve/pattern-10.mjs';
 
 const PROBLEM_PATTERN = /^Problem (\d{1,2})\.(\d{1,2})\.(\d{1,2}) — (.+)$/;
 const BLOCK_PATTERN =
   /^(Scenario|Main question|Best decomposition|Best formulation|Combined answer|Decomposition lesson|General-culture link)\.\s*([\s\S]*)$/;
 const SUBPROBLEM_PATTERN = /^(SP\d+ — .*|Atomic core — .*)$/;
+
+const STATEMENT_BY_TEMPLATE = new Map(
+  [
+    ...pattern01,
+    ...pattern02,
+    ...pattern03,
+    ...pattern04,
+    ...pattern05,
+    ...pattern06,
+    ...pattern07,
+    ...pattern08,
+    ...pattern09,
+    ...pattern10
+  ].map((entry) => [entry.template, entry.statement])
+);
+
+/** Strips the book's decomposition hint (reference material) off the task. */
+const QUESTION_TAIL_PATTERN = /\s*Best (?:decomposition|formulation)\b[\s\S]*$/;
 
 export const BOOK_ID = 'decompose-to-solve';
 export const BOOK_PATH = 'vision/Decompose_to_Solve_1000_Problems.docx';
@@ -61,11 +89,13 @@ export function parseDecomposeToSolve(paragraphs) {
   const finish = () => {
     if (current !== null) {
       current.scenario = current.scenario.trim();
-      current.question = current.question.trim();
+      current.question = current.question.trim().replace(QUESTION_TAIL_PATTERN, '').trim();
       current.printedAnswer = current.printedAnswer.trim();
       current.lesson = current.lesson.trim();
       current.link = current.link.trim();
-      current.statement = `Scenario. ${current.scenario}\n\nMain question. ${current.question}`;
+      const render = STATEMENT_BY_TEMPLATE.get(current.title);
+      const facts = typeof render === 'function' ? render(current.scenario) : current.scenario;
+      current.statement = `${facts}\n\nQuestion. ${current.question}`;
       delete current.formulation;
       problems.push(current);
       current = null;

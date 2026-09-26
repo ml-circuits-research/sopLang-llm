@@ -48,6 +48,11 @@ function parse(statement) {
   };
 }
 
+/** The compact statement: drop the no-other-criteria note. */
+function statement(facts) {
+  return facts.replace(/\s*No other mandatory criteria exist in the model\.\s*$/, '');
+}
+
 /**
  * A weighted score in hundredths of a point: `(w/100) × s` summed over the
  * criteria is `Σ w × s` hundredths, an integer, so the printed two-decimal
@@ -151,6 +156,7 @@ export const cases = [
     type: slugify('Multi-criteria decision'),
     category: 'no-knowledge',
     parse,
+    statement,
     solve,
     render,
     wires: WIRES,

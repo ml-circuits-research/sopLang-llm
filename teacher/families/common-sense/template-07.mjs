@@ -96,6 +96,11 @@ function parse(statement) {
   };
 }
 
+/** The compact statement: drop the do-not-assume note. */
+function statement(facts) {
+  return facts.replace(/\s*Do not assume any relationship that is not stated\.\s*$/, '');
+}
+
 /**
  * The forward closure of the observed facts. A rule is applied only when all of
  * its conditions already hold and its consequent is not yet known, so the rules
@@ -223,6 +228,7 @@ export const cases = [
     type: slugify('Logical implications'),
     category: 'no-knowledge',
     parse,
+    statement,
     solve,
     render,
     wires: WIRES,

@@ -14,7 +14,7 @@
 
 import { slugify } from '../../naming.mjs';
 
-const RAW_PATTERN = /the worksheet lists a raw requirement of (\d+) (.+?) in a local counting unit\./;
+const RAW_PATTERN = /The worksheet lists a raw requirement of (\d+) (.+?) in a local counting unit\./;
 const FACTOR_PATTERN = /One local unit corresponds to ([\d.]+) standard units\./;
 const LOSS_PATTERN = /Operational losses are estimated at (\d+)%, so enough input must be available to deliver the final requirement after loss\./;
 const CONTAINER_PATTERN = /Each container or service slot can supply (\d+) standard units, and at most (\d+) are available\./;
@@ -44,6 +44,14 @@ function parse(statement) {
     containerCapacity: Number(container[1]),
     availableContainers: Number(container[2])
   };
+}
+
+/** The compact statement: drop the domain preamble and the color-coding note. */
+function statement(facts) {
+  return facts
+    .replace(/^(?:In|For)\s+[\s\S]*?(?=the worksheet lists)/, '')
+    .replace(/^the worksheet/, 'The worksheet')
+    .replace(/\s*Another note gives[^.]+\.\s*$/, '');
 }
 
 /** The exact scaled need in standard units: raw × factor × 100 / (100 − loss). */
@@ -111,6 +119,7 @@ export const cases = [
     type: slugify('Normalization and Capacity'),
     category: 'no-knowledge',
     parse,
+    statement,
     solve,
     render,
     compute: COMPUTE,

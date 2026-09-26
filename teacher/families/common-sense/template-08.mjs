@@ -67,6 +67,11 @@ function parse(statement) {
   return { order, durations: durationsOf, prerequisites, unit: durationUnit };
 }
 
+/** The compact statement: drop the no-other-delays note. */
+function statement(facts) {
+  return facts.replace(/\s+and there are no other delays\.\s*$/, '.');
+}
+
 /**
  * The earliest schedule: tasks are released in dependency order, a task starts
  * at the latest finish among its prerequisites, and the duration of the project
@@ -195,6 +200,7 @@ export const cases = [
     type: slugify('Time dependencies'),
     category: 'no-knowledge',
     parse,
+    statement,
     solve,
     render,
     wires: WIRES,

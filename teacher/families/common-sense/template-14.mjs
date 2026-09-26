@@ -55,6 +55,11 @@ function parse(statement) {
   };
 }
 
+/** The compact statement: drop the equal-cost/additive-benefits note. */
+function statement(facts) {
+  return facts.replace(/\s*Every resource unit has the same cost[\s\S]*$/, '');
+}
+
 function totalOf(programs, taken) {
   return PROGRAM_NAMES.reduce(
     (sum, name) => sum + programs[name].slice(0, taken[name]).reduce((left, right) => left + right, 0),
@@ -165,6 +170,7 @@ export const cases = [
     type: slugify('Marginal allocation'),
     category: 'no-knowledge',
     parse,
+    statement,
     solve,
     render,
     wires: WIRES,

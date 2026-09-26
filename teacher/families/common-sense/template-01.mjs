@@ -30,6 +30,12 @@ function parse(statement) {
   return { countA, meanA, countB, meanB };
 }
 
+/** The compact statement: keep only the two group clauses, drop the framing and the method sentences. */
+function statement(facts) {
+  const groups = /Group A contains (\d+) cases with a mean of (\d+); Group B contains (\d+) cases with a mean of (\d+)/.exec(facts);
+  return `Group A contains ${groups[1]} cases with a mean of ${groups[2]}; Group B contains ${groups[3]} cases with a mean of ${groups[4]}.`;
+}
+
 /**
  * The rounded value of the exact rational `numerator / denominator` in
  * hundredths. Rounding is done on the rational itself with round-half-to-even,
@@ -120,6 +126,7 @@ export const cases = [
     type: slugify('Weighted averages'),
     category: 'no-knowledge',
     parse,
+    statement,
     solve,
     render,
     wires: WIRES,
