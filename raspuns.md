@@ -1,45 +1,35 @@
-# Ce fac acum — 2026-09-26, 16:40
+# Status — 2026-09-26, 16:50 — raspunsuri pe scurt
 
-## Ce ruleaza in acest moment
-Antrenez modelul Qwen3-1.7B (1,7 miliarde de parametri) pe setul nostru de 9.935 de exemple.
-Fiecare antrenament dureaza ~3 ore, apoi modelul e evaluat pe un "holdout" de 705 probleme pe care
-nu le-a vazut niciodata la antrenare. Verdictul celui care antreneaza ACUM vine ~17:45.
+## Da, am testat modelul de 17 miliarde
+- Model: Qwen3-17B (17 miliarde de parametri), antrenat de noi saptamana aceasta (fisierul de
+  evaluare: evaluation/registry/exp-017-qwen3-17b/metrics.json).
+- Rezultat: 442 din 705 corecte pe holdout.
+- Pe cele doua carti blocate: decompose-to-solve 0/100, common-sense 0/50 — TOT ZERO, ca la
+  modelul mic de 1,7 miliarde.
+- ATENTIE, onest: testul de 17 miliarde a fost pe setul de date de ATUNCI (inainte de containere);
+  enunturile celor doua carti erau practic identice cu cele de acum. Concluzia: nu marimea
+  modelului e problema, ci cele doua carti in sine.
 
-## Ce testez acum (ipoteza)
-Ultimele doua carti de probleme au scor ZERO la orice am incercat: "descompune si rezolva"
-(decompose-to-solve, 0 din 100) si "bun-simt" (common-sense, 0 din 50). Am verificat ca nici
-modelul de 10 ori mai mare (17 miliarde) nu le poate rezolva — deci problema e in TEXTELE
-problemei, nu in marimea modelului. Acum am simplificat enunturile (un numar pe propozitie,
-fara propozitii-distractor). Verdictul vine ~17:45.
+## Sunt gresite seturile de date la cele doua carti?
+Nu sunt gresite tehnic: fiecare circuit din set trece poarta de validare (reproduce raspunsul
+tiparit, verifica reactivitatea). Gresite sunt ca PREDARE: niciun model nu invata maparea
+enunt -> circuit pe ele. Acum testez daca enunturile simplificate rezolva asta (verdict ~17:45).
 
-## Ce a mers (confirmat, masurat)
-1. ABSTRACTEREA "CONTAINER" (lucrul pe etape cu un magazin de date) a functionat. Prima data
-   cand o carte intreaga de probleme a fost rezolvata complet: "world-as-a-system" 20 din 20.
-   Cu aceasta schimbare setul a atins maximul seriei: 460 din 705 corecte (65,2%).
-2. Documentatia firelor (wire-types) + regula din AGENTS.md ca orice modificare de fire
-   actualizeaza documentatia: facuta si mentinuta la zi.
-3. Bucla de invatare a abstractiilor: masoara -> semnaleaza -> propune -> valideaza -> masoara;
-   instrumentele (static-check, discover-wires) ruleaza dupa fiecare experiment.
+## Succes si esec pe carti (cu cel mai bun set de pana acum, cel cu containere, 460/705 = 65,2%)
+- SUCCES: world-as-a-system 20/20 (100%, prima carte rezolvata complet), procedural-arithmetic
+  438/480 (91%).
+- ESEC: decompose-to-solve 0/100, common-sense 0/50, scientific-reasoning 0/25,
+  adult-reasoning 0/10, logical-reasoning 0/10, mathematical-thinking 2/10.
 
-## Ce a esuat (confirmat, masurat)
-1. Spargerea calculelor in multe fire mici (structura "modulara"): 448 corecte, mai rau decat
-   forma compacta (460), cu erori de executie DUBLATE. Concluzie: planuri compacte, nu sparte.
-2. Rescrierea celor doua carti blocate in stilul containerelor: 428 corecte; cartile au ramas 0.
-3. Scurtarea raspunsurilor la valoarea bruta (fara proza): 439 corecte; cartile au ramas 0.
-4. Marimea modelului: 17 miliarde = tot 0 la cele doua carti. Nu asta e problema.
-
-## Ce am observat in plus
-- Proceduralul (aritmetica simpla) fluctueaza 410-438 pe aceleasi exemple intre experimente
-  identice ca date: e zgomot de masurare, nu semnal.
-- Noaptea a avut doua incidente de infrastructura, ambele reparate si comise:
-  (a) cache-ul de pagini al sistemului (99 GB) bloca memoria GPU-ului si oprea antrenamentele
-  la pasul 0/7 — acum un script din skills detecteaza si rezolva automat inainte de lansare;
-  (b) doi antrenori rulau simultan dupa o reinviere accidentala — l-am oprit pe cel vechi.
-- Fiecare schimbare de date trece prin poarta de validare (fiecare circuit trebuie sa
-  reproduca raspunsul tiparit) — a prins un raspuns "copt" (nerulat) inainte de antrenare.
+## Ce am incercat si ce a dat (toate masurate)
+- Containere (magazin construit in etape): SUCCES, a rezolvat cartea world 0 -> 20/20, 65,2% total.
+- Spargerea calculelor in fire mici: ESEC (63,5%, erori de executie dublate).
+- Container-stil aplicat pe cartile blocate: ESEC (60,7%, cartile tot 0).
+- Raspunsuri scurte, fara proza: NUL (62,3%, cartile tot 0).
+- Modelul de 10 ori mai mare: NUL pe cartile blocate.
+- Enunturi simplificate: IN TEST ACUM, verdict ~17:45.
 
 ## Ce urmeaza
-- ~17:45: verdictul enunturilor simplificate. Daca misca cele doua carti, continuam pe firul
-  asta. Daca nu, concluzia sesiunii: 90% pe benchmark nu vine din designul setului de date;
-  trebuie alta abordare de predare (demonstratii in context, alta impartire a pasilor).
-- Obiectivul ramane 90% pe benchmark (acum 65,2% maxim).
+Daca enunturile simplificate nu misca cele doua carti, concluzia sesiunii: designul setului nu
+mai e parghia; urmatoarea ipoteza e predarea cu demonstratii in context. Obiectivul ramane 90%
+pe benchmark (maxim actual 65,2%).
