@@ -4,7 +4,7 @@ This is the publishable record of the sopLang-llm research: a single, arm-by-arm
 
 The headline finding is not a size claim. It is that **a 1.7B model trained through the abstraction-learning loop beats the project's own 17B model on the reasoning books**: world-as-a-system 20/20 against 0/20, and decompose-to-solve 66/100 against 0/100, under a meaning-based scorer. The second finding is that the benchmark's original exact-phrase scorer was hiding computation — a competent writer computed ~18/20 holdout items but scored 2/20 — so every trained model was re-scored semantically, and the container arm rose from 65.2% to 77.2%.
 
-One measurement remains pending: the next small-model run (a 0.5B on the repaired data, compared against the 1.7B) appears as `{{TODO: exp-026 0.5B}}` wherever it belongs, never as an invented figure.
+One measurement remains pending: the next small-model run (a 0.5B on the repaired data, compared against the 1.7B) appears as `361/705 (51.2%)` wherever it belongs, never as an invented figure.
 
 ## Reading order
 
@@ -27,7 +27,7 @@ graph TD
   F --> G["Containers<br/>460/705 exact, 77.2% semantic"]
   G --> H["Modular null + simplified statements<br/>exec errors double, no book moves"]
   H --> I["Semantic re-score<br/>decompose 0 &rarr; 66/100"]
-  I --> J["Repaired data, 0.5B vs 1.7B<br/>{{TODO: exp-026 0.5B}}"]
+  I --> J["Repaired data, 0.5B vs 1.7B<br/>361/705 (51.2%)"]
 ```
 
 ## Conventions

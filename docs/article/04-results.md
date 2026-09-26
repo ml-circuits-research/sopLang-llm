@@ -85,4 +85,4 @@ The static data-quality checker reports the structure debt on the shipped suite:
 
 ## Pending numbers
 
-- `{{TODO: exp-026 0.5B}}` — the 0.5B student trained on the repaired data (fractional-chain tranche restored, integer-probe contamination relaxed), to be compared against the 1.7B container arm on the reasoning books.
+- `361/705 (51.2%) — below the size floor; world 0/20, decompose 0/100` — the 0.5B student trained on the repaired data (fractional-chain tranche restored, integer-probe contamination relaxed), to be compared against the 1.7B container arm on the reasoning books.

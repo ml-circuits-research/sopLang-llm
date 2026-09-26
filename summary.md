@@ -69,3 +69,12 @@ Method:
    one historical exception is exp-014-deep-chains at 49/50, which is worth revisiting.
 5. Recommendation: adopt a value-based answer comparison (numbers plus verdict/selection) as
    the benchmark's scorer, so the reported scores measure computation, not phrase reproduction.
+
+## Update — the 0.5B comparison (2026-09-26)
+
+qwen2.5-coder-0.5b trained on the repaired dv13 data: 361/705 (51.2%) exact. world-as-a-system
+0/20 and decompose-to-solve 0/100 (the 1.7B container arm solves them 20/20 and 66/100 semantic),
+so the "small model beats the big one" hypothesis does NOT hold at 0.5B: there is a measured
+size floor. The comparison headline remains the 1.7B beating the 17B on the reasoning books,
+now bounded below by the 0.5B floor. Next per plan: re-train the 1.7B on the same dv13 data to
+make the size comparison clean and to test whether the fractional/probe fix moves the 1.7B.
