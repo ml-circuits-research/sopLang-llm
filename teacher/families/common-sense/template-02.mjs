@@ -83,7 +83,7 @@ function render(solution) {
 
 const WIRES = [
   {
-    name: 'rate',
+    name: 'quantity',
     command: 'jsEval',
     body: [
       'const slots = $slots;',
@@ -98,23 +98,7 @@ const WIRES = [
       'const usefulPercent = 100 - slots.overheadPercent;',
       'const rate = roundHundredths(slots.throughput * usefulPercent, 100);',
       'probe(rate > 0, "the useful rate must stay positive");',
-      'return rate;'
-    ].join('\n')
-  },
-  {
-    name: 'quantity',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const roundHundredths = (numerator, denominator) => {',
-      '  let hundredths = Math.floor((numerator * 100) / denominator);',
-      '  const remainder = (numerator * 100) % denominator;',
-      '  if (2 * remainder > denominator || (2 * remainder === denominator && hundredths % 2 === 1)) {',
-      '    hundredths += 1;',
-      '  }',
-      '  return hundredths;',
-      '};',
-      'const quantity = roundHundredths($rate * slots.minutes, 6000);',
+      'const quantity = roundHundredths(slots.throughput * usefulPercent * slots.minutes, 6000);',
       'probe(quantity > 0, "the produced quantity must stay positive");',
       'return quantity;'
     ].join('\n')

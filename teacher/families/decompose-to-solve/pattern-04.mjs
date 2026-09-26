@@ -52,32 +52,11 @@ function render(solution) {
   return `The earliest safe completion time is ${solution.minutes} minutes, so the plan is ${solution.feasible ? 'feasible' : 'not feasible'}. The critical insight is that B and C are parallel branches whose maximum duration controls the join.`;
 }
 
-const WIRES = [
-  {
-    name: 'join',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const joinMinutes = Math.max(slots.bMinutes, slots.cMinutes);',
-      'probe(Number.isInteger(joinMinutes) && joinMinutes > 0, "the parallel join must be a positive whole number of minutes");',
-      'return joinMinutes;'
-    ].join('\n')
-  },
-  {
-    name: 'minutes',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'const minutes = slots.aMinutes + $join + slots.dMinutes + slots.eMinutes + slots.bufferMinutes;',
-      'probe(Number.isInteger(minutes) && minutes > 0, "the earliest safe completion time must be a positive whole number of minutes");',
-      'return minutes;'
-    ].join('\n')
-  }
-];
-
 const COMPUTE = [
   'const slots = $slots;',
-  'return "The earliest safe completion time is " + $minutes + " minutes, so the plan is " + ($minutes <= slots.limitMinutes ? "feasible" : "not feasible") + ". The critical insight is that B and C are parallel branches whose maximum duration controls the join.";'
+  'const joinMinutes = Math.max(slots.bMinutes, slots.cMinutes);',
+  'const minutes = slots.aMinutes + joinMinutes + slots.dMinutes + slots.eMinutes + slots.bufferMinutes;',
+  'return "The earliest safe completion time is " + minutes + " minutes, so the plan is " + (minutes <= slots.limitMinutes ? "feasible" : "not feasible") + ". The critical insight is that B and C are parallel branches whose maximum duration controls the join.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -99,7 +78,6 @@ export const cases = [
     parse,
     solve,
     render,
-    wires: WIRES,
     compute: COMPUTE,
     explain
   }

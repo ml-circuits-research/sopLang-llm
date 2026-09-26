@@ -41,17 +41,21 @@ const minutes = waves * slots.waveMinutes + slots.setupMinutes + slots.bufferMin
 probe(minutes >= slots.setupMinutes + slots.bufferMinutes, "the elapsed time must include the setup and the buffer");
 return { batches: batches, waves: waves, minutes: minutes };
 
-@verdict jsEval
+@cost jsEval
 const slots = $slots;
 const cost = slots.fixedCost + slots.ratePerUnit * $demand.preLoss;
 probe(cost >= slots.fixedCost, "the cost must include the fixed charge");
+return cost;
+
+@verdict jsEval
+const slots = $slots;
 const capacityOk = $batching.batches <= slots.batchSlots;
 const timeOk = $batching.minutes <= slots.deadlineMinutes;
-const budgetOk = cost <= slots.budgetUnits;
+const budgetOk = $cost <= slots.budgetUnits;
 const feasible = capacityOk && timeOk && budgetOk;
 const failing = (capacityOk ? 0 : 1) + (timeOk ? 0 : 1) + (budgetOk ? 0 : 1);
 probe(feasible === (failing === 0), "the verdict must be feasible exactly when no hard constraint fails");
-return { feasible: feasible, preLossTenths: $demand.preLossTenths, batches: $batching.batches, minutes: $batching.minutes, cost: cost };
+return { feasible: feasible, preLossTenths: $demand.preLossTenths, batches: $batching.batches, minutes: $batching.minutes, cost: $cost };
 
 @answer jsEval
 const preLossText = Math.floor($verdict.preLossTenths / 10) + "." + ($verdict.preLossTenths % 10);

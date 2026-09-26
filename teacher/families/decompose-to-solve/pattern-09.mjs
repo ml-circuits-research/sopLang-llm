@@ -195,19 +195,27 @@ const WIRES = [
     ].join('\n')
   },
   {
-    name: 'verdict',
+    name: 'cost',
     command: 'jsEval',
     body: [
       'const slots = $slots;',
       'const cost = slots.fixedCost + slots.ratePerUnit * $demand.preLoss;',
       'probe(cost >= slots.fixedCost, "the cost must include the fixed charge");',
+      'return cost;'
+    ].join('\n')
+  },
+  {
+    name: 'verdict',
+    command: 'jsEval',
+    body: [
+      'const slots = $slots;',
       'const capacityOk = $batching.batches <= slots.batchSlots;',
       'const timeOk = $batching.minutes <= slots.deadlineMinutes;',
-      'const budgetOk = cost <= slots.budgetUnits;',
+      'const budgetOk = $cost <= slots.budgetUnits;',
       'const feasible = capacityOk && timeOk && budgetOk;',
       'const failing = (capacityOk ? 0 : 1) + (timeOk ? 0 : 1) + (budgetOk ? 0 : 1);',
       'probe(feasible === (failing === 0), "the verdict must be feasible exactly when no hard constraint fails");',
-      'return { feasible: feasible, preLossTenths: $demand.preLossTenths, batches: $batching.batches, minutes: $batching.minutes, cost: cost };'
+      'return { feasible: feasible, preLossTenths: $demand.preLossTenths, batches: $batching.batches, minutes: $batching.minutes, cost: $cost };'
     ].join('\n')
   }
 ];

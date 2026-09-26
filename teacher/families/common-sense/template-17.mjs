@@ -65,26 +65,16 @@ function render(solution) {
   return `At least ${solution.modules} modules are required.`;
 }
 
-const WIRES = [
-  {
-    name: 'modules',
-    command: 'jsEval',
-    body: [
-      'const slots = $slots;',
-      'probe((slots.demand * (100 + slots.reserve)) % 100 === 0, "the stated reserve must leave a whole required capacity");',
-      'const required = (slots.demand * (100 + slots.reserve)) / 100;',
-      'const modules = Math.ceil(required / slots.capacity);',
-      'const installed = modules * slots.capacity;',
-      'probe(Number.isInteger(modules) && modules > 0, "the target capacity must need at least one module");',
-      'probe(installed >= required, "the installed capacity must cover the target capacity");',
-      'probe(installed - slots.capacity < required, "one module fewer must fall short of the target capacity");',
-      'return modules;'
-    ].join('\n')
-  }
-];
-
 const COMPUTE = [
-  'return "At least " + $modules + " modules are required.";'
+  'const slots = $slots;',
+  'probe((slots.demand * (100 + slots.reserve)) % 100 === 0, "the stated reserve must leave a whole required capacity");',
+  'const required = (slots.demand * (100 + slots.reserve)) / 100;',
+  'const modules = Math.ceil(required / slots.capacity);',
+  'const installed = modules * slots.capacity;',
+  'probe(Number.isInteger(modules) && modules > 0, "the target capacity must need at least one module");',
+  'probe(installed >= required, "the installed capacity must cover the target capacity");',
+  'probe(installed - slots.capacity < required, "one module fewer must fall short of the target capacity");',
+  'return "At least " + modules + " modules are required.";'
 ].join('\n');
 
 function explain(slots, solution) {
@@ -107,7 +97,6 @@ export const cases = [
     parse,
     solve,
     render,
-    wires: WIRES,
     compute: COMPUTE,
     explain
   }
