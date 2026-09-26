@@ -1,0 +1,18 @@
+@facts literal
+{
+  "observedA": "active",
+  "observedC": "inactive"
+}
+
+@answer jsEval
+const f = $facts;
+// Rule 1: A active => B active.
+const B = f.observedA === "active" ? "active" : "unknown";
+probe(B === "active", "Rule 1 must force B active");
+// Rule 2: B active and C inactive => D active.
+const D = B === "active" && f.observedC === "inactive" ? "active" : "unknown";
+probe(D === "active", "Rule 2 must force D active");
+// Rule 3: D active => E inactive.
+const E = D === "active" ? "inactive" : "unknown";
+probe(E === "inactive", "Rule 3 must force E inactive");
+return `B must be ${B}, D must be ${D}, E must be ${E}. Rule 4 (E active => A inactive) is not needed here because its antecedent is false.`;

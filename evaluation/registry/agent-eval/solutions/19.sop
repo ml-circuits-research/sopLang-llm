@@ -1,0 +1,22 @@
+@facts literal
+{
+  "A": { "value": 66.9, "uncertainty": 1.5 },
+  "B": { "value": 69.3, "uncertainty": 1 }
+}
+
+@answer jsEval
+const f = $facts;
+const aLow = f.A.value - f.A.uncertainty;
+const aHigh = f.A.value + f.A.uncertainty;
+const bLow = f.B.value - f.B.uncertainty;
+const bHigh = f.B.value + f.B.uncertainty;
+probe(aLow <= aHigh && bLow <= bHigh, "each interval must run from its lower to its upper endpoint");
+let conclusion;
+if (aHigh < bLow) {
+  conclusion = "B is certainly greater than A";
+} else if (bHigh < aLow) {
+  conclusion = "A is certainly greater than B";
+} else {
+  conclusion = "neither A > B nor B > A can be established with certainty";
+}
+return `${conclusion}: A in [${aLow.toFixed(1)}, ${aHigh.toFixed(1)}], B in [${bLow.toFixed(1)}, ${bHigh.toFixed(1)}].`;

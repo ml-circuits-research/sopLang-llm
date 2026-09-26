@@ -1,0 +1,27 @@
+@facts literal
+{
+  "requiredFlow": 35,
+  "timeLimit": 42,
+  "routes": {
+    "A": { "times": [9, 15, 12], "capacities": [84, 35, 58] },
+    "B": { "times": [15, 15, 14], "capacities": [81, 93, 36] },
+    "C": { "times": [6, 12, 18], "capacities": [39, 41, 64] }
+  }
+}
+
+@answer jsEval
+const f = $facts;
+const names = ["A", "B", "C"];
+const feasible = [];
+for (const name of names) {
+  const route = f.routes[name];
+  const time = route.times.reduce((sum, t) => sum + t, 0);
+  const capacity = Math.min(...route.capacities);
+  if (capacity >= f.requiredFlow && time <= f.timeLimit) {
+    feasible.push({ name, time });
+  }
+}
+probe(feasible.length > 0, "at least one route must be feasible");
+feasible.sort((a, b) => a.time - b.time);
+const best = feasible[0];
+return `Route ${best.name} (${best.time} minutes; capacity >= ${f.requiredFlow}).`;

@@ -1,0 +1,11 @@
+@facts literal
+{
+  "handled": 78,
+  "availableCapacity": 90
+}
+
+@answer jsEval
+const f = $facts;
+const capacityRefuted = f.availableCapacity >= f.handled;
+probe(capacityRefuted, "the capacity log must show at least the handled count, refuting H1");
+return `H2 (an ordering or dependency mistake). The capacity log tests H1 and refutes it (${f.availableCapacity} >= ${f.handled}); the time-stamped record tests H2 and supports it (a dependent action ran before its prerequisite); the independent reproduction tests H3 and refutes it (the quantity is reproduced within tolerance).`;

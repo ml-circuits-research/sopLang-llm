@@ -1,0 +1,20 @@
+@facts literal
+{
+  "capacities": { "A": 160, "B": 180, "C": 90, "D": 150 },
+  "improveStage": "C",
+  "improvePercent": 30,
+  "unit": "cases"
+}
+
+@answer jsEval
+const f = $facts;
+const stages = ["A", "B", "C", "D"];
+const initial = Math.min(...stages.map((s) => f.capacities[s]));
+const improved = {};
+for (const s of stages) {
+  improved[s] = s === f.improveStage ? f.capacities[s] * (100 + f.improvePercent) / 100 : f.capacities[s];
+}
+const after = Math.min(...stages.map((s) => improved[s]));
+const bottlenecks = stages.filter((s) => improved[s] === after);
+probe(bottlenecks.length >= 1, "a series process must have at least one bottleneck");
+return `Initial capacity: ${initial} ${f.unit}/hour; after improving ${f.improveStage} by ${f.improvePercent}%: ${after} ${f.unit}/hour; final bottleneck: ${bottlenecks.join(", ")}.`;

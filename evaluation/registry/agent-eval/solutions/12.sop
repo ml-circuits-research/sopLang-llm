@@ -1,0 +1,17 @@
+@facts literal
+{
+  "durations": { "A": 5, "B": 5, "C": 5, "D": 5, "E": 5, "F": 5 },
+  "prerequisites": { "A": [], "B": [], "C": ["A"], "D": ["A"], "E": ["B", "C"], "F": ["D", "E"] }
+}
+
+@answer jsEval
+const f = $facts;
+const order = ["A", "B", "C", "D", "E", "F"];
+const finish = {};
+for (const task of order) {
+  const prereqs = f.prerequisites[task];
+  const start = prereqs.length === 0 ? 0 : Math.max(...prereqs.map((p) => finish[p]));
+  finish[task] = start + f.durations[task];
+}
+probe(finish.F > 0, "the project must have a positive duration");
+return `Minimum duration: ${finish.F} days (finish A=5, C=10, E=15, F=20). Critical chain: A -> C -> E -> F.`;

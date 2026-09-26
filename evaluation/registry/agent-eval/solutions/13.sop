@@ -1,0 +1,18 @@
+@facts literal
+{
+  "population": 10000,
+  "prevalencePercent": 2,
+  "sensitivityPercent": 85,
+  "specificityPercent": 96
+}
+
+@answer jsEval
+const f = $facts;
+const present = f.population * f.prevalencePercent / 100;
+const absent = f.population - present;
+const truePositives = present * f.sensitivityPercent / 100;
+const falsePositives = absent * (100 - f.specificityPercent) / 100;
+const positives = truePositives + falsePositives;
+probe(positives > 0, "the detector must produce at least one positive");
+const ppvPercent = 100 * truePositives / positives;
+return `P(event present | positive) = ${ppvPercent.toFixed(1)}% (${truePositives} true positives of ${positives} positive alerts).`;

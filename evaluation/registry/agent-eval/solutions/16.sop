@@ -1,0 +1,16 @@
+@facts literal
+{
+  "countA": 45,
+  "meanA": 84,
+  "countB": 45,
+  "meanB": 84
+}
+
+@answer jsEval
+const f = $facts;
+const totalA = f.countA * f.meanA;
+const totalB = f.countB * f.meanB;
+const combined = (totalA + totalB) / (f.countA + f.countB);
+const simple = (f.meanA + f.meanB) / 2;
+probe(combined > 0 && simple > 0, "both means must be positive");
+return `Combined mean: ${combined} (weighted by counts); simple mean-of-means: ${simple}. The weighted mean is the correct rule.`;

@@ -1,0 +1,28 @@
+@facts literal
+{
+  "localUnits": 93,
+  "conversion": 1,
+  "lossPercent": 4,
+  "batchCapacity": 19,
+  "parallelBatches": 3,
+  "waveMinutes": 9,
+  "setupMinutes": 11,
+  "bufferMinutes": 11,
+  "batchSlots": 7,
+  "fixedCost": 72,
+  "costPerUnit": 1.32,
+  "deadlineMinutes": 45,
+  "budget": 174.92
+}
+
+@answer jsEval
+const f = $facts;
+const standardUnits = f.localUnits * f.conversion;
+const preLoss = standardUnits / (1 - f.lossPercent / 100);
+const batches = Math.ceil(preLoss / f.batchCapacity);
+probe(batches >= 1, "the workload needs at least one batch");
+const waves = Math.ceil(batches / f.parallelBatches);
+const minutes = waves * f.waveMinutes + f.setupMinutes + f.bufferMinutes;
+const cost = f.fixedCost + f.costPerUnit * preLoss;
+const feasible = batches <= f.batchSlots && minutes <= f.deadlineMinutes && cost <= f.budget;
+return `${feasible ? "feasible" : "not feasible"}: pre-loss ${preLoss.toFixed(3)} standard units, ${batches} batches, ${minutes} minutes, cost ${cost.toFixed(2)} vs budget ${f.budget}.`;

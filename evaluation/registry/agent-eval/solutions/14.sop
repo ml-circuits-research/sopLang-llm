@@ -1,0 +1,18 @@
+@facts literal
+{
+  "population": 4000,
+  "areas": 4,
+  "methods": [
+    { "id": "M1", "kind": "voluntary", "responses": 1200 },
+    { "id": "M2", "kind": "stratified", "perArea": 120 },
+    { "id": "M3", "kind": "venue", "responses": 2000 }
+  ]
+}
+
+@answer jsEval
+const f = $facts;
+const chosen = f.methods.find((m) => m.kind === "stratified");
+probe(chosen !== undefined, "a stratified method must be present");
+const planned = chosen.perArea * f.areas;
+probe(planned > 0 && planned < f.population, "the stratified sample must be a proper subset of the population");
+return `${chosen.id} (randomly select ${chosen.perArea} from each of ${f.areas} areas): stratified random sampling is the only method that generalizes to the whole population. M1's voluntary responses and M3's single-venue interviews are self-selected, so larger counts do not remove the selection bias.`;

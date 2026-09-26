@@ -1,0 +1,18 @@
+@facts literal
+{
+  "rawRequirement": 73,
+  "standardPerLocal": 2,
+  "lossPercent": 5,
+  "capacityPerSlot": 27,
+  "slotsAvailable": 10
+}
+
+@answer jsEval
+const f = $facts;
+const finalStandard = f.rawRequirement * f.standardPerLocal;
+probe(finalStandard > 0, "the final requirement must be positive");
+const preLoss = finalStandard / (1 - f.lossPercent / 100);
+const slots = Math.ceil(preLoss / f.capacityPerSlot);
+probe(slots >= 1, "the requirement needs at least one slot");
+const feasible = slots <= f.slotsAvailable;
+return `${slots} containers: ${feasible ? "feasible" : "not feasible"}.`;

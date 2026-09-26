@@ -1,0 +1,13 @@
+@facts literal
+{
+  "throughputPerHour": 12,
+  "overheadPercent": 10,
+  "minutes": 35
+}
+
+@answer jsEval
+const f = $facts;
+const usefulRate = f.throughputPerHour * (100 - f.overheadPercent) / 100;
+const quantity = usefulRate * (f.minutes / 60);
+probe(quantity > 0, "useful output must be positive");
+return `${quantity.toFixed(1)} useful beneficiaries (${usefulRate.toFixed(1)} beneficiaries/hour * ${f.minutes}/60 hours).`;

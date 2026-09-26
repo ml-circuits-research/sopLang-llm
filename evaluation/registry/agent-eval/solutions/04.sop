@@ -1,0 +1,20 @@
+@facts literal
+{
+  "costA": 127,
+  "timeA": 40,
+  "qualityA": 77,
+  "costB": 74,
+  "timeB": 37,
+  "qualityB": 84,
+  "timeWeight": 1,
+  "qualityWeight": 2
+}
+
+@answer jsEval
+const f = $facts;
+const score = (cost, time, quality) => cost + f.timeWeight * time - f.qualityWeight * quality;
+const sA = score(f.costA, f.timeA, f.qualityA);
+const sB = score(f.costB, f.timeB, f.qualityB);
+probe(Number.isFinite(sA) && Number.isFinite(sB), "both configuration scores must be finite");
+const winner = sB < sA ? "B" : "A";
+return `${winner} wins: S(A) = ${sA}, S(B) = ${sB}; minimizing S = cost + time - 2*quality.`;

@@ -1,0 +1,17 @@
+@facts literal
+{
+  "responses": 103,
+  "limitMinutes": 44,
+  "maxPerBlock": 14,
+  "minutesPerBlock": 3,
+  "setupMinutes": 6
+}
+
+@answer jsEval
+const f = $facts;
+const blocks = Math.ceil(f.responses / f.maxPerBlock);
+probe(blocks >= 1, "a positive workload needs at least one block");
+const totalMinutes = blocks * f.minutesPerBlock + f.setupMinutes;
+probe(totalMinutes > 0, "the elapsed time must be positive");
+const feasible = totalMinutes <= f.limitMinutes;
+return `${totalMinutes} minutes: ${feasible ? "feasible" : "not feasible"}.`;
