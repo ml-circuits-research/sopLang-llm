@@ -6,10 +6,13 @@
    receives the statements of 20 holdout problems from the two stuck books (without the
    answers) and writes the circuits by hand, using the wire language and the documentation.
    A second, independent agent will execute those circuits and score them against the
-   recorded answers. This answers the question: "if a competent writer is told how to make
-   circuits, does the benchmark pass?" If the agent solves them, the eval is fine and the
-   trained model is simply not learning. If the agent cannot solve them, the statements or
-   the eval have a real problem. Results pending - the solver agent is writing circuits now.
+   recorded answers. RESULT (measured): 2 of 20 pass. The writer computed about 18 of 20
+   correctly, but the answer comparison of the two books is exact-phrase based: the recorded
+   answers carry unit words and prose wrappers that no solver can derive from the statement.
+   Conclusion: for the two stuck books the benchmark measures phrase reproduction, not
+   computation. Per the stop rule, the dataset-design line stops here; proposal.md records
+   the fix (value-based comparison, or canonical answers) and the re-test criterion
+   (a competent writer must reach 20 of 20) before any further training.
 
 ## Which model is which — stated plainly
 - The working model is Qwen3-1.7B. It is small on purpose: the whole research goal is to make
@@ -56,11 +59,10 @@ are the current attempt to fix that.
   was killed.
 
 ## What is next
-1. When the agent-eval experiment lands: score the 20 circuits with the independent verifier,
-   write the pass/fail result here, and report it.
-2. When the holdout of the newly trained model lands (~18:30 UTC): record the verdict. If the
-   simplified statements moved the two stuck books, the research thread continues there. If
-   not, the next hypothesis is teaching with in-context demonstrations, and the article gets
-   the session's conclusion: the dataset-design levers (structure, style, answers, statements)
-   are exhausted; only the container abstraction moved a book, and 65.2% remains the best run.
+1. The agent-eval experiment has failed and the stop rule applies: no further dataset-design
+   arms, no further training on restructured datasets. The exp-025 holdout (already launched)
+   still completes and its verdict will be recorded, but it does not change the stop.
+2. Next session, per proposal.md: make the books' answer comparison value-based or canonicalize
+   the recorded answers, then re-run the writer experiment until it reaches 20 of 20. Only
+   then reconsider training.
 3. The goal remains 90% correct on the benchmark. The current best is 65.2%.
