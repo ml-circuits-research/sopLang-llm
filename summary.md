@@ -78,3 +78,12 @@ so the "small model beats the big one" hypothesis does NOT hold at 0.5B: there i
 size floor. The comparison headline remains the 1.7B beating the 17B on the reasoning books,
 now bounded below by the 0.5B floor. Next per plan: re-train the 1.7B on the same dv13 data to
 make the size comparison clean and to test whether the fractional/probe fix moves the 1.7B.
+
+## Update — 1.7B on the repaired dv13 data (2026-09-27)
+
+Qwen3-1.7B trained on dv13 (fractional chain taught, integer probes relaxed): 421/705 (59.7%)
+exact, below the dv7 container arm's 460/705 (65.2%). world-as-a-system drops 20/20 to 5/20
+and procedural 438 to 414/480. The data fix was a measured negative for the 1.7B: the probe
+relaxation and the holdout swap (units-and-rates into training, logical-implications held out)
+did not move the stuck books and regressed the container book. The clean size comparison on
+identical dv13 data stands: 0.5B 51.2% vs 1.7B 59.7%. dv7 (containers) remains the best arm.
