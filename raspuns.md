@@ -58,6 +58,16 @@ regression is execution errors: 57 -> 184, runtime completion 91.9% -> 73.9%, ca
 probe relaxation (P2) destabilizing the model's circuit emission. Recommendation stands but is
 sharper: revert ONLY the probe relaxation (P2); the world 'regression' needs no fix at all.
 
+## False-failure audit (2026-09-27): the 0.5B was NOT fooled, the 1.7B world drop was
+A semantic audit of both holdouts (a subagent re-classified every non-match row). Result:
+- 0.5B: 361 exact + 9 rescued = 370/705 (52.5%). Its world 0/20 is fully REAL (20/20 compile
+  errors: "Missing initializer in const declaration"); decompose 0/100 is mostly real (55
+  execution errors + 42 wrong-value). The scorer did NOT lie: the 0.5B is below the capacity floor.
+- 1.7B dv13: 421 exact + 24 rescued = 445/705 (63.1%). Its world drop 20->5 is a punctuation
+  artifact (all 15 mismatches = comma vs semicolon, identical coalitions) so world is ~20/20
+  semantically; the REAL dv13 regression is the execution-error jump 57->184 from the probe
+  relaxation. dv7 stays the best arm (460 exact, 544 semantic, 77.2%).
+
 ## Bottom line
 One word: the comparator. The container arm reaches 77.2% once the scorer judges meaning
 instead of exact phrasing; only common-sense remains genuinely unsolved.
