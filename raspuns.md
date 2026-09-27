@@ -40,6 +40,15 @@ measured size floor. The comparison headline stays "the 1.7B beats the 17B on th
 books", now bounded below. Next per plan: re-train the 1.7B on the same dv13 data to make the
 size comparison clean and test whether the fractional/probe fix moves the 1.7B.
 
+## Final night result (2026-09-27 morning)
+Three measured arms on the comparison: 0.5B 361/705 (51.2%), 1.7B-on-dv13 421/705 (59.7%),
+and the best, 1.7B containers dv7 460/705 (65.2%; 77.2% semantic). The repaired dv13 data did
+NOT help the 1.7B: world-as-a-system regressed 20/20 -> 5/20 and procedural 438 -> 414. So the
+fractional/probe fix was a measured negative for the 1.7B; the clean size comparison on
+identical dv13 data is 0.5B 51.2% vs 1.7B 59.7%. dv7 (containers) remains the best arm, and
+the article headline stands: the 1.7B trained through the loop beats the 17B on the reasoning
+books, with a measured size floor at 0.5B.
+
 ## Bottom line
 One word: the comparator. The container arm reaches 77.2% once the scorer judges meaning
 instead of exact phrasing; only common-sense remains genuinely unsolved.
