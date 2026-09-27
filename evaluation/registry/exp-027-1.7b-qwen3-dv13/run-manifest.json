@@ -1,0 +1,58 @@
+{
+  "experiment": "exp-027-1.7b-qwen3-dv13",
+  "slice": {
+    "name": "holdout",
+    "spec": "holdout",
+    "source": "/home/salboaie/work/sopLang-llm/training-data/<book>/eval/**/solution.sop",
+    "count": 705,
+    "books": null,
+    "limit": null,
+    "itemsSha256": "568762bd50c2485d07f50b0b70aff4fc3f494edbd7d659da930f7f11f3322864"
+  },
+  "checkpoint": {
+    "gguf": "evaluation/registry/exp-027-1.7b-qwen3-dv13/gguf/checkpoint-600.gguf"
+  },
+  "model": null,
+  "base": "http://127.0.0.1:8080",
+  "decoding": {
+    "temperature": 0,
+    "maxTokens": 2048,
+    "stream": false,
+    "timeoutMs": 600000,
+    "concurrency": 4,
+    "attemptsPerItem": 1,
+    "transportRetries": 1
+  },
+  "chatProfile": {
+    "id": "compiled-plan-chat-4",
+    "systemPromptSha256": "c2967d80d31eeb8a8f1605e75ece90edd16a0f0338a7b24bf15442bbf9287a74"
+  },
+  "base_model_manifest": {
+    "path": "/home/salboaie/work/sopLang-llm/training/environment/base-model-qwen3-17b.json"
+  },
+  "training": {
+    "createdUtc": "2026-09-26T20:55:16Z",
+    "finishedUtc": "2026-09-27T00:07:16Z",
+    "epochs": 2
+  },
+  "capabilityProbes": {
+    "profile": "capability-probes-1.0.0",
+    "systemPromptSha256": "3f0ff0bee57e51871d4c09dcf8e3e6ffb0ab414c41100199873dfd0fc5c69fe9",
+    "items": 10,
+    "passed": 3
+  },
+  "dataset": {
+    "exportManifest": "training/data/export-manifest.json",
+    "snapshot": "897b8c4fb102ab3f1e7812a4fe92a9a37addb67a4b1aac73ed5500519d49cf04",
+    "dataVersion": {
+      "number": "13",
+      "label": "fractional-chain restoration: units-and-rates joins the training mix (reserved for training so the holdout picks another template), and the \"whole positive\" integer probes relax to mild positive probes"
+    },
+    "validationSlice": "training/data/validation-slice.json"
+  },
+  "environment": {
+    "manifest": "training/environment/environment-manifest.json",
+    "sha256": "cacd40e3d24b0c41f44061afd77af9f7b8fdece0bf959dcaa2f577c4873fe180"
+  },
+  "startedAt": "2026-09-27T00:18:26.983Z"
+}
