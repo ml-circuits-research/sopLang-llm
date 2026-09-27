@@ -35,8 +35,12 @@ The suite grew as the procedural generator entered the tree: the census arms mea
 | `exp-023-1.7b-qwen3-dv9` | containers on the stuck books | 705 | 92 | 87.0% | 428/705 (60.7%) | 490/705 (69.5%) |
 | `exp-024-1.7b-qwen3-dv11` | compact answers | 705 | 112 | 84.1% | 439/705 (62.3%) | 473/705 (67.1%) |
 | `exp-025-1.7b-qwen3-dv12` | simplified statements | 705 | 136 | 80.7% | 432/705 (61.3%) | 500/705 (70.9%) |
+| `exp-026-0.5b-qwen2.5coder-dv13` | 0.5B base on the repaired data | 705 | 214 | 69.6% | 361/705 (51.2%) | 370/705 (52.5%) |
+| `exp-027-1.7b-qwen3-dv13` | probe relaxation (fractional chain + relaxed probes) | 705 | 184 | 73.9% | 421/705 (59.7%) | 445/705 (63.1%) |
 
 The ceiling is the finding before containers: after the wires arm reached 62.4%, neither a 17B base (62.7%) nor the dv4/dv5 data revisions (61.8%, 62.7%) moved the exact-match rate meaningfully. What *did* move across the later arms is where the failure sits: by dv5, runtime completion reached 84.4% and execution errors fell to 110, so the residual error is answering the wrong question, not breaking. The container arm then moved both the aggregate (65.2% exact) and the failure distribution (57 execution errors, 91.9% completion).
+
+The final two arms close the story. `exp-027-1.7b-qwen3-dv13` applied the probe-relaxation fix (fractional chain restored, integer probes relaxed) to the 1.7B and measured a *negative*: execution errors jumped from 57 to 184, world-as-a-system dropped from 20/20 to 5/20 exact — a drop that was entirely comma-vs-semicolon punctuation, semantically still 20/20 — and procedural-arithmetic fell from 438 to 414/480. `exp-026-0.5b-qwen2.5coder-dv13` trained the 0.5B on the same repaired data and reached 361/705 (51.2%) exact, 370/705 (52.5%) semantic, with world-as-a-system 0/20 (all 20 rows failing as compile errors, "Missing initializer in const declaration") and decompose-to-solve 0/100 — the measured size floor.
 
 ## The first series, for completeness
 
@@ -83,6 +87,6 @@ Three consequences. First, the exact scorer understated every model, most of all
 
 The static data-quality checker reports the structure debt on the shipped suite: on dv7, **2.19 wires per plan** against **15.4 `jsEval` lines per plan** (7.0 lines per wire), with **1,468 plans** (13.8%) carrying at most three wires but more than 25 `jsEval` lines. These are the monolithic book-family bodies the structure experiment refactored; dv8 moved the indicator to 2.81 wires per plan and 5.5 lines per wire, and the holdout moved the wrong way (chapter 3, H-structure).
 
-## Pending numbers
+## The size floor on identical data
 
-- `361/705 (51.2%) — below the size floor; world 0/20, decompose 0/100` — the 0.5B student trained on the repaired data (fractional-chain tranche restored, integer-probe contamination relaxed), to be compared against the 1.7B container arm on the reasoning books.
+Both the 0.5B (`exp-026`) and the 1.7B dv13 arm (`exp-027`) were trained on the same repaired dv13 data, so the size comparison is clean: 0.5B 361/705 (51.2%) exact and 370/705 (52.5%) semantic, against 1.7B 421/705 (59.7%) exact and 445/705 (63.1%) semantic — and against the container arm's 460/705 (65.2%, 77.2% semantic). The 0.5B solves world-as-a-system 0/20 (all 20 rows fail as compile errors, "Missing initializer in const declaration") and decompose-to-solve 0/100, mostly real rather than a scorer artifact. The loop multiplies capacity; it does not create it.

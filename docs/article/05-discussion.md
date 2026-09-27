@@ -25,13 +25,13 @@ All 50 common-sense holdout items are `units-and-rates` — a three-step fractio
 1. The deep fractional-chain training data (dataVersion 2, the "deep tranche", 9,495 rows) was **removed** in dv7 and later. Only `exp-014-deep-chains` trained on it, and it is the only arm that computes units-and-rates — 49/50 semantic, with only float-format misses.
 2. The mixed-book plan style teaches strict integer probes (e.g. scientific-reasoning form-27: `probe(Number.isInteger(rate) && rate > 0, ...)`). The model copies those probes onto the one fractional book, so roughly two-thirds of dv12's common-sense rows die as `execution_error` ("must be a whole positive quantity") before the value is ever compared.
 
-The fix is fourfold and all data-level: restore a fractional-chain tranche to the SFT mix (target common-sense semantic ≥ 40/50, execution-error share < 10%); strip or relax the integer probes on non-common-sense plans (target zero "probe failed: … whole" errors); broaden the common-sense holdout with a per-shape breakdown so a fix on one family is visible; and adopt the value-based scorer with rounding tolerance. The repaired data is the input to the pending 0.5B run (`361/705 (51.2%), confirming a size floor below which the loop cannot compensate`).
+The fix is fourfold and all data-level: restore a fractional-chain tranche to the SFT mix (target common-sense semantic ≥ 40/50, execution-error share < 10%); strip or relax the integer probes on non-common-sense plans (target zero "probe failed: … whole" errors); broaden the common-sense holdout with a per-shape breakdown so a fix on one family is visible; and adopt the value-based scorer with rounding tolerance. The repaired data (dv13) was then run on both students. For the 1.7B it was a measured negative — common-sense stayed 0/50, and the relaxed probes tripled execution errors (57 → 184) — while for the 0.5B it produced the size-floor result (361/705, 51.2% exact; 370/705, 52.5% semantic). Restoring the data alone did not solve the fractional book; that is where the argument of this paper turns toward moving the solving out of `jsEval` entirely (the framing conclusions below).
 
 ## What remains open
 
-**The 0.5B comparison.** The original standing goal — a small model approaching 90% on the compiled benchmark — is dropped in favor of the comparative claim this paper makes: a small model trained through the loop beats a larger one on the reasoning books. The open question is whether the win is robust to a still smaller student: the 0.5B (which reached 362/705, 51.3% exact, on the pre-repair deep-chains data in `exp-015`) is being trained on the repaired data and compared against the 1.7B container arm. `361/705 (51.2%), confirming a size floor below which the loop cannot compensate`
+**The remaining zero books.** scientific-reasoning, adult-reasoning, and logical-reasoning stay near zero (0–8 of 25, or 0–5 of 10) across arms, semantically included, and the fractional units-and-rates book (common-sense) stays zero even after the fractional chain was restored. The vocabulary hypothesis reads these as the *boundary* of the trained operator vocabulary — graph traversal, probability, time arithmetic, geometry, and decimal-chain arithmetic are not yet in the census — and predicts they move only when the loop grows the vocabulary, not when the model grows. Restoring data (dv13) was not enough: the probe-relaxation arm measured *negative* (execution errors 57 → 184), which is the evidence behind the first framing conclusion below.
 
-**The remaining zero books.** scientific-reasoning, adult-reasoning, and logical-reasoning stay near zero (0–8 of 25, or 0–5 of 10) across arms, semantically included. The vocabulary hypothesis reads these as the *boundary* of the trained operator vocabulary — graph traversal, probability, time arithmetic, and geometry are not yet in the census — and predicts they move only when the loop grows the vocabulary, not when the model grows.
+**The symbolic-solver alternative.** The strongest direction implied by the measured results — move the actual solving out of the model entirely, into a symbolic solver (Prolog, Z3, or similar), so the model never emits per-problem JavaScript — is a hypothesis. It is stated as such in the framing conclusions and remains to be proven in a separate experiment.
 
 ## Operations as part of the method
 
@@ -39,15 +39,28 @@ Two nights were lost to the machinery, and they are part of the result, not a fo
 
 ### The size floor: the loop multiplies capacity, it does not create it
 
-The 0.5B result bounds the comparative claim from below. On the same repaired data, the 0.5B
-student reaches 51.2% while the 1.7B container arm reaches 65.2% (77.2% semantic), and the
-gap is not about knowledge: the 0.5B solves world-as-a-system 0/20 and decompose-to-solve
-0/100, and even the simple integer book drops to 360/480 (the 1.7B's 438/480). Compiling a
-statement into a multi-wire circuit demands holding the statement's values, the wire
-vocabulary, and the family's plan template in working memory at once; a 494M-parameter model
-with a 896-wide hidden state cannot sustain that, while the 1.7B can. The abstraction loop
-therefore acts as a multiplier on whatever base capacity the model already has, not as a
-substitute for it: below a measured size floor, adding higher-level wires adds structure the
-student cannot yet produce, and the books stay unsolved. The comparative headline is thus
-sharpened: the loop lets a 1.7B student beat a 17B on the reasoning books, but the same loop
-cannot lift a 0.5B student past the floor.
+The 0.5B result bounds the comparative claim from below, and it is measured on identical data: both the 0.5B (Qwen2.5-Coder-0.5B) and the 1.7B were trained on the repaired dv13 data, so the size comparison is clean. The 0.5B reaches 361/705 (51.2%) exact and 370/705 (52.5%) semantic, against the 1.7B's 421/705 (59.7%) on the same data and the container arm's 460/705 (65.2%, 77.2% semantic). The gap is not about knowledge: the 0.5B solves world-as-a-system 0/20 — all 20 rows fail as compile errors ("Missing initializer in const declaration"), so the model cannot even emit a valid `const` — and decompose-to-solve 0/100, mostly real rather than a scorer artifact; even the integer book drops to 360/480 against the 1.7B's 414/480 on the same data. Compiling a statement into a multi-wire circuit demands holding the statement's values, the wire vocabulary, and the family's plan template in working memory at once; a 494M-parameter model with a 896-wide hidden state cannot sustain that, while the 1.7B can. The abstraction loop therefore acts as a multiplier on whatever base capacity the model already has, not as a substitute for it: below a measured size floor, adding higher-level wires adds structure the student cannot yet produce, and the books stay unsolved. The comparative headline is thus sharpened: the loop lets a 1.7B student beat a 17B on the reasoning books, but the same loop cannot lift a 0.5B student past the floor.
+
+## The coding agent as a research assistant: six mistakes and what caught each
+
+The loop was not run by a human holding a lab notebook; it was run by a coding agent and its orchestrator, executing the shipped skills. That fact is not window dressing, and it is not all good news. The agent made real mistakes that a human researcher would not have made, and the paper's honesty requires listing them alongside what caught each — because the gates and skills exist precisely because these failures happened.
+
+1. **A refactor agent turned a family's answer into a hard-coded literal.** It rewrote a family so its emitted answer no longer read its inputs — a constant dressed up as a computation. What caught it: the validation gate, which requires every circuit to reproduce its printed answer *and* to react to its inputs, and it caught the error *before* any training. Reactivity is exactly the distinction between a plan and a memorized template.
+
+2. **The orchestrator misdiagnosed a drop as distribution shift.** When the 1.7B's world-as-a-system score dropped, the orchestrator's first diagnosis was distribution shift. The real cause was comma-vs-semicolon punctuation in the recorded answers — semantically the book was still 20/20. What caught it: reading the actual rows. The lesson is now encoded as policy: check the rows, never assume.
+
+3. **A phrase-compression agent proposed the mechanically impossible.** It proposed shortening the render string so the answer would compress — but the render string and the circuit body are compared verbatim, so the change could not work as proposed. What caught it: a scope correction before the edit landed.
+
+4. **A statement-simplification agent assumed the wrong file.** It assumed the statements were generated in the family files; they are assembled in the source parsers. What caught it: the agent had to ask a scope question before editing.
+
+5. **The agent-eval solver read the answers off disk.** The solver agent tasked with producing reference solutions began reading the reference solutions on disk — self-contamination of the very thing it was supposed to compute. What caught it: it was steered away, and a copy detector was added so the attempt could not quietly recur.
+
+6. **The automatic judge failed outright.** The LLM judge (`judge_batch`) never produced a verdict — the judge account was rejected. What caught it: the fallback to independent subagent judges, which is what actually produced the semantic re-score.
+
+Alongside the experiment, the assistant also hardened the environment it was running in, not just the experiment: a page-cache-bloat guard for the unified-memory host (the DGX Spark), a memory guard corrected to use the kernel-visible available pool rather than an optimistic figure, and a stall alarm. These are the same class of contribution as the training gates — the assistant fixed the machine as well as the method, and the fixing is part of the reproducibility story.
+
+## Two framing conclusions
+
+**Conclusion 1 — `jsEval` is fragile; abstract wires transfer.** Hand-written JavaScript per problem concentrates the failures. The cleanest evidence is the probe-relaxation arm: shifting the probe idiom took execution errors from 57 (dv7) to 184 (dv13), and the same arm's world book dropped from 20/20 to 5/20 exact — a drop that was entirely comma-vs-semicolon punctuation, semantically still 20/20. The contrast is the container abstraction: a higher-level, declarative shape the model can recognize and compose, which transferred to an entire book (world-as-a-system 0 → 20/20). Abstract, LLM-recognizable circuits beat custom JavaScript because custom JavaScript concentrates the failure surface in exactly the code the model is most likely to mis-emit.
+
+**Conclusion 2 — the next leap is to stop emitting code per problem.** The measured direction of improvement is to keep searching for still-more-general abstractions and to *avoid* `jsEval` as much as possible, pushing the actual solving into a symbolic solver (Prolog, Z3, or similar) rather than emitting custom code per problem. This is a hypothesis, not a result: it has not been tested in this series, and it remains to be proven in a separate experiment.

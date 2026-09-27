@@ -12,6 +12,8 @@ The loop is not a human's lab notebook; it is a set of portable skills the agent
 - `skills/data-quality/` — a deterministic scanner that flags bodies which outgrown a single wire (the bloat indicator), with no model calls and no server.
 - `skills/night-orchestration/` — the discipline for unattended runs.
 
+The same agent's failures — six mistakes, and the gate or discipline that caught each — are recorded honestly in chapter 5, because the assistant is part of the method, including where it was wrong. A reproducibility claim would be incomplete without them.
+
 The gates are the load-bearing part of the method, and each one encodes a lost night:
 
 1. **One worker at a time.** The launcher refuses a second concurrent worker, rather than warning.
