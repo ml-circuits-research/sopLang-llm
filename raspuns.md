@@ -49,17 +49,14 @@ identical dv13 data is 0.5B 51.2% vs 1.7B 59.7%. dv7 (containers) remains the be
 the article headline stands: the 1.7B trained through the loop beats the 17B on the reasoning
 books, with a measured size floor at 0.5B.
 
-## Regression diagnosis (2026-09-27, morning)
-Question: is the world regression a refactoring mistake? Answer: no broken file - world's
-families and holdout are untouched and IDENTICAL between dv7 and dv13 (same 20 coalition-formation
-items, one unseen plan). World scored 20/20 in dv7, dv11, dv12, then 5/20 in dv13, so the
-regression is introduced exactly by the dv13 changes: (1) units-and-rates promoted into training
-and logical-implications held out, (2) integer probes relaxed across 11 families. The world
-failures are answer_mismatch (wrong value, 0 execution errors), so the model lost its
-generalization of the container-query idiom to the unseen coalition-formation plan - a
-distribution-shift side-effect, not a syntax bug. Recommendation: revert the probe relaxation
-(P2) and keep only the units-and-rates promotion (P1), re-measure; dv7 remains the best arm and
-the fix's value is unproven while it regressed the best book.
+## Regression diagnosis, CORRECTED (2026-09-27, morning)
+First pass blamed a distribution shift on world; that was WRONG. The data shows two separate
+effects of the dv13 changes. (1) The world '20->5' drop is a PUNCTUATION artifact: all 15
+world mismatches have identical coalition labels and seat counts; the model prints a comma
+where the oracle prints a semicolon, so semantically world is ~20/20 in dv13 too. (2) The REAL
+regression is execution errors: 57 -> 184, runtime completion 91.9% -> 73.9%, caused by the
+probe relaxation (P2) destabilizing the model's circuit emission. Recommendation stands but is
+sharper: revert ONLY the probe relaxation (P2); the world 'regression' needs no fix at all.
 
 ## Bottom line
 One word: the comparator. The container arm reaches 77.2% once the scorer judges meaning
