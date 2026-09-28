@@ -9,5 +9,6 @@
   "lineSpacing": 276,
   "maxFigureHeight": 7800,
   "keepTablesTogether": true,
-  "headerRight": "Review manuscript"
+  "headerRight": "Review manuscript",
+  "keepReferencesTogether": true
 }

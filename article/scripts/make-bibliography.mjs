@@ -36,7 +36,7 @@ Object.assign(refs, {
     title: 'An LLM Compiler for Parallel Function Calling',
     entry: 'Kim, Sehoon; Moon, Suhong; Tabrizi, Ryan; Lee, Nicholas; Mahoney, Michael W.; Keutzer, Kurt; Gholami, Amir (2024). An LLM Compiler for Parallel Function Calling. *Proceedings of Machine Learning Research*, 235, 24370-24391.',
     url: 'https://proceedings.mlr.press/v235/kim24y.html', metadataVerification: 'Publisher page and BibTeX checked, 2026-09-28.' },
-  z3: { citation: 'de Moura and Bjørner, 2008', sort: 'Moura 2008', year: 2008,
+  z3: { citation: 'de Moura and Bjørner, 2008', sort: 'de Moura 2008', year: 2008,
     title: 'Z3: An Efficient SMT Solver', doi: '10.1007/978-3-540-78800-3_24',
     entry: 'de Moura, Leonardo; Bjørner, Nikolaj (2008). Z3: An Efficient SMT Solver. *Tools and Algorithms for the Construction and Analysis of Systems*, Lecture Notes in Computer Science, 4963, 337-340.',
     url: 'https://www.microsoft.com/en-us/research/publication/z3-an-efficient-smt-solver/',

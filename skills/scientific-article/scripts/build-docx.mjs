@@ -29,7 +29,7 @@ function makeStyles(job) {
     ${style('Caption', 'Caption', '<w:sz w:val="19"/>', '<w:keepLines/><w:spacing w:before="80" w:after="160"/><w:jc w:val="left"/>')}
     ${style('TableText', 'Table text', `<w:sz w:val="${job.columns === 2 ? 17 : 19}"/>`, '<w:spacing w:before="25" w:after="45" w:line="240" w:lineRule="auto"/><w:jc w:val="left"/>')}
     ${style('Code', 'Code', '<w:rFonts w:ascii="Liberation Mono" w:hAnsi="Liberation Mono"/><w:sz w:val="17"/>', '<w:spacing w:before="0" w:after="0" w:line="230" w:lineRule="auto"/><w:shd w:fill="F4F4F4"/><w:jc w:val="left"/>')}
-    ${style('Reference', 'Reference', `<w:sz w:val="${size - 1}"/>`, '<w:ind w:left="260" w:hanging="260"/><w:spacing w:after="120"/><w:jc w:val="left"/>')}
+    ${style('Reference', 'Reference', `<w:sz w:val="${size - 1}"/>`, '<w:ind w:left="260" w:hanging="260"/><w:keepLines/><w:spacing w:after="80" w:line="240" w:lineRule="auto"/><w:jc w:val="left"/>')}
     ${style('Header', 'Header', '<w:sz w:val="17"/><w:color w:val="555555"/>', '<w:spacing w:after="60"/><w:jc w:val="left"/>')}
     </w:styles>`;
 }
@@ -136,7 +136,7 @@ export async function buildDocx(jobPath) {
       const isKeywords = /^Keywords:/.test(block.text);
       const style = inReferences ? 'Reference' : caption ? 'Caption' : isKeywords
         ? (job.styleMap?.Keywords ? 'Keywords' : 'Normal') : inAbstract && job.styleMap?.Abstract ? 'Abstract' : 'Normal';
-      body.push(paragraph(block.text, style, isTable ? '<w:keepNext/>' : ''));
+      body.push(paragraph(block.text, style, isTable || inReferences && job.keepReferencesTogether ? '<w:keepNext/>' : ''));
       if (/^Keywords:/.test(block.text)) afterKeywords = true;
     } else if (block.type === 'table') body.push(table(block.rows));
     else if (block.type === 'figure') body.push(await figure(block));

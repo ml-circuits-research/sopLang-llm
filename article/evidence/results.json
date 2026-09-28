@@ -144,41 +144,49 @@
         "adult-reasoning": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "common-sense": {
           "items": 50,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 50
         },
         "decompose-to-solve": {
           "items": 100,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 100
         },
         "logical-reasoning": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "mathematical-thinking": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "procedural-arithmetic": {
           "items": 480,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 40,
           "withJsEval": 480
         },
         "scientific-reasoning": {
           "items": 25,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 25
         },
         "world-as-a-system": {
           "items": 20,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 20
         }
       },
@@ -354,41 +362,49 @@
         "adult-reasoning": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "common-sense": {
           "items": 50,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 50
         },
         "decompose-to-solve": {
           "items": 100,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 100
         },
         "logical-reasoning": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "mathematical-thinking": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "procedural-arithmetic": {
           "items": 480,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 40,
           "withJsEval": 480
         },
         "scientific-reasoning": {
           "items": 25,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 25
         },
         "world-as-a-system": {
           "items": 20,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 20
         }
       },
@@ -564,41 +580,49 @@
         "adult-reasoning": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "common-sense": {
           "items": 50,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 50
         },
         "decompose-to-solve": {
           "items": 100,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 100
         },
         "logical-reasoning": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "mathematical-thinking": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "procedural-arithmetic": {
           "items": 480,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 40,
           "withJsEval": 480
         },
         "scientific-reasoning": {
           "items": 25,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 25
         },
         "world-as-a-system": {
           "items": 20,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 20
         }
       },
@@ -774,41 +798,49 @@
         "adult-reasoning": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "common-sense": {
           "items": 50,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 50
         },
         "decompose-to-solve": {
           "items": 100,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 100
         },
         "logical-reasoning": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "mathematical-thinking": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "procedural-arithmetic": {
           "items": 480,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 40,
           "withJsEval": 480
         },
         "scientific-reasoning": {
           "items": 25,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 25
         },
         "world-as-a-system": {
           "items": 20,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 20
         }
       },
@@ -984,41 +1016,49 @@
         "adult-reasoning": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "common-sense": {
           "items": 50,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 50
         },
         "decompose-to-solve": {
           "items": 100,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 100
         },
         "logical-reasoning": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "mathematical-thinking": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "procedural-arithmetic": {
           "items": 480,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 40,
           "withJsEval": 480
         },
         "scientific-reasoning": {
           "items": 25,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 25
         },
         "world-as-a-system": {
           "items": 20,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 20
         }
       },
@@ -1194,41 +1234,49 @@
         "adult-reasoning": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "common-sense": {
           "items": 50,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 50
         },
         "decompose-to-solve": {
           "items": 100,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 100
         },
         "logical-reasoning": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "mathematical-thinking": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "procedural-arithmetic": {
           "items": 480,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 40,
           "withJsEval": 480
         },
         "scientific-reasoning": {
           "items": 25,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 25
         },
         "world-as-a-system": {
           "items": 20,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 20
         }
       },
@@ -1404,41 +1452,49 @@
         "adult-reasoning": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "common-sense": {
           "items": 50,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 50
         },
         "decompose-to-solve": {
           "items": 100,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 100
         },
         "logical-reasoning": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "mathematical-thinking": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "procedural-arithmetic": {
           "items": 480,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 40,
           "withJsEval": 480
         },
         "scientific-reasoning": {
           "items": 25,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 25
         },
         "world-as-a-system": {
           "items": 20,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 20
         }
       },
@@ -1614,41 +1670,49 @@
         "adult-reasoning": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "common-sense": {
           "items": 50,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 50
         },
         "decompose-to-solve": {
           "items": 100,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 100
         },
         "logical-reasoning": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "mathematical-thinking": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "procedural-arithmetic": {
           "items": 480,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 40,
           "withJsEval": 480
         },
         "scientific-reasoning": {
           "items": 25,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 25
         },
         "world-as-a-system": {
           "items": 20,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 20
         }
       },
@@ -1824,41 +1888,49 @@
         "adult-reasoning": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "common-sense": {
           "items": 50,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 50
         },
         "decompose-to-solve": {
           "items": 100,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 100
         },
         "logical-reasoning": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "mathematical-thinking": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "procedural-arithmetic": {
           "items": 480,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 480
         },
         "scientific-reasoning": {
           "items": 25,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 25
         },
         "world-as-a-system": {
           "items": 20,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 20
         }
       },
@@ -2017,41 +2089,49 @@
         "adult-reasoning": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "common-sense": {
           "items": 50,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 50
         },
         "decompose-to-solve": {
           "items": 100,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 100
         },
         "logical-reasoning": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "mathematical-thinking": {
           "items": 10,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 10
         },
         "procedural-arithmetic": {
           "items": 480,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 40,
           "withJsEval": 480
         },
         "scientific-reasoning": {
           "items": 25,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 25
         },
         "world-as-a-system": {
           "items": 20,
           "withContainerDeclaration": 0,
+          "withSpecializedDeclaration": 0,
           "withJsEval": 20
         }
       },

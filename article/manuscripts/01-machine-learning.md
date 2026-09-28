@@ -123,7 +123,7 @@ Figure 2 contrasts the original and restricted comparator results without combin
 
 Figure 2. Two retrospective diagnostics with different item sets. They identify specific comparator penalties and do not define an overall semantic benchmark score.
 
-One dependency-join problem requires 7 + max(11, 17) + 6 + 12 + 4 = 46 minutes against a 43-minute limit. Its archived output states the same duration and negative feasibility verdict as the oracle, but uses “does not meet the limit” where the oracle uses “is not feasible” and adds an explanatory sentence. This is a representational mismatch with direct computational evidence, rather than a reason to accept arbitrary paraphrases without checking them.
+One archived dependency-join circuit computes 7 + max(11, 17) + 6 + 12 + 4 = 46 minutes against its compiled 43-minute limit. Its output states the same duration and negative feasibility verdict as the oracle, but uses “does not meet the limit” where the oracle uses “is not feasible” and adds an explanatory sentence. This is a representational mismatch supported by the saved computation, rather than a reason to accept arbitrary paraphrases without checking them.
 
 ## 5. Interpretation and limitations
 

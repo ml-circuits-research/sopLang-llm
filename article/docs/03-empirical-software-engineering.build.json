@@ -2,9 +2,9 @@
   "file": "03-empirical-software-engineering.docx",
   "journal": "Empirical Software Engineering",
   "source": "../manuscripts/03-empirical-software-engineering.md",
-  "sha256": "a9f7953d3b7ee3c46394e64a328c8714a44d87bbb240187459c88cde8e8b3a63",
-  "sourceSha256": "4f1a267b255f0011c5dfafbbe62ec9a473de414d37a1221f1e7aa98d3011b701",
-  "words": 3779,
+  "sha256": "f1a0f6230fa9c16eb6844200737e0c783d82096bab410a418823da497132f9e1",
+  "sourceSha256": "31c7d13ec2799200b6fc8b1f163ce0b72a2784ef5696317a81532b6884975b3f",
+  "words": 3794,
   "references": [
     "dwork",
     "pal",

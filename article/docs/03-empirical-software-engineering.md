@@ -108,6 +108,8 @@ The new restricted diagnostics recover a narrower, inspectable finding. For exp-
 
 Mechanism inspection produces a separate correction. The container-oriented dv7 curriculum achieves 20/20 coalition matches where exp-017 achieves 0/20. Yet none of those 20 dv7 outputs declares a container-family command. The measured improvement survives, but a claim that container execution caused it does not. The subset contains one coalition plan, which also rules out treating the result as complete coverage of its source book.
 
+Table 3 summarizes how these findings change the permissible interpretation while retaining the underlying observations.
+
 Table 3. Consequential corrections and their supported replacements.
 
 | Earlier interpretation | Audit finding | Supported replacement |

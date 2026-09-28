@@ -138,6 +138,8 @@ The smaller dv13 system matches 361/705 against 421/705 for the Qwen3 system. Th
 
 Some completed mismatches arise from output representation. A restricted coalition parser, applied retrospectively, maps complete tuple lists to a canonical set of coalition/count pairs. It accepts 20/20 exp-027 outputs where normalized exact matching accepts 5/20. A separate parser for completion-time and feasibility sentences accepts 64/100 exp-021 dependency-join outputs where the original comparator accepts none. Its remaining cases comprise 26 outside its grammar, two parsed disagreements, and eight execution failures.
 
+Table 3 states the property supported by each check, including the task-level review that the archive does not provide.
+
 Table 3. Different checks answer different questions.
 
 | Check | What acceptance supports |

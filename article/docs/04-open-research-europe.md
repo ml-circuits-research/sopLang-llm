@@ -141,7 +141,7 @@ The failures are scientific evidence about the current systems. The student mode
 
 Coding agents assisted the research and the preparation of this article. Their involvement can make experiments easier to construct and inspect, but no productivity gain is measured here. The epistemic concern is correlated error: an agent can implement a mistaken reference rule, test it against a matching circuit, and describe the agreement as validation. Human review must examine the relation to the task, not only agreement between generated artifacts.
 
-Messeri and Crockett's analysis of AI and scientific understanding provides a useful conceptual warning (Messeri & Crockett, 2024). In this case, the concrete response is to retain uncertainty at the point where it arises. Missing judgments remain missing. A model-size label is checked against the base manifest. A claimed mechanism is checked against generated commands. A future wire is described as a proposal until its experiment exists.
+Messeri and Crockett's analysis of AI and scientific understanding provides a useful conceptual warning (Messeri & Crockett, 2024). In this study, the concrete response is to retain uncertainty at the point where it arises. Model identity comes from the base manifest, comparisons retain their population boundaries, and mechanism claims depend on the generated commands. A future wire is described as a proposal until its experiment exists.
 
 ### 4.3 A prospective wire-discovery protocol
 

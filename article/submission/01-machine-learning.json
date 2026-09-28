@@ -10,5 +10,6 @@
   "maxFigureHeight": 7800,
   "keepTablesTogether": true,
   "headerRight": "Review manuscript",
-  "captionStyle": "springer"
+  "captionStyle": "springer",
+  "keepReferencesTogether": true
 }

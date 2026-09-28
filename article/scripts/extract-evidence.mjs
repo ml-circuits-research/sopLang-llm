@@ -106,6 +106,8 @@ for (const id of ids) {
     return [book, { items: subset.length,
       withContainerDeclaration: subset.filter(row =>
         /^@[\w]+ container(?:Add|Upsert|Remove|Filter)?\s*$/m.test(row.completion)).length,
+      withSpecializedDeclaration: subset.filter(row =>
+        /^@[\w]+ (?:graphPath|aggregate|fraction)\s*$/m.test(row.completion)).length,
       withJsEval: subset.filter(row => /^@[\w]+ jsEval\s*$/m.test(row.completion)).length }];
   }));
   arms.push({ id, ...counts, books, commandUsage,

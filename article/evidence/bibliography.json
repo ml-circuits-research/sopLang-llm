@@ -1135,7 +1135,7 @@
   },
   "z3": {
     "citation": "de Moura & Bjørner, 2008",
-    "sort": "Moura 2008",
+    "sort": "de Moura 2008",
     "year": 2008,
     "title": "Z3: An Efficient SMT Solver",
     "doi": "10.1007/978-3-540-78800-3_24",
