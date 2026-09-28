@@ -1,0 +1,5 @@
+@slots literal
+{"packs":3,"perPack":4}
+
+@answer jsEval
+return $slots.packs * $slots.perPack;

@@ -2,9 +2,9 @@
   "file": "02-informatica.docx",
   "journal": "Informatica",
   "source": "../manuscripts/02-informatica.md",
-  "sha256": "4a3159e6640ca7599a4fb858ce371477aecde861d44299e935b14abdf445c920",
-  "sourceSha256": "315beed9cb00c4081f60aef601fc9a13852f98504be33b002a82f42c6f038777",
-  "words": 3636,
+  "sha256": "f19635501ca34697fd24441f9b432ee90d1a0d6342ec016e577d3982af15c892",
+  "sourceSha256": "15eb6d5e56701e5347b230a192259e4350623982d5b79d2659ad6d27d2a05b41",
+  "words": 3099,
   "references": [
     "pal",
     "pot",
@@ -13,8 +13,6 @@
     "dreamcoder",
     "qwen15",
     "qwen3",
-    "qwen05",
-    "z3",
     "sandve",
     "artifact"
   ],
@@ -22,16 +20,16 @@
   "templateSha256": "940d6dec61cccf1fac3a65048072fc884656554015c0d8d0dc1eccadcee8f4de",
   "figures": [
     {
-      "source": "../assets/architecture-narrow.png",
-      "width": 3025,
-      "height": 5362,
-      "sha256": "d353f3e6b207cf281a4fbc7e926e6cb0a05801cd7901b89f3bc2432f79d29e87"
+      "source": "../assets/sop-program-anatomy-narrow.png",
+      "width": 4125,
+      "height": 4881,
+      "sha256": "04cd5f62efa25a18591d9a07fd44793da4d6386a5d051fef2e82875928f1d5e2"
     },
     {
-      "source": "../assets/wire-admission-narrow.png",
-      "width": 3025,
-      "height": 5156,
-      "sha256": "a576888d31965306303e22d0c0929f52c227c592dfe19dda230ed0700deba4ce"
+      "source": "../assets/reachability-contract.png",
+      "width": 4125,
+      "height": 3884,
+      "sha256": "e0f2397e3e4cc41e708981e837995261ef3e6c2723c60b6604edec42a37d178d"
     }
   ],
   "columns": 2,

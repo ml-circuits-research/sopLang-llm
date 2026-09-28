@@ -1,173 +1,169 @@
-# Executable answers and the limits of delegated understanding: a case for epistemic accountability in agent-assisted research
+# Who is responsible for an executable claim? Epistemic accountability in agent-assisted research
 
 ## Abstract
 
-When a language model produces an executable program, its answer becomes inspectable in a way that fluent prose alone is not. This can strengthen scientific practice, but it can also invite an unwarranted inference from successful execution to correct understanding. This article develops an account of epistemic accountability through a concrete case of coding-agent-assisted research on small language models. An audit of ten archived experimental arms, comprising 7,050 item records, finds a real benefit from more abstract computational operations: normalized exact matches rise from 379/705 to 440/705, while procedural execution errors fall from 63/480 to 13/480. The same archive reveals persistent failures, changed evaluation populations, a misleading model-size label, and missing decisions behind a semantic evaluation summary. These findings support a distinction between computational delegation, evidential independence, and scientific responsibility. A tested operation can reduce implementation error without validating the interpretation encoded in its inputs. An agent-assisted audit can make evidence inspectable without becoming independent peer review. We argue that useful abstractions should expose their exclusions, that uncertainty should remain attached to the claim it limits, and that humans retain responsibility for interpretation and publication. Future research should discover new executable abstractions while testing whether they improve transfer and preserve contestability.
+An executable answer makes a model's computation inspectable, but does not establish that the computation answers the intended question. This distinction becomes an ethical issue when coding agents also help construct the data, tests, and scientific explanation. We develop an account of epistemic accountability through a bounded case of small-model research. The case system, SOP Lang, represents a solution as named computations with explicit dependencies and executes them in a runtime. We explain its notation and use a constructed counterexample to show how a generated program and reference solver can agree on the same mistaken interpretation. Archived experiments also supply a constructive finding: specialized commands increase normalized exact matching from 53.8% to 62.4%, while a different change that adds intermediate structure increases execution failures. Our argument is that the benefit of delegation creates duties to specify what was checked, preserve the evidence needed to challenge a claim, and disclose uncertainty where it changes the inference. These duties remain with human authors even when agents produce much of the implementation and analysis. The case does not measure human overtrust or compare agents with human research assistants. It supports a practical standard for developing new abstractions that improve computation while keeping their assumptions open to scrutiny.
 
-Keywords: epistemic accountability; artificial intelligence; scientific practice; coding agents; abstraction; small language models
+Keywords: epistemic accountability; artificial intelligence; scientific practice; coding agents; executable reasoning; small language models
 
 ## 1. Introduction
 
-A program that runs is persuasive evidence of something. It shows that an implementation can carry out a sequence of operations under stated conditions. The temptation is to let that evidence do more work than it can: to treat execution as proof that the problem was understood, a passed test as proof that the data are correct, or a reproduced table as proof that its interpretation is sound.
+A program is persuasive evidence of something. It can show the operations that produced an answer and allow another person to execute them again. The difficult question is what that evidence justifies. A reproducible calculation may still implement the wrong interpretation of a problem.
 
-That temptation becomes consequential when coding agents participate in several stages of research. The agent may help write the data generator, the reference solver, the tests, and the article. Agreement among these outputs can then appear to be corroboration even when they inherit the same mistaken assumption. The issue is not whether any one artifact is useful. It is whether the relation between them supplies independent reasons to trust the scientific claim.
+This article examines that question in research conducted with coding agents. Its case is SOP Lang, a language developed to let small models translate word problems into explicit executable programs. The model supplies the quantities and selected operations; a runtime carries them out. We introduce the notation in Section 2 because the argument depends on seeing exactly what becomes explicit and what remains assumed.
 
-Messeri and Crockett describe how AI can create illusions of understanding in scientific work [@messeri]. Their argument directs attention to the gap between increased production and justified understanding. This article examines that gap through a specific technical case rather than a general prediction about scientific automation. The case is a research system that fine-tunes small language models to compile word problems into executable circuits.
+Agents can participate in more than the final program. They may help build the training examples, reference computations, tests, experiment scripts, and manuscript. Agreement among those artifacts can be useful, but can also arise because an assumption has been copied across them. The ethical issue is whether the published claim gives readers grounds proportionate to the confidence it invites.
 
-The research question is what makes computational delegation a justified source of scientific evidence when agents also help construct the checks and the interpretation. This matters because a workflow can become more productive and internally consistent without becoming better justified. Our argument is that delegation strengthens research when its boundaries remain visible. A narrow executable operation can remove a real source of error, while its contract excludes cases and embeds choices about admissible problems. Epistemic accountability requires a reader to be able to challenge the interpretation, the measurement, and the proposed mechanism separately.
+Messeri and Crockett describe how AI can create illusions of understanding in scientific research [@messeri]. We examine one concrete pathway to that concern: executable agreement may be mistaken for independent justification. We also preserve the positive case for delegation. Tested abstractions can help small models perform useful computations, and an inspectable program can make some mistakes easier to challenge.
 
-We develop this argument from an audited experimental archive. The archive contains a substantial positive result for more abstract operations, a negative result for additional decomposition, and several corrections to earlier interpretations. These are not observations of social deployment or a human-subject study of trust. They provide a concrete basis for reasoning about the responsibilities that arise when agents help produce scientific evidence.
+The research question is what makes computational delegation a justified source of scientific evidence when agents also help construct its checks and interpretation. We argue that epistemic accountability requires a reader to be able to distinguish the observed result, the property checked, and the explanation proposed. Human authors remain responsible for the relation between those three. This is a normative argument grounded in an artifact case, not a psychological study of overtrust or a measurement of research-assistant productivity.
 
-The ethical stake is the obligation to represent the grounds of a claim fairly to readers who may build on it. Calling an internally consistent result independently verified can shift the work of discovering its assumptions onto those readers. A misleading model comparison can similarly affect another team's choice of system or experimental budget. We do not measure such downstream consequences here. We identify the reporting choices that determine whether readers can assess those risks for themselves.
+## 2. What an executable answer exposes
 
-## 2. Delegation, abstraction, and reasons for belief
+### 2.1 The case language, without assumed prior knowledge
 
-### 2.1 What execution changes
+SOP Lang represents a program as a circuit of named computations called wires. A declaration starts with `@name command` at the beginning of a line. Its body continues until the next declaration. The command determines the body's meaning: `literal` reads JSON, while `jsEval` evaluates JavaScript. A reference beginning with a dollar sign reads another wire's value and declares a dependency.
 
-PAL demonstrates how a language model can translate a natural-language problem into a program and delegate the computation to an interpreter [@pal]. Program of Thoughts uses a related separation for numerical reasoning [@pot]. This changes what a reviewer can inspect. A returned number has a computational history that can be read, executed, and challenged.
+For "three packs containing four cells each," the following complete circuit returns 12:
 
-The gain is real. Arithmetic need not depend on a language model repeatedly predicting the next token of a calculation. Yet the program embodies an interpretation before the interpreter begins. If the model translates a parallel schedule into a sequential one, a correct interpreter will faithfully compute the wrong schedule. Execution supplies evidence about the program, while the relation between program and problem remains a further claim.
+```sop
+@slots literal
+{"packs":3,"perPack":4}
 
-Program synthesis makes the role of the specification explicit [@synthesis]. The specification is not a neutral input whose adequacy can always be assumed. In natural-language compilation, it includes decisions about which quantities matter, what a relation means, and which outputs count as equivalent. Those decisions may be distributed across model prompts, training examples, command contracts, and evaluation code.
+@answer jsEval
+return $slots.packs * $slots.perPack;
+```
 
-### 2.2 Abstraction includes exclusions
+The names `slots` and `answer` identify the two computations. They are conventions used by the dataset, not reserved keywords. The `literal` command supplies an object; `$slots.packs` reads its `packs` field. JavaScript's `return` supplies the value of the second wire. The caller requests the output named `answer`. The runtime executes dependencies first, so textual order alone does not determine evaluation.
 
-An abstract operation hides implementation work by exposing a smaller interface. A graph-reachability command can remove the need to generate a queue and a visited set. It must also choose a graph model: directed or undirected, weighted or unweighted, with some rule for absent nodes and repeated edges. These choices are part of the operation's meaning.
+Figure 1 shows what the program exposes. A reader can check that the model chose multiplication, extracted 3 and 4, and produced 12. The same reader must still compare that choice with the question. If the task asked for usable cells after one damaged cell per pack, this executable multiplication would be inadequate.
 
-Selbst and colleagues show how abstraction in sociotechnical systems can omit context that matters to the problem being addressed [@selbst]. Our case is narrower than their fairness analysis, but the conceptual connection is useful. A successful formal operation does not establish that the formalization retained every relevant distinction. In the word-problem setting, the excluded distinction may be directionality or units. In a future social application, the excluded distinction could be a contested category or a contextual exception. The present experiments do not validate such applications.
+![A complete SOP Lang program exposes the selected multiplication, extracted quantities, wire declaration conventions, and dependency that produces 12.](../assets/sop-program-anatomy.png)
 
-DreamCoder offers a computational account of why reusable abstractions can help synthesis [@dreamcoder]. The current project shares that motivation, although its operations were developed through human-directed work assisted by coding agents. The open question is how to discover new operations that improve learning without making their assumptions harder to inspect.
+Figure 1. An executable answer makes a particular interpretation inspectable. The example is constructed and executed for explanation; it is not a new experimental observation.
 
-### 2.3 Accountability differs from internal agreement
+The system also supplies specialized operations. A graph-reachability command, for example, takes an explicit edge list and endpoints and performs traversal internally. It removes implementation steps from the generated program. It does not remove the need to decide whether the problem concerns directed or undirected links, reachability or shortest paths, and the intended endpoints.
 
-Raji and colleagues describe auditing as a documented process across an AI system's development lifecycle [@raji]. This is relevant to research because a scientific claim also depends on a lifecycle: source selection, data construction, training, evaluation, interpretation, and release. Internal agreement between artifacts is useful only when the question each artifact answers is clear.
+### 2.2 Execution is a reason for a bounded belief
 
-We use epistemic accountability to mean that the grounds and limits of a claim are available for challenge, and that identifiable human authors accept responsibility for its interpretation and publication. It does not require a human to recompute every arithmetic operation. It does require that automated checks not be described as evidence of questions they never assessed.
+PAL and Program of Thoughts demonstrate how language models can delegate computation to interpreters [@pal] [@pot]. The benefit is concrete. Arithmetic need not be repeated through token prediction, and the operations leading to a result can be inspected. That supplies a reason to trust the execution of a stated program when the runtime's behavior has been adequately tested.
 
-## 3. Case and analytical basis
+The reason remains conditional on the specification. Gulwani, Polozov, and Singh treat the specification as a central problem of program synthesis [@synthesis]. In natural-language compilation, specification includes which quantities matter, what their relations are, and which outputs count as answering the question. A runtime cannot resolve all those choices by executing the program they produced.
 
-The case system, SOP Lang, represents a solution as named computational wires. A small model emits a circuit; a runtime checks dependencies and executes the selected commands. Literal wires state problem values, JavaScript wires express general computation, and specialized wires perform operations such as graph reachability, aggregation, and fraction reduction. Every explicit dependency is part of the inspectable program.
+We use epistemic accountability to mean that the grounds and limits of a scientific claim remain available for challenge, and that identifiable human authors accept responsibility for its interpretation and publication. This does not require a person to recompute every arithmetic step. It requires an honest account of what the automated step establishes.
 
-The teaching pipeline constructs parameterized problem families with reference parses, answer computations, circuit generators, and provenance. It executes candidate circuits and compares their answers with expected values. Assertions check selected conditions, and input perturbations help detect answers that ignore their stated inputs. This is a substantive attempt at data rigor. It does not make the reference parse and circuit semantically independent when they share the same family definition.
+### 2.3 Abstraction also chooses what to exclude
 
-The empirical basis is a retrospective reconstruction of ten archived arms, each evaluated on 705 items, for 7,050 item records in total. The analysis recounts outcomes, checks model metadata, joins item identifiers across versions, reapplies the original comparator, and inspects generated commands. It does not rerun training or collect participant data. Coding agents assisted both the original research and the present evidence analysis and writing; the audit is therefore not represented as independent human review.
+A specialized command can help by hiding implementation details. The model need not generate a traversal queue or fraction-reduction algorithm. Yet the operation also embodies choices about admissible inputs and relevant distinctions. An undirected reachability command excludes edge direction from its semantics. That is appropriate for some problems and wrong for others.
 
-The main evaluation slice contains 480 procedural items and 225 book-derived items. In the dv7 version, these correspond to 28 distinct plan fingerprints. Several book-derived subsets repeat a single computational plan. The benchmark was inspected during development, which limits its role as a test of unseen research decisions. Dwork and colleagues' work on adaptive holdout reuse explains why repeated consultation changes the evidential status of a nominal test set [@dwork].
+Selbst and colleagues explain how abstraction in sociotechnical systems can omit context important to the problem being addressed [@selbst]. Our computational case is narrower, but the connection is precise: successful operation inside a formal description does not establish that the description retained the relevant distinctions. We do not transfer the word-problem results to fairness or public decision-making applications. Their relevance is to how a claim should expose the assumptions of its chosen abstraction.
 
-The analysis is an argument from a bounded case. It can show where a particular justification succeeds or fails and identify obligations for similar workflows. It cannot measure how often researchers overtrust agents, whether agents outperform human research assistants, or whether the resulting practices improve social outcomes. These would require different studies.
+DreamCoder offers a computational motivation for discovering reusable program abstractions [@dreamcoder]. The present commands were developed through human-directed work assisted by coding agents. Their scientific value depends on improving the task while preserving enough visibility to assess when the command should be used.
 
-## 4. What survives the audit
+## 3. Evidence and analytical basis
 
-### 4.1 Abstract operations help in a concrete comparison
+### 3.1 The experimental case
 
-The strongest positive result comes from an early vocabulary change using Qwen2.5-Coder-1.5B-Instruct. Normalized exact matches increase from 379/705 to 440/705. Within the 480 procedural items, matches increase from 377 to 440 and execution errors fall from 63 to 13. The paired evaluation retains the same item identifiers and oracle strings. The revised vocabulary places graph, aggregation, and fraction algorithms inside narrower commands.
+The project constructs training examples from parameterized problem families with reference parses, answer computations, and generated circuits. It executes candidate circuits, compares answers, asserts selected properties, and perturbs literal inputs to detect some forms of hard-coding. These are substantial attempts at data rigor. They do not make the parser, reference computation, and circuit semantically independent when all originate in the same family definition.
 
-This is evidence that the representation asked of a small model can materially affect its success. It supports a constructive conclusion: scientific attention should be directed to the interface between model and executor, rather than only to the model's nominal size. The comparison has one archived run per condition and incomplete early training metadata, so it does not establish a general causal effect. Its value lies in a strong development signal with an explicit boundary.
+The primary evidence reconstruction covers ten archived fine-tuning runs, each evaluated on 705 items. It reproduces the original normalized exact classifications, resolves model identity from manifests, compares task populations, and inspects generated commands. Targeted checks also revisit base-model evaluations. No new training, model generation, or participant study is performed.
 
-Table 1 summarizes the observations used in the argument. Counts are retained because a percentage without its denominator can imply a breadth the sample does not have.
+Normalized exact matching means equality after stated text normalization, not general semantic correctness. The benchmark is synthetic, contains repeated computational plans, and was inspected during development. Dwork and colleagues' analysis of adaptive reuse explains why such a benchmark cannot provide independent confirmation of every later design choice [@dwork]. There is one run per condition in the comparisons discussed here.
 
-Table 1. Empirical observations and the claims they support.
+### 3.2 A useful result that deserves to be retained
 
-| Observation | Supported reading | Limit |
+The specialized-command comparison uses the same Qwen2.5-Coder-1.5B base release in both conditions. Introducing graph, aggregation, and fraction operations increases normalized exact matching from 53.8% to 62.4%. Procedural execution failures decline from 13.1% to 2.7%. The full evaluation contains 705 cases per condition; the procedural subset contains 480.
+
+This result supports taking the model-runtime interface seriously as a research variable. Our interpretation is that moving recurring algorithms into tested commands can reduce the implementation burden on a small model. The comparison lacks replicated seeds and a complete early training manifest, so it does not establish a general causal law. Its positive contribution remains worth reporting within that boundary.
+
+A separate representation change supplies a constraint on the interpretation. Splitting computations into more intermediate wires increases execution failures from 8.1% to 19.1% on 705 problems per condition. We think the added interfaces can impose coordination work without removing enough algorithm construction. The archive does not classify every failure mechanism, but the outcome already rules out the simple recommendation to add structure indiscriminately.
+
+The ethical significance is that the evidence can improve the project's own preferred story. Successful abstraction and unsuccessful decomposition belong in the same account of what researchers should investigate next. Preserving the negative result serves the reader who might otherwise invest in an attractive but unsupported design heuristic.
+
+### 3.3 Corrected interpretations as bounded examples
+
+One historical run label suggested a 17B model, while its manifest identifies a 1.7B release. The records support the latter identity. A claim that a much smaller model beat a tenfold larger one would therefore be misleading even if every reported outcome count were correct. The error lies in what the comparison is said to mean.
+
+Another claimed semantic summary cannot be reconstructed because its individual judge verdicts are absent. Saved requests show what a judge was asked; they do not show what it decided. We exclude the aggregate as evidence. This is a duty to preserve the difference between missing support and disproven support: the absence of decisions does not establish that every original decision was false.
+
+These examples are specific to the surviving archive. They do not show that agents are uniquely prone to such errors or that human research assistants would avoid them. They show why the responsibilities of publication cannot be satisfied by internal consistency alone.
+
+## 4. The independence problem
+
+Figure 2 gives a constructed counterexample. The stated graph has directed links B→A and C→B. A cannot reach C by following those directions. Suppose a parser discards direction and supplies an undirected edge list to both the generated solver and a reference computation. Both return `yes`. Their agreement is reproducible, but it supports the wrong interpretation of the original problem.
+
+![A directed graph has no path from A to C, but a shared undirected parse causes both generated and reference computations to answer yes.](../assets/shared-assumption-example.png)
+
+Figure 2. Constructed counterexample to treating agreement as independence. The source condition is lost before either computation checks the result. The diagram is explanatory and does not assert an observed error frequency.
+
+The example explains why more tests are sometimes insufficient. Tests of two implementations against the same parsed graph can increase execution coverage without challenging the omitted direction. The additional evidence must address the relation between the source statement and the parse, for example through an independently constructed countercase or targeted human review.
+
+Raji and colleagues describe auditing as a documented process across an AI development lifecycle [@raji]. In research, that process must preserve the distinction between construction, verification, and interpretation. Table 1 states the corresponding limits of the evidence.
+
+Table 1. What different checks warrant, and the question that remains for the author.
+
+| Check | Warranted belief | Remaining question |
 | --- | --- | --- |
-| Matches rise from 379/705 to 440/705 after specialized wires | Target vocabulary is a promising design variable | One run per condition; incomplete early training metadata |
-| Procedural execution errors fall from 63/480 to 13/480 | Some implementation burden can move into tested operations | Correct command selection remains necessary |
-| More decomposed targets raise execution errors from 57/705 to 135/705 | Additional structure can increase coordination failure | This does not reject modularity in general |
-| Syntax and graph acceptance is 705/705 in every selected arm | The model learns the outer program form | Structural validity does not establish task correctness |
-| A restricted coalition check accepts 20/20 where text matching accepts 5/20 | Some apparent errors are answer-format differences | The diagnostic applies to one declared output grammar |
+| Program parses and its dependencies are valid | The program meets structural rules | Does it express the intended task? |
+| Runtime returns a value | The selected computation completes under the runtime contract | Are the selected operation and arguments appropriate? |
+| Program and reference agree | Two results agree under the declared comparison | Do their implementations share the same mistaken premise? |
+| Perturbation changes the answer | The output depends on the tested inputs | Were the right inputs and constraints extracted? |
+| Saved labels reproduce a percentage | The aggregate follows from those labels | Do the labels measure the property claimed? |
 
-### 4.2 Additional structure can make performance worse
+This table does not diminish the value of checks. It identifies the belief for which each check supplies a reason. Calling all five operations "verification" without naming their object invites a stronger inference than any of them warrants.
 
-A later Qwen3-1.7B curriculum reaches 460/705 normalized exact matches. Splitting targets into more explicit wires reduces that count to 448/705 and raises execution errors from 57/705 to 135/705 on unchanged evaluation identifiers and oracle strings. A locally shorter computation can therefore produce a less reliable whole when it adds dependencies and bindings the student must coordinate.
+## 5. Duties that follow from delegation
 
-This negative result is epistemically important because it resists the architecture's own attractive story. If abstraction is useful, it is easy to assume that greater explicitness or more components will also be useful. The data require a distinction between an operation that removes recurring algorithmic work and a decomposition that redistributes the same work across more interfaces. The latter can increase the task's coordination burden.
+### 5.1 Describe the checked property accurately
 
-Neither observation licenses a universal account of model limits. The dv13 Qwen2.5-Coder-0.5B system matches 361/705 and the Qwen3-1.7B system matches 421/705, but family and pretraining change together with size. Describing this as a demonstrated size threshold would turn a comparison of two systems into a law the experiment was not designed to test.
+A scientific author should state what the check tested. "The saved comparison labels reproduce" is a clear claim. "The reasoning was verified" may suggest that task interpretation, execution, and judgment were all independently established. The present archive cannot support that broader statement.
 
-### 4.3 A correct count can accompany an incorrect story
+The same requirement applies to training-data rigor. Execution against reference answers and input perturbations are meaningful engineering controls. They should be described as those controls, with their shared assumptions identified. A reader can then decide whether they are sufficient for a proposed reuse or whether an independent review of problem meaning is needed.
 
-The archive identifier `exp-017-qwen3-17b` had encouraged a comparison with a purported 17B model. Its nested metadata identifies Qwen3-1.7B. The item counts remain real, but their use as evidence that a small model beats a model ten times larger is invalid. This is a failure of interpretation at the identity boundary, not a failure to run an experiment.
+This obligation follows from the reader's dependence on the author's description. Readers cannot reconstruct every pipeline before deciding which results deserve attention. Overstating a check transfers an undisclosed verification burden to them and can misdirect later research.
 
-A similar problem appears in the evaluation population. Dv7 and dv13 both contain 705 items, but 50 identifiers are replaced and 100 oracle strings change among the 655 shared items. A table with the same denominator can therefore invite an unsupported fixed-test comparison. The necessary correction is specific: report population continuity before interpreting a score change.
+### 5.2 Preserve the evidence needed to disagree
 
-Mechanism claims require another kind of inspection. A container-oriented curriculum changes coalition matches from 0/20 to 20/20, but none of the 20 successful evaluated outputs declares a container-family command. The result supports a curriculum-associated improvement on one coalition plan. It does not show that executing containers caused the improvement or that an entire reasoning book was solved. Inspectable programs make this distinction possible.
+A result becomes more accountable when a reader can challenge model identity, population continuity, scoring, and mechanism separately. Source records, exact model releases, generated programs, and item-level decisions make those challenges possible. A summary table alone often does not.
 
-### 4.4 Semantic generosity also needs a contract
+Sandve and colleagues' reproducibility guidance supports retaining executable transformations and their inputs [@sandve]. Datasheets and model cards similarly motivate documentation of construction, intended use, and evaluation conditions [@datasheets] [@modelcards]. In an agent-assisted workflow, this documentation should also state which components share a parser or reference implementation. Independence is a relation between sources of evidence, not a property obtained by storing them in different files.
 
-The original comparator normalizes text and then tests equality. Some mathematically correct outputs fail because their wording or list punctuation differs. A restricted coalition parser accepts 20/20 outputs in one arm where text matching accepts 5/20. A dependency-join parser accepts 64/100 outputs in another arm where the original comparator accepts 0/100. The latter parser leaves 26 answers outside its grammar, records two parsed disagreements, and preserves eight execution failures.
+This duty applies to failures as well as successes. A missing model response should remain visible as a response-availability problem. A rejected answer outside a diagnostic grammar should remain unclassified. An absent judge decision should not be filled with a plausible answer to rescue a headline.
 
-These diagnostics avoid two extremes. They do not declare every textual mismatch a reasoning failure. They also do not grant an unconstrained evaluator authority to decide what the answer “really means” without preserving the decision. Each accepted diagnostic has a stated grammar and inspectable parsed values. An abstention remains an abstention.
+### 5.3 Attach uncertainty to the inference it changes
 
-An earlier semantic summary lacks that traceability in the surviving archive. Its 833 judgment inputs remain, but the corresponding decisions and rationales do not. The aggregate is therefore excluded from the article's evidence. This does not prove that its judgments were false. It establishes that readers cannot reconstruct the claimed support from the available record.
+A general limitations section cannot repair every strong claim earlier in a paper. The missing early training manifest belongs beside the abstraction result because it limits causal attribution. A changed problem population belongs beside the comparison it affects. A weak number-presence scorer belongs beside the reported percentage because it determines what that percentage measures.
 
-Figure 1 distinguishes the questions answered at construction, verification, and interpretation.
+The required practice is proportionate. Exploratory work need not complete every future control before publication. It must present an exploratory result as such and make the next discriminating experiment clear. The positive abstraction result justifies further research; it does not justify a universal scaling law or deployment claim.
 
-![Construction, execution checks, and interpretation supply different kinds of evidence, with remaining uncertainty at each boundary.](../assets/epistemic-boundaries.png)
+This distinction also avoids an unproductive response to imperfect evidence. A useful developmental finding should not disappear merely because an older interpretation was too ambitious. Narrowing the inference preserves scientific value while making disagreement more precise.
 
-Figure 1. Distinct obligations in agent-assisted research. Agreement within one stage does not automatically answer the question posed at the next stage.
+### 5.4 Retain human responsibility for the published claim
 
-## 5. Epistemic obligations of an executable workflow
+An agent can generate code, compare records, or propose an interpretation. It cannot assume the author's responsibility to decide which claim is justified, which uncertainty matters, and which correction must be published. That responsibility concerns the use of the evidence, not merely ownership of the final text.
 
-### 5.1 Keep verification local to the property checked
+Disclosure should identify the affected stages. In this case agents assisted implementation, training-data tooling, analysis, and writing, including the present audit. Describing that involvement as grammar correction would conceal a material condition of the research. Conversely, treating agent participation as automatic disqualification would ignore the executable work that can be inspected.
 
-The word “verified” can collapse several claims. A parser verifies a syntax condition. A test compares an output with a reference. A perturbation check establishes sensitivity to selected changes. A reviewer assesses whether the reference represents the intended task. These operations have different objects and different failure modes.
+Human responsibility does not mean claiming perfect oversight. Authors should state what they checked, what remains unresolved, and how the evidence can be challenged. The same standard applies to this article; agent-assisted reconstruction reduces some mistakes but does not make the interpretation independent or infallible.
 
-In the case, every selected arm passes syntax and graph checks on all 705 items. Many programs still fail execution or return mismatched answers. This is a direct demonstration that structural acceptance has a limited scope. Calling the runtime “formally verified” would be stronger still; the project provides an implementation with tests, not a formal proof of its semantics.
+## 6. Discovering new wires without hiding their assumptions
 
-The practical obligation is to attach verification language to the property actually checked. “The archived comparator labels were reproduced” is informative. “The research was verified” hides which parts of the reasoning remain open. The same applies to data quality: executable checks strengthen the training pipeline without establishing that all source interpretations are correct.
+The positive result opens a concrete research direction. A dependency-join command could own scheduling over stated predecessor relations. A units-and-rates command could check dimensional compatibility before calculation. Such operations could reduce recurring implementation failures while keeping the extracted data visible.
 
-### 5.2 Preserve evidential independence as a question
+The ethical and technical tests align here. A candidate should state its input assumptions, exclusions, implementation, and adversarial cases. A controlled comparison should evaluate equivalent general-code and specialized-command targets across several seeds, with transfer tasks frozen before design. Reporting should include wrong-command selection and wrong-argument extraction, not only execution success.
 
-An oracle can be wrong in the same way as the program it checks. This is particularly plausible when both are constructed from the same reference parse or by the same agent-assisted process. More tests can increase coverage while leaving that shared assumption untouched.
+A shorter program is not sufficient evidence of a better research abstraction. If the command hides a disputed classification or silently discards a relevant condition, it can make generation easier while making the claim harder to examine. A useful wire exposes the information needed to determine when its result applies.
 
-Datasheets encourage documentation of a dataset's motivation, composition, construction, and intended use [@datasheets]. Model cards encourage disclosure of a model's identity, evaluation conditions, and limits [@modelcards]. In this workflow, such documentation should also state which checking components share an origin. A reference computation written separately at the code level may still depend on the same semantic reading of the problem.
-
-Evidential independence is therefore a design question, not a label granted by having two files. A future experiment can strengthen it through independently authored transfer tasks, alternative reference methods, and targeted human review of ambiguous cases. None of those should be claimed after the fact when the artifacts do not document them.
-
-### 5.3 Make uncertainty travel with the claim
-
-Uncertainty is often collected in a limitations section after a strong headline has already fixed the reader's impression. The case suggests a more exact practice. The missing early manifest belongs beside the abstraction comparison. The absent judge decisions belong beside the semantic aggregate. The changed population belongs beside the cross-version score. These are not generic caveats; they determine what each result means.
-
-Sandve and colleagues' reproducibility rules support keeping transformations executable and records recoverable [@sandve]. The further requirement is interpretive: a reproduced number should retain the conditions under which it answers the research question. This makes disagreement productive. A critic can accept the arithmetic and challenge the causal inference without being forced to reject the whole experiment.
-
-### 5.4 Retain human responsibility without pretending to human omniscience
-
-Human authors cannot inspect every internal computation of every model used in research. They can still take responsibility for deciding what evidence is sufficient, stating what remains unknown, preserving the record, and correcting claims. Delegating code generation or analysis does not transfer those obligations to an agent.
-
-This article itself uses agent assistance and should be judged by the same standard. Its executable reconstruction reduces specific mistakes and makes others easier to detect. It does not certify that the interpretation is free of bias or that the audit is independent. The disclosure is substantive because it identifies where the tools participated, rather than treating their use as either disqualifying or irrelevant.
-
-### 5.5 Duties to readers and future users
-
-The obligations above extend beyond an author's confidence in a result. Readers need an accurate account of what was checked because they cannot reconstruct every experiment before deciding whether to invest in a replication or application. A declaration of agent assistance is useful when it identifies the affected stages and their review conditions. A generic disclosure that “AI was used” does little to distinguish language editing from generating an oracle or assigning evaluation judgments.
-
-A corresponding duty is to preserve failures that constrain the claim. The negative decomposition result changes the practical recommendation: additional wires should be tested for coordination costs, not adopted because modularity sounds desirable. The unsupported semantic aggregate presents a different duty. When its individual decisions are absent, a publication should withhold the aggregate as evidence even if doing so makes the headline less impressive. This restraint follows from the reader's need to inspect the justification, rather than from a presumption that automated judgments are always unreliable.
-
-These duties are proportionate to the use being proposed. A preliminary study may publish useful exploratory evidence without completing every future control. It should not describe that evidence as a validated basis for consequential deployment. The distinction permits open scientific progress while preserving readers' ability to decide what additional checking their intended use requires.
-
-## 6. From new wires to a contestable research programme
-
-The positive abstraction result opens a specific research direction: search for new wires that remove repeated implementation failures while retaining explicit assumptions. A dependency-join operation might compute a critical path from a stated task graph. A units-and-rates operation might reject dimensionally incompatible quantities. A constraint interface might delegate satisfiability checking to an established solver. These are proposals whose scientific value depends on new experiments.
-
-The discovery process should use development traces while reserving a frozen transfer set. Each candidate should disclose its contract, excluded cases, implementation, and tests. Evaluation should compare equivalent tasks and token budgets across several training seeds, report command-selection and argument-extraction failures, and retain negative results. A shorter program is not sufficient evidence of a better abstraction if it hides an incorrect premise.
-
-There is also a question about what remains contestable after abstraction. If a wire compresses a disputed decision into a single opaque command, it may make the model's output shorter while making the scientific claim harder to challenge. A useful research abstraction should expose the values and relations on which the result depends. Its exclusions should be readable to someone examining why a particular problem was accepted or rejected.
-
-Figure 2 shows how a preserved audit chain makes these separate challenges possible.
-
-![The evidence audit links raw outputs, identity and population checks, measured outcomes, and bounded interpretation.](../assets/audit-chain.png)
-
-Figure 2. A practical route to contestability. The record should support challenges to identity, measurement, and mechanism separately; it cannot replace human responsibility for release.
-
-The societal implications remain conditional. Smaller models and explicit operations may eventually support accessible local research tools, but the present study measures neither energy savings nor equitable access. Synthetic word problems do not establish suitability for public administration, education decisions, or other consequential uses. The transferable lesson concerns the form of justification: an executable result should make assumptions available for challenge rather than conceal them behind technical fluency.
+No social-deployment, energy, or equitable-access benefit is measured by this case. Those may motivate future applications, but would require their own evidence. The contribution here is a standard for the research process: make computational delegation easier to inspect at the same time that it becomes easier to perform.
 
 ## 7. Conclusion
 
-Executable answers can improve the evidential quality of model-assisted research. In this case they make it possible to retain a substantial abstraction result, identify a failed decomposition change, and correct claims about model identity, population continuity, and mechanism. Their value depends on keeping execution, interpretation, and responsibility distinct.
+Executable programs can improve scientific evidence by exposing the computation behind an answer. The SOP Lang case shows a real benefit from specialized operations and a real limit to adding structure. It also shows why reproducible outputs do not settle model identity, task interpretation, or the meaning of an evaluation score.
 
-The next research step is to discover new wires under stronger experimental controls and ask which ones improve transfer without obscuring assumptions. The broader obligation is already clear: agents may help construct the evidence, but the scope of a scientific claim must remain answerable to that evidence and to the humans who publish it.
+Our conclusion is that delegated computation creates obligations to specify the checked property, preserve the grounds for challenge, and keep uncertainty attached to the affected inference. Human authors remain responsible for those obligations. The next abstraction research should seek commands that reduce implementation errors while making their assumptions and remaining interpretation choices clear.
 
 ## Data availability and use of AI-assisted tools
 
-An accompanying evidence package, provided as Online Resource 1, contains the reconstructed counts, comparison records, restricted diagnostic decisions, and analysis scripts. The review manuscript omits identifying repository links and author metadata. The package requires anonymization and a stable review-access location before double-anonymous submission. Coding-agent assistance is described in Sections 3 and 5.4. Funding, competing interests, contributor identities, and acknowledgements belong in the separate author information file and require confirmation before submission.
+Online Resource 1 contains reconstructed outcomes, source mappings, comparison records, diagnostic decisions, and analysis scripts. An anonymized stable access location is required before double-anonymous submission. This manuscript omits identifying author metadata and repository URLs. Coding-agent assistance is described in Sections 3 and 5.4. Author identities, funding, competing interests, and acknowledgements require separate completion.
 
 <!-- REFERENCES -->

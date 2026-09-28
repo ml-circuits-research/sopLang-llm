@@ -1,57 +1,62 @@
 {
   "auditedOn": "2026-09-28",
-  "sourceFilesChecked": 54,
+  "sourceFilesChecked": 72,
   "archivedItemRecords": 7050,
   "reports": [
     {
       "manuscript": "01-machine-learning",
-      "abstractWords": 200,
+      "abstractWords": 190,
       "keywords": 6,
       "references": 11,
-      "tables": 2,
+      "quantitativeRowsChecked": 8,
+      "tables": 3,
       "figures": 3,
-      "pages": 10,
-      "sha256": "6759dc7837472d8ec7e826e478f97093bc641bb23ec0c47723835c6130f99b82"
+      "pages": 11,
+      "sha256": "e8bbb73b3e5665d95d82c6c8599d51d090f941fd04ed45d1d95c44f5949eeb0b"
     },
     {
       "manuscript": "02-informatica",
-      "abstractWords": 194,
+      "abstractWords": 197,
       "keywords": 5,
-      "references": 11,
+      "references": 9,
+      "quantitativeRowsChecked": 5,
       "tables": 3,
       "figures": 2,
-      "pages": 6,
-      "sha256": "4a3159e6640ca7599a4fb858ce371477aecde861d44299e935b14abdf445c920"
+      "pages": 5,
+      "sha256": "f19635501ca34697fd24441f9b432ee90d1a0d6342ec016e577d3982af15c892"
     },
     {
       "manuscript": "03-empirical-software-engineering",
-      "abstractWords": 201,
+      "abstractWords": 202,
       "keywords": 6,
-      "references": 9,
-      "tables": 3,
-      "figures": 2,
-      "pages": 8,
-      "sha256": "f1a0f6230fa9c16eb6844200737e0c783d82096bab410a418823da497132f9e1"
+      "references": 8,
+      "quantitativeRowsChecked": 0,
+      "tables": 2,
+      "figures": 3,
+      "pages": 9,
+      "sha256": "a3f6ebcf34896fa59bebc582014e4b9f9f543a534c6a254c82dd3657d06b4e17"
     },
     {
       "manuscript": "04-open-research-europe",
-      "abstractWords": 192,
+      "abstractWords": 190,
       "keywords": 6,
-      "references": 14,
-      "tables": 4,
-      "figures": 2,
-      "pages": 11,
-      "sha256": "1c7eaccfe5ee5e258323abcdec6e1ef60005c3f51999634ac3284096f323b7fd"
+      "references": 11,
+      "quantitativeRowsChecked": 11,
+      "tables": 3,
+      "figures": 3,
+      "pages": 9,
+      "sha256": "da4cf2b4a46acb583b2701f8c1764d13c7fc4128a3b6f3b5db463662637c848d"
     },
     {
       "manuscript": "05-ai-and-ethics",
-      "abstractWords": 201,
+      "abstractWords": 204,
       "keywords": 6,
       "references": 11,
+      "quantitativeRowsChecked": 0,
       "tables": 1,
       "figures": 2,
       "pages": 8,
-      "sha256": "8dc583e5456261b0568d8b46ae3d2f0e8f5ff63122a8814618f0c0b317a88700"
+      "sha256": "6af514cbcf578680dd927f7ed729b289c7c5365672178e30f783b0d1b1a6de4c"
     }
   ],
   "scope": "Automated consistency checks. Scientific argument and visual layout also require the recorded manual review."

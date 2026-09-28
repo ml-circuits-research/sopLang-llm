@@ -40,6 +40,14 @@ The dependency-join example in manuscript 01 is record `decompose-to-solve/eval/
 
 ## Boundaries that remain
 
-There is one archived training run per condition; the known later seed is 3407, while exp-014's training manifest is absent. Repeated generated instances and repeated arms are not independent replications. Identical identifiers and oracles do not by themselves prove identical prompt bytes, because complete historical statements are not stored in the item files. Current source and verification code support the documented teaching process, but do not retrospectively prove every historical data row semantically correct. No fresh external benchmark, matched direct-answer baseline, training rerun, energy measurement, or productivity comparison was performed for this portfolio.
+There is one archived training run per condition; the known later seed is 3407, while exp-014's training manifest is absent. Repeated generated instances and repeated arms are not independent replications. Identical identifiers and oracles do not by themselves prove identical prompt bytes, because complete historical statements are not stored in the item files. Current source and verification code support the documented teaching process, but do not retrospectively prove every historical data row semantically correct. No fresh external benchmark, equal-budget execution ablation, training rerun, energy measurement, or productivity comparison was performed for this portfolio. The reader-focused revision found and reconstructed existing direct-answer base evaluations; their matched-population and scoring limits are documented in the baseline audit.
 
 The positive abstraction finding remains useful within these boundaries. It is neither discarded because stronger controls are absent nor promoted into a general causal law. The manuscript-specific research questions determine which parts of this evidence belong in each article.
+
+## Additional evidence in the reader-focused revision
+
+The manuscript-facing results now use percentages with denominators in captions or population definitions. Raw counts remain in the evidence files. Internal run names and data-version codes are moved to the [experiment map](../evidence/experiment-map.md). Each paper introduces SOP Lang notation through a complete executed example.
+
+The [baseline audit](baseline-audit.md) replaces the earlier blanket absence claim. Paired early base/adapted evaluations share all 585 identifiers and expected answers. Under the common historical content check, the 0.5B comparison is 10.8% to 44.4%, and the 1.5B comparison is 5.1% to 61.4%. These are weak reference-content diagnostics, not semantic-accuracy claims. Qwen3's separate base evaluation has 45.7% missing completions and is not used as a clean capacity ranking.
+
+The Open Research Europe revision examines a different contrast: the paired later systems improve from 51.2% to 59.7% overall exact match, while dependency-join execution failures increase from 55% to 94%. Both observations are retained. The family result describes those two systems; it does not isolate parameter count.

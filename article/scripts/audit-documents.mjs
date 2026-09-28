@@ -6,12 +6,16 @@ import { resolve } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { unzip } from '../../skills/scientific-article/scripts/zip.mjs';
 import { parseMarkdown } from '../../skills/scientific-article/scripts/markdown.mjs';
+import { auditTableValues } from './audit-table-values.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const article = resolve(root, 'article');
 const results = JSON.parse(await readFile(resolve(article, 'evidence/results.json')));
 const hashes = JSON.parse(await readFile(resolve(article, 'evidence/source-hashes.json')));
-for (const record of hashes) {
+const baselineHashes = JSON.parse(await readFile(resolve(article, 'evidence/baseline-source-hashes.json')));
+const baselines = JSON.parse(await readFile(resolve(article, 'evidence/baseline-results.json')));
+const allHashes = [...new Map([...hashes, ...baselineHashes].map(row => [row.path, row])).values()];
+for (const record of allHashes) {
   const bytes = await readFile(resolve(root, record.path));
   assert.equal(createHash('sha256').update(bytes).digest('hex'), record.sha256, `Changed source: ${record.path}`);
 }
@@ -21,6 +25,9 @@ for (const filename of (await readdir(resolve(article, 'manuscripts'))).filter(n
   const name = filename.slice(0, -3);
   const source = await readFile(resolve(article, 'manuscripts', filename), 'utf8');
   const blocks = parseMarkdown(source);
+  assert.doesNotMatch(source, /\bexp-\d+|\bdv\d+\b|checkpoint-\d+/, `${name}: unexplained archive labels in manuscript`);
+  assert.match(source, /```sop\n/, `${name}: missing complete language example`);
+  assert.ok(source.includes('convention') && source.includes('dependency') && source.includes('command'), `${name}: language conventions missing`);
   const abstract = source.split('## Abstract\n\n')[1].split('\n\n')[0];
   const abstractWords = abstract.trim().split(/\s+/).length;
   assert.ok(abstractWords >= 150 && abstractWords <= 250, `${name}: abstract length`);
@@ -37,19 +44,7 @@ for (const filename of (await readdir(resolve(article, 'manuscripts'))).filter(n
       assert.ok(narrative.includes(`${label} ${index + 1}`), `${name}: missing ${label} callout`);
     });
   }
-  for (const block of blocks.filter(block => block.type === 'table')) {
-    const headers = block.rows[0].map(cell => cell.toLowerCase());
-    const matchColumn = headers.findIndex(cell => ['match', 'normalized exact match'].includes(cell));
-    if (matchColumn < 0) continue;
-    for (const row of block.rows.slice(1)) {
-      const armId = row[0].match(/exp-\d+/)?.[0];
-      if (!armId) continue;
-      const arm = results.arms.find(arm => arm.id.startsWith(armId + '-'));
-      assert.equal(Number(row[matchColumn]), arm.classes.answer_match, `${name}: ${armId} match`);
-      const errorColumn = headers.findIndex(cell => /execution error/.test(cell));
-      if (errorColumn >= 0) assert.equal(Number(row[errorColumn]), arm.classes.execution_error);
-    }
-  }
+  const quantitativeRowsChecked = auditTableValues(name, blocks.filter(block => block.type === 'table'), results, baselines);
   if (/^(01|02|04)/.test(name)) assert.doesNotMatch(source, /77\.2%|544\/705|66\/100|\b17B\b/);
   const bytes = await readFile(resolve(article, 'docs', name + '.docx'));
   const zip = unzip(bytes);
@@ -76,11 +71,11 @@ for (const filename of (await readdir(resolve(article, 'manuscripts'))).filter(n
   } catch (error) {
     throw new Error(`PDF audit requires an existing rendered PDF and Poppler tools for ${name}; see article/README.md.`, { cause: error });
   }
-  reports.push({ manuscript: name, abstractWords, keywords: keywords.length, references: citations.length,
+  reports.push({ manuscript: name, abstractWords, keywords: keywords.length, references: citations.length, quantitativeRowsChecked,
     tables: manifest.tables, figures: manifest.figures.length, pages, sha256: manifest.sha256 });
 }
 assert.equal(reports.length, 5);
-const report = { auditedOn: '2026-09-28', sourceFilesChecked: hashes.length,
+const report = { auditedOn: '2026-09-28', sourceFilesChecked: allHashes.length,
   archivedItemRecords: results.recordCount, reports,
   scope: 'Automated consistency checks. Scientific argument and visual layout also require the recorded manual review.' };
 await writeFile(resolve(article, 'audit/document-checks.json'), JSON.stringify(report, null, 2) + '\n');

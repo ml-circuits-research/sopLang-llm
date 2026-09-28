@@ -1,185 +1,184 @@
-# From experiment logs to defensible claims: an artifact audit of coding-agent-assisted small-model research
+# When correct metrics support the wrong claim: auditing agent-assisted research software
 
 ## Abstract
 
-Context: Coding agents can help construct experimental software, training data, evaluators, and research narratives. Agreement among those artifacts may conceal a shared error rather than provide independent confirmation. Objective: We investigate how artifact-level auditing changes the claims supported by one agent-assisted machine-learning project. Method: An exploratory retrospective case study reconstructs ten archived fine-tuning arms from 7,050 item records, resolves model identity from nested manifests, joins evaluation items across versions, checks comparator behavior, and inspects the evidence behind semantic judgments and mechanism claims. Results: All original normalized exact outcome labels are reproducible, but several interpretations require revision. An arm described as a 17B model is actually Qwen3-1.7B; a later dataset version replaces 50 of 705 evaluation items; and 833 retained semantic-judge inputs lack the decisions needed to reproduce the reported semantic aggregates. A positive abstraction result survives: matches rise from 379/705 to 440/705, with procedural execution errors falling from 63/480 to 13/480. A target-decomposition change produces the opposite direction. Conclusion: The case supports a claim-centered audit that separates identity, population, measurement, and mechanism evidence. It does not estimate coding-agent productivity or compare agent-assisted and human-only research. We provide executable reconstruction, conservative diagnostic parsers, and a prospective audit protocol for future vocabulary-discovery experiments.
+Coding agents can help produce an experiment, its tests, and its explanation. Agreement between those artifacts is useful, but may preserve a shared mistake. We examine how an artifact audit changes the claims supported by one small-model research project. The system, SOP Lang, represents a generated solution as named computations with explicit dependencies and executes them in a runtime. We reconstruct 7,050 saved outputs from ten fine-tuning runs, then conduct targeted checks of base-model comparisons, evaluation populations, and missing judgment records. All original normalized exact labels reproduce. Interpretation changes nevertheless follow: a model-size contrast disappears after checking manifests, 7.1% of evaluation identifiers are replaced between two benchmark versions, and a base-model evaluation lacks completions for 45.7% of requests. Reapplying the same scoring rule to base and adapted outputs also exposes a distinction between reference-content recovery and semantic correctness. A useful positive result survives the audit: specialized commands increase normalized exact matching from 53.8% to 62.4%. We argue that research-software auditing should join counts to the identity, population, measurement rule, and mechanism required by the claim. This exploratory case does not estimate agent error rates or productivity. It supplies executable checks and a concrete method for retaining useful findings while correcting unsupported interpretations.
 
 Keywords: empirical software engineering; coding agents; reproducibility; case study; research software; evidence provenance
 
 ## 1. Introduction
 
-Research software increasingly includes work performed with coding agents. In a machine-learning project, the same workflow can produce a data generator, a reference solver, a validator, a training launcher, an evaluation script, and a polished account of the results. The resulting consistency is attractive: identifiers recur across files, tables agree with summaries, and automated checks pass. Yet consistency can arise because the artifacts share an incorrect assumption.
+An experiment can run successfully and still be described incorrectly. A result table may accurately summarize the saved outputs while labeling the wrong model, comparing changed tasks, or assigning a mechanism the generated code never used. These are software-engineering problems because the evidence is distributed across programs, manifests, records, and prose. Checking any one of them in isolation can miss the contradiction.
 
-The empirical problem is to determine what that collection of artifacts actually supports. A training run may be real while its model label is misleading. An accuracy count may be correct while the compared populations differ. A successful output may be genuine while the proposed explanation for its success is unsupported by the emitted program. These are different failure modes and require different audits.
+Coding agents make this relationship particularly important. They may assist the data generator, reference solver, tests, evaluation scripts, and article. A mistake can become consistent across those outputs through reuse. Internal agreement then becomes a weak basis for confidence, even when the numerical experiment itself is real.
 
-We study one repository that fine-tunes small language models to compile word problems into SOP Lang circuits. The research was conducted with coding-agent assistance, including implementation, experiment tooling, analysis, and writing. The system provides unusually inspectable evidence because each evaluated output is a program and the archive preserves per-item outcomes. It also contains drafts making claims about model size, abstract operations, and semantic accuracy. This combination permits an artifact-based examination of the path from run records to publication claims.
+Our case is a project that fine-tunes small language models to compile word problems into SOP Lang programs. SOP Lang is introduced in Section 2; no prior knowledge of the language is assumed. The archive contains both useful improvements and unsupported interpretations of those improvements. It therefore permits a practical question: how can an audit preserve scientific value while determining which statements the records actually justify?
 
-The study asks three questions. RQ1: Which claims can be reconstructed from surviving artifacts? RQ2: Which discrepancies arise between reproducible measurements and their interpretation? RQ3: Which audit procedures preserve useful findings while restricting unsupported conclusions? The intended contribution is an empirically grounded audit method, not a claim that coding agents caused every defect or that human-only research would have avoided them.
+Three research questions guide the study. RQ1 asks which numerical findings can be reconstructed from saved artifacts. RQ2 asks which additional checks change their interpretation. RQ3 asks what audit procedure follows for similar agent-assisted research workflows. The intended contribution is a method of connecting claims to evidence, grounded in observed corrections. We do not compare agent-assisted work with a human-only team or estimate how frequently agents make these mistakes.
 
-## 2. Background and analytical perspective
+## 2. The system under study
 
-Runeson and Höst describe case-study research as appropriate for examining software-engineering phenomena in their context [@runeson]. Our context is one evolving research repository, and our evidence is its technical archive. There are no interviews, randomized developer assignments, or measured productivity outcomes. The case can identify concrete risks and useful audit operations; it cannot estimate their prevalence across teams.
+### 2.1 A short introduction to SOP Lang
 
-Sandve and colleagues emphasize preserving the information needed to reconstruct computational results [@sandve]. That requirement motivates executable extraction from raw item records rather than copying tables from reports. However, a reproducible number can answer the wrong question. Kapoor and Narayanan's analysis of leakage illustrates how failures in experimental design can undermine conclusions even when code runs successfully [@kapoor]. In this case we distinguish adaptive reuse of a development benchmark from proven direct training contamination; the former is documented, while the latter is not established by the audit.
+SOP Lang is a textual intermediate language for executable solutions. A program, called a circuit, contains named computations called wires. A declaration starts with `@name command` at the beginning of a line. The body continues to the next declaration, and the command defines how that body is interpreted. References such as `$slots` read another wire's value and establish dependencies.
 
-Raji and colleagues frame internal algorithmic auditing as a process extending across the development lifecycle [@raji]. We adapt the idea to research claims. The audit object is a chain connecting a statement in a manuscript to the model identity, data population, comparator, item outcomes, and proposed explanation. A broken link can narrow a claim without invalidating every other link.
+For a problem asking for the cells in three packs of four, a complete program is:
 
-Messeri and Crockett discuss how AI use in science can create an illusion of understanding [@messeri]. This motivates examining whether executable checks and fluent interpretation were being treated as interchangeable evidence. Their argument is conceptual; it does not establish that coding agents caused the specific errors observed here. Our evidence for those errors comes from the repository itself.
+```sop
+@slots literal
+{"packs":3,"perPack":4}
 
-## 3. Case and research method
+@answer jsEval
+return $slots.packs * $slots.perPack;
+```
 
-### 3.1 System and case boundary
+The name `slots` identifies a wire whose `literal` command reads JSON. The name `answer` identifies a wire whose `jsEval` command evaluates JavaScript and returns 12. `$slots.packs` reads the field `packs` from the earlier value. The runtime evaluates the dependency before the consumer, regardless of declaration order. The caller chooses which output to request; `answer` and `slots` are dataset conventions rather than reserved keywords.
 
-The case system trains a small model to emit a circuit from a problem statement. Named wires expose literal data, JavaScript computation, and specialized commands such as graph reachability, aggregation, and fraction reduction. A runtime checks structure, schedules dependencies, executes operations, and records outcomes. Its purpose resembles the computation delegation used in PAL [@pal], with a project-specific target language and training pipeline.
+Figure 1 makes the division of responsibility concrete. The model selects multiplication and extracts 3 and 4. The runtime only executes that selection. A successful execution establishes that the program yields 12, not that 12 answers every possible statement containing those numbers.
 
-The archive analyzed here contains ten selected arms, spanning an early vocabulary change and a later curriculum series. Each arm contributes a 705-item evaluation file. The analysis includes 7,050 item records, the corresponding metric summaries, checkpoint selections, evaluation manifests, available training manifests, base-model metadata, relevant evaluator source, and the earlier article materials. The selection is purposive: these are the runs needed to examine the principal claims in the drafts. It is not a census of every experiment in the repository.
+![An annotated circuit links problem quantities to literal and JavaScript wires, showing which choices belong to the model and which dependency the runtime executes.](../assets/sop-program-anatomy.png)
 
-The audit snapshot is identified by repository revision `922debb5242e10e3e9c4c7d8b7f85b927d09d54e` for the pre-audit tracked source, together with SHA-256 hashes for the experimental files read. Some experimental artifacts are outside the tracked source history, making their content hashes necessary. The companion evidence manifest records those paths and hashes. No training or model inference was repeated, and existing artifacts were not rewritten to agree with the new analysis.
+Figure 1. The inspected research object is an executable interpretation. This constructed example illustrates the notation and is separately executed in the artifact checks.
 
-### 3.2 Evidence sources and audit operations
+Specialized commands can move an algorithm into the runtime. For example, `graphPath` performs undirected reachability from an explicit edge list and endpoints. The model selects the operation and inputs instead of generating traversal code. Correct selection remains essential: an undirected command can correctly execute an incorrect interpretation of a directed problem.
 
-Table 1 defines the relationship between evidence and claim. We treat an identifier as a pointer to evidence, not as authoritative metadata. This is particularly important for model names and data-version labels, which can survive after an underlying experimental decision changes.
+### 2.2 How evidence is produced
 
-Table 1. Claim classes and the audit operation needed to support them.
+The training pipeline constructs parameterized problem families. A family supplies a statement parser, reference computation, expected answer, and generated circuit. Candidate circuits are executed, selected input/output properties are asserted, and input perturbations test whether computed answers depend on the stated data. Accepted examples retain provenance and split information.
 
-| Claim class | Evidence inspected | Audit operation |
+The evaluation then records the generated program, execution outcome, answer, expected answer, and classification. A model manifest identifies the base release and revision. A run manifest records evaluation conditions, and checkpoint selection has its own record. These artifacts answer different questions; a correct answer count cannot replace model identity or benchmark continuity.
+
+The study includes ten primary archived fine-tuning runs with 705 items each. Targeted baseline analysis adds two earlier adapted systems and three direct-answer base evaluations where they test a specific comparison claim. This purposeful selection is not a census of every run ever attempted. The companion inventory identifies the exact source files and their hashes.
+
+## 3. Method
+
+### 3.1 Case-study design
+
+We use an exploratory retrospective case study of one evolving research repository. Runeson and Höst's guidance motivates defining context, units of analysis, a chain of evidence, and validity limits [@runeson]. The unit of analysis is a claim and the artifacts needed to support it. Item records supply observations for that claim; they are not independent research projects or independent samples of agent behavior.
+
+The audit recounts outcomes, reruns comparison functions on saved answers, resolves model identity from nested manifests, joins evaluation populations by identifier, inspects generated command use, and checks whether judgment decisions survive. No neural generation or training is repeated. Historical statements are not reconstructed from invented prompts or judgments.
+
+Coding agents participated in both the original development and this audit. That participation is a condition of the case and a reflexive limitation. Executable checks can make disagreement visible, but do not make this an independent human adjudication or external peer review.
+
+### 3.2 Audit operations
+
+Table 1 connects each claim class to a concrete operation. The procedure begins with the question being asked, not with a generic search for suspicious files. A comparison between base and adapted models needs shared populations and a common scoring rule. A mechanism claim needs evidence that the proposed mechanism was exercised.
+
+Table 1. Claims require different evidence operations.
+
+| Claim to assess | Artifact and operation | What the operation cannot establish |
 | --- | --- | --- |
-| Model identity | Nested base manifest, repository and revision fields | Resolve the actual base instead of parsing the arm label |
-| Population identity | Item identifiers, oracles, plan fingerprints | Join across arms and count replacements and changes |
-| Outcome count | Per-item classes and evaluator code | Recount classes and rerun the original comparator |
-| Semantic equivalence | Individual decisions or a specified parser | Retain decisions; reject unsupported aggregate reconstruction |
-| Mechanism | Emitted programs and command declarations | Check whether the proposed operation was actually used |
-| Causal attribution | Training configuration, seeds, interventions | State confounding and missing control information |
+| A particular model was evaluated | Resolve base identity and revision from manifests | A filename alone does not identify capacity |
+| A percentage summarizes saved outcomes | Recount unique records and reproduce labels | Correct aggregation does not validate the score's meaning |
+| One system improves on another | Join identifiers and expected answers; align scoring | Equal denominators do not prove equal populations |
+| A command explains improvement | Inspect generated command declarations and compare cases | Availability in the runtime does not prove execution |
+| Semantic judging improves accuracy | Require per-item verdicts and their aggregation | Saved judge inputs do not supply missing decisions |
+| A system transfers to new problems | Inspect family structure and benchmark use | Repeated instances are not independent structures |
 
-The extraction script checks that each arm has 705 unique identifiers, partitions all records into known outcome classes, and reproduces the stored metrics. It reapplies the original normalized exact comparator to each completed answer. It then joins selected arm pairs and records changed identifiers, oracle strings, and plan fingerprints. Finally, it inspects generated command declarations and the surviving semantic-judge artifacts.
+Sandve and colleagues emphasize executable transformations and retained provenance [@sandve]. Raji and colleagues treat auditing as a documented process across a development lifecycle [@raji]. We adapt those ideas to the narrower question of what a research result supports. Kapoor and Narayanan's account of evaluation leakage is relevant to repeated benchmark consultation [@kapoor], but does not by itself establish direct training contamination in this project.
 
-The original comparator normalizes Unicode, case, whitespace, and selected punctuation before equality. A mismatch under this rule is evidence of failed normalized textual agreement, not necessarily failed computation. We retain that distinction when interpreting the outcome ladder.
+### 3.3 Outcome measures and interpretation rules
 
-### 3.3 Retrospective semantic diagnostics
+The primary evaluator separates syntax, graph validity, execution, and normalized exact matching. Exact matching applies specified Unicode, case, whitespace, and punctuation/prefix normalization. We reproduce those labels rather than silently replacing them with a new semantic judgment.
 
-To investigate specific answer-format discrepancies without inventing missing judgments, we implement two restricted parsers. One accepts complete coalition/count tuple lists, normalizes set ordering, and rejects duplicates. The other accepts complete dependency-join sentences expressing a duration and a feasibility verdict through a fixed set of phrases. It recognizes the oracle's known explanatory suffix. Both require the whole answer to fit the declared grammar.
+The base-model prose evaluator uses a different historical rule: every reference number must appear in the completion, or a non-numeric reference must appear under normalized containment. We call this reference-content matching. It can accept contradictory or wrongly assigned numbers. The audit applies it to both base and adapted outputs, and also applies exact matching to both, preserving the distinction between the measures.
 
-The parser outputs are match, mismatch, outside grammar, or execution failure. Outside grammar is an explicit abstention. We preserve each decision and its parsed values in JSONL files. These diagnostics were designed after inspecting the archive and are therefore exploratory. They neither reproduce the missing historical judge decisions nor establish a general replacement score.
-
-### 3.4 Claim assessment and reflexivity
-
-We assign conclusions to five evidence states: reproduced from item records, corroborated by additional artifacts, historical-only, proposed, or unresolved. This classification separates a missing artifact from a negative result. For example, missing judge decisions make a semantic aggregate non-reproducible from the available archive; they do not prove every underlying judgment was wrong.
-
-The audit itself used coding-agent assistance. It is consequently not independent peer review or blinded human adjudication. Executable assertions, retained inputs, explicit abstention, and inspection of source contracts reduce specific risks, but cannot remove every shared assumption. We document that boundary because calling a second automated pass “independent validation” would repeat the problem under study.
+Evidence is classified as reproduced, corroborated, historical-only, proposed, or unresolved. A missing decision stays missing. An interpretation may be narrowed even when its count reproduces exactly. We avoid inferential significance tests because repeated templates, adaptive benchmark use, and one run per condition do not supply an appropriate replication design.
 
 ## 4. Findings
 
-### 4.1 RQ1: the primary outcome counts are reproducible
+### 4.1 RQ1: the saved outcome labels reproduce
 
-Every selected arm contributes 705 unique records, and reconstructed class totals agree with the archived metrics. Reapplying the original comparator yields no disagreements with stored match/mismatch labels. Syntax and graph acceptance is 705/705 for every arm. This establishes a stable descriptive base for the study.
+All normalized exact labels in the primary 7,050-record reconstruction reproduce when the original comparator is reapplied. All selected programs pass syntax and graph checks, a 100% structural acceptance rate, while downstream outcomes differ substantially. This shows that neither source-code execution nor a polished table is the main evidential problem in these records. The difficult step is deciding what those outputs mean.
 
-Table 2 shows the reconstructed counts. Completed mismatches and execution failures are kept separate because they call for different remedies. A comparator revision can affect the former, while it cannot turn a program that failed to execute into a successful answer.
+A constructive result survives. Comparing the general-code condition with the specialized-wire condition on 705 shared identifiers and unchanged expected answers, normalized exact matching rises from 53.8% to 62.4%. Procedural execution failures decline from 13.1% to 2.7% on 480 problems. We interpret this as a strong developmental signal that the target vocabulary matters. The audit retains it while stating the single-run design and missing early training manifest.
 
-Table 2. Audited outcome counts for the ten selected arms, each evaluated on 705 items.
+A claim that the added commands directly explain the entire gain requires more evidence. Only 8.3% of procedural outputs declare one of the new commands, while the procedural match rate improves by 13.1 percentage points. The command-use inspection narrows the mechanism account without negating the improvement. Changed training representations and other training differences remain possible contributors.
 
-| Arm and data | Normalized exact match | Completed mismatch | Execution error |
-| --- | --- | --- | --- |
-| exp-014, dv2 | 379 | 125 | 201 |
-| exp-016, dv3 | 440 | 90 | 175 |
-| exp-017, dv3 | 442 | 111 | 152 |
-| exp-021, dv7 | 460 | 188 | 57 |
-| exp-022, dv8 | 448 | 122 | 135 |
-| exp-023, dv9 | 428 | 185 | 92 |
-| exp-024, dv11 | 439 | 154 | 112 |
-| exp-025, dv12 | 432 | 137 | 136 |
-| exp-026, dv13 | 361 | 130 | 214 |
-| exp-027, dv13 | 421 | 100 | 184 |
+### 4.2 RQ2: identity and population checks change the comparison
 
-The counts also preserve useful negative evidence. The dv7-to-dv8 target-decomposition change reduces matches from 460/705 to 448/705 and increases execution errors from 57/705 to 135/705 on unchanged identifiers and oracle strings. A persuasive narrative about modularity must account for this result rather than treating additional structure as inherently beneficial.
+An earlier interpretation treated an ambiguously named run as a 17B model. Its nested base metadata identifies Qwen3-1.7B. The proposed tenfold size contrast therefore disappears, even though the saved outcomes remain correct. The correction concerns the comparison being made, not the existence of the run.
 
-### 4.2 RQ2: identity and population errors change the comparison
+Two benchmark versions both contain 705 items, but only 92.9% of their identifiers are shared. The later version replaces 7.1% of the earlier population, and 15.3% of shared identifiers have changed expected-answer strings. A reader seeing only aggregate percentages would have no reason to infer those changes. Population continuity must be reported before a score difference is interpreted as improvement or regression on a fixed test.
 
-The first material discrepancy concerns model identity. The experiment directory `exp-017-qwen3-17b` had been interpreted as a 17B model. Nested base-model metadata identifies Qwen3-1.7B and the same pinned revision used by the later 1.7B arms. The corresponding “small model beats 17B” claim is unsupported. Correcting the label preserves the observed curriculum difference while removing the scale comparison.
+Figure 2 places these checks beside the judgment-record problem. Its rows show why different claims require different source artifacts rather than another copy of the same summary table.
 
-The second concerns the evaluation population. Dv7 and dv13 each have 705 items, but only 655 identifiers are shared; 50 are removed and 50 introduced. Among the shared identifiers, 100 oracle strings and 147 plan fingerprints change. One task family moves into training and another takes its evaluation place. Aggregate scores with the same denominator therefore do not identify a fixed-test regression.
+![Three evidence checks connect model identity, benchmark overlap, and retained judgment records to the narrower claims they support.](../assets/claim-evidence-map.png)
 
-The audit also narrows the smaller-model comparison. Exp-026 uses Qwen2.5-Coder-0.5B-Instruct; exp-027 uses Qwen3-1.7B. Their dv13 items, oracles, and plans match, and their scores are 361/705 and 421/705. Size changes together with model family and pretraining. A claim about those two trained systems is supported; a universal minimum size for reasoning is not.
+Figure 2. Reproducing a count is only one audit operation. Identity, population continuity, and judgment traceability can each change the justified interpretation without changing the saved number.
 
-### 4.3 RQ2: judgment records and mechanism evidence are incomplete
+### 4.3 RQ2: a base comparison also depends on the scorer and serving result
 
-An earlier report gives a broad semantic score for several arms. The retained judge shards contain 833 unique inputs with keys, oracle texts, and model answers. They do not contain the corresponding verdicts or rationales. Four disjoint input shards also provide no evidence of inter-rater agreement. The broad semantic aggregates therefore remain historical-only.
+For the two early Qwen2.5-Coder comparisons, all 585 base items join the corresponding adapted evaluations with unchanged expected answers. Under a common reference-content rule, the 0.5B workflow improves from 10.8% before adaptation to 44.4% after adaptation and execution; the 1.5B workflow improves from 5.1% to 61.4%. Under exact matching, the corresponding pairs are 0.0% to 44.1% and 0.2% to 55.0%.
 
-The new restricted diagnostics recover a narrower, inspectable finding. For exp-027 coalitions, 20/20 answers match as tuple sets, compared with 5/20 under normalized exact text. For exp-021 dependency joins, 64/100 match under the declared duration/verdict grammar, compared with 0/100 originally. Another 26 cases are outside that grammar, two are parsed disagreements, and eight are execution failures. The method makes its refusal to classify visible, rather than converting every unrecognized phrase into a judgment.
+These are useful results, but the difference between the two scorers is itself evidence. Prose may contain the right values without expressing the right relation, while exact matching may reject a valid paraphrase. The responsible claim is improved performance of the complete adapted workflow under two specified checks. It is not a validated semantic-accuracy gain or an isolated estimate of the executor's contribution. Prompting, fine-tuning, and generation budget also change.
 
-Mechanism inspection produces a separate correction. The container-oriented dv7 curriculum achieves 20/20 coalition matches where exp-017 achieves 0/20. Yet none of those 20 dv7 outputs declares a container-family command. The measured improvement survives, but a claim that container execution caused it does not. The subset contains one coalition plan, which also rules out treating the result as complete coverage of its source book.
+The separate Qwen3 base evaluation returns no completion for 45.7% of 705 requests. Those missing responses remain in the denominator; they are not removed to improve the score. They must also not be described as observed reasoning mistakes. The source evaluator uses a 512-token generation cap, whereas compiled evaluations allow 2,048, and the retained errors do not establish an item-level causal diagnosis. The audit therefore rejects a clean capacity ranking from that base run.
 
-Table 3 summarizes how these findings change the permissible interpretation while retaining the underlying observations.
+Table 2 summarizes the interpretation changes that matter for a reader deciding whether to reproduce the work.
 
-Table 3. Consequential corrections and their supported replacements.
+Table 2. Audit findings and their practical reporting consequences.
 
-| Earlier interpretation | Audit finding | Supported replacement |
+| Finding | Tempting interpretation | Supported reporting |
 | --- | --- | --- |
-| A 1.7B model beats a 17B model | Both named arms use Qwen3-1.7B | A later curriculum improves selected outcomes for the same base |
-| Equal denominators imply the same test | 50 identifiers replaced between dv7 and dv13 | Compare shared populations and disclose oracle changes |
-| Semantic totals are independently verified | Judge inputs survive, decisions do not | Retain exact totals and separately report restricted diagnostics |
-| Containers explain coalition success | No container declarations in the 20 outputs | Report a family-specific curriculum association |
-| The 0.5B result establishes a size floor | Model family and pretraining also change | Describe the two systems without a universal threshold |
+| Ambiguous size label resolves to a 1.7B release | A small model beats a much larger model | Identify actual releases before comparing them |
+| Only 92.9% of benchmark identifiers persist | Percentages describe the same test | Compare shared populations and disclose changed answers |
+| Base evaluation has 45.7% missing completions | The base fails to reason on those problems | Report response availability separately from correctness |
+| Content and exact checks give different rates | Either score measures general semantic accuracy | Name the measured property and retain both limitations |
+| Historical judge inputs survive without verdicts | The semantic aggregate can be reproduced | Withhold the aggregate and preserve the missing-evidence record |
 
-### 4.4 RQ3: a positive result survives stricter claim boundaries
+### 4.4 RQ2: mechanism and semantic claims need item-level evidence
 
-Auditing does not reduce the case to a catalogue of mistakes. The early vocabulary transition remains a substantive finding. Qwen2.5-Coder-1.5B-Instruct increases matches from 379/705 in exp-014 to 440/705 in exp-016. Identifiers and oracle strings are unchanged. The paired records contain 377 joint matches, 63 matches exclusive to exp-016, two exclusive to exp-014, and 263 joint non-matches.
+A curriculum change improves a coalition family from 0% to 100% normalized exact match over 20 problems. Yet none of the successful programs declares the container commands invoked by the earlier explanation. The supported statement is curriculum-associated success on one coalition plan. Direct container execution and general mastery of a reasoning book do not follow.
 
-Within the 480 procedural items, matches rise from 377 to 440 while execution errors fall from 63 to 13. The revised system introduces graph, aggregation, and fraction commands. These operations replace recurring implementation code with narrower contracts. Forty procedural outputs directly use at least one of them. This is encouraging evidence for vocabulary design as a research variable, while incomplete exp-014 training metadata and one run per condition prevent a clean causal estimate.
+A prior semantic summary has a different gap. The archive retains 833 judge inputs, but not the corresponding verdicts required for reaggregation. The files are disjoint batches, not multiple independent ratings of the same cases. The summary is excluded as outcome evidence. Its absence does not prove every judgment was wrong; it prevents reconstruction of the claim.
 
-The distinction is useful for empirical software engineering. A defensible claim need not be either a universal causal law or an anecdote without evidential value. Here, reconstructed paired outcomes establish a development signal, source inspection supplies a plausible mechanism, and missing controls define the next experiment.
+We separately implement restricted diagnostics for coalition tuples and dependency-join sentences. They recognize complete declared forms and abstain otherwise. For one 100-problem scheduling subset, the diagnostic yields 64% matches, 2% disagreements, 26% unclassified outputs, and 8% execution failures. This supplies a reproducible answer to a narrower question. It does not replace missing historical judge decisions or create an overall semantic score.
 
-Figure 1 summarizes the audit chain that connects an observed outcome to a bounded claim.
+## 5. What the case implies for research software
 
-![Audit chain from archived item records through identity, population, measurement, and mechanism checks to a bounded scientific claim.](../assets/audit-chain.png)
+### 5.1 RQ3: audit the inference, not only the arithmetic
 
-Figure 1. The claim-centered audit used in the case. A reproduced aggregate is one part of the chain; human scientific responsibility remains necessary at the publication boundary.
+The central finding is that a correct metric can support an incorrect claim. Model identity determines which systems were compared. Population continuity determines whether a percentage difference concerns the same problems. A scorer determines which property was measured. Generated programs help determine whether a proposed mechanism was used. These relationships must remain attached to the result.
 
-## 5. Discussion
+The practical audit is therefore a sequence of claim-specific joins. Connect the run to its base manifest, the reported percentage to item outcomes, the pair of runs to shared identifiers and targets, and the explanation to generated commands. Each join can be automated partly, but selecting the right join requires understanding the claim. A script that only checks table sums cannot detect an unsupported model-size story.
 
-### 5.1 Consistency is a weak substitute for independent evidence
+This account also explains why audit should preserve positive work. The specialized-vocabulary result remains scientifically useful after the larger-model claim and unsupported semantic aggregate are removed. The resulting recommendation is more precise: investigate target-language design under better controls. The audit improves the question for the next experiment instead of treating every imperfection as a reason to discard the project.
 
-Several original summaries were numerically consistent with stored metrics. Their problems lay in what those metrics were taken to represent. A model-size label changed the comparator class; a constant sample size concealed a changed population; a curriculum name became a mechanism claim. A workflow that checks only arithmetic consistency would miss all three.
+### 5.2 Agreement within generated artifacts can share a cause
 
-This suggests separating four records in agent-assisted research. The run record identifies the system and its inputs. The measurement record defines the observation procedure. The interpretation record connects observations to a claim. The release record states what another researcher can actually inspect. These records can be linked, but one should not silently supply missing content for another.
+Figure 3 gives a constructed example of the independence problem. A directed graph is mistakenly parsed as undirected. Both a generated solver and a reference computation use that same parse and return the same wrong answer. More tests of the two implementations against one another can preserve the defect.
 
-The missing semantic decisions illustrate why this separation matters. A text summary can truthfully preserve what a previous analysis reported, yet still be insufficient to reproduce it. An auditor should label the evidential gap rather than either accepting the aggregate or inventing new decisions under its name. Fresh diagnostics are useful when they are identified as fresh analyses.
+![A directed reachability problem is misread as undirected, causing a generated solver and reference computation to agree on an answer that violates the original task.](../assets/shared-assumption-example.png)
 
-### 5.2 Data rigor needs differentiated checks
+Figure 3. Constructed counterexample, not an observed frequency estimate. Agreement between implementations cannot repair a condition lost before either implementation receives the problem.
 
-The training pipeline made a serious attempt to check accepted examples. Reference computations, executable circuits, assertions, and input perturbations address concrete failure modes. These controls are more informative than accepting generated examples solely because their prose looks plausible. However, they do not create independence automatically. A reference parse and its circuit can agree because both misread the same sentence.
+The data pipeline's execution checks, assertions, and perturbations still have value: they catch failures in the properties they exercise. The additional requirement is to inspect shared origins. Gebru and colleagues' datasheets motivate recording data construction and intended use [@datasheets]; Mitchell and colleagues' model cards motivate recording model identity and evaluation conditions [@modelcards]. Here that documentation should also identify which parsers and assumptions are reused by the supposed checks.
 
-Figure 2 locates the uncertainties that agreement between generated artifacts can leave unresolved.
+Messeri and Crockett discuss how AI can create illusions of understanding in science [@messeri]. This case offers a specific software pathway by which unwarranted confidence can arise: consistent artifacts can obscure an untested inference. We do not infer that participants experienced a measured cognitive effect, or that a human-only workflow would avoid the same problem.
 
-![Construction, verification, and interpretation each leave a different source of uncertainty that internal agreement cannot remove.](../assets/epistemic-boundaries.png)
+### 5.3 Design the next experiment to separate explanations
 
-Figure 2. Why additional checks need different evidential roles. Repeating a shared assumption in a generator, test, and report does not establish independent corroboration.
+A future wire-discovery study should freeze transfer families before using development failures to propose commands. Each command should state its supported inputs, exclusions, and reference implementation. Equivalent general-code and specialized-command targets should be compared under the same base revision, token budget, checkpoint rule, and decoding settings, across several seeds.
 
-Gebru and colleagues' datasheet approach motivates documenting composition, construction, and intended use [@datasheets]. Mitchell and colleagues' model cards motivate identifying the trained model and its evaluation context [@modelcards]. Applied to this case, those practices should include the benchmark's repeated developmental use, family concentration, changed oracles, and unsupported semantic aggregates. A card that lists only a model name and an accuracy number would omit the facts that materially affect interpretation.
-
-The archive also demonstrates a limit of claims about generalization. In dv7, the 705 items represent 28 plan fingerprints, and several book-derived subsets repeat a single plan. The label “unseen family” requires a version-specific definition of what was excluded and when it was inspected. Repeated use of the nominal holdout for design converts it into development evidence, consistent with the concerns about adaptive analysis articulated by Dwork and colleagues [@dwork].
-
-### 5.3 Implications for future wire-discovery studies
-
-The next study should attach an audit specification to the experiment plan. Each proposed wire should identify the error class it addresses, excluded uses, reference implementation, and transfer families that remain sealed. The model, tokenizer, training export, token budget, checkpoint rule, comparator, and inference settings should be pinned before comparison. Multiple seeds would permit estimating variability across training runs.
-
-The audit should also require command-use evidence before attributing a gain to a command. A curriculum can affect generated JavaScript even when the model never calls the new operation. Distinguishing direct use from indirect training effects makes a stronger experiment possible. It prevents an attractive architectural story from outrunning the observed programs.
-
-Finally, automated judgment should preserve every decision, its input, the judge identity and version, and the procedure for disagreement or abstention. Where structured answers are feasible, a task-defined comparator is preferable to a retrospective interpretation of prose. Human review should target ambiguous specifications and informative disagreements, rather than merely approve aggregate tables.
+The audit record should include command-selection errors and direct command use, not just final correctness. An abstraction may improve generated JavaScript even when it is not directly called; a curriculum may help without exercising the runtime feature that inspired it. Distinguishing those possibilities turns an attractive explanation into a testable one. Dwork and colleagues' work on adaptive reuse supports reserving a separate confirmation stage [@dwork].
 
 ## 6. Threats to validity
 
-Construct validity is limited by normalized exact matching, synthetic task definitions, and plan fingerprints that approximate structure. The restricted parsers address two concrete formatting issues but do not measure general semantic correctness. Internal validity is limited by non-randomized developmental interventions, checkpoint selection, changing target lengths, one seed per condition, and missing exp-014 training metadata.
+Construct validity depends on the outcome definitions. Neither exact matching nor reference-content recovery establishes general semantic correctness. The restricted diagnostics cover only declared answer forms. Plan fingerprints index computational structure but do not prove semantic distance from training data.
 
-External validity is limited to one repository, a small set of model families, and generated word problems. The study does not measure deployment behavior, software-team productivity, or the rate of agent-induced errors across projects. There is no human-only comparison, so agent assistance cannot be identified as the cause of the observed discrepancies.
+Internal validity is limited by retrospective selection, changing curricula and target lengths, one run per condition, incomplete early manifests, and missing historical prompt bytes. The audit cannot make those controls exist after the experiment. Checkpoint selection and serving failures also affect interpretation of system comparisons.
 
-Reliability is improved by executable extraction, source hashes, item-level diagnostics, and preserved original artifacts. It remains limited by unavailable historical judgment decisions and the absence of a fresh training replication. The audit was assisted by the same class of tools being examined and should be reviewed independently before claims are treated as externally validated.
+External validity is limited to one synthetic-task research project. No agent-versus-human comparison, productivity measure, deployment outcome, or population error rate is estimated. Reliability is strengthened by executable reconstruction, source hashes, preserved decisions, and explicit unresolved evidence, but the audit itself remains agent-assisted and requires external scientific assessment.
 
 ## 7. Conclusion
 
-The case shows how an experiment archive can support reliable counts and unreliable interpretations at the same time. Checking identity, population, measurement, and mechanism changes the strongest claims while preserving a useful positive result about abstract wires and a negative result about target decomposition. A claim-centered audit gives coding-agent-assisted research a concrete path from executable artifacts to bounded scientific conclusions. Its value is demonstrated here through corrected evidence, not through an unmeasured claim of research automation or productivity.
+The archive supports a real positive vocabulary result and also shows why accurate metrics are insufficient for accurate research claims. Checking model identity, population continuity, scoring semantics, and mechanism evidence changes what can be concluded. The useful outcome is a more specific scientific account, not simply a longer checklist.
+
+For agent-assisted research, the practical requirement is to preserve the links that let a reader challenge each inference. Automation can produce and check those links. Human authors remain responsible for deciding what they establish and for correcting interpretations that the records cannot support.
 
 ## Data availability and declarations
 
-The companion artifact, Online Resource 1, provides reconstruction scripts, source hashes, paired comparison tables, restricted parser decisions, and a correction ledger. Original evaluation records and run manifests remain the primary evidence. Human participant data were not collected for this artifact study. Coding-agent assistance is described in Sections 1 and 3.4; it does not imply agent authorship. Contributor identities, affiliations, funding, competing interests, and public archive details require author confirmation before submission.
+Online Resource 1 contains the source inventory, experiment mappings, outcome reconstruction, baseline rescoring, restricted diagnostic decisions, and analysis scripts. Original records remain necessary for full reconstruction. Public access, author identities, affiliations, funding, and competing interests require completion before submission. Coding-agent assistance includes the research tooling, audit, and manuscript preparation; no independent peer review is claimed.
 
 <!-- REFERENCES -->

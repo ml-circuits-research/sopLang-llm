@@ -1,192 +1,172 @@
-# Reconstructing a small-model compilation experiment: reusable evidence for discovering executable abstractions
+# What executable answers reveal and hide: reusable evidence for evaluating small-model compilation
 
 ## Abstract
 
-Background: Small language models can emit executable programs, but reliable compilation depends on the operations available to them and on the quality of their training and evaluation data. Methods: We reconstruct ten developmental arms of the SOP Lang project from archived model metadata, training manifests, and 7,050 item-level evaluation records. The analysis separates normalized exact answer matching, execution failure, and two restricted retrospective checks of answer equivalence. Results: A specialized-wire transition increases normalized exact matches from 379/705 to 440/705 and reduces procedural execution errors from 63/480 to 13/480. A later Qwen3-1.7B curriculum reaches 460/705 matches; a more decomposed target representation lowers this to 448/705 and raises execution errors from 57 to 135. All ten arms pass syntax and graph checks on every evaluated item. Item-level joins identify population changes that constrain comparisons across dataset versions. Conclusions: The evidence supports further study of executable abstractions while exposing persistent limitations in small-model interpretation and coordination. We provide a reconstructable evidence package, explicit limits on data verification and agent-assisted analysis, and a prospective protocol for testing new wires on frozen transfer families. The current results are developmental, without multi-seed replication or a fresh confirmatory benchmark.
+Background: A model-generated program can execute successfully yet answer the wrong question, while a correct result can be rejected because of wording. Methods: We study these distinctions in SOP Lang, a language of named computations with explicit value dependencies. Experiment A compares adapted Qwen2.5-Coder-0.5B and Qwen3-1.7B systems on 705 shared problems. Analysis B applies restricted answer-equivalence checks to preserved outputs without generating new answers. Results: Normalized exact matching is 51.2% for the 0.5B system and 59.7% for the 1.7B system. This overall ranking conceals opposite family-level behavior: procedural execution failures fall from 15.4% to 4.2%, but dependency-join failures rise from 55% to 94%. For coalition answers, a declared tuple-set comparison changes the 1.7B system's match rate from 25% to 100% on 20 cases. A separate scheduling diagnostic identifies 64% matches, 26% unclassified outputs, 2% disagreements, and 8% execution failures. Conclusions: Model ranking, execution reliability, and answer equivalence answer different questions. The archive supports useful gains and specific remaining limits, rather than a single broad claim about reasoning. We provide reproducible analyses, per-item decisions, and a prospective design for discovering commands that address recurring failures while testing transfer and interpretation separately.
 
-Keywords: open research; small language models; reproducible machine learning; executable abstractions; synthetic training data; negative results
+Keywords: open research; small language models; executable evaluation; semantic equivalence; reproducibility; program compilation
 
 ## 1. Introduction
 
-An executable intermediate representation can make a language-model answer easier to inspect. Instead of returning only a number or explanation, the model returns a program whose inputs and operations can be examined. PAL demonstrates this approach through program-aided language models (Gao et al., 2023), while Program of Thoughts separates numerical computation from generated reasoning (Chen et al., 2023). Neither arrangement removes the need to translate the statement correctly.
+A percentage of correct answers is useful only when the reader knows what counts as an answer and what counts as correct. This becomes particularly important when a language model produces a program. The program may fail before returning a value, compute a coherent answer to the wrong task, or return the right result in an unexpected format. A single score can hide these different outcomes.
 
-SOP Lang explores whether a small model can learn that translation when its target language exposes useful operations as named wires. A wire is a computational node with declared dependencies and a command contract. Some wires run generated JavaScript; others implement a narrower operation such as graph reachability, aggregation, or fraction reduction. The working hypothesis is that moving recurrent algorithms into tested operations can reduce generation failures. The countervailing risk is that the model may select an inappropriate operation or misstate its arguments.
+Program-aided methods make the intermediate computation available for inspection. Gao and colleagues' PAL and Chen and colleagues' Program of Thoughts delegate calculation to executable code (Gao et al., 2023) (Chen et al., 2023). That creates an opportunity to ask more precise questions than whether a model "can reason." Which programs execute? Which task families improve? Which rejected outputs differ only in form? What evidence would justify accepting them?
 
-The research question is what the archived experiment establishes about the usefulness and limits of executable abstractions when execution, answer comparison, and benchmark composition are examined separately. This matters because each failure calls for a different intervention: a new operation, better task interpretation, or a corrected evaluation contract. We provide a reconstructed experimental record and a research protocol built from its successes and failures. Item-level outcomes, configuration identities, and failed variants let readers examine the empirical basis of the abstraction hypothesis. The record distinguishes archived observations from new diagnostics and future experiments.
+We examine those questions using SOP Lang, an executable language developed for a small-model compilation project. Its notation is introduced below. The project contains a substantial archive of successful and unsuccessful training variants. We use that archive to study evaluation, concentrating on one paired model comparison and two restricted answer diagnostics. The complete reconstruction of the broader developmental series remains in the accompanying evidence package.
 
-This emphasis follows Sandve and colleagues' argument for preserving the provenance and transformations behind computational results (Sandve et al., 2013). It also reflects a practical lesson from work on data cascades: data problems can propagate through later stages of a research workflow (Sambasivan et al., 2021). In this project, coding agents helped produce code, data tooling, analysis, and prose. Transparent records are therefore needed at every stage where one generated artifact is used to validate another.
+The research question is how much the interpretation of a small-model result changes when structural validity, execution, family-level performance, and answer equivalence are reported separately. This matters both to model selection and to the next engineering intervention. If failures are concentrated in one recurring computation, a new command may help. If the computation succeeds but the scorer rejects its wording, changing the model may address the wrong problem.
 
 ## 2. Methods
 
-### 2.1 Research design and evidence boundary
+### 2.1 SOP Lang in one example
 
-We analyze ten selected developmental arms, each with 705 archived evaluation items. The resulting 7,050 records are a retrospective census of those arm-specific files, not independent random samples from a population of reasoning tasks. The selection covers an early command-vocabulary change and the later curriculum variants used in the project's draft interpretations.
+A SOP Lang program is a circuit of named computations called wires. A declaration begins at the start of a line with `@name command`; the following lines form that command's body until the next declaration. A reference such as `$slots` reads another wire's value. References define the dependencies from which the runtime computes execution order.
 
-The analysis reconstructs outcomes from the original JSONL files. It checks unique item identifiers, recounts outcome classes, compares totals with the metric files, resolves base-model identity from nested manifests, and re-executes the original answer comparator on saved outputs. Pairwise joins expose changes to identifiers, oracle strings, and plan fingerprints. No model training or inference was repeated for this article.
+For "three packs containing four cells each," a complete circuit is:
 
-We distinguish five evidential states. Reproduced results follow directly from item records and executable analysis. Corroborated interpretations also have supporting configuration or source evidence. Historical-only results occur in old reports but lack the records required for reconstruction. Proposed work has no measured outcome. Unresolved facts remain explicitly unresolved. The companion claim ledger applies these distinctions to the principal manuscript statements.
+```sop
+@slots literal
+{"packs":3,"perPack":4}
 
-### 2.2 System and training-data construction
+@answer jsEval
+return $slots.packs * $slots.perPack;
+```
 
-The student maps a word problem to an SOP Lang circuit. Literal wires contain values extracted from the statement, and computation wires derive the answer. The executor checks syntax and dependencies, validates the active graph, evaluates commands under resource budgets, and records completion or failure. The runtime's contract is about the emitted circuit; it cannot decide whether a coherent circuit expresses the intended meaning of the original sentence.
+The `literal` command turns its JSON body into the value of the wire named `slots`. The `jsEval` command evaluates the JavaScript body of `answer`, reads the two fields through `$slots`, and returns 12. The runtime evaluates `slots` first because `answer` depends on it, not because it is printed first. The caller requests the output named `answer`. Both `slots` and `answer` are naming conventions, not reserved keywords.
 
-Teaching examples originate in parameterized families. A family includes a reference parse, reference computation, circuit generator, expected answer, and provenance. The pipeline executes candidate circuits before acceptance. Dataset verification checks structural requirements and perturbs literal inputs to detect outputs that fail to depend on their stated data. Probe assertions check selected properties inside generated computations. When a source answer is not determined by the statement, the pipeline's documented policy requires an explicit clarification, a declared computed answer, or rejection rather than an unexplained lookup.
+Figure 1 separates the program's explicit data from its computation. The model is responsible for both extraction and operation choice. Successful execution does not establish that multiplication is the intended operation in a different problem using the same numbers.
 
-These checks represent a deliberate attempt to improve synthetic-data quality. They are not independent proofs of task semantics. The parser, reference computation, and generated circuit can share a misconception; some categorical outputs legitimately remain unchanged under the available perturbations. The article therefore uses “checked” for the data pipeline and reserves stronger claims for specifically stated properties.
+![The syntax of a complete two-wire SOP Lang program is linked to its value dependency and the result of multiplying three packs by four cells.](../assets/sop-program-anatomy.png)
 
-The pipeline's use of family and plan identities is relevant to compositional generalization. Lake and Baroni show why success on familiar constructions should be distinguished from systematic recombination (Lake & Baroni, 2018). Here, a plan fingerprint indexes a computational form, but cannot by itself certify semantic distance from training data. Repeated benchmark inspection also limits the interpretation of nominal holdout performance.
+Figure 1. Reading the evaluated representation. A wire is a computation node, a dollar-prefixed reference is a value dependency, and the caller chooses the output. This is an executed illustrative example.
 
-### 2.3 Benchmark composition and version changes
+The language also provides specialized commands. A `graphPath` body specifies an undirected edge list and endpoints; the runtime performs traversal. `aggregate` performs supported filtering and reduction, and `fraction` reduces an integer ratio. These commands can remove algorithm implementation from generated text. They still require the model to choose a suitable operation and supply the correct data.
 
-The dv7 slice has 480 procedural items and 225 book-derived items. Its procedural subset covers 12 plan fingerprints. The seven book-derived subsets contribute 10 adult-reasoning, 50 common-sense, 100 dependency-join, 10 logical-reasoning, 10 mathematical, 25 scientific-reasoning, and 20 coalition cases. Together they contribute 16 fingerprints, ten from the mathematical subset and one from each other subset.
+### 2.2 Data construction and study boundary
 
-Thus, 705 items represent 28 plan fingerprints, rather than 705 independent forms of reasoning. In particular, the 20 coalition items do not cover an entire source book. We report this composition because aggregate performance is strongly weighted toward procedural problems and because family-level failures can disappear inside a single overall score.
+Problem families originate in source books and procedural generators. Each family supplies a reference parse, answer computation, circuit generator, and provenance. Candidate circuits are executed against expected answers, selected properties are asserted, and input perturbations test sensitivity to problem data. These checks catch concrete defects without proving that the reference parse captures every source condition. Shared assumptions between generator, oracle, and circuit remain possible.
 
-The development team inspected the nominal holdout across successive revisions. Dwork and colleagues explain why adaptive reuse can compromise a holdout's role as independent confirmation (Dwork et al., 2015). We consequently call it a development benchmark. Relative to dv7, dv13 retains 655 identifiers, removes 50, and adds 50. Among retained identifiers, 100 oracle strings and 147 plan fingerprints change. A stable denominator does not make these versions an unchanged evaluation population.
+The primary archive contains ten fine-tuning runs with 705 evaluated items each. We recount all outcomes and reapply the original comparator. This article selects the later paired model comparison because it retains identical item identifiers, expected-answer strings, and plan fingerprints across conditions. Other runs provide the separately identified scheduling diagnostic and historical context. No training or model generation is repeated.
 
-### 2.4 Model identity, training, and selection
+The evaluation population is synthetic and structurally concentrated. A representative earlier version contains 28 plan fingerprints across 705 items; a fingerprint identifies a computational form rather than a semantically independent problem. The development team repeatedly inspected this nominal holdout. Following the concern established by Dwork and colleagues for adaptive reuse (Dwork et al., 2015), we treat it as a development benchmark rather than a sealed confirmation set.
 
-The early exp-014 and exp-016 arms use Qwen2.5-Coder-1.5B-Instruct (Qwen, n.d.-b). The later series uses Qwen3-1.7B except for exp-026, which uses Qwen2.5-Coder-0.5B-Instruct (Qwen, n.d.-c) (Qwen, n.d.-a). Model identities and revisions are taken from the archived base manifests.
+### 2.3 Experiment A: two adapted base models
 
-Later curriculum arms use full fine-tuning, AdamW, learning rate 0.0001, seed 3407, two epochs, effective batch size 32, bfloat16 precision, and a maximum sequence length of 4,096. Checkpoint selection follows the archived validation procedure. Evaluation uses the selected GGUF artifact, greedy decoding, a 2,048-token generation cap, and one task attempt. Infrastructure transport recovery does not constitute a semantic retry. Token exposure varies with the exported targets; for example, dv7 records 6,648,719 target tokens and dv8 records 6,782,314.
+Experiment A compares Qwen2.5-Coder-0.5B-Instruct with Qwen3-1.7B after SOP Lang adaptation. The official model cards identify the releases (Qwen, n.d.-a) (Qwen, n.d.-c); exact revisions, training completion times, and checkpoint records are supplied in the supplement. The model names are release identities, not an independently recounted parameter census.
 
-Table 1 provides compact identities for the central comparisons. Finish times refer to training completion, not article preparation. The exp-014 time is approximate because its training manifest is missing. Full revisions, data snapshots, selected checkpoints, token counts, and available training settings are retained in the machine-readable evidence table.
+Both systems are evaluated on the same 705 identifiers and reference answers. Their training uses full fine-tuning, AdamW at learning rate 0.0001, two epochs, seed 3407, effective batch size 32, maximum sequence length 4,096, and bfloat16 precision. Evaluation uses validation-selected exports, greedy decoding, a 2,048-token cap, and one task attempt. The selected checkpoint and target-token exposure differ, and family and pretraining change with size. This is a comparison of two trained systems, not a controlled scaling law.
 
-Table 1. Identity of the principal compared systems. All timestamps are UTC in 2026.
+### 2.4 Analysis B: what the answer comparator recognizes
 
-| Arm | Base model | Data | Training finish | Selected step |
-| --- | --- | --- | --- | --- |
-| exp-014 | Qwen2.5-Coder-1.5B-Instruct | dv2 | 23 Sep, 17:10:57, approximate | 450 |
-| exp-016 | Qwen2.5-Coder-1.5B-Instruct | dv3 | 24 Sep, 08:14:49 | 600 |
-| exp-021 | Qwen3-1.7B | dv7 | 25 Sep, 15:44:50 | 450 |
-| exp-022 | Qwen3-1.7B | dv8 | 25 Sep, 20:45:14 | 450 |
-| exp-026 | Qwen2.5-Coder-0.5B-Instruct | dv13 | 26 Sep, 20:07:03 | 660 |
-| exp-027 | Qwen3-1.7B | dv13 | 27 Sep, 00:07:16 | 600 |
+The original evaluator separates syntax/graph rejection, execution failure, completed mismatch, and normalized exact match. Exact matching performs specified text normalization and then equality. It does not generally recognize paraphrases or permutations of a valid answer list.
 
-### 2.5 Measurements and analysis
+We implement two retrospective diagnostics. The coalition parser accepts complete lists of coalition identifiers and seat counts, canonicalizes member and list order, and rejects duplicate coalitions or repeated members. The scheduling parser accepts complete sentences specifying a safe-integer completion time and a feasibility verdict under a fixed grammar. It permits a known explanatory suffix and rejects contradictory surplus text. Unsupported outputs remain unclassified.
 
-The original outcome ladder distinguishes transport, wrapper, parse, graph, execution, and answer-comparison failures. In the selected slices, all items pass the stages preceding execution. Completed answers are evaluated by normalized exact matching, which performs Unicode, case, whitespace, punctuation, and answer-prefix normalization before equality. This is a reproducible text comparator, not a general semantic judgment.
+The coalition diagnostic uses the 1.7B condition in Experiment A. The scheduling diagnostic uses a separate earlier 1.7B curriculum with 100 dependency-join cases; these ask when parallel work can finish and whether a time limit can be met. We keep the populations and their purposes separate. The diagnostics do not combine into an overall semantic score, and they do not reconstruct missing historical judgments.
 
-We report counts, per-subset results, and paired changes. We do not add inferential confidence intervals because the observations are a fixed developmental collection with repeated templates and one training run per condition. Such intervals would conceal the absence of an appropriate sampling and replication design.
+### 2.5 Reporting and reconstruction
 
-Two additional analyses examine specific comparator failures. The coalition diagnostic accepts complete lists of coalition/count tuples, canonicalizes ordering, and rejects duplicates. The dependency-join diagnostic accepts complete duration-and-feasibility sentences from a fixed grammar. It recognizes one explanatory suffix from the oracle. Both abstain on unsupported output forms and preserve item-level decisions. They were designed retrospectively and remain separate from the original benchmark metric.
+All rates below are percentages; table captions state the denominator and comparison population. The machine-readable evidence retains integer counts and item-level decisions. We use descriptive differences because repeated task templates and one run per condition do not justify an inferential sampling model.
+
+The analysis checks unique identifiers, exhaustive outcome partitions, agreement with archived metrics, model identity, paired population continuity, and scorer behavior. Source files have recorded hashes. A separate base-model reanalysis is also included in the package, with common scoring on paired inputs. It is not merged into Experiment A: direct prose and compiled generation use different prompts and budgets, and the Qwen3 base run has substantial missing output.
 
 ## 3. Results
 
-### 3.1 Reconstructed outcomes and positive abstraction evidence
+### 3.1 Experiment A: an overall improvement with uneven transfer
 
-Reconstructed outcome totals agree with the archived metrics, and reapplying the original comparator reproduces every stored match/mismatch label. Table 2 includes positive and negative arms. Syntax and graph checks pass on 705/705 items in each arm, even though execution and answer outcomes differ substantially.
+Table 1 shows the evaluation stages. Both systems achieve 100% syntax and graph acceptance. The 1.7B system has higher execution completion and a normalized exact-match rate of 59.7%, compared with 51.2% for the 0.5B system. The difference is 8.5 percentage points. Paired outcomes favor the 1.7B system on 8.7% of problems and the 0.5B system on 0.1%.
 
-Table 2. Outcome reconstruction, with 705 evaluated items per arm. “Mismatch” means a completed answer that fails normalized exact comparison.
+Table 1. Experiment A. Percentages use the same 705 evaluated problems per model. Completion includes exact matches and completed mismatches.
 
-| Arm | Match | Mismatch | Execution error |
+| Adapted model | Syntax and graph accepted | Execution completed | Normalized exact match |
 | --- | --- | --- | --- |
-| exp-014 | 379 | 125 | 201 |
-| exp-016 | 440 | 90 | 175 |
-| exp-017 | 442 | 111 | 152 |
-| exp-021 | 460 | 188 | 57 |
-| exp-022 | 448 | 122 | 135 |
-| exp-023 | 428 | 185 | 92 |
-| exp-024 | 439 | 154 | 112 |
-| exp-025 | 432 | 137 | 136 |
-| exp-026 | 361 | 130 | 214 |
-| exp-027 | 421 | 100 | 184 |
+| Qwen2.5-Coder-0.5B | 100.0% | 69.6% | 51.2% |
+| Qwen3-1.7B | 100.0% | 73.9% | 59.7% |
 
-The early specialized-wire transition increases total matches from 379/705 to 440/705. On identical identifiers and oracle strings, 377 items match in both arms, 63 only in exp-016, two only in exp-014, and 263 in neither. Procedural matches rise from 377/480 to 440/480, while procedural execution errors fall from 63/480 to 13/480. This is the clearest positive signal for moving recurrent graph, aggregation, and fraction operations into specialized commands.
+The aggregate is a useful description of these systems, but it does not show uniform improvement. Table 2 separates the task families most relevant to the next abstraction experiment. Procedural exact matching increases from 75.0% to 86.3%. At the same time, dependency-join execution becomes less reliable: the failure rate rises from 55% to 94%. The larger system is therefore better overall and worse on a particular recurring computation.
 
-Only 40 procedural exp-016 completions directly declare one of these new commands, fewer than the 63 additional procedural matches. A direct-use explanation is therefore incomplete. The data are compatible with broader effects of changed targets or training exposure, and the missing exp-014 training manifest prevents establishing that every other condition was identical.
+Table 2. Experiment A by problem family. Every percentage uses the row's stated sample size for each model. The final row groups the remaining book-derived tasks, which retain distinct records in the supplement.
 
-Figure 1 shows the full outcome partition, keeping failed variants visible alongside successful ones.
-
-![Stacked outcome counts across ten archived arms, distinguishing exact matches, completed mismatches, and execution failures.](../assets/outcome-ladder.png)
-
-Figure 1. Development outcomes reconstructed from item records. Each bar contains 705 items, but dataset versions are not all identical populations. The figure supports descriptive comparison, not a continuous learning curve.
-
-### 3.2 Negative results and persistent limits
-
-The dv7 Qwen3 arm reaches 460/705 matches and 648/705 completed executions. The dv8 arm, which changes target decomposition, reaches 448/705 matches and 570/705 completed executions. Execution errors rise from 57 to 135 despite unchanged evaluation identifiers and oracle strings. The paired comparison has 446 joint matches, 14 matches exclusive to dv7, and two exclusive to dv8.
-
-Later curriculum changes also fail to exceed dv7 under the original comparator: dv9 yields 428/705, dv11 yields 439/705, and dv12 yields 432/705. These results show that plausible representational changes can introduce costs. They do not establish that the development path was optimal or that an alternative training budget would produce the same ranking.
-
-Performance remains uneven. In exp-021, procedural items contribute 438/480 matches, while the seven book-derived subsets together contribute 22/225. Twenty of those are the coalition cases and two are mathematical cases. The difference limits any claim about broad reasoning ability even when the overall exact-match score reaches 65.2%, or 460/705.
-
-The dv13 smaller-model comparison records 361/705 matches for Qwen2.5-Coder-0.5B-Instruct and 421/705 for Qwen3-1.7B on the same dv13 items and oracles. Because model family and pretraining change alongside size, this is not a controlled scaling experiment. It identifies a difference between two archived trained systems.
-
-### 3.3 Comparator diagnostics and command use
-
-Table 3 reports the restricted diagnostics. They show why completed mismatches deserve inspection while keeping unsupported cases visible. A coalition answer can enumerate the correct coalition/count pairs in a different order or separator style. A dependency-join answer can state the correct time and verdict using a phrase absent from the original oracle wording.
-
-Table 3. Retrospective diagnostic outcomes. Outside-grammar answers remain unclassified.
-
-| Subset and arm | Original match | Restricted match | Restricted mismatch | Outside grammar | Execution failure |
+| Family | Problems | 0.5B exact match | 1.7B exact match | 0.5B execution failure | 1.7B execution failure |
 | --- | --- | --- | --- | --- | --- |
-| Coalitions, exp-027, n = 20 | 5 | 20 | 0 | 0 | 0 |
-| Dependency joins, exp-021, n = 100 | 0 | 64 | 2 | 26 | 8 |
+| Procedural computations | 480 | 75.0% | 86.3% | 15.4% | 4.2% |
+| Dependency joins | 100 | 0.0% | 0.0% | 55.0% | 94.0% |
+| Coalition enumeration | 20 | 0.0% | 25.0% | 100.0% | 0.0% |
+| Other book-derived tasks | 105 | 1.0% | 1.9% | 61.9% | 66.7% |
 
-The two diagnostics have different grammars and item populations. Their counts are not combined into a general semantic accuracy estimate.
+Figure 2 visualizes the opposing execution changes. Our interpretation is that the learned procedural repertoire has improved without becoming a general solution to composition or task interpretation. A single overall percentage would obscure precisely the failure family that could motivate a dependency-join command.
 
-Exp-021 matches 20/20 coalition cases where exp-017 matches 0/20. Inspection of the 20 successful completions finds no container-family declarations. The observation therefore supports a curriculum association without identifying direct container execution as its mechanism. The sample covers one coalition plan.
+![Family-level execution failure rates compare the adapted 0.5B and 1.7B systems, showing improved procedural and coalition execution but worse dependency-join execution.](../assets/family-failures.png)
+
+Figure 2. Experiment A does not improve every task family. Each pair uses the same problems within its family. Differences describe the two recorded systems and do not isolate model size.
+
+### 3.2 Analysis B: a correct answer can fail text matching
+
+For the 1.7B system's coalition outputs, normalized exact matching accepts 25% of the 20 cases, while the restricted tuple-set comparison accepts 100%. The additional matches follow from explicitly defined equivalence in member order, tuple order, and separators. They do not require accepting arbitrary explanatory prose.
+
+The separate scheduling diagnostic yields 64% restricted matches where exact matching accepts 0%. Of the remaining outputs, 26% lie outside the declared grammar, 2% disagree on the parsed duration or verdict, and 8% fail execution. Table 3 retains these unresolved and failed categories.
+
+Table 3. Analysis B. Coalition percentages use 20 outputs from Experiment A's 1.7B system; scheduling percentages use 100 outputs from the earlier 1.7B curriculum. The populations are not pooled.
+
+| Evaluation outcome | Coalition outputs | Scheduling outputs |
+| --- | --- | --- |
+| Original exact match | 25% | 0% |
+| Restricted match | 100% | 64% |
+| Parsed disagreement | 0% | 2% |
+| Unclassified | 0% | 26% |
+| Execution failure | 0% | 8% |
+
+One saved scheduling circuit computes a 46-minute completion time against a 43-minute limit. Its answer states that the plan "does not meet the limit," while the reference says it "is not feasible." The circuit, duration, and negative verdict agree. Figure 3 shows why a declared answer structure can recognize this agreement without treating every textual mismatch as correct.
+
+![Equivalent negative scheduling verdicts are mapped to a duration-and-feasibility pair; the diagnostic outcome bar retains unclassified, disagreement, and execution-failure categories.](../assets/scoring-diagnostic.png)
+
+Figure 3. A specific answer-equivalence correction. The phrases shown are excerpts from a retained example; acceptance in the actual diagnostic requires the complete supported sentence, not isolated keywords.
 
 ## 4. Discussion
 
-### 4.1 What the evidence supports
+### 4.1 What the comparisons tell us
 
-The archive supports treating executable vocabulary as a serious experimental variable. Moving algorithmic work into specialized wires coincides with fewer execution failures and more correct procedural answers. The finding is compatible with the broader motivation for reusable abstractions in DreamCoder (Ellis et al., 2021), but this project does not implement that system's automatic library-learning procedure.
+The evidence supports three practical conclusions. First, changing the trained model can improve overall performance without fixing every computation family. Second, structural acceptance is a weak proxy for useful capability when it is already perfect and execution still fails. Third, answer representation can materially change measured performance even when the saved computation is unchanged.
 
-The evidence also rejects two overly broad inferences. First, structural validity does not establish task correctness: every selected arm passes syntax and graph checks while many outputs fail later. Second, adding structure does not guarantee improvement: the dv8 target split increases execution errors. A useful wire should remove recurring implementation burden without creating a larger command-selection or argument-binding burden.
+Our interpretation of Experiment A is a redistribution of strengths and failures across the learned repertoire. The procedural improvement is real under the recorded comparator, while the scheduling regression is equally real at the execution stage. This argues for family-specific diagnosis before choosing the next model or curriculum. It does not justify a universal size threshold or a claim that the larger system understands every family better.
 
-The failures are scientific evidence about the current systems. The student models learn recognizable circuit form more reliably than they generalize across the evaluated task structures. Some failures belong to program execution, others to interpretation, and others to answer comparison. These distinctions are more informative for future design than a single claim that the model “can” or “cannot” reason.
+Analysis B changes what should be optimized. Coalition formatting errors can be addressed through a task-level output schema or declared equivalence relation. Dependency-join execution failures require a different intervention, such as a better representation or a tested scheduling command. Treating both as generic model errors would conceal this distinction.
 
-### 4.2 Agent assistance and epistemic responsibility
+The wider archive supplies a constructive reason to investigate new commands: specialized graph, aggregation, and fraction operations accompany an increase from 53.8% to 62.4% exact matching in an earlier paired comparison. This article uses that finding as motivation rather than repeating its full experimental analysis. DreamCoder's learned libraries provide a related motivation for reusable abstractions (Ellis et al., 2021); the current project has not implemented automatic library discovery.
 
-Coding agents assisted the research and the preparation of this article. Their involvement can make experiments easier to construct and inspect, but no productivity gain is measured here. The epistemic concern is correlated error: an agent can implement a mistaken reference rule, test it against a matching circuit, and describe the agreement as validation. Human review must examine the relation to the task, not only agreement between generated artifacts.
+### 4.2 Rigor with agent-generated research artifacts
 
-Messeri and Crockett's analysis of AI and scientific understanding provides a useful conceptual warning (Messeri & Crockett, 2024). In this study, the concrete response is to retain uncertainty at the point where it arises. Model identity comes from the base manifest, comparisons retain their population boundaries, and mechanism claims depend on the generated commands. A future wire is described as a proposal until its experiment exists.
+Coding agents assisted implementation, teaching-data construction, experimental tooling, analysis, and writing. Their participation does not invalidate the results, but it makes shared assumptions a practical concern. A generator, reference solver, and circuit can agree because all use the same parse. The pipeline's checks establish the properties they actually test, not an independent guarantee of task meaning.
 
-### 4.3 A prospective wire-discovery protocol
+Messeri and Crockett's analysis of AI and scientific understanding explains why such agreement can invite excessive confidence (Messeri & Crockett, 2024). Our response is to preserve distinct evidence states and per-item decisions. An unclassified answer remains unclassified. A retrospective diagnostic remains retrospective. A proposed command remains proposed until its measured comparison exists. The present audit itself is agent-assisted, not independent peer review.
 
-Future experiments should freeze a new transfer benchmark before candidate design. Development traces can identify repeated algorithmic failures, but the frozen families must remain outside that process. Candidate wires should specify inputs, outputs, excluded cases, implementation, and adversarial tests. A dependency-join scheduler, a units-and-rates operation, and a constraint interface are plausible candidates, not current findings.
+### 4.3 A new experiment suggested by these failures
 
-The comparison should hold constant base revision, training-token budget, checkpoint selection, and decoding settings, while contrasting the new command against an equivalent general-code target. Several seeds should quantify run variability. Reporting should include direct command use, selection errors, extraction errors, execution failures, answer correctness, generated length, and measured computational cost. No current result establishes that a new command lowers energy use or total research cost.
+The dependency-join family is a concrete candidate for abstraction. A new operation could accept durations and explicit predecessor relations, then compute completion time by propagating predecessor maxima through an acyclic graph. This would remove recurring scheduling implementation from the model's output. It would still leave the model responsible for identifying which branches are parallel and which tasks depend on them.
 
-Figure 2 summarizes the proposed separation between development and confirmation.
-
-![A proposed development loop for choosing new wire abstractions, separated from a frozen transfer evaluation.](../assets/vocabulary-loop.png)
-
-Figure 2. Proposed experiment sequence. This prospective design addresses limitations of the current archive and has not yet been executed.
+The test should compare that command against equivalent general-code targets under a common base revision, training-token budget, checkpoint rule, and decoding budget. Several seeds and transfer families frozen before command design are needed. Outcome reporting should distinguish extraction, command selection, execution, and answer-schema agreement. Units-and-rates operations provide another candidate where explicit contracts could prevent a different recurring mistake. Neither extension is claimed as a current result.
 
 ## 5. Reuse and reproducibility
 
-The companion artifact (SOP Lang research artifact, 2026) separates raw inputs, derived evidence, manuscripts, and audit records. The extraction script reads archived item files and manifests, emits a machine-readable result table, and records source hashes. Restricted parser decisions are preserved per item. Figure code reads the result table rather than duplicating numbers by hand. Markdown sources and editable DOCX files derive from a shared bibliography ledger.
+The companion artifact (SOP Lang research artifact, 2026) contains source hashes, model identities, full reconstructed outcomes, paired comparisons, baseline diagnostics, parser implementations, and item-level decisions. Figures are generated from those derived records. An experiment map links the article's descriptive labels to exact archived runs. Local reconstruction requires the original item records and manifests, whose paths are preserved in that map.
 
-Table 4 describes the reusable components and their limits. Dataset documentation follows the motivation of datasheets (Gebru et al., 2021), while model identity and intended-use limitations follow the concerns addressed by model cards (Mitchell et al., 2019). These are documentation practices, not certifications of correctness.
+Following Sandve and colleagues' provenance practices (Sandve et al., 2013), the package distinguishes original inputs from derived analyses. Dataset documentation follows the motivation of datasheets (Gebru et al., 2021), and model identification follows model-card concerns (Mitchell et al., 2019). These practices help another researcher inspect the analysis; they do not certify its interpretation.
 
-Table 4. Reuse map for the accompanying evidence package.
+A public deposit has not yet been made. Source books retain their own rights status, and a repository hash does not supply files that a reader cannot access. A complete open-research release must deposit the permitted reconstruction inputs or document legitimate restrictions, provide a persistent identifier, and preserve the distinction between the original scorer and the retrospective diagnostics.
 
-| Component | Reuse supported | Boundary |
-| --- | --- | --- |
-| Results and source hashes | Reconstruct counts and identify the exact inputs | Hashes do not provide missing source files |
-| Pairwise comparisons | Check item and oracle continuity | Similar identifiers do not prove semantic identity |
-| Restricted decisions and parsers | Reproduce the two comparator diagnostics | Unsupported prose remains unclassified |
-| Figure sources | Regenerate numerical graphics | Descriptive charts do not establish causality |
-| Claim and bibliography ledgers | Inspect support and stated limitations | Self-audit does not replace external review |
-| Archived model/training metadata | Identify evaluated systems | The missing early manifest limits replication |
+## 6. Limitations and conclusion
 
-Local reconstruction requires the original repository's archived evaluation and training metadata. Public reuse requires depositing the necessary source records or documenting a legitimate restriction. A repository URL or hash alone is insufficient for open data if the records are unavailable. Source books remain separate materials with their own rights status; the evidence package does not grant new redistribution rights over them.
+The study is retrospective, synthetic, and development-driven, with one training run per reported condition. It has no new external confirmation set, equal-budget ablation isolating execution, or independent semantic relabeling. The restricted diagnostics do not cover arbitrary answers. Base-model comparisons available in the package have their own scorer and response-availability limitations.
 
-## 6. Limitations and conclusions
-
-The study is retrospective, synthetic, single-seed, and development-driven. It lacks an independently designed fresh test, a matched direct-answer baseline, and a controlled larger-model comparison. Two restricted diagnostics improve understanding of specific scoring errors but do not supply general semantic accuracy. The analysis reconstructs archived evaluation, not neural training.
-
-Within those limits, the positive abstraction result and the negative decomposition result are both reproducible. They justify a focused research programme on discovering new wires and measuring the boundaries of their usefulness. The open contribution is the evidence needed to challenge that interpretation as well as reproduce it.
+The useful result is a more precise account of what the systems can do. The 1.7B adaptation has the higher overall match rate, but worse scheduling execution on the compared family. Some apparent coalition errors disappear under a declared representation of the answer. These findings point to different repairs and a specific next experiment: discover commands that remove demonstrated implementation failures, while testing interpretation and transfer separately.
 
 ## Data and software availability
 
-The accompanying local artifact contains the scripts, derived tables, source-hash manifest, restricted diagnostic decisions, and manuscript sources described above. The original item records and model manifests are required for complete reconstruction. An immutable public deposit and its persistent identifier have not yet been established in this manuscript; these must be completed before an open-data submission. Access to the local workspace is not represented as public availability.
+The accompanying local package contains reconstruction scripts, derived evidence, source hashes, figure sources, and diagnostic decisions. Complete reproduction also needs the archived raw inputs. An immutable public deposit and persistent identifier must be supplied before an open-data submission. Local workspace access is not represented as public availability.
 
 ## Author contributions, funding, and competing interests
 
-Contributor identities and roles, funding or grant information, and competing-interest declarations require author confirmation. No European Union grant or institutional eligibility is inferred from the project location. Coding-agent assistance is disclosed in Section 4.2; human authors remain responsible for the scientific content and submission declarations.
+Author identities and roles, funding, and competing-interest declarations require completion. No European Union grant or institutional eligibility is inferred from the project location. Coding-agent assistance is disclosed in Section 4.2; human authors retain responsibility for interpretation and publication.
 
 ## References
 
@@ -200,19 +180,13 @@ Gao, L., Madaan, A., Zhou, S., Alon, U., Liu, P., Yang, Y., Callan, J., & Neubig
 
 Gebru, T., Morgenstern, J., Vecchione, B., Vaughan, J. W., Wallach, H., Daumé, H., III, & Crawford, K. (2021). Datasheets for datasets. *Communications of the ACM*, 64(12), 86-92. [https://doi.org/10.1145/3458723](https://doi.org/10.1145/3458723)
 
-Lake, B., & Baroni, M. (2018). Generalization without Systematicity: On the Compositional Skills of Sequence-to-Sequence Recurrent Networks. *Proceedings of Machine Learning Research*, 80, 2873-2882. [https://proceedings.mlr.press/v80/lake18a.html](https://proceedings.mlr.press/v80/lake18a.html)
-
 Messeri, L., & Crockett, M. J. (2024). Artificial intelligence and illusions of understanding in scientific research. *Nature*, 627(8002), 49-58. [https://doi.org/10.1038/s41586-024-07146-0](https://doi.org/10.1038/s41586-024-07146-0)
 
 Mitchell, M., Wu, S., Zaldivar, A., Barnes, P., Vasserman, L., Hutchinson, B., Spitzer, E., Raji, I. D., & Gebru, T. (2019). Model Cards for Model Reporting. *Proceedings of the Conference on Fairness, Accountability, and Transparency*, 220-229. [https://doi.org/10.1145/3287560.3287596](https://doi.org/10.1145/3287560.3287596)
 
 Qwen. (n.d.-a). *Qwen2.5-Coder-0.5B-Instruct* [Model card]. Hugging Face. Retrieved September 28, 2026, from [https://huggingface.co/Qwen/Qwen2.5-Coder-0.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-Coder-0.5B-Instruct)
 
-Qwen. (n.d.-b). *Qwen2.5-Coder-1.5B-Instruct* [Model card]. Hugging Face. Retrieved September 28, 2026, from [https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct)
-
 Qwen. (n.d.-c). *Qwen3-1.7B* [Model card]. Hugging Face. Retrieved September 28, 2026, from [https://huggingface.co/Qwen/Qwen3-1.7B](https://huggingface.co/Qwen/Qwen3-1.7B)
-
-Sambasivan, N., Kapania, S., Highfill, H., Akrong, D., Paritosh, P., & Aroyo, L. M. (2021). “Everyone wants to do the model work, not the data work”: Data Cascades in High-Stakes AI. *Proceedings of the 2021 CHI Conference on Human Factors in Computing Systems*, 1-15. [https://doi.org/10.1145/3411764.3445518](https://doi.org/10.1145/3411764.3445518)
 
 Sandve, G. K., Nekrutenko, A., Taylor, J., & Hovig, E. (2013). Ten Simple Rules for Reproducible Computational Research. *PLoS Computational Biology*, 9(10), e1003285. [https://doi.org/10.1371/journal.pcbi.1003285](https://doi.org/10.1371/journal.pcbi.1003285)
 

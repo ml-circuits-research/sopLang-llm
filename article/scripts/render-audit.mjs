@@ -40,10 +40,11 @@ for (const name of names) {
     }
   }
   execFileSync('pdftoppm', ['-scale-to', '620', '-png', pdf, resolve(directory, 'page')], { timeout: 30000 });
-  const images = (await readdir(directory))
-    .filter(name => /^page-\d+\.png$/.test(name) && Number(name.match(/\d+/)[0]) <= pages.length)
-    .sort((left, right) => Number(left.match(/\d+/)[0]) - Number(right.match(/\d+/)[0]))
-    .map(name => resolve(directory, name));
+  // Poppler changes zero-padding when a document crosses a power of ten pages.
+  // Select the current canonical names, not older page-01/page-1 duplicates.
+  const digits = String(pages.length).length;
+  const images = pages.map((_, index) => resolve(directory,
+    `page-${String(index + 1).padStart(digits, '0')}.png`));
   execFileSync('montage', [...images, '-tile', '3x', '-geometry', '620x877+6+6',
     '-background', '#dddddd', resolve(output, stem + '-contact.png')], { timeout: 30000 });
   geometry.push({ manuscript: stem, pages: pages.length, extractedWords: words, clippedTextDetected: false });

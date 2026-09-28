@@ -1,0 +1,276 @@
+{
+  "scope": "Retrospective paired rescoring; historical answer-content matching is a weak diagnostic, not semantic accuracy.",
+  "limitations": [
+    "Base answers use a 512-token cap in the retained evaluator source; compiled answers use 2048.",
+    "Fine-tuning, prompting, and execution change together; this is not an isolated execution ablation.",
+    "Number presence ignores order, roles, units, and contradiction; word containment also permits false positives.",
+    "Exact matching penalizes semantically equivalent prose.",
+    "Qwen3 base evaluation has 322 missing completions out of 705 and must not support a clean capacity ranking.",
+    "Identical identifiers and reference strings do not establish identical missing historical compiled prompt bytes."
+  ],
+  "comparisons": [
+    {
+      "name": "Qwen2.5-Coder-0.5B-Instruct",
+      "base": "cmp-base-holdout-prose-05",
+      "tuned": "exp-012-census",
+      "identity": "training/environment/base-model.json",
+      "purpose": "Paired early workflow comparison",
+      "items": 585,
+      "commonIdentifiers": 585,
+      "changedOracles": 0,
+      "baseContent": 63,
+      "baseExact": 0,
+      "baseMissingCompletions": 0,
+      "tunedContent": 260,
+      "tunedExact": 258,
+      "baseManifest": {
+        "experiment": "cmp-base-holdout-prose-05",
+        "gguf": "training/checkpoints/base-f16.gguf",
+        "items": 585,
+        "matched": 63,
+        "prompt": "Answer the problem directly and briefly. Give the final answer in one short sentence; no working, no explanation.",
+        "generatedAt": "2026-09-22T22:55:07.547Z"
+      },
+      "tunedManifest": {
+        "experiment": "exp-012-census",
+        "slice": {
+          "name": "holdout",
+          "spec": "holdout",
+          "source": "/home/salboaie/work/sopLang-llm/training-data/<book>/eval/**/solution.sop",
+          "count": 585,
+          "books": null,
+          "limit": null,
+          "itemsSha256": "90adfe367b7d9ad948328a65a5d6ca8f75b8cddea3b43d34a9e2eb4b43d2172a"
+        },
+        "checkpoint": {
+          "gguf": "evaluation/registry/exp-012-census/gguf/checkpoint-720.gguf"
+        },
+        "model": null,
+        "base": "http://127.0.0.1:8080",
+        "decoding": {
+          "temperature": 0,
+          "maxTokens": 2048,
+          "stream": false,
+          "timeoutMs": 600000,
+          "concurrency": 4,
+          "attemptsPerItem": 1,
+          "transportRetries": 1
+        },
+        "chatProfile": {
+          "id": "compiled-plan-chat-4",
+          "systemPromptSha256": "c2967d80d31eeb8a8f1605e75ece90edd16a0f0338a7b24bf15442bbf9287a74"
+        },
+        "capabilityProbes": {
+          "profile": "capability-probes-1.0.0",
+          "systemPromptSha256": "3f0ff0bee57e51871d4c09dcf8e3e6ffb0ab414c41100199873dfd0fc5c69fe9",
+          "items": 10,
+          "passed": 2
+        },
+        "dataset": {
+          "exportManifest": "training/data/export-manifest.json",
+          "snapshot": "cc1929f3d7c3da19f17bf254758c8d9e52c42324e35f01b13bff16c7bf423f00",
+          "validationSlice": "training/data/validation-slice.json",
+          "dataVersion": {
+            "number": "1",
+            "label": "composition inventory (2026-09-22) — the declared operator inventory, 37 compositions"
+          }
+        },
+        "environment": {
+          "manifest": "training/environment/environment-manifest.json",
+          "sha256": "cacd40e3d24b0c41f44061afd77af9f7b8fdece0bf959dcaa2f577c4873fe180"
+        },
+        "startedAt": "2026-09-23T00:02:04.339Z",
+        "training": {
+          "finishedUtc": "2026-09-22T22:50:13Z",
+          "finishedUtcApprox": true
+        },
+        "base_model_manifest": {
+          "path": "training/environment/base-model.json"
+        }
+      },
+      "baseIdentity": "Qwen/Qwen2.5-Coder-0.5B-Instruct",
+      "revision": "ea3f2471cf1b1f0db85067f1ef93848e38e88c25",
+      "selectedCheckpoint": "checkpoint-720",
+      "trainingFinish": {
+        "finishedUtc": "2026-09-22T22:50:13Z",
+        "finishedUtcApprox": true
+      }
+    },
+    {
+      "name": "Qwen2.5-Coder-1.5B-Instruct",
+      "base": "cmp-base-holdout-prose-15",
+      "tuned": "exp-013-1.5b",
+      "identity": "training/environment/base-model-1.5b.json",
+      "purpose": "Paired early workflow comparison",
+      "items": 585,
+      "commonIdentifiers": 585,
+      "changedOracles": 0,
+      "baseContent": 30,
+      "baseExact": 1,
+      "baseMissingCompletions": 0,
+      "tunedContent": 359,
+      "tunedExact": 322,
+      "baseManifest": {
+        "experiment": "cmp-base-holdout-prose-15",
+        "gguf": "training/checkpoints/base-1.5b-f16.gguf",
+        "items": 585,
+        "matched": 30,
+        "prompt": "Answer the problem directly and briefly. Give the final answer in one short sentence; no working, no explanation.",
+        "generatedAt": "2026-09-22T22:54:01.841Z"
+      },
+      "tunedManifest": {
+        "experiment": "exp-013-1.5b",
+        "slice": {
+          "name": "holdout",
+          "spec": "holdout",
+          "source": "/home/salboaie/work/sopLang-llm/training-data/<book>/eval/**/solution.sop",
+          "count": 585,
+          "books": null,
+          "limit": null,
+          "itemsSha256": "90adfe367b7d9ad948328a65a5d6ca8f75b8cddea3b43d34a9e2eb4b43d2172a"
+        },
+        "checkpoint": {
+          "gguf": "evaluation/registry/exp-013-1.5b/gguf/checkpoint-450.gguf"
+        },
+        "model": null,
+        "base": "http://127.0.0.1:8080",
+        "decoding": {
+          "temperature": 0,
+          "maxTokens": 2048,
+          "stream": false,
+          "timeoutMs": 600000,
+          "concurrency": 4,
+          "attemptsPerItem": 1,
+          "transportRetries": 1
+        },
+        "chatProfile": {
+          "id": "compiled-plan-chat-4",
+          "systemPromptSha256": "c2967d80d31eeb8a8f1605e75ece90edd16a0f0338a7b24bf15442bbf9287a74"
+        },
+        "capabilityProbes": {
+          "profile": "capability-probes-1.0.0",
+          "systemPromptSha256": "3f0ff0bee57e51871d4c09dcf8e3e6ffb0ab414c41100199873dfd0fc5c69fe9",
+          "items": 10,
+          "passed": 5
+        },
+        "dataset": {
+          "exportManifest": "training/data/export-manifest.json",
+          "snapshot": "cc1929f3d7c3da19f17bf254758c8d9e52c42324e35f01b13bff16c7bf423f00",
+          "validationSlice": "training/data/validation-slice.json",
+          "dataVersion": {
+            "number": "1",
+            "label": "composition inventory (2026-09-22) — the declared operator inventory, 37 compositions"
+          }
+        },
+        "environment": {
+          "manifest": "training/environment/environment-manifest.json",
+          "sha256": "cacd40e3d24b0c41f44061afd77af9f7b8fdece0bf959dcaa2f577c4873fe180"
+        },
+        "startedAt": "2026-09-23T10:38:16.101Z",
+        "training": {
+          "finishedUtc": "2026-09-23T07:59:35Z",
+          "finishedUtcApprox": true
+        },
+        "base_model_manifest": {
+          "path": "training/environment/base-model-1.5b.json"
+        }
+      },
+      "baseIdentity": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "selectedCheckpoint": "checkpoint-450",
+      "trainingFinish": {
+        "finishedUtc": "2026-09-23T07:59:35Z",
+        "finishedUtcApprox": true
+      }
+    },
+    {
+      "name": "Qwen3-1.7B",
+      "base": "cmp-base-holdout-prose-q3",
+      "tuned": "exp-021-1.7b-qwen3-dv7",
+      "identity": "training/environment/base-model-qwen3-17b.json",
+      "purpose": "Incomplete base-output audit; not a model-capacity ranking",
+      "items": 705,
+      "commonIdentifiers": 705,
+      "changedOracles": 0,
+      "baseContent": 357,
+      "baseExact": 0,
+      "baseMissingCompletions": 322,
+      "tunedContent": 549,
+      "tunedExact": 460,
+      "baseManifest": {
+        "experiment": "cmp-base-holdout-prose-q3",
+        "gguf": "training/checkpoints/base-qwen3-17b-f16.gguf",
+        "items": 705,
+        "matched": 357,
+        "prompt": "Answer the problem directly and briefly. Give the final answer in one short sentence; no working, no explanation.",
+        "generatedAt": "2026-09-23T22:22:18.931Z"
+      },
+      "tunedManifest": {
+        "experiment": "exp-021-1.7b-qwen3-dv7",
+        "slice": {
+          "name": "holdout",
+          "spec": "holdout",
+          "source": "/home/salboaie/work/sopLang-llm/training-data/<book>/eval/**/solution.sop",
+          "count": 705,
+          "books": null,
+          "limit": null,
+          "itemsSha256": "c5f946fcf65baa8b7ece6423f0e8f3b6eb902791a5f734a83bd745a65d32c572"
+        },
+        "checkpoint": {
+          "gguf": "evaluation/registry/exp-021-1.7b-qwen3-dv7/gguf/checkpoint-450.gguf"
+        },
+        "model": null,
+        "base": "http://127.0.0.1:8080",
+        "decoding": {
+          "temperature": 0,
+          "maxTokens": 2048,
+          "stream": false,
+          "timeoutMs": 600000,
+          "concurrency": 4,
+          "attemptsPerItem": 1,
+          "transportRetries": 1
+        },
+        "chatProfile": {
+          "id": "compiled-plan-chat-4",
+          "systemPromptSha256": "c2967d80d31eeb8a8f1605e75ece90edd16a0f0338a7b24bf15442bbf9287a74"
+        },
+        "base_model_manifest": {
+          "path": "/home/salboaie/work/sopLang-llm/training/environment/base-model-qwen3-17b.json"
+        },
+        "training": {
+          "createdUtc": "2026-09-25T15:31:53Z",
+          "finishedUtc": "2026-09-25T15:44:50Z",
+          "epochs": 2
+        },
+        "capabilityProbes": {
+          "profile": "capability-probes-1.0.0",
+          "systemPromptSha256": "3f0ff0bee57e51871d4c09dcf8e3e6ffb0ab414c41100199873dfd0fc5c69fe9",
+          "items": 10,
+          "passed": 1
+        },
+        "dataset": {
+          "exportManifest": "training/data/export-manifest.json",
+          "snapshot": "d4c741c3ccb4b0886a5053abddfd829a06f25951462e6185d9e8dcf152752609",
+          "dataVersion": {
+            "number": "7",
+            "label": "container plans: store built in stages, store patched by upsert, kept-shipments query"
+          },
+          "validationSlice": "training/data/validation-slice.json"
+        },
+        "environment": {
+          "manifest": "training/environment/environment-manifest.json",
+          "sha256": "cacd40e3d24b0c41f44061afd77af9f7b8fdece0bf959dcaa2f577c4873fe180"
+        },
+        "startedAt": "2026-09-25T16:05:38.547Z"
+      },
+      "baseIdentity": "Qwen/Qwen3-1.7B",
+      "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+      "selectedCheckpoint": "checkpoint-450",
+      "trainingFinish": {
+        "createdUtc": "2026-09-25T15:31:53Z",
+        "finishedUtc": "2026-09-25T15:44:50Z",
+        "epochs": 2
+      }
+    }
+  ]
+}

@@ -1,160 +1,197 @@
-# Learning to select executable abstractions: evidence and limits from small language models compiling word problems
+# Choosing the language a small model must learn: executable abstractions in program compilation
 
 ## Abstract
 
-Small language models can delegate calculation to a program executor, but they must still translate a problem into the right program. We investigate whether the available programming vocabulary changes this remaining difficulty. A retrospective study of SOP Lang examines ten archived fine-tuning arms and reconstructs outcomes from 7,050 item records. In the most direct vocabulary comparison, Qwen2.5-Coder-1.5B-Instruct increases normalized exact matches from 379/705 to 440/705 after the introduction of specialized graph, aggregation, and fraction commands; execution errors on the 480 procedural items fall from 63 to 13. This is a substantial descriptive improvement, although one run per condition and incomplete training metadata prevent a clean causal estimate. A later Qwen3-1.7B curriculum reaches 460/705 matches, while splitting targets into more wires reduces this to 448/705 and raises execution errors from 57 to 135. All ten arms pass syntax and graph checks on all evaluated items. Two restricted semantic diagnostics expose answer-format penalties without establishing a general semantic score. The results distinguish executable syntax, successful execution, and correct interpretation, with implications for the limits of checked, agent-assisted data construction. We propose a preregisterable research programme for discovering useful wire abstractions, with frozen transfer tasks, paired comparisons, and explicit accounting for selection difficulty.
+A small language model can delegate arithmetic to a runtime yet still fail to generate the required algorithm. We ask whether changing its target language can reduce that difficulty. SOP Lang is the executable representation studied here: a program contains named computations, called wires, whose explicit dependencies determine execution order. We reconstruct three representation/model comparisons and separately reassess archived base-model evaluations. Experiment A adds graph, aggregation, and fraction commands to a general-code curriculum. Normalized exact matches increase from 53.8% to 62.4%, while procedural execution failures fall from 13.1% to 2.7%. Experiment B instead divides target computations into more wires. Matches decrease from 65.2% to 63.5% and execution failures rise from 8.1% to 19.1%. Experiment C compares two adapted models on the same later evaluation set; it establishes a system difference, not a model-size threshold. Our interpretation is that useful abstraction removes algorithm construction from the generated program, whereas decomposition can add coordination work without removing it. One run per condition, incomplete early metadata, and repeated benchmark use limit causal inference. The results motivate searching for commands that reduce implementation errors while keeping task interpretation, argument extraction, and command selection measurable.
 
-Keywords: small language models; program synthesis; executable reasoning; abstraction learning; compositional generalization; reproducibility
+Keywords: small language models; program synthesis; executable abstractions; target representation; compositional generalization; reproducibility
 
 ## 1. Introduction
 
-A small language model asked to solve a word problem faces two different tasks. It must identify the quantities, relations, and operations intended by the statement, and it must carry out those operations. Program-aided methods delegate the second task to an interpreter. Gao and colleagues' PAL makes this separation explicit by generating executable programs [@pal]. Chen and colleagues' Program of Thoughts similarly separates numerical computation from language-model reasoning [@pot]. These methods establish the value of execution. They leave open which language a small model should learn to generate.
+A model that knows it must find a path through a graph may still produce a faulty graph-search implementation. If the runtime already supplies a graph-search command, the model can express the same intention by selecting the command and identifying its inputs. This changes what the model must learn. It also leaves an important source of error untouched: choosing graph search for a problem that requires a different operation.
 
-That choice can change the learning problem. Writing a graph traversal requires the model to emit a queue, a visited set, termination conditions, and a return value. Calling a graph command requires the model to identify an edge list and two nodes. The latter removes several opportunities for transcription error, but adds a selection obligation: the command must have the semantics the problem requires. An undirected reachability command is inappropriate for a weighted shortest-path problem even if the resulting program is syntactically valid.
+Program-aided language models make this division of work possible. Gao and colleagues' PAL generates programs and delegates their execution to an interpreter [@pal]. Chen and colleagues' Program of Thoughts separates numerical computation from language-model reasoning [@pot]. Once computation is delegated, the target language becomes an experimental choice. A model can generate a general-purpose algorithm, a composition of small operations, or a call to a more abstract operation. These representations need not be equally learnable by a small model.
 
-This article studies that trade-off in SOP Lang, a language whose named computational components are called wires. The student compiles a problem into a dependency graph; a deterministic executor evaluates the graph. Some wires execute generated JavaScript, while others expose narrower operations with explicit contracts. The empirical question is whether more abstract operations help small models produce correct executable solutions, and where that assistance stops.
+We investigate that choice using SOP Lang, a language developed for this project. SOP Lang represents a solution as named computations with explicit value dependencies. The model writes the program, and a runtime executes it. We fine-tune small code-capable models to translate word problems into this representation, then inspect the saved programs and their outcomes.
 
-The contribution is an exploratory analysis of ten development arms, with a strong positive vocabulary signal and several informative failures. We reconstruct item outcomes and model identities from archived records, then examine the comparisons most relevant to representation learning. This makes it possible to distinguish a promising vocabulary intervention from broader claims about model capacity that the experimental design cannot resolve.
+The research question is whether an executable vocabulary can reduce the implementation burden on a small model without merely relocating failure to command selection. It matters because improving the interface between model and runtime may recover useful capability without changing the base model. A vocabulary that is too detailed, too broad, or poorly matched to the tasks may do the opposite.
 
-Three questions organize the analysis. Does adding specialized commands coincide with fewer execution failures and more correct answers? Does decomposing targets into more wires necessarily help? Which apparent failures reflect interpretation, execution, or an overly restrictive answer comparator? These questions support a research direction in vocabulary discovery without implying that a suitable vocabulary eliminates the limits of small models.
+We organize the evidence around three comparisons. Experiment A introduces specialized commands. Experiment B increases the number of wires in training targets. Experiment C changes the base model on an otherwise shared evaluation set. The strongest result is the contrast between A and B: adding an operation that owns an algorithm helps, while splitting an algorithm across more generated components can hurt. We interpret this contrast as evidence that abstraction level, rather than component count alone, deserves explicit study.
 
-## 2. Related work and conceptual model
+## 2. SOP Lang and the learning problem
 
-Program synthesis treats the search space and the specification as central design choices [@synthesis]. SOP Lang adopts that perspective: its command vocabulary defines the available search space, while the natural-language problem and task oracle provide imperfect specifications. The distinction matters because an executor can enforce the language contract without verifying that the natural-language interpretation is correct.
+### 2.1 Reading a circuit
 
-Ellis and colleagues' DreamCoder learns reusable program abstractions and uses them to guide subsequent synthesis [@dreamcoder]. The present system shares the motivation for reusable operations but does not implement DreamCoder's library-learning algorithm. Human-directed development, assisted by coding agents, introduced the commands evaluated here. Learning which new wires to propose and when to retain them remains future work. We use “abstraction learning” only for the broader research problem; the current experiment measures a manually revised vocabulary and curriculum.
+A SOP Lang program is called a circuit. Its basic unit, a wire, is a named computation that produces a value; it is not a physical connection. A declaration has the form `@name command` at the start of a line. The text until the next declaration is that command's body. A reference such as `$slots` reads another wire's value and declares a dependency. The runtime determines execution order from these dependencies, not from the order of declarations.
 
-Lake and Baroni's compositional-generalization experiments show why strong performance on familiar forms need not imply reliable recombination [@scan]. Our benchmark also contains repeated problem families. A large number of instances can therefore represent few distinct computational plans. We report family composition and treat transfer across plans separately from performance on additional numerical instances.
+Consider the problem, "There are three packs, each containing four cells. How many cells are there?" A compiled solution is:
 
-Let x denote a problem statement, C a command catalogue, G the generated circuit, and E the executor. The model produces G = M(x, C), and the system returns E(G). Correctness requires both that G express the intended task and that execution implement G correctly. Changing C can shorten G and reduce implementation errors while making command selection more demanding. The resulting hypothesis is conditional: a useful abstraction removes recurrent implementation work while preserving distinctions the model can select reliably.
+```sop
+@slots literal
+{"packs":3,"perPack":4}
 
-Figure 1 identifies the separate obligations at the model and runtime boundaries.
+@answer jsEval
+return $slots.packs * $slots.perPack;
+```
 
-![A word problem is translated by a small model into a program, then executed by a runtime; interpretation and execution have separate obligations.](../assets/execution-contract.png)
+The first wire is named `slots`. Its `literal` command reads a JSON body and produces the object containing 3 and 4. The second wire is named `answer`. Its `jsEval` command evaluates a JavaScript body, where `return` supplies the wire's value. The expression `$slots.packs` reads the `packs` field of the first wire. Thus `answer` depends on `slots` and returns 12. The caller requests the `answer` value; that name is a dataset convention, not a special language keyword. Likewise, `slots` is a conventional name for values extracted from the problem.
 
-Figure 1. The compilation boundary. Execution checks constrain the program's behavior; they do not establish that the program represents the statement correctly.
+Figure 1 connects this notation to the resulting dependency graph. The graph explains evaluation order, but it cannot certify that multiplication expresses the question. If one cell in each pack were unusable, the same program would execute successfully and answer the wrong task.
 
-## 3. Materials and methods
+![An annotated two-wire program shows declarations, command bodies, a value reference, and the dependency from extracted quantities to the result 12.](../assets/sop-program-anatomy.png)
 
-### 3.1 Study design and units of analysis
+Figure 1. A complete SOP Lang example. The model supplies the extracted values and operation; the runtime evaluates the declared dependency. This constructed example illustrates the language and is not a benchmark observation.
 
-We performed a retrospective census of the archived holdout records for ten selected fine-tuning arms. Each arm contributes 705 unique item identifiers, giving 7,050 records. Selection covers the early specialized-wire comparison and the later curriculum series discussed in the project's article drafts. It is a bounded developmental case study, not a systematic search over all possible models, vocabularies, or training settings.
+### 2.2 Abstraction changes the generated work
 
-The primary unit is an item outcome within an arm. For comparisons we join records by item identifier and inspect oracle and plan-fingerprint changes. We do not treat the 7,050 records as independent observations. Items recur across arms, and many share a generator and computational plan. There is one archived training run per reported condition. Consequently, we report counts and paired differences without confidence intervals or significance tests that would imply an unsupported population-sampling or seed-replication model.
+General JavaScript lets the model express many algorithms, but requires it to emit their implementation correctly. A specialized command moves one algorithm into the runtime. For example, `graphPath` accepts an undirected edge list and two endpoints, then performs reachability internally. The model still has to extract the graph and select the right endpoints. It no longer has to generate a queue, a visited set, and traversal termination logic.
 
-### 3.2 Training data and evaluation composition
+The other commands introduced in Experiment A are `aggregate`, for supported filtering and reduction operations, and `fraction`, for reducing an integer ratio. Each has a restricted input/output contract. A command for undirected reachability cannot answer a directed shortest-path question simply because both involve graphs. A shorter generated program is useful only when the selected command preserves the problem's meaning.
 
-The teaching pipeline constructs problem families from source books and procedural generators. A family supplies a reference parse, a computation, an answer, and a circuit. Accepted circuits are executed and compared with expected answers. Dataset verification checks structural requirements and perturbs compiled inputs to detect answers that do not depend on them. Probe assertions check selected input and output properties. These mechanisms provide executable checks; shared assumptions between a family parser, reference computation, and generated circuit can still produce correlated errors.
+This differs from decomposition. Splitting a JavaScript computation into several wires may leave the same algorithmic decisions in the model's output while adding names and value transfers. The model must now coordinate more interfaces. Our working explanation is that abstraction can remove generated implementation work, whereas decomposition may only distribute that work. Experiments A and B test these two development choices in the available archive.
 
-Table 1 describes the dv7 evaluation slice. Its 480 procedural items dominate the aggregate. The remaining 225 items come from seven book-derived subsets. A book label identifies provenance, not broad coverage of the book: the 20 world-as-a-system cases use one coalition plan. Plan fingerprints are a useful structural index, not a proof that two tasks have identical semantics.
+### 2.3 Relation to prior work
 
-Table 1. Composition of the dv7 development benchmark.
+Gulwani, Polozov, and Singh identify specification and program search space as central dimensions of program synthesis [@synthesis]. Here, the natural-language problem and reference answer specify the task imperfectly, while the command vocabulary constrains the program space. The runtime can enforce its command semantics without establishing that the model interpreted the specification correctly.
 
-| Subset | Items | Distinct plan fingerprints |
-| --- | --- | --- |
-| Procedural problems | 480 | 12 |
-| Adult reasoning | 10 | 1 |
-| Common sense | 50 | 1 |
-| Dependency joins, decompose-to-solve | 100 | 1 |
-| Logical reasoning | 10 | 1 |
-| Mathematical thinking | 10 | 10 |
-| Scientific reasoning | 25 | 1 |
-| Coalitions, world-as-a-system | 20 | 1 |
-| Total | 705 | 28 |
+DreamCoder, by Ellis and colleagues, learns reusable program libraries and uses them in subsequent synthesis [@dreamcoder]. Our commands were introduced through human-directed development assisted by coding agents. We do not implement DreamCoder's automatic library-learning procedure. Its relevance is the idea that changing available abstractions can change synthesis difficulty. Finding new SOP Lang commands automatically remains an open research question.
 
-The nominal holdout informed successive development decisions. It is therefore a development benchmark, even where its plan fingerprints were excluded from a particular training export. Adaptive reuse can make performance on a repeatedly inspected test set an optimistic guide to new data [@dwork]. We do not claim a sealed confirmatory test. Dataset version dv13 also changes the evaluation population: relative to dv7, 655 identifiers remain, 50 disappear, 50 are added, and 100 oracle strings change among the shared identifiers. We avoid interpreting their aggregate difference as a controlled regression on a fixed test.
+Lake and Baroni's compositional-generalization work motivates distinguishing new numerical instances from new computational structures [@scan]. This distinction is essential here because many evaluated problems share the same generator and plan. A model can learn a circuit form reliably while failing to select that form for an unfamiliar kind of problem.
 
-### 3.3 Models, training, and inference
+## 3. Study design
 
-The early vocabulary comparison uses Qwen2.5-Coder-1.5B-Instruct in exp-014 and exp-016. Later arms use Qwen3-1.7B, except exp-026, which uses Qwen2.5-Coder-0.5B-Instruct. These are model-family names, not independently recounted parameter totals. The official model cards identify the three base releases [@qwen15] [@qwen3] [@qwen05]; the archived manifests supply the revisions used here.
+### 3.1 Experiments and observations
 
-The later curriculum runs use full fine-tuning with AdamW, learning rate 0.0001, two epochs, seed 3407, effective batch size 32, maximum sequence length 4,096, and bfloat16 precision. Checkpoint selection uses the recorded validation procedure; the selected step varies between arms. Evaluation uses greedy generation, a 2,048-token output limit, and one task attempt. A transport retry is infrastructure recovery, not a second semantic attempt. The analysis uses the saved outputs of the selected GGUF exports and does not rerun model inference.
+This is a retrospective analysis of a developmental experiment archive. We reconstruct ten saved runs, each containing 705 unique evaluation items, and select the three comparisons relevant to the representation question. A run is one trained system under one condition; an experiment below compares two such systems. The supplementary experiment map connects these descriptive names to original manifests, checkpoints, dataset versions, and source hashes.
 
-Training exposure is not identical merely because the recipe is shared. For example, the later dv7 and dv8 runs record 6,648,719 and 6,782,314 target tokens seen, respectively. The exp-014 training manifest is absent; its evaluation manifest supports base identity and an approximate finish time, but cannot establish that every training variable was held fixed. Exact model revisions, selected checkpoints, dataset snapshots, and finish times are preserved in the supplementary evidence table.
+Table 1 defines the interventions before reporting their outcomes. Each of these comparisons contains 705 problems per condition and retains the same evaluation identifiers and reference-answer strings within that pair. This does not establish identical historical prompt bytes, which were not fully retained. Experiments A, B, and C also do not share an unchanged evaluation population across the entire development history.
 
-### 3.4 Outcome reconstruction and restricted diagnostics
+Table 1. The three comparisons and the inference each permits.
 
-The original evaluator distinguishes transport, wrapper, parse, graph, execution, and answer-comparison outcomes. No transport, wrapper, parse, or graph failures occur in these ten selected slices. We distinguish completed execution from a normalized exact answer match. The comparator applies Unicode normalization, case folding, whitespace and punctuation normalization, and limited answer-prefix removal before equality. It does not establish semantic equivalence. Reapplying this comparator to all archived completed outputs reproduces every stored match/mismatch label.
+| Experiment | Conditions compared | Base model | Main question |
+| --- | --- | --- | --- |
+| A: command abstraction | General code; specialized wires | Qwen2.5-Coder-1.5B-Instruct in both | Does a narrower executable vocabulary help compilation? |
+| B: target decomposition | Compact targets; split targets | Qwen3-1.7B in both | Does distributing computation across more wires help? |
+| C: base-model choice | 0.5B model; 1.7B model | Qwen2.5-Coder-0.5B-Instruct; Qwen3-1.7B | How do these two trained systems differ on the same later tasks? |
 
-Two new, deliberately restricted diagnostics examine formatting effects. A coalition parser accepts only complete lists of coalition identifiers and seat counts, canonicalizes member and list order, and rejects duplicate coalitions. A dependency-join parser accepts complete sentences expressing a completion time and a feasibility verdict, with a fixed set of synonymous verdict phrases. It recognizes one known explanatory suffix. Unsupported prose remains unclassified. These diagnostics neither rescue execution failures nor infer meaning from a bag of numbers.
+The model names follow the official release identities [@qwen15] [@qwen05] [@qwen3]. Experiment C changes model family and pretraining together with size. It cannot isolate the effect of parameter count.
 
-Only original normalized exact outcomes and the two reproducible restricted diagnostics enter the reported results. We do not extrapolate a general semantic score from the diagnostic subsets.
+### 3.2 Training data and evaluation tasks
 
-## 4. Results
+Training examples are constructed from parameterized problem families derived from source books and procedural generators. A family provides a reference parse, an answer computation, and a target circuit. Candidate circuits are executed against expected answers. Structural checks and selected assertions reject malformed examples, while perturbing extracted inputs helps detect answers that ignore those inputs.
 
-### 4.1 A positive signal from specialized wires
+These controls address concrete defects in synthetic data. They do not prove semantic correctness when the generator, reference computation, and circuit share the same mistaken reading. Some categorical answers also remain unchanged under legitimate input changes. We therefore describe the data as checked, with retained provenance, rather than independently verified in every semantic respect.
 
-Table 2 reports the primary outcomes. The early vocabulary transition increases matches by 61 items, from 379/705 to 440/705, an 8.7 percentage-point difference. The paired comparison retains all 705 identifiers and unchanged oracle strings. Both arms match 377 items; exp-016 alone matches 63, exp-014 alone matches two, and neither matches 263. Forty plan fingerprints change between the evaluated records, consistent with a representation intervention.
+Each evaluation set contains 480 procedural problems and 225 book-derived problems. The set used in Experiment B has 28 distinct plan fingerprints, a structural index of computations: 12 procedural plans and 16 book-derived plans. Its 20 coalition problems share one plan, and its 100 dependency-join problems share another. A dependency join asks when parallel branches can finish and whether the resulting schedule meets a time limit. These repeated instances are useful execution tests, but do not supply 705 independent tests of general reasoning.
 
-The procedural subset supplies the clearest mechanism-related evidence. Matches increase from 377/480 to 440/480, while execution failures decrease from 63/480 to 13/480. The revised vocabulary includes `graphPath`, `aggregate`, and `fraction`, which place traversal, reduction, and ratio-normalization code inside tested commands. Forty procedural completions in exp-016 declare at least one of these commands. The aggregate gain exceeds that direct-use count, so the observations do not identify command execution as the sole mediator; changed training targets can also affect programs that continue to use JavaScript.
+Development repeatedly used the nominal holdout to guide changes. We consequently call it a development benchmark. Dwork and colleagues explain why adaptive test reuse weakens independent confirmation [@dwork]. Between the versions used in B and C, 7.1% of evaluation identifiers are replaced and 15.3% of the 655 retained identifiers have changed reference strings. We compare conditions within each experiment, not scores across these changing populations.
 
-Table 2. Selected comparisons relevant to vocabulary, decomposition, and model choice. Counts use 705 items per row. “Other completed” means execution completed but normalized exact comparison failed. The companion table contains all ten arms.
+### 3.3 Training and decoding
 
-| Arm | Base model | Data | Match | Other completed | Execution error |
-| --- | --- | --- | --- | --- | --- |
-| exp-014 | Qwen2.5-Coder-1.5B | dv2 | 379 | 125 | 201 |
-| exp-016 | Qwen2.5-Coder-1.5B | dv3 | 440 | 90 | 175 |
-| exp-021 | Qwen3-1.7B | dv7 | 460 | 188 | 57 |
-| exp-022 | Qwen3-1.7B | dv8 | 448 | 122 | 135 |
-| exp-026 | Qwen2.5-Coder-0.5B | dv13 | 361 | 130 | 214 |
-| exp-027 | Qwen3-1.7B | dv13 | 421 | 100 | 184 |
+Later runs use full fine-tuning with AdamW, learning rate 0.0001, two epochs, seed 3407, effective batch size 32, maximum sequence length 4,096, and bfloat16 precision. Checkpoints are selected using the archived validation procedure. Evaluation uses the selected GGUF export, greedy generation, a 2,048-token output limit, and one task attempt. Transport recovery is not a second attempt to solve the problem.
 
-### 4.2 More wires do not imply better compilation
+One run per condition survives in the archive. The general-code condition in Experiment A lacks its complete training manifest, so training equivalence cannot be fully reconstructed. Even in B, shared settings do not imply identical exposure: split targets contain 2.0% more target tokens than compact targets, approximately 6.78 million versus 6.65 million. We reconstruct saved outputs without retraining or generating new answers.
 
-The later dv7 curriculum reaches 65.2% normalized exact match, 460/705, and completes execution on 648/705 items. Its dv8 successor changes target decomposition while preserving the evaluated identifiers and oracle strings. It matches 448/705 and completes 570/705. Execution errors increase from 57 to 135. The paired table contains 446 joint matches, 14 matches exclusive to dv7, and two exclusive to dv8.
+### 3.4 Outcome definitions
 
-This result rejects the simple development heuristic that more explicit intermediate wires necessarily help this student. Splitting a computation can reduce the length of an individual body while adding variable bindings and cross-wire dependencies. The observed error increase is consistent with that burden, but this retrospective comparison does not separately estimate the effects of sequence length, checkpoint selection, or curriculum exposure. It is evidence against an unconditional modularity claim, not against modular programming generally.
+The evaluator checks parsing, dependency-graph validity, execution, and the returned answer separately. A normalized exact match means the answer equals the reference after Unicode, case, whitespace, and specified punctuation/prefix normalization. It is not a general semantic judgment. A completed mismatch is an executed answer that fails that comparison; an execution failure produces no accepted task answer.
 
-### 4.3 Structural validity leaves substantial task failure
+We recount all 7,050 records, reproduce the original comparator labels, and join paired runs by item identifier. Counts and paired differences describe the archive. Percentages and percentage-point differences are rounded separately from integer counts. We do not attach inferential confidence intervals to repeated templates with one training run per condition. The complete ten-run reconstruction is available in the supplement, including development variants outside these three comparisons. A separate early reference comparison joins two untuned base evaluations to their corresponding fine-tuned systems on 585 shared identifiers and unchanged reference answers. Here "base" means the released instruction-tuned checkpoint before SOP Lang adaptation, not a model without prior training.
 
-Every evaluated program passes the evaluator's syntax and graph stages: 705/705 in each arm. Nevertheless, exp-021 has 57 execution failures and 188 completed mismatches. Within its 225 book-derived items it records only 22 normalized exact matches, comprising 20 coalition answers and two mathematical answers. Procedural matches are 438/480. The aggregate therefore combines high performance on a relatively narrow procedural distribution with much weaker transfer to other tested plans.
+## 4. Results and interpretation
 
-The coalition result requires particular care. Exp-017 matches 0/20 and fails execution on all 20 cases; exp-021 matches 20/20. This is an encouraging family-specific curriculum result. Inspection of all 20 exp-021 completions finds no container-family declarations. We therefore cannot attribute their success to executing containers, despite the curriculum arm's container-oriented design. Neither the sample nor its generated programs supports a claim that the model solved an entire reasoning book through container execution.
+### 4.1 Reference comparison: before and after SOP Lang adaptation
 
-The dv13 comparison also has a clear boundary. Qwen2.5-Coder-0.5B matches 361/705 and Qwen3-1.7B matches 421/705 on identical item identifiers, oracles, and plan fingerprints. Sixty-one items match only for the latter and one only for the former. Model family, pretraining, and size all change. The result describes two trained systems; it does not locate a universal parameter threshold for reasoning.
+The early archive permits a direct comparison of two released Qwen2.5-Coder models with their adapted counterparts on the same 585 problem identifiers and reference answers. The base models answer in prose; the adapted models emit programs whose executed answers are scored. To avoid silently comparing different scoring rules, we apply both historical reference-content matching and normalized exact matching to both sides.
 
-### 4.4 Answer formatting hides some successful computation
+The content check accepts the presence of every reference number, or normalized containment of a non-numeric reference. It is a weak diagnostic: it can ignore units, role assignments, and contradictory prose. Exact matching has the opposite problem of rejecting equivalent wording. Table 2 reports the two measures separately rather than naming either one general semantic accuracy.
 
-The restricted coalition diagnostic accepts 20/20 exp-027 outputs, compared with 5/20 normalized exact matches. Fifteen discrepancies are therefore explainable within a fully specified tuple representation. For exp-021 dependency joins, the original comparator matches 0/100, while the restricted diagnostic matches 64/100. Of the remaining cases, 26 are outside its grammar, two disagree on the parsed value or verdict, and eight fail execution. The 26 unclassified cases are not assigned semantic correctness or incorrectness.
+Table 2. Base checkpoints versus their SOP Lang adaptations. All entries are percentages over the same 585 problems per row; each scorer is applied identically to base and adapted outputs. The content check is the historical weak diagnostic described above.
 
-Figure 2 contrasts the original and restricted comparator results without combining their populations.
+| Base model | Base content match | Adapted content match | Base exact match | Adapted exact match |
+| --- | --- | --- | --- | --- |
+| Qwen2.5-Coder-0.5B | 10.8% | 44.4% | 0.0% | 44.1% |
+| Qwen2.5-Coder-1.5B | 5.1% | 61.4% | 0.2% | 55.0% |
 
-![Restricted comparison identifies 64 of 100 dependency-join matches and 20 of 20 coalition matches, alongside the original comparator results.](../assets/comparator-diagnostic.png)
+The adapted workflow recovers reference content much more often for both bases. The larger model is stronger after adaptation under both checks, although it is weaker as a direct-answer base under this prompt and diagnostic. This reversal shows why parameter count alone is an inadequate explanation of these observations. We interpret the result as support for the complete trained-compilation workflow on these tasks. It does not isolate execution from fine-tuning or prompting, and generation budgets differ: the retained prose evaluator uses a 512-token cap, whereas compiled evaluation allows 2,048.
 
-Figure 2. Two retrospective diagnostics with different item sets. They identify specific comparator penalties and do not define an overall semantic benchmark score.
+An additional Qwen3 base evaluation returns no completion on 45.7% of its 705 requests. We retain that record in the supplement but exclude it from this cleanly joined base-model table. Treating missing responses as evidence of a model-capacity limit would confound serving behavior with task solving.
 
-One archived dependency-join circuit computes 7 + max(11, 17) + 6 + 12 + 4 = 46 minutes against its compiled 43-minute limit. Its output states the same duration and negative feasibility verdict as the oracle, but uses “does not meet the limit” where the oracle uses “is not feasible” and adds an explanatory sentence. This is a representational mismatch supported by the saved computation, rather than a reason to accept arbitrary paraphrases without checking them.
+### 4.2 Experiment A: specialized commands improve the recorded system
 
-## 5. Interpretation and limitations
+Adding graph, aggregation, and fraction commands increases normalized exact matches from 53.8% to 62.4%, an improvement of 8.7 percentage points. On paired items, the specialized condition gains a match on 8.9% of problems and loses one on 0.3%. Reference-plan fingerprints change on 5.7% of problems; item identifiers and expected answer strings remain unchanged.
 
-The positive result is substantial enough to justify further experimentation. Moving recurrent algorithms into narrower commands coincides with a 50-item reduction in procedural execution errors and a 63-item increase in procedural matches. It shows that the target language deserves treatment as an experimental variable alongside model choice and training data. It does not show that the three introduced commands are optimal, that all gains arise from direct use, or that an unrestricted wire catalogue would continue to help.
+The procedural subset accounts for the improvement. Its matches rise from 78.5% to 91.7%, and execution failures fall from 13.1% to 2.7%. Our interpretation is that moving recurring algorithms into tested operations makes the target easier for the student to generate reliably. This is the clearest positive evidence for the vocabulary hypothesis in the archive.
 
-The failures identify two separate limits. A model can learn the outer grammar while still misimplementing a computation. It can also implement a coherent but inappropriate plan. Narrow commands address the first problem for selected operations; they cannot generally resolve the second. Adding enough commands may create a new bottleneck in selecting among subtly different contracts. That possibility gives wire discovery a measurable trade-off rather than a presumption of monotonic improvement.
+There is a useful complication. Only 8.3% of procedural outputs in the specialized condition declare one of the three added commands, while the procedural match rate improves by 13.1 percentage points. Direct command execution therefore cannot explain the entire gain. Changed training representations may also improve programs that still use JavaScript, and uncontrolled early training differences remain possible. A future ablation must separate command availability, target rewriting, and direct command use.
 
-The study has no contemporaneous direct-answer baseline, no held-constant larger-model comparison, no multi-seed replication, and no fresh externally constructed test. The evaluation is synthetic and structurally concentrated. Multiple developmental choices, including checkpoint and curriculum selection, used related evaluation evidence. We consequently avoid state-of-the-art claims, computational-efficiency comparisons, and causal generalizations beyond the observed systems.
+Table 3 retains all outcome classes for the three experiments. Figure 2 makes the opposite effects of abstraction and decomposition visible.
 
-Coding agents assisted implementation, data-pipeline work, experiment tooling, analysis, and manuscript preparation. Their participation matters epistemically because code, tests, oracles, and explanatory prose can inherit the same mistaken assumption. Sandve and colleagues' reproducibility guidance motivates retaining executable analysis and provenance [@sandve], but reproducibility alone does not make an interpretation valid. Human authors remain responsible for the scientific claims. The audit in this article is an artifact-based reconstruction, not independent human relabeling or external peer review.
+Table 3. Outcome percentages within each experiment. Every condition has 705 evaluated problems. Completed mismatches are distinct from execution failures.
 
-## 6. Future work: discovering wires under a fixed evaluation contract
+| Experiment | Condition | Match | Completed mismatch | Execution failure |
+| --- | --- | --- | --- | --- |
+| A | General code | 53.8% | 17.7% | 28.5% |
+| A | Specialized wires | 62.4% | 12.8% | 24.8% |
+| B | Compact targets | 65.2% | 26.7% | 8.1% |
+| B | Split targets | 63.5% | 17.3% | 19.1% |
+| C | 0.5B model | 51.2% | 18.4% | 30.4% |
+| C | 1.7B model | 59.7% | 14.2% | 26.1% |
 
-The next study should begin by freezing a new transfer set before inspecting its failures. Candidate wires would be proposed from training and development traces only. Examples include a dependency-join scheduler with explicit parallel branches, a units-and-rates operator with dimensional constraints, and a constraint-satisfaction interface. These are proposals, not implemented results. A solver such as Z3 supplies a concrete reference for the latter design [@z3], but does not solve the natural-language specification problem by itself.
+![Paired outcome bars compare command abstraction in Experiment A and target decomposition in Experiment B, with explicit conditions, rates, and denominators.](../assets/abstraction-comparison.png)
 
-Each candidate should carry a versioned input/output contract, unsupported cases, a reference implementation, and adversarial tests. A wire should be compared against an equivalent JavaScript target under the same base revision, training-token budget, checkpoint rule, and inference budget. Multiple seeds and family-level transfer splits would separate a reproducible representation benefit from an isolated favorable run. Both direct command use and gains on programs that do not call the new command should be reported.
+Figure 2. Two representation changes have opposite observed effects. Experiment A reduces procedural execution failures from 13.1% to 2.7%. Experiment B raises overall execution failures from 8.1% to 19.1%. The failure panels have different, explicitly stated populations.
 
-Acceptance criteria should include task correctness, execution failures, unsupported-command selection, generated-token length, and measured execution cost. A compact catalogue that improves one family but confuses another should retain that trade-off in the report. Structured answer schemas should be fixed with the task definition; semantic diagnostics introduced after observing failures should remain explicitly retrospective.
+### 4.3 Experiment B: more components can make generation harder
 
-Figure 3 separates iterative command development from the proposed confirmation step.
+Splitting target computations into more wires lowers matches from 65.2% to 63.5% and raises execution failures from 8.1% to 19.1%. The split condition loses matches on 2.0% of paired problems and gains them on 0.3%. Both conditions achieve 100% syntax and graph acceptance.
 
-![A development loop proposes and verifies new wires, with a separate frozen transfer set reserved for later confirmation.](../assets/vocabulary-loop.png)
+The practical conclusion is that valid decomposition is not necessarily learnable decomposition. A student may emit legal references and an acyclic graph yet misuse an intermediate value or generate faulty code inside a component. Our proposed explanation is an increased coordination burden: more interfaces must be generated consistently, even when individual bodies become shorter. The aggregate error increase is consistent with that explanation, but we have not classified every failure by a causal mechanism.
 
-Figure 3. Proposed vocabulary-discovery protocol. The frozen transfer evaluation is a future requirement; it was not part of the archived developmental series.
+This result changes the design recommendation. A new wire should remove a recurring algorithmic obligation, or make a necessary distinction easier to express. Increasing the number of intermediate wires is not itself evidence of progress. A controlled follow-up should measure dependency-binding errors and generated length alongside task correctness.
+
+### 4.4 Experiment C: base-model choice matters, but does not define a size floor
+
+On the same later evaluation identifiers, reference strings, and plan fingerprints, the 0.5B system matches 51.2% of problems and the 1.7B system matches 59.7%. The advantage is 8.5 percentage points. In the paired comparison, 8.7% of cases match only for the 1.7B system and 0.1% only for the 0.5B system.
+
+For a practitioner choosing between these two trained systems, the 1.7B result is better under the recorded evaluation. For a theory of small-model capacity, the comparison is insufficient. Both family and pretraining change with size, and each condition has one run. The result does not locate a universal minimum model size for reasoning. It reinforces the need to measure the combined model, vocabulary, curriculum, and executor.
+
+### 4.5 What the aggregate scores conceal
+
+All ten reconstructed runs pass syntax and graph checks on 100.0% of items, while answer and execution outcomes differ substantially. In B's compact condition, procedural matches are 91.3%, but book-derived matches are only 9.8%. The coalition family contributes most of those book-derived matches. The model has learned the outer language more reliably than it transfers across the tested task structures.
+
+Some completed mismatches also arise from answer form. A retrospective parser for B's 100 dependency-join outputs accepts complete duration-and-feasibility sentences under a declared grammar. Its outcome rates are 64% matched, 26% unclassified, 2% disagreeing, and 8% execution failure; normalized exact matching accepts 0%. On C's 20 coalition outputs, a tuple-set parser accepts 100.0% for the 1.7B condition against 25.0% original matches. Both diagnostics are deliberately narrow and preserve per-item decisions. They do not define a new overall semantic score.
+
+## 5. What we think happened
+
+The evidence supports a specific account of the opportunity. The small model often learns how a circuit is written before it can reliably implement every computation inside that circuit. Commands that own a useful algorithm can reduce that second burden. Experiment A provides a substantial positive signal; Experiment B shows why that signal should not be generalized to every form of additional structure.
+
+The remaining difficulty is interpretation. A graph command cannot correct missing edges, reversed relations, or the selection of reachability when the problem asks for a shortest route. More abstract operations may therefore move failure from algorithm construction toward extraction and command selection. That shift can still be valuable, provided it is measured rather than hidden in a single accuracy total.
+
+Coding agents assisted the data pipeline, implementation, experiment tooling, analysis, and manuscript preparation. This made executable reconstruction possible but also creates a risk that the same assumption appears in code, tests, and explanation. Sandve and colleagues' reproducibility practices support preserving those transformations [@sandve]. Independence still requires evidence that can challenge the shared assumption. The present audit is not external peer review or independent human relabeling.
+
+The main limits are one run per condition, incomplete early training metadata, repeated benchmark inspection, synthetic and structurally concentrated tasks, and no equal-budget ablation isolating execution from adaptation and prompting. No energy saving, general model-capacity law, or state-of-the-art advantage is measured. These limits narrow the explanation without erasing the observed improvement.
+
+## 6. The next experiment: discovering useful wires
+
+The next research step is to search for operations that replace repeated implementation failures. A dependency-join scheduler could own critical-path calculation. A units-and-rates operation could enforce dimensional compatibility. A solver interface could delegate a stated constraint problem to an established system such as Z3 [@z3]. These are candidate designs, not results from the present study.
+
+Figure 3 proposes the comparison needed to evaluate such candidates. Development traces supply the failure cases and command design. A separately frozen transfer set remains outside that loop. For each candidate, equivalent tasks are rendered as general-code and specialized-command targets using the same base revision, training-token budget, checkpoint rule, and decoding budget. Several seeds are needed to estimate run variability.
+
+![A proposed matched experiment trains general-code and specialized-command targets under shared conditions and evaluates both on sealed transfer families.](../assets/wire-discovery-design.png)
+
+Figure 3. Proposed test of a new abstraction. The two target representations differ while training and evaluation rules are held fixed. This confirmatory design was not performed in the archived study.
+
+A wire should be retained when it improves task outcomes without an offsetting rise in wrong-command or wrong-argument errors on other families. Direct command use, execution failures, generated length, and measured computational cost should be reported. Negative candidates belong in the record. The objective is a vocabulary whose operations are both useful and reliably selectable, not the largest possible catalogue.
 
 ## 7. Conclusion
 
-Small-model program compilation is sensitive to the operations the model is asked to express. In this archive, specialized wires accompany a clear improvement, while additional target decomposition can reduce reliability. Perfect syntax and graph validity coexist with substantial execution and interpretation failures. The defensible research claim is that executable abstractions are a promising, testable way to redistribute work between a small model and its runtime. Discovering which abstractions generalize requires new controlled experiments, rather than a stronger reading of the present development benchmark.
+The target language is part of the learning problem. In Experiment A, specialized commands raise normalized exact matching from 53.8% to 62.4% and lower procedural execution failures from 13.1% to 2.7%. In Experiment B, additional decomposition raises execution failures from 8.1% to 19.1%. We interpret the difference as evidence that removing algorithm construction can help a small model, while adding interfaces can make its job harder.
+
+Useful abstraction does not remove the need to understand the task. The next scientific question is which new commands reduce implementation difficulty while preserving reliable selection and transfer. The current results justify that search and specify the controls needed to test it.
 
 ## Data, code, and disclosure
 
-The companion artifact, Online Resource 1, contains the ten-arm evidence table, source hashes, paired comparisons, restricted diagnostic decisions, and reconstruction scripts. Original inputs are the project's archived holdout JSONL files and training/evaluation manifests. No model inference or training was repeated for this analysis. Public archival deposition, contributor identities, funding, and competing-interest statements require author confirmation before submission. No unsupported funding or authorship declaration is made in this manuscript. Coding-agent assistance is disclosed in Section 5.
+Online Resource 1 contains the experiment-to-archive map, complete ten-run outcomes, exact model identities and training timestamps, source hashes, paired comparisons including the base-model reanalysis, diagnostic decisions, and reconstruction scripts. No training or model inference was repeated for this analysis. Public deposit details, authorship, funding, and competing-interest declarations require completion before submission. Coding-agent assistance is described in Section 5.
 
 <!-- REFERENCES -->

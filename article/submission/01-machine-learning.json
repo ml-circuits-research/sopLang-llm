@@ -11,5 +11,27 @@
   "keepTablesTogether": true,
   "headerRight": "Review manuscript",
   "captionStyle": "springer",
-  "keepReferencesTogether": true
+  "keepReferencesTogether": true,
+  "tableWeights": {
+    "Experiment|Conditions compared|Base model|Main question": [
+      1.5,
+      2,
+      2,
+      2.4
+    ],
+    "Base model|Base content match|Adapted content match|Base exact match|Adapted exact match": [
+      2.1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "Experiment|Condition|Match|Completed mismatch|Execution failure": [
+      0.7,
+      1.6,
+      1,
+      1.2,
+      1.2
+    ]
+  }
 }

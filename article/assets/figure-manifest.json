@@ -1,0 +1,56 @@
+[
+  {
+    "name": "sop-program-anatomy",
+    "width": 1200,
+    "height": 535,
+    "description": "SOP Lang declaration, body, value reference, and dependency for a complete arithmetic example"
+  },
+  {
+    "name": "sop-program-anatomy-narrow",
+    "width": 600,
+    "height": 710,
+    "description": "Column-width guide to declarations, bodies, value references, and execution order"
+  },
+  {
+    "name": "reachability-contract",
+    "width": 600,
+    "height": 565,
+    "description": "Undirected and directed reachability require different command semantics"
+  },
+  {
+    "name": "abstraction-comparison",
+    "width": 1200,
+    "height": 665,
+    "description": "Paired percentages for abstraction and decomposition with denominators and direct condition labels"
+  },
+  {
+    "name": "wire-discovery-design",
+    "width": 1200,
+    "height": 625,
+    "description": "A future paired experimental design separates command development from sealed transfer evaluation"
+  },
+  {
+    "name": "claim-evidence-map",
+    "width": 1200,
+    "height": 650,
+    "description": "Specific model-identity, population, and judgment checks bound the scientific interpretation"
+  },
+  {
+    "name": "shared-assumption-example",
+    "width": 1200,
+    "height": 710,
+    "description": "A constructed directed-graph example shows how common parsing assumptions defeat evidential independence"
+  },
+  {
+    "name": "family-failures",
+    "width": 1200,
+    "height": 575,
+    "description": "A paired model comparison improves some task families and worsens dependency-join execution"
+  },
+  {
+    "name": "scoring-diagnostic",
+    "width": 1200,
+    "height": 590,
+    "description": "Declared duration-and-feasibility equivalence and the complete restricted diagnostic partition"
+  }
+]

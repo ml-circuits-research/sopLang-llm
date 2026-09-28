@@ -2,40 +2,43 @@
   "file": "04-open-research-europe.docx",
   "journal": "Open Research Europe",
   "source": "../manuscripts/04-open-research-europe.md",
-  "sha256": "1c7eaccfe5ee5e258323abcdec6e1ef60005c3f51999634ac3284096f323b7fd",
-  "sourceSha256": "8814a2c9d8513b82e86377b81e339cd4d68c920b5aa9e275fc1fc30687744d17",
-  "words": 3811,
+  "sha256": "da4cf2b4a46acb583b2701f8c1764d13c7fc4128a3b6f3b5db463662637c848d",
+  "sourceSha256": "2f0ea5920e48b7a85ab8fc6a1d09fca147db6a266233f79245c86c551291fa69",
+  "words": 3316,
   "references": [
     "pot",
     "dwork",
     "dreamcoder",
     "pal",
     "datasheets",
-    "scan",
     "messeri",
     "modelcards",
     "qwen05",
-    "qwen15",
     "qwen3",
-    "cascades",
     "sandve",
     "artifact"
   ],
-  "tables": 4,
+  "tables": 3,
   "figures": [
     {
-      "source": "../assets/outcome-ladder.png",
-      "width": 7562,
-      "height": 5843,
-      "sha256": "edfff8f9922ff2d3816e236057e642ae3ba9289fcacb5c8dfdec8449286c43a9"
+      "source": "../assets/sop-program-anatomy.png",
+      "width": 8250,
+      "height": 3678,
+      "sha256": "61f303e546c5bb3a3122bafd827c0e9781316d5b3e7a0b962c12062eaa718132"
     },
     {
-      "source": "../assets/vocabulary-loop.png",
-      "width": 7562,
+      "source": "../assets/family-failures.png",
+      "width": 8250,
+      "height": 3953,
+      "sha256": "af24263f6eb1f4820f8dd7934808a5d1f2f26a07690e83927f45159ab51ce824"
+    },
+    {
+      "source": "../assets/scoring-diagnostic.png",
+      "width": 8250,
       "height": 4056,
-      "sha256": "c8c3db6fa64bbae967ae099a336a9e23e957e1a5f5d5da0b9008b5bbc56db6b4"
+      "sha256": "189c640e31ffec4831907556b558667f27f0e66707cd2178d92619b9c0bc28ec"
     }
   ],
   "columns": 1,
-  "zipMembers": 10
+  "zipMembers": 11
 }

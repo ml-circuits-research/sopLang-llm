@@ -49,3 +49,34 @@ test('archived descriptive comparisons retain the intended population boundaries
   const changed = evidence.comparisons.find(row => row.left.startsWith('exp-021') && row.right.startsWith('exp-027'));
   assert.deepEqual([changed.common, changed.onlyLeftIds, changed.onlyRightIds, changed.changedOracles], [655, 50, 50, 100]);
 });
+
+test('every manuscript contains a runnable, self-contained language example', async () => {
+  const { readdir } = await import('node:fs/promises');
+  const directory = new URL('../manuscripts/', import.meta.url);
+  const runtime = createRuntime();
+  for (const name of await readdir(directory)) {
+    if (!name.endsWith('.md')) continue;
+    const source = await readFile(new URL(name, directory), 'utf8');
+    const examples = [...source.matchAll(/```sop\n([\s\S]*?)\n```/g)].map(match => match[1]);
+    assert.ok(examples.length > 0, `${name}: missing complete example`);
+    for (const example of examples) {
+      const result = await runtime.run(example, { outputs: ['answer'] });
+      assert.equal(result.status, 'completed', name);
+      assert.equal(result.outputs.answer, example.includes('@answer graphPath') ? 'yes' : 12, name);
+    }
+  }
+});
+
+test('illustrations preserve dependency order and expose the directed-graph counterexample', async () => {
+  const arithmetic = await readFile(new URL('../evidence/illustrative-arithmetic.sop', import.meta.url), 'utf8');
+  const runtime = createRuntime();
+  const declarations = arithmetic.trim().split('\n\n');
+  const reordered = await runtime.run(declarations.reverse().join('\n\n'), { outputs: ['answer'] });
+  assert.equal(reordered.outputs.answer, 12);
+  const graph = '@slots literal\n{"edges":[["B","A"],["C","B"]],"start":"A","target":"C"}\n\n@answer graphPath\nedges: $slots.edges\nfrom: $slots.start\nto: $slots.target';
+  const result = await runtime.run(graph, { outputs: ['answer'] });
+  assert.equal(result.outputs.answer, 'yes');
+  // In the stated directed interpretation A has no outgoing edge, so it cannot reach C.
+  const directedEdges = [['B', 'A'], ['C', 'B']];
+  assert.equal(directedEdges.some(([from]) => from === 'A'), false);
+});

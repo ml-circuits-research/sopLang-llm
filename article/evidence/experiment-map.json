@@ -1,0 +1,54 @@
+{
+  "contrasts": {
+    "vocabulary": {
+      "label": "Add specialized commands",
+      "conditions": {
+        "General code": "exp-014-deep-chains",
+        "Specialized wires": "exp-016-wires"
+      }
+    },
+    "decomposition": {
+      "label": "Split target computations",
+      "conditions": {
+        "Compact targets": "exp-021-1.7b-qwen3-dv7",
+        "Split targets": "exp-022-1.7b-qwen3-dv8"
+      }
+    },
+    "model": {
+      "label": "Change the adapted base model",
+      "conditions": {
+        "0.5B model": "exp-026-0.5b-qwen2.5coder-dv13",
+        "1.7B model": "exp-027-1.7b-qwen3-dv13"
+      }
+    },
+    "diagnostics": {
+      "label": "Restricted answer-equivalence diagnostics",
+      "populations": {
+        "Coalitions": "exp-027-1.7b-qwen3-dv13",
+        "Scheduling": "exp-021-1.7b-qwen3-dv7"
+      }
+    }
+  },
+  "manuscripts": {
+    "01-machine-learning": {
+      "A": "vocabulary",
+      "B": "decomposition",
+      "C": "model"
+    },
+    "02-informatica": {
+      "A": "vocabulary",
+      "B": "decomposition"
+    },
+    "03-empirical-software-engineering": {
+      "focus": "Identity, population, scorer, response availability, and mechanism audits"
+    },
+    "04-open-research-europe": {
+      "A": "model",
+      "Analysis B": "diagnostics"
+    },
+    "05-ai-and-ethics": {
+      "focus": "Normative analysis grounded in the vocabulary comparison and audit cases"
+    }
+  },
+  "baselineEvidence": "baseline-results.json"
+}

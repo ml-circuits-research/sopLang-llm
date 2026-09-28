@@ -1,0 +1,117 @@
+[
+  {
+    "path": "evaluation/run-prose-eval.mjs",
+    "bytes": 8681,
+    "sha256": "8283e61a1fef78822727444b7dd316a960fa5f07c114a3a2ac30448fbb50e783"
+  },
+  {
+    "path": "teacher/naming.mjs",
+    "bytes": 1241,
+    "sha256": "9c0fda5743934c2b50f254fc009d4698be18acfe8357c5f8fc49a7ec02d55a13"
+  },
+  {
+    "path": "evaluation/registry/cmp-base-holdout-prose-05/items/prose.jsonl",
+    "bytes": 471722,
+    "sha256": "af58bcab8e1626b7836dfe39b449ce148074ed88c4d478a099b80968bacb7f3e"
+  },
+  {
+    "path": "evaluation/registry/exp-012-census/items/holdout.jsonl",
+    "bytes": 1149281,
+    "sha256": "875051235cbf73905cf631f921f8803e00e2e18e5222dae0e6dbc9fc326895dd"
+  },
+  {
+    "path": "evaluation/registry/cmp-base-holdout-prose-05/run-manifest.json",
+    "bytes": 303,
+    "sha256": "e2c23bc6144b5dc3316039fac93fe4e789d4338ac4d14567caa52e6f06146773"
+  },
+  {
+    "path": "evaluation/registry/exp-012-census/run-manifest.json",
+    "bytes": 1791,
+    "sha256": "41e4ad1f44b9e5699760d9e73585a652030d37bfcaf1d3a5423a61f87507c40d"
+  },
+  {
+    "path": "evaluation/registry/exp-012-census/metrics.json",
+    "bytes": 15327,
+    "sha256": "a486e9baf1e70870f271a2c010574ecc016d40abc21246423fd93a36cf9d961d"
+  },
+  {
+    "path": "training/environment/base-model.json",
+    "bytes": 1232,
+    "sha256": "ca5b4f945fe0a550b41b21cdc9b56ad0dda839c2faeab5e828c680243101242f"
+  },
+  {
+    "path": "evaluation/registry/exp-012-census/selection.json",
+    "bytes": 1597263,
+    "sha256": "f431896f5962ed8ce0252c8275340936cea6c877949f21356f504b23e689612d"
+  },
+  {
+    "path": "evaluation/registry/cmp-base-holdout-prose-15/items/prose.jsonl",
+    "bytes": 384078,
+    "sha256": "c769515a8073b08eb68532d864e326bb82d7541646cdebf446bdbe4e074b2f49"
+  },
+  {
+    "path": "evaluation/registry/exp-013-1.5b/items/holdout.jsonl",
+    "bytes": 1153148,
+    "sha256": "432ed39b3cf4e70998fadf5a06b58ea576dba6b10a0cf711d9c98af9ae894a04"
+  },
+  {
+    "path": "evaluation/registry/cmp-base-holdout-prose-15/run-manifest.json",
+    "bytes": 308,
+    "sha256": "67d3df8aa5549fa4a39f9c7ced529b6603d92f710290804592c445ba124d7ce1"
+  },
+  {
+    "path": "evaluation/registry/exp-013-1.5b/run-manifest.json",
+    "bytes": 1792,
+    "sha256": "7552ded36a96a9d67bd7ce9dcc0c0bce2ea590378232f58898f259dc700b179b"
+  },
+  {
+    "path": "evaluation/registry/exp-013-1.5b/metrics.json",
+    "bytes": 15317,
+    "sha256": "b31907fca546b780debdb874af391bad1d2e0782cb3f1364ec38e469f23ff4f9"
+  },
+  {
+    "path": "training/environment/base-model-1.5b.json",
+    "bytes": 1235,
+    "sha256": "93961ee3a37a070bb18160253eeddc3d02d3318ca52a86d0ec41a8a5a8881908"
+  },
+  {
+    "path": "evaluation/registry/exp-013-1.5b/selection.json",
+    "bytes": 1887589,
+    "sha256": "ffd77a891b2bcfabaf2cc1b7ca3adcc295fe7e30fe0db7a10bb3ba382620045f"
+  },
+  {
+    "path": "evaluation/registry/cmp-base-holdout-prose-q3/items/prose.jsonl",
+    "bytes": 461638,
+    "sha256": "198d491394b7ba9c2ab6c44cfef50c8d079aa4e5019c5fb46aaab732c677956d"
+  },
+  {
+    "path": "evaluation/registry/exp-021-1.7b-qwen3-dv7/items/holdout.jsonl",
+    "bytes": 1011399,
+    "sha256": "ef86aec93740ed0f12f78bdf291939d42072cd83f3069be17ed91d327b4c2c78"
+  },
+  {
+    "path": "evaluation/registry/cmp-base-holdout-prose-q3/run-manifest.json",
+    "bytes": 314,
+    "sha256": "6bec573a03c1b7aff27ffdefdf7811b30b2795511b2e474437ef48987b2bbe7e"
+  },
+  {
+    "path": "evaluation/registry/exp-021-1.7b-qwen3-dv7/run-manifest.json",
+    "bytes": 1872,
+    "sha256": "5427ad2333fa533f6f388fb4e7034902a6f4279372d6a365e61dfdbae760206d"
+  },
+  {
+    "path": "evaluation/registry/exp-021-1.7b-qwen3-dv7/metrics.json",
+    "bytes": 16620,
+    "sha256": "86467cc993fe009f109ef65bbce5238db7d47fc234c4ddb16aff15991bf1ebc7"
+  },
+  {
+    "path": "training/environment/base-model-qwen3-17b.json",
+    "bytes": 1374,
+    "sha256": "92c9fd0a91f79b258cc56c1c5e3c65dfeac95c79fce79a2a38c6555f376d8941"
+  },
+  {
+    "path": "evaluation/registry/exp-021-1.7b-qwen3-dv7/selection.json",
+    "bytes": 147864,
+    "sha256": "7fab37f1b963cda53d88e696a8590e763e4356235f7c0458882992ac34e0da18"
+  }
+]

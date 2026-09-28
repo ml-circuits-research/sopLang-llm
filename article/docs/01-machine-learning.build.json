@@ -2,9 +2,9 @@
   "file": "01-machine-learning.docx",
   "journal": "Machine Learning",
   "source": "../manuscripts/01-machine-learning.md",
-  "sha256": "6759dc7837472d8ec7e826e478f97093bc641bb23ec0c47723835c6130f99b82",
-  "sourceSha256": "69857b84d52458e0cc0d6783853d390403b00aa8e58685eff3ec882945bcc6fa",
-  "words": 3663,
+  "sha256": "e8bbb73b3e5665d95d82c6c8599d51d090f941fd04ed45d1d95c44f5949eeb0b",
+  "sourceSha256": "e2ceb98635642abe3d8729d27fcffdf1a54b0e3bfa01d8ff956253b9d13f5da1",
+  "words": 4203,
   "references": [
     "pot",
     "z3",
@@ -18,25 +18,25 @@
     "qwen3",
     "sandve"
   ],
-  "tables": 2,
+  "tables": 3,
   "figures": [
     {
-      "source": "../assets/execution-contract.png",
-      "width": 7562,
-      "height": 2818,
-      "sha256": "76631b2ec43a649b42abb553bb1e943f41eb7b294eca6c0b2c3675b597a5e22b"
+      "source": "../assets/sop-program-anatomy.png",
+      "width": 8250,
+      "height": 3678,
+      "sha256": "61f303e546c5bb3a3122bafd827c0e9781316d5b3e7a0b962c12062eaa718132"
     },
     {
-      "source": "../assets/comparator-diagnostic.png",
-      "width": 7562,
-      "height": 3162,
-      "sha256": "2bbb51da603ffabe097ad7a1287fac8bfa1a7f063c188989929bdaf600656fcb"
+      "source": "../assets/abstraction-comparison.png",
+      "width": 8250,
+      "height": 4571,
+      "sha256": "69eec813edcaeed7d066695549ef26fb4e38f3e4b5da0d13ec5ba15e6b2d67a1"
     },
     {
-      "source": "../assets/vocabulary-loop.png",
-      "width": 7562,
-      "height": 4056,
-      "sha256": "c8c3db6fa64bbae967ae099a336a9e23e957e1a5f5d5da0b9008b5bbc56db6b4"
+      "source": "../assets/wire-discovery-design.png",
+      "width": 8250,
+      "height": 4296,
+      "sha256": "023d8bf6963fe79e1f77e01bacf8507bbaca195b6ae5c4f796847a34a34bf3f4"
     }
   ],
   "columns": 1,

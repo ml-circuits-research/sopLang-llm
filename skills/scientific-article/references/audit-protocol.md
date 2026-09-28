@@ -15,6 +15,8 @@ Audit the manuscript against the underlying records, not against another summary
 
 ## Argument pass
 
+Read as a newcomer: can the reader explain the system, read its minimal example, identify each experimental condition, and state what the comparison changes without opening the repository? Reject unexplained internal run labels in the main text. Check that each article selects evidence appropriate to its own question. Quantitative comparisons must name both conditions, identify the metric and denominator, and state the practical interpretation. If percentages lead the presentation, check their rounding against retained counts.
+
 Write a one-line purpose for every section and one premise/conclusion pair for each major claim. Remove a section if it contributes neither evidence nor a needed step in the argument. Check that the abstract reports the same study, denominators, and limitations as the body. Distinguish observed association, a controlled comparison's intended intervention, a plausible mechanism, and a causal conclusion.
 
 Act as a skeptical reviewer: formulate the strongest alternative explanation for each claimed contribution. Address it with existing evidence or narrow the claim. Test whether a negative result is being turned into a universal prohibition, a software test into a proof, or one project into a claim about all scientists. Avoid prescriptive language whose premise is merely anecdotal.

@@ -10,5 +10,26 @@
   "maxFigureHeight": 7800,
   "keepTablesTogether": true,
   "headerRight": "Review manuscript",
-  "keepReferencesTogether": true
+  "keepReferencesTogether": true,
+  "tableWeights": {
+    "Adapted model|Syntax and graph accepted|Execution completed|Normalized exact match": [
+      2,
+      1.2,
+      1.1,
+      1.2
+    ],
+    "Family|Problems|0.5B exact match|1.7B exact match|0.5B execution failure|1.7B execution failure": [
+      2,
+      0.7,
+      1,
+      1,
+      1.2,
+      1.2
+    ],
+    "Evaluation outcome|Coalition outputs|Scheduling outputs": [
+      2,
+      1,
+      1
+    ]
+  }
 }
