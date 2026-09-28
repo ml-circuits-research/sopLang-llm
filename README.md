@@ -28,6 +28,8 @@ The canonical documentation lives under `docs/`.
 
 The design specifications are the source of truth for documented behavior. `AGENTS.md` tells a coding agent how to work in this repository.
 
+The [research manuscript portfolio](article/README.md) contains five journal-specific English manuscripts in Markdown and DOCX, their evidence reconstruction, figures, bibliography verification, and submission requirements. These audited manuscripts supersede the historical article drafts under `docs/article/` for publication claims.
+
 ## Implementation status
 
 The repository ships the language runtime under `runtime/` and the standard vocabulary under `wires/standard/`, together with a test suite that covers the parser, dependency analysis, scheduling, epochs and revisions, containers, metaprogramming, tracing and replay, the registry and profile readers, the published schema profile, the isolated JavaScript sandbox, and compiled-context end-to-end scenarios.

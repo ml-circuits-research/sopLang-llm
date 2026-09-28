@@ -1,0 +1,13 @@
+{
+  "source": "../manuscripts/04-open-research-europe.md",
+  "output": "../docs/04-open-research-europe.docx",
+  "bibliography": "../evidence/bibliography.json",
+  "journal": "Open Research Europe",
+  "shortTitle": "Reconstructing small-model compilation",
+  "fontSize": 11,
+  "citationStyle": "author-date",
+  "lineSpacing": 276,
+  "maxFigureHeight": 7800,
+  "keepTablesTogether": true,
+  "headerRight": "Review manuscript"
+}

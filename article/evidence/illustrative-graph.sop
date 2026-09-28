@@ -1,0 +1,8 @@
+@slots literal
+{"edges":[["A","B"],["B","C"]],
+ "start":"A","target":"C"}
+
+@answer graphPath
+edges: $slots.edges
+from: $slots.start
+to: $slots.target

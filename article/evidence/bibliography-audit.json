@@ -1,0 +1,233 @@
+[
+  {
+    "key": "cascades",
+    "title": "“Everyone wants to do the model work, not the data work”: Data Cascades in High-Stakes AI",
+    "metadata": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked.",
+    "accessed": "2026-09-28",
+    "supportUrl": "https://research.google/pubs/everyone-wants-to-do-the-model-work-not-the-data-work-data-cascades-in-high-stakes-ai/",
+    "locator": "Abstract on data practices and downstream consequences",
+    "supports": "Data-quality problems can propagate through later stages of an AI workflow.",
+    "doesNotEstablish": "The present synthetic case does not reproduce the source's high-stakes field study.",
+    "status": "Primary-source support checked for the limited proposition recorded here."
+  },
+  {
+    "key": "datasheets",
+    "title": "Datasheets for datasets",
+    "metadata": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked.",
+    "accessed": "2026-09-28",
+    "supportUrl": "https://arxiv.org/abs/1803.09010",
+    "locator": "Abstract of author version v8",
+    "supports": "Dataset documentation should identify motivation, composition, collection and recommended use.",
+    "doesNotEstablish": "Documenting provenance does not remove shared generator-oracle assumptions.",
+    "status": "Primary-source support checked for the limited proposition recorded here."
+  },
+  {
+    "key": "dreamcoder",
+    "title": "DreamCoder: bootstrapping inductive program synthesis with wake-sleep library learning",
+    "metadata": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked.",
+    "accessed": "2026-09-28",
+    "supportUrl": "https://www.neurosymbolic.org/papers/EllisWNSMHCST21.pdf",
+    "locator": "PLDI version, introduction and overview",
+    "supports": "DreamCoder jointly learns reusable program libraries and neural search policies.",
+    "doesNotEstablish": "SOP Lang command design is an agent-assisted engineering loop, not a reproduction of its learning algorithm.",
+    "status": "Primary-source support checked for the limited proposition recorded here."
+  },
+  {
+    "key": "dwork",
+    "title": "The reusable holdout: Preserving validity in adaptive data analysis",
+    "metadata": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked.",
+    "accessed": "2026-09-28",
+    "supportUrl": "https://arxiv.org/abs/1506.02629",
+    "locator": "Companion author paper, abstract on adaptive holdout reuse",
+    "supports": "Repeated adaptive use of test results can overfit the holdout.",
+    "doesNotEstablish": "No numerical correction or reusable-holdout theorem is applied to the project.",
+    "status": "Primary-source support checked for the limited proposition recorded here."
+  },
+  {
+    "key": "kapoor",
+    "title": "Leakage and the reproducibility crisis in machine-learning-based science",
+    "metadata": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked.",
+    "accessed": "2026-09-28",
+    "supportUrl": "https://reproducible.cs.princeton.edu/",
+    "locator": "Authors' project page, scope and leakage explanation; paper linked there",
+    "supports": "Predictive evaluation can become overoptimistic through leakage and invalid separation of learning from testing.",
+    "doesNotEstablish": "The citation does not establish direct training contamination in this repository.",
+    "status": "Primary-source support checked for the limited proposition recorded here."
+  },
+  {
+    "key": "messeri",
+    "title": "Artificial intelligence and illusions of understanding in scientific research",
+    "metadata": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked.",
+    "accessed": "2026-09-28",
+    "supportUrl": "https://www.crockettlab.org/s/MesseriCrockett_2024_Nature.pdf",
+    "locator": "Pages 49-50, introduction and Box 1",
+    "supports": "AI assistance can create misplaced confidence in understanding and narrow scientific inquiry.",
+    "doesNotEstablish": "The project does not measure cognitive illusions in human participants.",
+    "status": "Primary-source support checked for the limited proposition recorded here."
+  },
+  {
+    "key": "modelcards",
+    "title": "Model Cards for Model Reporting",
+    "metadata": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked.",
+    "accessed": "2026-09-28",
+    "supportUrl": "https://arxiv.org/abs/1810.03993",
+    "locator": "Abstract and model-card reporting proposal",
+    "supports": "Model documentation should state identity, intended use, evaluation conditions and limitations.",
+    "doesNotEstablish": "A completed card alone does not validate performance claims.",
+    "status": "Primary-source support checked for the limited proposition recorded here."
+  },
+  {
+    "key": "raji",
+    "title": "Closing the AI accountability gap: defining an end-to-end framework for internal algorithmic auditing",
+    "metadata": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked.",
+    "accessed": "2026-09-28",
+    "supportUrl": "https://arxiv.org/abs/2001.00973",
+    "locator": "Introduction and sections 2-3, author full text",
+    "supports": "Auditing distributes documented checks over the AI development lifecycle and distinguishes reliability from accountability.",
+    "doesNotEstablish": "Local research auditing is an adaptation, not validation of the whole organizational framework.",
+    "status": "Primary-source support checked for the limited proposition recorded here."
+  },
+  {
+    "key": "runeson",
+    "title": "Guidelines for conducting and reporting case study research in software engineering",
+    "metadata": "Crossref DOI record, accessed 2026-09-28; 2009 journal issue year checked on publisher page; online-first date is 2008.",
+    "accessed": "2026-09-28",
+    "supportUrl": "https://doi.org/10.1007/s10664-008-9102-8",
+    "locator": "Abstract and case-study design/reporting sections",
+    "supports": "A software-engineering case study needs context, a chain of evidence, and explicit validity analysis.",
+    "doesNotEstablish": "A single case cannot estimate an agent error rate across populations.",
+    "status": "Primary-source support checked for the limited proposition recorded here."
+  },
+  {
+    "key": "sandve",
+    "title": "Ten Simple Rules for Reproducible Computational Research",
+    "metadata": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked.",
+    "accessed": "2026-09-28",
+    "supportUrl": "https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003285",
+    "locator": "Rules 1-5",
+    "supports": "Track provenance, script transformations, preserve versions and intermediate results.",
+    "doesNotEstablish": "The checklist is a reproducibility discipline, not a semantic oracle.",
+    "status": "Primary-source support checked for the limited proposition recorded here."
+  },
+  {
+    "key": "selbst",
+    "title": "Fairness and Abstraction in Sociotechnical Systems",
+    "metadata": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked.",
+    "accessed": "2026-09-28",
+    "supportUrl": "https://andrewselbst.com/wp-content/uploads/2019/10/selbst-et-al-fairness-and-abstraction-in-sociotechnical-systems.pdf",
+    "locator": "Introduction and discussion of abstraction traps",
+    "supports": "Technical abstraction can omit socially significant context and make a narrow formal target misleading.",
+    "doesNotEstablish": "A word-problem experiment is not a fairness deployment study.",
+    "status": "Primary-source support checked for the limited proposition recorded here."
+  },
+  {
+    "key": "synthesis",
+    "title": "Program Synthesis",
+    "metadata": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked.",
+    "accessed": "2026-09-28",
+    "supportUrl": "https://eecs481.org/readings/Gulwani17.pdf",
+    "locator": "Introduction, specification/search-space/search-technique discussion",
+    "supports": "Program synthesis depends on the specification and the restricted space of programs.",
+    "doesNotEstablish": "An executable output is not proof that a natural-language specification was formalized correctly.",
+    "status": "Primary-source support checked for the limited proposition recorded here."
+  },
+  {
+    "key": "pal",
+    "title": "PAL: Program-aided Language Models",
+    "metadata": "Publisher page and BibTeX checked, 2026-09-28.",
+    "accessed": "2026-09-28",
+    "supportUrl": "https://proceedings.mlr.press/v202/gao23f.html",
+    "locator": "Abstract, paragraphs 2-3",
+    "supports": "Natural-language problems can be translated into programs and solved by an external interpreter.",
+    "doesNotEstablish": "Does not validate SOP Lang or its small-model results.",
+    "status": "Primary-source support checked for the limited proposition recorded here."
+  },
+  {
+    "key": "pot",
+    "title": "Program of Thoughts Prompting: Disentangling Computation from Reasoning for Numerical Reasoning Tasks",
+    "metadata": "Author preprint v4 and author code repository identify the TMLR 2023 publication; direct OpenReview access returned a browser challenge.",
+    "accessed": "2026-09-28",
+    "supportUrl": "https://arxiv.org/abs/2211.12588",
+    "locator": "Author version v4, abstract and introduction",
+    "supports": "Program-of-Thoughts delegates numerical computation to a program interpreter.",
+    "doesNotEstablish": "The published paper predates this project and is not a baseline evaluated here.",
+    "status": "Primary-source support checked for the limited proposition recorded here."
+  },
+  {
+    "key": "scan",
+    "title": "Generalization without Systematicity: On the Compositional Skills of Sequence-to-Sequence Recurrent Networks",
+    "metadata": "Publisher page and BibTeX checked, 2026-09-28.",
+    "accessed": "2026-09-28",
+    "supportUrl": "https://proceedings.mlr.press/v80/lake18a.html",
+    "locator": "Abstract",
+    "supports": "SCAN distinguishes limited recombination from more demanding systematic compositional generalization.",
+    "doesNotEstablish": "RNN findings do not establish a scaling law for modern code models.",
+    "status": "Primary-source support checked for the limited proposition recorded here."
+  },
+  {
+    "key": "llmcompiler",
+    "title": "An LLM Compiler for Parallel Function Calling",
+    "metadata": "Publisher page and BibTeX checked, 2026-09-28.",
+    "accessed": "2026-09-28",
+    "supportUrl": "https://proceedings.mlr.press/v235/kim24y.html",
+    "locator": "Abstract, architecture description",
+    "supports": "LLMCompiler separates planning, dispatch and execution of function calls.",
+    "doesNotEstablish": "Its reported speedups are not transferred to the present study.",
+    "status": "Primary-source support checked for the limited proposition recorded here."
+  },
+  {
+    "key": "z3",
+    "title": "Z3: An Efficient SMT Solver",
+    "metadata": "Author institution publication record and linked DOI checked, 2026-09-28.",
+    "accessed": "2026-09-28",
+    "supportUrl": "https://www.microsoft.com/en-us/research/publication/z3-an-efficient-smt-solver/",
+    "locator": "Publication abstract",
+    "supports": "Z3 solves satisfiability modulo theories, including arithmetic and arrays.",
+    "doesNotEstablish": "No Z3 integration, speedup or accuracy improvement has been measured here.",
+    "status": "Primary-source support checked for the limited proposition recorded here."
+  },
+  {
+    "key": "qwen05",
+    "title": "Qwen2.5-Coder-0.5B-Instruct",
+    "metadata": "Official model owner page, model name and publisher checked 2026-09-28; no unsupported publication date assigned.",
+    "accessed": "2026-09-28",
+    "supportUrl": "https://huggingface.co/Qwen/Qwen2.5-Coder-0.5B-Instruct",
+    "locator": "Model card title and model overview",
+    "supports": "Identifies the named released model and its owner.",
+    "doesNotEstablish": "Experimental fine-tuning identity and results come from the local run manifests, not the upstream model card.",
+    "status": "Primary-source support checked for the limited proposition recorded here."
+  },
+  {
+    "key": "qwen15",
+    "title": "Qwen2.5-Coder-1.5B-Instruct",
+    "metadata": "Official model owner page, model name and publisher checked 2026-09-28; no unsupported publication date assigned.",
+    "accessed": "2026-09-28",
+    "supportUrl": "https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "locator": "Model card title and model overview",
+    "supports": "Identifies the named released model and its owner.",
+    "doesNotEstablish": "Experimental fine-tuning identity and results come from the local run manifests, not the upstream model card.",
+    "status": "Primary-source support checked for the limited proposition recorded here."
+  },
+  {
+    "key": "qwen3",
+    "title": "Qwen3-1.7B",
+    "metadata": "Official model owner page, model name and publisher checked 2026-09-28; no unsupported publication date assigned.",
+    "accessed": "2026-09-28",
+    "supportUrl": "https://huggingface.co/Qwen/Qwen3-1.7B",
+    "locator": "Model card title and model overview",
+    "supports": "Identifies the named released model and its owner.",
+    "doesNotEstablish": "Experimental fine-tuning identity and results come from the local run manifests, not the upstream model card.",
+    "status": "Primary-source support checked for the limited proposition recorded here."
+  },
+  {
+    "key": "artifact",
+    "title": "SOP Lang research artifact: audited experiment records and reconstruction scripts",
+    "metadata": "Local companion artifact inspected; no public DOI or public availability asserted.",
+    "accessed": "2026-09-28",
+    "supportUrl": "../README.md",
+    "locator": "Evidence inventory and source-hash manifest",
+    "supports": "Locates the reconstruction scripts, derived tables, and original-input inventory used in the manuscripts.",
+    "doesNotEstablish": "The local artifact is not an independently published dataset or a public archived release.",
+    "status": "Primary-source support checked for the limited proposition recorded here."
+  }
+]

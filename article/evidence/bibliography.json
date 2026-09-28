@@ -1,0 +1,1178 @@
+{
+  "cascades": {
+    "citation": "Sambasivan et al., 2021",
+    "sort": "Sambasivan 2021",
+    "doi": "10.1145/3411764.3445518",
+    "entry": "Sambasivan, N., Kapania, S., Highfill, H., Akrong, D., Paritosh, P., & Aroyo, L. M. (2021). “Everyone wants to do the model work, not the data work”: Data Cascades in High-Stakes AI. *Proceedings of the 2021 CHI Conference on Human Factors in Computing Systems*, 1-15.",
+    "title": "“Everyone wants to do the model work, not the data work”: Data Cascades in High-Stakes AI",
+    "year": 2021,
+    "authors": [
+      {
+        "given": "Nithya",
+        "family": "Sambasivan",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "Google Research, United States"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Shivani",
+        "family": "Kapania",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Google Research India, India"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Hannah",
+        "family": "Highfill",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Google Inc., United States"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Diana",
+        "family": "Akrong",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Google Research Accra, Ghana"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Praveen",
+        "family": "Paritosh",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Google, United States"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Lora M",
+        "family": "Aroyo",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Google, United States"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "url": "https://doi.org/10.1145/3411764.3445518",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "datasheets": {
+    "citation": "Gebru et al., 2021",
+    "sort": "Gebru 2021",
+    "doi": "10.1145/3458723",
+    "entry": "Gebru, T., Morgenstern, J., Vecchione, B., Vaughan, J. W., Wallach, H., Daumé, H., III, & Crawford, K. (2021). Datasheets for datasets. *Communications of the ACM*, 64(12), 86-92.",
+    "title": "Datasheets for datasets",
+    "year": 2021,
+    "authors": [
+      {
+        "given": "Timnit",
+        "family": "Gebru",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "DAIR Institute, Palo Alto, CA"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Jamie",
+        "family": "Morgenstern",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "University of Washington, Seattle, WA"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Briana",
+        "family": "Vecchione",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Cornell University, Ithaca, NY"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Jennifer Wortman",
+        "family": "Vaughan",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Microsoft Research, New York, NY"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Hanna",
+        "family": "Wallach",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Microsoft Research, New York, NY"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Hal Daumé",
+        "family": "III",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "University of Maryland, College Park, MD"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Kate",
+        "family": "Crawford",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "USC Annenberg, CA"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "url": "https://doi.org/10.1145/3458723",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "dreamcoder": {
+    "citation": "Ellis et al., 2021",
+    "sort": "Ellis 2021",
+    "doi": "10.1145/3453483.3454080",
+    "entry": "Ellis, K., Wong, C., Nye, M., Sablé-Meyer, M., Morales, L., Hewitt, L., Cary, L., Solar-Lezama, A., & Tenenbaum, J. B. (2021). DreamCoder: bootstrapping inductive program synthesis with wake-sleep library learning. *Proceedings of the 42nd ACM SIGPLAN International Conference on Programming Language Design and Implementation*, 835-850.",
+    "title": "DreamCoder: bootstrapping inductive program synthesis with wake-sleep library learning",
+    "year": 2021,
+    "authors": [
+      {
+        "given": "Kevin",
+        "family": "Ellis",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "Cornell University, USA"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Catherine",
+        "family": "Wong",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Massachusetts Institute of Technology, USA"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Maxwell",
+        "family": "Nye",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Massachusetts Institute of Technology, USA"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Mathias",
+        "family": "Sablé-Meyer",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "PSL University, France / Collège de France, France / NeuroSpin, France"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Lucas",
+        "family": "Morales",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Massachusetts Institute of Technology, USA"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Luke",
+        "family": "Hewitt",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Massachusetts Institute of Technology, USA"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Luc",
+        "family": "Cary",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Massachusetts Institute of Technology, USA"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Armando",
+        "family": "Solar-Lezama",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Massachusetts Institute of Technology, USA"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Joshua B.",
+        "family": "Tenenbaum",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Massachusetts Institute of Technology, USA"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "url": "https://doi.org/10.1145/3453483.3454080",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "dwork": {
+    "citation": "Dwork et al., 2015",
+    "sort": "Dwork 2015",
+    "doi": "10.1126/science.aaa9375",
+    "entry": "Dwork, C., Feldman, V., Hardt, M., Pitassi, T., Reingold, O., & Roth, A. (2015). The reusable holdout: Preserving validity in adaptive data analysis. *Science*, 349(6248), 636-638.",
+    "title": "The reusable holdout: Preserving validity in adaptive data analysis",
+    "year": 2015,
+    "authors": [
+      {
+        "given": "Cynthia",
+        "family": "Dwork",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "Microsoft Research, Mountain View, CA 94043, USA."
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Vitaly",
+        "family": "Feldman",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "IBM Almaden Research Center, San Jose, CA 95120, USA."
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Moritz",
+        "family": "Hardt",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Google Research, Mountain View, CA 94043, USA."
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Toniann",
+        "family": "Pitassi",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Department of Computer Science, University of Toronto, Toronto, Ontario M5S 3G4, Canada."
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Omer",
+        "family": "Reingold",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Samsung Research America, Mountain View, CA 94043, USA."
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Aaron",
+        "family": "Roth",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Department of Computer and Information Science, University of Pennsylvania, Philadelphia, PA 19104, USA."
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "url": "https://doi.org/10.1126/science.aaa9375",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "kapoor": {
+    "citation": "Kapoor & Narayanan, 2023",
+    "sort": "Kapoor 2023",
+    "doi": "10.1016/j.patter.2023.100804",
+    "entry": "Kapoor, S., & Narayanan, A. (2023). Leakage and the reproducibility crisis in machine-learning-based science. *Patterns*, 4(9), 100804.",
+    "title": "Leakage and the reproducibility crisis in machine-learning-based science",
+    "year": 2023,
+    "authors": [
+      {
+        "ORCID": "https://orcid.org/0000-0001-5695-280X",
+        "authenticated-orcid": false,
+        "given": "Sayash",
+        "family": "Kapoor",
+        "sequence": "first",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Arvind",
+        "family": "Narayanan",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "url": "https://doi.org/10.1016/j.patter.2023.100804",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "messeri": {
+    "citation": "Messeri & Crockett, 2024",
+    "sort": "Messeri 2024",
+    "doi": "10.1038/s41586-024-07146-0",
+    "entry": "Messeri, L., & Crockett, M. J. (2024). Artificial intelligence and illusions of understanding in scientific research. *Nature*, 627(8002), 49-58.",
+    "title": "Artificial intelligence and illusions of understanding in scientific research",
+    "year": 2024,
+    "authors": [
+      {
+        "ORCID": "https://orcid.org/0000-0002-0964-123X",
+        "authenticated-orcid": false,
+        "given": "Lisa",
+        "family": "Messeri",
+        "sequence": "first",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0001-8800-410X",
+        "authenticated-orcid": false,
+        "given": "M. J.",
+        "family": "Crockett",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "url": "https://doi.org/10.1038/s41586-024-07146-0",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "modelcards": {
+    "citation": "Mitchell et al., 2019",
+    "sort": "Mitchell 2019",
+    "doi": "10.1145/3287560.3287596",
+    "entry": "Mitchell, M., Wu, S., Zaldivar, A., Barnes, P., Vasserman, L., Hutchinson, B., Spitzer, E., Raji, I. D., & Gebru, T. (2019). Model Cards for Model Reporting. *Proceedings of the Conference on Fairness, Accountability, and Transparency*, 220-229.",
+    "title": "Model Cards for Model Reporting",
+    "year": 2019,
+    "authors": [
+      {
+        "given": "Margaret",
+        "family": "Mitchell",
+        "sequence": "first",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Simone",
+        "family": "Wu",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Andrew",
+        "family": "Zaldivar",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Parker",
+        "family": "Barnes",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Lucy",
+        "family": "Vasserman",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Ben",
+        "family": "Hutchinson",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Elena",
+        "family": "Spitzer",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Inioluwa Deborah",
+        "family": "Raji",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Timnit",
+        "family": "Gebru",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "url": "https://doi.org/10.1145/3287560.3287596",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "raji": {
+    "citation": "Raji et al., 2020",
+    "sort": "Raji 2020",
+    "doi": "10.1145/3351095.3372873",
+    "entry": "Raji, I. D., Smart, A., White, R. N., Mitchell, M., Gebru, T., Hutchinson, B., Smith-Loud, J., Theron, D., & Barnes, P. (2020). Closing the AI accountability gap: defining an end-to-end framework for internal algorithmic auditing. *Proceedings of the 2020 Conference on Fairness, Accountability, and Transparency*, 33-44.",
+    "title": "Closing the AI accountability gap: defining an end-to-end framework for internal algorithmic auditing",
+    "year": 2020,
+    "authors": [
+      {
+        "given": "Inioluwa Deborah",
+        "family": "Raji",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "Partnership on AI"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Andrew",
+        "family": "Smart",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Google"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Rebecca N.",
+        "family": "White",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Google"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Margaret",
+        "family": "Mitchell",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Google"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Timnit",
+        "family": "Gebru",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Google"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Ben",
+        "family": "Hutchinson",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Google"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Jamila",
+        "family": "Smith-Loud",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Google"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Daniel",
+        "family": "Theron",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Google"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Parker",
+        "family": "Barnes",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Google"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "url": "https://doi.org/10.1145/3351095.3372873",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "runeson": {
+    "citation": "Runeson & Höst, 2009",
+    "sort": "Runeson 2009",
+    "doi": "10.1007/s10664-008-9102-8",
+    "entry": "Runeson, P., & Höst, M. (2009). Guidelines for conducting and reporting case study research in software engineering. *Empirical Software Engineering*, 14(2), 131-164.",
+    "title": "Guidelines for conducting and reporting case study research in software engineering",
+    "year": 2009,
+    "authors": [
+      {
+        "given": "Per",
+        "family": "Runeson",
+        "sequence": "first",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Martin",
+        "family": "Höst",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "url": "https://doi.org/10.1007/s10664-008-9102-8",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; 2009 journal issue year checked on publisher page; online-first date is 2008."
+  },
+  "sandve": {
+    "citation": "Sandve et al., 2013",
+    "sort": "Sandve 2013",
+    "doi": "10.1371/journal.pcbi.1003285",
+    "entry": "Sandve, G. K., Nekrutenko, A., Taylor, J., & Hovig, E. (2013). Ten Simple Rules for Reproducible Computational Research. *PLoS Computational Biology*, 9(10), e1003285.",
+    "title": "Ten Simple Rules for Reproducible Computational Research",
+    "year": 2013,
+    "authors": [
+      {
+        "given": "Geir Kjetil",
+        "family": "Sandve",
+        "sequence": "first",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Anton",
+        "family": "Nekrutenko",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "James",
+        "family": "Taylor",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Eivind",
+        "family": "Hovig",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "url": "https://doi.org/10.1371/journal.pcbi.1003285",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "selbst": {
+    "citation": "Selbst et al., 2019",
+    "sort": "Selbst 2019",
+    "doi": "10.1145/3287560.3287598",
+    "entry": "Selbst, A. D., Boyd, D., Friedler, S. A., Venkatasubramanian, S., & Vertesi, J. (2019). Fairness and Abstraction in Sociotechnical Systems. *Proceedings of the Conference on Fairness, Accountability, and Transparency*, 59-68.",
+    "title": "Fairness and Abstraction in Sociotechnical Systems",
+    "year": 2019,
+    "authors": [
+      {
+        "given": "Andrew D.",
+        "family": "Selbst",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "Data &amp; Society Research Institute, New York, NY"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Danah",
+        "family": "Boyd",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Microsoft Research and Data &amp; Society Research Institute, New York, NY"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Sorelle A.",
+        "family": "Friedler",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Haverford College, Haverford, PA"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Suresh",
+        "family": "Venkatasubramanian",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "University of Utah, Salt Lake City, UT"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Janet",
+        "family": "Vertesi",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Princeton University, Princeton, NJ"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "url": "https://doi.org/10.1145/3287560.3287598",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "synthesis": {
+    "citation": "Gulwani et al., 2017",
+    "sort": "Gulwani 2017",
+    "doi": "10.1561/2500000010",
+    "entry": "Gulwani, S., Polozov, O., & Singh, R. (2017). Program Synthesis. *Foundations and Trends® in Programming Languages*, 4(1-2), 1-119.",
+    "title": "Program Synthesis",
+    "year": 2017,
+    "authors": [
+      {
+        "given": "Sumit",
+        "family": "Gulwani",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "Microsoft Research"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Oleksandr",
+        "family": "Polozov",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "University of Washington"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Rishabh",
+        "family": "Singh",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Microsoft Research"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "url": "https://doi.org/10.1561/2500000010",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "pal": {
+    "citation": "Gao et al., 2023",
+    "sort": "Gao 2023",
+    "year": 2023,
+    "title": "PAL: Program-aided Language Models",
+    "entry": "Gao, L., Madaan, A., Zhou, S., Alon, U., Liu, P., Yang, Y., Callan, J., & Neubig, G. (2023). PAL: Program-aided Language Models. *Proceedings of Machine Learning Research*, 202, 10764-10799.",
+    "url": "https://proceedings.mlr.press/v202/gao23f.html",
+    "metadataVerification": "Publisher page and BibTeX checked, 2026-09-28."
+  },
+  "pot": {
+    "citation": "Chen et al., 2023",
+    "sort": "Chen 2023",
+    "year": 2023,
+    "title": "Program of Thoughts Prompting: Disentangling Computation from Reasoning for Numerical Reasoning Tasks",
+    "entry": "Chen, W., Ma, X., Wang, X., & Cohen, W. W. (2023). Program of Thoughts Prompting: Disentangling Computation from Reasoning for Numerical Reasoning Tasks. *Transactions on Machine Learning Research*.",
+    "url": "https://openreview.net/forum?id=YfZ4ZPt8zd",
+    "metadataVerification": "Author preprint v4 and author code repository identify the TMLR 2023 publication; direct OpenReview access returned a browser challenge."
+  },
+  "scan": {
+    "citation": "Lake & Baroni, 2018",
+    "sort": "Lake 2018",
+    "year": 2018,
+    "title": "Generalization without Systematicity: On the Compositional Skills of Sequence-to-Sequence Recurrent Networks",
+    "entry": "Lake, B., & Baroni, M. (2018). Generalization without Systematicity: On the Compositional Skills of Sequence-to-Sequence Recurrent Networks. *Proceedings of Machine Learning Research*, 80, 2873-2882.",
+    "url": "https://proceedings.mlr.press/v80/lake18a.html",
+    "metadataVerification": "Publisher page and BibTeX checked, 2026-09-28."
+  },
+  "llmcompiler": {
+    "citation": "Kim et al., 2024",
+    "sort": "Kim 2024",
+    "year": 2024,
+    "title": "An LLM Compiler for Parallel Function Calling",
+    "entry": "Kim, S., Moon, S., Tabrizi, R., Lee, N., Mahoney, M. W., Keutzer, K., & Gholami, A. (2024). An LLM Compiler for Parallel Function Calling. *Proceedings of Machine Learning Research*, 235, 24370-24391.",
+    "url": "https://proceedings.mlr.press/v235/kim24y.html",
+    "metadataVerification": "Publisher page and BibTeX checked, 2026-09-28."
+  },
+  "z3": {
+    "citation": "de Moura & Bjørner, 2008",
+    "sort": "Moura 2008",
+    "year": 2008,
+    "title": "Z3: An Efficient SMT Solver",
+    "doi": "10.1007/978-3-540-78800-3_24",
+    "entry": "de Moura, L., & Bjørner, N. (2008). Z3: An Efficient SMT Solver. *Tools and Algorithms for the Construction and Analysis of Systems*, Lecture Notes in Computer Science, 4963, 337-340.",
+    "url": "https://www.microsoft.com/en-us/research/publication/z3-an-efficient-smt-solver/",
+    "metadataVerification": "Author institution publication record and linked DOI checked, 2026-09-28."
+  },
+  "qwen05": {
+    "citation": "Qwen, n.d.-a",
+    "sort": "Qwen a",
+    "title": "Qwen2.5-Coder-0.5B-Instruct",
+    "entry": "Qwen. (n.d.-a). *Qwen2.5-Coder-0.5B-Instruct* [Model card]. Hugging Face. Retrieved September 28, 2026, from",
+    "url": "https://huggingface.co/Qwen/Qwen2.5-Coder-0.5B-Instruct",
+    "metadataVerification": "Official model owner page, model name and publisher checked 2026-09-28; no unsupported publication date assigned."
+  },
+  "qwen15": {
+    "citation": "Qwen, n.d.-b",
+    "sort": "Qwen b",
+    "title": "Qwen2.5-Coder-1.5B-Instruct",
+    "entry": "Qwen. (n.d.-b). *Qwen2.5-Coder-1.5B-Instruct* [Model card]. Hugging Face. Retrieved September 28, 2026, from",
+    "url": "https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "metadataVerification": "Official model owner page, model name and publisher checked 2026-09-28; no unsupported publication date assigned."
+  },
+  "qwen3": {
+    "citation": "Qwen, n.d.-c",
+    "sort": "Qwen c",
+    "title": "Qwen3-1.7B",
+    "entry": "Qwen. (n.d.-c). *Qwen3-1.7B* [Model card]. Hugging Face. Retrieved September 28, 2026, from",
+    "url": "https://huggingface.co/Qwen/Qwen3-1.7B",
+    "metadataVerification": "Official model owner page, model name and publisher checked 2026-09-28; no unsupported publication date assigned."
+  },
+  "artifact": {
+    "citation": "SOP Lang research artifact, 2026",
+    "sort": "SOP Lang research artifact 2026",
+    "title": "SOP Lang research artifact: audited experiment records and reconstruction scripts",
+    "year": 2026,
+    "entry": "*SOP Lang research artifact: Audited experiment records and reconstruction scripts*. (2026). Supplementary material accompanying this manuscript; snapshot dated September 28, 2026. Public persistent identifier pending.",
+    "metadataVerification": "Local companion artifact inspected; no public DOI or public availability asserted."
+  }
+}

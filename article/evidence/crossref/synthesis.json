@@ -1,0 +1,1384 @@
+{
+  "indexed": {
+    "date-parts": [
+      [
+        2026,
+        9,
+        26
+      ]
+    ],
+    "date-time": "2026-09-26T21:40:42Z",
+    "timestamp": 1790458842229,
+    "version": "4.1.0"
+  },
+  "reference-count": 151,
+  "publisher": "Emerald",
+  "issue": "1-2",
+  "content-domain": {
+    "domain": [],
+    "crossmark-restriction": false
+  },
+  "short-container-title": [],
+  "published-print": {
+    "date-parts": [
+      [
+        2017,
+        7,
+        11
+      ]
+    ]
+  },
+  "abstract": "<jats:p>Program synthesis is the task of automatically finding a program in the underlying programming language that satisfies the user intent expressed in the form of some specification. Since the inception of AI in the 1950s, this problem has been considered the holy grail of Computer Science. Despite inherent challenges in the problem such as ambiguity of user intent and a typically enormous search space of programs, the field of program synthesis has developed many different techniques that enable program synthesis in different real-life application domains. It is now used successfully in software engineering, biological discovery, computer-aided education, end-user programming, and data cleaning. In the last decade, several applications of synthesis in the field of programming by examples have been deployed in mass-market industrial products.</jats:p>\n                  <jats:p>This survey is a general overview of the state-of-the-art approaches to program synthesis, its applications, and subfields. We discuss the general principles common to all modern synthesis approaches such as syntactic bias, oracle-guided inductive search, and optimization techniques. We then present a literature review covering the four most common state-of-the-art techniques in program synthesis: enumerative search, constraint solving, stochastic search, and deduction-based programming by examples. We conclude with a brief list of future horizons for the field.</jats:p>",
+  "DOI": "10.1561/2500000010",
+  "type": "journal-article",
+  "created": {
+    "date-parts": [
+      [
+        2017,
+        7,
+        11
+      ]
+    ],
+    "date-time": "2017-07-11T05:06:53Z",
+    "timestamp": 1499749613000
+  },
+  "page": "1-119",
+  "source": "Crossref",
+  "is-referenced-by-count": 282,
+  "title": [
+    "Program Synthesis"
+  ],
+  "prefix": "10.1108",
+  "volume": "4",
+  "author": [
+    {
+      "given": "Sumit",
+      "family": "Gulwani",
+      "sequence": "first",
+      "affiliation": [
+        {
+          "name": "Microsoft Research"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Oleksandr",
+      "family": "Polozov",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "University of Washington"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Rishabh",
+      "family": "Singh",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Microsoft Research"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    }
+  ],
+  "member": "140",
+  "published-online": {
+    "date-parts": [
+      [
+        2017,
+        7,
+        11
+      ]
+    ]
+  },
+  "reference": [
+    {
+      "key": "2026032910223079000_ref001",
+      "article-title": "Calibrating research in program synthesis using 72,000 hours of programmer time",
+      "volume-title": "Microsoft Research, Redmond, WA, USA, Technical Report",
+      "author": "Akiba",
+      "year": "2013"
+    },
+    {
+      "key": "2026032910223079000_ref002",
+      "first-page": "281",
+      "volume-title": "Learning natural coding conventions",
+      "author": "Allamanis",
+      "year": "2014"
+    },
+    {
+      "key": "2026032910223079000_ref003",
+      "first-page": "1",
+      "article-title": "Syntax-guided synthesis",
+      "volume-title": "Formal Methods in Computer-Aided Design, FMCAD",
+      "author": "Alur",
+      "year": "2013"
+    },
+    {
+      "key": "2026032910223079000_ref004",
+      "first-page": "163",
+      "volume-title": "Synthesis through unification",
+      "author": "Alur",
+      "year": "2015"
+    },
+    {
+      "key": "2026032910223079000_ref005",
+      "first-page": "3",
+      "volume-title": "Results and analysis of SyGuS-Comp’15",
+      "author": "Alur",
+      "year": "2015"
+    },
+    {
+      "key": "2026032910223079000_ref006",
+      "first-page": "178",
+      "volume-title": "SyGuS-Comp 2016: Results and analysis",
+      "author": "Alur",
+      "year": "2016"
+    },
+    {
+      "key": "2026032910223079000_ref007",
+      "article-title": "DeepCoder: Learning to write programs",
+      "volume-title": "CoRR",
+      "author": "Balog",
+      "year": "2016"
+    },
+    {
+      "key": "2026032910223079000_ref008",
+      "first-page": "394",
+      "volume-title": "Automatic generation of peephole superoptimizers",
+      "author": "Bansal",
+      "year": "2006"
+    },
+    {
+      "key": "2026032910223079000_ref009",
+      "first-page": "177",
+      "volume-title": "Binary translation using peephole super-optimizers",
+      "author": "Bansal",
+      "year": "2008"
+    },
+    {
+      "key": "2026032910223079000_ref010",
+      "first-page": "218",
+      "volume-title": "FlashRelate: extracting relational data from semi-structured spreadsheets using examples",
+      "author": "Barowy",
+      "year": "2015"
+    },
+    {
+      "key": "2026032910223079000_ref011",
+      "volume-title": "The SMT-LIB Standard Version 2.6",
+      "author": "Barrett",
+      "year": "2010"
+    },
+    {
+      "key": "2026032910223079000_ref012",
+      "first-page": "123",
+      "volume-title": "From relational verification to SIMD loop synthesis",
+      "author": "Barthe",
+      "year": "2013"
+    },
+    {
+      "issue": "8",
+      "key": "2026032910223079000_ref013",
+      "doi-asserted-by": "crossref",
+      "first-page": "585",
+      "DOI": "10.1109/TSMC.1978.4310035",
+      "article-title": "The inference of regular LISP programs from examples",
+      "volume": "8",
+      "author": "Biermann",
+      "year": "1978",
+      "journal-title": "IEEE transactions on Systems, Man, and Cybernetics"
+    },
+    {
+      "key": "2026032910223079000_ref014",
+      "doi-asserted-by": "crossref",
+      "DOI": "10.1145/3062341.3062353",
+      "article-title": "Synthesizing memory models from framework sketches and litmus tests",
+      "volume-title": "Programming Languages Design and Implementation",
+      "author": "Bornholt",
+      "year": "2017"
+    },
+    {
+      "key": "2026032910223079000_ref015",
+      "first-page": "775",
+      "volume-title": "ACM SIGPLAN Notices",
+      "author": "Bornholt",
+      "year": "2016"
+    },
+    {
+      "key": "2026032910223079000_ref016",
+      "doi-asserted-by": "crossref",
+      "DOI": "10.1145/1273496.1273513",
+      "article-title": "Learning to rank: from pairwise approach to listwise approach",
+      "volume-title": "ICML",
+      "author": "Cao",
+      "year": "2007"
+    },
+    {
+      "key": "2026032910223079000_ref017",
+      "first-page": "243",
+      "volume-title": "Quantitative synthesis for concurrent programs",
+      "author": "Cerný",
+      "year": "2011"
+    },
+    {
+      "issue": "1",
+      "key": "2026032910223079000_ref018",
+      "doi-asserted-by": "crossref",
+      "first-page": "9:1",
+      "DOI": "10.1145/2699430",
+      "article-title": "Measuring and synthesizing systems in probabilistic environments",
+      "volume": "62",
+      "author": "Chatterjee",
+      "year": "2015",
+      "journal-title": "J. ACM"
+    },
+    {
+      "issue": "1",
+      "key": "2026032910223079000_ref019",
+      "doi-asserted-by": "crossref",
+      "first-page": "207",
+      "DOI": "10.1145/2578855.2535859",
+      "article-title": "Bridging boolean and quantitative synthesis using smoothed proof search",
+      "volume": "49",
+      "author": "Chaudhuri",
+      "year": "2014",
+      "journal-title": "SIGPLAN Not."
+    },
+    {
+      "key": "2026032910223079000_ref020",
+      "volume-title": "Backpropagation: theory, architectures, and applications",
+      "author": "Chauvin",
+      "year": "1995"
+    },
+    {
+      "key": "2026032910223079000_ref021",
+      "first-page": "311",
+      "volume-title": "A practical framework for constructing structured drawings",
+      "author": "Cheema",
+      "year": "2014"
+    },
+    {
+      "key": "2026032910223079000_ref022",
+      "first-page": "3",
+      "volume-title": "Optimizing database-backed applications with query synthesis",
+      "author": "Cheung",
+      "year": "2013"
+    },
+    {
+      "key": "2026032910223079000_ref023",
+      "first-page": "341",
+      "volume-title": "Programmatic and direct manipulation, together at last",
+      "author": "Chugh",
+      "year": "2016"
+    },
+    {
+      "key": "2026032910223079000_ref024",
+      "doi-asserted-by": "crossref",
+      "first-page": "605",
+      "DOI": "10.1007/11776420_44",
+      "article-title": "Subset ranking using regression",
+      "volume": "4005",
+      "author": "Cossock",
+      "year": "2006",
+      "journal-title": "Learning Theory"
+    },
+    {
+      "key": "2026032910223079000_ref025",
+      "volume-title": "Watch What I Do – Programming by Demonstration.",
+      "author": "Cypher",
+      "year": "1993"
+    },
+    {
+      "key": "2026032910223079000_ref026",
+      "volume-title": "Computer Aided Verification (CAV)",
+      "author": "D’Antoni",
+      "year": "2016"
+    },
+    {
+      "key": "2026032910223079000_ref027",
+      "volume-title": "Logical and Relational Learning",
+      "author": "De Raedt",
+      "year": "2010",
+      "edition": "1st"
+    },
+    {
+      "key": "2026032910223079000_ref028",
+      "first-page": "345",
+      "volume-title": "Program synthesis using natural language",
+      "author": "Desai",
+      "year": "2016"
+    },
+    {
+      "key": "2026032910223079000_ref029",
+      "volume-title": "A unified system of type refinements",
+      "author": "Dunfield",
+      "year": "2007"
+    },
+    {
+      "key": "2026032910223079000_ref030",
+      "volume-title": "Learning to learn programs from examples: Going beyond program structure",
+      "author": "Ellis",
+      "year": "2017"
+    },
+    {
+      "key": "2026032910223079000_ref031",
+      "doi-asserted-by": "crossref",
+      "DOI": "10.1145/3009837.3009851",
+      "volume-title": "Component-based synthesis for complex APIs",
+      "author": "Feng",
+      "year": "2017"
+    },
+    {
+      "key": "2026032910223079000_ref032",
+      "first-page": "245",
+      "volume-title": "ACM Sigplan Notices",
+      "author": "Flanagan",
+      "year": "2006"
+    },
+    {
+      "key": "2026032910223079000_ref033",
+      "first-page": "802",
+      "volume-title": "ACM SIGPLAN Notices",
+      "author": "Frankle",
+      "year": "2016"
+    },
+    {
+      "key": "2026032910223079000_ref034",
+      "first-page": "268",
+      "volume-title": "Refinement types for ML",
+      "author": "Freeman",
+      "year": "1991"
+    },
+    {
+      "key": "2026032910223079000_ref035",
+      "first-page": "933",
+      "article-title": "An efficient boosting algorithm for combining preferences",
+      "volume": "4",
+      "author": "Freund",
+      "year": "2003",
+      "journal-title": "The Journal of machine learning research"
+    },
+    {
+      "key": "2026032910223079000_ref036",
+      "article-title": "TerpreT: A probabilistic programming language for program induction",
+      "volume-title": "CoRR",
+      "author": "Gaunt",
+      "year": "2016"
+    },
+    {
+      "key": "2026032910223079000_ref037",
+      "doi-asserted-by": "crossref",
+      "DOI": "10.1002/9781118574522",
+      "volume-title": "Constraint Satisfaction Problems: CSP Formalisms and Techniques",
+      "author": "Ghédira",
+      "year": "2013"
+    },
+    {
+      "key": "2026032910223079000_ref038",
+      "first-page": "441",
+      "volume-title": "Automated synthesis of symbolic instruction encodings from I/O samples",
+      "author": "Godefroid",
+      "year": "2012"
+    },
+    {
+      "key": "2026032910223079000_ref039",
+      "first-page": "303",
+      "article-title": "On the complexity of teaching",
+      "volume": "50",
+      "author": "Goldman",
+      "year": "1992",
+      "journal-title": "Journal of Computer and System Sciences"
+    },
+    {
+      "key": "2026032910223079000_ref040",
+      "volume-title": "Neural Turing machines",
+      "author": "Graves",
+      "year": "2014"
+    },
+    {
+      "key": "2026032910223079000_ref041",
+      "first-page": "219",
+      "article-title": "Application of theorem proving to problem solving",
+      "volume-title": "IJCAI",
+      "author": "Cordell Green",
+      "year": "1969"
+    },
+    {
+      "key": "2026032910223079000_ref042",
+      "first-page": "1",
+      "volume-title": "Dimensions in program synthesis",
+      "author": "Gulwani",
+      "year": "2010"
+    },
+    {
+      "key": "2026032910223079000_ref043",
+      "first-page": "317",
+      "volume-title": "Automating string processing in spreadsheets using input-output examples",
+      "author": "Gulwani",
+      "year": "2011"
+    },
+    {
+      "key": "2026032910223079000_ref044",
+      "first-page": "137",
+      "article-title": "Programming by examples - and its applications in data wrangling",
+      "volume-title": "Dependable Software Systems Engineering",
+      "author": "Gulwani",
+      "year": "2016"
+    },
+    {
+      "key": "2026032910223079000_ref045",
+      "first-page": "277",
+      "volume-title": "Program verification as probabilistic inference",
+      "author": "Gulwani",
+      "year": "2007"
+    },
+    {
+      "key": "2026032910223079000_ref046",
+      "first-page": "803",
+      "volume-title": "NLyze: interactive programming by natural language for spreadsheet data analysis and manipulation",
+      "author": "Gulwani",
+      "year": "2014"
+    },
+    {
+      "key": "2026032910223079000_ref047",
+      "first-page": "62",
+      "volume-title": "Synthesis of loop-free programs",
+      "author": "Gulwani",
+      "year": "2011"
+    },
+    {
+      "key": "2026032910223079000_ref048",
+      "first-page": "50",
+      "volume-title": "Synthesizing geometry constructions",
+      "author": "Gulwani",
+      "year": "2011"
+    },
+    {
+      "issue": "8",
+      "key": "2026032910223079000_ref049",
+      "doi-asserted-by": "crossref",
+      "first-page": "97",
+      "DOI": "10.1145/2240236.2240260",
+      "article-title": "Spreadsheet data manipulation using examples",
+      "volume": "55",
+      "author": "Gulwani",
+      "year": "2012",
+      "journal-title": "Commun. ACM"
+    },
+    {
+      "key": "2026032910223079000_ref050",
+      "first-page": "701",
+      "volume-title": "StriSynth: Synthesis for live programming",
+      "author": "Gulwani",
+      "year": "2015"
+    },
+    {
+      "key": "2026032910223079000_ref051",
+      "first-page": "27",
+      "volume-title": "ACM SIGPLAN Notices",
+      "author": "Gvero",
+      "year": "2013"
+    },
+    {
+      "key": "2026032910223079000_ref052",
+      "first-page": "317",
+      "volume-title": "Spreadsheet table transformations from examples",
+      "author": "Harris",
+      "year": "2011"
+    },
+    {
+      "key": "2026032910223079000_ref053",
+      "first-page": "379",
+      "volume-title": "Semi-automated SVG programming via direct manipulation",
+      "author": "Hempel",
+      "year": "2016"
+    },
+    {
+      "key": "2026032910223079000_ref054",
+      "first-page": "115",
+      "article-title": "Large margin rank boundaries for ordinal regression",
+      "volume-title": "Advances in Neural Information Processing Systems",
+      "author": "Herbrich",
+      "year": "1999"
+    },
+    {
+      "key": "2026032910223079000_ref055",
+      "first-page": "569",
+      "article-title": "TrueSkill™: A Bayesian skill rating system",
+      "volume-title": "Advances in neural information processing systems",
+      "author": "Herbrich",
+      "year": "2006"
+    },
+    {
+      "key": "2026032910223079000_ref056",
+      "volume-title": "Adaptation in natural and artificial systems: an introductory analysis with applications to biology, control, and artificial intelligence",
+      "author": "Holland",
+      "year": "1975"
+    },
+    {
+      "key": "2026032910223079000_ref057",
+      "first-page": "36",
+      "volume-title": "A simple inductive synthesis methodology and its applications",
+      "author": "Itzhaky",
+      "year": "2010"
+    },
+    {
+      "key": "2026032910223079000_ref058",
+      "volume-title": "A Theory of Formal Synthesis via Inductive Learning",
+      "author": "Jha",
+      "year": "2015"
+    },
+    {
+      "key": "2026032910223079000_ref059",
+      "first-page": "215",
+      "volume-title": "Oracle-guided component-based program synthesis",
+      "author": "Jha",
+      "year": "2010"
+    },
+    {
+      "key": "2026032910223079000_ref060",
+      "doi-asserted-by": "crossref",
+      "first-page": "226",
+      "DOI": "10.1007/11513988_23",
+      "volume-title": "Computer Aided Verification (CAV)",
+      "author": "Jobstmann",
+      "year": "2005"
+    },
+    {
+      "key": "2026032910223079000_ref061",
+      "first-page": "114",
+      "volume-title": "Genetic programming with fitness based on model checking",
+      "author": "Johnson",
+      "year": "2007"
+    },
+    {
+      "key": "2026032910223079000_ref062",
+      "volume-title": "Probabilistic inference of programs from input/output examples",
+      "author": "Jojic",
+      "year": "2006"
+    },
+    {
+      "key": "2026032910223079000_ref063",
+      "first-page": "304",
+      "volume-title": "Denali: A goal-directed superoptimizer",
+      "author": "Joshi",
+      "year": "2002"
+    },
+    {
+      "key": "2026032910223079000_ref064",
+      "first-page": "190",
+      "article-title": "Inferring algorithmic patterns with stack-augmented recurrent nets",
+      "volume-title": "NIPS",
+      "author": "Joulin",
+      "year": "2015"
+    },
+    {
+      "key": "2026032910223079000_ref065",
+      "first-page": "24:1",
+      "article-title": "CPSGrader: Synthesizing temporal logic testers for auto-grading an embedded systems laboratory",
+      "volume-title": "EMSOFT",
+      "author": "Juniwal",
+      "year": "2014"
+    },
+    {
+      "key": "2026032910223079000_ref066",
+      "volume-title": "Neural GPUs learn algorithms",
+      "author": "Kaiser",
+      "year": "2015"
+    },
+    {
+      "key": "2026032910223079000_ref067",
+      "volume-title": "MagicHaskeller on the Web: Automated programming as a service",
+      "author": "Katayama",
+      "year": "2013"
+    },
+    {
+      "key": "2026032910223079000_ref068",
+      "first-page": "33",
+      "volume-title": "Genetic programming and model checking: Synthesizing new mutual exclusion algorithms",
+      "author": "Katz",
+      "year": "2008"
+    },
+    {
+      "key": "2026032910223079000_ref069",
+      "first-page": "438",
+      "volume-title": "Structure-activity relationships derived by machine learning: The use of atoms and their bond connectivities to predict mutagenicity by inductive logic programming",
+      "author": "King",
+      "year": "1996"
+    },
+    {
+      "key": "2026032910223079000_ref070",
+      "doi-asserted-by": "crossref",
+      "first-page": "58",
+      "DOI": "10.1007/BF01186549",
+      "article-title": "Zur deutung der intuitionistischen logik",
+      "volume": "35",
+      "author": "Kolmogorov",
+      "year": "1932",
+      "journal-title": "Math. Zeitschr"
+    },
+    {
+      "key": "2026032910223079000_ref071",
+      "first-page": "768",
+      "volume-title": "Hierarchical genetic algorithms operating on populations of computer programs",
+      "author": "Koza",
+      "year": "1989"
+    },
+    {
+      "key": "2026032910223079000_ref072",
+      "volume-title": "Genetic programming - on the programming of computers by means of natural selection",
+      "author": "Koza",
+      "year": "1993"
+    },
+    {
+      "issue": "2",
+      "key": "2026032910223079000_ref073",
+      "doi-asserted-by": "crossref",
+      "first-page": "87",
+      "DOI": "10.1007/BF00175355",
+      "article-title": "Genetic programming as a means for programming computers by natural selection",
+      "volume": "4",
+      "author": "Koza",
+      "year": "1994",
+      "journal-title": "Statistics and Computing"
+    },
+    {
+      "issue": "03",
+      "key": "2026032910223079000_ref074",
+      "doi-asserted-by": "crossref",
+      "first-page": "253",
+      "DOI": "10.1017/S0956796805005733",
+      "article-title": "Educational pearl: Automata via macros",
+      "volume": "16",
+      "author": "Krishnamurthi",
+      "year": "2006",
+      "journal-title": "Journal of Functional Programming"
+    },
+    {
+      "key": "2026032910223079000_ref075",
+      "first-page": "111",
+      "volume-title": "Automatic inference of memory fences",
+      "author": "Kuperstein",
+      "year": "2010"
+    },
+    {
+      "key": "2026032910223079000_ref076",
+      "volume-title": "Neural random-access machines",
+      "author": "Kurach",
+      "year": "2015"
+    },
+    {
+      "key": "2026032910223079000_ref077",
+      "first-page": "527",
+      "volume-title": "Version space algebra and its application to programming by demonstration",
+      "author": "Lau",
+      "year": "2000"
+    },
+    {
+      "key": "2026032910223079000_ref078",
+      "first-page": "55",
+      "volume-title": "FlashExtract: a framework for data extraction by examples",
+      "author": "Le",
+      "year": "2014"
+    },
+    {
+      "key": "2026032910223079000_ref079",
+      "first-page": "193",
+      "volume-title": "SmartSynth: synthesizing smartphone automation scripts from natural language",
+      "author": "Le",
+      "year": "2013"
+    },
+    {
+      "issue": "1",
+      "key": "2026032910223079000_ref080",
+      "doi-asserted-by": "crossref",
+      "first-page": "54",
+      "DOI": "10.1109/TSE.2011.104",
+      "article-title": "Genprog: A generic method for automatic software repair",
+      "volume": "38",
+      "author": "Le Goues",
+      "year": "2012",
+      "journal-title": "IEEE Transactions on Software Engineering"
+    },
+    {
+      "key": "2026032910223079000_ref081",
+      "first-page": "565",
+      "volume-title": "Interactive parser synthesis by example",
+      "author": "Leung",
+      "year": "2015"
+    },
+    {
+      "key": "2026032910223079000_ref082",
+      "first-page": "639",
+      "volume-title": "Learning programs: A hierarchical Bayesian approach",
+      "author": "Liang",
+      "year": "2010"
+    },
+    {
+      "issue": "03",
+      "key": "2026032910223079000_ref083",
+      "doi-asserted-by": "crossref",
+      "first-page": "271",
+      "DOI": "10.1017/S1471068407003195",
+      "article-title": "Building rules on top of ontologies for the Semantic Web with inductive logic programming",
+      "volume": "8",
+      "author": "Lisi",
+      "year": "2008",
+      "journal-title": "Theory and Practice of Logic Programming"
+    },
+    {
+      "key": "2026032910223079000_ref084",
+      "first-page": "48",
+      "article-title": "Jungloid mining: helping to navigate the API jungle",
+      "volume-title": "PLDI",
+      "author": "Mandelin",
+      "year": "2005"
+    },
+    {
+      "issue": "3",
+      "key": "2026032910223079000_ref085",
+      "doi-asserted-by": "crossref",
+      "first-page": "151",
+      "DOI": "10.1145/362566.362568",
+      "article-title": "Toward automatic program synthesis",
+      "volume": "14",
+      "author": "Manna",
+      "year": "1971",
+      "journal-title": "Commun. ACM"
+    },
+    {
+      "issue": "2",
+      "key": "2026032910223079000_ref086",
+      "doi-asserted-by": "crossref",
+      "first-page": "175",
+      "DOI": "10.1016/0004-3702(75)90008-9",
+      "article-title": "Knowledge and reasoning in program synthesis",
+      "volume": "6",
+      "author": "Manna",
+      "year": "1975",
+      "journal-title": "Artif. Intell."
+    },
+    {
+      "key": "2026032910223079000_ref087",
+      "first-page": "122",
+      "volume-title": "Superoptimizer - A look at the smallest program",
+      "author": "Massalin",
+      "year": "1987"
+    },
+    {
+      "key": "2026032910223079000_ref088",
+      "first-page": "291",
+      "volume-title": "User interaction models for disambiguation in programming by example",
+      "author": "Mayer",
+      "year": "2015"
+    },
+    {
+      "key": "2026032910223079000_ref089",
+      "first-page": "187",
+      "volume-title": "A machine learning framework for programming by example",
+      "author": "Krishna Menon",
+      "year": "2013"
+    },
+    {
+      "key": "2026032910223079000_ref090",
+      "first-page": "997",
+      "article-title": "Typestate-based semantic code search over partial programs",
+      "volume-title": "OOPSLA",
+      "author": "Mishne",
+      "year": "2012"
+    },
+    {
+      "issue": "2",
+      "key": "2026032910223079000_ref091",
+      "doi-asserted-by": "crossref",
+      "first-page": "203",
+      "DOI": "10.1016/0004-3702(82)90040-6",
+      "article-title": "Generalization as search",
+      "volume": "18",
+      "author": "Mitchell",
+      "year": "1982",
+      "journal-title": "Artificial intelligence"
+    },
+    {
+      "issue": "4",
+      "key": "2026032910223079000_ref092",
+      "doi-asserted-by": "crossref",
+      "first-page": "295",
+      "DOI": "10.1007/BF03037089",
+      "article-title": "Inductive logic programming",
+      "volume": "8",
+      "author": "Muggleton",
+      "year": "1991",
+      "journal-title": "New generation computing"
+    },
+    {
+      "issue": "3",
+      "key": "2026032910223079000_ref093",
+      "doi-asserted-by": "crossref",
+      "first-page": "245",
+      "DOI": "10.1007/BF03037227",
+      "article-title": "Inverse entailment and Progol",
+      "volume": "13",
+      "author": "Muggleton",
+      "year": "1995",
+      "journal-title": "New generation computing"
+    },
+    {
+      "key": "2026032910223079000_ref094",
+      "first-page": "339",
+      "volume-title": "Machine invention of first-order predicates by inverting resolution",
+      "author": "Muggleton",
+      "year": "1992"
+    },
+    {
+      "issue": "7",
+      "key": "2026032910223079000_ref095",
+      "doi-asserted-by": "crossref",
+      "first-page": "647",
+      "DOI": "10.1093/protein/5.7.647",
+      "article-title": "Protein secondary structure prediction using logic-based machine learning",
+      "volume": "5",
+      "author": "Muggleton",
+      "year": "1992",
+      "journal-title": "Protein Engineering"
+    },
+    {
+      "issue": "1",
+      "key": "2026032910223079000_ref096",
+      "doi-asserted-by": "crossref",
+      "first-page": "25",
+      "DOI": "10.1007/s10994-013-5358-3",
+      "article-title": "Meta-interpretive learning: application to grammatical inference",
+      "volume": "94",
+      "author": "Muggleton",
+      "year": "2014",
+      "journal-title": "Machine Learning"
+    },
+    {
+      "issue": "1",
+      "key": "2026032910223079000_ref097",
+      "doi-asserted-by": "crossref",
+      "first-page": "49",
+      "DOI": "10.1007/s10994-014-5471-y",
+      "article-title": "Meta-interpretive learning of higher-order dyadic Datalog: Predicate invention revisited",
+      "volume": "100",
+      "author": "Muggleton",
+      "year": "2015",
+      "journal-title": "Machine Learning"
+    },
+    {
+      "key": "2026032910223079000_ref098",
+      "volume-title": "Neural programmer: Inducing latent programs with gradient descent",
+      "author": "Neelakantan",
+      "year": "2015"
+    },
+    {
+      "key": "2026032910223079000_ref099",
+      "first-page": "772",
+      "volume-title": "SemFix: program repair via semantic analysis",
+      "author": "Thien Nguyen",
+      "year": "2013"
+    },
+    {
+      "key": "2026032910223079000_ref100",
+      "first-page": "186",
+      "volume-title": "Editing by example",
+      "author": "Nix",
+      "year": "1984"
+    },
+    {
+      "key": "2026032910223079000_ref101",
+      "first-page": "208",
+      "volume-title": "ACM SIGPLAN Notices",
+      "author": "Nori",
+      "year": "2015"
+    },
+    {
+      "key": "2026032910223079000_ref102",
+      "first-page": "619",
+      "volume-title": "Type-and-example-directed program synthesis",
+      "author": "Osera",
+      "year": "2015"
+    },
+    {
+      "key": "2026032910223079000_ref103",
+      "first-page": "181",
+      "volume-title": "Automated reasoning for web page layout",
+      "author": "Panchekha",
+      "year": "2016"
+    },
+    {
+      "issue": "6",
+      "key": "2026032910223079000_ref104",
+      "doi-asserted-by": "crossref",
+      "first-page": "1",
+      "DOI": "10.1145/2813885.2737959",
+      "article-title": "Automatically improving accuracy for floating point expressions",
+      "volume": "50",
+      "author": "Panchekha",
+      "year": "2015",
+      "journal-title": "ACM SIGPLAN Notices"
+    },
+    {
+      "key": "2026032910223079000_ref105",
+      "article-title": "Neuro-symbolic program synthesis",
+      "volume-title": "CoRR",
+      "author": "Parisotto",
+      "year": "2016"
+    },
+    {
+      "key": "2026032910223079000_ref106",
+      "first-page": "275",
+      "volume-title": "ACM SIGPLAN Notices",
+      "author": "Perelman",
+      "year": "2012"
+    },
+    {
+      "key": "2026032910223079000_ref107",
+      "first-page": "23",
+      "volume-title": "Investigating Safety of a Radiotherapy Machine Using System Models with Pluggable Checkers",
+      "author": "Pernsteiner",
+      "year": "2016"
+    },
+    {
+      "key": "2026032910223079000_ref108",
+      "first-page": "396",
+      "volume-title": "ACM SIGPLAN Notices",
+      "author": "Mangpo Phothilimthana",
+      "year": "2014"
+    },
+    {
+      "key": "2026032910223079000_ref109",
+      "first-page": "297",
+      "volume-title": "Scaling up superoptimization",
+      "author": "Mangpo Phothilimthana",
+      "year": "2016"
+    },
+    {
+      "key": "2026032910223079000_ref110",
+      "first-page": "179",
+      "volume-title": "POPL",
+      "author": "Pnueli",
+      "year": "1989"
+    },
+    {
+      "key": "2026032910223079000_ref111",
+      "first-page": "522",
+      "volume-title": "Program synthesis from polymorphic refinement types",
+      "author": "Polikarpova",
+      "year": "2016"
+    },
+    {
+      "key": "2026032910223079000_ref112",
+      "volume-title": "Type-driven repair for information flow security",
+      "author": "Polikarpova",
+      "year": "2016"
+    },
+    {
+      "key": "2026032910223079000_ref113",
+      "first-page": "107",
+      "volume-title": "FlashMeta: a framework for inductive program synthesis",
+      "author": "Polozov",
+      "year": "2015"
+    },
+    {
+      "key": "2026032910223079000_ref114",
+      "first-page": "419",
+      "volume-title": "ACM SIGPLAN Notices",
+      "author": "Raychev",
+      "year": "2014"
+    },
+    {
+      "key": "2026032910223079000_ref115",
+      "first-page": "761",
+      "volume-title": "ACM SIGPLAN Notices",
+      "author": "Raychev",
+      "year": "2016"
+    },
+    {
+      "key": "2026032910223079000_ref116",
+      "doi-asserted-by": "crossref",
+      "DOI": "10.1609/aaai.v31i1.10668",
+      "article-title": "Automated data extraction using predictive program synthesis",
+      "volume-title": "AAAI",
+      "author": "Raza",
+      "year": "2017"
+    },
+    {
+      "key": "2026032910223079000_ref117",
+      "first-page": "792",
+      "volume-title": "Compositional program synthesis from natural language and examples",
+      "author": "Raza",
+      "year": "2015"
+    },
+    {
+      "key": "2026032910223079000_ref118",
+      "volume-title": "Neural programmer-interpreters",
+      "author": "Reed",
+      "year": "2015"
+    },
+    {
+      "key": "2026032910223079000_ref119",
+      "volume-title": "Petri nets: an introduction",
+      "author": "Reisig",
+      "year": "2012"
+    },
+    {
+      "key": "2026032910223079000_ref120",
+      "volume-title": "Programming with a differentiable Forth interpreter",
+      "author": "Riedel",
+      "year": "2016"
+    },
+    {
+      "key": "2026032910223079000_ref121",
+      "first-page": "159",
+      "volume-title": "ACM SIGPLAN Notices",
+      "author": "Rondon",
+      "year": "2008"
+    },
+    {
+      "issue": "1",
+      "key": "2026032910223079000_ref122",
+      "doi-asserted-by": "crossref",
+      "first-page": "1",
+      "DOI": "10.1186/1471-2105-13-162",
+      "article-title": "Automated identification of protein-ligand interaction features using inductive logic programming: a hexose binding case study",
+      "volume": "13",
+      "author": "Santos",
+      "year": "2012",
+      "journal-title": "BMC bioinformatics"
+    },
+    {
+      "key": "2026032910223079000_ref123",
+      "first-page": "305",
+      "volume-title": "ACM SIGARCH Computer Architecture News",
+      "author": "Schkufza",
+      "year": "2013"
+    },
+    {
+      "key": "2026032910223079000_ref124",
+      "first-page": "305",
+      "article-title": "Stochastic superoptimization",
+      "volume-title": "Architectural Support for Programming Languages and Operating Systems, ASPLOS ‘13",
+      "author": "Schkufza",
+      "year": "2013"
+    },
+    {
+      "key": "2026032910223079000_ref125",
+      "first-page": "260",
+      "volume-title": "Inferring LISP programs from examples",
+      "author": "Shaw",
+      "year": "1975"
+    },
+    {
+      "key": "2026032910223079000_ref126",
+      "first-page": "634",
+      "volume-title": "Synthesizing number transformations from input-output examples",
+      "author": "Singh",
+      "year": "2012"
+    },
+    {
+      "key": "2026032910223079000_ref127",
+      "first-page": "740",
+      "volume-title": "Learning semantic string transformations from examples",
+      "author": "Singh",
+      "year": "2012"
+    },
+    {
+      "key": "2026032910223079000_ref128",
+      "first-page": "398",
+      "article-title": "Predicting a correct program in programming by example",
+      "volume-title": "CAV",
+      "author": "Singh",
+      "year": "2015"
+    },
+    {
+      "key": "2026032910223079000_ref129",
+      "first-page": "343",
+      "volume-title": "Transforming spreadsheet data types using examples",
+      "author": "Singh",
+      "year": "2016"
+    },
+    {
+      "key": "2026032910223079000_ref130",
+      "first-page": "15",
+      "volume-title": "Automatic feedback generation for introductory programming assignments",
+      "author": "Singh",
+      "year": "2013"
+    },
+    {
+      "key": "2026032910223079000_ref131",
+      "doi-asserted-by": "crossref",
+      "DOI": "10.21236/ADA016811",
+      "volume-title": "Pygmalion: A Creative Programming Environment",
+      "author": "Smith",
+      "year": "1975"
+    },
+    {
+      "key": "2026032910223079000_ref132",
+      "volume-title": "Program synthesis by sketching",
+      "author": "Solar-Lezama",
+      "year": "2008"
+    },
+    {
+      "key": "2026032910223079000_ref133",
+      "first-page": "313",
+      "volume-title": "From program verification to program synthesis",
+      "author": "Srivastava",
+      "year": "2010"
+    },
+    {
+      "key": "2026032910223079000_ref134",
+      "first-page": "492",
+      "volume-title": "Path-based inductive synthesis for program inversion",
+      "author": "Srivastava",
+      "year": "2011"
+    },
+    {
+      "issue": "5",
+      "key": "2026032910223079000_ref135",
+      "doi-asserted-by": "crossref",
+      "first-page": "497",
+      "DOI": "10.1007/s10009-012-0223-4",
+      "article-title": "Template-based program verification and program synthesis",
+      "volume": "15",
+      "author": "Srivastava",
+      "year": "2013",
+      "journal-title": "International Journal on Software Tools for Technology Transfer (STTT)"
+    },
+    {
+      "issue": "1",
+      "key": "2026032910223079000_ref136",
+      "doi-asserted-by": "crossref",
+      "first-page": "186",
+      "DOI": "10.1016/j.jmb.2012.10.014",
+      "article-title": "Gene function hypotheses for the campylobacter jejuni glycome generated by a logic-based approach",
+      "volume": "425",
+      "author": "Sternberg",
+      "year": "2013",
+      "journal-title": "Journal of molecular biology"
+    },
+    {
+      "issue": "1",
+      "key": "2026032910223079000_ref137",
+      "doi-asserted-by": "crossref",
+      "first-page": "161",
+      "DOI": "10.1145/321992.322002",
+      "article-title": "A methodology for LISP program construction from examples",
+      "volume": "24",
+      "author": "Summers",
+      "year": "1977",
+      "journal-title": "Journal of the ACM (JACM)"
+    },
+    {
+      "key": "2026032910223079000_ref138",
+      "doi-asserted-by": "crossref",
+      "first-page": "225",
+      "DOI": "10.1016/B978-0-12-420002-9.00004-4",
+      "article-title": "Construction and validation of food webs using logic-based machine learning and text mining",
+      "volume": "49",
+      "author": "Tamaddoni-Nezhad",
+      "year": "2013",
+      "journal-title": "Advances in Ecological Research"
+    },
+    {
+      "key": "2026032910223079000_ref139",
+      "first-page": "135",
+      "volume-title": "Growing solver-aided languages with Rosette",
+      "author": "Torlak",
+      "year": "2013"
+    },
+    {
+      "key": "2026032910223079000_ref140",
+      "first-page": "530",
+      "volume-title": "ACM SIGPLAN Notices",
+      "author": "Torlak",
+      "year": "2014"
+    },
+    {
+      "key": "2026032910223079000_ref141",
+      "first-page": "287",
+      "volume-title": "TRANSIT: Specifying protocols with concolic snippets",
+      "author": "Udupa",
+      "year": "2013"
+    },
+    {
+      "key": "2026032910223079000_ref142",
+      "first-page": "678",
+      "volume-title": "Smten: automatic translation of high-level symbolic computations into SMT queries",
+      "author": "Uhler",
+      "year": "2013"
+    },
+    {
+      "key": "2026032910223079000_ref143",
+      "first-page": "327",
+      "volume-title": "Abstraction-guided synthesis of synchronization",
+      "author": "Vechev",
+      "year": "2010"
+    },
+    {
+      "key": "2026032910223079000_ref144",
+      "first-page": "241",
+      "article-title": "PROW: A step toward automatic program writing",
+      "volume-title": "IJCAI",
+      "author": "Waldinger",
+      "year": "1969"
+    },
+    {
+      "key": "2026032910223079000_ref145",
+      "volume-title": "Hacker’s delight",
+      "author": "Warren",
+      "year": "2013"
+    },
+    {
+      "key": "2026032910223079000_ref146",
+      "first-page": "364",
+      "volume-title": "Automatically finding patches using genetic programming",
+      "author": "Weimer",
+      "year": "2009"
+    },
+    {
+      "key": "2026032910223079000_ref147",
+      "first-page": "765",
+      "volume-title": "Scalable verification of border gateway protocol configurations with an SMT solver",
+      "author": "Weitz",
+      "year": "2016"
+    },
+    {
+      "key": "2026032910223079000_ref148",
+      "doi-asserted-by": "crossref",
+      "DOI": "10.1145/1390156.1390306",
+      "article-title": "Listwise approach to learning to rank: theory and algorithm",
+      "volume-title": "ICML",
+      "author": "Xia",
+      "year": "2008"
+    },
+    {
+      "key": "2026032910223079000_ref149",
+      "first-page": "508",
+      "volume-title": "Synthesizing transformations on hierarchically structured data",
+      "author": "Yaghmazadeh",
+      "year": "2016"
+    },
+    {
+      "key": "2026032910223079000_ref150",
+      "first-page": "843",
+      "article-title": "An entity-mention model for coreference resolution with inductive logic programming",
+      "volume-title": "ACL",
+      "author": "Yang",
+      "year": "2008"
+    },
+    {
+      "key": "2026032910223079000_ref151",
+      "first-page": "956",
+      "volume-title": "Bing developer assistant: improving developer productivity by recommending sample code",
+      "author": "Zhang",
+      "year": "2016"
+    }
+  ],
+  "container-title": [
+    "Foundations and Trends® in Programming Languages"
+  ],
+  "original-title": [],
+  "language": "en",
+  "link": [
+    {
+      "URL": "https://www.emerald.com/ftpgl/article-pdf/4/1-2/1/11025595/2500000010en.pdf",
+      "content-type": "application/pdf",
+      "content-version": "vor",
+      "intended-application": "syndication"
+    },
+    {
+      "URL": "https://www.emerald.com/ftpgl/article-pdf/4/1-2/1/11025595/2500000010en.pdf",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+    }
+  ],
+  "deposited": {
+    "date-parts": [
+      [
+        2026,
+        4,
+        29
+      ]
+    ],
+    "date-time": "2026-04-29T18:16:48Z",
+    "timestamp": 1777486608000
+  },
+  "score": 1,
+  "resource": {
+    "primary": {
+      "URL": "https://www.emerald.com/ftpgl/article/4/1-2/1/1326569/Program-Synthesis"
+    }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+    "date-parts": [
+      [
+        2017,
+        7,
+        11
+      ]
+    ]
+  },
+  "references-count": 151,
+  "journal-issue": {
+    "issue": "1-2",
+    "published-print": {
+      "date-parts": [
+        [
+          2017,
+          7,
+          11
+        ]
+      ]
+    }
+  },
+  "URL": "https://doi.org/10.1561/2500000010",
+  "relation": {},
+  "ISSN": [
+    "2325-1107",
+    "2325-1131"
+  ],
+  "issn-type": [
+    {
+      "value": "2325-1107",
+      "type": "print"
+    },
+    {
+      "value": "2325-1131",
+      "type": "electronic"
+    }
+  ],
+  "subject": [],
+  "published": {
+    "date-parts": [
+      [
+        2017,
+        7,
+        11
+      ]
+    ]
+  }
+}

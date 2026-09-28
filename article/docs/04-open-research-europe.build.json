@@ -1,0 +1,41 @@
+{
+  "file": "04-open-research-europe.docx",
+  "journal": "Open Research Europe",
+  "source": "../manuscripts/04-open-research-europe.md",
+  "sha256": "3ba77e3de399d4e22546f2deac8c7137fbaba5961c887f96e4b6025565237cd2",
+  "sourceSha256": "b555fdf523c6ede5dfc3667f650273c68312ba1742557d5cc588da6452fe27a9",
+  "words": 3812,
+  "references": [
+    "pot",
+    "dwork",
+    "dreamcoder",
+    "pal",
+    "datasheets",
+    "scan",
+    "messeri",
+    "modelcards",
+    "qwen05",
+    "qwen15",
+    "qwen3",
+    "cascades",
+    "sandve",
+    "artifact"
+  ],
+  "tables": 4,
+  "figures": [
+    {
+      "source": "../assets/outcome-ladder.png",
+      "width": 7562,
+      "height": 5843,
+      "sha256": "edfff8f9922ff2d3816e236057e642ae3ba9289fcacb5c8dfdec8449286c43a9"
+    },
+    {
+      "source": "../assets/vocabulary-loop.png",
+      "width": 7562,
+      "height": 4056,
+      "sha256": "c8c3db6fa64bbae967ae099a336a9e23e957e1a5f5d5da0b9008b5bbc56db6b4"
+    }
+  ],
+  "columns": 1,
+  "zipMembers": 10
+}

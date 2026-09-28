@@ -1,0 +1,2577 @@
+{
+  "auditDate": "2026-09-28",
+  "recordCount": 7050,
+  "design": "Retrospective descriptive audit; no new training or neural judgment.",
+  "arms": [
+    {
+      "id": "exp-017-qwen3-17b",
+      "items": 705,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 152,
+        "answer_mismatch": 111,
+        "answer_match": 442
+      },
+      "completed": 553,
+      "exactPercent": 62.695035460992905,
+      "plans": 28,
+      "books": {
+        "adult-reasoning": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 10,
+            "answer_mismatch": 0,
+            "answer_match": 0
+          },
+          "completed": 0,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "common-sense": {
+          "items": 50,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 17,
+            "answer_mismatch": 33,
+            "answer_match": 0
+          },
+          "completed": 33,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "decompose-to-solve": {
+          "items": 100,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 87,
+            "answer_mismatch": 13,
+            "answer_match": 0
+          },
+          "completed": 13,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "logical-reasoning": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 4,
+            "answer_mismatch": 6,
+            "answer_match": 0
+          },
+          "completed": 6,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "mathematical-thinking": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 1,
+            "answer_mismatch": 6,
+            "answer_match": 3
+          },
+          "completed": 9,
+          "exactPercent": 30,
+          "plans": 10
+        },
+        "procedural-arithmetic": {
+          "items": 480,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 4,
+            "answer_mismatch": 37,
+            "answer_match": 439
+          },
+          "completed": 476,
+          "exactPercent": 91.45833333333333,
+          "plans": 12
+        },
+        "scientific-reasoning": {
+          "items": 25,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 9,
+            "answer_mismatch": 16,
+            "answer_match": 0
+          },
+          "completed": 16,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "world-as-a-system": {
+          "items": 20,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 20,
+            "answer_mismatch": 0,
+            "answer_match": 0
+          },
+          "completed": 0,
+          "exactPercent": 0,
+          "plans": 1
+        }
+      },
+      "commandUsage": {
+        "adult-reasoning": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "common-sense": {
+          "items": 50,
+          "withContainerDeclaration": 0,
+          "withJsEval": 50
+        },
+        "decompose-to-solve": {
+          "items": 100,
+          "withContainerDeclaration": 0,
+          "withJsEval": 100
+        },
+        "logical-reasoning": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "mathematical-thinking": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "procedural-arithmetic": {
+          "items": 480,
+          "withContainerDeclaration": 0,
+          "withJsEval": 480
+        },
+        "scientific-reasoning": {
+          "items": 25,
+          "withContainerDeclaration": 0,
+          "withJsEval": 25
+        },
+        "world-as-a-system": {
+          "items": 20,
+          "withContainerDeclaration": 0,
+          "withJsEval": 20
+        }
+      },
+      "comparatorDiscrepancies": 0,
+      "base": "Qwen/Qwen3-1.7B",
+      "trainingManifestMissing": false,
+      "finishApproximate": false,
+      "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+      "dataVersion": {
+        "number": "3",
+        "label": "declarative wires (graphPath, aggregate, fraction)"
+      },
+      "finish": "2026-09-24T13:57:32Z",
+      "seed": 3407,
+      "trainExamples": 10069,
+      "targetTokensSeen": 8708250,
+      "steps": 630,
+      "learningRate": 0.0001,
+      "epochs": 2,
+      "maxSequenceLength": 4096,
+      "effectiveBatch": 32,
+      "precision": "bf16",
+      "optimizer": "adamw_torch",
+      "selection": "checkpoint-450",
+      "sliceHash": "5e1f071929d442da5bbe36ced7e0136b8854ceec098f1b6cafcf91fa0b749f3f",
+      "trainSnapshot": "b423751423877019cfd23d13aedc435cffeb5991e758b53131acb25124236e40",
+      "environment": {
+        "accelerate": "1.15.0",
+        "peft": null,
+        "torch": "2.14.0+cu130",
+        "torch_cuda": "13.0",
+        "transformers": "5.17.0"
+      }
+    },
+    {
+      "id": "exp-021-1.7b-qwen3-dv7",
+      "items": 705,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 57,
+        "answer_mismatch": 188,
+        "answer_match": 460
+      },
+      "completed": 648,
+      "exactPercent": 65.2482269503546,
+      "plans": 28,
+      "books": {
+        "adult-reasoning": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 4,
+            "answer_mismatch": 6,
+            "answer_match": 0
+          },
+          "completed": 6,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "common-sense": {
+          "items": 50,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 19,
+            "answer_mismatch": 31,
+            "answer_match": 0
+          },
+          "completed": 31,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "decompose-to-solve": {
+          "items": 100,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 8,
+            "answer_mismatch": 92,
+            "answer_match": 0
+          },
+          "completed": 92,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "logical-reasoning": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 5,
+            "answer_mismatch": 5,
+            "answer_match": 0
+          },
+          "completed": 5,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "mathematical-thinking": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 1,
+            "answer_mismatch": 7,
+            "answer_match": 2
+          },
+          "completed": 9,
+          "exactPercent": 20,
+          "plans": 10
+        },
+        "procedural-arithmetic": {
+          "items": 480,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 12,
+            "answer_mismatch": 30,
+            "answer_match": 438
+          },
+          "completed": 468,
+          "exactPercent": 91.25,
+          "plans": 12
+        },
+        "scientific-reasoning": {
+          "items": 25,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 8,
+            "answer_mismatch": 17,
+            "answer_match": 0
+          },
+          "completed": 17,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "world-as-a-system": {
+          "items": 20,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 0,
+            "answer_mismatch": 0,
+            "answer_match": 20
+          },
+          "completed": 20,
+          "exactPercent": 100,
+          "plans": 1
+        }
+      },
+      "commandUsage": {
+        "adult-reasoning": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "common-sense": {
+          "items": 50,
+          "withContainerDeclaration": 0,
+          "withJsEval": 50
+        },
+        "decompose-to-solve": {
+          "items": 100,
+          "withContainerDeclaration": 0,
+          "withJsEval": 100
+        },
+        "logical-reasoning": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "mathematical-thinking": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "procedural-arithmetic": {
+          "items": 480,
+          "withContainerDeclaration": 0,
+          "withJsEval": 480
+        },
+        "scientific-reasoning": {
+          "items": 25,
+          "withContainerDeclaration": 0,
+          "withJsEval": 25
+        },
+        "world-as-a-system": {
+          "items": 20,
+          "withContainerDeclaration": 0,
+          "withJsEval": 20
+        }
+      },
+      "comparatorDiscrepancies": 0,
+      "base": "Qwen/Qwen3-1.7B",
+      "trainingManifestMissing": false,
+      "finishApproximate": false,
+      "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+      "dataVersion": {
+        "number": "7",
+        "label": "container plans: store built in stages, store patched by upsert, kept-shipments query"
+      },
+      "finish": "2026-09-25T15:44:50Z",
+      "seed": 3407,
+      "trainExamples": 10553,
+      "targetTokensSeen": 6648719,
+      "steps": 660,
+      "learningRate": 0.0001,
+      "epochs": 2,
+      "maxSequenceLength": 4096,
+      "effectiveBatch": 32,
+      "precision": "bf16",
+      "optimizer": "adamw_torch",
+      "selection": "checkpoint-450",
+      "sliceHash": "c5f946fcf65baa8b7ece6423f0e8f3b6eb902791a5f734a83bd745a65d32c572",
+      "trainSnapshot": "d4c741c3ccb4b0886a5053abddfd829a06f25951462e6185d9e8dcf152752609",
+      "environment": {
+        "accelerate": "1.15.0",
+        "peft": null,
+        "torch": "2.14.0+cu130",
+        "torch_cuda": "13.0",
+        "transformers": "5.17.0"
+      }
+    },
+    {
+      "id": "exp-022-1.7b-qwen3-dv8",
+      "items": 705,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 135,
+        "answer_mismatch": 122,
+        "answer_match": 448
+      },
+      "completed": 570,
+      "exactPercent": 63.54609929078014,
+      "plans": 28,
+      "books": {
+        "adult-reasoning": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 10,
+            "answer_mismatch": 0,
+            "answer_match": 0
+          },
+          "completed": 0,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "common-sense": {
+          "items": 50,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 26,
+            "answer_mismatch": 24,
+            "answer_match": 0
+          },
+          "completed": 24,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "decompose-to-solve": {
+          "items": 100,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 59,
+            "answer_mismatch": 41,
+            "answer_match": 0
+          },
+          "completed": 41,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "logical-reasoning": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 1,
+            "answer_mismatch": 9,
+            "answer_match": 0
+          },
+          "completed": 9,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "mathematical-thinking": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 3,
+            "answer_mismatch": 7,
+            "answer_match": 0
+          },
+          "completed": 7,
+          "exactPercent": 0,
+          "plans": 10
+        },
+        "procedural-arithmetic": {
+          "items": 480,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 31,
+            "answer_mismatch": 21,
+            "answer_match": 428
+          },
+          "completed": 449,
+          "exactPercent": 89.16666666666667,
+          "plans": 12
+        },
+        "scientific-reasoning": {
+          "items": 25,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 5,
+            "answer_mismatch": 20,
+            "answer_match": 0
+          },
+          "completed": 20,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "world-as-a-system": {
+          "items": 20,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 0,
+            "answer_mismatch": 0,
+            "answer_match": 20
+          },
+          "completed": 20,
+          "exactPercent": 100,
+          "plans": 1
+        }
+      },
+      "commandUsage": {
+        "adult-reasoning": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "common-sense": {
+          "items": 50,
+          "withContainerDeclaration": 0,
+          "withJsEval": 50
+        },
+        "decompose-to-solve": {
+          "items": 100,
+          "withContainerDeclaration": 0,
+          "withJsEval": 100
+        },
+        "logical-reasoning": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "mathematical-thinking": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "procedural-arithmetic": {
+          "items": 480,
+          "withContainerDeclaration": 0,
+          "withJsEval": 480
+        },
+        "scientific-reasoning": {
+          "items": 25,
+          "withContainerDeclaration": 0,
+          "withJsEval": 25
+        },
+        "world-as-a-system": {
+          "items": 20,
+          "withContainerDeclaration": 0,
+          "withJsEval": 20
+        }
+      },
+      "comparatorDiscrepancies": 0,
+      "base": "Qwen/Qwen3-1.7B",
+      "trainingManifestMissing": false,
+      "finishApproximate": false,
+      "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+      "dataVersion": {
+        "number": "8",
+        "label": "dv8 structure: book-family compute bodies split into modular multi-wire plans"
+      },
+      "finish": "2026-09-25T20:45:14Z",
+      "seed": 3407,
+      "trainExamples": 10553,
+      "targetTokensSeen": 6782314,
+      "steps": 660,
+      "learningRate": 0.0001,
+      "epochs": 2,
+      "maxSequenceLength": 4096,
+      "effectiveBatch": 32,
+      "precision": "bf16",
+      "optimizer": "adamw_torch",
+      "selection": "checkpoint-450",
+      "sliceHash": "3d5269c7d05f895a358fcd737247eef9985925a6c37dd30fcfad1848f6ff63a5",
+      "trainSnapshot": "6cdb6e6ec3582242812a5a985c243b2651f23499a862f511cd1b830e522b40d4",
+      "environment": {
+        "accelerate": "1.15.0",
+        "peft": null,
+        "torch": "2.14.0+cu130",
+        "torch_cuda": "13.0",
+        "transformers": "5.17.0"
+      }
+    },
+    {
+      "id": "exp-023-1.7b-qwen3-dv9",
+      "items": 705,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 92,
+        "answer_mismatch": 185,
+        "answer_match": 428
+      },
+      "completed": 613,
+      "exactPercent": 60.709219858156025,
+      "plans": 28,
+      "books": {
+        "adult-reasoning": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 2,
+            "answer_mismatch": 8,
+            "answer_match": 0
+          },
+          "completed": 8,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "common-sense": {
+          "items": 50,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 31,
+            "answer_mismatch": 19,
+            "answer_match": 0
+          },
+          "completed": 19,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "decompose-to-solve": {
+          "items": 100,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 36,
+            "answer_mismatch": 64,
+            "answer_match": 0
+          },
+          "completed": 64,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "logical-reasoning": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 1,
+            "answer_mismatch": 9,
+            "answer_match": 0
+          },
+          "completed": 9,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "mathematical-thinking": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 1,
+            "answer_mismatch": 7,
+            "answer_match": 2
+          },
+          "completed": 9,
+          "exactPercent": 20,
+          "plans": 10
+        },
+        "procedural-arithmetic": {
+          "items": 480,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 14,
+            "answer_mismatch": 56,
+            "answer_match": 410
+          },
+          "completed": 466,
+          "exactPercent": 85.41666666666667,
+          "plans": 12
+        },
+        "scientific-reasoning": {
+          "items": 25,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 7,
+            "answer_mismatch": 18,
+            "answer_match": 0
+          },
+          "completed": 18,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "world-as-a-system": {
+          "items": 20,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 0,
+            "answer_mismatch": 4,
+            "answer_match": 16
+          },
+          "completed": 20,
+          "exactPercent": 80,
+          "plans": 1
+        }
+      },
+      "commandUsage": {
+        "adult-reasoning": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "common-sense": {
+          "items": 50,
+          "withContainerDeclaration": 0,
+          "withJsEval": 50
+        },
+        "decompose-to-solve": {
+          "items": 100,
+          "withContainerDeclaration": 0,
+          "withJsEval": 100
+        },
+        "logical-reasoning": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "mathematical-thinking": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "procedural-arithmetic": {
+          "items": 480,
+          "withContainerDeclaration": 0,
+          "withJsEval": 480
+        },
+        "scientific-reasoning": {
+          "items": 25,
+          "withContainerDeclaration": 0,
+          "withJsEval": 25
+        },
+        "world-as-a-system": {
+          "items": 20,
+          "withContainerDeclaration": 0,
+          "withJsEval": 20
+        }
+      },
+      "comparatorDiscrepancies": 0,
+      "base": "Qwen/Qwen3-1.7B",
+      "trainingManifestMissing": false,
+      "finishApproximate": false,
+      "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+      "dataVersion": {
+        "number": "9",
+        "label": "zero-book tranche: decompose-to-solve and common-sense compute moves to the container idiom with whole-positive answer gates"
+      },
+      "finish": "2026-09-26T00:58:17Z",
+      "seed": 3407,
+      "trainExamples": 10553,
+      "targetTokensSeen": 6854734,
+      "steps": 660,
+      "learningRate": 0.0001,
+      "epochs": 2,
+      "maxSequenceLength": 4096,
+      "effectiveBatch": 32,
+      "precision": "bf16",
+      "optimizer": "adamw_torch",
+      "selection": "checkpoint-600",
+      "sliceHash": "4f951215a072b856f65ec93128884d40a8c549c4a7d3903b02bc63bb075335c8",
+      "trainSnapshot": "6e5605dabfb574329072bae37c6cd0cb2e20a2fe3ebb77b144df82e7d165fa9d",
+      "environment": {
+        "accelerate": "1.15.0",
+        "peft": null,
+        "torch": "2.14.0+cu130",
+        "torch_cuda": "13.0",
+        "transformers": "5.17.0"
+      }
+    },
+    {
+      "id": "exp-024-1.7b-qwen3-dv11",
+      "items": 705,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 112,
+        "answer_mismatch": 154,
+        "answer_match": 439
+      },
+      "completed": 593,
+      "exactPercent": 62.269503546099294,
+      "plans": 28,
+      "books": {
+        "adult-reasoning": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 8,
+            "answer_mismatch": 2,
+            "answer_match": 0
+          },
+          "completed": 2,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "common-sense": {
+          "items": 50,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 6,
+            "answer_mismatch": 44,
+            "answer_match": 0
+          },
+          "completed": 44,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "decompose-to-solve": {
+          "items": 100,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 62,
+            "answer_mismatch": 38,
+            "answer_match": 0
+          },
+          "completed": 38,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "logical-reasoning": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 0,
+            "answer_mismatch": 10,
+            "answer_match": 0
+          },
+          "completed": 10,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "mathematical-thinking": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 0,
+            "answer_mismatch": 7,
+            "answer_match": 3
+          },
+          "completed": 10,
+          "exactPercent": 30,
+          "plans": 10
+        },
+        "procedural-arithmetic": {
+          "items": 480,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 25,
+            "answer_mismatch": 39,
+            "answer_match": 416
+          },
+          "completed": 455,
+          "exactPercent": 86.66666666666667,
+          "plans": 12
+        },
+        "scientific-reasoning": {
+          "items": 25,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 11,
+            "answer_mismatch": 14,
+            "answer_match": 0
+          },
+          "completed": 14,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "world-as-a-system": {
+          "items": 20,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 0,
+            "answer_mismatch": 0,
+            "answer_match": 20
+          },
+          "completed": 20,
+          "exactPercent": 100,
+          "plans": 1
+        }
+      },
+      "commandUsage": {
+        "adult-reasoning": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "common-sense": {
+          "items": 50,
+          "withContainerDeclaration": 0,
+          "withJsEval": 50
+        },
+        "decompose-to-solve": {
+          "items": 100,
+          "withContainerDeclaration": 0,
+          "withJsEval": 100
+        },
+        "logical-reasoning": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "mathematical-thinking": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "procedural-arithmetic": {
+          "items": 480,
+          "withContainerDeclaration": 0,
+          "withJsEval": 480
+        },
+        "scientific-reasoning": {
+          "items": 25,
+          "withContainerDeclaration": 0,
+          "withJsEval": 25
+        },
+        "world-as-a-system": {
+          "items": 20,
+          "withContainerDeclaration": 0,
+          "withJsEval": 20
+        }
+      },
+      "comparatorDiscrepancies": 0,
+      "base": "Qwen/Qwen3-1.7B",
+      "trainingManifestMissing": false,
+      "finishApproximate": false,
+      "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+      "dataVersion": {
+        "number": "11",
+        "label": "phrase compression: the two zero books print value-bearing answers and move prose to the explanation"
+      },
+      "finish": "2026-09-26T11:28:52Z",
+      "seed": 3407,
+      "trainExamples": 10553,
+      "targetTokensSeen": 6636500,
+      "steps": 660,
+      "learningRate": 0.0001,
+      "epochs": 2,
+      "maxSequenceLength": 4096,
+      "effectiveBatch": 32,
+      "precision": "bf16",
+      "optimizer": "adamw_torch",
+      "selection": "checkpoint-600",
+      "sliceHash": "6fe68cf757ed41b9ae38f1736eb0c178d0e06f7dff6667b7e3e5e1a7c026f8cc",
+      "trainSnapshot": "29b8675c2e163371cc0e5931bf3e75ede264531f4e1807d986b303163d90b511",
+      "environment": {
+        "accelerate": "1.15.0",
+        "peft": null,
+        "torch": "2.14.0+cu130",
+        "torch_cuda": "13.0",
+        "transformers": "5.17.0"
+      }
+    },
+    {
+      "id": "exp-025-1.7b-qwen3-dv12",
+      "items": 705,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 136,
+        "answer_mismatch": 137,
+        "answer_match": 432
+      },
+      "completed": 569,
+      "exactPercent": 61.276595744680854,
+      "plans": 28,
+      "books": {
+        "adult-reasoning": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 10,
+            "answer_mismatch": 0,
+            "answer_match": 0
+          },
+          "completed": 0,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "common-sense": {
+          "items": 50,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 36,
+            "answer_mismatch": 14,
+            "answer_match": 0
+          },
+          "completed": 14,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "decompose-to-solve": {
+          "items": 100,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 44,
+            "answer_mismatch": 56,
+            "answer_match": 0
+          },
+          "completed": 56,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "logical-reasoning": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 0,
+            "answer_mismatch": 10,
+            "answer_match": 0
+          },
+          "completed": 10,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "mathematical-thinking": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 0,
+            "answer_mismatch": 7,
+            "answer_match": 3
+          },
+          "completed": 10,
+          "exactPercent": 30,
+          "plans": 10
+        },
+        "procedural-arithmetic": {
+          "items": 480,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 33,
+            "answer_mismatch": 38,
+            "answer_match": 409
+          },
+          "completed": 447,
+          "exactPercent": 85.20833333333333,
+          "plans": 12
+        },
+        "scientific-reasoning": {
+          "items": 25,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 13,
+            "answer_mismatch": 12,
+            "answer_match": 0
+          },
+          "completed": 12,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "world-as-a-system": {
+          "items": 20,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 0,
+            "answer_mismatch": 0,
+            "answer_match": 20
+          },
+          "completed": 20,
+          "exactPercent": 100,
+          "plans": 1
+        }
+      },
+      "commandUsage": {
+        "adult-reasoning": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "common-sense": {
+          "items": 50,
+          "withContainerDeclaration": 0,
+          "withJsEval": 50
+        },
+        "decompose-to-solve": {
+          "items": 100,
+          "withContainerDeclaration": 0,
+          "withJsEval": 100
+        },
+        "logical-reasoning": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "mathematical-thinking": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "procedural-arithmetic": {
+          "items": 480,
+          "withContainerDeclaration": 0,
+          "withJsEval": 480
+        },
+        "scientific-reasoning": {
+          "items": 25,
+          "withContainerDeclaration": 0,
+          "withJsEval": 25
+        },
+        "world-as-a-system": {
+          "items": 20,
+          "withContainerDeclaration": 0,
+          "withJsEval": 20
+        }
+      },
+      "comparatorDiscrepancies": 0,
+      "base": "Qwen/Qwen3-1.7B",
+      "trainingManifestMissing": false,
+      "finishApproximate": false,
+      "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+      "dataVersion": {
+        "number": "12",
+        "label": "statement simplification: the two zero books state their numbers plainly without distractors; parse updated in lockstep"
+      },
+      "finish": "2026-09-26T16:45:07Z",
+      "seed": 3407,
+      "trainExamples": 10553,
+      "targetTokensSeen": 6616018,
+      "steps": 660,
+      "learningRate": 0.0001,
+      "epochs": 2,
+      "maxSequenceLength": 4096,
+      "effectiveBatch": 32,
+      "precision": "bf16",
+      "optimizer": "adamw_torch",
+      "selection": "checkpoint-450",
+      "sliceHash": "b30551d38730be82ddcd3bb33b2bb0319f42ed1251470a25b74e29ba6e4ce069",
+      "trainSnapshot": "8aaf6b3aa4d0b32c8e63d3676584a56f082514c07fe70368981f85796827abe8",
+      "environment": {
+        "accelerate": "1.15.0",
+        "peft": null,
+        "torch": "2.14.0+cu130",
+        "torch_cuda": "13.0",
+        "transformers": "5.17.0"
+      }
+    },
+    {
+      "id": "exp-026-0.5b-qwen2.5coder-dv13",
+      "items": 705,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 214,
+        "answer_mismatch": 130,
+        "answer_match": 361
+      },
+      "completed": 491,
+      "exactPercent": 51.205673758865245,
+      "plans": 28,
+      "books": {
+        "adult-reasoning": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 6,
+            "answer_mismatch": 4,
+            "answer_match": 0
+          },
+          "completed": 4,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "common-sense": {
+          "items": 50,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 50,
+            "answer_mismatch": 0,
+            "answer_match": 0
+          },
+          "completed": 0,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "decompose-to-solve": {
+          "items": 100,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 55,
+            "answer_mismatch": 45,
+            "answer_match": 0
+          },
+          "completed": 45,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "logical-reasoning": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 2,
+            "answer_mismatch": 8,
+            "answer_match": 0
+          },
+          "completed": 8,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "mathematical-thinking": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 4,
+            "answer_mismatch": 5,
+            "answer_match": 1
+          },
+          "completed": 6,
+          "exactPercent": 10,
+          "plans": 10
+        },
+        "procedural-arithmetic": {
+          "items": 480,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 74,
+            "answer_mismatch": 46,
+            "answer_match": 360
+          },
+          "completed": 406,
+          "exactPercent": 75,
+          "plans": 12
+        },
+        "scientific-reasoning": {
+          "items": 25,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 3,
+            "answer_mismatch": 22,
+            "answer_match": 0
+          },
+          "completed": 22,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "world-as-a-system": {
+          "items": 20,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 20,
+            "answer_mismatch": 0,
+            "answer_match": 0
+          },
+          "completed": 0,
+          "exactPercent": 0,
+          "plans": 1
+        }
+      },
+      "commandUsage": {
+        "adult-reasoning": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "common-sense": {
+          "items": 50,
+          "withContainerDeclaration": 0,
+          "withJsEval": 50
+        },
+        "decompose-to-solve": {
+          "items": 100,
+          "withContainerDeclaration": 0,
+          "withJsEval": 100
+        },
+        "logical-reasoning": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "mathematical-thinking": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "procedural-arithmetic": {
+          "items": 480,
+          "withContainerDeclaration": 0,
+          "withJsEval": 480
+        },
+        "scientific-reasoning": {
+          "items": 25,
+          "withContainerDeclaration": 0,
+          "withJsEval": 25
+        },
+        "world-as-a-system": {
+          "items": 20,
+          "withContainerDeclaration": 0,
+          "withJsEval": 20
+        }
+      },
+      "comparatorDiscrepancies": 0,
+      "base": "Qwen/Qwen2.5-Coder-0.5B-Instruct",
+      "trainingManifestMissing": false,
+      "finishApproximate": false,
+      "revision": "local",
+      "dataVersion": {
+        "number": "13",
+        "label": "fractional-chain restoration: units-and-rates joins the training mix (reserved for training so the holdout picks another template), and the \"whole positive\" integer probes relax to mild positive probes"
+      },
+      "finish": "2026-09-26T20:07:03Z",
+      "seed": 3407,
+      "trainExamples": 10553,
+      "targetTokensSeen": 6488408,
+      "steps": 660,
+      "learningRate": 0.0001,
+      "epochs": 2,
+      "maxSequenceLength": 4096,
+      "effectiveBatch": 32,
+      "precision": "bf16",
+      "optimizer": "adamw_torch",
+      "selection": "checkpoint-660",
+      "sliceHash": "568762bd50c2485d07f50b0b70aff4fc3f494edbd7d659da930f7f11f3322864",
+      "trainSnapshot": "897b8c4fb102ab3f1e7812a4fe92a9a37addb67a4b1aac73ed5500519d49cf04",
+      "environment": {
+        "accelerate": "1.15.0",
+        "peft": null,
+        "torch": "2.14.0+cu130",
+        "torch_cuda": "13.0",
+        "transformers": "5.17.0"
+      }
+    },
+    {
+      "id": "exp-027-1.7b-qwen3-dv13",
+      "items": 705,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 184,
+        "answer_mismatch": 100,
+        "answer_match": 421
+      },
+      "completed": 521,
+      "exactPercent": 59.716312056737586,
+      "plans": 28,
+      "books": {
+        "adult-reasoning": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 6,
+            "answer_mismatch": 4,
+            "answer_match": 0
+          },
+          "completed": 4,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "common-sense": {
+          "items": 50,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 50,
+            "answer_mismatch": 0,
+            "answer_match": 0
+          },
+          "completed": 0,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "decompose-to-solve": {
+          "items": 100,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 94,
+            "answer_mismatch": 6,
+            "answer_match": 0
+          },
+          "completed": 6,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "logical-reasoning": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 1,
+            "answer_mismatch": 9,
+            "answer_match": 0
+          },
+          "completed": 9,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "mathematical-thinking": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 2,
+            "answer_mismatch": 6,
+            "answer_match": 2
+          },
+          "completed": 8,
+          "exactPercent": 20,
+          "plans": 10
+        },
+        "procedural-arithmetic": {
+          "items": 480,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 20,
+            "answer_mismatch": 46,
+            "answer_match": 414
+          },
+          "completed": 460,
+          "exactPercent": 86.25,
+          "plans": 12
+        },
+        "scientific-reasoning": {
+          "items": 25,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 11,
+            "answer_mismatch": 14,
+            "answer_match": 0
+          },
+          "completed": 14,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "world-as-a-system": {
+          "items": 20,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 0,
+            "answer_mismatch": 15,
+            "answer_match": 5
+          },
+          "completed": 20,
+          "exactPercent": 25,
+          "plans": 1
+        }
+      },
+      "commandUsage": {
+        "adult-reasoning": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "common-sense": {
+          "items": 50,
+          "withContainerDeclaration": 0,
+          "withJsEval": 50
+        },
+        "decompose-to-solve": {
+          "items": 100,
+          "withContainerDeclaration": 0,
+          "withJsEval": 100
+        },
+        "logical-reasoning": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "mathematical-thinking": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "procedural-arithmetic": {
+          "items": 480,
+          "withContainerDeclaration": 0,
+          "withJsEval": 480
+        },
+        "scientific-reasoning": {
+          "items": 25,
+          "withContainerDeclaration": 0,
+          "withJsEval": 25
+        },
+        "world-as-a-system": {
+          "items": 20,
+          "withContainerDeclaration": 0,
+          "withJsEval": 20
+        }
+      },
+      "comparatorDiscrepancies": 0,
+      "base": "Qwen/Qwen3-1.7B",
+      "trainingManifestMissing": false,
+      "finishApproximate": false,
+      "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+      "dataVersion": {
+        "number": "13",
+        "label": "fractional-chain restoration: units-and-rates joins the training mix (reserved for training so the holdout picks another template), and the \"whole positive\" integer probes relax to mild positive probes"
+      },
+      "finish": "2026-09-27T00:07:16Z",
+      "seed": 3407,
+      "trainExamples": 10553,
+      "targetTokensSeen": 6572832,
+      "steps": 660,
+      "learningRate": 0.0001,
+      "epochs": 2,
+      "maxSequenceLength": 4096,
+      "effectiveBatch": 32,
+      "precision": "bf16",
+      "optimizer": "adamw_torch",
+      "selection": "checkpoint-600",
+      "sliceHash": "568762bd50c2485d07f50b0b70aff4fc3f494edbd7d659da930f7f11f3322864",
+      "trainSnapshot": "897b8c4fb102ab3f1e7812a4fe92a9a37addb67a4b1aac73ed5500519d49cf04",
+      "environment": {
+        "accelerate": "1.15.0",
+        "peft": null,
+        "torch": "2.14.0+cu130",
+        "torch_cuda": "13.0",
+        "transformers": "5.17.0"
+      }
+    },
+    {
+      "id": "exp-014-deep-chains",
+      "items": 705,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 201,
+        "answer_mismatch": 125,
+        "answer_match": 379
+      },
+      "completed": 504,
+      "exactPercent": 53.758865248226954,
+      "plans": 28,
+      "books": {
+        "adult-reasoning": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 10,
+            "answer_mismatch": 0,
+            "answer_match": 0
+          },
+          "completed": 0,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "common-sense": {
+          "items": 50,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 0,
+            "answer_mismatch": 50,
+            "answer_match": 0
+          },
+          "completed": 50,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "decompose-to-solve": {
+          "items": 100,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 98,
+            "answer_mismatch": 2,
+            "answer_match": 0
+          },
+          "completed": 2,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "logical-reasoning": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 6,
+            "answer_mismatch": 4,
+            "answer_match": 0
+          },
+          "completed": 4,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "mathematical-thinking": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 3,
+            "answer_mismatch": 5,
+            "answer_match": 2
+          },
+          "completed": 7,
+          "exactPercent": 20,
+          "plans": 10
+        },
+        "procedural-arithmetic": {
+          "items": 480,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 63,
+            "answer_mismatch": 40,
+            "answer_match": 377
+          },
+          "completed": 417,
+          "exactPercent": 78.54166666666667,
+          "plans": 12
+        },
+        "scientific-reasoning": {
+          "items": 25,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 5,
+            "answer_mismatch": 20,
+            "answer_match": 0
+          },
+          "completed": 20,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "world-as-a-system": {
+          "items": 20,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 16,
+            "answer_mismatch": 4,
+            "answer_match": 0
+          },
+          "completed": 4,
+          "exactPercent": 0,
+          "plans": 1
+        }
+      },
+      "commandUsage": {
+        "adult-reasoning": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "common-sense": {
+          "items": 50,
+          "withContainerDeclaration": 0,
+          "withJsEval": 50
+        },
+        "decompose-to-solve": {
+          "items": 100,
+          "withContainerDeclaration": 0,
+          "withJsEval": 100
+        },
+        "logical-reasoning": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "mathematical-thinking": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "procedural-arithmetic": {
+          "items": 480,
+          "withContainerDeclaration": 0,
+          "withJsEval": 480
+        },
+        "scientific-reasoning": {
+          "items": 25,
+          "withContainerDeclaration": 0,
+          "withJsEval": 25
+        },
+        "world-as-a-system": {
+          "items": 20,
+          "withContainerDeclaration": 0,
+          "withJsEval": 20
+        }
+      },
+      "comparatorDiscrepancies": 0,
+      "base": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "trainingManifestMissing": true,
+      "finishApproximate": true,
+      "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "dataVersion": {
+        "number": "2",
+        "label": "deep tranche (2026-09-23) — the five census operators in depth-3/4 chains, 9495 rows"
+      },
+      "finish": "2026-09-23T17:10:57Z",
+      "selection": "checkpoint-450",
+      "sliceHash": "3983739a47e8b2d1065219d72c3dc13ab34b5281636773bad5dcb5c72c0f8fee",
+      "trainSnapshot": "57daa1d42132f5f7f2abb9c1d2fe667512dd38983d467f0658e80f5cba405d99"
+    },
+    {
+      "id": "exp-016-wires",
+      "items": 705,
+      "classes": {
+        "generation_transport_error": 0,
+        "wrapper_rejected": 0,
+        "parse_invalid": 0,
+        "graph_invalid": 0,
+        "execution_error": 175,
+        "answer_mismatch": 90,
+        "answer_match": 440
+      },
+      "completed": 530,
+      "exactPercent": 62.4113475177305,
+      "plans": 28,
+      "books": {
+        "adult-reasoning": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 9,
+            "answer_mismatch": 1,
+            "answer_match": 0
+          },
+          "completed": 1,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "common-sense": {
+          "items": 50,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 15,
+            "answer_mismatch": 35,
+            "answer_match": 0
+          },
+          "completed": 35,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "decompose-to-solve": {
+          "items": 100,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 98,
+            "answer_mismatch": 2,
+            "answer_match": 0
+          },
+          "completed": 2,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "logical-reasoning": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 5,
+            "answer_mismatch": 5,
+            "answer_match": 0
+          },
+          "completed": 5,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "mathematical-thinking": {
+          "items": 10,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 5,
+            "answer_mismatch": 5,
+            "answer_match": 0
+          },
+          "completed": 5,
+          "exactPercent": 0,
+          "plans": 10
+        },
+        "procedural-arithmetic": {
+          "items": 480,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 13,
+            "answer_mismatch": 27,
+            "answer_match": 440
+          },
+          "completed": 467,
+          "exactPercent": 91.66666666666667,
+          "plans": 12
+        },
+        "scientific-reasoning": {
+          "items": 25,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 15,
+            "answer_mismatch": 10,
+            "answer_match": 0
+          },
+          "completed": 10,
+          "exactPercent": 0,
+          "plans": 1
+        },
+        "world-as-a-system": {
+          "items": 20,
+          "classes": {
+            "generation_transport_error": 0,
+            "wrapper_rejected": 0,
+            "parse_invalid": 0,
+            "graph_invalid": 0,
+            "execution_error": 15,
+            "answer_mismatch": 5,
+            "answer_match": 0
+          },
+          "completed": 5,
+          "exactPercent": 0,
+          "plans": 1
+        }
+      },
+      "commandUsage": {
+        "adult-reasoning": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "common-sense": {
+          "items": 50,
+          "withContainerDeclaration": 0,
+          "withJsEval": 50
+        },
+        "decompose-to-solve": {
+          "items": 100,
+          "withContainerDeclaration": 0,
+          "withJsEval": 100
+        },
+        "logical-reasoning": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "mathematical-thinking": {
+          "items": 10,
+          "withContainerDeclaration": 0,
+          "withJsEval": 10
+        },
+        "procedural-arithmetic": {
+          "items": 480,
+          "withContainerDeclaration": 0,
+          "withJsEval": 480
+        },
+        "scientific-reasoning": {
+          "items": 25,
+          "withContainerDeclaration": 0,
+          "withJsEval": 25
+        },
+        "world-as-a-system": {
+          "items": 20,
+          "withContainerDeclaration": 0,
+          "withJsEval": 20
+        }
+      },
+      "comparatorDiscrepancies": 0,
+      "base": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "trainingManifestMissing": false,
+      "finishApproximate": false,
+      "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "dataVersion": {
+        "number": "3",
+        "label": "declarative wires (2026-09-24) — graphPath, aggregate, fraction replace the multi-line transcriptions"
+      },
+      "finish": "2026-09-24T08:14:49Z",
+      "seed": 3407,
+      "trainExamples": 10069,
+      "targetTokensSeen": 8808866,
+      "steps": 630,
+      "learningRate": 0.0001,
+      "epochs": 2,
+      "maxSequenceLength": 4096,
+      "effectiveBatch": 32,
+      "precision": "bf16",
+      "optimizer": "adamw_torch",
+      "selection": "checkpoint-600",
+      "sliceHash": "5e1f071929d442da5bbe36ced7e0136b8854ceec098f1b6cafcf91fa0b749f3f",
+      "trainSnapshot": "b423751423877019cfd23d13aedc435cffeb5991e758b53131acb25124236e40",
+      "environment": {
+        "accelerate": "1.15.0",
+        "peft": null,
+        "torch": "2.14.0+cu130",
+        "torch_cuda": "13.0",
+        "transformers": "5.17.0"
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "left": "exp-021-1.7b-qwen3-dv7",
+      "right": "exp-017-qwen3-17b",
+      "common": 705,
+      "onlyLeftIds": 0,
+      "onlyRightIds": 0,
+      "changedOracles": 0,
+      "changedPlans": 695,
+      "bothMatch": 439,
+      "leftOnlyMatch": 21,
+      "rightOnlyMatch": 3,
+      "neitherMatch": 242,
+      "byBook": {
+        "adult-reasoning": {
+          "n": 10,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "common-sense": {
+          "n": 50,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "decompose-to-solve": {
+          "n": 100,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "logical-reasoning": {
+          "n": 10,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "mathematical-thinking": {
+          "n": 10,
+          "leftOnly": 0,
+          "rightOnly": 1
+        },
+        "procedural-arithmetic": {
+          "n": 480,
+          "leftOnly": 1,
+          "rightOnly": 2
+        },
+        "scientific-reasoning": {
+          "n": 25,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "world-as-a-system": {
+          "n": 20,
+          "leftOnly": 20,
+          "rightOnly": 0
+        }
+      }
+    },
+    {
+      "left": "exp-021-1.7b-qwen3-dv7",
+      "right": "exp-022-1.7b-qwen3-dv8",
+      "common": 705,
+      "onlyLeftIds": 0,
+      "onlyRightIds": 0,
+      "changedOracles": 0,
+      "changedPlans": 107,
+      "bothMatch": 446,
+      "leftOnlyMatch": 14,
+      "rightOnlyMatch": 2,
+      "neitherMatch": 243,
+      "byBook": {
+        "adult-reasoning": {
+          "n": 10,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "common-sense": {
+          "n": 50,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "decompose-to-solve": {
+          "n": 100,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "logical-reasoning": {
+          "n": 10,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "mathematical-thinking": {
+          "n": 10,
+          "leftOnly": 2,
+          "rightOnly": 0
+        },
+        "procedural-arithmetic": {
+          "n": 480,
+          "leftOnly": 12,
+          "rightOnly": 2
+        },
+        "scientific-reasoning": {
+          "n": 25,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "world-as-a-system": {
+          "n": 20,
+          "leftOnly": 0,
+          "rightOnly": 0
+        }
+      }
+    },
+    {
+      "left": "exp-021-1.7b-qwen3-dv7",
+      "right": "exp-027-1.7b-qwen3-dv13",
+      "common": 655,
+      "onlyLeftIds": 50,
+      "onlyRightIds": 50,
+      "changedOracles": 100,
+      "changedPlans": 147,
+      "bothMatch": 418,
+      "leftOnlyMatch": 42,
+      "rightOnlyMatch": 3,
+      "neitherMatch": 192,
+      "byBook": {
+        "adult-reasoning": {
+          "n": 10,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "decompose-to-solve": {
+          "n": 100,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "logical-reasoning": {
+          "n": 10,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "mathematical-thinking": {
+          "n": 10,
+          "leftOnly": 1,
+          "rightOnly": 1
+        },
+        "procedural-arithmetic": {
+          "n": 480,
+          "leftOnly": 26,
+          "rightOnly": 2
+        },
+        "scientific-reasoning": {
+          "n": 25,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "world-as-a-system": {
+          "n": 20,
+          "leftOnly": 15,
+          "rightOnly": 0
+        }
+      }
+    },
+    {
+      "left": "exp-026-0.5b-qwen2.5coder-dv13",
+      "right": "exp-027-1.7b-qwen3-dv13",
+      "common": 705,
+      "onlyLeftIds": 0,
+      "onlyRightIds": 0,
+      "changedOracles": 0,
+      "changedPlans": 0,
+      "bothMatch": 360,
+      "leftOnlyMatch": 1,
+      "rightOnlyMatch": 61,
+      "neitherMatch": 283,
+      "byBook": {
+        "adult-reasoning": {
+          "n": 10,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "common-sense": {
+          "n": 50,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "decompose-to-solve": {
+          "n": 100,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "logical-reasoning": {
+          "n": 10,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "mathematical-thinking": {
+          "n": 10,
+          "leftOnly": 0,
+          "rightOnly": 1
+        },
+        "procedural-arithmetic": {
+          "n": 480,
+          "leftOnly": 1,
+          "rightOnly": 55
+        },
+        "scientific-reasoning": {
+          "n": 25,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "world-as-a-system": {
+          "n": 20,
+          "leftOnly": 0,
+          "rightOnly": 5
+        }
+      }
+    },
+    {
+      "left": "exp-016-wires",
+      "right": "exp-014-deep-chains",
+      "common": 705,
+      "onlyLeftIds": 0,
+      "onlyRightIds": 0,
+      "changedOracles": 0,
+      "changedPlans": 40,
+      "bothMatch": 377,
+      "leftOnlyMatch": 63,
+      "rightOnlyMatch": 2,
+      "neitherMatch": 263,
+      "byBook": {
+        "adult-reasoning": {
+          "n": 10,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "common-sense": {
+          "n": 50,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "decompose-to-solve": {
+          "n": 100,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "logical-reasoning": {
+          "n": 10,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "mathematical-thinking": {
+          "n": 10,
+          "leftOnly": 0,
+          "rightOnly": 2
+        },
+        "procedural-arithmetic": {
+          "n": 480,
+          "leftOnly": 63,
+          "rightOnly": 0
+        },
+        "scientific-reasoning": {
+          "n": 25,
+          "leftOnly": 0,
+          "rightOnly": 0
+        },
+        "world-as-a-system": {
+          "n": 20,
+          "leftOnly": 0,
+          "rightOnly": 0
+        }
+      }
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "exp-017-qwen3-17b",
+      "book": "world-as-a-system",
+      "items": 20,
+      "counts": {
+        "execution_failure": 20
+      },
+      "file": "exp-017-qwen3-17b-world-as-a-system-restricted.jsonl"
+    },
+    {
+      "id": "exp-017-qwen3-17b",
+      "book": "decompose-to-solve",
+      "items": 100,
+      "counts": {
+        "execution_failure": 87,
+        "outside_grammar": 7,
+        "restricted_mismatch": 6
+      },
+      "file": "exp-017-qwen3-17b-decompose-to-solve-restricted.jsonl"
+    },
+    {
+      "id": "exp-021-1.7b-qwen3-dv7",
+      "book": "world-as-a-system",
+      "items": 20,
+      "counts": {
+        "restricted_match": 20
+      },
+      "file": "exp-021-1.7b-qwen3-dv7-world-as-a-system-restricted.jsonl"
+    },
+    {
+      "id": "exp-021-1.7b-qwen3-dv7",
+      "book": "decompose-to-solve",
+      "items": 100,
+      "counts": {
+        "restricted_match": 64,
+        "outside_grammar": 26,
+        "execution_failure": 8,
+        "restricted_mismatch": 2
+      },
+      "file": "exp-021-1.7b-qwen3-dv7-decompose-to-solve-restricted.jsonl"
+    },
+    {
+      "id": "exp-022-1.7b-qwen3-dv8",
+      "book": "world-as-a-system",
+      "items": 20,
+      "counts": {
+        "restricted_match": 20
+      },
+      "file": "exp-022-1.7b-qwen3-dv8-world-as-a-system-restricted.jsonl"
+    },
+    {
+      "id": "exp-022-1.7b-qwen3-dv8",
+      "book": "decompose-to-solve",
+      "items": 100,
+      "counts": {
+        "execution_failure": 59,
+        "outside_grammar": 41
+      },
+      "file": "exp-022-1.7b-qwen3-dv8-decompose-to-solve-restricted.jsonl"
+    },
+    {
+      "id": "exp-023-1.7b-qwen3-dv9",
+      "book": "world-as-a-system",
+      "items": 20,
+      "counts": {
+        "restricted_match": 16,
+        "outside_grammar": 4
+      },
+      "file": "exp-023-1.7b-qwen3-dv9-world-as-a-system-restricted.jsonl"
+    },
+    {
+      "id": "exp-023-1.7b-qwen3-dv9",
+      "book": "decompose-to-solve",
+      "items": 100,
+      "counts": {
+        "outside_grammar": 64,
+        "execution_failure": 36
+      },
+      "file": "exp-023-1.7b-qwen3-dv9-decompose-to-solve-restricted.jsonl"
+    },
+    {
+      "id": "exp-024-1.7b-qwen3-dv11",
+      "book": "world-as-a-system",
+      "items": 20,
+      "counts": {
+        "restricted_match": 20
+      },
+      "file": "exp-024-1.7b-qwen3-dv11-world-as-a-system-restricted.jsonl"
+    },
+    {
+      "id": "exp-024-1.7b-qwen3-dv11",
+      "book": "decompose-to-solve",
+      "items": 100,
+      "counts": {
+        "execution_failure": 62,
+        "outside_grammar": 38
+      },
+      "file": "exp-024-1.7b-qwen3-dv11-decompose-to-solve-restricted.jsonl"
+    },
+    {
+      "id": "exp-025-1.7b-qwen3-dv12",
+      "book": "world-as-a-system",
+      "items": 20,
+      "counts": {
+        "restricted_match": 20
+      },
+      "file": "exp-025-1.7b-qwen3-dv12-world-as-a-system-restricted.jsonl"
+    },
+    {
+      "id": "exp-025-1.7b-qwen3-dv12",
+      "book": "decompose-to-solve",
+      "items": 100,
+      "counts": {
+        "execution_failure": 44,
+        "outside_grammar": 56
+      },
+      "file": "exp-025-1.7b-qwen3-dv12-decompose-to-solve-restricted.jsonl"
+    },
+    {
+      "id": "exp-026-0.5b-qwen2.5coder-dv13",
+      "book": "world-as-a-system",
+      "items": 20,
+      "counts": {
+        "execution_failure": 20
+      },
+      "file": "exp-026-0.5b-qwen2.5coder-dv13-world-as-a-system-restricted.jsonl"
+    },
+    {
+      "id": "exp-026-0.5b-qwen2.5coder-dv13",
+      "book": "decompose-to-solve",
+      "items": 100,
+      "counts": {
+        "execution_failure": 55,
+        "outside_grammar": 45
+      },
+      "file": "exp-026-0.5b-qwen2.5coder-dv13-decompose-to-solve-restricted.jsonl"
+    },
+    {
+      "id": "exp-027-1.7b-qwen3-dv13",
+      "book": "world-as-a-system",
+      "items": 20,
+      "counts": {
+        "restricted_match": 20
+      },
+      "file": "exp-027-1.7b-qwen3-dv13-world-as-a-system-restricted.jsonl"
+    },
+    {
+      "id": "exp-027-1.7b-qwen3-dv13",
+      "book": "decompose-to-solve",
+      "items": 100,
+      "counts": {
+        "execution_failure": 94,
+        "outside_grammar": 6
+      },
+      "file": "exp-027-1.7b-qwen3-dv13-decompose-to-solve-restricted.jsonl"
+    },
+    {
+      "id": "exp-014-deep-chains",
+      "book": "world-as-a-system",
+      "items": 20,
+      "counts": {
+        "execution_failure": 16,
+        "outside_grammar": 4
+      },
+      "file": "exp-014-deep-chains-world-as-a-system-restricted.jsonl"
+    },
+    {
+      "id": "exp-014-deep-chains",
+      "book": "decompose-to-solve",
+      "items": 100,
+      "counts": {
+        "execution_failure": 98,
+        "outside_grammar": 2
+      },
+      "file": "exp-014-deep-chains-decompose-to-solve-restricted.jsonl"
+    },
+    {
+      "id": "exp-016-wires",
+      "book": "world-as-a-system",
+      "items": 20,
+      "counts": {
+        "execution_failure": 15,
+        "outside_grammar": 5
+      },
+      "file": "exp-016-wires-world-as-a-system-restricted.jsonl"
+    },
+    {
+      "id": "exp-016-wires",
+      "book": "decompose-to-solve",
+      "items": 100,
+      "counts": {
+        "execution_failure": 98,
+        "outside_grammar": 2
+      },
+      "file": "exp-016-wires-decompose-to-solve-restricted.jsonl"
+    }
+  ],
+  "historicalJudges": {
+    "items": 833,
+    "uniqueKeys": 833,
+    "fields": [
+      "key",
+      "oracle",
+      "answer"
+    ],
+    "conclusion": "Archived shards contain inputs only. Individual verdicts are absent."
+  },
+  "limitations": [
+    "One training seed per arm; item-level counts are not independent training replications.",
+    "The benchmark was repeatedly inspected and changed during development.",
+    "Historical item records do not include full statements; identical IDs do not prove identical prompts.",
+    "Restricted parsers are retrospective diagnostics, not a general semantic scorer.",
+    "The official Qwen3-1.7B name is used; the legacy parameter-count field is not independently certified."
+  ]
+}

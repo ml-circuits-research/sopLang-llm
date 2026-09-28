@@ -1,0 +1,1994 @@
+{
+  "indexed": {
+    "date-parts": [
+      [
+        2026,
+        9,
+        26
+      ]
+    ],
+    "date-time": "2026-09-26T00:36:46Z",
+    "timestamp": 1790383006403,
+    "version": "4.1.0"
+  },
+  "reference-count": 187,
+  "publisher": "Springer Science and Business Media LLC",
+  "issue": "8002",
+  "license": [
+    {
+      "start": {
+        "date-parts": [
+          [
+            2024,
+            3,
+            6
+          ]
+        ],
+        "date-time": "2024-03-06T00:00:00Z",
+        "timestamp": 1709683200000
+      },
+      "content-version": "tdm",
+      "delay-in-days": 0,
+      "URL": "https://www.springernature.com/gp/researchers/text-and-data-mining"
+    },
+    {
+      "start": {
+        "date-parts": [
+          [
+            2024,
+            3,
+            6
+          ]
+        ],
+        "date-time": "2024-03-06T00:00:00Z",
+        "timestamp": 1709683200000
+      },
+      "content-version": "vor",
+      "delay-in-days": 0,
+      "URL": "https://www.springernature.com/gp/researchers/text-and-data-mining"
+    }
+  ],
+  "content-domain": {
+    "domain": [
+      "link.springer.com"
+    ],
+    "crossmark-restriction": false
+  },
+  "short-container-title": [
+    "Nature"
+  ],
+  "published-print": {
+    "date-parts": [
+      [
+        2024,
+        3,
+        7
+      ]
+    ]
+  },
+  "DOI": "10.1038/s41586-024-07146-0",
+  "type": "journal-article",
+  "created": {
+    "date-parts": [
+      [
+        2024,
+        3,
+        6
+      ]
+    ],
+    "date-time": "2024-03-06T12:02:35Z",
+    "timestamp": 1709726555000
+  },
+  "page": "49-58",
+  "update-policy": "https://doi.org/10.1007/springer_crossmark_policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 639,
+  "title": [
+    "Artificial intelligence and illusions of understanding in scientific research"
+  ],
+  "prefix": "10.1038",
+  "volume": "627",
+  "author": [
+    {
+      "ORCID": "https://orcid.org/0000-0002-0964-123X",
+      "authenticated-orcid": false,
+      "given": "Lisa",
+      "family": "Messeri",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0001-8800-410X",
+      "authenticated-orcid": false,
+      "given": "M. J.",
+      "family": "Crockett",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    }
+  ],
+  "member": "297",
+  "published-online": {
+    "date-parts": [
+      [
+        2024,
+        3,
+        6
+      ]
+    ]
+  },
+  "reference": [
+    {
+      "key": "7146_CR1",
+      "doi-asserted-by": "publisher",
+      "first-page": "2538",
+      "DOI": "10.1016/j.joule.2020.11.021",
+      "volume": "4",
+      "author": "G Crabtree",
+      "year": "2020",
+      "unstructured": "Crabtree, G. Self-driving laboratories coming of age. Joule 4, 2538–2541 (2020).",
+      "journal-title": "Joule"
+    },
+    {
+      "key": "7146_CR2",
+      "doi-asserted-by": "publisher",
+      "first-page": "47",
+      "DOI": "10.1038/s41586-023-06221-2",
+      "volume": "620",
+      "author": "H Wang",
+      "year": "2023",
+      "unstructured": "Wang, H. et al. Scientific discovery in the age of artificial intelligence. Nature 620, 47–60 (2023). This review explores how AI can be incorporated across the research pipeline, drawing from a wide range of scientific disciplines.",
+      "journal-title": "Nature"
+    },
+    {
+      "key": "7146_CR3",
+      "doi-asserted-by": "publisher",
+      "first-page": "597",
+      "DOI": "10.1016/j.tics.2023.04.008",
+      "volume": "27",
+      "author": "D Dillion",
+      "year": "2023",
+      "unstructured": "Dillion, D., Tandon, N., Gu, Y. & Gray, K. Can AI language models replace human participants? Trends Cogn. Sci. 27, 597–600 (2023).",
+      "journal-title": "Trends Cogn. Sci."
+    },
+    {
+      "key": "7146_CR4",
+      "doi-asserted-by": "publisher",
+      "first-page": "1108",
+      "DOI": "10.1126/science.adi1778",
+      "volume": "380",
+      "author": "I Grossmann",
+      "year": "2023",
+      "unstructured": "Grossmann, I. et al. AI and the transformation of social science research. Science 380, 1108–1109 (2023). This forward-looking article proposes a variety of ways to incorporate generative AI into social-sciences research.",
+      "journal-title": "Science"
+    },
+    {
+      "key": "7146_CR5",
+      "first-page": "3",
+      "volume": "42",
+      "author": "Y Gil",
+      "year": "2022",
+      "unstructured": "Gil, Y. Will AI write scientific papers in the future? AI Mag. 42, 3–15 (2022).",
+      "journal-title": "AI Mag."
+    },
+    {
+      "key": "7146_CR6",
+      "doi-asserted-by": "publisher",
+      "first-page": "29",
+      "DOI": "10.1038/s41540-021-00189-3",
+      "volume": "7",
+      "author": "H Kitano",
+      "year": "2021",
+      "unstructured": "Kitano, H. Nobel Turing Challenge: creating the engine for scientific discovery. npj Syst. Biol. Appl. 7, 29 (2021).",
+      "journal-title": "npj Syst. Biol. Appl."
+    },
+    {
+      "key": "7146_CR7",
+      "unstructured": "Benjamin, R. Race After Technology: Abolitionist Tools for the New Jim Code (Oxford Univ. Press, 2020). This book examines how social norms about race become embedded in technologies, even those that are focused on providing good societal outcomes."
+    },
+    {
+      "key": "7146_CR8",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Broussard, M. More Than a Glitch: Confronting Race, Gender, and Ability Bias in Tech (MIT Press, 2023).",
+      "DOI": "10.7551/mitpress/14234.001.0001"
+    },
+    {
+      "key": "7146_CR9",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Noble, S. U. Algorithms of Oppression: How Search Engines Reinforce Racism (New York Univ. Press, 2018).",
+      "DOI": "10.2307/j.ctt1pwt9w5"
+    },
+    {
+      "key": "7146_CR10",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Bender, E. M., Gebru, T., McMillan-Major, A. & Shmitchell, S. On the dangers of stochastic parrots: can language models be too big? in Proc. 2021 ACM Conference on Fairness, Accountability, and Transparency 610–623 (Association for Computing Machinery, 2021). One of the first comprehensive critiques of large language models, this article draws attention to a host of issues that ought to be considered before taking up such tools.",
+      "DOI": "10.1145/3442188.3445922"
+    },
+    {
+      "key": "7146_CR11",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Crawford, K. Atlas of AI: Power, Politics, and the Planetary Costs of Artificial Intelligence (Yale Univ. Press, 2021).",
+      "DOI": "10.12987/9780300252392"
+    },
+    {
+      "key": "7146_CR12",
+      "doi-asserted-by": "publisher",
+      "first-page": "575",
+      "DOI": "10.1007/s11023-017-9417-6",
+      "volume": "27",
+      "author": "DG Johnson",
+      "year": "2017",
+      "unstructured": "Johnson, D. G. & Verdicchio, M. Reframing AI discourse. Minds Mach. 27, 575–590 (2017).",
+      "journal-title": "Minds Mach."
+    },
+    {
+      "key": "7146_CR13",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Atanasoski, N. & Vora, K. Surrogate Humanity: Race, Robots, and the Politics of Technological Futures (Duke Univ. Press, 2019).",
+      "DOI": "10.1215/9781478004455"
+    },
+    {
+      "key": "7146_CR14",
+      "doi-asserted-by": "publisher",
+      "first-page": "e2215907120",
+      "DOI": "10.1073/pnas.2215907120",
+      "volume": "120",
+      "author": "M Mitchell",
+      "year": "2023",
+      "unstructured": "Mitchell, M. & Krakauer, D. C. The debate over understanding in AI’s large language models. Proc. Natl Acad. Sci. USA 120, e2215907120 (2023).",
+      "journal-title": "Proc. Natl Acad. Sci. USA"
+    },
+    {
+      "key": "7146_CR15",
+      "doi-asserted-by": "publisher",
+      "first-page": "1222",
+      "DOI": "10.1126/science.adi0248",
+      "volume": "380",
+      "author": "C Kidd",
+      "year": "2023",
+      "unstructured": "Kidd, C. & Birhane, A. How AI can distort human beliefs. Science 380, 1222–1223 (2023).",
+      "journal-title": "Science"
+    },
+    {
+      "key": "7146_CR16",
+      "doi-asserted-by": "publisher",
+      "first-page": "277",
+      "DOI": "10.1038/s42254-023-00581-4",
+      "volume": "5",
+      "author": "A Birhane",
+      "year": "2023",
+      "unstructured": "Birhane, A., Kasirzadeh, A., Leslie, D. & Wachter, S. Science in the age of large language models. Nat. Rev. Phys. 5, 277–280 (2023).",
+      "journal-title": "Nat. Rev. Phys."
+    },
+    {
+      "key": "7146_CR17",
+      "doi-asserted-by": "publisher",
+      "first-page": "100804",
+      "DOI": "10.1016/j.patter.2023.100804",
+      "volume": "4",
+      "author": "S Kapoor",
+      "year": "2023",
+      "unstructured": "Kapoor, S. & Narayanan, A. Leakage and the reproducibility crisis in machine-learning-based science. Patterns 4, 100804 (2023).",
+      "journal-title": "Patterns"
+    },
+    {
+      "key": "7146_CR18",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Hullman, J., Kapoor, S., Nanayakkara, P., Gelman, A. & Narayanan, A. The worst of both worlds: a comparative analysis of errors in learning from data in psychology and machine learning. In Proc. 2022 AAAI/ACM Conference on AI, Ethics, and Society (eds Conitzer, V. et al.) 335–348 (Association for Computing Machinery, 2022).",
+      "DOI": "10.1145/3514094.3534196"
+    },
+    {
+      "key": "7146_CR19",
+      "doi-asserted-by": "publisher",
+      "first-page": "206",
+      "DOI": "10.1038/s42256-019-0048-x",
+      "volume": "1",
+      "author": "C Rudin",
+      "year": "2019",
+      "unstructured": "Rudin, C. Stop explaining black box machine learning models for high stakes decisions and use interpretable models instead. Nat. Mach. Intell. 1, 206–215 (2019). This paper articulates the problems with attempting to explain AI systems that lack interpretability, and advocates for building interpretable models instead.",
+      "journal-title": "Nat. Mach. Intell."
+    },
+    {
+      "key": "7146_CR20",
+      "doi-asserted-by": "publisher",
+      "first-page": "e2307596120",
+      "DOI": "10.1073/pnas.2307596120",
+      "volume": "120",
+      "author": "MJ Crockett",
+      "year": "2023",
+      "unstructured": "Crockett, M. J., Bai, X., Kapoor, S., Messeri, L. & Narayanan, A. The limitations of machine learning models for predicting scientific replicability. Proc. Natl Acad. Sci. USA 120, e2307596120 (2023).",
+      "journal-title": "Proc. Natl Acad. Sci. USA"
+    },
+    {
+      "key": "7146_CR21",
+      "doi-asserted-by": "publisher",
+      "first-page": "138",
+      "DOI": "10.1126/science.adi8982",
+      "volume": "381",
+      "author": "S Lazar",
+      "year": "2023",
+      "unstructured": "Lazar, S. & Nelson, A. AI safety on whose terms? Science 381, 138 (2023).",
+      "journal-title": "Science"
+    },
+    {
+      "key": "7146_CR22",
+      "unstructured": "Collingridge, D. The Social Control of Technology (St Martin’s Press, 1980)."
+    },
+    {
+      "key": "7146_CR23",
+      "doi-asserted-by": "publisher",
+      "first-page": "209",
+      "DOI": "10.1177/02683962211048201",
+      "volume": "37",
+      "author": "G Wagner",
+      "year": "2022",
+      "unstructured": "Wagner, G., Lukyanenko, R. & Paré, G. Artificial intelligence and the conduct of literature reviews. J. Inf. Technol. 37, 209–226 (2022).",
+      "journal-title": "J. Inf. Technol."
+    },
+    {
+      "key": "7146_CR24",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1038/d41586-020-01733-7",
+      "author": "M Hutson",
+      "year": "2020",
+      "unstructured": "Hutson, M. Artificial-intelligence tools aim to tame the coronavirus literature. Nature https://doi.org/10.1038/d41586-020-01733-7 (2020).",
+      "journal-title": "Nature"
+    },
+    {
+      "key": "7146_CR25",
+      "doi-asserted-by": "publisher",
+      "first-page": "244",
+      "DOI": "10.1159/000515908",
+      "volume": "106",
+      "author": "Q Haas",
+      "year": "2021",
+      "unstructured": "Haas, Q. et al. Utilizing artificial intelligence to manage COVID-19 scientific evidence torrent with Risklick AI: a critical tool for pharmacology and therapy development. Pharmacology 106, 244–253 (2021).",
+      "journal-title": "Pharmacology"
+    },
+    {
+      "key": "7146_CR26",
+      "doi-asserted-by": "publisher",
+      "unstructured": "Müller, H., Pachnanda, S., Pahl, F. & Rosenqvist, C. The application of artificial intelligence on different types of literature reviews – a comparative study. In 2022 International Conference on Applied Artificial Intelligence (ICAPAI) https://doi.org/10.1109/ICAPAI55158.2022.9801564 (Institute of Electrical and Electronics Engineers, 2022).",
+      "DOI": "10.1109/ICAPAI55158.2022.9801564"
+    },
+    {
+      "key": "7146_CR27",
+      "doi-asserted-by": "publisher",
+      "first-page": "106589",
+      "DOI": "10.1016/j.infsof.2021.106589",
+      "volume": "136",
+      "author": "R van Dinter",
+      "year": "2021",
+      "unstructured": "van Dinter, R., Tekinerdogan, B. & Catal, C. Automation of systematic literature reviews: a systematic literature review. Inf. Softw. Technol. 136, 106589 (2021).",
+      "journal-title": "Inf. Softw. Technol."
+    },
+    {
+      "key": "7146_CR28",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Aydın, Ö. & Karaarslan, E. OpenAI ChatGPT generated literature review: digital twin in healthcare. In Emerging Computer Technologies 2 (ed. Aydın, Ö.) 22–31 (İzmir Akademi Dernegi, 2022).",
+      "DOI": "10.2139/ssrn.4308687"
+    },
+    {
+      "key": "7146_CR29",
+      "doi-asserted-by": "publisher",
+      "first-page": "4862",
+      "DOI": "10.1093/bioinformatics/btz422",
+      "volume": "35",
+      "author": "M AlQuraishi",
+      "year": "2019",
+      "unstructured": "AlQuraishi, M. AlphaFold at CASP13. Bioinformatics 35, 4862–4865 (2019).",
+      "journal-title": "Bioinformatics"
+    },
+    {
+      "key": "7146_CR30",
+      "doi-asserted-by": "publisher",
+      "first-page": "583",
+      "DOI": "10.1038/s41586-021-03819-2",
+      "volume": "596",
+      "author": "J Jumper",
+      "year": "2021",
+      "unstructured": "Jumper, J. et al. Highly accurate protein structure prediction with AlphaFold. Nature 596, 583–589 (2021).",
+      "journal-title": "Nature"
+    },
+    {
+      "key": "7146_CR31",
+      "doi-asserted-by": "publisher",
+      "first-page": "382",
+      "DOI": "10.1038/s43588-023-00440-3",
+      "volume": "3",
+      "author": "JS Lee",
+      "year": "2023",
+      "unstructured": "Lee, J. S., Kim, J. & Kim, P. M. Score-based generative modeling for de novo protein design. Nat. Computat. Sci. 3, 382–392 (2023).",
+      "journal-title": "Nat. Computat. Sci."
+    },
+    {
+      "key": "7146_CR32",
+      "doi-asserted-by": "publisher",
+      "first-page": "1120",
+      "DOI": "10.1038/nmat4717",
+      "volume": "15",
+      "author": "R Gómez-Bombarelli",
+      "year": "2016",
+      "unstructured": "Gómez-Bombarelli, R. et al. Design of efficient molecular organic light-emitting diodes by a high-throughput virtual screening and experimental approach. Nat. Mater. 15, 1120–1127 (2016).",
+      "journal-title": "Nat. Mater."
+    },
+    {
+      "key": "7146_CR33",
+      "doi-asserted-by": "publisher",
+      "first-page": "761",
+      "DOI": "10.1038/s42254-022-00518-3",
+      "volume": "4",
+      "author": "M Krenn",
+      "year": "2022",
+      "unstructured": "Krenn, M. et al. On scientific understanding with artificial intelligence. Nat. Rev. Phys. 4, 761–769 (2022).",
+      "journal-title": "Nat. Rev. Phys."
+    },
+    {
+      "key": "7146_CR34",
+      "doi-asserted-by": "publisher",
+      "first-page": "273",
+      "DOI": "10.1038/d41586-018-06617-5",
+      "volume": "561",
+      "author": "A Extance",
+      "year": "2018",
+      "unstructured": "Extance, A. How AI technology can tame the scientific literature. Nature 561, 273–274 (2018).",
+      "journal-title": "Nature"
+    },
+    {
+      "key": "7146_CR35",
+      "unstructured": "Hastings, J. AI for Scientific Discovery (CRC Press, 2023). This book reviews current and future incorporation of AI into the scientific research pipeline."
+    },
+    {
+      "key": "7146_CR36",
+      "doi-asserted-by": "publisher",
+      "first-page": "1021",
+      "DOI": "10.1038/s41562-023-01637-2",
+      "volume": "7",
+      "author": "A Ahmed",
+      "year": "2023",
+      "unstructured": "Ahmed, A. et al. The future of academic publishing. Nat. Hum. Behav. 7, 1021–1026 (2023).",
+      "journal-title": "Nat. Hum. Behav."
+    },
+    {
+      "key": "7146_CR37",
+      "unstructured": "Gray, K., Yam, K. C., Zhen’An, A. E., Wilbanks, D. & Waytz, A. The psychology of robots and artificial intelligence. In The Handbook of Social Psychology (eds Gilbert, D. et al.) (in the press)."
+    },
+    {
+      "key": "7146_CR38",
+      "doi-asserted-by": "publisher",
+      "first-page": "337",
+      "DOI": "10.1017/pan.2023.2",
+      "volume": "31",
+      "author": "LP Argyle",
+      "year": "2023",
+      "unstructured": "Argyle, L. P. et al. Out of one, many: using language models to simulate human samples. Polit. Anal. 31, 337–351 (2023).",
+      "journal-title": "Polit. Anal."
+    },
+    {
+      "key": "7146_CR39",
+      "unstructured": "Aher, G., Arriaga, R. I. & Kalai, A. T. Using large language models to simulate multiple humans and replicate human subject studies. In Proc. 40th International Conference on Machine Learning (eds Krause, A. et al.) 337–371 (JMLR.org, 2023)."
+    },
+    {
+      "key": "7146_CR40",
+      "doi-asserted-by": "publisher",
+      "first-page": "e2218523120",
+      "DOI": "10.1073/pnas.2218523120",
+      "volume": "120",
+      "author": "M Binz",
+      "year": "2023",
+      "unstructured": "Binz, M. & Schulz, E. Using cognitive psychology to understand GPT-3. Proc. Natl Acad. Sci. USA 120, e2218523120 (2023).",
+      "journal-title": "Proc. Natl Acad. Sci. USA"
+    },
+    {
+      "key": "7146_CR41",
+      "unstructured": "Ornstein, J. T., Blasingame, E. N. & Truscott, J. S. How to train your stochastic parrot: large language models for political texts. Github, https://joeornstein.github.io/publications/ornstein-blasingame-truscott.pdf (2023)."
+    },
+    {
+      "key": "7146_CR42",
+      "doi-asserted-by": "publisher",
+      "first-page": "13825",
+      "DOI": "10.1073/pnas.1821458116",
+      "volume": "116",
+      "author": "S He",
+      "year": "2019",
+      "unstructured": "He, S. et al. Learning to predict the cosmological structure formation. Proc. Natl Acad. Sci. USA 116, 13825–13832 (2019).",
+      "journal-title": "Proc. Natl Acad. Sci. USA"
+    },
+    {
+      "key": "7146_CR43",
+      "doi-asserted-by": "publisher",
+      "first-page": "3257",
+      "DOI": "10.1109/TMI.2019.2927182",
+      "volume": "39",
+      "author": "F Mahmood",
+      "year": "2020",
+      "unstructured": "Mahmood, F. et al. Deep adversarial training for multi-organ nuclei segmentation in histopathology images. IEEE Trans. Med. Imaging 39, 3257–3267 (2020).",
+      "journal-title": "IEEE Trans. Med. Imaging"
+    },
+    {
+      "key": "7146_CR44",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Teixeira, B. et al. Generating synthetic X-ray images of a person from the surface geometry. In Proc. IEEE Conference on Computer Vision and Pattern Recognition 9059–9067 (Institute of Electrical and Electronics Engineers, 2018).",
+      "DOI": "10.1109/CVPR.2018.00944"
+    },
+    {
+      "key": "7146_CR45",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1038/s41467-019-14018-z",
+      "volume": "11",
+      "author": "M Marouf",
+      "year": "2020",
+      "unstructured": "Marouf, M. et al. Realistic in silico generation and augmentation of single-cell RNA-seq data using generative adversarial networks. Nat. Commun. 11, 166 (2020).",
+      "journal-title": "Nat. Commun."
+    },
+    {
+      "key": "7146_CR46",
+      "doi-asserted-by": "publisher",
+      "first-page": "489",
+      "DOI": "10.1038/445489a",
+      "volume": "445",
+      "author": "DJ Watts",
+      "year": "2007",
+      "unstructured": "Watts, D. J. A twenty-first century science. Nature 445, 489 (2007).",
+      "journal-title": "Nature"
+    },
+    {
+      "key": "7146_CR47",
+      "doi-asserted-by": "publisher",
+      "first-page": "662",
+      "DOI": "10.1080/1369118X.2012.678878",
+      "volume": "15",
+      "author": "d boyd",
+      "year": "2012",
+      "unstructured": "boyd, d. & Crawford, K. Critical questions for big data. Inf. Commun. Soc. 15, 662–679 (2012). This article assesses the ethical and epistemic implications of scientific and societal moves towards big data and provides a parallel case study for thinking about the risks of artificial intelligence.",
+      "journal-title": "Inf. Commun. Soc."
+    },
+    {
+      "key": "7146_CR48",
+      "doi-asserted-by": "publisher",
+      "first-page": "433",
+      "DOI": "10.1111/tops.12404",
+      "volume": "11",
+      "author": "E Jolly",
+      "year": "2019",
+      "unstructured": "Jolly, E. & Chang, L. J. The Flatland fallacy: moving beyond low–dimensional thinking. Top. Cogn. Sci. 11, 433–454 (2019).",
+      "journal-title": "Top. Cogn. Sci."
+    },
+    {
+      "key": "7146_CR49",
+      "doi-asserted-by": "publisher",
+      "first-page": "1100",
+      "DOI": "10.1177/1745691617693393",
+      "volume": "12",
+      "author": "T Yarkoni",
+      "year": "2017",
+      "unstructured": "Yarkoni, T. & Westfall, J. Choosing prediction over explanation in psychology: lessons from machine learning. Perspect. Psychol. Sci. 12, 1100–1122 (2017).",
+      "journal-title": "Perspect. Psychol. Sci."
+    },
+    {
+      "key": "7146_CR50",
+      "doi-asserted-by": "publisher",
+      "first-page": "221",
+      "DOI": "10.1038/nmeth.2340",
+      "volume": "10",
+      "author": "P Radivojac",
+      "year": "2013",
+      "unstructured": "Radivojac, P. et al. A large-scale evaluation of computational protein function prediction. Nat. Methods 10, 221–227 (2013).",
+      "journal-title": "Nat. Methods"
+    },
+    {
+      "key": "7146_CR51",
+      "doi-asserted-by": "publisher",
+      "first-page": "932",
+      "DOI": "10.1038/s41587-021-01179-w",
+      "volume": "40",
+      "author": "ML Bileschi",
+      "year": "2022",
+      "unstructured": "Bileschi, M. L. et al. Using deep learning to annotate the protein universe. Nat. Biotechnol. 40, 932–937 (2022).",
+      "journal-title": "Nat. Biotechnol."
+    },
+    {
+      "key": "7146_CR52",
+      "doi-asserted-by": "publisher",
+      "first-page": "695",
+      "DOI": "10.1038/s41592-019-0466-z",
+      "volume": "16",
+      "author": "N Barkas",
+      "year": "2019",
+      "unstructured": "Barkas, N. et al. Joint analysis of heterogeneous single-cell RNA-seq dataset collections. Nat. Methods 16, 695–698 (2019).",
+      "journal-title": "Nat. Methods"
+    },
+    {
+      "key": "7146_CR53",
+      "doi-asserted-by": "publisher",
+      "first-page": "688",
+      "DOI": "10.1038/s44159-023-00241-5",
+      "volume": "2",
+      "author": "D Demszky",
+      "year": "2023",
+      "unstructured": "Demszky, D. et al. Using large language models in psychology. Nat. Rev. Psychol. 2, 688–701 (2023).",
+      "journal-title": "Nat. Rev. Psychol."
+    },
+    {
+      "key": "7146_CR54",
+      "unstructured": "Karjus, A. Machine-assisted mixed methods: augmenting humanities and social sciences with artificial intelligence. Preprint at https://arxiv.org/abs/2309.14379 (2023)."
+    },
+    {
+      "key": "7146_CR55",
+      "doi-asserted-by": "publisher",
+      "first-page": "70",
+      "DOI": "10.1038/s41586-021-04086-x",
+      "volume": "600",
+      "author": "A Davies",
+      "year": "2021",
+      "unstructured": "Davies, A. et al. Advancing mathematics by guiding human intuition with AI. Nature 600, 70–74 (2021).",
+      "journal-title": "Nature"
+    },
+    {
+      "key": "7146_CR56",
+      "doi-asserted-by": "publisher",
+      "first-page": "1209",
+      "DOI": "10.1126/science.abe2629",
+      "volume": "372",
+      "author": "JC Peterson",
+      "year": "2021",
+      "unstructured": "Peterson, J. C., Bourgin, D. D., Agrawal, M., Reichman, D. & Griffiths, T. L. Using large-scale experiments and machine learning to discover theories of human decision-making. Science 372, 1209–1214 (2021).",
+      "journal-title": "Science"
+    },
+    {
+      "key": "7146_CR57",
+      "doi-asserted-by": "publisher",
+      "unstructured": "Ilyas, A. et al. Adversarial examples are not bugs, they are features. Preprint at https://doi.org/10.48550/arXiv.1905.02175 (2019)",
+      "DOI": "10.48550/arXiv.1905.02175"
+    },
+    {
+      "key": "7146_CR58",
+      "doi-asserted-by": "publisher",
+      "first-page": "266",
+      "DOI": "10.1177/01622439211026371",
+      "volume": "47",
+      "author": "BM Semel",
+      "year": "2022",
+      "unstructured": "Semel, B. M. Listening like a computer: attentional tensions and mechanized care in psychiatric digital phenotyping. Sci. Technol. Hum. Values 47, 266–290 (2022).",
+      "journal-title": "Sci. Technol. Hum. Values"
+    },
+    {
+      "key": "7146_CR59",
+      "doi-asserted-by": "publisher",
+      "first-page": "119",
+      "DOI": "10.3233/DS-170011",
+      "volume": "1",
+      "author": "Y Gil",
+      "year": "2017",
+      "unstructured": "Gil, Y. Thoughtful artificial intelligence: forging a new partnership for data science and scientific discovery. Data Sci. 1, 119–129 (2017).",
+      "journal-title": "Data Sci."
+    },
+    {
+      "key": "7146_CR60",
+      "doi-asserted-by": "publisher",
+      "first-page": "25",
+      "DOI": "10.1057/s41599-020-00703-8",
+      "volume": "8",
+      "author": "A Checco",
+      "year": "2021",
+      "unstructured": "Checco, A., Bracciale, L., Loreti, P., Pinfield, S. & Bianchi, G. AI-assisted peer review. Humanit. Soc. Sci. Commun. 8, 25 (2021).",
+      "journal-title": "Humanit. Soc. Sci. Commun."
+    },
+    {
+      "key": "7146_CR61",
+      "doi-asserted-by": "publisher",
+      "first-page": "208",
+      "DOI": "10.1162/qss_a_00185",
+      "volume": "3",
+      "author": "M Thelwall",
+      "year": "2022",
+      "unstructured": "Thelwall, M. Can the quality of published academic journal articles be assessed with machine learning? Quant. Sci. Stud. 3, 208–226 (2022).",
+      "journal-title": "Quant. Sci. Stud."
+    },
+    {
+      "key": "7146_CR62",
+      "unstructured": "Dhar, P. Peer review of scholarly research gets an AI boost. IEEE Spectrum spectrum.ieee.org/peer-review-of-scholarly-research-gets-an-ai-boost (2020)."
+    },
+    {
+      "key": "7146_CR63",
+      "doi-asserted-by": "publisher",
+      "first-page": "609",
+      "DOI": "10.1038/d41586-018-07245-9",
+      "volume": "563",
+      "author": "D Heaven",
+      "year": "2018",
+      "unstructured": "Heaven, D. AI peer reviewers unleashed to ease publishing grind. Nature 563, 609–610 (2018).",
+      "journal-title": "Nature"
+    },
+    {
+      "key": "7146_CR64",
+      "doi-asserted-by": "publisher",
+      "first-page": "234",
+      "DOI": "10.1038/d41586-023-03144-w",
+      "volume": "622",
+      "author": "G Conroy",
+      "year": "2023",
+      "unstructured": "Conroy, G. How ChatGPT and other AI tools could disrupt scientific publishing. Nature 622, 234–236 (2023).",
+      "journal-title": "Nature"
+    },
+    {
+      "key": "7146_CR65",
+      "doi-asserted-by": "publisher",
+      "first-page": "719",
+      "DOI": "10.1146/annurev-psych-020821-114157",
+      "volume": "73",
+      "author": "BA Nosek",
+      "year": "2022",
+      "unstructured": "Nosek, B. A. et al. Replicability, robustness, and reproducibility in psychological science. Annu. Rev. Psychol. 73, 719–748 (2022).",
+      "journal-title": "Annu. Rev. Psychol."
+    },
+    {
+      "key": "7146_CR66",
+      "doi-asserted-by": "publisher",
+      "first-page": "e0225826",
+      "DOI": "10.1371/journal.pone.0225826",
+      "volume": "14",
+      "author": "A Altmejd",
+      "year": "2019",
+      "unstructured": "Altmejd, A. et al. Predicting the replicability of social science lab experiments. PLoS ONE 14, e0225826 (2019).",
+      "journal-title": "PLoS ONE"
+    },
+    {
+      "key": "7146_CR67",
+      "doi-asserted-by": "publisher",
+      "first-page": "10762",
+      "DOI": "10.1073/pnas.1909046117",
+      "volume": "117",
+      "author": "Y Yang",
+      "year": "2020",
+      "unstructured": "Yang, Y., Youyou, W. & Uzzi, B. Estimating the deep replicability of scientific findings using human and artificial intelligence. Proc. Natl Acad. Sci. USA 117, 10762–10768 (2020).",
+      "journal-title": "Proc. Natl Acad. Sci. USA"
+    },
+    {
+      "key": "7146_CR68",
+      "doi-asserted-by": "publisher",
+      "first-page": "e2208863120",
+      "DOI": "10.1073/pnas.2208863120",
+      "volume": "120",
+      "author": "W Youyou",
+      "year": "2023",
+      "unstructured": "Youyou, W., Yang, Y. & Uzzi, B. A discipline-wide investigation of the replicability of psychology papers over the past two decades. Proc. Natl Acad. Sci. USA 120, e2208863120 (2023).",
+      "journal-title": "Proc. Natl Acad. Sci. USA"
+    },
+    {
+      "key": "7146_CR69",
+      "doi-asserted-by": "publisher",
+      "first-page": "891",
+      "DOI": "10.1016/j.tics.2019.07.011",
+      "volume": "23",
+      "author": "N Rabb",
+      "year": "2019",
+      "unstructured": "Rabb, N., Fernbach, P. M. & Sloman, S. A. Individual representation in a community of knowledge. Trends Cogn. Sci. 23, 891–902 (2019). This comprehensive review paper documents the empirical evidence for distributed cognition in communities of knowledge and the resultant vulnerabilities to illusions of understanding.",
+      "journal-title": "Trends Cogn. Sci."
+    },
+    {
+      "key": "7146_CR70",
+      "doi-asserted-by": "publisher",
+      "first-page": "521",
+      "DOI": "10.1207/s15516709cog2605_1",
+      "volume": "26",
+      "author": "L Rozenblit",
+      "year": "2002",
+      "unstructured": "Rozenblit, L. & Keil, F. The misunderstood limits of folk science: an illusion of explanatory depth. Cogn. Sci. 26, 521–562 (2002). This paper provided an empirical demonstration of the illusion of explanatory depth, and inspired a programme of research in cognitive science on communities of knowledge.",
+      "journal-title": "Cogn. Sci."
+    },
+    {
+      "key": "7146_CR71",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Hutchins, E. Cognition in the Wild (MIT Press, 1995).",
+      "DOI": "10.7551/mitpress/1881.001.0001"
+    },
+    {
+      "key": "7146_CR72",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Lave, J. & Wenger, E. Situated Learning: Legitimate Peripheral Participation (Cambridge Univ. Press, 1991).",
+      "DOI": "10.1017/CBO9780511815355"
+    },
+    {
+      "key": "7146_CR73",
+      "doi-asserted-by": "publisher",
+      "first-page": "5",
+      "DOI": "10.2307/2026796",
+      "volume": "87",
+      "author": "P Kitcher",
+      "year": "1990",
+      "unstructured": "Kitcher, P. The division of cognitive labor. J. Philos. 87, 5–22 (1990).",
+      "journal-title": "J. Philos."
+    },
+    {
+      "key": "7146_CR74",
+      "doi-asserted-by": "publisher",
+      "first-page": "335",
+      "DOI": "10.2307/2026523",
+      "volume": "82",
+      "author": "J Hardwig",
+      "year": "1985",
+      "unstructured": "Hardwig, J. Epistemic dependence. J. Philos. 82, 335–349 (1985).",
+      "journal-title": "J. Philos."
+    },
+    {
+      "key": "7146_CR75",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Keil, F. in Oxford Studies In Epistemology (eds Gendler, T. S. & Hawthorne, J.) 143–166 (Oxford Academic, 2005).",
+      "DOI": "10.1093/oso/9780199285891.003.0006"
+    },
+    {
+      "key": "7146_CR76",
+      "doi-asserted-by": "publisher",
+      "first-page": "225",
+      "DOI": "10.1086/644786",
+      "volume": "76",
+      "author": "M Weisberg",
+      "year": "2009",
+      "unstructured": "Weisberg, M. & Muldoon, R. Epistemic landscapes and the division of cognitive labor. Philos. Sci. 76, 225–252 (2009).",
+      "journal-title": "Philos. Sci."
+    },
+    {
+      "key": "7146_CR77",
+      "doi-asserted-by": "publisher",
+      "first-page": "1451",
+      "DOI": "10.1177/0956797616662271",
+      "volume": "27",
+      "author": "SA Sloman",
+      "year": "2016",
+      "unstructured": "Sloman, S. A. & Rabb, N. Your understanding is my understanding: evidence for a community of knowledge. Psychol. Sci. 27, 1451–1460 (2016).",
+      "journal-title": "Psychol. Sci."
+    },
+    {
+      "key": "7146_CR78",
+      "doi-asserted-by": "publisher",
+      "first-page": "137",
+      "DOI": "10.1023/A:1008259020140",
+      "volume": "8",
+      "author": "RA Wilson",
+      "year": "1998",
+      "unstructured": "Wilson, R. A. & Keil, F. The shadows and shallows of explanation. Minds Mach. 8, 137–159 (1998).",
+      "journal-title": "Minds Mach."
+    },
+    {
+      "key": "7146_CR79",
+      "doi-asserted-by": "publisher",
+      "first-page": "259",
+      "DOI": "10.1080/03640210701863339",
+      "volume": "32",
+      "author": "FC Keil",
+      "year": "2008",
+      "unstructured": "Keil, F. C., Stein, C., Webb, L., Billings, V. D. & Rozenblit, L. Discerning the division of cognitive labor: an emerging understanding of how knowledge is clustered in other minds. Cogn. Sci. 32, 259–300 (2008).",
+      "journal-title": "Cogn. Sci."
+    },
+    {
+      "key": "7146_CR80",
+      "doi-asserted-by": "publisher",
+      "first-page": "359",
+      "DOI": "10.1111/j.1468-0017.2010.01394.x",
+      "volume": "25",
+      "author": "D Sperber",
+      "year": "2010",
+      "unstructured": "Sperber, D. et al. Epistemic vigilance. Mind Lang. 25, 359–393 (2010).",
+      "journal-title": "Mind Lang."
+    },
+    {
+      "key": "7146_CR81",
+      "doi-asserted-by": "publisher",
+      "first-page": "373",
+      "DOI": "10.1007/s11098-015-0497-y",
+      "volume": "173",
+      "author": "DA Wilkenfeld",
+      "year": "2016",
+      "unstructured": "Wilkenfeld, D. A., Plunkett, D. & Lombrozo, T. Depth and deference: when and why we attribute understanding. Philos. Stud. 173, 373–393 (2016).",
+      "journal-title": "Philos. Stud."
+    },
+    {
+      "key": "7146_CR82",
+      "doi-asserted-by": "publisher",
+      "first-page": "776",
+      "DOI": "10.1126/science.1207745",
+      "volume": "333",
+      "author": "B Sparrow",
+      "year": "2011",
+      "unstructured": "Sparrow, B., Liu, J. & Wegner, D. M. Google effects on memory: cognitive consequences of having information at our fingertips. Science 333, 776–778 (2011).",
+      "journal-title": "Science"
+    },
+    {
+      "key": "7146_CR83",
+      "doi-asserted-by": "publisher",
+      "first-page": "674",
+      "DOI": "10.1037/xge0000070",
+      "volume": "144",
+      "author": "M Fisher",
+      "year": "2015",
+      "unstructured": "Fisher, M., Goddu, M. K. & Keil, F. C. Searching for explanations: how the internet inflates estimates of internal knowledge. J. Exp. Psychol. Gen. 144, 674–687 (2015).",
+      "journal-title": "J. Exp. Psychol. Gen."
+    },
+    {
+      "key": "7146_CR84",
+      "doi-asserted-by": "publisher",
+      "first-page": "1845",
+      "DOI": "10.1038/s41562-023-01734-2",
+      "volume": "7",
+      "author": "J De Freitas",
+      "year": "2023",
+      "unstructured": "De Freitas, J., Agarwal, S., Schmitt, B. & Haslam, N. Psychological factors underlying attitudes toward AI tools. Nat. Hum. Behav. 7, 1845–1854 (2023).",
+      "journal-title": "Nat. Hum. Behav."
+    },
+    {
+      "key": "7146_CR85",
+      "doi-asserted-by": "publisher",
+      "first-page": "809",
+      "DOI": "10.1177/0022243719851788",
+      "volume": "56",
+      "author": "N Castelo",
+      "year": "2019",
+      "unstructured": "Castelo, N., Bos, M. W. & Lehmann, D. R. Task-dependent algorithm aversion. J. Mark. Res. 56, 809–825 (2019).",
+      "journal-title": "J. Mark. Res."
+    },
+    {
+      "key": "7146_CR86",
+      "doi-asserted-by": "publisher",
+      "first-page": "1636",
+      "DOI": "10.1038/s41562-021-01146-0",
+      "volume": "5",
+      "author": "R Cadario",
+      "year": "2021",
+      "unstructured": "Cadario, R., Longoni, C. & Morewedge, C. K. Understanding, explaining, and utilizing medical artificial intelligence. Nat. Hum. Behav. 5, 1636–1642 (2021).",
+      "journal-title": "Nat. Hum. Behav."
+    },
+    {
+      "key": "7146_CR87",
+      "doi-asserted-by": "publisher",
+      "first-page": "105021",
+      "DOI": "10.1016/j.cognition.2022.105021",
+      "volume": "223",
+      "author": "K Oktar",
+      "year": "2022",
+      "unstructured": "Oktar, K. & Lombrozo, T. Deciding to be authentic: intuition is favored over deliberation when authenticity matters. Cognition 223, 105021 (2022).",
+      "journal-title": "Cognition"
+    },
+    {
+      "key": "7146_CR88",
+      "doi-asserted-by": "publisher",
+      "first-page": "106859",
+      "DOI": "10.1016/j.chb.2021.106859",
+      "volume": "122",
+      "author": "YE Bigman",
+      "year": "2021",
+      "unstructured": "Bigman, Y. E., Yam, K. C., Marciano, D., Reynolds, S. J. & Gray, K. Threat of racial and economic inequality increases preference for algorithm decision-making. Comput. Hum. Behav. 122, 106859 (2021).",
+      "journal-title": "Comput. Hum. Behav."
+    },
+    {
+      "key": "7146_CR89",
+      "doi-asserted-by": "publisher",
+      "first-page": "898027",
+      "DOI": "10.3389/fpsyg.2022.898027",
+      "volume": "13",
+      "author": "MC Claudy",
+      "year": "2022",
+      "unstructured": "Claudy, M. C., Aquino, K. & Graso, M. Artificial intelligence can’t be charmed: the effects of impartiality on laypeople’s algorithmic preferences. Front. Psychol. 13, 898027 (2022).",
+      "journal-title": "Front. Psychol."
+    },
+    {
+      "key": "7146_CR90",
+      "doi-asserted-by": "publisher",
+      "unstructured": "Snyder, C., Keppler, S. & Leider, S. Algorithm reliance under pressure: the effect of customer load on service workers. Preprint at SSRN https://doi.org/10.2139/ssrn.4066823 (2022).",
+      "DOI": "10.2139/ssrn.4066823"
+    },
+    {
+      "key": "7146_CR91",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1038/s41598-021-87480-9",
+      "volume": "11",
+      "author": "E Bogert",
+      "year": "2021",
+      "unstructured": "Bogert, E., Schecter, A. & Watson, R. T. Humans rely more on algorithms than social influence as a task becomes more difficult. Sci Rep. 11, 8028 (2021).",
+      "journal-title": "Sci Rep."
+    },
+    {
+      "key": "7146_CR92",
+      "doi-asserted-by": "publisher",
+      "first-page": "119",
+      "DOI": "10.1002/per.2410070204",
+      "volume": "7",
+      "author": "A Raviv",
+      "year": "1993",
+      "unstructured": "Raviv, A., Bar‐Tal, D., Raviv, A. & Abin, R. Measuring epistemic authority: studies of politicians and professors. Eur. J. Personal. 7, 119–138 (1993).",
+      "journal-title": "Eur. J. Personal."
+    },
+    {
+      "key": "7146_CR93",
+      "doi-asserted-by": "publisher",
+      "first-page": "1043",
+      "DOI": "10.1080/10410236.2013.831685",
+      "volume": "29",
+      "author": "L Cummings",
+      "year": "2014",
+      "unstructured": "Cummings, L. The “trust” heuristic: arguments from authority in public health. Health Commun. 29, 1043–1056 (2014).",
+      "journal-title": "Health Commun."
+    },
+    {
+      "key": "7146_CR94",
+      "doi-asserted-by": "publisher",
+      "unstructured": "Lee, M. K. Understanding perception of algorithmic decisions: fairness, trust, and emotion in response to algorithmic management. Big Data Soc. 5, https://doi.org/10.1177/2053951718756684 (2018).",
+      "DOI": "10.1177/2053951718756684"
+    },
+    {
+      "key": "7146_CR95",
+      "unstructured": "Kissinger, H. A., Schmidt, E. & Huttenlocher, D. The Age of A.I. And Our Human Future (Little, Brown, 2021)."
+    },
+    {
+      "key": "7146_CR96",
+      "doi-asserted-by": "publisher",
+      "first-page": "748",
+      "DOI": "10.1016/j.tics.2016.08.001",
+      "volume": "20",
+      "author": "T Lombrozo",
+      "year": "2016",
+      "unstructured": "Lombrozo, T. Explanatory preferences shape learning and inference. Trends Cogn. Sci. 20, 748–759 (2016). This paper provides an overview of philosophical theories of explanatory virtues and reviews empirical evidence on the sorts of explanations people find satisfying.",
+      "journal-title": "Trends Cogn. Sci."
+    },
+    {
+      "key": "7146_CR97",
+      "doi-asserted-by": "publisher",
+      "first-page": "e13169",
+      "DOI": "10.1111/cogs.13169",
+      "volume": "46",
+      "author": "TH Vrantsidis",
+      "year": "2022",
+      "unstructured": "Vrantsidis, T. H. & Lombrozo, T. Simplicity as a cue to probability: multiple roles for simplicity in evaluating explanations. Cogn. Sci. 46, e13169 (2022).",
+      "journal-title": "Cogn. Sci."
+    },
+    {
+      "key": "7146_CR98",
+      "unstructured": "Johnson, S. G. B., Johnston, A. M., Toig, A. E. & Keil, F. C. Explanatory scope informs causal strength inferences. In Proc. 36th Annual Meeting of the Cognitive Science Society 2453–2458 (Cognitive Science Society, 2014)."
+    },
+    {
+      "key": "7146_CR99",
+      "doi-asserted-by": "publisher",
+      "first-page": "527",
+      "DOI": "10.3758/s13421-010-0028-1",
+      "volume": "39",
+      "author": "SS Khemlani",
+      "year": "2011",
+      "unstructured": "Khemlani, S. S., Sussman, A. B. & Oppenheimer, D. M. Harry Potter and the sorcerer’s scope: latent scope biases in explanatory reasoning. Mem. Cognit. 39, 527–535 (2011).",
+      "journal-title": "Mem. Cognit."
+    },
+    {
+      "key": "7146_CR100",
+      "doi-asserted-by": "publisher",
+      "first-page": "101453",
+      "DOI": "10.1016/j.cogpsych.2021.101453",
+      "volume": "132",
+      "author": "EG Liquin",
+      "year": "2022",
+      "unstructured": "Liquin, E. G. & Lombrozo, T. Motivated to learn: an account of explanatory satisfaction. Cogn. Psychol. 132, 101453 (2022).",
+      "journal-title": "Cogn. Psychol."
+    },
+    {
+      "key": "7146_CR101",
+      "doi-asserted-by": "publisher",
+      "first-page": "67",
+      "DOI": "10.1016/j.cognition.2016.06.011",
+      "volume": "155",
+      "author": "EJ Hopkins",
+      "year": "2016",
+      "unstructured": "Hopkins, E. J., Weisberg, D. S. & Taylor, J. C. V. The seductive allure is a reductive allure: people prefer scientific explanations that contain logically irrelevant reductive information. Cognition 155, 67–76 (2016).",
+      "journal-title": "Cognition"
+    },
+    {
+      "key": "7146_CR102",
+      "doi-asserted-by": "publisher",
+      "first-page": "44",
+      "DOI": "10.1186/s41235-018-0135-2",
+      "volume": "3",
+      "author": "DS Weisberg",
+      "year": "2018",
+      "unstructured": "Weisberg, D. S., Hopkins, E. J. & Taylor, J. C. V. People’s explanatory preferences for scientific phenomena. Cogn. Res. Princ. Implic. 3, 44 (2018).",
+      "journal-title": "Cogn. Res. Princ. Implic."
+    },
+    {
+      "key": "7146_CR103",
+      "doi-asserted-by": "publisher",
+      "first-page": "633",
+      "DOI": "10.1177/0956797613504301",
+      "volume": "25",
+      "author": "A Jerez-Fernandez",
+      "year": "2014",
+      "unstructured": "Jerez-Fernandez, A., Angulo, A. N. & Oppenheimer, D. M. Show me the numbers: precision as a cue to others’ confidence. Psychol. Sci. 25, 633–635 (2014).",
+      "journal-title": "Psychol. Sci."
+    },
+    {
+      "key": "7146_CR104",
+      "doi-asserted-by": "publisher",
+      "first-page": "1140",
+      "DOI": "10.1002/mar.21498",
+      "volume": "38",
+      "author": "J Kim",
+      "year": "2021",
+      "unstructured": "Kim, J., Giroux, M. & Lee, J. C. When do you trust AI? The effect of number presentation detail on consumer trust and acceptance of AI recommendations. Psychol. Mark. 38, 1140–1155 (2021).",
+      "journal-title": "Psychol. Mark."
+    },
+    {
+      "key": "7146_CR105",
+      "doi-asserted-by": "publisher",
+      "first-page": "227",
+      "DOI": "10.1017/S1358246121000035",
+      "volume": "89",
+      "author": "CT Nguyen",
+      "year": "2021",
+      "unstructured": "Nguyen, C. T. The seductions of clarity. R. Inst. Philos. Suppl. 89, 227–255 (2021). This article describes how reductive and quantitative explanations can generate a sense of understanding that is not necessarily correlated with actual understanding.",
+      "journal-title": "R. Inst. Philos. Suppl."
+    },
+    {
+      "key": "7146_CR106",
+      "doi-asserted-by": "publisher",
+      "first-page": "375",
+      "DOI": "10.1080/09658211.2021.1882501",
+      "volume": "30",
+      "author": "M Fisher",
+      "year": "2022",
+      "unstructured": "Fisher, M., Smiley, A. H. & Grillo, T. L. H. Information without knowledge: the effects of internet search on learning. Memory 30, 375–387 (2022).",
+      "journal-title": "Memory"
+    },
+    {
+      "key": "7146_CR107",
+      "doi-asserted-by": "publisher",
+      "first-page": "711",
+      "DOI": "10.1002/acp.4058",
+      "volume": "37",
+      "author": "ED Eliseev",
+      "year": "2023",
+      "unstructured": "Eliseev, E. D. & Marsh, E. J. Understanding why searching the internet inflates confidence in explanatory ability. Appl. Cogn. Psychol. 37, 711–720 (2023).",
+      "journal-title": "Appl. Cogn. Psychol."
+    },
+    {
+      "key": "7146_CR108",
+      "doi-asserted-by": "publisher",
+      "first-page": "292",
+      "DOI": "10.1037/xap0000310",
+      "volume": "27",
+      "author": "M Fisher",
+      "year": "2021",
+      "unstructured": "Fisher, M. & Oppenheimer, D. M. Who knows what? Knowledge misattribution in the division of cognitive labor. J. Exp. Psychol. Appl. 27, 292–306 (2021).",
+      "journal-title": "J. Exp. Psychol. Appl."
+    },
+    {
+      "key": "7146_CR109",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Chromik, M., Eiband, M., Buchner, F., Krüger, A. & Butz, A. I think I get your point, AI! The illusion of explanatory depth in explainable AI. In 26th International Conference on Intelligent User Interfaces (eds Hammond, T. et al.) 307–317 (Association for Computing Machinery, 2021).",
+      "DOI": "10.1145/3397481.3450644"
+    },
+    {
+      "key": "7146_CR110",
+      "doi-asserted-by": "publisher",
+      "first-page": "510",
+      "DOI": "10.1016/j.shpsa.2012.12.005",
+      "volume": "44",
+      "author": "M Strevens",
+      "year": "2013",
+      "unstructured": "Strevens, M. No understanding without explanation. Stud. Hist. Philos. Sci. A 44, 510–515 (2013).",
+      "journal-title": "Stud. Hist. Philos. Sci. A"
+    },
+    {
+      "key": "7146_CR111",
+      "unstructured": "Ylikoski, P. in Scientific Understanding: Philosophical Perspectives (eds De Regt, H. et al.) 100–119 (Univ. Pittsburgh Press, 2009)."
+    },
+    {
+      "key": "7146_CR112",
+      "doi-asserted-by": "publisher",
+      "unstructured": "Giudice, M. D. The prediction–explanation fallacy: a pervasive problem in scientific applications of machine learning. Preprint at PsyArXiv https://doi.org/10.31234/osf.io/4vq8f (2021).",
+      "DOI": "10.31234/osf.io/4vq8f"
+    },
+    {
+      "key": "7146_CR113",
+      "doi-asserted-by": "publisher",
+      "first-page": "181",
+      "DOI": "10.1038/s41586-021-03659-0",
+      "volume": "595",
+      "author": "JM Hofman",
+      "year": "2021",
+      "unstructured": "Hofman, J. M. et al. Integrating explanation and prediction in computational social science. Nature 595, 181–188 (2021). This paper highlights the advantages and disadvantages of explanatory versus predictive approaches to modelling, with a focus on applications to computational social science.",
+      "journal-title": "Nature"
+    },
+    {
+      "key": "7146_CR114",
+      "doi-asserted-by": "publisher",
+      "first-page": "289",
+      "DOI": "10.1214/10-STS330",
+      "volume": "25",
+      "author": "G Shmueli",
+      "year": "2010",
+      "unstructured": "Shmueli, G. To explain or to predict? Stat. Sci. 25, 289–310 (2010).",
+      "journal-title": "Stat. Sci."
+    },
+    {
+      "key": "7146_CR115",
+      "doi-asserted-by": "publisher",
+      "first-page": "486",
+      "DOI": "10.1126/science.aal3856",
+      "volume": "355",
+      "author": "JM Hofman",
+      "year": "2017",
+      "unstructured": "Hofman, J. M., Sharma, A. & Watts, D. J. Prediction and explanation in social systems. Science 355, 486–488 (2017).",
+      "journal-title": "Science"
+    },
+    {
+      "key": "7146_CR116",
+      "doi-asserted-by": "publisher",
+      "first-page": "90",
+      "DOI": "10.1016/j.obhdp.2018.12.005",
+      "volume": "151",
+      "author": "JM Logg",
+      "year": "2019",
+      "unstructured": "Logg, J. M., Minson, J. A. & Moore, D. A. Algorithm appreciation: people prefer algorithmic to human judgment. Organ. Behav. Hum. Decis. Process. 151, 90–103 (2019).",
+      "journal-title": "Organ. Behav. Hum. Decis. Process."
+    },
+    {
+      "key": "7146_CR117",
+      "doi-asserted-by": "publisher",
+      "first-page": "2803",
+      "DOI": "10.1007/s11229-018-1692-0",
+      "volume": "197",
+      "author": "CT Nguyen",
+      "year": "2020",
+      "unstructured": "Nguyen, C. T. Cognitive islands and runaway echo chambers: problems for epistemic dependence on experts. Synthese 197, 2803–2821 (2020).",
+      "journal-title": "Synthese"
+    },
+    {
+      "key": "7146_CR118",
+      "doi-asserted-by": "publisher",
+      "first-page": "199",
+      "DOI": "10.1214/ss/1009213726",
+      "volume": "16",
+      "author": "L Breiman",
+      "year": "2001",
+      "unstructured": "Breiman, L. Statistical modeling: the two cultures. Stat. Sci. 16, 199–215 (2001).",
+      "journal-title": "Stat. Sci."
+    },
+    {
+      "key": "7146_CR119",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Gao, J. & Wang, D. Quantifying the benefit of artificial intelligence for scientific research. Preprint at arxiv.org/abs/2304.10578 (2023).",
+      "DOI": "10.1038/s41562-024-02020-5"
+    },
+    {
+      "key": "7146_CR120",
+      "doi-asserted-by": "publisher",
+      "first-page": "28",
+      "DOI": "10.1038/d41586-023-03316-8",
+      "volume": "623",
+      "author": "B Hanson",
+      "year": "2023",
+      "unstructured": "Hanson, B. et al. Garbage in, garbage out: mitigating risks and maximizing benefits of AI in research. Nature 623, 28–31 (2023).",
+      "journal-title": "Nature"
+    },
+    {
+      "key": "7146_CR121",
+      "doi-asserted-by": "publisher",
+      "first-page": "e2018340118",
+      "DOI": "10.1073/pnas.2018340118",
+      "volume": "118",
+      "author": "J Kleinberg",
+      "year": "2021",
+      "unstructured": "Kleinberg, J. & Raghavan, M. Algorithmic monoculture and social welfare. Proc. Natl Acad. Sci. USA 118, e2018340118 (2021). This paper uses formal modelling methods to demonstrate that when companies all rely on the same algorithm to make decisions (an algorithmic monoculture), the overall quality of those decisions is reduced because valuable options can slip through the cracks, even when the algorithm performs accurately for individual companies.",
+      "journal-title": "Proc. Natl Acad. Sci. USA"
+    },
+    {
+      "key": "7146_CR122",
+      "doi-asserted-by": "publisher",
+      "first-page": "9284",
+      "DOI": "10.1073/pnas.1915378117",
+      "volume": "117",
+      "author": "B Hofstra",
+      "year": "2020",
+      "unstructured": "Hofstra, B. et al. The diversity–innovation paradox in science. Proc. Natl Acad. Sci. USA 117, 9284–9291 (2020).",
+      "journal-title": "Proc. Natl Acad. Sci. USA"
+    },
+    {
+      "key": "7146_CR123",
+      "doi-asserted-by": "publisher",
+      "first-page": "16385",
+      "DOI": "10.1073/pnas.0403723101",
+      "volume": "101",
+      "author": "L Hong",
+      "year": "2004",
+      "unstructured": "Hong, L. & Page, S. E. Groups of diverse problem solvers can outperform groups of high-ability problem solvers. Proc. Natl Acad. Sci. USA 101, 16385–16389 (2004).",
+      "journal-title": "Proc. Natl Acad. Sci. USA"
+    },
+    {
+      "key": "7146_CR124",
+      "doi-asserted-by": "publisher",
+      "first-page": "267",
+      "DOI": "10.1002/ejsp.2016",
+      "volume": "44",
+      "author": "SE Page",
+      "year": "2014",
+      "unstructured": "Page, S. E. Where diversity comes from and why it matters? Eur. J. Soc. Psychol. 44, 267–279 (2014). This article reviews research demonstrating the benefits of cognitive diversity and diversity in methodological approaches for problem solving and innovation.",
+      "journal-title": "Eur. J. Soc. Psychol."
+    },
+    {
+      "key": "7146_CR125",
+      "unstructured": "Clarke, A. E. & Fujimura, J. H. (eds) The Right Tools for the Job: At Work in Twentieth-Century Life Sciences (Princeton Univ. Press, 2014)."
+    },
+    {
+      "key": "7146_CR126",
+      "doi-asserted-by": "publisher",
+      "unstructured": "Silva, V. J., Bonacelli, M. B. M. & Pacheco, C. A. Framing the effects of machine learning on science. AI Soc. https://doi.org/10.1007/s00146-022-01515-x (2022).",
+      "DOI": "10.1007/s00146-022-01515-x"
+    },
+    {
+      "key": "7146_CR127",
+      "doi-asserted-by": "publisher",
+      "first-page": "107",
+      "DOI": "10.1177/2515245919838781",
+      "volume": "2",
+      "author": "K Sassenberg",
+      "year": "2019",
+      "unstructured": "Sassenberg, K. & Ditrich, L. Research in social psychology changed between 2011 and 2016: larger sample sizes, more self-report measures, and more online studies. Adv. Methods Pract. Psychol. Sci. 2, 107–114 (2019).",
+      "journal-title": "Adv. Methods Pract. Psychol. Sci."
+    },
+    {
+      "key": "7146_CR128",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1080/00224545.2022.2135088",
+      "author": "AF Simon",
+      "year": "2022",
+      "unstructured": "Simon, A. F. & Wilder, D. Methods and measures in social and personality psychology: a comparison of JPSP publications in 1982 and 2016. J. Soc. Psychol. https://doi.org/10.1080/00224545.2022.2135088 (2022).",
+      "journal-title": "J. Soc. Psychol."
+    },
+    {
+      "key": "7146_CR129",
+      "doi-asserted-by": "publisher",
+      "first-page": "842",
+      "DOI": "10.1177/0146167218798821",
+      "volume": "45",
+      "author": "CA Anderson",
+      "year": "2019",
+      "unstructured": "Anderson, C. A. et al. The MTurkification of social and personality psychology. Pers. Soc. Psychol. Bull. 45, 842–850 (2019).",
+      "journal-title": "Pers. Soc. Psychol. Bull."
+    },
+    {
+      "key": "7146_CR130",
+      "unstructured": "Latour, B. in The Social After Gabriel Tarde: Debates and Assessments (ed. Candea, M.) 145–162 (Routledge, 2010)."
+    },
+    {
+      "key": "7146_CR131",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Porter, T. M. Trust in Numbers: The Pursuit of Objectivity in Science and Public Life (Princeton Univ. Press, 1996).",
+      "DOI": "10.1515/9781400821617"
+    },
+    {
+      "key": "7146_CR132",
+      "doi-asserted-by": "publisher",
+      "first-page": "189",
+      "DOI": "10.1038/s41586-021-03660-7",
+      "volume": "595",
+      "author": "D Lazer",
+      "year": "2021",
+      "unstructured": "Lazer, D. et al. Meaningful measures of human society in the twenty-first century. Nature 595, 189–196 (2021).",
+      "journal-title": "Nature"
+    },
+    {
+      "key": "7146_CR133",
+      "doi-asserted-by": "publisher",
+      "first-page": "419",
+      "DOI": "10.1146/annurev-polisci-051120-111443",
+      "volume": "25",
+      "author": "D Knox",
+      "year": "2022",
+      "unstructured": "Knox, D., Lucas, C. & Cho, W. K. T. Testing causal theories with learned proxies. Annu. Rev. Polit. Sci. 25, 419–441 (2022).",
+      "journal-title": "Annu. Rev. Polit. Sci."
+    },
+    {
+      "key": "7146_CR134",
+      "doi-asserted-by": "publisher",
+      "first-page": "76",
+      "DOI": "10.1093/pan/mpu011",
+      "volume": "23",
+      "author": "P Barberá",
+      "year": "2015",
+      "unstructured": "Barberá, P. Birds of the same feather tweet together: Bayesian ideal point estimation using Twitter data. Polit. Anal. 23, 76–91 (2015).",
+      "journal-title": "Polit. Anal."
+    },
+    {
+      "key": "7146_CR135",
+      "doi-asserted-by": "publisher",
+      "first-page": "eabe5641",
+      "DOI": "10.1126/sciadv.abe5641",
+      "volume": "7",
+      "author": "WJ Brady",
+      "year": "2021",
+      "unstructured": "Brady, W. J., McLoughlin, K., Doan, T. N. & Crockett, M. J. How social learning amplifies moral outrage expression in online social networks. Sci. Adv. 7, eabe5641 (2021).",
+      "journal-title": "Sci. Adv."
+    },
+    {
+      "key": "7146_CR136",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Barnes, J., Klinger, R. & im Walde, S. S. Assessing state-of-the-art sentiment models on state-of-the-art sentiment datasets. In Proc. 8th Workshop on Computational Approaches to Subjectivity, Sentiment and Social Media Analysis (eds Balahur, A. et al.) 2–12 (Association for Computational Linguistics, 2017).",
+      "DOI": "10.18653/v1/W17-5202"
+    },
+    {
+      "key": "7146_CR137",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Gitelman, L. (ed.) “Raw Data” is an Oxymoron (MIT Press, 2013).",
+      "DOI": "10.7551/mitpress/9302.001.0001"
+    },
+    {
+      "key": "7146_CR138",
+      "doi-asserted-by": "publisher",
+      "first-page": "e2203150119",
+      "DOI": "10.1073/pnas.2203150119",
+      "volume": "119",
+      "author": "N Breznau",
+      "year": "2022",
+      "unstructured": "Breznau, N. et al. Observing many researchers using the same data and hypothesis reveals a hidden universe of uncertainty. Proc. Natl Acad. Sci. USA 119, e2203150119 (2022). This study demonstrates how 73 research teams analysing the same dataset reached different conclusions about the relationship between immigration and public support for social policies, highlighting the subjectivity and uncertainty involved in analysing complex datasets.",
+      "journal-title": "Proc. Natl Acad. Sci. USA"
+    },
+    {
+      "key": "7146_CR139",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Gillespie, T. in Media Technologies: Essays on Communication, Materiality, and Society (eds Gillespie, T. et al.) 167–194 (MIT Press, 2014).",
+      "DOI": "10.7551/mitpress/9780262525374.003.0009"
+    },
+    {
+      "key": "7146_CR140",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Leonelli, S. Data-Centric Biology: A Philosophical Study (Univ. Chicago Press, 2016).",
+      "DOI": "10.7208/chicago/9780226416502.001.0001"
+    },
+    {
+      "key": "7146_CR141",
+      "doi-asserted-by": "publisher",
+      "unstructured": "Wang, A., Kapoor, S., Barocas, S. & Narayanan, A. Against predictive optimization: on the legitimacy of decision-making algorithms that optimize predictive accuracy. ACM J. Responsib. Comput., https://doi.org/10.1145/3636509 (2023).",
+      "DOI": "10.1145/3636509"
+    },
+    {
+      "key": "7146_CR142",
+      "doi-asserted-by": "publisher",
+      "first-page": "483",
+      "DOI": "10.1126/science.aal4321",
+      "volume": "355",
+      "author": "S Athey",
+      "year": "2017",
+      "unstructured": "Athey, S. Beyond prediction: using big data for policy problems. Science 355, 483–485 (2017).",
+      "journal-title": "Science"
+    },
+    {
+      "key": "7146_CR143",
+      "doi-asserted-by": "publisher",
+      "first-page": "279",
+      "DOI": "10.1177/27538699231176523",
+      "volume": "1",
+      "author": "R del Rosario Martínez-Ordaz,",
+      "year": "2023",
+      "unstructured": "del Rosario Martínez-Ordaz, R. Scientific understanding through big data: from ignorance to insights to understanding. Possibility Stud. Soc. 1, 279–299 (2023).",
+      "journal-title": "Possibility Stud. Soc."
+    },
+    {
+      "key": "7146_CR144",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1038/s41467-022-33417-3",
+      "volume": "13",
+      "author": "A-M Nussberger",
+      "year": "2022",
+      "unstructured": "Nussberger, A.-M., Luo, L., Celis, L. E. & Crockett, M. J. Public attitudes value interpretability but prioritize accuracy in artificial intelligence. Nat. Commun. 13, 5821 (2022).",
+      "journal-title": "Nat. Commun."
+    },
+    {
+      "key": "7146_CR145",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Zittrain, J. in The Cambridge Handbook of Responsible Artificial Intelligence: Interdisciplinary Perspectives (eds. Voeneky, S. et al.) 176–184 (Cambridge Univ. Press, 2022). This article articulates the epistemic risks of prioritizing predictive accuracy over explanatory understanding when AI tools are interacting in complex systems.",
+      "DOI": "10.1017/9781009207898.014"
+    },
+    {
+      "key": "7146_CR146",
+      "unstructured": "Shumailov, I. et al. The curse of recursion: training on generated data makes models forget. Preprint at arxiv.org/abs/2305.17493 (2023)."
+    },
+    {
+      "key": "7146_CR147",
+      "unstructured": "Latour, B. Science In Action: How to Follow Scientists and Engineers Through Society (Harvard Univ. Press, 1987). This book provides strategies and approaches for thinking about science as a social endeavour."
+    },
+    {
+      "key": "7146_CR148",
+      "doi-asserted-by": "publisher",
+      "first-page": "163",
+      "DOI": "10.1146/annurev.an.24.100195.001115",
+      "volume": "24",
+      "author": "S Franklin",
+      "year": "1995",
+      "unstructured": "Franklin, S. Science as culture, cultures of science. Annu. Rev. Anthropol. 24, 163–184 (1995).",
+      "journal-title": "Annu. Rev. Anthropol."
+    },
+    {
+      "key": "7146_CR149",
+      "doi-asserted-by": "publisher",
+      "first-page": "575",
+      "DOI": "10.2307/3178066",
+      "volume": "14",
+      "author": "D Haraway",
+      "year": "1988",
+      "unstructured": "Haraway, D. Situated knowledges: the science question in feminism and the privilege of partial perspective. Fem. Stud. 14, 575–599 (1988). This article acknowledges that the objective ‘view from nowhere’ is unobtainable: knowledge, it argues, is always situated.",
+      "journal-title": "Fem. Stud."
+    },
+    {
+      "key": "7146_CR150",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Harding, S. Objectivity and Diversity: Another Logic of Scientific Research (Univ. Chicago Press, 2015).",
+      "DOI": "10.7208/chicago/9780226241531.001.0001"
+    },
+    {
+      "key": "7146_CR151",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Longino, H. E. Science as Social Knowledge: Values and Objectivity in Scientific Inquiry (Princeton Univ. Press, 1990).",
+      "DOI": "10.1515/9780691209753"
+    },
+    {
+      "key": "7146_CR152",
+      "unstructured": "Daston, L. & Galison, P. Objectivity (Princeton Univ. Press, 2007). This book is a historical analysis of the shifting modes of ‘objectivity’ that scientists have pursued, arguing that objectivity is not a universal concept but that it shifts alongside scientific techniques and ambitions."
+    },
+    {
+      "key": "7146_CR153",
+      "doi-asserted-by": "publisher",
+      "first-page": "421",
+      "DOI": "10.1086/704991",
+      "volume": "45",
+      "author": "C Prescod-Weinstein",
+      "year": "2020",
+      "unstructured": "Prescod-Weinstein, C. Making Black women scientists under white empiricism: the racialization of epistemology in physics. Signs J. Women Cult. Soc. 45, 421–447 (2020).",
+      "journal-title": "Signs J. Women Cult. Soc."
+    },
+    {
+      "key": "7146_CR154",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Mavhunga, C. What Do Science, Technology, and Innovation Mean From Africa? (MIT Press, 2017).",
+      "DOI": "10.7551/mitpress/10769.001.0001"
+    },
+    {
+      "key": "7146_CR155",
+      "unstructured": "Schiebinger, L. The Mind Has No Sex? Women in the Origins of Modern Science (Harvard Univ. Press, 1991)."
+    },
+    {
+      "key": "7146_CR156",
+      "doi-asserted-by": "publisher",
+      "first-page": "485",
+      "DOI": "10.1086/494680",
+      "volume": "16",
+      "author": "E Martin",
+      "year": "1991",
+      "unstructured": "Martin, E. The egg and the sperm: how science has constructed a romance based on stereotypical male–female roles. Signs J. Women Cult. Soc. 16, 485–501 (1991). This case study shows how assumptions about gender affect scientific theories, sometimes delaying the articulation of what might be considered to be more accurate descriptions of scientific phenomena.",
+      "journal-title": "Signs J. Women Cult. Soc."
+    },
+    {
+      "key": "7146_CR157",
+      "first-page": "437",
+      "volume": "36",
+      "author": "S Harding",
+      "year": "1992",
+      "unstructured": "Harding, S. Rethinking standpoint epistemology: What is “strong objectivity”? Centen. Rev. 36, 437–470 (1992). In this article, Harding outlines her position on ‘strong objectivity’, by which clearly articulating one’s standpoint can lead to more robust knowledge claims.",
+      "journal-title": "Centen. Rev."
+    },
+    {
+      "key": "7146_CR158",
+      "unstructured": "Oreskes, N. Why Trust Science? (Princeton Univ. Press, 2019). This book introduces the reader to 20 years of scholarship in science and technology studies, arguing that the tools the discipline has for understanding science can help to reinstate public trust in the institution."
+    },
+    {
+      "key": "7146_CR159",
+      "doi-asserted-by": "publisher",
+      "first-page": "36",
+      "DOI": "10.1007/s11229-023-04261-9",
+      "volume": "202",
+      "author": "K Rolin",
+      "year": "2023",
+      "unstructured": "Rolin, K., Koskinen, I., Kuorikoski, J. & Reijula, S. Social and cognitive diversity in science: introduction. Synthese 202, 36 (2023).",
+      "journal-title": "Synthese"
+    },
+    {
+      "key": "7146_CR160",
+      "doi-asserted-by": "publisher",
+      "first-page": "123",
+      "DOI": "10.1006/jeth.2000.2709",
+      "volume": "97",
+      "author": "L Hong",
+      "year": "2001",
+      "unstructured": "Hong, L. & Page, S. E. Problem solving by heterogeneous agents. J. Econ. Theory 97, 123–163 (2001).",
+      "journal-title": "J. Econ. Theory"
+    },
+    {
+      "key": "7146_CR161",
+      "doi-asserted-by": "publisher",
+      "first-page": "752",
+      "DOI": "10.1177/17456916211006070",
+      "volume": "17",
+      "author": "J Sulik",
+      "year": "2022",
+      "unstructured": "Sulik, J., Bahrami, B. & Deroy, O. The diversity gap: when diversity matters for knowledge. Perspect. Psychol. Sci. 17, 752–767 (2022).",
+      "journal-title": "Perspect. Psychol. Sci."
+    },
+    {
+      "key": "7146_CR162",
+      "doi-asserted-by": "publisher",
+      "first-page": "36",
+      "DOI": "10.1017/nws.2022.34",
+      "volume": "11",
+      "author": "A Lungeanu",
+      "year": "2023",
+      "unstructured": "Lungeanu, A., Whalen, R., Wu, Y. J., DeChurch, L. A. & Contractor, N. S. Diversity, networks, and innovation: a text analytic approach to measuring expertise diversity. Netw. Sci. 11, 36–64 (2023).",
+      "journal-title": "Netw. Sci."
+    },
+    {
+      "key": "7146_CR163",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1038/s41467-018-07634-8",
+      "volume": "9",
+      "author": "BK AlShebli",
+      "year": "2018",
+      "unstructured": "AlShebli, B. K., Rahwan, T. & Woon, W. L. The preeminence of ethnic diversity in scientific collaboration. Nat. Commun. 9, 5163 (2018).",
+      "journal-title": "Nat. Commun."
+    },
+    {
+      "key": "7146_CR164",
+      "doi-asserted-by": "publisher",
+      "first-page": "e79147",
+      "DOI": "10.1371/journal.pone.0079147",
+      "volume": "8",
+      "author": "LG Campbell",
+      "year": "2013",
+      "unstructured": "Campbell, L. G., Mehtani, S., Dozier, M. E. & Rinehart, J. Gender-heterogeneous working groups produce higher quality science. PLoS ONE 8, e79147 (2013).",
+      "journal-title": "PLoS ONE"
+    },
+    {
+      "key": "7146_CR165",
+      "doi-asserted-by": "publisher",
+      "first-page": "726",
+      "DOI": "10.1038/s41562-018-0433-1",
+      "volume": "2",
+      "author": "MW Nielsen",
+      "year": "2018",
+      "unstructured": "Nielsen, M. W., Bloch, C. W. & Schiebinger, L. Making gender diversity work for scientific discovery and innovation. Nat. Hum. Behav. 2, 726–734 (2018).",
+      "journal-title": "Nat. Hum. Behav."
+    },
+    {
+      "key": "7146_CR166",
+      "doi-asserted-by": "publisher",
+      "first-page": "e2200841119",
+      "DOI": "10.1073/pnas.2200841119",
+      "volume": "119",
+      "author": "Y Yang",
+      "year": "2022",
+      "unstructured": "Yang, Y., Tian, T. Y., Woodruff, T. K., Jones, B. F. & Uzzi, B. Gender-diverse teams produce more novel and higher-impact scientific ideas. Proc. Natl Acad. Sci. USA 119, e2200841119 (2022).",
+      "journal-title": "Proc. Natl Acad. Sci. USA"
+    },
+    {
+      "key": "7146_CR167",
+      "doi-asserted-by": "publisher",
+      "first-page": "e2113067119",
+      "DOI": "10.1073/pnas.2113067119",
+      "volume": "119",
+      "author": "D Kozlowski",
+      "year": "2022",
+      "unstructured": "Kozlowski, D., Larivière, V., Sugimoto, C. R. & Monroe-White, T. Intersectional inequalities in science. Proc. Natl Acad. Sci. USA 119, e2113067119 (2022).",
+      "journal-title": "Proc. Natl Acad. Sci. USA"
+    },
+    {
+      "key": "7146_CR168",
+      "doi-asserted-by": "publisher",
+      "first-page": "465",
+      "DOI": "10.1007/s11229-022-03787-8",
+      "volume": "200",
+      "author": "C Fehr",
+      "year": "2022",
+      "unstructured": "Fehr, C. & Jones, J. M. Culture, exploitation, and epistemic approaches to diversity. Synthese 200, 465 (2022).",
+      "journal-title": "Synthese"
+    },
+    {
+      "key": "7146_CR169",
+      "doi-asserted-by": "publisher",
+      "first-page": "1804",
+      "DOI": "10.1038/s41562-023-01652-3",
+      "volume": "7",
+      "author": "R Nakadai",
+      "year": "2023",
+      "unstructured": "Nakadai, R., Nakawake, Y. & Shibasaki, S. AI language tools risk scientific diversity and innovation. Nat. Hum. Behav. 7, 1804–1805 (2023).",
+      "journal-title": "Nat. Hum. Behav."
+    },
+    {
+      "key": "7146_CR170",
+      "unstructured": "National Academies of Sciences, Engineering, and Medicine et al. Advancing Antiracism, Diversity, Equity, and Inclusion in STEMM Organizations: Beyond Broadening Participation (National Academies Press, 2023)."
+    },
+    {
+      "key": "7146_CR171",
+      "first-page": "121",
+      "volume": "109",
+      "author": "L Winner",
+      "year": "1980",
+      "unstructured": "Winner, L. Do artifacts have politics? Daedalus 109, 121–136 (1980).",
+      "journal-title": "Daedalus"
+    },
+    {
+      "key": "7146_CR172",
+      "unstructured": "Eubanks, V. Automating Inequality: How High-Tech Tools Profile, Police, and Punish the Poor (St. Martin’s Press, 2018)."
+    },
+    {
+      "key": "7146_CR173",
+      "doi-asserted-by": "publisher",
+      "first-page": "18",
+      "DOI": "10.1038/s42256-019-0139-8",
+      "volume": "2",
+      "author": "M Littmann",
+      "year": "2020",
+      "unstructured": "Littmann, M. et al. Validity of machine learning in biology and medicine increased through collaborations across fields of expertise. Nat. Mach. Intell. 2, 18–24 (2020).",
+      "journal-title": "Nat. Mach. Intell."
+    },
+    {
+      "key": "7146_CR174",
+      "doi-asserted-by": "publisher",
+      "first-page": "98",
+      "DOI": "10.1038/s42256-022-00603-3",
+      "volume": "5",
+      "author": "A Carusi",
+      "year": "2023",
+      "unstructured": "Carusi, A. et al. Medical artificial intelligence is as much social as it is technological. Nat. Mach. Intell. 5, 98–100 (2023).",
+      "journal-title": "Nat. Mach. Intell."
+    },
+    {
+      "key": "7146_CR175",
+      "unstructured": "Raghu, M. & Schmidt, E. A survey of deep learning for scientific discovery. Preprint at arxiv.org/abs/2003.11755 (2020)."
+    },
+    {
+      "key": "7146_CR176",
+      "unstructured": "Bishop, C. AI4Science to empower the fifth paradigm of scientific discovery. Microsoft Research Blog www.microsoft.com/en-us/research/blog/ai4science-to-empower-the-fifth-paradigm-of-scientific-discovery/ (2022)."
+    },
+    {
+      "key": "7146_CR177",
+      "doi-asserted-by": "publisher",
+      "first-page": "50",
+      "DOI": "10.1145/3488666",
+      "volume": "28",
+      "author": "M Whittaker",
+      "year": "2021",
+      "unstructured": "Whittaker, M. The steep cost of capture. Interactions 28, 50–55 (2021).",
+      "journal-title": "Interactions"
+    },
+    {
+      "key": "7146_CR178",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Liesenfeld, A., Lopez, A. & Dingemanse, M. Opening up ChatGPT: Tracking openness, transparency, and accountability in instruction-tuned text generators. In Proc. 5th International Conference on Conversational User Interfaces 1–6 (Association for Computing Machinery, 2023).",
+      "DOI": "10.1145/3571884.3604316"
+    },
+    {
+      "key": "7146_CR179",
+      "doi-asserted-by": "publisher",
+      "first-page": "e2021636118",
+      "DOI": "10.1073/pnas.2021636118",
+      "volume": "118",
+      "author": "JSG Chu",
+      "year": "2021",
+      "unstructured": "Chu, J. S. G. & Evans, J. A. Slowed canonical progress in large fields of science. Proc. Natl Acad. Sci. USA 118, e2021636118 (2021).",
+      "journal-title": "Proc. Natl Acad. Sci. USA"
+    },
+    {
+      "key": "7146_CR180",
+      "doi-asserted-by": "publisher",
+      "first-page": "138",
+      "DOI": "10.1038/s41586-022-05543-x",
+      "volume": "613",
+      "author": "M Park",
+      "year": "2023",
+      "unstructured": "Park, M., Leahey, E. & Funk, R. J. Papers and patents are becoming less disruptive over time. Nature 613, 138–144 (2023).",
+      "journal-title": "Nature"
+    },
+    {
+      "key": "7146_CR181",
+      "doi-asserted-by": "publisher",
+      "first-page": "1",
+      "DOI": "10.1016/j.tics.2019.10.007",
+      "volume": "24",
+      "author": "U Frith",
+      "year": "2020",
+      "unstructured": "Frith, U. Fast lane to slow science. Trends Cogn. Sci. 24, 1–2 (2020). This article explains the epistemic risks of a hyperfocus on scientific productivity and explores possible avenues for incentivizing the production of higher-quality science on a slower timescale.",
+      "journal-title": "Trends Cogn. Sci."
+    },
+    {
+      "key": "7146_CR182",
+      "unstructured": "Stengers, I. Another Science is Possible: A Manifesto for Slow Science (Wiley, 2018)."
+    },
+    {
+      "key": "7146_CR183",
+      "doi-asserted-by": "publisher",
+      "first-page": "115",
+      "DOI": "10.1038/s41586-023-06668-3",
+      "volume": "623",
+      "author": "BM Lake",
+      "year": "2023",
+      "unstructured": "Lake, B. M. & Baroni, M. Human-like systematic generalization through a meta-learning neural network. Nature 623, 115–121 (2023).",
+      "journal-title": "Nature"
+    },
+    {
+      "key": "7146_CR184",
+      "unstructured": "Feinman, R. & Lake, B. M. Learning task-general representations with generative neuro-symbolic modeling. Preprint at arxiv.org/abs/2006.14448 (2021)."
+    },
+    {
+      "key": "7146_CR185",
+      "doi-asserted-by": "publisher",
+      "first-page": "612",
+      "DOI": "10.1109/JPROC.2021.3058954",
+      "volume": "109",
+      "author": "B Schölkopf",
+      "year": "2021",
+      "unstructured": "Schölkopf, B. et al. Toward causal representation learning. Proc. IEEE 109, 612–634 (2021).",
+      "journal-title": "Proc. IEEE"
+    },
+    {
+      "key": "7146_CR186",
+      "doi-asserted-by": "publisher",
+      "first-page": "eadm8175",
+      "DOI": "10.1126/science.adm8175",
+      "volume": "382",
+      "author": "M Mitchell",
+      "year": "2023",
+      "unstructured": "Mitchell, M. AI’s challenge of understanding the world. Science 382, eadm8175 (2023).",
+      "journal-title": "Science"
+    },
+    {
+      "key": "7146_CR187",
+      "doi-asserted-by": "publisher",
+      "first-page": "443",
+      "DOI": "10.1007/s00146-022-01422-1",
+      "volume": "38",
+      "author": "L Sartori",
+      "year": "2023",
+      "unstructured": "Sartori, L. & Bocca, G. Minding the gap(s): public perceptions of AI and socio-technical imaginaries. AI Soc. 38, 443–458 (2023).",
+      "journal-title": "AI Soc."
+    }
+  ],
+  "container-title": [
+    "Nature"
+  ],
+  "original-title": [],
+  "language": "en",
+  "link": [
+    {
+      "URL": "https://www.nature.com/articles/s41586-024-07146-0.pdf",
+      "content-type": "application/pdf",
+      "content-version": "vor",
+      "intended-application": "text-mining"
+    },
+    {
+      "URL": "https://www.nature.com/articles/s41586-024-07146-0",
+      "content-type": "text/html",
+      "content-version": "vor",
+      "intended-application": "text-mining"
+    },
+    {
+      "URL": "https://www.nature.com/articles/s41586-024-07146-0.pdf",
+      "content-type": "application/pdf",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+    }
+  ],
+  "deposited": {
+    "date-parts": [
+      [
+        2024,
+        11,
+        13
+      ]
+    ],
+    "date-time": "2024-11-13T17:35:34Z",
+    "timestamp": 1731519334000
+  },
+  "score": 1,
+  "resource": {
+    "primary": {
+      "URL": "https://www.nature.com/articles/s41586-024-07146-0"
+    }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+    "date-parts": [
+      [
+        2024,
+        3,
+        6
+      ]
+    ]
+  },
+  "references-count": 187,
+  "journal-issue": {
+    "issue": "8002",
+    "published-print": {
+      "date-parts": [
+        [
+          2024,
+          3,
+          7
+        ]
+      ]
+    }
+  },
+  "alternative-id": [
+    "7146"
+  ],
+  "URL": "https://doi.org/10.1038/s41586-024-07146-0",
+  "relation": {},
+  "ISSN": [
+    "0028-0836",
+    "1476-4687"
+  ],
+  "issn-type": [
+    {
+      "value": "0028-0836",
+      "type": "print"
+    },
+    {
+      "value": "1476-4687",
+      "type": "electronic"
+    }
+  ],
+  "subject": [],
+  "published": {
+    "date-parts": [
+      [
+        2024,
+        3,
+        6
+      ]
+    ]
+  },
+  "assertion": [
+    {
+      "value": "31 July 2023",
+      "order": 1,
+      "name": "received",
+      "label": "Received",
+      "group": {
+        "name": "ArticleHistory",
+        "label": "Article History"
+      }
+    },
+    {
+      "value": "31 January 2024",
+      "order": 2,
+      "name": "accepted",
+      "label": "Accepted",
+      "group": {
+        "name": "ArticleHistory",
+        "label": "Article History"
+      }
+    },
+    {
+      "value": "6 March 2024",
+      "order": 3,
+      "name": "first_online",
+      "label": "First Online",
+      "group": {
+        "name": "ArticleHistory",
+        "label": "Article History"
+      }
+    },
+    {
+      "value": "The authors declare no competing interests.",
+      "order": 1,
+      "name": "Ethics",
+      "group": {
+        "name": "EthicsHeading",
+        "label": "Competing interests"
+      }
+    }
+  ]
+}

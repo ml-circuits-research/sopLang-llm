@@ -1,0 +1,823 @@
+{
+  "indexed": {
+    "date-parts": [
+      [
+        2026,
+        9,
+        28
+      ]
+    ],
+    "date-time": "2026-09-28T02:41:17Z",
+    "timestamp": 1790563277592,
+    "version": "4.1.0"
+  },
+  "publisher-location": "New York, NY, USA",
+  "reference-count": 82,
+  "publisher": "ACM",
+  "license": [
+    {
+      "start": {
+        "date-parts": [
+          [
+            2020,
+            1,
+            27
+          ]
+        ],
+        "date-time": "2020-01-27T00:00:00Z",
+        "timestamp": 1580083200000
+      },
+      "content-version": "vor",
+      "delay-in-days": 0,
+      "URL": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "content-domain": {
+    "domain": [
+      "dl.acm.org"
+    ],
+    "crossmark-restriction": true
+  },
+  "short-container-title": [],
+  "published-print": {
+    "date-parts": [
+      [
+        2020,
+        1,
+        27
+      ]
+    ]
+  },
+  "DOI": "10.1145/3351095.3372873",
+  "type": "proceedings-article",
+  "created": {
+    "date-parts": [
+      [
+        2020,
+        1,
+        23
+      ]
+    ],
+    "date-time": "2020-01-23T08:43:02Z",
+    "timestamp": 1579768982000
+  },
+  "page": "33-44",
+  "update-policy": "https://doi.org/10.1145/crossmark-policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 1311,
+  "title": [
+    "Closing the AI accountability gap"
+  ],
+  "prefix": "10.1145",
+  "author": [
+    {
+      "given": "Inioluwa Deborah",
+      "family": "Raji",
+      "sequence": "first",
+      "affiliation": [
+        {
+          "name": "Partnership on AI"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Andrew",
+      "family": "Smart",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Google"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Rebecca N.",
+      "family": "White",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Google"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Margaret",
+      "family": "Mitchell",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Google"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Timnit",
+      "family": "Gebru",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Google"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Ben",
+      "family": "Hutchinson",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Google"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Jamila",
+      "family": "Smith-Loud",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Google"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Daniel",
+      "family": "Theron",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Google"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Parker",
+      "family": "Barnes",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Google"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    }
+  ],
+  "member": "320",
+  "published-online": {
+    "date-parts": [
+      [
+        2020,
+        1,
+        27
+      ]
+    ]
+  },
+  "reference": [
+    {
+      "key": "e_1_3_2_2_1_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1016/j.bdr.2015.04.001"
+    },
+    {
+      "key": "e_1_3_2_2_2_1",
+      "volume-title": "Yijun Yu, and Bashar Nuseibeh.",
+      "author": "Bennaceur Amel",
+      "year": "2019",
+      "unstructured": "Amel Bennaceur , Thein Than Tun , Yijun Yu, and Bashar Nuseibeh. 2019 . Requirements Engineering. In Handbook of Software Engineering. Springer , 51--92. Amel Bennaceur, Thein Than Tun, Yijun Yu, and Bashar Nuseibeh. 2019. Requirements Engineering. In Handbook of Software Engineering. Springer, 51--92."
+    },
+    {
+      "key": "e_1_3_2_2_3_1",
+      "volume-title": "International Journal of project management 23, 1",
+      "author": "Bing Li",
+      "year": "2005",
+      "unstructured": "Li Bing , Akintola Akintoye , Peter J Edwards , and Cliff Hardcastle . 2005. The allocation of risk in PPP/PFI construction projects in the UK . International Journal of project management 23, 1 ( 2005 ), 25--35. Li Bing, Akintola Akintoye, Peter J Edwards, and Cliff Hardcastle. 2005. The allocation of risk in PPP/PFI construction projects in the UK. International Journal of project management 23, 1 (2005), 25--35."
+    },
+    {
+      "key": "e_1_3_2_2_4_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/BigData.2017.8258038"
+    },
+    {
+      "key": "e_1_3_2_2_5_1",
+      "volume-title": "Product development: Past research, present findings, and future directions",
+      "author": "Brown Shona L",
+      "year": "1995",
+      "unstructured": "Shona L Brown and Kathleen M Eisenhardt . 1995. Product development: Past research, present findings, and future directions . Academy of management review 20, 2 ( 1995 ), 343--378. Shona L Brown and Kathleen M Eisenhardt. 1995. Product development: Past research, present findings, and future directions. Academy of management review 20, 2 (1995), 343--378."
+    },
+    {
+      "key": "e_1_3_2_2_6_1",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Chad Brubaker Suman Jana Baishakhi Ray Sarfraz Khurshid and Vitaly Shmatikov. 2014. Using Frankencerts for Automated Adversarial Testing of Certificate Validation. In in SSL/TLS Implementations âĂİ IEEE Symposium on Security and Privacy. Citeseer.  Chad Brubaker Suman Jana Baishakhi Ray Sarfraz Khurshid and Vitaly Shmatikov. 2014. Using Frankencerts for Automated Adversarial Testing of Certificate Validation. In in SSL/TLS Implementations âĂİ IEEE Symposium on Security and Privacy. Citeseer.",
+      "DOI": "10.1109/SP.2014.15"
+    },
+    {
+      "key": "e_1_3_2_2_7_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1007/s10506-017-9214-9"
+    },
+    {
+      "key": "e_1_3_2_2_8_1",
+      "volume-title": "Conference on Fairness, Accountability and Transparency. 77--91",
+      "author": "Buolamwini Joy",
+      "year": "2018",
+      "unstructured": "Joy Buolamwini and Timnit Gebru . 2018 . Gender shades: Intersectional accuracy disparities in commercial gender classification . In Conference on Fairness, Accountability and Transparency. 77--91 . Joy Buolamwini and Timnit Gebru. 2018. Gender shades: Intersectional accuracy disparities in commercial gender classification. In Conference on Fairness, Accountability and Transparency. 77--91."
+    },
+    {
+      "key": "e_1_3_2_2_9_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1177/2053951715622512"
+    },
+    {
+      "key": "e_1_3_2_2_10_1",
+      "volume-title": "J Donald Warren Jr, and Miklos Vasarhelyi",
+      "author": "Byrnes Paul Eric",
+      "year": "2018",
+      "unstructured": "Paul Eric Byrnes , Abdullah Al-Awadhi , Benita Gullvist , Helen Brown-Liburd , Ryan Teeter , J Donald Warren Jr, and Miklos Vasarhelyi . 2018 . Evolution of Auditing: From the Traditional Approach to the Future Audit 1. In Continuous Auditing: Theory and Application. Emerald Publishing Limited , 285--297. Paul Eric Byrnes, Abdullah Al-Awadhi, Benita Gullvist, Helen Brown-Liburd, Ryan Teeter, J Donald Warren Jr, and Miklos Vasarhelyi. 2018. Evolution of Auditing: From the Traditional Approach to the Future Audit 1. In Continuous Auditing: Theory and Application. Emerald Publishing Limited, 285--297."
+    },
+    {
+      "key": "e_1_3_2_2_11_1",
+      "volume-title": "Conference on Fairness, Accountability and Transparency. 134--148",
+      "author": "Chouldechova Alexandra",
+      "year": "2018",
+      "unstructured": "Alexandra Chouldechova , Diana Benavides-Prado , Oleksandr Fialko , and Rhema Vaithianathan . 2018 . A case study of algorithm-assisted decision making in child maltreatment hotline screening decisions . In Conference on Fairness, Accountability and Transparency. 134--148 . Alexandra Chouldechova, Diana Benavides-Prado, Oleksandr Fialko, and Rhema Vaithianathan. 2018. A case study of algorithm-assisted decision making in child maltreatment hotline screening decisions. In Conference on Fairness, Accountability and Transparency. 134--148."
+    },
+    {
+      "key": "e_1_3_2_2_12_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1177/2053951717718855"
+    },
+    {
+      "key": "e_1_3_2_2_13_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1090/S0002-9947-1952-0045327-5"
+    },
+    {
+      "key": "e_1_3_2_2_14_1",
+      "volume-title": "Bias detectives: the researchers striving to make algorithms fair. Nature 558, 7710",
+      "author": "Courtland Rachel",
+      "year": "2018",
+      "unstructured": "Rachel Courtland . 2018. Bias detectives: the researchers striving to make algorithms fair. Nature 558, 7710 ( 2018 ), 357--357. Rachel Courtland. 2018. Bias detectives: the researchers striving to make algorithms fair. Nature 558, 7710 (2018), 357--357."
+    },
+    {
+      "key": "e_1_3_2_2_15_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1016/j.childyouth.2017.06.027"
+    },
+    {
+      "key": "e_1_3_2_2_16_1",
+      "unstructured": "Michael A Cusumano and Stanley A Smith. 1995. Beyond the waterfall: Software development at Microsoft. (1995).  Michael A Cusumano and Stanley A Smith. 1995. Beyond the waterfall: Software development at Microsoft. (1995)."
+    },
+    {
+      "key": "e_1_3_2_2_17_1",
+      "unstructured": "Nicholas Diakopoulos. 2014. Algorithmic accountability reporting: On the investigation of black boxes. (2014).  Nicholas Diakopoulos. 2014. Algorithmic accountability reporting: On the investigation of black boxes. (2014)."
+    },
+    {
+      "key": "e_1_3_2_2_18_1",
+      "volume-title": "A Broader View on Bias in Automated Decision-Making: Reflecting on Epistemology and Dynamics. arXiv preprint arXiv:1807.00553",
+      "author": "Dobbe Roel",
+      "year": "2018",
+      "unstructured": "Roel Dobbe , Sarah Dean , Thomas Gilbert , and Nitin Kohli . 2018. A Broader View on Bias in Automated Decision-Making: Reflecting on Epistemology and Dynamics. arXiv preprint arXiv:1807.00553 ( 2018 ). Roel Dobbe, Sarah Dean, Thomas Gilbert, and Nitin Kohli. 2018. A Broader View on Bias in Automated Decision-Making: Reflecting on Epistemology and Dynamics. arXiv preprint arXiv:1807.00553 (2018)."
+    },
+    {
+      "key": "e_1_3_2_2_19_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1007/978-3-540-39878-3_19"
+    },
+    {
+      "key": "e_1_3_2_2_20_1",
+      "volume-title": "Runaway feedback loops in predictive policing. arXiv preprint arXiv:1706.09847",
+      "author": "Ensign Danielle",
+      "year": "2017",
+      "unstructured": "Danielle Ensign , Sorelle A Friedler , Scott Neville , Carlos Scheidegger , and Suresh Venkatasubramanian . 2017. Runaway feedback loops in predictive policing. arXiv preprint arXiv:1706.09847 ( 2017 ). Danielle Ensign, Sorelle A Friedler, Scott Neville, Carlos Scheidegger, and Suresh Venkatasubramanian. 2017. Runaway feedback loops in predictive policing. arXiv preprint arXiv:1706.09847 (2017)."
+    },
+    {
+      "key": "e_1_3_2_2_21_1",
+      "volume-title": "A child abuse prediction model fails poor families. Wired Magazine",
+      "author": "Eubanks Virginia",
+      "year": "2018",
+      "unstructured": "Virginia Eubanks . 2018. A child abuse prediction model fails poor families. Wired Magazine ( 2018 ). Virginia Eubanks. 2018. A child abuse prediction model fails poor families. Wired Magazine (2018)."
+    },
+    {
+      "key": "e_1_3_2_2_22_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1016/j.kjss.2016.10.003"
+    },
+    {
+      "key": "e_1_3_2_2_23_1",
+      "volume-title": "Information Cultures in the Digital Age",
+      "author": "Furner Jonathan",
+      "unstructured": "Jonathan Furner . 2016. \"Data\" : The data . In Information Cultures in the Digital Age . Springer , 287--306. Jonathan Furner. 2016. \"Data\": The data. In Information Cultures in the Digital Age. Springer, 287--306."
+    },
+    {
+      "key": "e_1_3_2_2_24_1",
+      "volume-title": "Hanna Wallach, Hal Daumeé III, and Kate Crawford.",
+      "author": "Gebru Timnit",
+      "year": "2018",
+      "unstructured": "Timnit Gebru , Jamie Morgenstern , Briana Vecchione , Jennifer Wortman Vaughan , Hanna Wallach, Hal Daumeé III, and Kate Crawford. 2018 . Datasheets for datasets. arXiv preprint arXiv:1803.09010 (2018). Timnit Gebru, Jamie Morgenstern, Briana Vecchione, Jennifer Wortman Vaughan, Hanna Wallach, Hal Daumeé III, and Kate Crawford. 2018. Datasheets for datasets. arXiv preprint arXiv:1803.09010 (2018)."
+    },
+    {
+      "key": "e_1_3_2_2_25_1",
+      "volume-title": "Impact Evaluation of a Predictive Risk Modeling Tool for Allegheny CountyâĂ&Zacute;s Child Welfare Office",
+      "author": "Goldhaber-Fiebert Jeremy",
+      "year": "2019",
+      "unstructured": "Jeremy Goldhaber-Fiebert and Lea Prince . 2019. Impact Evaluation of a Predictive Risk Modeling Tool for Allegheny CountyâĂ&Zacute;s Child Welfare Office . Pittsburgh : Allegheny County.[Google Scholar ] ( 2019 ). Jeremy Goldhaber-Fiebert and Lea Prince. 2019. Impact Evaluation of a Predictive Risk Modeling Tool for Allegheny CountyâĂ&Zacute;s Child Welfare Office. Pittsburgh: Allegheny County.[Google Scholar] (2019)."
+    },
+    {
+      "key": "e_1_3_2_2_26_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3287560.3287563"
+    },
+    {
+      "key": "e_1_3_2_2_27_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.24251/HICSS.2019.258"
+    },
+    {
+      "key": "e_1_3_2_2_28_1",
+      "volume-title": "Towards deep neural network architectures robust to adversarial examples. arXiv preprint arXiv:1412.5068",
+      "author": "Gu Shixiang",
+      "year": "2014",
+      "unstructured": "Shixiang Gu and Luca Rigazio . 2014. Towards deep neural network architectures robust to adversarial examples. arXiv preprint arXiv:1412.5068 ( 2014 ). Shixiang Gu and Luca Rigazio. 2014. Towards deep neural network architectures robust to adversarial examples. arXiv preprint arXiv:1412.5068 (2014)."
+    },
+    {
+      "key": "e_1_3_2_2_29_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1093/actrade/9780199588480.001.0001"
+    },
+    {
+      "key": "e_1_3_2_2_30_1",
+      "unstructured": "Brendan Hall and Kevin Driscoll. 2014. Distributed System Design Checklist. (2014).  Brendan Hall and Kevin Driscoll. 2014. Distributed System Design Checklist. (2014)."
+    },
+    {
+      "key": "e_1_3_2_2_31_1",
+      "volume-title": "Hal Daumé III, Miro Dudík, and Hanna Wallach.",
+      "author": "Holstein Kenneth",
+      "year": "2018",
+      "unstructured": "Kenneth Holstein , Jennifer Wortman Vaughan , Hal Daumé III, Miro Dudík, and Hanna Wallach. 2018 . Improving fairness in machine learning systems: What do industry practitioners need? arXiv preprint arXiv:1812.05239 (2018). Kenneth Holstein, Jennifer Wortman Vaughan, Hal Daumé III, Miro Dudík, and Hanna Wallach. 2018. Improving fairness in machine learning systems: What do industry practitioners need? arXiv preprint arXiv:1812.05239 (2018)."
+    },
+    {
+      "key": "e_1_3_2_2_32_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/IEEESTD.2008.4601584"
+    },
+    {
+      "key": "e_1_3_2_2_33_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1111/j.1527-2001.2010.01138.x"
+    },
+    {
+      "key": "e_1_3_2_2_34_1",
+      "volume-title": "Artificial Intelligence: the global landscape of ethics guidelines. arXiv preprint arXiv:1906.11668",
+      "author": "Jobin Anna",
+      "year": "2019",
+      "unstructured": "Anna Jobin , Marcello Ienca , and Effy Vayena . 2019. Artificial Intelligence: the global landscape of ethics guidelines. arXiv preprint arXiv:1906.11668 ( 2019 ). Anna Jobin, Marcello Ienca, and Effy Vayena. 2019. Artificial Intelligence: the global landscape of ethics guidelines. arXiv preprint arXiv:1906.11668 (2019)."
+    },
+    {
+      "key": "e_1_3_2_2_35_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1007/s11334-011-0142-7"
+    },
+    {
+      "key": "e_1_3_2_2_36_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.3390/socsci8100281"
+    },
+    {
+      "key": "e_1_3_2_2_37_1",
+      "volume-title": "Examining gender and race bias in two hundred sentiment analysis systems. arXiv preprint arXiv:1805.04508",
+      "author": "Kiritchenko Svetlana",
+      "year": "2018",
+      "unstructured": "Svetlana Kiritchenko and Saif M Mohammad . 2018. Examining gender and race bias in two hundred sentiment analysis systems. arXiv preprint arXiv:1805.04508 ( 2018 ). Svetlana Kiritchenko and Saif M Mohammad. 2018. Examining gender and race bias in two hundred sentiment analysis systems. arXiv preprint arXiv:1805.04508 (2018)."
+    },
+    {
+      "key": "e_1_3_2_2_38_1",
+      "volume-title": "Translation Tutorial: A Shared Lexicon for Research and Practice in Human-Centered Software Systems. In 1st Conference on Fairness, Accountability, and Transparancy",
+      "author": "Kohli Nitin",
+      "year": "2018",
+      "unstructured": "Nitin Kohli , Renata Barreto , and Joshua A Kroll . 2018 . Translation Tutorial: A Shared Lexicon for Research and Practice in Human-Centered Software Systems. In 1st Conference on Fairness, Accountability, and Transparancy . New York, NY, USA. 7. Nitin Kohli, Renata Barreto, and Joshua A Kroll. 2018. Translation Tutorial: A Shared Lexicon for Research and Practice in Human-Centered Software Systems. In 1st Conference on Fairness, Accountability, and Transparancy. New York, NY, USA. 7."
+    },
+    {
+      "key": "e_1_3_2_2_39_1",
+      "first-page": "633",
+      "article-title": "Accountable algorithms",
+      "volume": "165",
+      "author": "Kroll Joshua A",
+      "year": "2016",
+      "unstructured": "Joshua A Kroll , Solon Barocas , Edward W Felten , Joel R Reidenberg , David G Robinson , and Harlan Yu . 2016 . Accountable algorithms . U. Pa. L. Rev. 165 (2016), 633 . Joshua A Kroll, Solon Barocas, Edward W Felten, Joel R Reidenberg, David G Robinson, and Harlan Yu. 2016. Accountable algorithms. U. Pa. L. Rev. 165 (2016), 633.",
+      "journal-title": "U. Pa. L. Rev."
+    },
+    {
+      "key": "e_1_3_2_2_40_1",
+      "unstructured": "Arie W Kruglanski. 1996. Motivated social cognition: Principles of the interface. (1996).  Arie W Kruglanski. 1996. Motivated social cognition: Principles of the interface. (1996)."
+    },
+    {
+      "key": "e_1_3_2_2_41_1",
+      "volume-title": "Evolutionary Computation and AI Safety: Research Problems Impeding Routine and Safe Real-world Application of Evolution. arXiv preprint arXiv:1906.10189",
+      "author": "Lehman Joel",
+      "year": "2019",
+      "unstructured": "Joel Lehman . 2019. Evolutionary Computation and AI Safety: Research Problems Impeding Routine and Safe Real-world Application of Evolution. arXiv preprint arXiv:1906.10189 ( 2019 ). Joel Lehman. 2019. Evolutionary Computation and AI Safety: Research Problems Impeding Routine and Safe Real-world Application of Evolution. arXiv preprint arXiv:1906.10189 (2019)."
+    },
+    {
+      "key": "e_1_3_2_2_42_1",
+      "volume-title": "Engineering a safer world: Systems thinking applied to safety",
+      "author": "Leveson Nancy",
+      "unstructured": "Nancy Leveson . 2011. Engineering a safer world: Systems thinking applied to safety . MIT press . Nancy Leveson. 2011. Engineering a safer world: Systems thinking applied to safety. MIT press."
+    },
+    {
+      "key": "e_1_3_2_2_43_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.4236/ib.2012.43036"
+    },
+    {
+      "key": "e_1_3_2_2_44_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/ICCV.2015.425"
+    },
+    {
+      "key": "e_1_3_2_2_45_1",
+      "volume-title": "Urgency in the Anthropocene",
+      "author": "Lynch Amanda H",
+      "unstructured": "Amanda H Lynch and Siri Veland . 2018. Urgency in the Anthropocene . MIT Press . Amanda H Lynch and Siri Veland. 2018. Urgency in the Anthropocene. MIT Press."
+    },
+    {
+      "key": "e_1_3_2_2_46_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1093/cybsec/tyx008"
+    },
+    {
+      "key": "e_1_3_2_2_47_1",
+      "volume-title": "Diversity in faces. arXiv preprint arXiv:1901.10436",
+      "author": "Merler Michele",
+      "year": "2019",
+      "unstructured": "Michele Merler , Nalini Ratha , Rogerio S Feris , and John R Smith . 2019. Diversity in faces. arXiv preprint arXiv:1901.10436 ( 2019 ). Michele Merler, Nalini Ratha, Rogerio S Feris, and John R Smith. 2019. Diversity in faces. arXiv preprint arXiv:1901.10436 (2019)."
+    },
+    {
+      "key": "e_1_3_2_2_48_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3287560.3287596"
+    },
+    {
+      "key": "e_1_3_2_2_49_1",
+      "volume-title": "AI Ethics: Too Principled to Fail? SSRN",
+      "author": "Mittelstadt Brent",
+      "year": "2019",
+      "unstructured": "Brent Mittelstadt . 2019. AI Ethics: Too Principled to Fail? SSRN ( 2019 ). Brent Mittelstadt. 2019. AI Ethics: Too Principled to Fail? SSRN (2019)."
+    },
+    {
+      "key": "e_1_3_2_2_50_1",
+      "doi-asserted-by": "crossref",
+      "DOI": "10.1007/978-3-319-33525-4",
+      "volume-title": "The ethics of big data: current and foreseeable issues in biomedical contexts. Science and engineering ethics 22, 2",
+      "author": "Mittelstadt Brent Daniel",
+      "year": "2016",
+      "unstructured": "Brent Daniel Mittelstadt and Luciano Floridi . 2016. The ethics of big data: current and foreseeable issues in biomedical contexts. Science and engineering ethics 22, 2 ( 2016 ), 303--341. Brent Daniel Mittelstadt and Luciano Floridi. 2016. The ethics of big data: current and foreseeable issues in biomedical contexts. Science and engineering ethics 22, 2 (2016), 303--341."
+    },
+    {
+      "key": "e_1_3_2_2_51_1",
+      "volume-title": "How Police Technology Aggravates Racial Inequity: A Taxonomy of Problems and a Path Forward. Available at SSRN 3340898",
+      "author": "Moy Laura",
+      "year": "2019",
+      "unstructured": "Laura Moy . 2019. How Police Technology Aggravates Racial Inequity: A Taxonomy of Problems and a Path Forward. Available at SSRN 3340898 ( 2019 ). Laura Moy. 2019. How Police Technology Aggravates Racial Inequity: A Taxonomy of Problems and a Path Forward. Available at SSRN 3340898 (2019)."
+    },
+    {
+      "key": "e_1_3_2_2_52_1",
+      "volume-title": "Responsible Innova-tion: Managing the Responsible Emergence of Science and Innovation in Society",
+      "author": "Muniesa Fabian",
+      "year": "2013",
+      "unstructured": "Fabian Muniesa , Marc Lenglet , 2013 . Responsible innovation in finance: directions and implications. Responsible Innova-tion: Managing the Responsible Emergence of Science and Innovation in Society . Wiley , London (2013), 185--198. Fabian Muniesa, Marc Lenglet, et al. 2013. Responsible innovation in finance: directions and implications. Responsible Innova-tion: Managing the Responsible Emergence of Science and Innovation in Society. Wiley, London (2013), 185--198."
+    },
+    {
+      "key": "e_1_3_2_2_53_1",
+      "article-title": "Procedural justice and tax compliance",
+      "volume": "38",
+      "author": "Murphy Kristina",
+      "year": "2003",
+      "unstructured": "Kristina Murphy . 2003 . Procedural justice and tax compliance . Australian Journal of Social Issues (Australian Council of Social Service) 38 , 3 (2003). Kristina Murphy. 2003. Procedural justice and tax compliance. Australian Journal of Social Issues (Australian Council of Social Service) 38, 3 (2003).",
+      "journal-title": "Australian Journal of Social Issues (Australian Council of Social Service)"
+    },
+    {
+      "key": "e_1_3_2_2_54_1",
+      "unstructured": "Safiya Umoja Noble. 2018. Algorithms of oppression: How search engines reinforce racism. nyu Press.  Safiya Umoja Noble. 2018. Algorithms of oppression: How search engines reinforce racism. nyu Press."
+    },
+    {
+      "key": "e_1_3_2_2_55_1",
+      "volume-title": "Research Foundation and Institute of Internal Auditors",
+      "author": "Institute of Internal Auditors.",
+      "year": "2007",
+      "unstructured": "Institute of Internal Auditors. Research Foundation and Institute of Internal Auditors . 2007 . The Professional Practices Framework. Inst of Internal Auditors . Institute of Internal Auditors. Research Foundation and Institute of Internal Auditors. 2007. The Professional Practices Framework. Inst of Internal Auditors."
+    },
+    {
+      "key": "e_1_3_2_2_56_1",
+      "first-page": "14",
+      "article-title": "World Medical Association Declaration of Helsinki: ethical principles for medical research involving human subjects",
+      "volume": "81",
+      "author": "General Assembly of the World Medical Association et al.",
+      "year": "2014",
+      "unstructured": "General Assembly of the World Medical Association et al. 2014 . World Medical Association Declaration of Helsinki: ethical principles for medical research involving human subjects . The Journal of the American College of Dentists 81 , 3 (2014), 14 . General Assembly of the World Medical Association et al. 2014. World Medical Association Declaration of Helsinki: ethical principles for medical research involving human subjects. The Journal of the American College of Dentists 81, 3 (2014), 14.",
+      "journal-title": "The Journal of the American College of Dentists"
+    },
+    {
+      "key": "e_1_3_2_2_57_1",
+      "volume-title": "Weapons of math destruction: How big data increases inequality and threatens democracy",
+      "author": "O'neil Cathy",
+      "unstructured": "Cathy O'neil . 2016. Weapons of math destruction: How big data increases inequality and threatens democracy . Broadway Books . Cathy O'neil. 2016. Weapons of math destruction: How big data increases inequality and threatens democracy. Broadway Books."
+    },
+    {
+      "key": "e_1_3_2_2_58_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/2351316.2351317"
+    },
+    {
+      "key": "e_1_3_2_2_59_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1016/S0263-7863(01)00040-0"
+    },
+    {
+      "key": "e_1_3_2_2_60_1",
+      "doi-asserted-by": "crossref",
+      "first-page": "421",
+      "DOI": "10.36644/mlr.116.3.regulating",
+      "article-title": "Regulating black-box medicine",
+      "volume": "116",
+      "author": "Price W",
+      "year": "2017",
+      "unstructured": "W Price and II Nicholson . 2017 . Regulating black-box medicine . Mich. L. Rev. 116 (2017), 421 . W Price and II Nicholson. 2017. Regulating black-box medicine. Mich. L. Rev. 116 (2017), 421.",
+      "journal-title": "Mich. L. Rev."
+    },
+    {
+      "key": "e_1_3_2_2_61_1",
+      "volume-title": "Laurie Kain Hart, and Philippe Bourgois",
+      "author": "Quesada James",
+      "year": "2011",
+      "unstructured": "James Quesada , Laurie Kain Hart, and Philippe Bourgois . 2011 . Structural vulnerability and health: Latino migrant laborers in the United States. Medical anthropology 30, 4 (2011), 339--362. James Quesada, Laurie Kain Hart, and Philippe Bourgois. 2011. Structural vulnerability and health: Latino migrant laborers in the United States. Medical anthropology 30, 4 (2011), 339--362."
+    },
+    {
+      "key": "e_1_3_2_2_62_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3306618.3314244"
+    },
+    {
+      "key": "e_1_3_2_2_63_1",
+      "volume-title": "Commercial aviation safety 5/e",
+      "author": "Rodrigues Clarence",
+      "unstructured": "Clarence Rodrigues and Stephen Cusick . 2011. Commercial aviation safety 5/e . McGraw Hill Professional . Clarence Rodrigues and Stephen Cusick. 2011. Commercial aviation safety 5/e. McGraw Hill Professional."
+    },
+    {
+      "key": "e_1_3_2_2_64_1",
+      "volume-title": "F Esteban Reboll, A Pobo Peris, M Bodí Saera, et al.",
+      "author": "Rodríguez G Sirgo",
+      "year": "2014",
+      "unstructured": "G Sirgo Rodríguez , M Olona Cabases , MC Martin Delgado , F Esteban Reboll, A Pobo Peris, M Bodí Saera, et al. 2014 . Audits in real time for safety in critical care: definition and pilot study. Medicina intensiva 38, 8 (2014), 473--482. G Sirgo Rodríguez, M Olona Cabases, MC Martin Delgado, F Esteban Reboll, A Pobo Peris, M Bodí Saera, et al. 2014. Audits in real time for safety in critical care: definition and pilot study. Medicina intensiva 38, 8 (2014), 473--482."
+    },
+    {
+      "key": "e_1_3_2_2_65_1",
+      "volume-title": "Auditing algorithms: Research methods for detecting discrimination on internet platforms. Data and discrimination: converting critical concerns into productive inquiry 22",
+      "author": "Sandvig Christian",
+      "year": "2014",
+      "unstructured": "Christian Sandvig , Kevin Hamilton , Karrie Karahalios , and Cedric Langbort . 2014. Auditing algorithms: Research methods for detecting discrimination on internet platforms. Data and discrimination: converting critical concerns into productive inquiry 22 ( 2014 ). Christian Sandvig, Kevin Hamilton, Karrie Karahalios, and Cedric Langbort. 2014. Auditing algorithms: Research methods for detecting discrimination on internet platforms. Data and discrimination: converting critical concerns into productive inquiry 22 (2014)."
+    },
+    {
+      "key": "e_1_3_2_2_66_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1007/s10551-005-0556-y"
+    },
+    {
+      "key": "e_1_3_2_2_67_1",
+      "unstructured": "David Sculley Gary Holt Daniel Golovin Eugene Davydov Todd Phillips Dietmar Ebner Vinay Chaudhary and Michael Young. 2014. Machine learning: The high interest credit card of technical debt. (2014).  David Sculley Gary Holt Daniel Golovin Eugene Davydov Todd Phillips Dietmar Ebner Vinay Chaudhary and Michael Young. 2014. Machine learning: The high interest credit card of technical debt. (2014)."
+    },
+    {
+      "key": "e_1_3_2_2_68_1",
+      "first-page": "1085",
+      "article-title": "The intuitive appeal of explainable machines",
+      "volume": "87",
+      "author": "Selbst Andrew D",
+      "year": "2018",
+      "unstructured": "Andrew D Selbst and Solon Barocas . 2018 . The intuitive appeal of explainable machines . Fordham L. Rev. 87 (2018), 1085 . Andrew D Selbst and Solon Barocas. 2018. The intuitive appeal of explainable machines. Fordham L. Rev. 87 (2018), 1085.",
+      "journal-title": "Fordham L. Rev."
+    },
+    {
+      "key": "e_1_3_2_2_69_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3287560.3287598"
+    },
+    {
+      "key": "e_1_3_2_2_70_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1098/rsta.2017.0362"
+    },
+    {
+      "key": "e_1_3_2_2_71_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1108/02686901111151332"
+    },
+    {
+      "key": "e_1_3_2_2_72_1",
+      "volume-title": "Failure mode and effect analysis: FMEA from theory to execution",
+      "author": "Stamatis Diomidis H",
+      "unstructured": "Diomidis H Stamatis . 2003. Failure mode and effect analysis: FMEA from theory to execution . ASQ Quality press . Diomidis H Stamatis. 2003. Failure mode and effect analysis: FMEA from theory to execution. ASQ Quality press."
+    },
+    {
+      "key": "e_1_3_2_2_73_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1016/j.respol.2013.05.008"
+    },
+    {
+      "key": "e_1_3_2_2_74_1",
+      "volume-title": "The financialization of the firm: Managerial and social implications",
+      "author": "Styhre Alexander",
+      "unstructured": "Alexander Styhre . 2015. The financialization of the firm: Managerial and social implications . Edward Elgar Publishing . Alexander Styhre. 2015. The financialization of the firm: Managerial and social implications. Edward Elgar Publishing."
+    },
+    {
+      "key": "e_1_3_2_2_75_1",
+      "volume-title": "The Unfinished Business of Governance",
+      "author": "Styhre Alexander",
+      "unstructured": "Alexander Styhre . 2018. The unfinished business of governance: towards new governance regimes . In The Unfinished Business of Governance . Edward Elgar Publishing . Alexander Styhre. 2018. The unfinished business of governance: towards new governance regimes. In The Unfinished Business of Governance. Edward Elgar Publishing."
+    },
+    {
+      "key": "e_1_3_2_2_76_1",
+      "volume-title": "Quality assurance of chemical measurements",
+      "author": "Taylor K",
+      "unstructured": "John K Taylor . 2018. Quality assurance of chemical measurements . Routledge . JohnK Taylor. 2018. Quality assurance of chemical measurements. Routledge."
+    },
+    {
+      "key": "e_1_3_2_2_77_1",
+      "volume-title": "Design controls for the medical device industry",
+      "author": "Teixeira Marie B",
+      "unstructured": "Marie B Teixeira , Marie Teixeira , and Richard Bradley . 2013. Design controls for the medical device industry . CRC press . Marie B Teixeira, Marie Teixeira, and Richard Bradley. 2013. Design controls for the medical device industry. CRC press."
+    },
+    {
+      "key": "e_1_3_2_2_79_1",
+      "volume-title": "International principles for social impact assessment. Impact assessment and project appraisal 21, 1",
+      "author": "Vanclay Frank",
+      "year": "2003",
+      "unstructured": "Frank Vanclay . 2003. International principles for social impact assessment. Impact assessment and project appraisal 21, 1 ( 2003 ), 5--12. Frank Vanclay. 2003. International principles for social impact assessment. Impact assessment and project appraisal 21, 1 (2003), 5--12."
+    },
+    {
+      "key": "e_1_3_2_2_80_1",
+      "first-page": "16",
+      "article-title": "Averting highest-risk errors is first priority",
+      "volume": "2",
+      "author": "Vanderveen Tim",
+      "year": "2005",
+      "unstructured": "Tim Vanderveen . 2005 . Averting highest-risk errors is first priority . Patient Safety and Quality Healthcare 2 (2005), 16 -- 21 . Tim Vanderveen. 2005. Averting highest-risk errors is first priority. Patient Safety and Quality Healthcare 2 (2005), 16--21.",
+      "journal-title": "Patient Safety and Quality Healthcare"
+    },
+    {
+      "key": "e_1_3_2_2_81_1",
+      "volume-title": "Durga Rao Karanki, et al",
+      "author": "Verma Ajit Kumar",
+      "year": "2010",
+      "unstructured": "Ajit Kumar Verma , Srividya Ajit , Durga Rao Karanki, et al . 2010 . Reliability and safety engineering. Vol. 43 . Springer . Ajit Kumar Verma, Srividya Ajit, Durga Rao Karanki, et al. 2010. Reliability and safety engineering. Vol. 43. Springer."
+    },
+    {
+      "key": "e_1_3_2_2_82_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3306618.3314289"
+    },
+    {
+      "key": "e_1_3_2_2_83_1",
+      "volume-title": "Linking Artificial Intelligence Principles. arXiv preprint arXiv:1812.04814",
+      "author": "Zeng Yi",
+      "year": "2018",
+      "unstructured": "Yi Zeng , Enmeng Lu , and Cunqing Huangfu . 2018. Linking Artificial Intelligence Principles. arXiv preprint arXiv:1812.04814 ( 2018 ). Yi Zeng, Enmeng Lu, and Cunqing Huangfu. 2018. Linking Artificial Intelligence Principles. arXiv preprint arXiv:1812.04814 (2018)."
+    }
+  ],
+  "event": {
+    "name": "FAT* '20: Conference on Fairness, Accountability, and Transparency",
+    "location": "Barcelona Spain",
+    "acronym": "FAT* '20",
+    "sponsor": [
+      "ACM Association for Computing Machinery"
+    ]
+  },
+  "container-title": [
+    "Proceedings of the 2020 Conference on Fairness, Accountability, and Transparency"
+  ],
+  "original-title": [],
+  "link": [
+    {
+      "URL": "https://dl.acm.org/doi/10.1145/3351095.3372873",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "text-mining"
+    },
+    {
+      "URL": "https://dl.acm.org/doi/pdf/10.1145/3351095.3372873",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+    }
+  ],
+  "deposited": {
+    "date-parts": [
+      [
+        2025,
+        6,
+        17
+      ]
+    ],
+    "date-time": "2025-06-17T18:41:22Z",
+    "timestamp": 1750185682000
+  },
+  "score": 1,
+  "resource": {
+    "primary": {
+      "URL": "https://dl.acm.org/doi/10.1145/3351095.3372873"
+    }
+  },
+  "subtitle": [
+    "defining an end-to-end framework for internal algorithmic auditing"
+  ],
+  "short-title": [],
+  "issued": {
+    "date-parts": [
+      [
+        2020,
+        1,
+        27
+      ]
+    ]
+  },
+  "references-count": 82,
+  "alternative-id": [
+    "10.1145/3351095.3372873",
+    "10.1145/3351095"
+  ],
+  "URL": "https://doi.org/10.1145/3351095.3372873",
+  "relation": {},
+  "subject": [],
+  "published": {
+    "date-parts": [
+      [
+        2020,
+        1,
+        27
+      ]
+    ]
+  },
+  "assertion": [
+    {
+      "value": "2020-01-27",
+      "order": 2,
+      "name": "published",
+      "label": "Published",
+      "group": {
+        "name": "publication_history",
+        "label": "Publication History"
+      }
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "file": "03-empirical-software-engineering.docx",
+  "journal": "Empirical Software Engineering",
+  "source": "../manuscripts/03-empirical-software-engineering.md",
+  "sha256": "a9f7953d3b7ee3c46394e64a328c8714a44d87bbb240187459c88cde8e8b3a63",
+  "sourceSha256": "4f1a267b255f0011c5dfafbbe62ec9a473de414d37a1221f1e7aa98d3011b701",
+  "words": 3779,
+  "references": [
+    "dwork",
+    "pal",
+    "datasheets",
+    "kapoor",
+    "messeri",
+    "modelcards",
+    "raji",
+    "runeson",
+    "sandve"
+  ],
+  "tables": 3,
+  "figures": [
+    {
+      "source": "../assets/audit-chain.png",
+      "width": 7562,
+      "height": 3918,
+      "sha256": "5e0b89ed2870f8be57be18934cba828fe6dd5674f682026cebd405fd73eff92b"
+    },
+    {
+      "source": "../assets/epistemic-boundaries.png",
+      "width": 7562,
+      "height": 3575,
+      "sha256": "6991dd1a5815629cefba66e31860c5c14228a02900a959d3f7a3a1f7e7674ef0"
+    }
+  ],
+  "columns": 1,
+  "zipMembers": 10
+}

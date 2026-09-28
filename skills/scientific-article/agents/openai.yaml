@@ -1,0 +1,4 @@
+interface:
+  display_name: "Scientific Article"
+  short_description: "Evidence-grounded manuscripts, journal adaptation, and audit"
+  default_prompt: "Use $scientific-article to prepare and audit a scientific manuscript from the supplied research artifacts."

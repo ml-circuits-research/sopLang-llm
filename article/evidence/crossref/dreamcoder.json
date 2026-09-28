@@ -1,0 +1,652 @@
+{
+  "indexed": {
+    "date-parts": [
+      [
+        2026,
+        9,
+        27
+      ]
+    ],
+    "date-time": "2026-09-27T01:12:26Z",
+    "timestamp": 1790471546903,
+    "version": "4.1.0"
+  },
+  "publisher-location": "New York, NY, USA",
+  "reference-count": 57,
+  "publisher": "ACM",
+  "license": [
+    {
+      "start": {
+        "date-parts": [
+          [
+            2021,
+            6,
+            18
+          ]
+        ],
+        "date-time": "2021-06-18T00:00:00Z",
+        "timestamp": 1623974400000
+      },
+      "content-version": "vor",
+      "delay-in-days": 0,
+      "URL": "https://www.acm.org/publications/policies/copyright_policy#Background"
+    }
+  ],
+  "funder": [
+    {
+      "DOI": "10.13039/100000001",
+      "name": "National Science Foundation",
+      "doi-asserted-by": "publisher",
+      "award": [
+        "1918839 and 1231216"
+      ],
+      "award-info": [
+        {
+          "award-number": [
+            "1918839 and 1231216"
+          ]
+        }
+      ],
+      "id": [
+        {
+          "id": "10.13039/100000001",
+          "id-type": "DOI",
+          "asserted-by": "publisher"
+        }
+      ]
+    },
+    {
+      "DOI": "10.13039/100000181",
+      "name": "Air Force Office of Scientific Research",
+      "doi-asserted-by": "publisher",
+      "award": [
+        "FA9550-16-1-0012"
+      ],
+      "award-info": [
+        {
+          "award-number": [
+            "FA9550-16-1-0012"
+          ]
+        }
+      ],
+      "id": [
+        {
+          "id": "10.13039/100000181",
+          "id-type": "DOI",
+          "asserted-by": "publisher"
+        }
+      ]
+    }
+  ],
+  "content-domain": {
+    "domain": [
+      "dl.acm.org"
+    ],
+    "crossmark-restriction": true
+  },
+  "short-container-title": [],
+  "published-print": {
+    "date-parts": [
+      [
+        2021,
+        6,
+        19
+      ]
+    ]
+  },
+  "DOI": "10.1145/3453483.3454080",
+  "type": "proceedings-article",
+  "created": {
+    "date-parts": [
+      [
+        2021,
+        6,
+        24
+      ]
+    ],
+    "date-time": "2021-06-24T16:58:49Z",
+    "timestamp": 1624553929000
+  },
+  "page": "835-850",
+  "update-policy": "https://doi.org/10.1145/crossmark-policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 83,
+  "title": [
+    "DreamCoder: bootstrapping inductive program synthesis with wake-sleep library learning"
+  ],
+  "prefix": "10.1145",
+  "author": [
+    {
+      "given": "Kevin",
+      "family": "Ellis",
+      "sequence": "first",
+      "affiliation": [
+        {
+          "name": "Cornell University, USA"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Catherine",
+      "family": "Wong",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Massachusetts Institute of Technology, USA"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Maxwell",
+      "family": "Nye",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Massachusetts Institute of Technology, USA"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Mathias",
+      "family": "Sablé-Meyer",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "PSL University, France / Collège de France, France / NeuroSpin, France"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Lucas",
+      "family": "Morales",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Massachusetts Institute of Technology, USA"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Luke",
+      "family": "Hewitt",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Massachusetts Institute of Technology, USA"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Luc",
+      "family": "Cary",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Massachusetts Institute of Technology, USA"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Armando",
+      "family": "Solar-Lezama",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Massachusetts Institute of Technology, USA"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Joshua B.",
+      "family": "Tenenbaum",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Massachusetts Institute of Technology, USA"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    }
+  ],
+  "member": "320",
+  "published-online": {
+    "date-parts": [
+      [
+        2021,
+        6,
+        18
+      ]
+    ]
+  },
+  "reference": [
+    {
+      "key": "e_1_3_2_2_1_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.4204/EPTCS.260.9"
+    },
+    {
+      "key": "e_1_3_2_2_2_1",
+      "unstructured": "Matej Balog Alexander L Gaunt Marc Brockschmidt Sebastian Nowozin and Daniel Tarlow. 2016. DeepCoder: Learning to Write Programs. ICLR.  Matej Balog Alexander L Gaunt Marc Brockschmidt Sebastian Nowozin and Daniel Tarlow. 2016. DeepCoder: Learning to Write Programs. ICLR."
+    },
+    {
+      "key": "e_1_3_2_2_3_1",
+      "volume-title": "Pattern Recognition and Machine Learning",
+      "author": "Bishop Christopher M.",
+      "unstructured": "Christopher M. Bishop . 2006. Pattern Recognition and Machine Learning . Springer-Verlag New York, Inc. . Christopher M. Bishop. 2006. Pattern Recognition and Machine Learning. Springer-Verlag New York, Inc.."
+    },
+    {
+      "key": "e_1_3_2_2_4_1",
+      "unstructured": "Xinyun Chen Chang Liu and Dawn Song. 2018. Execution-guided neural program synthesis. ICLR.  Xinyun Chen Chang Liu and Dawn Song. 2018. Execution-guided neural program synthesis. ICLR."
+    },
+    {
+      "key": "e_1_3_2_2_5_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.4324/9781315799681"
+    },
+    {
+      "key": "e_1_3_2_2_6_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1207/s15516709cog0502_2"
+    },
+    {
+      "key": "e_1_3_2_2_7_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.3115/v1/D14-1179"
+    },
+    {
+      "key": "e_1_3_2_2_8_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.24963/ijcai.2019/841"
+    },
+    {
+      "key": "e_1_3_2_2_9_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/582153.582176"
+    },
+    {
+      "key": "e_1_3_2_2_10_1",
+      "volume-title": "Tenenbaum",
+      "author": "Dechter Eyal",
+      "year": "2013",
+      "unstructured": "Eyal Dechter , Jon Malmaud , Ryan P. Adams , and Joshua B . Tenenbaum . 2013 . Bootstrap Learning via Modular Concept Discovery. In IJCAI. Eyal Dechter, Jon Malmaud, Ryan P. Adams, and Joshua B. Tenenbaum. 2013. Bootstrap Learning via Modular Concept Discovery. In IJCAI."
+    },
+    {
+      "key": "e_1_3_2_2_11_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/1066100.1066102"
+    },
+    {
+      "key": "e_1_3_2_2_12_1",
+      "unstructured": "Jacob Devlin Rudy R Bunel Rishabh Singh Matthew Hausknecht and Pushmeet Kohli. 2017. Neural Program Meta-Induction. In NIPS.  Jacob Devlin Rudy R Bunel Rishabh Singh Matthew Hausknecht and Pushmeet Kohli. 2017. Neural Program Meta-Induction. In NIPS."
+    },
+    {
+      "key": "e_1_3_2_2_13_1",
+      "unstructured": "Jacob Devlin Jonathan Uesato Surya Bhupatiraju Rishabh Singh Abdel-rahman Mohamed and Pushmeet Kohli. 2017. RobustFill: Neural Program Learning under Noisy I/O. ICML.  Jacob Devlin Jonathan Uesato Surya Bhupatiraju Rishabh Singh Abdel-rahman Mohamed and Pushmeet Kohli. 2017. RobustFill: Neural Program Learning under Noisy I/O. ICML."
+    },
+    {
+      "key": "e_1_3_2_2_14_1",
+      "unstructured": "Kevin Ellis Lucas Morales Mathias Sablé-Meyer Armando Solar-Lezama and Josh Tenenbaum. 2018. Library Learning for Neurally-Guided Bayesian Program Induction. In NeurIPS.  Kevin Ellis Lucas Morales Mathias Sablé-Meyer Armando Solar-Lezama and Josh Tenenbaum. 2018. Library Learning for Neurally-Guided Bayesian Program Induction. In NeurIPS."
+    },
+    {
+      "key": "e_1_3_2_2_15_1",
+      "unstructured": "Kevin Ellis Maxwell Nye Yewen Pu Felix Sosa Josh Tenenbaum and Armando Solar-Lezama. 2019. Write execute assess: Program synthesis with a repl. In Advances in Neural Information Processing Systems. 9169–9178.  Kevin Ellis Maxwell Nye Yewen Pu Felix Sosa Josh Tenenbaum and Armando Solar-Lezama. 2019. Write execute assess: Program synthesis with a repl. In Advances in Neural Information Processing Systems. 9169–9178."
+    },
+    {
+      "key": "e_1_3_2_2_16_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1111/j.2044-8295.1984.tb01915.x"
+    },
+    {
+      "key": "e_1_3_2_2_17_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/2737924.2737977"
+    },
+    {
+      "key": "e_1_3_2_2_18_1",
+      "unstructured": "Yaroslav Ganin Tejas Kulkarni Igor Babuschkin S. M. Ali Eslami and Oriol Vinyals. 2018. Synthesizing Programs for Images using Reinforced Adversarial Learning. ICML.  Yaroslav Ganin Tejas Kulkarni Igor Babuschkin S. M. Ali Eslami and Oriol Vinyals. 2018. Synthesizing Programs for Images using Reinforced Adversarial Learning. ICML."
+    },
+    {
+      "key": "e_1_3_2_2_19_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1017/S0956796804245324"
+    },
+    {
+      "key": "e_1_3_2_2_20_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/1926385.1926423"
+    },
+    {
+      "key": "e_1_3_2_2_22_1",
+      "volume-title": "Conference on Uncertainty in Artificial Intelligence. 1278–1287",
+      "author": "Hewitt Luke",
+      "year": "2020",
+      "unstructured": "Luke Hewitt , Tuan Anh Le , and Joshua Tenenbaum . 2020 . Learning to learn generative programs with Memoised Wake-Sleep . In Conference on Uncertainty in Artificial Intelligence. 1278–1287 . Luke Hewitt, Tuan Anh Le, and Joshua Tenenbaum. 2020. Learning to learn generative programs with Memoised Wake-Sleep. In Conference on Uncertainty in Artificial Intelligence. 1278–1287."
+    },
+    {
+      "key": "e_1_3_2_2_23_1",
+      "volume-title": "The \"wake-sleep\" algorithm for unsupervised neural networks. Science, 268, 5214",
+      "author": "Hinton Geoffrey E",
+      "year": "1995",
+      "unstructured": "Geoffrey E Hinton , Peter Dayan , Brendan J Frey , and Radford M Neal . 1995. The \"wake-sleep\" algorithm for unsupervised neural networks. Science, 268, 5214 ( 1995 ), 1158–1161. Geoffrey E Hinton, Peter Dayan, Brendan J Frey, and Radford M Neal. 1995. The \"wake-sleep\" algorithm for unsupervised neural networks. Science, 268, 5214 (1995), 1158–1161."
+    },
+    {
+      "key": "e_1_3_2_2_24_1",
+      "unstructured": "Irvin Hwang Andreas Stuhlmüller and Noah D Goodman. 2011. Inducing probabilistic programs by Bayesian program merging. arXiv preprint arXiv:1110.5667.  Irvin Hwang Andreas Stuhlmüller and Noah D Goodman. 2011. Inducing probabilistic programs by Bayesian program merging. arXiv preprint arXiv:1110.5667."
+    },
+    {
+      "key": "e_1_3_2_2_25_1",
+      "volume-title": "Adam: A method for stochastic optimization. arXiv preprint arXiv:1412.6980.",
+      "author": "Kingma Diederik P",
+      "year": "2014",
+      "unstructured": "Diederik P Kingma and Jimmy Ba . 2014 . Adam: A method for stochastic optimization. arXiv preprint arXiv:1412.6980. Diederik P Kingma and Jimmy Ba. 2014. Adam: A method for stochastic optimization. arXiv preprint arXiv:1412.6980."
+    },
+    {
+      "key": "e_1_3_2_2_26_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1007/11872436_8"
+    },
+    {
+      "key": "e_1_3_2_2_27_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1126/science.aab3050"
+    },
+    {
+      "key": "e_1_3_2_2_28_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1177/027046768800800417"
+    },
+    {
+      "key": "e_1_3_2_2_29_1",
+      "volume-title": "Beyond imitation: Zero-shot task transfer on robots by learning concepts as cognitive programs. Science Robotics, 4, 26",
+      "author": "Lázaro-Gredilla Miguel",
+      "year": "2019",
+      "unstructured": "Miguel Lázaro-Gredilla , Dianhuan Lin , J Swaroop Guntupalli , and Dileep George . 2019. Beyond imitation: Zero-shot task transfer on robots by learning concepts as cognitive programs. Science Robotics, 4, 26 ( 2019 ), eaav3150. https://doi.org/10.1126/scirobotics.aav3150 10.1126/scirobotics.aav3150 Miguel Lázaro-Gredilla, Dianhuan Lin, J Swaroop Guntupalli, and Dileep George. 2019. Beyond imitation: Zero-shot task transfer on robots by learning concepts as cognitive programs. Science Robotics, 4, 26 (2019), eaav3150. https://doi.org/10.1126/scirobotics.aav3150"
+    },
+    {
+      "key": "e_1_3_2_2_30_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3296979.3192410"
+    },
+    {
+      "key": "e_1_3_2_2_31_1",
+      "volume-title": "Learning Programs: A Hierarchical Bayesian Approach. In ICML.",
+      "author": "Liang Percy",
+      "year": "2010",
+      "unstructured": "Percy Liang , Michael I. Jordan , and Dan Klein . 2010 . Learning Programs: A Hierarchical Bayesian Approach. In ICML. Percy Liang, Michael I. Jordan, and Dan Klein. 2010. Learning Programs: A Hierarchical Bayesian Approach. In ICML."
+    },
+    {
+      "key": "e_1_3_2_2_32_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.3233/978-1-61499-419-0-525"
+    },
+    {
+      "key": "e_1_3_2_2_33_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/367177.367199"
+    },
+    {
+      "key": "e_1_3_2_2_34_1",
+      "unstructured": "Aditya Menon Omer Tamuz Sumit Gulwani Butler Lampson and Adam Kalai. 2013. A machine learning framework for programming by example. In ICML. 187–195.  Aditya Menon Omer Tamuz Sumit Gulwani Butler Lampson and Adam Kalai. 2013. A machine learning framework for programming by example. In ICML. 187–195."
+    },
+    {
+      "key": "e_1_3_2_2_35_1",
+      "unstructured": "Microsoft. 2016. F# Guide: Units of Measure. https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/units-of-measure  Microsoft. 2016. F# Guide: Units of Measure. https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/units-of-measure"
+    },
+    {
+      "key": "e_1_3_2_2_36_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1007/s10994-014-5471-y"
+    },
+    {
+      "key": "e_1_3_2_2_37_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1007/s10994-018-5707-3"
+    },
+    {
+      "key": "e_1_3_2_2_38_1",
+      "unstructured": "Maxwell Nye Luke Hewitt Joshua Tenenbaum and Armando Solar-Lezama. 2019. Learning to infer program sketches. ICML.  Maxwell Nye Luke Hewitt Joshua Tenenbaum and Armando Solar-Lezama. 2019. Learning to infer program sketches. ICML."
+    },
+    {
+      "key": "e_1_3_2_2_39_1",
+      "volume-title": "Types and programming languages",
+      "author": "Pierce Benjamin C.",
+      "unstructured": "Benjamin C. Pierce . 2002. Types and programming languages . MIT Press . isbn:978-0-262-16209-8 Benjamin C. Pierce. 2002. Types and programming languages. MIT Press. isbn:978-0-262-16209-8"
+    },
+    {
+      "key": "e_1_3_2_2_40_1",
+      "unstructured": "Riccardo Poli William B. Langdon and Nicholas Freitag McPhee. 2008. A field guide to genetic programming. Published via http://lulu.com and freely available at http://www.gp-field-guide.org.uk. (With contributions by J. R. Koza).  Riccardo Poli William B. Langdon and Nicholas Freitag McPhee. 2008. A field guide to genetic programming. Published via http://lulu.com and freely available at http://www.gp-field-guide.org.uk. (With contributions by J. R. Koza)."
+    },
+    {
+      "key": "e_1_3_2_2_41_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/2908080.2908093"
+    },
+    {
+      "key": "e_1_3_2_2_42_1",
+      "unstructured": "Illia Polosukhin and Alexander Skidanov. 2018. Neural program search: Solving programming tasks from description and examples. arXiv preprint arXiv:1802.04335.  Illia Polosukhin and Alexander Skidanov. 2018. Neural program search: Solving programming tasks from description and examples. arXiv preprint arXiv:1802.04335."
+    },
+    {
+      "key": "e_1_3_2_2_43_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/2858965.2814310"
+    },
+    {
+      "key": "e_1_3_2_2_44_1",
+      "volume-title": "Russell and Peter Norvig",
+      "author": "Stuart",
+      "year": "2003",
+      "unstructured": "Stuart J. Russell and Peter Norvig . 2003 . Artificial Intelligence : A Modern Approach (2 ed.). Pearson Education . isbn:0137903952 Stuart J. Russell and Peter Norvig. 2003. Artificial Intelligence: A Modern Approach (2 ed.). Pearson Education. isbn:0137903952"
+    },
+    {
+      "key": "e_1_3_2_2_45_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1126/science.1165893"
+    },
+    {
+      "key": "e_1_3_2_2_46_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/2228360.2228425"
+    },
+    {
+      "key": "e_1_3_2_2_47_1",
+      "unstructured": "Richard Shin Miltiadis Allamanis Marc Brockschmidt and Oleksandr Polozov. 2019. Program Synthesis and Semantic Parsing with Learned Code Idioms. NeurIPS.  Richard Shin Miltiadis Allamanis Marc Brockschmidt and Oleksandr Polozov. 2019. Program Synthesis and Semantic Parsing with Learned Code Idioms. NeurIPS."
+    },
+    {
+      "key": "e_1_3_2_2_48_1",
+      "unstructured": "Vighnesh Shiv and Chris Quirk. 2019. Novel positional encodings to enable tree-based transformers. In Advances in Neural Information Processing Systems.  Vighnesh Shiv and Chris Quirk. 2019. Novel positional encodings to enable tree-based transformers. In Advances in Neural Information Processing Systems."
+    },
+    {
+      "key": "e_1_3_2_2_49_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1080/02698599208573403"
+    },
+    {
+      "key": "e_1_3_2_2_50_1",
+      "unstructured": "Jake Snell Kevin Swersky and Richard Zemel. 2017. Prototypical Networks for Few-shot Learning. In Advances in Neural Information Processing Systems.  Jake Snell Kevin Swersky and Richard Zemel. 2017. Prototypical Networks for Few-shot Learning. In Advances in Neural Information Processing Systems."
+    },
+    {
+      "key": "e_1_3_2_2_51_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.18653/v1/2020.acl-main.684"
+    },
+    {
+      "key": "e_1_3_2_2_52_1",
+      "volume-title": "Between MDPs and semi-MDPs: A framework for temporal abstraction in reinforcement learning. Artificial intelligence, 112, 1-2",
+      "author": "Sutton Richard S",
+      "year": "1999",
+      "unstructured": "Richard S Sutton , Doina Precup , and Satinder Singh . 1999. Between MDPs and semi-MDPs: A framework for temporal abstraction in reinforcement learning. Artificial intelligence, 112, 1-2 ( 1999 ), 181–211. Richard S Sutton, Doina Precup, and Satinder Singh. 1999. Between MDPs and semi-MDPs: A framework for temporal abstraction in reinforcement learning. Artificial intelligence, 112, 1-2 (1999), 181–211."
+    },
+    {
+      "key": "e_1_3_2_2_53_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/1480881.1480915"
+    },
+    {
+      "key": "e_1_3_2_2_54_1",
+      "unstructured": "David D. Thornburg. 1983. Friends of the Turtle. Compute! March.  David D. Thornburg. 1983. Friends of the Turtle. Compute! March."
+    },
+    {
+      "key": "e_1_3_2_2_55_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/IROS.2017.8202133"
+    },
+    {
+      "key": "e_1_3_2_2_56_1",
+      "volume-title": "Houdini: Lifelong learning as program synthesis. In Advances in Neural Information Processing Systems. 8687–8698.",
+      "author": "Valkov Lazar",
+      "year": "2018",
+      "unstructured": "Lazar Valkov , Dipak Chaudhari , Akash Srivastava , Charles Sutton , and Swarat Chaudhuri . 2018 . Houdini: Lifelong learning as program synthesis. In Advances in Neural Information Processing Systems. 8687–8698. Lazar Valkov, Dipak Chaudhari, Akash Srivastava, Charles Sutton, and Swarat Chaudhuri. 2018. Houdini: Lifelong learning as program synthesis. In Advances in Neural Information Processing Systems. 8687–8698."
+    },
+    {
+      "key": "e_1_3_2_2_57_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/91556.91592"
+    },
+    {
+      "key": "e_1_3_2_2_58_1",
+      "unstructured": "Patrick Winston. 1972. The MIT Robot. Machine Intelligence.  Patrick Winston. 1972. The MIT Robot. Machine Intelligence."
+    }
+  ],
+  "event": {
+    "name": "PLDI '21: 42nd ACM SIGPLAN International Conference on Programming Language Design and Implementation",
+    "location": "Virtual Canada",
+    "acronym": "PLDI '21",
+    "sponsor": [
+      "SIGPLAN ACM Special Interest Group on Programming Languages"
+    ]
+  },
+  "container-title": [
+    "Proceedings of the 42nd ACM SIGPLAN International Conference on Programming Language Design and Implementation"
+  ],
+  "original-title": [],
+  "link": [
+    {
+      "URL": "https://dl.acm.org/doi/10.1145/3453483.3454080",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "text-mining"
+    },
+    {
+      "URL": "https://dl.acm.org/doi/pdf/10.1145/3453483.3454080",
+      "content-type": "application/pdf",
+      "content-version": "vor",
+      "intended-application": "syndication"
+    },
+    {
+      "URL": "https://dl.acm.org/doi/pdf/10.1145/3453483.3454080",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+    }
+  ],
+  "deposited": {
+    "date-parts": [
+      [
+        2025,
+        6,
+        17
+      ]
+    ],
+    "date-time": "2025-06-17T20:47:48Z",
+    "timestamp": 1750193268000
+  },
+  "score": 1,
+  "resource": {
+    "primary": {
+      "URL": "https://dl.acm.org/doi/10.1145/3453483.3454080"
+    }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+    "date-parts": [
+      [
+        2021,
+        6,
+        18
+      ]
+    ]
+  },
+  "references-count": 57,
+  "alternative-id": [
+    "10.1145/3453483.3454080",
+    "10.1145/3453483"
+  ],
+  "URL": "https://doi.org/10.1145/3453483.3454080",
+  "relation": {},
+  "subject": [],
+  "published": {
+    "date-parts": [
+      [
+        2021,
+        6,
+        18
+      ]
+    ]
+  },
+  "assertion": [
+    {
+      "value": "2021-06-18",
+      "order": 2,
+      "name": "published",
+      "label": "Published",
+      "group": {
+        "name": "publication_history",
+        "label": "Publication History"
+      }
+    }
+  ]
+}

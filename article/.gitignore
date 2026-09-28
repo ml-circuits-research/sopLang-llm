@@ -1,0 +1,12 @@
+# Local full-text reading caches are not licensed for redistribution here.
+evidence/literature/
+# Official templates and review material are retrieved for local author preparation.
+# Their URLs, hashes, and use are recorded in submission/journal-matrix.md.
+submission/Informatica2026.dotx
+submission/word_example.docx
+submission/informatica-review-prompt.txt
+# Large visual inspection intermediates can be reproduced from the delivered DOCX files.
+audit/rendered/*/
+audit/rendered/*-contact.png
+audit/rendered/*.txt
+audit/rendered/*.xhtml

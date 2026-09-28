@@ -1,0 +1,48 @@
+{
+  "source": "../manuscripts/02-informatica.md",
+  "output": "../docs/02-informatica.docx",
+  "bibliography": "../evidence/bibliography.json",
+  "journal": "Informatica",
+  "shortTitle": "SOP Lang: contract-bearing wires",
+  "fontSize": 10,
+  "citationStyle": "numbered",
+  "lineSpacing": 240,
+  "maxFigureHeight": 6500,
+  "columns": 2,
+  "columnSpace": 284,
+  "margins": {
+    "top": 1644,
+    "right": 1077,
+    "bottom": 1134,
+    "left": 1304
+  },
+  "template": "Informatica2026.dotx",
+  "frontMatter": "keywords-before-abstract",
+  "hideAbstractHeading": true,
+  "styleMap": {
+    "Normal": "IText",
+    "Title": "ITitle",
+    "Abstract": "IAbstract",
+    "Keywords": "IKeywords",
+    "Heading1": "ISectionTitle",
+    "Heading2": "ISubSectionTitle",
+    "Caption": "IFigureCaption"
+  },
+  "tableWeights": {
+    "Command|Operation and important restriction": [
+      1,
+      2.8
+    ],
+    "System and data|Match|Execution errors": [
+      2.1,
+      0.8,
+      1.1
+    ],
+    "Check|What acceptance supports": [
+      1.4,
+      2.6
+    ]
+  },
+  "keepTablesTogether": true,
+  "headerRight": "Technical paper"
+}

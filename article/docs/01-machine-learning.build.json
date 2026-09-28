@@ -1,0 +1,44 @@
+{
+  "file": "01-machine-learning.docx",
+  "journal": "Machine Learning",
+  "source": "../manuscripts/01-machine-learning.md",
+  "sha256": "45e3559d01fd5f06c3760806123fe23581f85565cc6a8660878d1dca5d6c0333",
+  "sourceSha256": "2fa367206b5a5f0713de38a82ed4174a65938f40f74dffe8624cbb215628a420",
+  "words": 3661,
+  "references": [
+    "pot",
+    "dwork",
+    "dreamcoder",
+    "pal",
+    "synthesis",
+    "scan",
+    "z3",
+    "qwen05",
+    "qwen15",
+    "qwen3",
+    "sandve"
+  ],
+  "tables": 2,
+  "figures": [
+    {
+      "source": "../assets/execution-contract.png",
+      "width": 7562,
+      "height": 2818,
+      "sha256": "76631b2ec43a649b42abb553bb1e943f41eb7b294eca6c0b2c3675b597a5e22b"
+    },
+    {
+      "source": "../assets/comparator-diagnostic.png",
+      "width": 7562,
+      "height": 3162,
+      "sha256": "2bbb51da603ffabe097ad7a1287fac8bfa1a7f063c188989929bdaf600656fcb"
+    },
+    {
+      "source": "../assets/vocabulary-loop.png",
+      "width": 7562,
+      "height": 4056,
+      "sha256": "c8c3db6fa64bbae967ae099a336a9e23e957e1a5f5d5da0b9008b5bbc56db6b4"
+    }
+  ],
+  "columns": 1,
+  "zipMembers": 11
+}

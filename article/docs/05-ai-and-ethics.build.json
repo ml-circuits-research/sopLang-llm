@@ -1,0 +1,38 @@
+{
+  "file": "05-ai-and-ethics.docx",
+  "journal": "AI and Ethics",
+  "source": "../manuscripts/05-ai-and-ethics.md",
+  "sha256": "d452ceef0718099dd537cde8b91499fd238e7c5cdd6eb79bf0227f5bc68f544e",
+  "sourceSha256": "d318e357edaf4290fa8d742997ceabf5a1f90f7151b4161b61acb1f35da0dcef",
+  "words": 4120,
+  "references": [
+    "messeri",
+    "pal",
+    "pot",
+    "synthesis",
+    "selbst",
+    "dreamcoder",
+    "raji",
+    "dwork",
+    "datasheets",
+    "modelcards",
+    "sandve"
+  ],
+  "tables": 1,
+  "figures": [
+    {
+      "source": "../assets/epistemic-boundaries.png",
+      "width": 7562,
+      "height": 3575,
+      "sha256": "6991dd1a5815629cefba66e31860c5c14228a02900a959d3f7a3a1f7e7674ef0"
+    },
+    {
+      "source": "../assets/audit-chain.png",
+      "width": 7562,
+      "height": 3918,
+      "sha256": "5e0b89ed2870f8be57be18934cba828fe6dd5674f682026cebd405fd73eff92b"
+    }
+  ],
+  "columns": 1,
+  "zipMembers": 10
+}

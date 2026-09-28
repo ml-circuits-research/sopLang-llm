@@ -1,0 +1,14 @@
+{
+  "source": "../manuscripts/03-empirical-software-engineering.md",
+  "output": "../docs/03-empirical-software-engineering.docx",
+  "bibliography": "../evidence/bibliography.json",
+  "journal": "Empirical Software Engineering",
+  "shortTitle": "Auditing agent-assisted research",
+  "fontSize": 10,
+  "citationStyle": "author-date",
+  "lineSpacing": 276,
+  "maxFigureHeight": 7800,
+  "keepTablesTogether": true,
+  "headerRight": "Review manuscript",
+  "captionStyle": "springer"
+}

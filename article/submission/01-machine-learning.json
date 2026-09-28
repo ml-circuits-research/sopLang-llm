@@ -1,0 +1,14 @@
+{
+  "source": "../manuscripts/01-machine-learning.md",
+  "output": "../docs/01-machine-learning.docx",
+  "bibliography": "../evidence/bibliography.json",
+  "journal": "Machine Learning",
+  "shortTitle": "Executable abstractions for small models",
+  "fontSize": 11,
+  "citationStyle": "author-date",
+  "lineSpacing": 276,
+  "maxFigureHeight": 7800,
+  "keepTablesTogether": true,
+  "headerRight": "Review manuscript",
+  "captionStyle": "springer"
+}

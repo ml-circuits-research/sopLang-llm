@@ -1,0 +1,39 @@
+{
+  "file": "02-informatica.docx",
+  "journal": "Informatica",
+  "source": "../manuscripts/02-informatica.md",
+  "sha256": "eb815ecb7d9d7a2c0c919e3704a2b88e56e53f06ab80e8037ab51e425e8c33c7",
+  "sourceSha256": "c7638ec62ead1925e85f016ad5ffdede5a53fc9f1c48569412594c6c8dff7549",
+  "words": 3617,
+  "references": [
+    "pal",
+    "pot",
+    "synthesis",
+    "llmcompiler",
+    "dreamcoder",
+    "qwen15",
+    "qwen3",
+    "qwen05",
+    "z3",
+    "sandve",
+    "artifact"
+  ],
+  "tables": 3,
+  "templateSha256": "940d6dec61cccf1fac3a65048072fc884656554015c0d8d0dc1eccadcee8f4de",
+  "figures": [
+    {
+      "source": "../assets/architecture-narrow.png",
+      "width": 3025,
+      "height": 5362,
+      "sha256": "d353f3e6b207cf281a4fbc7e926e6cb0a05801cd7901b89f3bc2432f79d29e87"
+    },
+    {
+      "source": "../assets/wire-admission-narrow.png",
+      "width": 3025,
+      "height": 5156,
+      "sha256": "a576888d31965306303e22d0c0929f52c227c592dfe19dda230ed0700deba4ce"
+    }
+  ],
+  "columns": 2,
+  "zipMembers": 10
+}

@@ -20,6 +20,7 @@ The repository does not distribute skills as product artifacts. The agent skills
 - `night-orchestration` — unattended long-running work done safely: the launch gate (preflight.sh), the shared chain-waiting logic (lib-watch.sh, result-artifact completion + failure detection), the disk guard, and the health check. All parameterized by environment variables with documented conventions. The repo's `training/environment/` scripts are thin adapters that bind the skill's tools to this project's paths.
 - `training-rules` — the measured methodology of small-model training on synthetic data: coverage law, vocabulary hypothesis, structural splits, assertion policy, target-form minimalism, retries as deployment, training economics, base shootout, reporting discipline.
 - `training-runbook` — the portable phase runbook: arm design, generator extension, family verification, rebuild, training, chain, baselines, retry sweep, report and cleanup.
+- `scientific-article` — evidence-based manuscript preparation, verified bibliography, journal-specific positioning, claim audits, diagrams and native tables, and portable Markdown-to-DOCX generation. Its self-contained instructions and tools are under `skills/scientific-article/`; the project manuscript portfolio is under `article/`.
 
 The product surfaces of this repository are the language runtime, the wire registry, the context adapter, the teaching pipeline, and the training data suite described by the design specifications.
 

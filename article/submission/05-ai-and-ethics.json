@@ -1,0 +1,14 @@
+{
+  "source": "../manuscripts/05-ai-and-ethics.md",
+  "output": "../docs/05-ai-and-ethics.docx",
+  "bibliography": "../evidence/bibliography.json",
+  "journal": "AI and Ethics",
+  "shortTitle": "Executable answers and epistemic accountability",
+  "fontSize": 10,
+  "citationStyle": "springer-numbered",
+  "lineSpacing": 276,
+  "maxFigureHeight": 7800,
+  "keepTablesTogether": true,
+  "headerRight": "Review manuscript",
+  "captionStyle": "springer"
+}

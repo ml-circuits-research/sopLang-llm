@@ -1,0 +1,712 @@
+{
+  "indexed": {
+    "date-parts": [
+      [
+        2026,
+        9,
+        27
+      ]
+    ],
+    "date-time": "2026-09-27T04:38:38Z",
+    "timestamp": 1790483918188,
+    "version": "4.1.0"
+  },
+  "publisher-location": "New York, NY, USA",
+  "reference-count": 71,
+  "publisher": "ACM",
+  "license": [
+    {
+      "start": {
+        "date-parts": [
+          [
+            2019,
+            1,
+            29
+          ]
+        ],
+        "date-time": "2019-01-29T00:00:00Z",
+        "timestamp": 1548720000000
+      },
+      "content-version": "vor",
+      "delay-in-days": 0,
+      "URL": "https://www.acm.org/publications/policies/copyright_policy#Background"
+    }
+  ],
+  "funder": [
+    {
+      "DOI": "10.13039/100000001",
+      "name": "National Science Foundation",
+      "doi-asserted-by": "publisher",
+      "award": [
+        "IIS-1633400, IIS-1633387, IIS-1633724"
+      ],
+      "award-info": [
+        {
+          "award-number": [
+            "IIS-1633400, IIS-1633387, IIS-1633724"
+          ]
+        }
+      ],
+      "id": [
+        {
+          "id": "10.13039/100000001",
+          "id-type": "DOI",
+          "asserted-by": "publisher"
+        }
+      ]
+    }
+  ],
+  "content-domain": {
+    "domain": [
+      "dl.acm.org"
+    ],
+    "crossmark-restriction": true
+  },
+  "short-container-title": [],
+  "published-print": {
+    "date-parts": [
+      [
+        2019,
+        1,
+        29
+      ]
+    ]
+  },
+  "DOI": "10.1145/3287560.3287598",
+  "type": "proceedings-article",
+  "created": {
+    "date-parts": [
+      [
+        2019,
+        1,
+        9
+      ]
+    ],
+    "date-time": "2019-01-09T16:42:15Z",
+    "timestamp": 1547052135000
+  },
+  "page": "59-68",
+  "update-policy": "https://doi.org/10.1145/crossmark-policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 1299,
+  "title": [
+    "Fairness and Abstraction in Sociotechnical Systems"
+  ],
+  "prefix": "10.1145",
+  "author": [
+    {
+      "given": "Andrew D.",
+      "family": "Selbst",
+      "sequence": "first",
+      "affiliation": [
+        {
+          "name": "Data &amp; Society Research Institute, New York, NY"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Danah",
+      "family": "Boyd",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Microsoft Research and Data &amp; Society Research Institute, New York, NY"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Sorelle A.",
+      "family": "Friedler",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Haverford College, Haverford, PA"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Suresh",
+      "family": "Venkatasubramanian",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "University of Utah, Salt Lake City, UT"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Janet",
+      "family": "Vertesi",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Princeton University, Princeton, NJ"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    }
+  ],
+  "member": "320",
+  "published-online": {
+    "date-parts": [
+      [
+        2019,
+        1,
+        29
+      ]
+    ]
+  },
+  "reference": [
+    {
+      "key": "e_1_3_2_1_1_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1207/S15327051HCI1523_5"
+    },
+    {
+      "key": "e_1_3_2_1_2_1",
+      "unstructured": "Act of Oct. 27 2010. Pennsylvania Public Law 931 No. 95. Codified at 42 Pa. C.S. &sect;2154.7.  Act of Oct. 27 2010. Pennsylvania Public Law 931 No. 95. Codified at 42 Pa. C.S. &sect;2154.7."
+    },
+    {
+      "key": "e_1_3_2_1_3_1",
+      "unstructured": "African American Ministers In Action etal 2018. The use of pre-trial \"risk assessment\" instruments: A shared statement of civil rights concerns. http://civilrightsdocs.info/pdf/criminal-justice/Pretrial-Risk-Assessment-Full.pdf.  African American Ministers In Action et al. 2018. The use of pre-trial \"risk assessment\" instruments: A shared statement of civil rights concerns. http://civilrightsdocs.info/pdf/criminal-justice/Pretrial-Risk-Assessment-Full.pdf."
+    },
+    {
+      "key": "e_1_3_2_1_4_1",
+      "volume-title": "Proc. of the 35th International Conference on Machine Learning.",
+      "author": "Agarwal Alekh",
+      "year": "2018",
+      "unstructured": "Alekh Agarwal , Alina Beygelzimer , Miroslav Dudík , John Langford , and Hanna Wallach . 2018 . A reductions approach to fair classification . In Proc. of the 35th International Conference on Machine Learning. Alekh Agarwal, Alina Beygelzimer, Miroslav Dudík, John Langford, and Hanna Wallach. 2018. A reductions approach to fair classification. In Proc. of the 35th International Conference on Machine Learning."
+    },
+    {
+      "key": "e_1_3_2_1_5_1",
+      "volume-title": "Social Science, Technical Systems, and Cooperative Work: Beyond the Great Divide, Geoffery C",
+      "author": "Agre Philip E.",
+      "unstructured": "Philip E. Agre . 1997. Toward a critical technical practice: Lessons learned in trying to reform AI . In Social Science, Technical Systems, and Cooperative Work: Beyond the Great Divide, Geoffery C . Bowker, Susan Leigh Star, Les Gasser, and William Turner (Eds.). Erlbaum , 131--157. Philip E. Agre. 1997. Toward a critical technical practice: Lessons learned in trying to reform AI. In Social Science, Technical Systems, and Cooperative Work: Beyond the Great Divide, Geoffery C. Bowker, Susan Leigh Star, Les Gasser, and William Turner (Eds.). Erlbaum, 131--157."
+    },
+    {
+      "key": "e_1_3_2_1_6_1",
+      "volume-title": "The de-scription of technological objects",
+      "author": "Akrich Madeline",
+      "unstructured": "Madeline Akrich . 1992. The de-scription of technological objects . In Shaping Technology/Building Society, Wiebe E Bijker and John Law (Eds.). MIT Press , 205--224. Madeline Akrich. 1992. The de-scription of technological objects. In Shaping Technology/Building Society, Wiebe E Bijker and John Law (Eds.). MIT Press, 205--224."
+    },
+    {
+      "key": "e_1_3_2_1_7_1",
+      "volume-title": "Machine bias. ProPublica (May 23",
+      "author": "Angwin Julia",
+      "year": "2016",
+      "unstructured": "Julia Angwin , Jeff Larson , Surya Mattu , and Lauren Kirchner . 2016. Machine bias. ProPublica (May 23 2016 ). Julia Angwin, Jeff Larson, Surya Mattu, and Lauren Kirchner. 2016. Machine bias. ProPublica (May 23 2016)."
+    },
+    {
+      "key": "e_1_3_2_1_8_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.2307/20439026"
+    },
+    {
+      "key": "e_1_3_2_1_9_1",
+      "first-page": "1",
+      "article-title": "Interventions over Predictions: Reframing the Ethical Debate for Actuarial Risk Assessment",
+      "volume": "81",
+      "author": "Barabas Chelsea",
+      "year": "2018",
+      "unstructured": "Chelsea Barabas , Karthik Dinakar , Madars Virza , Joichi Ito , and Jonathan Zittrain . 2018 . Interventions over Predictions: Reframing the Ethical Debate for Actuarial Risk Assessment . Proceedings of Machine Learning Research 81 , 1 -- 15 . Chelsea Barabas, Karthik Dinakar, Madars Virza, Joichi Ito, and Jonathan Zittrain. 2018. Interventions over Predictions: Reframing the Ethical Debate for Actuarial Risk Assessment. Proceedings of Machine Learning Research 81, 1--15.",
+      "journal-title": "Proceedings of Machine Learning Research"
+    },
+    {
+      "key": "e_1_3_2_1_10_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.2307/2392767"
+    },
+    {
+      "key": "e_1_3_2_1_11_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/1978942.1979275"
+    },
+    {
+      "key": "e_1_3_2_1_12_1",
+      "volume-title": "Bender and Batya Friedman",
+      "author": "Emily",
+      "year": "2018",
+      "unstructured": "Emily M. Bender and Batya Friedman . 2018 . Data statements for NLP: Toward mitigating system bias and enabling better science. Transactions of the Association for Computational Linguistics ( to appear) (2018). https://openreview.net/forum?id=By4oPeX9f Emily M. Bender and Batya Friedman. 2018. Data statements for NLP: Toward mitigating system bias and enabling better science. Transactions of the Association for Computational Linguistics (to appear) (2018). https://openreview.net/forum?id=By4oPeX9f"
+    },
+    {
+      "key": "e_1_3_2_1_13_1",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Michel Callon. 1986. Some elements of a sociology of translation: Domestication of the scallops and the fishermen of St. Brieuc Bay. In Power Action and Belief A New Sociology of Knowledge John Law (Ed.). Routeledge and Kegan Paul 196--233.  Michel Callon. 1986. Some elements of a sociology of translation: Domestication of the scallops and the fishermen of St. Brieuc Bay. In Power Action and Belief A New Sociology of Knowledge John Law (Ed.). Routeledge and Kegan Paul 196--233.",
+      "DOI": "10.1111/j.1467-954X.1984.tb00113.x"
+    },
+    {
+      "key": "e_1_3_2_1_14_1",
+      "volume-title": "Fair prediction with disparate impact: A study of bias in recidivism prediction instruments. Big Data 5.2",
+      "author": "Chouldechova Alexandra",
+      "year": "2017",
+      "unstructured": "Alexandra Chouldechova . 2017. Fair prediction with disparate impact: A study of bias in recidivism prediction instruments. Big Data 5.2 ( 2017 ), 153--163. Alexandra Chouldechova. 2017. Fair prediction with disparate impact: A study of bias in recidivism prediction instruments. Big Data 5.2 (2017), 153--163."
+    },
+    {
+      "key": "e_1_3_2_1_15_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.4324/9781315144788"
+    },
+    {
+      "key": "e_1_3_2_1_16_1",
+      "first-page": "1249",
+      "article-title": "Technological due process",
+      "volume": "85",
+      "author": "Citron Danielle Keats",
+      "year": "2008",
+      "unstructured": "Danielle Keats Citron . 2008 . Technological due process . Washington University Law Review 85 (2008), 1249 -- 1313 . Danielle Keats Citron. 2008. Technological due process. Washington University Law Review 85 (2008), 1249--1313.",
+      "journal-title": "Washington University Law Review"
+    },
+    {
+      "key": "e_1_3_2_1_17_1",
+      "volume-title": "Artificial experts: Social knowledge and intelligent machines (inside technology)",
+      "author": "Collins H.M.",
+      "unstructured": "H.M. Collins . 1990. Artificial experts: Social knowledge and intelligent machines (inside technology) . MIT Press . H.M. Collins. 1990. Artificial experts: Social knowledge and intelligent machines (inside technology). MIT Press."
+    },
+    {
+      "key": "e_1_3_2_1_18_1",
+      "volume-title": "The Social Shaping of Technology",
+      "author": "Cowan Ruth Schwartz",
+      "unstructured": "Ruth Schwartz Cowan . 1985. How the refrigerator got its hum . In The Social Shaping of Technology , Mackenzie and Wajcman (Eds.). McGraw Hill Education , 202--218. Ruth Schwartz Cowan. 1985. How the refrigerator got its hum. In The Social Shaping of Technology, Mackenzie and Wajcman (Eds.). McGraw Hill Education, 202--218."
+    },
+    {
+      "key": "e_1_3_2_1_19_1",
+      "volume-title": "COMPAS risk scales: Demonstrating accuracy equity and predictive parity. (2016)",
+      "author": "Dieterich William",
+      "unstructured": "William Dieterich , Christina Mendoza , and Tim Brennan . 2016. COMPAS risk scales: Demonstrating accuracy equity and predictive parity. (2016) . Northpoint Inc . William Dieterich, Christina Mendoza, and Tim Brennan. 2016. COMPAS risk scales: Demonstrating accuracy equity and predictive parity. (2016). Northpoint Inc."
+    },
+    {
+      "key": "e_1_3_2_1_20_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/1124772.1124855"
+    },
+    {
+      "key": "e_1_3_2_1_21_1",
+      "first-page": "59",
+      "article-title": "Constructing recidivism risk",
+      "volume": "67",
+      "author": "Eaglin Jessica M.",
+      "year": "2017",
+      "unstructured": "Jessica M. Eaglin . 2017 . Constructing recidivism risk . Emory Law Journal 67 (2017), 59 -- 122 . Jessica M. Eaglin. 2017. Constructing recidivism risk. Emory Law Journal 67 (2017), 59--122.",
+      "journal-title": "Emory Law Journal"
+    },
+    {
+      "key": "e_1_3_2_1_22_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1086/517897"
+    },
+    {
+      "key": "e_1_3_2_1_23_1",
+      "volume-title": "Automating inequality: How high-tech tools profile, police, and punish the poor",
+      "author": "Eubanks Virginia",
+      "unstructured": "Virginia Eubanks . 2018. Automating inequality: How high-tech tools profile, police, and punish the poor . St. Martin's Press . Virginia Eubanks. 2018. Automating inequality: How high-tech tools profile, police, and punish the poor. St. Martin's Press."
+    },
+    {
+      "key": "e_1_3_2_1_24_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/2783258.2783311"
+    },
+    {
+      "key": "e_1_3_2_1_25_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1016/j.aos.2013.11.002"
+    },
+    {
+      "key": "e_1_3_2_1_28_1",
+      "volume-title": "Wired shut: Copyright and the shape of digital culture",
+      "author": "Gillespie Tarleton",
+      "unstructured": "Tarleton Gillespie . 2007. Wired shut: Copyright and the shape of digital culture . MIT Press . Tarleton Gillespie. 2007. Wired shut: Copyright and the shape of digital culture. MIT Press."
+    },
+    {
+      "key": "e_1_3_2_1_29_1",
+      "volume-title": "5th Workshop on Fairness, Accountability, and Transparency in Machine Learning.",
+      "author": "Green Ben",
+      "year": "2018",
+      "unstructured": "Ben Green . 2018 . \" Fair\" risk assessments: A precarious approach for criminal justice reform . In 5th Workshop on Fairness, Accountability, and Transparency in Machine Learning. Ben Green. 2018. \"Fair\" risk assessments: A precarious approach for criminal justice reform. In 5th Workshop on Fairness, Accountability, and Transparency in Machine Learning."
+    },
+    {
+      "key": "e_1_3_2_1_30_1",
+      "volume-title": "From betamax to Blockbuster: Video stores and the invention of movies on video",
+      "author": "Greenberg Josh",
+      "unstructured": "Josh Greenberg . 2008. From betamax to Blockbuster: Video stores and the invention of movies on video . MIT Press . Josh Greenberg. 2008. From betamax to Blockbuster: Video stores and the invention of movies on video. MIT Press."
+    },
+    {
+      "key": "e_1_3_2_1_31_1",
+      "volume-title": "Proc. of AAAI.",
+      "author": "Grgic-Hlaca Nina",
+      "year": "2018",
+      "unstructured": "Nina Grgic-Hlaca , Muhammad Bilal Zafar , Krishna P Gummadi , and Adrian Weller . 2018 . Beyond distributive fairness in algorithmic decision making: Feature selection for procedurally fair learning . In Proc. of AAAI. Nina Grgic-Hlaca, Muhammad Bilal Zafar, Krishna P Gummadi, and Adrian Weller. 2018. Beyond distributive fairness in algorithmic decision making: Feature selection for procedurally fair learning. In Proc. of AAAI."
+    },
+    {
+      "key": "e_1_3_2_1_32_1",
+      "volume-title": "NIPS'16 Proceedings of the 30th International Conference on Neural Information Processing Systems. 3315--3323",
+      "author": "Hardt Moritz",
+      "year": "2016",
+      "unstructured": "Moritz Hardt , Eric Price , and Nathan Srebro . 2016 . Equality of opportunity in supervised learning . In NIPS'16 Proceedings of the 30th International Conference on Neural Information Processing Systems. 3315--3323 . Moritz Hardt, Eric Price, and Nathan Srebro. 2016. Equality of opportunity in supervised learning. In NIPS'16 Proceedings of the 30th International Conference on Neural Information Processing Systems. 3315--3323."
+    },
+    {
+      "key": "e_1_3_2_1_33_1",
+      "volume-title": "Lana Yarosh, Bushra Anjum, Danish Contractor, and Cathy Wu.",
+      "author": "Hecht Brent",
+      "year": "2018",
+      "unstructured": "Brent Hecht , Lauren Wilcox , Jeffrey P. Bigham , Johannes Schöning , Ehsan Hoque , Jason Ernst , Yonatan Bisk , Luigi De Russis , Lana Yarosh, Bushra Anjum, Danish Contractor, and Cathy Wu. 2018 . It's time to do something: Mitigating the negative impacts of computing through a change to the peer review process. https://acm-fca.org/2018/03/29/negativeimpacts/. ACM Future of Computing Blog. Brent Hecht, Lauren Wilcox, Jeffrey P. Bigham, Johannes Schöning, Ehsan Hoque, Jason Ernst, Yonatan Bisk, Luigi De Russis, Lana Yarosh, Bushra Anjum, Danish Contractor, and Cathy Wu. 2018. It's time to do something: Mitigating the negative impacts of computing through a change to the peer review process. https://acm-fca.org/2018/03/29/negativeimpacts/. ACM Future of Computing Blog."
+    },
+    {
+      "key": "e_1_3_2_1_34_1",
+      "unstructured": "Deborah Hellman. 2008. When is discrimination wrong? Harvard University Press.  Deborah Hellman. 2008. When is discrimination wrong? Harvard University Press."
+    },
+    {
+      "key": "e_1_3_2_1_35_1",
+      "volume-title": "Editor",
+      "author": "Hess David J.",
+      "unstructured": "David J. Hess . 2001. Editor 's introduction. In Studying those who study us: An anthropologist in the world of artificial intelligence. Stanford University Press , xi--xxvi. David J. Hess. 2001. Editor's introduction. In Studying those who study us: An anthropologist in the world of artificial intelligence. Stanford University Press, xi--xxvi."
+    },
+    {
+      "key": "e_1_3_2_1_36_1",
+      "volume-title": "Where fairness fails: On data, algorithms, and the limits of antidiscrimination discourse. Under review with Information, Communication, and Society",
+      "author": "Hoffmann Anna Lauren",
+      "year": "2019",
+      "unstructured": "Anna Lauren Hoffmann . 2019. Where fairness fails: On data, algorithms, and the limits of antidiscrimination discourse. Under review with Information, Communication, and Society ( 2019 ). Anna Lauren Hoffmann. 2019. Where fairness fails: On data, algorithms, and the limits of antidiscrimination discourse. Under review with Information, Communication, and Society (2019)."
+    },
+    {
+      "key": "e_1_3_2_1_37_1",
+      "volume-title": "The dataset nutrition label: A framework to drive higher quality data standards. arXiv:1805.03677 {cs} (May",
+      "author": "Holland Sarah",
+      "year": "2018",
+      "unstructured": "Sarah Holland , Ahmed Hosny , Sarah Newman , Joshua Joseph , and Kasia Chmielinski . 2018. The dataset nutrition label: A framework to drive higher quality data standards. arXiv:1805.03677 {cs} (May 2018 ). http://arxiv.org/abs/1805.03677 arXiv: 1805.03677. Sarah Holland, Ahmed Hosny, Sarah Newman, Joshua Joseph, and Kasia Chmielinski. 2018. The dataset nutrition label: A framework to drive higher quality data standards. arXiv:1805.03677 {cs} (May 2018). http://arxiv.org/abs/1805.03677 arXiv: 1805.03677."
+    },
+    {
+      "key": "e_1_3_2_1_38_1",
+      "unstructured": "Hal Daumé III. 2018. A Course in Machine Learning. http://ciml.info.  Hal Daumé III. 2018. A Course in Machine Learning. http://ciml.info."
+    },
+    {
+      "key": "e_1_3_2_1_39_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/IC4.2009.4909197"
+    },
+    {
+      "key": "e_1_3_2_1_40_1",
+      "volume-title": "Fairness-aware classifier with prejudice remover regularizer. Machine Learning and Knowledge Discovery in Databases",
+      "author": "Kamishima Toshihiro",
+      "year": "2012",
+      "unstructured": "Toshihiro Kamishima , Shotaro Akaho , Hideki Asoh , and Jun Sakuma . 2012. Fairness-aware classifier with prejudice remover regularizer. Machine Learning and Knowledge Discovery in Databases ( 2012 ), 35--50. Toshihiro Kamishima, Shotaro Akaho, Hideki Asoh, and Jun Sakuma. 2012. Fairness-aware classifier with prejudice remover regularizer. Machine Learning and Knowledge Discovery in Databases (2012), 35--50."
+    },
+    {
+      "key": "e_1_3_2_1_41_1",
+      "unstructured": "Abraham Kaplan. 1964. The conduct of inquiry: Methodology for behavioural science. Chandler.  Abraham Kaplan. 1964. The conduct of inquiry: Methodology for behavioural science. Chandler."
+    },
+    {
+      "key": "e_1_3_2_1_42_1",
+      "volume-title": "Proc. of ITCS.",
+      "author": "Kleinberg Jon",
+      "year": "2017",
+      "unstructured": "Jon Kleinberg , Sendhil Mullainathan , and Manish Raghavan . 2017 . Inherent trade-offs in the fair determination of risk scores . In Proc. of ITCS. Jon Kleinberg, Sendhil Mullainathan, and Manish Raghavan. 2017. Inherent trade-offs in the fair determination of risk scores. In Proc. of ITCS."
+    },
+    {
+      "key": "e_1_3_2_1_43_1",
+      "volume-title": "Users as agents of technological change: The social construction of the automobile in the rural United States. Technology and culture 37, 4",
+      "author": "Kline Ronald",
+      "year": "1996",
+      "unstructured": "Ronald Kline and Trevor Pinch . 1996. Users as agents of technological change: The social construction of the automobile in the rural United States. Technology and culture 37, 4 ( 1996 ). Ronald Kline and Trevor Pinch. 1996. Users as agents of technological change: The social construction of the automobile in the rural United States. Technology and culture 37, 4 (1996)."
+    },
+    {
+      "key": "e_1_3_2_1_44_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1177/016224399101600304"
+    },
+    {
+      "key": "e_1_3_2_1_45_1",
+      "volume-title": "Eddie Murphy and the dangers of counterfactual causal thinking about detecting racial discrimination. Northwestern Law Review 113",
+      "author": "Kohler-Hausmann Issa",
+      "year": "2019",
+      "unstructured": "Issa Kohler-Hausmann . 2019. Eddie Murphy and the dangers of counterfactual causal thinking about detecting racial discrimination. Northwestern Law Review 113 ( 2019 ). Forthcoming . Issa Kohler-Hausmann. 2019. Eddie Murphy and the dangers of counterfactual causal thinking about detecting racial discrimination. Northwestern Law Review 113 (2019). Forthcoming."
+    },
+    {
+      "key": "e_1_3_2_1_46_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.2307/1229191"
+    },
+    {
+      "key": "e_1_3_2_1_47_1",
+      "volume-title": "Criminal law",
+      "author": "LaFave Wayne R.",
+      "unstructured": "Wayne R. LaFave . 2017. Criminal law ( 6 th ed.). West Academic Publishing . Wayne R. LaFave. 2017. Criminal law (6th ed.). West Academic Publishing.",
+      "edition": "6"
+    },
+    {
+      "key": "e_1_3_2_1_48_1",
+      "volume-title": "Science in action: How to follow scientists and engineers through society",
+      "author": "Latour Bruno",
+      "unstructured": "Bruno Latour . 1987. Science in action: How to follow scientists and engineers through society . Harvard University Press . Bruno Latour. 1987. Science in action: How to follow scientists and engineers through society. Harvard University Press."
+    },
+    {
+      "key": "e_1_3_2_1_49_1",
+      "volume-title": "Reassembling the social an introduction to actor-network-theory",
+      "author": "Latour Bruno",
+      "unstructured": "Bruno Latour . 2005. Reassembling the social an introduction to actor-network-theory . Oxford University Press . Bruno Latour. 2005. Reassembling the social an introduction to actor-network-theory. Oxford University Press."
+    },
+    {
+      "key": "e_1_3_2_1_50_1",
+      "volume-title": "The Social Construction of Technological Systems: New Directions in the Sociology and History of Technology, Wiebe E",
+      "author": "Law John",
+      "unstructured": "John Law . 1987. Technology and heterogeneous engineering: The case of Portuegese expansion . In The Social Construction of Technological Systems: New Directions in the Sociology and History of Technology, Wiebe E . Bijker, Thomas P. Hughes, and Trevor Pinch (Eds.). MIT Press , 111--34. John Law. 1987. Technology and heterogeneous engineering: The case of Portuegese expansion. In The Social Construction of Technological Systems: New Directions in the Sociology and History of Technology, Wiebe E. Bijker, Thomas P. Hughes, and Trevor Pinch (Eds.). MIT Press, 111--34."
+    },
+    {
+      "key": "e_1_3_2_1_51_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.2307/1228797"
+    },
+    {
+      "key": "e_1_3_2_1_52_1",
+      "unstructured": "Lawrence Lessig. 2006. Code 2.0. Basic Books.  Lawrence Lessig. 2006. Code 2.0. Basic Books."
+    },
+    {
+      "key": "e_1_3_2_1_53_1",
+      "volume-title": "Does mitigating ML's impact disparity require treatment disparity? arXiv preprint arXiv:1711.07076",
+      "author": "Lipton Zachary C",
+      "year": "2018",
+      "unstructured": "Zachary C Lipton , Alexandra Chouldechova , and Julian McAuley . 2018. Does mitigating ML's impact disparity require treatment disparity? arXiv preprint arXiv:1711.07076 ( 2018 ). Zachary C Lipton, Alexandra Chouldechova, and Julian McAuley. 2018. Does mitigating ML's impact disparity require treatment disparity? arXiv preprint arXiv:1711.07076 (2018)."
+    },
+    {
+      "key": "e_1_3_2_1_54_1",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Isak Mendoza and Lee A Bygrave. 2017. The right not to be subject to automated decisions based on profiling. In EU Internet Law. 77--98.  Isak Mendoza and Lee A Bygrave. 2017. The right not to be subject to automated decisions based on profiling. In EU Internet Law. 77--98.",
+      "DOI": "10.1007/978-3-319-64955-9_4"
+    },
+    {
+      "key": "e_1_3_2_1_55_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3287560.3287596"
+    },
+    {
+      "key": "e_1_3_2_1_56_1",
+      "volume-title": "To save everything, click here: Technology, solutionism, and the urge to fix problems that don't exist",
+      "author": "Morozov Evgeny",
+      "unstructured": "Evgeny Morozov . 2013. To save everything, click here: Technology, solutionism, and the urge to fix problems that don't exist . Penguin UK. Evgeny Morozov. 2013. To save everything, click here: Technology, solutionism, and the urge to fix problems that don't exist. Penguin UK."
+    },
+    {
+      "key": "e_1_3_2_1_57_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1177/030631284014003004"
+    },
+    {
+      "key": "e_1_3_2_1_58_1",
+      "unstructured": "Dillon Reisman Jason Schultz Kate Crawford and Meredith Whittaker. 2018. Algorithmic impact assessments: A practical framework for public agency accountability. https://ainowinstitute.org/aiareport2018.pdf.  Dillon Reisman Jason Schultz Kate Crawford and Meredith Whittaker. 2018. Algorithmic impact assessments: A practical framework for public agency accountability. https://ainowinstitute.org/aiareport2018.pdf."
+    },
+    {
+      "key": "e_1_3_2_1_59_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/1754428.1754432"
+    },
+    {
+      "key": "e_1_3_2_1_60_1",
+      "first-page": "109",
+      "article-title": "Disparate impact in big data policing",
+      "volume": "52",
+      "author": "Selbst Andrew D.",
+      "year": "2017",
+      "unstructured": "Andrew D. Selbst . 2017 . Disparate impact in big data policing . Georgia Law Review 52 (2017), 109 -- 195 . Andrew D. Selbst. 2017. Disparate impact in big data policing. Georgia Law Review 52 (2017), 109--195.",
+      "journal-title": "Georgia Law Review"
+    },
+    {
+      "key": "e_1_3_2_1_61_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1093/idpl/ipx022"
+    },
+    {
+      "key": "e_1_3_2_1_62_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1207/S15327108IJAP1001_5"
+    },
+    {
+      "key": "e_1_3_2_1_63_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1177/0306312718772094"
+    },
+    {
+      "key": "e_1_3_2_1_64_1",
+      "doi-asserted-by": "crossref",
+      "unstructured": "State v. Loomis 2016. 881 N.W.2d 749 (Wisconsin).  State v. Loomis 2016. 881 N.W.2d 749 (Wisconsin).",
+      "DOI": "10.1149/MA2016-01/11/749"
+    },
+    {
+      "key": "e_1_3_2_1_65_1",
+      "volume-title": "Assessing risk assessment in action. Minnesota Law Review 103",
+      "author": "Stevenson Megan T.",
+      "year": "2018",
+      "unstructured": "Megan T. Stevenson . 2018. Assessing risk assessment in action. Minnesota Law Review 103 ( 2018 ). Forthcoming . Megan T. Stevenson. 2018. Assessing risk assessment in action. Minnesota Law Review 103 (2018). Forthcoming."
+    },
+    {
+      "key": "e_1_3_2_1_66_1",
+      "volume-title": "Plans and situated actions",
+      "author": "Suchman Lucy",
+      "unstructured": "Lucy Suchman . 1987. Plans and situated actions . Cambridge University Press . Lucy Suchman. 1987. Plans and situated actions. Cambridge University Press."
+    },
+    {
+      "key": "e_1_3_2_1_67_1",
+      "volume-title": "Codified at 42 U.S.C. &sect",
+      "author": "Civil Rights Title VII",
+      "year": "2000",
+      "unstructured": "Title VII of the Civil Rights Act of 1964, Public Law 88--352 1964. Codified at 42 U.S.C. &sect ; 2000 e-2. Title VII of the Civil Rights Act of 1964, Public Law 88--352 1964. Codified at 42 U.S.C. &sect; 2000e-2."
+    },
+    {
+      "key": "e_1_3_2_1_68_1",
+      "volume-title": "Lowenkamp",
+      "author": "VanNostrand Marie",
+      "year": "2013",
+      "unstructured": "Marie VanNostrand and Christopher T . Lowenkamp . 2013 . Assessing pretrial risk without a defendant interview. https:/www.arnoldfoundation.org/wp-content/uploads/2014/02/LJAF_Report_no-interview_FNL.pdf. Laura and John Arnold Foundation. Marie VanNostrand and Christopher T. Lowenkamp. 2013. Assessing pretrial risk without a defendant interview. https:/www.arnoldfoundation.org/wp-content/uploads/2014/02/LJAF_Report_no-interview_FNL.pdf. Laura and John Arnold Foundation."
+    },
+    {
+      "key": "e_1_3_2_1_69_1",
+      "first-page": "1343",
+      "article-title": "Life, liberty, and trade secrets: Intellectual properly in the criminal justice system",
+      "volume": "70",
+      "author": "Wexler Rebecca",
+      "year": "2018",
+      "unstructured": "Rebecca Wexler . 2018 . Life, liberty, and trade secrets: Intellectual properly in the criminal justice system . Stanford Law Review 70 (2018), 1343 -- 1429 . Rebecca Wexler. 2018. Life, liberty, and trade secrets: Intellectual properly in the criminal justice system. Stanford Law Review 70 (2018), 1343--1429.",
+      "journal-title": "Stanford Law Review"
+    },
+    {
+      "key": "e_1_3_2_1_70_1",
+      "volume-title": "Managing risk, managing race: racialized actuarial science in the United States",
+      "author": "Wiggins Benjamin Alan",
+      "year": "1881",
+      "unstructured": "Benjamin Alan Wiggins . 2013. Managing risk, managing race: racialized actuarial science in the United States , 1881 --1948. Ph.D. Dissertation. University of Minnesota . Benjamin Alan Wiggins. 2013. Managing risk, managing race: racialized actuarial science in the United States, 1881--1948. Ph.D. Dissertation. University of Minnesota."
+    },
+    {
+      "key": "e_1_3_2_1_71_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3183713.3193568"
+    },
+    {
+      "key": "e_1_3_2_1_72_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3038912.3052660"
+    },
+    {
+      "key": "e_1_3_2_1_73_1",
+      "volume-title": "Sullivan",
+      "author": "Zimmer Michael J.",
+      "year": "2017",
+      "unstructured": "Michael J. Zimmer and Charles A . Sullivan . 2017 . Cases and materials on employment discrimination ( 9 th ed.). Wolters Kluwer . Michael J. Zimmer and Charles A. Sullivan. 2017. Cases and materials on employment discrimination (9th ed.). Wolters Kluwer.",
+      "edition": "9"
+    }
+  ],
+  "event": {
+    "name": "FAT* '19: Conference on Fairness, Accountability, and Transparency",
+    "location": "Atlanta GA USA",
+    "acronym": "FAT* '19",
+    "sponsor": [
+      "ACM Association for Computing Machinery"
+    ]
+  },
+  "container-title": [
+    "Proceedings of the Conference on Fairness, Accountability, and Transparency"
+  ],
+  "original-title": [],
+  "link": [
+    {
+      "URL": "https://dl.acm.org/doi/10.1145/3287560.3287598",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "text-mining"
+    },
+    {
+      "URL": "https://dl.acm.org/doi/pdf/10.1145/3287560.3287598",
+      "content-type": "application/pdf",
+      "content-version": "vor",
+      "intended-application": "syndication"
+    },
+    {
+      "URL": "https://dl.acm.org/doi/pdf/10.1145/3287560.3287598",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+    }
+  ],
+  "deposited": {
+    "date-parts": [
+      [
+        2025,
+        6,
+        17
+      ]
+    ],
+    "date-time": "2025-06-17T21:08:04Z",
+    "timestamp": 1750194484000
+  },
+  "score": 1,
+  "resource": {
+    "primary": {
+      "URL": "https://dl.acm.org/doi/10.1145/3287560.3287598"
+    }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+    "date-parts": [
+      [
+        2019,
+        1,
+        29
+      ]
+    ]
+  },
+  "references-count": 71,
+  "alternative-id": [
+    "10.1145/3287560.3287598",
+    "10.1145/3287560"
+  ],
+  "URL": "https://doi.org/10.1145/3287560.3287598",
+  "relation": {},
+  "subject": [],
+  "published": {
+    "date-parts": [
+      [
+        2019,
+        1,
+        29
+      ]
+    ]
+  },
+  "assertion": [
+    {
+      "value": "2019-01-29",
+      "order": 2,
+      "name": "published",
+      "label": "Published",
+      "group": {
+        "name": "publication_history",
+        "label": "Publication History"
+      }
+    }
+  ]
+}
