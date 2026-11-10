@@ -1,0 +1,22 @@
+{
+  "experiment": "e8-sopicl3-l2-qwen3-17",
+  "items": 75,
+  "records": 75,
+  "complete": true,
+  "groups": {
+    "held-out:L2": {
+      "records": 55,
+      "exact": 0,
+      "value": 8,
+      "executed": 20,
+      "missing": 0
+    },
+    "trained-control:L2": {
+      "records": 20,
+      "exact": 0,
+      "value": 6,
+      "executed": 7,
+      "missing": 0
+    }
+  }
+}

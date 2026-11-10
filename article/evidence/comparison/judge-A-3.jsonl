@@ -1,0 +1,348 @@
+{"pid":"2ec49c431df1","verdict":"different","reason":"value 6 vs 4"}
+{"pid":"3237c5cc4db2","verdict":"different","reason":"value 222 vs 461"}
+{"pid":"7962e6cae470","verdict":"different","reason":"different coalitions"}
+{"pid":"c14391cc8b83","verdict":"different","reason":"value 408 vs 6"}
+{"pid":"c1b1e94c49b2","verdict":"different","reason":"value 7 vs 44"}
+{"pid":"c1c39a1e5968","verdict":"different","reason":"value 123 vs 105"}
+{"pid":"c1cfb8b5f0ed","verdict":"same","reason":"53 minutes, not feasible"}
+{"pid":"c2817c700d21","verdict":"different","reason":"value 0 vs 17"}
+{"pid":"c28b47692c53","verdict":"different","reason":"value 148 vs 4"}
+{"pid":"c295b15eedec","verdict":"different","reason":"value 27 vs 7"}
+{"pid":"c3396bf424bb","verdict":"different","reason":"30 minutes and feasible vs 52 not feasible"}
+{"pid":"c3398033e674","verdict":"different","reason":"value 168 vs 250"}
+{"pid":"c35e4abf2c2c","verdict":"different","reason":"value 30 vs 5"}
+{"pid":"c371c1675951","verdict":"different","reason":"NaN vs 77"}
+{"pid":"c3841c8b3a22","verdict":"different","reason":"empty list vs A"}
+{"pid":"c3a5ebf4c0e7","verdict":"same","reason":"3120 matches"}
+{"pid":"c3aab54a5263","verdict":"same","reason":"Sam wears the shield"}
+{"pid":"c3aadd56e288","verdict":"different","reason":"does not state Harun wears the shield"}
+{"pid":"c3cebe4a5890","verdict":"different","reason":"5 days vs 6 days"}
+{"pid":"c3d330603a75","verdict":"different","reason":"different coalitions"}
+{"pid":"c3de4add2797","verdict":"different","reason":"value -9 vs 11"}
+{"pid":"c4cc063ba598","verdict":"different","reason":"7 days vs 6 days"}
+{"pid":"c516c827b37d","verdict":"different","reason":"different observation proposed"}
+{"pid":"c55bd28073f1","verdict":"different","reason":"value 0 is not the reference observation"}
+{"pid":"c5a4b3b30dff","verdict":"same","reason":"Harun wears the shield"}
+{"pid":"c6148af1dedc","verdict":"different","reason":"value 15 vs 42"}
+{"pid":"c61c40b1e0bf","verdict":"different","reason":"value 132 vs 222"}
+{"pid":"c684dbcd1d4f","verdict":"different","reason":"value 4980 vs 1380"}
+{"pid":"c685da6dff2f","verdict":"same","reason":"states a path exists"}
+{"pid":"c70b8f79686c","verdict":"different","reason":"only BC vs AB, AC, BC"}
+{"pid":"c7339f64a916","verdict":"different","reason":"conflicting yes and no"}
+{"pid":"c756735b88ae","verdict":"different","reason":"only BC vs AB, AC, BC"}
+{"pid":"c75796b6d85b","verdict":"different","reason":"12.6 vs 14"}
+{"pid":"c78f2f698e97","verdict":"different","reason":"value 17 vs 28"}
+{"pid":"c798add41df1","verdict":"different","reason":"value 36 vs 2"}
+{"pid":"c7a9ccf307e6","verdict":"same","reason":"52 minutes, not feasible"}
+{"pid":"c7b27dd6ce9d","verdict":"different","reason":"value 28 vs 16"}
+{"pid":"c7eb2e37c3c1","verdict":"different","reason":"value 7 vs 1"}
+{"pid":"c7fcc1b8bcfd","verdict":"same","reason":"21 matches"}
+{"pid":"c82e4c3d6584","verdict":"different","reason":"3 days and order today vs 22 days can wait"}
+{"pid":"c8685b9934c1","verdict":"different","reason":"empty answer"}
+{"pid":"c8906f2be734","verdict":"same","reason":"8 matches"}
+{"pid":"c8a593aea250","verdict":"same","reason":"21 matches"}
+{"pid":"c8aaadb41c79","verdict":"same","reason":"A only"}
+{"pid":"c8bdec072c66","verdict":"same","reason":"780 matches"}
+{"pid":"c92a4079240d","verdict":"different","reason":"only AB vs AB, AC, BC"}
+{"pid":"c9403561ee7f","verdict":"different","reason":"62 vs 58 minutes"}
+{"pid":"c94d32c6835e","verdict":"different","reason":"value 6 vs 8"}
+{"pid":"c98e2b9a86b7","verdict":"different","reason":"answer is not Class A"}
+{"pid":"c9999118bdd7","verdict":"same","reason":"19 matches"}
+{"pid":"c9f2cfe81f25","verdict":"different","reason":"value 653 vs 43"}
+{"pid":"ca14c04fae1b","verdict":"different","reason":"28 days and no verdict vs 20 days"}
+{"pid":"ca24ae308c1d","verdict":"different","reason":"value 39 vs 19"}
+{"pid":"ca47a795444c","verdict":"different","reason":"different observation proposed"}
+{"pid":"ca8fa2664284","verdict":"same","reason":"same three coalitions"}
+{"pid":"caf261556cdc","verdict":"different","reason":"value 45 vs 24"}
+{"pid":"cb0c6c724c7a","verdict":"different","reason":"value 25 vs 14"}
+{"pid":"cb90ba9780d6","verdict":"different","reason":"value 6600 vs 1500"}
+{"pid":"cb940bd0a73e","verdict":"same","reason":"9 matches"}
+{"pid":"cbc2d0ef2001","verdict":"different","reason":"2 days vs 7 days"}
+{"pid":"cbc9b3b8236a","verdict":"same","reason":"7 matches"}
+{"pid":"cbd65f25eb04","verdict":"different","reason":"value 35 vs 19"}
+{"pid":"cc01fe3af5d1","verdict":"different","reason":"value 10800 vs 1140"}
+{"pid":"cc487e254b52","verdict":"different","reason":"value 43 vs 93"}
+{"pid":"cccaec188375","verdict":"different","reason":"mean 5.2 vs 8.75"}
+{"pid":"ccd8101e1050","verdict":"different","reason":"6 days and order today vs 7 days can wait"}
+{"pid":"cd610da1e9f3","verdict":"same","reason":"53 minutes, feasible"}
+{"pid":"cd6a4ec137df","verdict":"different","reason":"names a hypothesis, not the discriminating observation"}
+{"pid":"cda71256a62a","verdict":"different","reason":"value 8 vs 14"}
+{"pid":"cdb0d9be40bb","verdict":"different","reason":"12 vs 58 minutes"}
+{"pid":"cdb2bb0aaa9d","verdict":"different","reason":"value 1225 vs 170"}
+{"pid":"cdb48070255d","verdict":"same","reason":"77 matches"}
+{"pid":"cdbc1d1b01a3","verdict":"same","reason":"8 matches"}
+{"pid":"ce04f3ab0f56","verdict":"different","reason":"6.57 vs 5"}
+{"pid":"ce23e51fa0df","verdict":"same","reason":"10 matches"}
+{"pid":"ce29159b2133","verdict":"different","reason":"NaN and no verdict"}
+{"pid":"ce9127da0f43","verdict":"different","reason":"value 391 vs 461"}
+{"pid":"cec1b8aa5b99","verdict":"different","reason":"value 147 vs 3"}
+{"pid":"ced1b280a85a","verdict":"different","reason":"empty answer"}
+{"pid":"cef228db3e86","verdict":"different","reason":"adds non-minimal ABC"}
+{"pid":"cef68abba3c8","verdict":"different","reason":"value 1104 vs 90"}
+{"pid":"cf0bedcb9b42","verdict":"same","reason":"27 matches"}
+{"pid":"cf0fc4da53ca","verdict":"different","reason":"33.4 vs 5"}
+{"pid":"cf2c4950a9e5","verdict":"different","reason":"value 25 vs 14"}
+{"pid":"cf475c030cea","verdict":"different","reason":"Friday succeeds vs neither"}
+{"pid":"cf5aecdf3e72","verdict":"different","reason":"Monday succeeds vs neither"}
+{"pid":"cf7f85c62b22","verdict":"different","reason":"does not state Sol wears the shield"}
+{"pid":"d02719e032e6","verdict":"same","reason":"5.2 rounds to reference 5"}
+{"pid":"d04472edd2ac","verdict":"different","reason":"value 38 vs 24"}
+{"pid":"d0974ef6b03b","verdict":"different","reason":"value 7080 vs 2340"}
+{"pid":"d0d63d7e12eb","verdict":"different","reason":"adds non-minimal ABC"}
+{"pid":"d0d82f1ee097","verdict":"different","reason":"does not give the risk-avoidance reason"}
+{"pid":"d15eebb5a567","verdict":"same","reason":"43 matches"}
+{"pid":"d17bc09c2c70","verdict":"unclear","reason":"vague energy or fiber measurement vs specific observation"}
+{"pid":"d18db7a7252e","verdict":"different","reason":"value 174 vs 8"}
+{"pid":"d1a3f468b6ed","verdict":"different","reason":"no new mean given"}
+{"pid":"d1b0c921d09a","verdict":"different","reason":"4 vs 2 cm/day"}
+{"pid":"d1f5b5309f7d","verdict":"same","reason":"3120 matches"}
+{"pid":"d223134d76ee","verdict":"different","reason":"value 43 vs 46"}
+{"pid":"d2cb7871149c","verdict":"different","reason":"value 3 vs 2"}
+{"pid":"d30993540d91","verdict":"same","reason":"16 matches"}
+{"pid":"d34c27944ddc","verdict":"same","reason":"3240 matches"}
+{"pid":"d3597309baea","verdict":"same","reason":"96 matches"}
+{"pid":"d38d8201ce3e","verdict":"different","reason":"blue can be VIP and gold certain vs cannot and uncertain"}
+{"pid":"d3cd4bbed686","verdict":"same","reason":"1 matches"}
+{"pid":"d4398d7c6889","verdict":"different","reason":"22 vs 16 days"}
+{"pid":"d4558ef75e23","verdict":"different","reason":"value 342 vs 72"}
+{"pid":"d45f144859e8","verdict":"different","reason":"different reason"}
+{"pid":"d45f841255b1","verdict":"unclear","reason":"says Rule One forces the shield but does not name Omar"}
+{"pid":"d49f6e3345e6","verdict":"different","reason":"10 vs 9 days"}
+{"pid":"d4a032a37917","verdict":"different","reason":"value 0 vs 24"}
+{"pid":"d4a2c38c94bf","verdict":"different","reason":"value 28 vs 24"}
+{"pid":"d4cea3c6c474","verdict":"different","reason":"value 0.77 vs 77"}
+{"pid":"d4e5ab045b11","verdict":"different","reason":"no coalitions listed"}
+{"pid":"d50a8d6c22da","verdict":"different","reason":"6 vs 5 steps"}
+{"pid":"d53de4953236","verdict":"same","reason":"9 matches"}
+{"pid":"d5a52475ecd0","verdict":"different","reason":"value 14 vs 44"}
+{"pid":"d5b7e1187485","verdict":"different","reason":"NaN and not feasible vs 70 feasible"}
+{"pid":"d63b8b82777e","verdict":"same","reason":"neither succeeds"}
+{"pid":"d64f8e50bd4d","verdict":"different","reason":"16 days and order today vs 15 days can wait"}
+{"pid":"d668ab2fe54f","verdict":"same","reason":"same three coalitions"}
+{"pid":"d68647c98074","verdict":"different","reason":"values of B, D, E not stated"}
+{"pid":"d69ca8cd4109","verdict":"same","reason":"8 matches"}
+{"pid":"d6f09c112573","verdict":"different","reason":"value 59 vs 45"}
+{"pid":"d7086fbd9b2b","verdict":"same","reason":"77 matches"}
+{"pid":"d71356d18f94","verdict":"different","reason":"6 vs 20/3"}
+{"pid":"d73947005da5","verdict":"different","reason":"27.5 vs 2"}
+{"pid":"d7a6b07c1b13","verdict":"same","reason":"95 matches"}
+{"pid":"d7b20ed2a7e7","verdict":"different","reason":"value 33 vs 37"}
+{"pid":"d7c065ad8fc9","verdict":"different","reason":"15 days but conditional order-today verdict instead of can wait"}
+{"pid":"d7d69fad04c2","verdict":"same","reason":"43 matches"}
+{"pid":"d8105e5f257f","verdict":"different","reason":"value 3 vs 5"}
+{"pid":"d84a0abeb125","verdict":"different","reason":"value 228 vs 72"}
+{"pid":"d862dc95cc65","verdict":"different","reason":"value 1392 vs 2568"}
+{"pid":"d87dd12208e6","verdict":"different","reason":"7 days and order today vs 6 days can wait"}
+{"pid":"d8c70dfbcad4","verdict":"different","reason":"restates hypotheses, not the discriminating observation"}
+{"pid":"d8cc69db8d21","verdict":"same","reason":"5.0 matches"}
+{"pid":"d90329ec9e8a","verdict":"same","reason":"62 minutes, feasible"}
+{"pid":"d96873079184","verdict":"same","reason":"29 matches"}
+{"pid":"d9a39c3785de","verdict":"different","reason":"NaN vs 222"}
+{"pid":"d9bcea9ea3cc","verdict":"different","reason":"value 24 vs 74"}
+{"pid":"d9bd3af63e8d","verdict":"same","reason":"Omar wears the shield"}
+{"pid":"da3079d0a0ce","verdict":"different","reason":"NaN vs 29"}
+{"pid":"da539aef927b","verdict":"different","reason":"123 vs 70 minutes"}
+{"pid":"da68143ebcaf","verdict":"different","reason":"value 57 vs 27"}
+{"pid":"da6d2938d749","verdict":"different","reason":"3.11 days and order today vs 15 days can wait"}
+{"pid":"da78c472c86a","verdict":"same","reason":"19 days, order can wait"}
+{"pid":"da83c3ab9601","verdict":"different","reason":"value 12 vs 18"}
+{"pid":"dab13e2dc6f7","verdict":"same","reason":"77 matches"}
+{"pid":"daeca43e1d3c","verdict":"different","reason":"value 4 vs 8"}
+{"pid":"daecd5f282c3","verdict":"different","reason":"4 days and tomorrow vs 3 days and today"}
+{"pid":"db601d286eeb","verdict":"different","reason":"6 vs 2 cm/day"}
+{"pid":"dbc5bdeddb07","verdict":"same","reason":"1860 matches"}
+{"pid":"dbe9696d5a59","verdict":"different","reason":"NaN vs 2"}
+{"pid":"dbececf5ef5f","verdict":"different","reason":"13 days but conditional order-today verdict instead of can wait"}
+{"pid":"dbfb31b5ad08","verdict":"different","reason":"empty list"}
+{"pid":"dc23779644fc","verdict":"same","reason":"31 matches"}
+{"pid":"dc33b86ac2ab","verdict":"same","reason":"220 matches"}
+{"pid":"dc44320f6670","verdict":"different","reason":"value 9 vs 14"}
+{"pid":"dc454a5effc4","verdict":"different","reason":"value 67 vs 11"}
+{"pid":"dc768331e65b","verdict":"different","reason":"7.5 vs 20/3"}
+{"pid":"dc779343ee88","verdict":"same","reason":"34 matches"}
+{"pid":"dcb67bef14fc","verdict":"same","reason":"4 matches"}
+{"pid":"dd579b31255e","verdict":"different","reason":"value 44 vs 4"}
+{"pid":"dd593046776d","verdict":"different","reason":"value 60 vs 24"}
+{"pid":"dd66f66c60e0","verdict":"different","reason":"no final value"}
+{"pid":"dd6ca065e622","verdict":"different","reason":"value 480 vs 3240"}
+{"pid":"dd9cb37e20ad","verdict":"same","reason":"Sol wears the shield"}
+{"pid":"ddbb93533d0e","verdict":"different","reason":"8 vs 7 days"}
+{"pid":"ddd18baa16eb","verdict":"same","reason":"52 minutes, not feasible"}
+{"pid":"ddec35d1e9d5","verdict":"same","reason":"15 days, order can wait"}
+{"pid":"ddfa8ef53a46","verdict":"different","reason":"7.4 vs 12"}
+{"pid":"de08e237d157","verdict":"same","reason":"path exists"}
+{"pid":"de1d34154434","verdict":"different","reason":"different observation proposed"}
+{"pid":"de4d783459ad","verdict":"different","reason":"9 vs 8"}
+{"pid":"dea451111c46","verdict":"different","reason":"different observation proposed"}
+{"pid":"df2bb19c1ce2","verdict":"same","reason":"16 days, order can wait"}
+{"pid":"df39ecdd015c","verdict":"different","reason":"not coalitions"}
+{"pid":"df5afd09b6ef","verdict":"same","reason":"3888 matches"}
+{"pid":"df6d3422320f","verdict":"different","reason":"NaN vs 29"}
+{"pid":"dfef44df1ce1","verdict":"different","reason":"value 34 vs 56"}
+{"pid":"e0187e68087b","verdict":"different","reason":"9 vs 6 days, no verdict"}
+{"pid":"e019fe178b4c","verdict":"same","reason":"3 matches"}
+{"pid":"e064afaebd25","verdict":"same","reason":"final 14 matches"}
+{"pid":"e0c1e1d8d03d","verdict":"different","reason":"only AB vs AB, AC, BC"}
+{"pid":"e0ca755f7ba8","verdict":"different","reason":"only AB vs AB, AC, BC"}
+{"pid":"e0d68c47cb20","verdict":"different","reason":"value 13 vs 14"}
+{"pid":"e0fac1ee01cb","verdict":"different","reason":"different reason"}
+{"pid":"e14729eda216","verdict":"same","reason":"same three coalitions"}
+{"pid":"e163da6ab6a4","verdict":"same","reason":"5 matches"}
+{"pid":"e194c88c79f2","verdict":"same","reason":"path exists"}
+{"pid":"e1dba521368a","verdict":"different","reason":"154.5 vs 77"}
+{"pid":"e1dfba009861","verdict":"different","reason":"value 58 vs 29"}
+{"pid":"e233f36899ca","verdict":"different","reason":"value 76 vs 114"}
+{"pid":"e28167ad09eb","verdict":"different","reason":"2.61 days and order today vs 10 days can wait"}
+{"pid":"e2adf724bd2b","verdict":"different","reason":"value 48 vs 3"}
+{"pid":"e2c57a549178","verdict":"different","reason":"0.67 vs 4"}
+{"pid":"e2e9dd734eac","verdict":"different","reason":"value 100 vs 90"}
+{"pid":"e357d0b19137","verdict":"different","reason":"AC, BC (duplicated) vs AB, AC, BC"}
+{"pid":"e367d5b0a537","verdict":"different","reason":"value 174 vs 8"}
+{"pid":"e3899fd8b7f2","verdict":"same","reason":"114 matches"}
+{"pid":"e3b35f7bf860","verdict":"same","reason":"20 matches"}
+{"pid":"e3c436a1fbf1","verdict":"different","reason":"2400 vs 24"}
+{"pid":"e3eb3e8e9dc5","verdict":"same","reason":"64 minutes, not feasible"}
+{"pid":"e4223b6cbd3d","verdict":"different","reason":"value 840 vs 912"}
+{"pid":"e42e82e24455","verdict":"same","reason":"35 matches"}
+{"pid":"e4a08625efd4","verdict":"different","reason":"value 200 vs 6"}
+{"pid":"e4e615b93b4c","verdict":"different","reason":"value 27 vs 3"}
+{"pid":"e5a4b2cc2ac7","verdict":"same","reason":"Class A"}
+{"pid":"e5ae1945f4a6","verdict":"different","reason":"49 and feasible vs 52 not feasible"}
+{"pid":"e5e686ce24cd","verdict":"same","reason":"16 matches"}
+{"pid":"e657233b86f8","verdict":"same","reason":"4 matches"}
+{"pid":"e68827f72f6b","verdict":"same","reason":"72 matches"}
+{"pid":"e6e7e7278c85","verdict":"different","reason":"47.5 vs 33"}
+{"pid":"e70ab8de204b","verdict":"different","reason":"restates hypotheses, not the discriminating observation"}
+{"pid":"e7243f628c0b","verdict":"different","reason":"value 180 vs 20"}
+{"pid":"e753fcf2d37b","verdict":"different","reason":"value 4 vs 37"}
+{"pid":"e75a4cf36468","verdict":"different","reason":"no clear answer"}
+{"pid":"e790d20270ca","verdict":"different","reason":"17 days and tomorrow vs 16 days can wait"}
+{"pid":"e7a430f5856c","verdict":"same","reason":"61 matches"}
+{"pid":"e7d1329ece29","verdict":"same","reason":"11 matches"}
+{"pid":"e7dd67bdfd0f","verdict":"different","reason":"60 vs 70 minutes"}
+{"pid":"e808cbd2b825","verdict":"different","reason":"value 10 vs 8"}
+{"pid":"e8553e4c3a49","verdict":"different","reason":"value 228 vs 54"}
+{"pid":"e8618bf9c869","verdict":"different","reason":"value 526 vs 11"}
+{"pid":"e8aec14eae07","verdict":"different","reason":"value 6 vs 3"}
+{"pid":"e913134022a8","verdict":"same","reason":"44 matches"}
+{"pid":"e93e04a73ae1","verdict":"same","reason":"30 matches"}
+{"pid":"e93fd07eda0c","verdict":"different","reason":"says order must be placed today vs can wait"}
+{"pid":"e9b0167a6fce","verdict":"different","reason":"7.8 vs 3"}
+{"pid":"e9b9b455c440","verdict":"different","reason":"value 152 vs 14"}
+{"pid":"e9c333322e18","verdict":"different","reason":"does not state no / code 01"}
+{"pid":"e9d35f36112f","verdict":"different","reason":"value 26 vs 44"}
+{"pid":"ea16d2b74dd6","verdict":"different","reason":"value 74 vs 37"}
+{"pid":"ea3354d28510","verdict":"different","reason":"value 172 vs 61"}
+{"pid":"ea48ba548821","verdict":"same","reason":"2 cm/day"}
+{"pid":"ea67fb1b7211","verdict":"different","reason":"value 600 vs 164"}
+{"pid":"ea82d0bb26f6","verdict":"same","reason":"48 minutes, not feasible"}
+{"pid":"ea987e32c8b1","verdict":"different","reason":"empty list"}
+{"pid":"eabf55cb4c37","verdict":"same","reason":"1 matches"}
+{"pid":"eac3d194be27","verdict":"different","reason":"only AB vs AB, AC, BC"}
+{"pid":"eb09162d97ba","verdict":"different","reason":"27.5 vs 2"}
+{"pid":"eb2d72d76e06","verdict":"different","reason":"NaN vs 220"}
+{"pid":"eb6a410f0a2a","verdict":"same","reason":"Sam wears the shield"}
+{"pid":"eb7da8479af2","verdict":"different","reason":"value 39 vs 48"}
+{"pid":"ebbcb2d25cb0","verdict":"different","reason":"no observation named"}
+{"pid":"ebd848cedf5f","verdict":"same","reason":"22 matches"}
+{"pid":"ebe1efd10d75","verdict":"different","reason":"22 days and order today vs 16 days can wait"}
+{"pid":"ebfeb3567acd","verdict":"different","reason":"does not say whether a path exists"}
+{"pid":"ec27ad760631","verdict":"different","reason":"different observation proposed"}
+{"pid":"ec90759db661","verdict":"different","reason":"no day count and different verdict"}
+{"pid":"ecfa0e069f0c","verdict":"different","reason":"different observation proposed"}
+{"pid":"ed06aa5160d5","verdict":"same","reason":"3240 matches"}
+{"pid":"ed1f4b294c12","verdict":"different","reason":"not coalitions"}
+{"pid":"ed59b7e65c63","verdict":"different","reason":"value 24 vs 43"}
+{"pid":"ed76f1c94cbb","verdict":"different","reason":"must order now vs can wait"}
+{"pid":"edc2f5b02959","verdict":"different","reason":"value 0 vs 2"}
+{"pid":"edf7bbaa5bcd","verdict":"different","reason":"BC vs A"}
+{"pid":"ee8cf41e3bb5","verdict":"different","reason":"19 days and order today vs 18 days can wait"}
+{"pid":"eee584b65276","verdict":"same","reason":"A only"}
+{"pid":"efa0c677e6a0","verdict":"same","reason":"3 matches"}
+{"pid":"efb04bf80533","verdict":"different","reason":"Class B vs Class A"}
+{"pid":"f01c960e0aa9","verdict":"different","reason":"value 45 vs 46"}
+{"pid":"f02dcee0b991","verdict":"different","reason":"196 days and no verdict vs 16 days can wait"}
+{"pid":"f07f1fcd2017","verdict":"different","reason":"value 32 vs 16"}
+{"pid":"f0d3431ef2b3","verdict":"different","reason":"no clear discriminating observation"}
+{"pid":"f0d594bc5335","verdict":"different","reason":"value 260 vs 164"}
+{"pid":"f0ea791d745f","verdict":"same","reason":"58 minutes, feasible"}
+{"pid":"f0f4029b1806","verdict":"same","reason":"24 matches"}
+{"pid":"f118c50d8bf1","verdict":"same","reason":"46 matches"}
+{"pid":"f12cd5d1395d","verdict":"different","reason":"value 51 vs 17"}
+{"pid":"f146f1e75005","verdict":"different","reason":"207.76 vs 210"}
+{"pid":"f153e61f793e","verdict":"different","reason":"BC vs AB, AC"}
+{"pid":"f16390a47cd1","verdict":"same","reason":"9 matches"}
+{"pid":"f16706c63cd8","verdict":"same","reason":"8 days, order today"}
+{"pid":"f1de7ae264c5","verdict":"same","reason":"144 matches"}
+{"pid":"f1e62ae1568b","verdict":"same","reason":"90 matches"}
+{"pid":"f229b3e67b0a","verdict":"same","reason":"57 minutes, feasible"}
+{"pid":"f22bf3602f00","verdict":"different","reason":"2 hours vs 960 minutes"}
+{"pid":"f2a311fb19bc","verdict":"different","reason":"value 36 vs 8"}
+{"pid":"f2ae4d213a65","verdict":"different","reason":"value 76 vs 19"}
+{"pid":"f2b8d7f8eb17","verdict":"different","reason":"not coalitions"}
+{"pid":"f340509499f4","verdict":"different","reason":"23.75 vs 33"}
+{"pid":"f35f1a802145","verdict":"different","reason":"value 46 vs 29"}
+{"pid":"f3c5a1635974","verdict":"different","reason":"value 66 vs 33"}
+{"pid":"f3f7b80eca38","verdict":"different","reason":"18.5 vs 33"}
+{"pid":"f401c6fff7ba","verdict":"same","reason":"960 matches"}
+{"pid":"f49702dc45e0","verdict":"same","reason":"1860 matches"}
+{"pid":"f4b03034f644","verdict":"different","reason":"value 47 vs 250"}
+{"pid":"f4d0a104da31","verdict":"same","reason":"77 matches"}
+{"pid":"f51b5e24ce54","verdict":"same","reason":"2340 matches"}
+{"pid":"f5829da16beb","verdict":"different","reason":"says order must be placed today vs can wait"}
+{"pid":"f5a5cc93c9bf","verdict":"different","reason":"value 56 vs 48"}
+{"pid":"f5a648d17d4e","verdict":"different","reason":"value 51 vs 105"}
+{"pid":"f5b4cc1f0ea6","verdict":"different","reason":"Monday succeeds vs neither"}
+{"pid":"f605356861bb","verdict":"different","reason":"value 4 vs 16"}
+{"pid":"f62aa5fc5890","verdict":"same","reason":"16 days, order can wait"}
+{"pid":"f64a045a23e5","verdict":"different","reason":"value 240 vs 222"}
+{"pid":"f653335d688e","verdict":"different","reason":"Monday succeeds vs neither"}
+{"pid":"f66dd5ca2e7b","verdict":"different","reason":"21.6 rounds to 22, not 21"}
+{"pid":"f6d479efd861","verdict":"different","reason":"value 138 vs 26"}
+{"pid":"f6fdcf5d3bce","verdict":"different","reason":"value 18 vs 20"}
+{"pid":"f717a52fc398","verdict":"different","reason":"value 65 vs 222"}
+{"pid":"f74bb0996cee","verdict":"different","reason":"list of 5s vs 12"}
+{"pid":"f782416fb4c4","verdict":"different","reason":"value 1 vs 3"}
+{"pid":"f7ef467e2c1a","verdict":"different","reason":"7 days but no order verdict"}
+{"pid":"f821c5f00299","verdict":"different","reason":"value 270 vs 54"}
+{"pid":"f86b679a2c96","verdict":"same","reason":"59 minutes, not feasible"}
+{"pid":"f8a91cd58eb7","verdict":"different","reason":"value 92 vs 2208"}
+{"pid":"f8ad7d261692","verdict":"same","reason":"6.667 equals 20/3"}
+{"pid":"f8d78fc51e2f","verdict":"different","reason":"value 0 is not an observation"}
+{"pid":"f93d042e4409","verdict":"different","reason":"value 8 vs 29"}
+{"pid":"f94b554d0d66","verdict":"different","reason":"value 40 vs 24"}
+{"pid":"f9a05188cc28","verdict":"same","reason":"74 matches"}
+{"pid":"f9eb48ff868e","verdict":"same","reason":"222 matches"}
+{"pid":"fa0b07e43c21","verdict":"different","reason":"106 hours vs 1380 minutes"}
+{"pid":"fa16178dc9dd","verdict":"unclear","reason":"hand is a vague pointer to microbes on hands"}
+{"pid":"fa445682c08c","verdict":"different","reason":"3.5 vs 22"}
+{"pid":"fa6c013d173e","verdict":"different","reason":"3 vs 5 steps"}
+{"pid":"fa9b5ff3e67a","verdict":"different","reason":"6 days and can wait vs 5 days order today"}
+{"pid":"faa27daa3868","verdict":"different","reason":"NaN vs 16"}
+{"pid":"fad4b8b92ebc","verdict":"different","reason":"value 1 vs 34"}
+{"pid":"fb09f8a2e79c","verdict":"same","reason":"114 matches"}
+{"pid":"fb6bc1d655e1","verdict":"different","reason":"value 4 vs 72"}
+{"pid":"fb9e1056ec12","verdict":"same","reason":"path exists"}
+{"pid":"fc22a3eccdb1","verdict":"different","reason":"18 vs 70 minutes"}
+{"pid":"fc231c6a4cb8","verdict":"different","reason":"mean 25 vs 8.75"}
+{"pid":"fc69f64154e2","verdict":"different","reason":"0.38 vs 216"}
+{"pid":"fc79423deac3","verdict":"different","reason":"value 18 vs 16"}
+{"pid":"fca52a9a4118","verdict":"different","reason":"13 days and conditional order today vs 12 days can wait"}
+{"pid":"fcf80c57d7c6","verdict":"different","reason":"value 21 vs 4"}
+{"pid":"fd1764f4d70d","verdict":"same","reason":"6.375 rounds to reference 6"}
+{"pid":"fd8cbe47b3a2","verdict":"different","reason":"value 8100 vs 540"}
+{"pid":"fdc34a93539d","verdict":"different","reason":"value 81 vs 11"}
+{"pid":"fe0c42e6869f","verdict":"different","reason":"only AB vs AB, AC"}
+{"pid":"fe3be4ec9e7b","verdict":"different","reason":"NaN vs 72"}
+{"pid":"fe6e5f52a231","verdict":"different","reason":"different observation proposed"}
+{"pid":"fea2c356fbf5","verdict":"different","reason":"-1 days vs 6 days"}
+{"pid":"feb0d413aa87","verdict":"different","reason":"82 minutes and feasible vs 70 feasible"}
+{"pid":"ff4385763628","verdict":"different","reason":"value 0 vs 4"}
+{"pid":"ff897b851d71","verdict":"different","reason":"Monday succeeds vs neither"}
+{"pid":"ff8dcb4a1cd0","verdict":"different","reason":"value 0 vs A"}
+{"pid":"ffa2153c146b","verdict":"different","reason":"value 5 vs 1"}
+{"pid":"ffa976325741","verdict":"different","reason":"19 minutes feasible vs 52 not feasible"}
+{"pid":"ffbd21d2bad1","verdict":"same","reason":"2448 matches"}
+{"pid":"ffc0155c2ca6","verdict":"different","reason":"value 32 vs 4"}
+{"pid":"ffce42d85ea4","verdict":"different","reason":"value 135 vs 117"}
+{"pid":"ffcedfbd52fa","verdict":"different","reason":"28.5 vs 17"}

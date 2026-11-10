@@ -1,0 +1,18 @@
+{
+  "experiment": "e8-sopicl3-l0-qwen3-17-paired",
+  "gguf": "training/checkpoints/base-qwen3-17b-f16.gguf",
+  "ggufBytes": 4069679360,
+  "itemSource": "evaluation/registry/items-e2/paired/L0.jsonl",
+  "itemCount": 45,
+  "mode": "sop-icl",
+  "shots": 3,
+  "perGroup": null,
+  "samples": 1,
+  "temperature": 0,
+  "seed": 20260928,
+  "maxTokens": 1536,
+  "noThink": true,
+  "systemPromptSha256": "bef332e1699b7955cac95335924e671a6e24dcdaac41e421a96c3d0bded95646",
+  "resumedWith": 29,
+  "updatedAt": "2026-09-29T00:48:46.319Z"
+}

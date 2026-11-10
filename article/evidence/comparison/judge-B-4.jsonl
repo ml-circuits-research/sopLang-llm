@@ -1,0 +1,100 @@
+{"pid":"f630ece39619","verdict":"same","reason":"Candidate gives 2, matching the reference."}
+{"pid":"f4e6f39b9b23","verdict":"different","reason":"Candidate gives 74, reference is 37."}
+{"pid":"f36f4c0a9469","verdict":"same","reason":"Both give 44 minutes and feasible."}
+{"pid":"f330799efd57","verdict":"different","reason":"Candidate gives 32, reference is 16."}
+{"pid":"f190d680e94f","verdict":"different","reason":"Candidate gives 364, reference is 22."}
+{"pid":"f16eeaa5134a","verdict":"different","reason":"Candidate gives 45, reference is 15."}
+{"pid":"eebc5ab85854","verdict":"different","reason":"Candidate gives 0, reference is 16."}
+{"pid":"e95e735b6144","verdict":"different","reason":"Candidate gives 2.714, reference is 2."}
+{"pid":"e26f9d6a0ed5","verdict":"different","reason":"Candidate gives 2.64, reference is 24."}
+{"pid":"dfe31af8388f","verdict":"same","reason":"Both give 70 minutes and feasible."}
+{"pid":"dd49629442fb","verdict":"different","reason":"Candidate gives 23, reference is 14."}
+{"pid":"dabfe5aaa237","verdict":"same","reason":"Candidate gives 47, matching the reference."}
+{"pid":"d98e0e11fdea","verdict":"different","reason":"Candidate answers a different crate question with NaN, not the value 9."}
+{"pid":"d934fde8c202","verdict":"different","reason":"Candidate gives 290, reference is 90."}
+{"pid":"d85e7146ef72","verdict":"different","reason":"Candidate gives 290, reference is 90."}
+{"pid":"d5261f1c9e18","verdict":"different","reason":"Candidate gives 112, reference is 172."}
+{"pid":"d3361e2574aa","verdict":"different","reason":"Candidate gives 14, reference is 47."}
+{"pid":"d0a2cfa649ab","verdict":"unclear","reason":"Candidate gives the expression 14 + 14 + 14 without stating a single final value."}
+{"pid":"ca5c0568d930","verdict":"different","reason":"Candidate gives NaN minutes instead of 48."}
+{"pid":"c837eac3e8c5","verdict":"different","reason":"Candidate gives 38, reference is 9."}
+{"pid":"c41189ccdd70","verdict":"same","reason":"Both give 32 minutes and feasible."}
+{"pid":"c2d854201e33","verdict":"different","reason":"Candidate gives 112, reference is 172."}
+{"pid":"c0c113e429bf","verdict":"different","reason":"Candidate gives -5, reference is 90."}
+{"pid":"bf2ac2ddd957","verdict":"different","reason":"Candidate gives 35.8, reference is 167."}
+{"pid":"bded5cd3f58d","verdict":"different","reason":"Candidate gives 1, reference is 4."}
+{"pid":"bc041ea9ac09","verdict":"same","reason":"Both give 64 minutes and not feasible."}
+{"pid":"bb1a6ee60426","verdict":"different","reason":"Candidate gives NaN, reference is 37."}
+{"pid":"b7ee799331e5","verdict":"same","reason":"Candidate gives 37, matching the reference."}
+{"pid":"b2b139ddbe55","verdict":"different","reason":"Candidate gives 23 minutes, reference is 44."}
+{"pid":"b0b38ea13ec3","verdict":"different","reason":"Candidate gives 2.42 days, reference is 3888 hours."}
+{"pid":"af268d1caac3","verdict":"different","reason":"Candidate gives 35.33, reference is 4."}
+{"pid":"aef191c09061","verdict":"different","reason":"Candidate gives 40, reference is 24."}
+{"pid":"ad1ceaf730dc","verdict":"different","reason":"Candidate gives 23, reference is 14."}
+{"pid":"a92d56f4ccd3","verdict":"different","reason":"Candidate gives 25, reference is 4."}
+{"pid":"a774ed72e737","verdict":"same","reason":"Candidate gives 72, matching the reference."}
+{"pid":"a3cac18797ab","verdict":"same","reason":"Both answer yes."}
+{"pid":"a15ac503da04","verdict":"different","reason":"Candidate gives 6900, reference is 3120."}
+{"pid":"9d4a25298983","verdict":"different","reason":"Candidate gives 28 minutes and feasible, reference is 64 and not feasible."}
+{"pid":"9c80a22d0dde","verdict":"different","reason":"Candidate gives 142, reference is 12."}
+{"pid":"9c72bb229c63","verdict":"different","reason":"Candidate gives 115 hours, reference is 3120 minutes."}
+{"pid":"99f22613c65a","verdict":"different","reason":"Candidate gives 175, reference is 3120."}
+{"pid":"999faec82619","verdict":"different","reason":"Candidate gives 115, reference is 3120."}
+{"pid":"983ef51bdbcf","verdict":"different","reason":"Candidate gives undefined, reference is 16."}
+{"pid":"958ba826f861","verdict":"same","reason":"Candidate answers yes, matching the reference verdict."}
+{"pid":"94bf48d6faa3","verdict":"different","reason":"Candidate gives 176, reference is 22."}
+{"pid":"91e7c29ede7b","verdict":"different","reason":"Candidate gives 60, reference is 24."}
+{"pid":"8db225bba76d","verdict":"different","reason":"Candidate gives 390, reference is 220."}
+{"pid":"7ac720520da3","verdict":"same","reason":"Both give 1500."}
+{"pid":"7763db49116e","verdict":"different","reason":"Candidate gives 190, reference is 90."}
+{"pid":"75ecb0d7d349","verdict":"different","reason":"Candidate gives 165.6, reference is 172."}
+{"pid":"7596688d3dc3","verdict":"different","reason":"Candidate gives 186, reference is 3888."}
+{"pid":"702ec489bf16","verdict":"different","reason":"Candidate gives 32, reference is 16."}
+{"pid":"6dbe13a1da9c","verdict":"different","reason":"Candidate gives 46, reference is 12."}
+{"pid":"6ba322bddc7f","verdict":"different","reason":"Candidate gives 0.0008, reference is 9."}
+{"pid":"6a7d53e92188","verdict":"same","reason":"Candidate gives 47, matching the reference."}
+{"pid":"69d05df66a7c","verdict":"same","reason":"Both answer yes."}
+{"pid":"662478e836d8","verdict":"same","reason":"Candidate gives 9.00, matching 9."}
+{"pid":"658bdc4cac7a","verdict":"same","reason":"Candidate gives 172, matching the reference."}
+{"pid":"65280502d6c8","verdict":"different","reason":"Candidate gives 44, reference is 11."}
+{"pid":"643b8ee65e1e","verdict":"different","reason":"Candidate gives 6900, reference is 3120."}
+{"pid":"604cf976936f","verdict":"different","reason":"Candidate gives 4, reference is 8."}
+{"pid":"5f10ac509747","verdict":"different","reason":"Candidate gives -156800, reference is 16."}
+{"pid":"59dd8b41de74","verdict":"different","reason":"Candidate gives NaN, reference is 15."}
+{"pid":"594785148326","verdict":"same","reason":"Both give 59 minutes and not feasible."}
+{"pid":"57daf64be0ce","verdict":"different","reason":"Candidate gives 14, reference is 47."}
+{"pid":"546254fd2392","verdict":"different","reason":"Candidate gives 4, reference is 10."}
+{"pid":"52f47623e902","verdict":"different","reason":"Candidate gives 12, reference is 8."}
+{"pid":"52c0be1bd471","verdict":"different","reason":"Candidate gives 2.16, reference is 24."}
+{"pid":"4f4de5cec0b4","verdict":"different","reason":"Candidate gives 12, reference is 72."}
+{"pid":"4a80be975f95","verdict":"different","reason":"Candidate gives 60, reference is 24."}
+{"pid":"47d89f04a86d","verdict":"different","reason":"Candidate gives 125, reference is 15."}
+{"pid":"4610ea01da16","verdict":"different","reason":"Candidate answers no, reference is yes."}
+{"pid":"454230d82048","verdict":"same","reason":"Both give 49 minutes and feasible."}
+{"pid":"43c90de86101","verdict":"different","reason":"Candidate gives 178, reference is 2340."}
+{"pid":"3f67bd6fc2bb","verdict":"different","reason":"Candidate gives 72 minutes and not feasible, reference is 58 and feasible."}
+{"pid":"3b662e51105f","verdict":"different","reason":"Candidate gives 125, reference is 15."}
+{"pid":"378b41a42f83","verdict":"different","reason":"Candidate gives NaN minutes instead of 59."}
+{"pid":"31f8eb27ddde","verdict":"same","reason":"Both give 50 minutes and not feasible."}
+{"pid":"2f6baaca47d7","verdict":"different","reason":"Candidate gives 7080, reference is 2340."}
+{"pid":"2bf4c4d2280d","verdict":"different","reason":"Candidate gives 0, reference is 4."}
+{"pid":"2b008e0d4af7","verdict":"different","reason":"Candidate gives no yes/no verdict, only '11 -> 11'."}
+{"pid":"253b4779fc38","verdict":"different","reason":"Candidate gives 32, reference is 41."}
+{"pid":"23ac4f8a0ed5","verdict":"different","reason":"Candidate gives 231, reference is 9."}
+{"pid":"23abcc6ca33e","verdict":"different","reason":"Candidate gives 0, reference is 16."}
+{"pid":"201b788a1721","verdict":"different","reason":"Candidate gives 133, reference is 2."}
+{"pid":"1f8315b7e0d4","verdict":"different","reason":"Candidate gives 36, reference is 72."}
+{"pid":"1e7f683b00f3","verdict":"different","reason":"Candidate gives 3325, reference is 37."}
+{"pid":"1df916d63ecc","verdict":"different","reason":"Candidate gives 37 minutes, reference is 32."}
+{"pid":"1ad4e55c828f","verdict":"different","reason":"Candidate gives 46, reference is 12."}
+{"pid":"1a99b0844be0","verdict":"different","reason":"Candidate gives 1600, reference is 16."}
+{"pid":"1439c2b1f02c","verdict":"different","reason":"Candidate gives 4, reference is 8."}
+{"pid":"1296415f3941","verdict":"different","reason":"Candidate gives 16, reference is 41."}
+{"pid":"111a75088183","verdict":"same","reason":"Both give 48 minutes and not feasible."}
+{"pid":"0daad58f155d","verdict":"different","reason":"Candidate gives 28, reference is 72."}
+{"pid":"0c4bc55da862","verdict":"same","reason":"Both give 53 minutes and feasible."}
+{"pid":"09b9d1d30dd8","verdict":"same","reason":"Candidate gives 4, matching the reference."}
+{"pid":"0993304f7939","verdict":"same","reason":"Candidate gives 3888, matching the reference."}
+{"pid":"0609f1826b28","verdict":"different","reason":"Candidate gives 190, reference is 90."}
+{"pid":"02990f85a428","verdict":"same","reason":"Candidate gives 14, matching the reference."}
+{"pid":"0112edf3a162","verdict":"different","reason":"Candidate gives 1584, reference is 960."}

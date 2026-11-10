@@ -1,0 +1,22 @@
+{
+  "experiment": "e8-sopicl3-l2-qwen3-17-paired",
+  "items": 45,
+  "records": 45,
+  "complete": true,
+  "groups": {
+    "held-out:L2": {
+      "records": 33,
+      "exact": 0,
+      "value": 6,
+      "executed": 12,
+      "missing": 0
+    },
+    "trained-control:L2": {
+      "records": 12,
+      "exact": 0,
+      "value": 5,
+      "executed": 6,
+      "missing": 0
+    }
+  }
+}

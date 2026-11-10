@@ -1,0 +1,188 @@
+{
+  "generated": "2026-09-28T19:27:32.181Z",
+  "note": "Current runtime and classifier re-applied to every saved completion; no inference.",
+  "arms": [
+    {
+      "arm": "exp-002-sft-lr2e-5",
+      "items": 225,
+      "sameClass": 225,
+      "sameAnswer": 225,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-003-sft-lr1e-4",
+      "items": 225,
+      "sameClass": 225,
+      "sameAnswer": 225,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-003-sft-lr1e-4-q4-k-m",
+      "items": 265,
+      "sameClass": 265,
+      "sameAnswer": 265,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-003-sft-lr1e-4-q8-0",
+      "items": 265,
+      "sameClass": 265,
+      "sameAnswer": 265,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-004-lora",
+      "items": 265,
+      "sameClass": 265,
+      "sameAnswer": 265,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-005-sft-widened",
+      "items": 265,
+      "sameClass": 265,
+      "sameAnswer": 265,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-007-sft-wires",
+      "items": 265,
+      "sameClass": 265,
+      "sameAnswer": 265,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-008-sft-shapes",
+      "items": 265,
+      "sameClass": 265,
+      "sameAnswer": 265,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-009-mix10",
+      "items": 265,
+      "sameClass": 265,
+      "sameAnswer": 265,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-010-contrastive",
+      "items": 265,
+      "sameClass": 265,
+      "sameAnswer": 265,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-011-compositions",
+      "items": 425,
+      "sameClass": 425,
+      "sameAnswer": 425,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-012-census",
+      "items": 585,
+      "sameClass": 585,
+      "sameAnswer": 585,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-013-1.5b",
+      "items": 585,
+      "sameClass": 585,
+      "sameAnswer": 585,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-014-deep-chains",
+      "items": 705,
+      "sameClass": 705,
+      "sameAnswer": 705,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-015-deep-chains-05",
+      "items": 705,
+      "sameClass": 705,
+      "sameAnswer": 705,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-016-wires",
+      "items": 705,
+      "sameClass": 705,
+      "sameAnswer": 705,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-017-qwen3-17b",
+      "items": 705,
+      "sameClass": 705,
+      "sameAnswer": 705,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-018-1.7b-qwen3-dv4",
+      "items": 705,
+      "sameClass": 705,
+      "sameAnswer": 705,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-019-1.7b-qwen3-dv5",
+      "items": 705,
+      "sameClass": 705,
+      "sameAnswer": 705,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-021-1.7b-qwen3-dv7",
+      "items": 705,
+      "sameClass": 705,
+      "sameAnswer": 705,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-022-1.7b-qwen3-dv8",
+      "items": 705,
+      "sameClass": 705,
+      "sameAnswer": 705,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-023-1.7b-qwen3-dv9",
+      "items": 705,
+      "sameClass": 705,
+      "sameAnswer": 705,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-024-1.7b-qwen3-dv11",
+      "items": 705,
+      "sameClass": 705,
+      "sameAnswer": 705,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-025-1.7b-qwen3-dv12",
+      "items": 705,
+      "sameClass": 705,
+      "sameAnswer": 705,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-026-0.5b-qwen2.5coder-dv13",
+      "items": 705,
+      "sameClass": 705,
+      "sameAnswer": 705,
+      "transitions": {}
+    },
+    {
+      "arm": "exp-027-1.7b-qwen3-dv13",
+      "items": 705,
+      "sameClass": 705,
+      "sameAnswer": 705,
+      "transitions": {}
+    }
+  ]
+}

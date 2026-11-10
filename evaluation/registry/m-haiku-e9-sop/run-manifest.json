@@ -1,0 +1,6 @@
+{
+  "experiment": "m-haiku-e9-sop",
+  "model": "haiku",
+  "via": "Claude Code agent session (model alias), same messages as evaluation/run-items.mjs",
+  "scoredAt": "2026-09-29T04:04:31.032Z"
+}

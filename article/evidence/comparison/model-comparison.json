@@ -1,0 +1,709 @@
+{
+  "main": {
+    "0.5B untuned | direct": {
+      "book": {
+        "n": 55,
+        "ok": 5,
+        "exact": 0
+      },
+      "compositions": {
+        "n": 55,
+        "ok": 9,
+        "exact": 0
+      },
+      "withheld": {
+        "n": 5,
+        "ok": 0,
+        "exact": 0
+      }
+    },
+    "0.5B untuned | JavaScript": {
+      "book": {
+        "n": 55,
+        "ok": 1,
+        "exact": 0
+      },
+      "compositions": {
+        "n": 55,
+        "ok": 33,
+        "exact": 7
+      },
+      "withheld": {
+        "n": 5,
+        "ok": 0,
+        "exact": 0
+      }
+    },
+    "0.5B untuned | SOP Lang in prompt": {
+      "book": {
+        "n": 55,
+        "ok": 2,
+        "exact": 0
+      },
+      "compositions": {
+        "n": 55,
+        "ok": 4,
+        "exact": 0
+      },
+      "withheld": {
+        "n": 5,
+        "ok": 0,
+        "exact": 0
+      }
+    },
+    "1.5B untuned | direct": {
+      "book": {
+        "n": 55,
+        "ok": 13,
+        "exact": 1
+      },
+      "compositions": {
+        "n": 55,
+        "ok": 2,
+        "exact": 0
+      },
+      "withheld": {
+        "n": 5,
+        "ok": 0,
+        "exact": 0
+      }
+    },
+    "1.5B untuned | JavaScript": {
+      "book": {
+        "n": 55,
+        "ok": 10,
+        "exact": 2
+      },
+      "compositions": {
+        "n": 55,
+        "ok": 49,
+        "exact": 14
+      },
+      "withheld": {
+        "n": 5,
+        "ok": 0,
+        "exact": 0
+      }
+    },
+    "1.5B untuned | SOP Lang in prompt": {
+      "book": {
+        "n": 55,
+        "ok": 9,
+        "exact": 0
+      },
+      "compositions": {
+        "n": 55,
+        "ok": 19,
+        "exact": 5
+      },
+      "withheld": {
+        "n": 5,
+        "ok": 0,
+        "exact": 0
+      }
+    },
+    "1.7B untuned | direct": {
+      "book": {
+        "n": 55,
+        "ok": 11,
+        "exact": 0
+      },
+      "compositions": {
+        "n": 55,
+        "ok": 17,
+        "exact": 0
+      },
+      "withheld": {
+        "n": 5,
+        "ok": 0,
+        "exact": 0
+      }
+    },
+    "1.7B untuned | JavaScript": {
+      "book": {
+        "n": 55,
+        "ok": 10,
+        "exact": 2
+      },
+      "compositions": {
+        "n": 55,
+        "ok": 45,
+        "exact": 13
+      },
+      "withheld": {
+        "n": 5,
+        "ok": 4,
+        "exact": 0
+      }
+    },
+    "1.7B untuned | SOP Lang in prompt": {
+      "book": {
+        "n": 55,
+        "ok": 1,
+        "exact": 0
+      },
+      "compositions": {
+        "n": 55,
+        "ok": 34,
+        "exact": 4
+      },
+      "withheld": {
+        "n": 5,
+        "ok": 0,
+        "exact": 0
+      }
+    },
+    "0.5B fine-tuned (final data) | SOP Lang": {
+      "book": {
+        "n": 55,
+        "ok": 4,
+        "exact": 1
+      },
+      "compositions": {
+        "n": 55,
+        "ok": 45,
+        "exact": 45
+      },
+      "withheld": {
+        "n": 5,
+        "ok": 0,
+        "exact": 0
+      }
+    },
+    "1.5B fine-tuned | SOP Lang": {
+      "book": {
+        "n": 55,
+        "ok": 6,
+        "exact": 5
+      },
+      "compositions": {
+        "n": 55,
+        "ok": 55,
+        "exact": 55
+      },
+      "withheld": {
+        "n": 5,
+        "ok": 0,
+        "exact": 0
+      }
+    },
+    "1.7B fine-tuned (compact) | SOP Lang": {
+      "book": {
+        "n": 55,
+        "ok": 32,
+        "exact": 27
+      },
+      "compositions": {
+        "n": 55,
+        "ok": 55,
+        "exact": 55
+      },
+      "withheld": {
+        "n": 5,
+        "ok": 0,
+        "exact": 0
+      }
+    },
+    "1.7B fine-tuned (final data) | SOP Lang": {
+      "book": {
+        "n": 55,
+        "ok": 27,
+        "exact": 7
+      },
+      "compositions": {
+        "n": 55,
+        "ok": 51,
+        "exact": 51
+      },
+      "withheld": {
+        "n": 5,
+        "ok": 0,
+        "exact": 0
+      }
+    },
+    "Haiku 4.5 | direct": {
+      "book": {
+        "n": 55,
+        "ok": 41,
+        "exact": 0
+      },
+      "compositions": {
+        "n": 55,
+        "ok": 48,
+        "exact": 0
+      },
+      "withheld": {
+        "n": 5,
+        "ok": 0,
+        "exact": 0
+      }
+    },
+    "Haiku 4.5 | JavaScript": {
+      "book": {
+        "n": 55,
+        "ok": 52,
+        "exact": 1
+      },
+      "compositions": {
+        "n": 55,
+        "ok": 55,
+        "exact": 5
+      },
+      "withheld": {
+        "n": 5,
+        "ok": 5,
+        "exact": 0
+      }
+    },
+    "Haiku 4.5 | SOP Lang in prompt": {
+      "book": {
+        "n": 55,
+        "ok": 47,
+        "exact": 1
+      },
+      "compositions": {
+        "n": 55,
+        "ok": 55,
+        "exact": 5
+      },
+      "withheld": {
+        "n": 5,
+        "ok": 5,
+        "exact": 0
+      }
+    },
+    "Sonnet 5 | direct": {
+      "book": {
+        "n": 55,
+        "ok": 53,
+        "exact": 0
+      },
+      "compositions": {
+        "n": 55,
+        "ok": 55,
+        "exact": 5
+      },
+      "withheld": {
+        "n": 5,
+        "ok": 5,
+        "exact": 0
+      }
+    },
+    "Sonnet 5 | JavaScript": {
+      "book": {
+        "n": 55,
+        "ok": 54,
+        "exact": 0
+      },
+      "compositions": {
+        "n": 55,
+        "ok": 55,
+        "exact": 5
+      },
+      "withheld": {
+        "n": 5,
+        "ok": 5,
+        "exact": 0
+      }
+    },
+    "Sonnet 5 | SOP Lang in prompt": {
+      "book": {
+        "n": 55,
+        "ok": 53,
+        "exact": 1
+      },
+      "compositions": {
+        "n": 55,
+        "ok": 55,
+        "exact": 5
+      },
+      "withheld": {
+        "n": 5,
+        "ok": 5,
+        "exact": 0
+      }
+    }
+  },
+  "e8": {
+    "0.5B untuned | Operator plan": {
+      "l0": {
+        "n": 33,
+        "ok": 11,
+        "exact": 11
+      },
+      "l2": {
+        "n": 33,
+        "ok": 6,
+        "exact": 6
+      }
+    },
+    "0.5B untuned | Plain JavaScript": {
+      "l0": {
+        "n": 33,
+        "ok": 22,
+        "exact": 3
+      },
+      "l2": {
+        "n": 33,
+        "ok": 13,
+        "exact": 2
+      }
+    },
+    "0.5B untuned | SOP Lang, jsEval": {
+      "l0": {
+        "n": 33,
+        "ok": 5,
+        "exact": 0
+      },
+      "l2": {
+        "n": 33,
+        "ok": 10,
+        "exact": 0
+      }
+    },
+    "1.5B untuned | Operator plan": {
+      "l0": {
+        "n": 33,
+        "ok": 30,
+        "exact": 30
+      },
+      "l2": {
+        "n": 33,
+        "ok": 9,
+        "exact": 9
+      }
+    },
+    "1.5B untuned | Plain JavaScript": {
+      "l0": {
+        "n": 33,
+        "ok": 30,
+        "exact": 10
+      },
+      "l2": {
+        "n": 33,
+        "ok": 19,
+        "exact": 7
+      }
+    },
+    "1.5B untuned | SOP Lang, jsEval": {
+      "l0": {
+        "n": 33,
+        "ok": 13,
+        "exact": 3
+      },
+      "l2": {
+        "n": 33,
+        "ok": 1,
+        "exact": 0
+      }
+    },
+    "1.7B untuned | Operator plan": {
+      "l0": {
+        "n": 33,
+        "ok": 31,
+        "exact": 28
+      },
+      "l2": {
+        "n": 33,
+        "ok": 15,
+        "exact": 15
+      }
+    },
+    "1.7B untuned | Plain JavaScript": {
+      "l0": {
+        "n": 33,
+        "ok": 26,
+        "exact": 6
+      },
+      "l2": {
+        "n": 33,
+        "ok": 26,
+        "exact": 2
+      }
+    },
+    "1.7B untuned | SOP Lang, jsEval": {
+      "l0": {
+        "n": 33,
+        "ok": 23,
+        "exact": 3
+      },
+      "l2": {
+        "n": 33,
+        "ok": 6,
+        "exact": 0
+      }
+    },
+    "Haiku 4.5 | Operator plan": {
+      "l0": {
+        "n": 33,
+        "ok": 33,
+        "exact": 33
+      },
+      "l2": {
+        "n": 33,
+        "ok": 33,
+        "exact": 33
+      }
+    },
+    "Haiku 4.5 | Plain JavaScript": {
+      "l0": {
+        "n": 33,
+        "ok": 33,
+        "exact": 6
+      },
+      "l2": {
+        "n": 33,
+        "ok": 33,
+        "exact": 6
+      }
+    },
+    "Haiku 4.5 | SOP Lang, jsEval": {
+      "l0": {
+        "n": 33,
+        "ok": 31,
+        "exact": 28
+      },
+      "l2": {
+        "n": 33,
+        "ok": 33,
+        "exact": 6
+      }
+    },
+    "Sonnet 5 | Operator plan": {
+      "l0": {
+        "n": 33,
+        "ok": 33,
+        "exact": 33
+      },
+      "l2": {
+        "n": 33,
+        "ok": 33,
+        "exact": 33
+      }
+    },
+    "Sonnet 5 | Plain JavaScript": {
+      "l0": {
+        "n": 33,
+        "ok": 33,
+        "exact": 3
+      },
+      "l2": {
+        "n": 33,
+        "ok": 33,
+        "exact": 3
+      }
+    },
+    "Sonnet 5 | SOP Lang, jsEval": {
+      "l0": {
+        "n": 33,
+        "ok": 33,
+        "exact": 3
+      },
+      "l2": {
+        "n": 33,
+        "ok": 33,
+        "exact": 3
+      }
+    }
+  },
+  "e3": {
+    "1.7B fine-tuned (compact) | SOP Lang": {
+      "o": {
+        "held-out-scheduling": {
+          "n": 15,
+          "ok": 15,
+          "exact": 0
+        },
+        "held-out-coalition": {
+          "n": 15,
+          "ok": 15,
+          "exact": 15
+        }
+      },
+      "p": {
+        "held-out-scheduling": {
+          "n": 15,
+          "ok": 15,
+          "exact": 0
+        },
+        "held-out-coalition": {
+          "n": 15,
+          "ok": 15,
+          "exact": 15
+        }
+      }
+    },
+    "1.7B fine-tuned (final data) | SOP Lang": {
+      "o": {
+        "held-out-scheduling": {
+          "n": 15,
+          "ok": 0,
+          "exact": 0
+        },
+        "held-out-coalition": {
+          "n": 15,
+          "ok": 15,
+          "exact": 3
+        }
+      },
+      "p": {
+        "held-out-scheduling": {
+          "n": 15,
+          "ok": 15,
+          "exact": 0
+        },
+        "held-out-coalition": {
+          "n": 15,
+          "ok": 15,
+          "exact": 15
+        }
+      }
+    },
+    "Haiku 4.5 | JavaScript": {
+      "o": {
+        "held-out-scheduling": {
+          "n": 15,
+          "ok": 15,
+          "exact": 0
+        },
+        "held-out-coalition": {
+          "n": 15,
+          "ok": 15,
+          "exact": 0
+        }
+      },
+      "p": {
+        "held-out-scheduling": {
+          "n": 15,
+          "ok": 15,
+          "exact": 0
+        },
+        "held-out-coalition": {
+          "n": 15,
+          "ok": 15,
+          "exact": 0
+        }
+      }
+    },
+    "Haiku 4.5 | SOP Lang in prompt": {
+      "o": {
+        "held-out-scheduling": {
+          "n": 15,
+          "ok": 15,
+          "exact": 0
+        },
+        "held-out-coalition": {
+          "n": 15,
+          "ok": 15,
+          "exact": 0
+        }
+      },
+      "p": {
+        "held-out-scheduling": {
+          "n": 15,
+          "ok": 15,
+          "exact": 0
+        },
+        "held-out-coalition": {
+          "n": 15,
+          "ok": 15,
+          "exact": 0
+        }
+      }
+    },
+    "Sonnet 5 | JavaScript": {
+      "o": {
+        "held-out-scheduling": {
+          "n": 15,
+          "ok": 15,
+          "exact": 0
+        },
+        "held-out-coalition": {
+          "n": 15,
+          "ok": 15,
+          "exact": 0
+        }
+      },
+      "p": {
+        "held-out-scheduling": {
+          "n": 15,
+          "ok": 15,
+          "exact": 0
+        },
+        "held-out-coalition": {
+          "n": 15,
+          "ok": 15,
+          "exact": 0
+        }
+      }
+    },
+    "Sonnet 5 | SOP Lang in prompt": {
+      "o": {
+        "held-out-scheduling": {
+          "n": 15,
+          "ok": 15,
+          "exact": 0
+        },
+        "held-out-coalition": {
+          "n": 15,
+          "ok": 15,
+          "exact": 0
+        }
+      },
+      "p": {
+        "held-out-scheduling": {
+          "n": 15,
+          "ok": 15,
+          "exact": 0
+        },
+        "held-out-coalition": {
+          "n": 15,
+          "ok": 15,
+          "exact": 0
+        }
+      }
+    }
+  },
+  "e9": {
+    "1.5B untuned | JavaScript": {
+      "n": 40,
+      "ok": 2,
+      "exact": 0
+    },
+    "1.7B untuned | JavaScript": {
+      "n": 40,
+      "ok": 24,
+      "exact": 0
+    },
+    "1.7B fine-tuned (compact) | SOP Lang": {
+      "n": 40,
+      "ok": 2,
+      "exact": 0
+    },
+    "1.7B fine-tuned (final data) | SOP Lang": {
+      "n": 40,
+      "ok": 0,
+      "exact": 0
+    },
+    "Haiku 4.5 | JavaScript": {
+      "n": 40,
+      "ok": 40,
+      "exact": 0
+    },
+    "Haiku 4.5 | SOP Lang in prompt": {
+      "n": 40,
+      "ok": 40,
+      "exact": 0
+    },
+    "Sonnet 5 | JavaScript": {
+      "n": 40,
+      "ok": 40,
+      "exact": 0
+    },
+    "Sonnet 5 | SOP Lang in prompt": {
+      "n": 40,
+      "ok": 40,
+      "exact": 0
+    }
+  }
+}

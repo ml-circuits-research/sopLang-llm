@@ -1,0 +1,22 @@
+{
+  "experiment": "e8-sopicl3-l0-coder15",
+  "items": 75,
+  "records": 75,
+  "complete": true,
+  "groups": {
+    "held-out:L0": {
+      "records": 55,
+      "exact": 4,
+      "value": 19,
+      "executed": 32,
+      "missing": 0
+    },
+    "trained-control:L0": {
+      "records": 20,
+      "exact": 4,
+      "value": 11,
+      "executed": 12,
+      "missing": 0
+    }
+  }
+}

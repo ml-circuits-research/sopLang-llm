@@ -1,0 +1,22 @@
+{
+  "experiment": "e3-original-exp025",
+  "items": 30,
+  "records": 30,
+  "complete": true,
+  "groups": {
+    "held-out-scheduling:original": {
+      "records": 15,
+      "exact": 0,
+      "value": 8,
+      "executed": 8,
+      "missing": 0
+    },
+    "held-out-coalition:original": {
+      "records": 15,
+      "exact": 7,
+      "value": 7,
+      "executed": 13,
+      "missing": 0
+    }
+  }
+}

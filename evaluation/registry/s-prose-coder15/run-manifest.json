@@ -1,0 +1,18 @@
+{
+  "experiment": "s-prose-coder15",
+  "gguf": "training/checkpoints/base-1.5b-f16.gguf",
+  "ggufBytes": 3093669600,
+  "itemSource": "slice:holdout",
+  "itemCount": 115,
+  "mode": "prose",
+  "shots": 0,
+  "perGroup": 5,
+  "samples": 1,
+  "temperature": 0,
+  "seed": 20260928,
+  "maxTokens": 1024,
+  "noThink": false,
+  "systemPromptSha256": "6164c61383c892ad5b8494b7761f9f9dda0b486a719ccd1aa2f6d185b4ee4db0",
+  "resumedWith": 0,
+  "updatedAt": "2026-09-28T20:53:43.333Z"
+}

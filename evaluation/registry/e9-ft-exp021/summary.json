@@ -1,0 +1,15 @@
+{
+  "experiment": "e9-ft-exp021",
+  "items": 40,
+  "records": 40,
+  "complete": true,
+  "groups": {
+    "withheld-procedural": {
+      "records": 40,
+      "exact": 0,
+      "value": 5,
+      "executed": 30,
+      "missing": 0
+    }
+  }
+}

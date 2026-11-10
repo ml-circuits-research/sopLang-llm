@@ -1,0 +1,18 @@
+{
+  "experiment": "e8-ops3-l2-coder15",
+  "gguf": "training/checkpoints/base-1.5b-f16.gguf",
+  "ggufBytes": 3093669600,
+  "itemSource": "evaluation/registry/items-e2/L2.jsonl",
+  "itemCount": 75,
+  "mode": "ops",
+  "shots": 3,
+  "perGroup": 5,
+  "samples": 1,
+  "temperature": 0,
+  "seed": 20260928,
+  "maxTokens": 768,
+  "noThink": false,
+  "systemPromptSha256": "bd4eecf6d9791315e7e7f9471f447f1c3cb3e3b1383301fbc77675ccbaccd1d1",
+  "resumedWith": 0,
+  "updatedAt": "2026-09-28T22:49:44.656Z"
+}

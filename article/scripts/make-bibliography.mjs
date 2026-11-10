@@ -95,11 +95,17 @@ for (const ref of Object.values(refs)) {
   ref.entry = ref.entry.replace(match[0], `${authorText} (${match[2]}). `);
   ref.citation = ref.citation.replace(' and ', ' & ');
 }
-const ledger = Object.entries(refs).map(([key, ref]) => ({ key, title: ref.title,
+let ledger = Object.entries(refs).map(([key, ref]) => ({ key, title: ref.title,
   metadata: ref.metadataVerification, accessed: '2026-09-28',
   supportUrl: support[key][0], locator: support[key][1],
   supports: support[key][2], doesNotEstablish: support[key][3],
   status: 'Primary-source support checked for the limited proposition recorded here.' }));
+// Works verified for the September 2026 portfolio revision carry their own audit records.
+const additions = JSON.parse(await readFile(resolve(root, 'evidence/bibliography-additions.json')));
+const additionsAudit = JSON.parse(await readFile(resolve(root, 'evidence/bibliography-additions-audit.json')));
+for (const key of Object.keys(additions)) if (refs[key]) throw new Error(`Duplicate bibliography key: ${key}`);
+Object.assign(refs, additions);
+ledger = ledger.concat(additionsAudit);
 await writeFile(resolve(root, 'evidence/bibliography.json'), JSON.stringify(refs, null, 2) + '\n');
 await writeFile(resolve(root, 'evidence/bibliography-audit.json'), JSON.stringify(ledger, null, 2) + '\n');
 await writeFile(resolve(root, 'audit/bibliography.md'), '# Bibliography verification\n\nChecked 28 September 2026. Metadata and support were checked separately. The records below describe the supported propositions; they do not certify every possible use of a citation. Cached author PDFs are local reading material and are excluded from the delivery archive.\n\n'

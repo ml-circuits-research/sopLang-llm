@@ -1,0 +1,269 @@
+{"pid":"755ecca07b63","verdict":"same","reason":"Both say no, identical code 01."}
+{"pid":"755f9102eeac","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"7562bb49dcc5","verdict":"same","reason":"Same decoding green-green-red."}
+{"pid":"77544da3449d","verdict":"same","reason":"59 minutes and exceeds limit, i.e. not feasible."}
+{"pid":"7784becfb4d9","verdict":"same","reason":"Both select bringing the magnet near as the discriminating check."}
+{"pid":"77a42a439667","verdict":"same","reason":"18 days and order can wait."}
+{"pid":"783e6c56c8f9","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"784688f18516","verdict":"same","reason":"Both give 5."}
+{"pid":"785386793487","verdict":"different","reason":"Candidate lists no coalition; reference is A."}
+{"pid":"7942e8adb021","verdict":"same","reason":"3 days and must order today."}
+{"pid":"79c64c4ff356","verdict":"same","reason":"62 minutes, feasible."}
+{"pid":"79d636dfa809","verdict":"same","reason":"Both yes."}
+{"pid":"7a00acb894d6","verdict":"same","reason":"Sam must wear the shield; rules are separate."}
+{"pid":"7b6d41804d24","verdict":"same","reason":"58 minutes, feasible."}
+{"pid":"7bd5e322ebc5","verdict":"same","reason":"59 minutes, does not meet limit."}
+{"pid":"7c85c57c62c9","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"7d2686a75de6","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"7d742eb55b6d","verdict":"same","reason":"5 days and order need not be placed today."}
+{"pid":"7e5ad3fe367e","verdict":"same","reason":"17 days and order need not be placed today."}
+{"pid":"80558a62f57d","verdict":"same","reason":"Both say no path."}
+{"pid":"811cb76391ed","verdict":"different","reason":"Candidate adds AB and AC to the reference set of A only."}
+{"pid":"815564bba869","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"81ef9992640a","verdict":"same","reason":"Both give 4."}
+{"pid":"82a5536d9504","verdict":"same","reason":"53 minutes, feasible."}
+{"pid":"82b5d4a7deef","verdict":"same","reason":"Both yes."}
+{"pid":"8343ef56c5a5","verdict":"same","reason":"6 days and order can wait."}
+{"pid":"85277d0f3fc9","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"855685b58873","verdict":"different","reason":"Candidate proposes a hand-washing intervention, not the reference observation of microbes on hands or food covering."}
+{"pid":"860ea4685b4c","verdict":"same","reason":"Same coalitions AB, AC."}
+{"pid":"8618152d64d7","verdict":"same","reason":"18 days and order can wait."}
+{"pid":"86a84891cd05","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"878aaf3800a8","verdict":"same","reason":"Both Class A."}
+{"pid":"878d0491a814","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"88d3d2258811","verdict":"same","reason":"Same coalitions and seat totals."}
+{"pid":"89635e700014","verdict":"same","reason":"6.666... equals 20/3."}
+{"pid":"89962908bdab","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"89dcf00e971d","verdict":"same","reason":"Sam must wear the shield; rules apply to separate objects."}
+{"pid":"89ebe2beaef3","verdict":"same","reason":"64 minutes, not feasible."}
+{"pid":"89efca70ef9c","verdict":"same","reason":"Both give 34."}
+{"pid":"8acb4c67e611","verdict":"same","reason":"7 days and yes, must order today."}
+{"pid":"8b91c7cbf21c","verdict":"different","reason":"Candidate adds AB and AC to the reference set of A only."}
+{"pid":"8ca2bb918aa6","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"8d172d201d5a","verdict":"same","reason":"Both 2 cm per day."}
+{"pid":"8d5c1d54f968","verdict":"same","reason":"21 days and order can wait."}
+{"pid":"8dc895c96ef8","verdict":"same","reason":"Both give 6."}
+{"pid":"8e9d0b1c9efb","verdict":"different","reason":"Candidate chooses repeating with the same method, not the reference instrument check."}
+{"pid":"8effe9742f10","verdict":"same","reason":"Both give 2."}
+{"pid":"8f54c931d76c","verdict":"same","reason":"57 minutes, not feasible."}
+{"pid":"9079cc236221","verdict":"same","reason":"6.67 matches 20/3."}
+{"pid":"9086abdfb2cb","verdict":"same","reason":"19 days and order can wait."}
+{"pid":"90e5d421d918","verdict":"same","reason":"B and D active, E inactive, Rule 4 not needed."}
+{"pid":"9215fd7c7677","verdict":"same","reason":"7 days and must order today."}
+{"pid":"923cab642455","verdict":"same","reason":"8 days and must order today."}
+{"pid":"929b5baeb194","verdict":"same","reason":"Neither attempt succeeds."}
+{"pid":"93413f262936","verdict":"same","reason":"10 days and order can wait."}
+{"pid":"9403e64064ad","verdict":"same","reason":"59 minutes, not feasible."}
+{"pid":"944ae6485ad5","verdict":"same","reason":"52 minutes, not feasible."}
+{"pid":"94ca82694845","verdict":"same","reason":"10 days and order can wait."}
+{"pid":"9541df5590d0","verdict":"different","reason":"Candidate says 6 steps, reference 5."}
+{"pid":"9619078bc15c","verdict":"same","reason":"Both A alone."}
+{"pid":"9867461e9377","verdict":"same","reason":"52 minutes, not feasible."}
+{"pid":"9949a8448b55","verdict":"same","reason":"Blue cannot be VIP; gold uncertain."}
+{"pid":"9970b3641b77","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"9a0d1dfaf3e1","verdict":"same","reason":"18 days and order can wait."}
+{"pid":"9a6faf70c821","verdict":"same","reason":"19 days and order can wait."}
+{"pid":"9a88de0770a8","verdict":"same","reason":"8.75 and the mean increases."}
+{"pid":"9aa27176b6bf","verdict":"same","reason":"Sam must wear shields; rules independent."}
+{"pid":"9ab82c213ca9","verdict":"same","reason":"21 days and no need to order today."}
+{"pid":"9b9c11b4ae75","verdict":"same","reason":"32 minutes, feasible."}
+{"pid":"9ba8463c9a22","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"9bb222b9a541","verdict":"same","reason":"6.67 matches 20/3."}
+{"pid":"9c1f88497f59","verdict":"same","reason":"A alone."}
+{"pid":"9c2f5df8a417","verdict":"same","reason":"Same coalitions AB, AC."}
+{"pid":"9c555426162e","verdict":"same","reason":"52 minutes, not feasible."}
+{"pid":"9c62b193dce6","verdict":"same","reason":"A alone."}
+{"pid":"9c65fbfc7d21","verdict":"same","reason":"16 days and order can wait."}
+{"pid":"9c6f630a9aae","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"9c788a1d7d9e","verdict":"same","reason":"5 days and order can wait."}
+{"pid":"9cea3b79692d","verdict":"same","reason":"Both 117."}
+{"pid":"9d477ab4d947","verdict":"different","reason":"Candidate adds AB and AC to the reference set of A only."}
+{"pid":"9e86ba9b32bf","verdict":"same","reason":"20 days and order can wait."}
+{"pid":"9f545c2231fc","verdict":"same","reason":"Same coalitions AB, AC."}
+{"pid":"a12a876462cc","verdict":"same","reason":"58 minutes, feasible."}
+{"pid":"a14ff387f10f","verdict":"same","reason":"58 minutes, meets limit."}
+{"pid":"a289a243bb6d","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"a318ca6e0a96","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"a32d01d5fb10","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"a3ab56553da1","verdict":"same","reason":"70 minutes, meets limit."}
+{"pid":"a40937f4ef4a","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"a550d7b2c457","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"a57df2dcb982","verdict":"same","reason":"Both 222."}
+{"pid":"a5fc47554947","verdict":"same","reason":"A alone."}
+{"pid":"a69d3536cc9f","verdict":"same","reason":"49 minutes, feasible."}
+{"pid":"a6a41ef7bacc","verdict":"same","reason":"Same coalitions AB, AC."}
+{"pid":"a882b05ffb32","verdict":"same","reason":"20 days and no need to order today."}
+{"pid":"a917f251916b","verdict":"same","reason":"17 days and order can wait."}
+{"pid":"a927a41913d2","verdict":"same","reason":"Both select checking whether increasing the portion helps."}
+{"pid":"a98ae2a2ce59","verdict":"same","reason":"13 days and order can wait."}
+{"pid":"ab82dd177867","verdict":"same","reason":"Same coalitions AB, AC."}
+{"pid":"ac1cd3cafb94","verdict":"same","reason":"16 days and order can wait."}
+{"pid":"ac8f3ff137a6","verdict":"same","reason":"Both yes."}
+{"pid":"ad4701f727e9","verdict":"same","reason":"A alone."}
+{"pid":"ada716cb9f4c","verdict":"same","reason":"7 days and order can wait."}
+{"pid":"ae5b539396cf","verdict":"same","reason":"Sol wears the shield; rules separate."}
+{"pid":"ae69864b473f","verdict":"same","reason":"6 days and must order today."}
+{"pid":"b0278d717f8a","verdict":"same","reason":"59 minutes, not feasible."}
+{"pid":"b16576c3fce5","verdict":"same","reason":"9 days and order can wait."}
+{"pid":"b16610f0645a","verdict":"same","reason":"8 days and order can wait."}
+{"pid":"b1834171bd36","verdict":"same","reason":"Same coalitions AB, AC."}
+{"pid":"b2103b52f9e7","verdict":"same","reason":"50 minutes, not feasible."}
+{"pid":"b32280347076","verdict":"same","reason":"Both 3."}
+{"pid":"b3da4aed86c5","verdict":"same","reason":"13 days and order can wait."}
+{"pid":"b480e4ee6f50","verdict":"same","reason":"16 days and order can wait."}
+{"pid":"b4c645c2c130","verdict":"same","reason":"7 days and order can wait."}
+{"pid":"b53fe970df3f","verdict":"same","reason":"59 minutes, not feasible."}
+{"pid":"b6a237e2b762","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"b6c8b1abf159","verdict":"same","reason":"10 days and order can wait."}
+{"pid":"b6d50b6c66a6","verdict":"same","reason":"Both yes."}
+{"pid":"b6ee3a6ed433","verdict":"same","reason":"Same coalitions AB, AC."}
+{"pid":"b77ae1e421b5","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"b7b3b9e4be73","verdict":"same","reason":"Only A alone."}
+{"pid":"b84604b12e22","verdict":"same","reason":"22 days and order can wait."}
+{"pid":"b87ef031baba","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"b9903a967396","verdict":"same","reason":"2 cm per day."}
+{"pid":"ba619a8e30b5","verdict":"same","reason":"9 days and no need to order today."}
+{"pid":"baaaea79688c","verdict":"same","reason":"49 minutes, meets limit."}
+{"pid":"bab8a249c312","verdict":"different","reason":"Candidate lists no coalition; reference is A."}
+{"pid":"bb02d8dd4f8e","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"bb0d2cb8213f","verdict":"same","reason":"Both yes."}
+{"pid":"bb21432a890e","verdict":"same","reason":"52 minutes, not feasible."}
+{"pid":"bbc9e16c379c","verdict":"same","reason":"70 minutes, feasible."}
+{"pid":"bc5e10e1f881","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"bcc5cfc60b24","verdict":"same","reason":"Same coalitions AB, AC."}
+{"pid":"bce1eddbbb2d","verdict":"same","reason":"B and D active, E inactive, Rule 4 not needed."}
+{"pid":"bcf8cd6ccebd","verdict":"different","reason":"Candidate says no, reference yes."}
+{"pid":"bd6f46a6992b","verdict":"same","reason":"10 days and order can wait."}
+{"pid":"be660512e6db","verdict":"different","reason":"Candidate omits coalition AC."}
+{"pid":"be80e68ddaad","verdict":"same","reason":"B and D active, E inactive, Rule 4 not required."}
+{"pid":"bf43d8691c20","verdict":"same","reason":"Both yes."}
+{"pid":"bf7aedb3540f","verdict":"same","reason":"Both yes."}
+{"pid":"bfd8b2c3b396","verdict":"same","reason":"6 days and must order today."}
+{"pid":"c0cc8c7b5839","verdict":"same","reason":"Same coalitions and seat totals."}
+{"pid":"c16a10268c62","verdict":"same","reason":"Omar must wear the shield; Rule Two does not affect it."}
+{"pid":"c16ed341fd83","verdict":"same","reason":"Sol must wear shields; rules independent."}
+{"pid":"c230c6703b6b","verdict":"same","reason":"Both 14."}
+{"pid":"c321b25cc39e","verdict":"same","reason":"6 days and order can wait."}
+{"pid":"c36de9f5c494","verdict":"same","reason":"59 minutes, not feasible."}
+{"pid":"c36ed64fb0b7","verdict":"same","reason":"Both 3."}
+{"pid":"c4b5f71c0a85","verdict":"same","reason":"Both yes."}
+{"pid":"c4d1005e150e","verdict":"same","reason":"22 days and order can wait."}
+{"pid":"c5318e9fb5d8","verdict":"same","reason":"13 days and order can wait."}
+{"pid":"c55f3c32289c","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"c5c693afea66","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"c79f6227d00d","verdict":"same","reason":"Candidate checks whether energy is at target, the reference's equivalent observation."}
+{"pid":"c7ba3fc0d0f8","verdict":"same","reason":"8.75 and increases."}
+{"pid":"c7eec5b847d9","verdict":"different","reason":"Candidate gives 16, reference 24."}
+{"pid":"c7ef29c18e25","verdict":"same","reason":"Both 27."}
+{"pid":"c8030416ebb4","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"c811ac9a2091","verdict":"same","reason":"Both Class A."}
+{"pid":"c887b48d8451","verdict":"same","reason":"Both 44."}
+{"pid":"c8e824baea1f","verdict":"same","reason":"59 minutes, not feasible."}
+{"pid":"c9a56177dd55","verdict":"same","reason":"8.75 and increases."}
+{"pid":"ca0013007c16","verdict":"same","reason":"7 days and order can wait."}
+{"pid":"ca29d2233b61","verdict":"same","reason":"Both 5."}
+{"pid":"cb0032a4fc74","verdict":"same","reason":"Same coalitions AB, AC."}
+{"pid":"cb1aedb977b8","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"cbdcbec0da46","verdict":"same","reason":"Same coalitions AB, AC."}
+{"pid":"ccdbfcb3f4fd","verdict":"same","reason":"Both 44."}
+{"pid":"cd8962dde544","verdict":"same","reason":"58 minutes, meets limit."}
+{"pid":"ce43731642b6","verdict":"same","reason":"Same coalitions AB, AC."}
+{"pid":"cee064f9b9ef","verdict":"same","reason":"Only A alone is the final answer."}
+{"pid":"cef0bbca5f9e","verdict":"same","reason":"Same coalitions AB, AC."}
+{"pid":"cf375811156e","verdict":"same","reason":"Neither attempt succeeds."}
+{"pid":"cf9d06c8d693","verdict":"different","reason":"Candidate says order must be placed today; reference says it can wait."}
+{"pid":"d0d0ef1827cc","verdict":"same","reason":"5 days and must order today."}
+{"pid":"d0ebdfefe683","verdict":"different","reason":"Candidate gives 181, reference 250."}
+{"pid":"d0f1e7e0d5cf","verdict":"same","reason":"10 days and order can wait."}
+{"pid":"d1aefe20e736","verdict":"same","reason":"B and D active, E inactive, Rule 4 not needed."}
+{"pid":"d2a5a4971c5a","verdict":"different","reason":"Candidate chooses an alternate receiver test, not the reference observation."}
+{"pid":"d2f863569a18","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"d31bff5aa5a8","verdict":"same","reason":"19 days and order can wait."}
+{"pid":"d352ffcef817","verdict":"same","reason":"Same reason: avoid being left with the smaller piece."}
+{"pid":"d36e6df9a188","verdict":"same","reason":"70 minutes, feasible."}
+{"pid":"d48b6c295bf0","verdict":"different","reason":"Candidate tests hand-washing, not the reference observation of microbes on hands or food covering."}
+{"pid":"d5b950716f42","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"d6033bb16715","verdict":"same","reason":"18 days and order can wait."}
+{"pid":"d9115c766359","verdict":"same","reason":"Same coalitions AB, AC."}
+{"pid":"d9823f7b2300","verdict":"same","reason":"59 minutes, not feasible."}
+{"pid":"da077a8e8ac7","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"da321c221f71","verdict":"same","reason":"Both yes."}
+{"pid":"da94600bfb45","verdict":"different","reason":"Candidate omits coalition AB."}
+{"pid":"dab520de80f2","verdict":"same","reason":"No, both encode 01."}
+{"pid":"dc5f2df32391","verdict":"same","reason":"18 days and order can wait."}
+{"pid":"dc6893a9520e","verdict":"same","reason":"A alone."}
+{"pid":"dd6edca26552","verdict":"same","reason":"52 minutes, not feasible."}
+{"pid":"ddd1376e71ba","verdict":"same","reason":"Both 5 steps."}
+{"pid":"de05eadeecec","verdict":"same","reason":"16 days and order can wait."}
+{"pid":"de112971074e","verdict":"same","reason":"Same coalitions AB, AC."}
+{"pid":"de3ce5a5b037","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"deef84395a2a","verdict":"same","reason":"6 days and no need to order today."}
+{"pid":"df0bc70c9962","verdict":"different","reason":"Candidate proposes separate-route and hand-washing tests, not the reference observation of microbes on hands or food covering."}
+{"pid":"df375067a605","verdict":"same","reason":"44 minutes, feasible."}
+{"pid":"df560490ff0a","verdict":"same","reason":"Both 912 hours."}
+{"pid":"dfd828131bff","verdict":"same","reason":"9 days and order can wait."}
+{"pid":"e0a5a1939e02","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"e0b4af8b578b","verdict":"different","reason":"Candidate says equal; reference says Class A."}
+{"pid":"e0ca97061918","verdict":"same","reason":"Both yes."}
+{"pid":"e14055368529","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"e16e5c5e6c14","verdict":"same","reason":"11 days and order can wait."}
+{"pid":"e2026f96c6c4","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"e219bdaf8010","verdict":"same","reason":"No, the code cannot distinguish them."}
+{"pid":"e2e78134c6c6","verdict":"same","reason":"Neither attempt succeeds."}
+{"pid":"e309d9258161","verdict":"same","reason":"48 minutes, not feasible."}
+{"pid":"e30da5da5c1e","verdict":"same","reason":"70 minutes, feasible."}
+{"pid":"e3b2e076459e","verdict":"same","reason":"59 minutes, not feasible."}
+{"pid":"e3cbe144f575","verdict":"same","reason":"Blue cannot be VIP; gold uncertain."}
+{"pid":"e4088c1a3b46","verdict":"different","reason":"Candidate says a path exists; reference says no."}
+{"pid":"e435b1d1b320","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"e58e129a0656","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"e5b23f3644bc","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"e665ae729921","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"e6a7d16a5df7","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"e6b88f79df38","verdict":"same","reason":"10 days and no need to order today."}
+{"pid":"e6c7b6611135","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"e6f07ea7f771","verdict":"same","reason":"Both 77."}
+{"pid":"e814d53458cc","verdict":"same","reason":"Both 7."}
+{"pid":"e86e7ec98a5a","verdict":"same","reason":"Same coalitions and seat totals."}
+{"pid":"e9146a2d1247","verdict":"same","reason":"5 days and no need to order today."}
+{"pid":"e97a2d1aee14","verdict":"same","reason":"49 minutes, feasible."}
+{"pid":"eb8fc4925a04","verdict":"same","reason":"58 minutes, feasible."}
+{"pid":"ec4bfa20d260","verdict":"same","reason":"Leo wears the shield; rules separate."}
+{"pid":"ec64af0735a4","verdict":"same","reason":"Both 8."}
+{"pid":"ee0853f4393a","verdict":"same","reason":"Sam must wear shields; rules independent."}
+{"pid":"ee32f5a89c3b","verdict":"same","reason":"11 days and no need to order today."}
+{"pid":"eea56e821793","verdict":"same","reason":"18 days and order can wait."}
+{"pid":"eec92baafc7e","verdict":"same","reason":"44 minutes, feasible."}
+{"pid":"eee7f8fa689d","verdict":"same","reason":"Both 33."}
+{"pid":"f0260dfca8d6","verdict":"same","reason":"Both 216 hours."}
+{"pid":"f094ab9fb8fe","verdict":"different","reason":"Candidate says order must be placed today; reference says it can wait."}
+{"pid":"f1277baa3ef3","verdict":"same","reason":"64 minutes, not feasible."}
+{"pid":"f180e267cae4","verdict":"same","reason":"Omar must wear shields; rules independent."}
+{"pid":"f21cfc39858d","verdict":"same","reason":"Both select checking whether increasing the portion helps."}
+{"pid":"f2a7885253a8","verdict":"same","reason":"52 minutes, not feasible."}
+{"pid":"f375dccd6464","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"f4042179906b","verdict":"different","reason":"Candidate excludes BC, which the reference includes."}
+{"pid":"f5c927022011","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"f5ff2c79145f","verdict":"same","reason":"B and D active, E inactive, Rule 4 not needed."}
+{"pid":"f6332ca900a5","verdict":"same","reason":"Same reason: the cutter would be left with the smaller piece."}
+{"pid":"f71453dfa074","verdict":"same","reason":"Blue cannot be VIP; gold uncertain."}
+{"pid":"f720821a25be","verdict":"same","reason":"Harun must wear the shield."}
+{"pid":"f7b9b47801f1","verdict":"different","reason":"Candidate lists no coalition; reference is A."}
+{"pid":"f8156d5b4d70","verdict":"same","reason":"22 days and order can wait."}
+{"pid":"f8820ebb9f7d","verdict":"same","reason":"13 days and order can wait."}
+{"pid":"f916aaae3404","verdict":"same","reason":"Leo must wear the shield."}
+{"pid":"f9c4f43ed34f","verdict":"same","reason":"5 days and must order today."}
+{"pid":"f9cf38902a3f","verdict":"same","reason":"Both 48."}
+{"pid":"fad27613826f","verdict":"same","reason":"10 days and order can wait."}
+{"pid":"fb5fc390e3c7","verdict":"same","reason":"7 days and order can wait."}
+{"pid":"fbb05f85995d","verdict":"same","reason":"Both 16."}
+{"pid":"fbb26503b29b","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"fc2a1a2c83cd","verdict":"same","reason":"6 days and order can wait."}
+{"pid":"fc3fbc9c38d4","verdict":"same","reason":"Winning set is AB and AC, BC marked not winning."}
+{"pid":"fc6ceb649eb3","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"fc7907ad5a2a","verdict":"different","reason":"Candidate omits coalition BC."}
+{"pid":"fd865dafe73f","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"fe14ef8bd0fd","verdict":"same","reason":"Same coalitions AB, AC, BC."}
+{"pid":"fe92655120da","verdict":"same","reason":"Leo must wear shields; rules independent."}
+{"pid":"fee53f1b54cd","verdict":"different","reason":"Candidate says no path; reference yes."}
+{"pid":"ff534f447e73","verdict":"same","reason":"Harun wears the shield; rules separate."}

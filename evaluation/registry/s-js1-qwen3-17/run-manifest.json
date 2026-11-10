@@ -1,0 +1,18 @@
+{
+  "experiment": "s-js1-qwen3-17",
+  "gguf": "training/checkpoints/base-qwen3-17b-f16.gguf",
+  "ggufBytes": 4069679360,
+  "itemSource": "slice:holdout",
+  "itemCount": 115,
+  "mode": "js",
+  "shots": 1,
+  "perGroup": 5,
+  "samples": 1,
+  "temperature": 0,
+  "seed": 20260928,
+  "maxTokens": 1024,
+  "noThink": true,
+  "systemPromptSha256": "05650018d20b2a02ddcfda4389cb41d6ce413935ec0c5093add1522b19e92baf",
+  "resumedWith": 0,
+  "updatedAt": "2026-09-28T21:04:43.390Z"
+}

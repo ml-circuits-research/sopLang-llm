@@ -1,0 +1,348 @@
+{"pid": "ffcedfbd52fa", "verdict": "different", "reason": "Final value differs from the reference."}
+{"pid": "ffce42d85ea4", "verdict": "different", "reason": "135 differs from 117."}
+{"pid": "ffc0155c2ca6", "verdict": "different", "reason": "32 differs from 4."}
+{"pid": "ffbd21d2bad1", "verdict": "same", "reason": "Same value 2448."}
+{"pid": "ffa976325741", "verdict": "different", "reason": "19 minutes and feasible differ from 52 minutes not feasible."}
+{"pid": "ffa2153c146b", "verdict": "different", "reason": "5 differs from 1."}
+{"pid": "ff8dcb4a1cd0", "verdict": "different", "reason": "Answer 0 does not name coalition A."}
+{"pid": "ff897b851d71", "verdict": "different", "reason": "Says Monday succeeds; reference says neither."}
+{"pid": "ff4385763628", "verdict": "different", "reason": "0 differs from 4."}
+{"pid": "feb0d413aa87", "verdict": "different", "reason": "82 minutes differs from 70."}
+{"pid": "fea2c356fbf5", "verdict": "different", "reason": "Stock days -1 differs from 6."}
+{"pid": "fe6e5f52a231", "verdict": "different", "reason": "Names a different discriminating observation."}
+{"pid": "fe3be4ec9e7b", "verdict": "different", "reason": "NaN differs from 72."}
+{"pid": "fe0c42e6869f", "verdict": "different", "reason": "Selects A and B rather than AB and AC."}
+{"pid": "fdc34a93539d", "verdict": "different", "reason": "81 differs from 11."}
+{"pid": "fd8cbe47b3a2", "verdict": "different", "reason": "8100 differs from 540."}
+{"pid": "fd1764f4d70d", "verdict": "different", "reason": "6.375 differs from 6."}
+{"pid": "fcf80c57d7c6", "verdict": "different", "reason": "21 differs from 4."}
+{"pid": "fca52a9a4118", "verdict": "different", "reason": "13 days and must order differ from 12 days can wait."}
+{"pid": "fc79423deac3", "verdict": "different", "reason": "18 differs from 16."}
+{"pid": "fc69f64154e2", "verdict": "different", "reason": "0.38 differs from 216."}
+{"pid": "fc231c6a4cb8", "verdict": "different", "reason": "25 differs from 8.75."}
+{"pid": "fc22a3eccdb1", "verdict": "different", "reason": "18 minutes differs from 70."}
+{"pid": "fb9e1056ec12", "verdict": "same", "reason": "Both say a path exists."}
+{"pid": "fb6bc1d655e1", "verdict": "different", "reason": "4 differs from 72."}
+{"pid": "fb09f8a2e79c", "verdict": "same", "reason": "Same value 114."}
+{"pid": "fad4b8b92ebc", "verdict": "different", "reason": "1 differs from 34."}
+{"pid": "faa27daa3868", "verdict": "different", "reason": "NaN differs from 16."}
+{"pid": "fa9b5ff3e67a", "verdict": "different", "reason": "6 days and no need differ from 5 days must order."}
+{"pid": "fa6c013d173e", "verdict": "different", "reason": "3 steps differs from 5."}
+{"pid": "fa445682c08c", "verdict": "different", "reason": "3.5 differs from 22."}
+{"pid": "fa16178dc9dd", "verdict": "different", "reason": "Names hand, not microbes on hands; incomplete observation."}
+{"pid": "fa0b07e43c21", "verdict": "different", "reason": "106 hours differs from 1380 minutes."}
+{"pid": "f9eb48ff868e", "verdict": "same", "reason": "Same value 222."}
+{"pid": "f9a05188cc28", "verdict": "same", "reason": "Same value 74."}
+{"pid": "f94b554d0d66", "verdict": "different", "reason": "40 differs from 24."}
+{"pid": "f93d042e4409", "verdict": "different", "reason": "8 differs from 29."}
+{"pid": "f8d78fc51e2f", "verdict": "different", "reason": "Answer 0 gives no observation."}
+{"pid": "f8ad7d261692", "verdict": "same", "reason": "6.667 equals 20/3."}
+{"pid": "f8a91cd58eb7", "verdict": "different", "reason": "92 differs from 2208."}
+{"pid": "f86b679a2c96", "verdict": "same", "reason": "Same 59 minutes and not feasible."}
+{"pid": "f821c5f00299", "verdict": "different", "reason": "270 differs from 54."}
+{"pid": "f7ef467e2c1a", "verdict": "different", "reason": "Order verdict missing."}
+{"pid": "f782416fb4c4", "verdict": "different", "reason": "1 differs from 3."}
+{"pid": "f74bb0996cee", "verdict": "different", "reason": "5 differs from 12."}
+{"pid": "f717a52fc398", "verdict": "different", "reason": "65 differs from 222."}
+{"pid": "f6fdcf5d3bce", "verdict": "different", "reason": "18 differs from 20."}
+{"pid": "f6d479efd861", "verdict": "different", "reason": "138 differs from 26."}
+{"pid": "f66dd5ca2e7b", "verdict": "different", "reason": "21.6 does not round to 21."}
+{"pid": "f653335d688e", "verdict": "different", "reason": "Says Monday succeeds; reference says neither."}
+{"pid": "f64a045a23e5", "verdict": "different", "reason": "240 differs from 222."}
+{"pid": "f62aa5fc5890", "verdict": "same", "reason": "Same 16 days and order can wait."}
+{"pid": "f605356861bb", "verdict": "different", "reason": "4 differs from 16."}
+{"pid": "f5b4cc1f0ea6", "verdict": "different", "reason": "Says Monday succeeds; reference says neither."}
+{"pid": "f5a648d17d4e", "verdict": "different", "reason": "51 differs from 105."}
+{"pid": "f5a5cc93c9bf", "verdict": "different", "reason": "56 differs from 48."}
+{"pid": "f5829da16beb", "verdict": "different", "reason": "Says must order today; reference says can wait."}
+{"pid": "f51b5e24ce54", "verdict": "same", "reason": "Same value 2340."}
+{"pid": "f4d0a104da31", "verdict": "same", "reason": "Same value 77."}
+{"pid": "f4b03034f644", "verdict": "different", "reason": "47 differs from 250."}
+{"pid": "f49702dc45e0", "verdict": "same", "reason": "Same value 1860."}
+{"pid": "f401c6fff7ba", "verdict": "same", "reason": "Same value 960."}
+{"pid": "f3f7b80eca38", "verdict": "different", "reason": "18.5 differs from 33."}
+{"pid": "f3c5a1635974", "verdict": "different", "reason": "66 differs from 33."}
+{"pid": "f35f1a802145", "verdict": "different", "reason": "46 differs from 29."}
+{"pid": "f340509499f4", "verdict": "different", "reason": "23.75 differs from 33."}
+{"pid": "f2b8d7f8eb17", "verdict": "different", "reason": "Lists numbers, not coalitions AB, AC, BC."}
+{"pid": "f2ae4d213a65", "verdict": "different", "reason": "76 differs from 19."}
+{"pid": "f2a311fb19bc", "verdict": "different", "reason": "36 differs from 8."}
+{"pid": "f22bf3602f00", "verdict": "different", "reason": "No final minute value; 2 hours is not 960 minutes."}
+{"pid": "f229b3e67b0a", "verdict": "same", "reason": "Same 57 minutes and feasible."}
+{"pid": "f1e62ae1568b", "verdict": "same", "reason": "Same value 90."}
+{"pid": "f1de7ae264c5", "verdict": "same", "reason": "Same value 144."}
+{"pid": "f16706c63cd8", "verdict": "same", "reason": "Same 8 days and must order today."}
+{"pid": "f16390a47cd1", "verdict": "same", "reason": "Same value 9."}
+{"pid": "f153e61f793e", "verdict": "different", "reason": "Selects B and C rather than AB and AC."}
+{"pid": "f146f1e75005", "verdict": "different", "reason": "207.76 differs from 210."}
+{"pid": "f12cd5d1395d", "verdict": "different", "reason": "51 differs from 17."}
+{"pid": "f118c50d8bf1", "verdict": "same", "reason": "Same value 46."}
+{"pid": "f0f4029b1806", "verdict": "same", "reason": "Same value 24."}
+{"pid": "f0ea791d745f", "verdict": "same", "reason": "Same 58 minutes and feasible."}
+{"pid": "f0d594bc5335", "verdict": "different", "reason": "260 differs from 164."}
+{"pid": "f0d3431ef2b3", "verdict": "different", "reason": "Does not name the discriminating observation."}
+{"pid": "f07f1fcd2017", "verdict": "different", "reason": "32 differs from 16."}
+{"pid": "f02dcee0b991", "verdict": "different", "reason": "196 days and no order verdict differ from 16 days can wait."}
+{"pid": "f01c960e0aa9", "verdict": "different", "reason": "45 differs from 46."}
+{"pid": "efb04bf80533", "verdict": "different", "reason": "Selects Class B instead of Class A."}
+{"pid": "efa0c677e6a0", "verdict": "same", "reason": "Same value 3."}
+{"pid": "eee584b65276", "verdict": "same", "reason": "Selects coalition A only."}
+{"pid": "ee8cf41e3bb5", "verdict": "different", "reason": "19 days and must order differ from 18 days can wait."}
+{"pid": "edf7bbaa5bcd", "verdict": "different", "reason": "Selects B and C instead of A."}
+{"pid": "edc2f5b02959", "verdict": "different", "reason": "0 differs from 2."}
+{"pid": "ed76f1c94cbb", "verdict": "different", "reason": "Says must order now; reference says can wait."}
+{"pid": "ed59b7e65c63", "verdict": "different", "reason": "24 differs from 43."}
+{"pid": "ed1f4b294c12", "verdict": "different", "reason": "Lists numbers, not coalitions AB, AC, BC."}
+{"pid": "ed06aa5160d5", "verdict": "same", "reason": "Same value 3240."}
+{"pid": "ecfa0e069f0c", "verdict": "different", "reason": "Does not name the discriminating check."}
+{"pid": "ec90759db661", "verdict": "different", "reason": "No day count and implies insufficiency; reference 16 days can wait."}
+{"pid": "ec27ad760631", "verdict": "different", "reason": "Names a different observation, not increasing the portion."}
+{"pid": "ebfeb3567acd", "verdict": "different", "reason": "Does not state whether a path exists."}
+{"pid": "ebe1efd10d75", "verdict": "different", "reason": "22 days and must order differ from 16 days can wait."}
+{"pid": "ebd848cedf5f", "verdict": "same", "reason": "Same value 22."}
+{"pid": "ebbcb2d25cb0", "verdict": "different", "reason": "Does not name the discriminating observation."}
+{"pid": "eb7da8479af2", "verdict": "different", "reason": "39 differs from 48."}
+{"pid": "eb6a410f0a2a", "verdict": "same", "reason": "Rule One forces Sam's shield; Rule Two governs darkness."}
+{"pid": "eb2d72d76e06", "verdict": "different", "reason": "NaN differs from 220."}
+{"pid": "eb09162d97ba", "verdict": "different", "reason": "27.5 differs from 2."}
+{"pid": "eac3d194be27", "verdict": "different", "reason": "Selects A and B rather than AB, AC, BC."}
+{"pid": "eabf55cb4c37", "verdict": "same", "reason": "Same value 1."}
+{"pid": "ea987e32c8b1", "verdict": "different", "reason": "Empty list; reference lists AB, AC, BC."}
+{"pid": "ea82d0bb26f6", "verdict": "same", "reason": "Same 48 minutes and not feasible."}
+{"pid": "ea67fb1b7211", "verdict": "different", "reason": "600 differs from 164."}
+{"pid": "ea48ba548821", "verdict": "same", "reason": "Same 2 cm per day."}
+{"pid": "ea3354d28510", "verdict": "different", "reason": "172 differs from 61."}
+{"pid": "ea16d2b74dd6", "verdict": "different", "reason": "74 differs from 37."}
+{"pid": "e9d35f36112f", "verdict": "different", "reason": "26 differs from 44."}
+{"pid": "e9c333322e18", "verdict": "different", "reason": "Does not state No with shared code 01."}
+{"pid": "e9b9b455c440", "verdict": "different", "reason": "152 differs from 14."}
+{"pid": "e9b0167a6fce", "verdict": "different", "reason": "7.8 differs from 3."}
+{"pid": "e93fd07eda0c", "verdict": "different", "reason": "Says must order today; reference says can wait."}
+{"pid": "e93e04a73ae1", "verdict": "same", "reason": "Same value 30."}
+{"pid": "e913134022a8", "verdict": "same", "reason": "Same value 44."}
+{"pid": "e8aec14eae07", "verdict": "different", "reason": "6 differs from 3."}
+{"pid": "e8618bf9c869", "verdict": "different", "reason": "526 differs from 11."}
+{"pid": "e8553e4c3a49", "verdict": "different", "reason": "228 differs from 54."}
+{"pid": "e808cbd2b825", "verdict": "different", "reason": "10 differs from 8."}
+{"pid": "e7dd67bdfd0f", "verdict": "different", "reason": "60 minutes differs from 70."}
+{"pid": "e7d1329ece29", "verdict": "same", "reason": "Same value 11."}
+{"pid": "e7a430f5856c", "verdict": "same", "reason": "Same value 61."}
+{"pid": "e790d20270ca", "verdict": "different", "reason": "17 days differs from 16."}
+{"pid": "e75a4cf36468", "verdict": "different", "reason": "No clear step count; not 5."}
+{"pid": "e753fcf2d37b", "verdict": "different", "reason": "4 differs from 37."}
+{"pid": "e7243f628c0b", "verdict": "different", "reason": "36/180 differ from 20."}
+{"pid": "e70ab8de204b", "verdict": "different", "reason": "Names a different observation."}
+{"pid": "e6e7e7278c85", "verdict": "different", "reason": "47.5 differs from 33."}
+{"pid": "e68827f72f6b", "verdict": "same", "reason": "Same value 72."}
+{"pid": "e657233b86f8", "verdict": "same", "reason": "Same value 4."}
+{"pid": "e5e686ce24cd", "verdict": "same", "reason": "Same value 16."}
+{"pid": "e5ae1945f4a6", "verdict": "different", "reason": "49 minutes and feasible differ from 52 not feasible."}
+{"pid": "e5a4b2cc2ac7", "verdict": "same", "reason": "Same selection Class A."}
+{"pid": "e4e615b93b4c", "verdict": "different", "reason": "27 differs from 3."}
+{"pid": "e4a08625efd4", "verdict": "different", "reason": "200 differs from 6."}
+{"pid": "e42e82e24455", "verdict": "same", "reason": "Same value 35."}
+{"pid": "e4223b6cbd3d", "verdict": "different", "reason": "840 differs from 912."}
+{"pid": "e3eb3e8e9dc5", "verdict": "same", "reason": "Same 64 minutes and not feasible."}
+{"pid": "e3c436a1fbf1", "verdict": "different", "reason": "2400 differs from 24."}
+{"pid": "e3b35f7bf860", "verdict": "same", "reason": "Same value 20."}
+{"pid": "e3899fd8b7f2", "verdict": "same", "reason": "Same value 114."}
+{"pid": "e367d5b0a537", "verdict": "different", "reason": "174 differs from 8."}
+{"pid": "e357d0b19137", "verdict": "different", "reason": "Lists AC, BC, CA; misses AB."}
+{"pid": "e2e9dd734eac", "verdict": "different", "reason": "100 differs from 90."}
+{"pid": "e2c57a549178", "verdict": "different", "reason": "0.667 differs from 4."}
+{"pid": "e2adf724bd2b", "verdict": "different", "reason": "48 differs from 3."}
+{"pid": "e28167ad09eb", "verdict": "different", "reason": "2.6 days and must order differ from 10 days can wait."}
+{"pid": "e233f36899ca", "verdict": "different", "reason": "76 differs from 114."}
+{"pid": "e1dfba009861", "verdict": "different", "reason": "58 differs from 29."}
+{"pid": "e1dba521368a", "verdict": "different", "reason": "154.5 differs from 77."}
+{"pid": "e194c88c79f2", "verdict": "same", "reason": "Both say a path exists."}
+{"pid": "e163da6ab6a4", "verdict": "same", "reason": "Same value 5."}
+{"pid": "e14729eda216", "verdict": "same", "reason": "Same coalitions AB, AC, BC."}
+{"pid": "e0fac1ee01cb", "verdict": "different", "reason": "Does not give the risk-avoidance reason."}
+{"pid": "e0d68c47cb20", "verdict": "different", "reason": "13 differs from 14."}
+{"pid": "e0ca755f7ba8", "verdict": "different", "reason": "Selects A and B rather than AB, AC, BC."}
+{"pid": "e0c1e1d8d03d", "verdict": "different", "reason": "Selects A and B rather than AB, AC, BC."}
+{"pid": "e064afaebd25", "verdict": "same", "reason": "Final value 14 matches."}
+{"pid": "e019fe178b4c", "verdict": "same", "reason": "Same value 3."}
+{"pid": "e0187e68087b", "verdict": "different", "reason": "9 days and no verdict differ from 6 days can wait."}
+{"pid": "dfef44df1ce1", "verdict": "different", "reason": "34 differs from 56."}
+{"pid": "df6d3422320f", "verdict": "different", "reason": "NaN differs from 29."}
+{"pid": "df5afd09b6ef", "verdict": "same", "reason": "Same value 3888."}
+{"pid": "df39ecdd015c", "verdict": "different", "reason": "Lists numbers, not coalitions."}
+{"pid": "df2bb19c1ce2", "verdict": "same", "reason": "Same 16 days and no order needed."}
+{"pid": "dea451111c46", "verdict": "different", "reason": "Does not name the discriminating observation."}
+{"pid": "de4d783459ad", "verdict": "different", "reason": "9 differs from 8."}
+{"pid": "de1d34154434", "verdict": "different", "reason": "Names a different observation."}
+{"pid": "de08e237d157", "verdict": "same", "reason": "Both say a path exists."}
+{"pid": "ddfa8ef53a46", "verdict": "different", "reason": "7.4 differs from 12."}
+{"pid": "ddec35d1e9d5", "verdict": "same", "reason": "Same 15 days and order can wait."}
+{"pid": "ddd18baa16eb", "verdict": "same", "reason": "Same 52 minutes and not feasible."}
+{"pid": "ddbb93533d0e", "verdict": "different", "reason": "8 days differs from 7."}
+{"pid": "dd9cb37e20ad", "verdict": "same", "reason": "Sol wears the shield."}
+{"pid": "dd6ca065e622", "verdict": "different", "reason": "480 differs from 3240."}
+{"pid": "dd66f66c60e0", "verdict": "different", "reason": "No final value."}
+{"pid": "dd593046776d", "verdict": "different", "reason": "60 differs from 24."}
+{"pid": "dd579b31255e", "verdict": "different", "reason": "44 differs from 4."}
+{"pid": "dcb67bef14fc", "verdict": "same", "reason": "Same value 4."}
+{"pid": "dc779343ee88", "verdict": "same", "reason": "Same value 34."}
+{"pid": "dc768331e65b", "verdict": "different", "reason": "7.50 differs from 20/3."}
+{"pid": "dc454a5effc4", "verdict": "different", "reason": "67 differs from 11."}
+{"pid": "dc44320f6670", "verdict": "different", "reason": "9 differs from 14."}
+{"pid": "dc33b86ac2ab", "verdict": "same", "reason": "Same value 220."}
+{"pid": "dc23779644fc", "verdict": "same", "reason": "Same value 31."}
+{"pid": "dbfb31b5ad08", "verdict": "different", "reason": "Empty list; reference lists AB, AC, BC."}
+{"pid": "dbececf5ef5f", "verdict": "different", "reason": "Conditional must-order verdict differs from can wait."}
+{"pid": "dbe9696d5a59", "verdict": "different", "reason": "NaN differs from 2."}
+{"pid": "dbc5bdeddb07", "verdict": "same", "reason": "Same value 1860."}
+{"pid": "db601d286eeb", "verdict": "different", "reason": "6 differs from 2 cm/day."}
+{"pid": "daecd5f282c3", "verdict": "different", "reason": "4 days and order tomorrow differ from 3 days must order today."}
+{"pid": "daeca43e1d3c", "verdict": "different", "reason": "4 differs from 8."}
+{"pid": "dab13e2dc6f7", "verdict": "same", "reason": "Same value 77."}
+{"pid": "da83c3ab9601", "verdict": "different", "reason": "12 differs from 18."}
+{"pid": "da78c472c86a", "verdict": "same", "reason": "Same 19 days and order can wait."}
+{"pid": "da6d2938d749", "verdict": "different", "reason": "3.1 days and must order differ from 15 days can wait."}
+{"pid": "da68143ebcaf", "verdict": "different", "reason": "57 differs from 27."}
+{"pid": "da539aef927b", "verdict": "different", "reason": "123 minutes differs from 70, though verdict matches."}
+{"pid": "da3079d0a0ce", "verdict": "different", "reason": "NaN differs from 29."}
+{"pid": "d9bd3af63e8d", "verdict": "same", "reason": "Omar wears the shield; darkness does not excuse Rule One."}
+{"pid": "d9bcea9ea3cc", "verdict": "different", "reason": "24 differs from 74."}
+{"pid": "d9a39c3785de", "verdict": "different", "reason": "NaN differs from 222."}
+{"pid": "d96873079184", "verdict": "same", "reason": "Same value 29."}
+{"pid": "d90329ec9e8a", "verdict": "same", "reason": "Same 62 minutes and feasible."}
+{"pid": "d8cc69db8d21", "verdict": "same", "reason": "Same value 5."}
+{"pid": "d8c70dfbcad4", "verdict": "different", "reason": "Names a different observation."}
+{"pid": "d87dd12208e6", "verdict": "different", "reason": "7 days and must order differ from 6 days can wait."}
+{"pid": "d862dc95cc65", "verdict": "different", "reason": "1392 differs from 2568."}
+{"pid": "d84a0abeb125", "verdict": "different", "reason": "228 differs from 72."}
+{"pid": "d8105e5f257f", "verdict": "different", "reason": "3 differs from 5."}
+{"pid": "d7d69fad04c2", "verdict": "same", "reason": "Same value 43."}
+{"pid": "d7c065ad8fc9", "verdict": "different", "reason": "Conditional must-order verdict differs from can wait."}
+{"pid": "d7b20ed2a7e7", "verdict": "different", "reason": "33 differs from 37."}
+{"pid": "d7a6b07c1b13", "verdict": "same", "reason": "Same value 95."}
+{"pid": "d73947005da5", "verdict": "different", "reason": "27.5 differs from 2."}
+{"pid": "d71356d18f94", "verdict": "different", "reason": "6 differs from 20/3."}
+{"pid": "d7086fbd9b2b", "verdict": "same", "reason": "Same value 77."}
+{"pid": "d6f09c112573", "verdict": "different", "reason": "59 differs from 45."}
+{"pid": "d69ca8cd4109", "verdict": "same", "reason": "Same value 8."}
+{"pid": "d68647c98074", "verdict": "different", "reason": "Gives no values and omits the Rule 4 conclusion."}
+{"pid": "d668ab2fe54f", "verdict": "same", "reason": "Same coalitions AB, AC, BC."}
+{"pid": "d64f8e50bd4d", "verdict": "different", "reason": "16 days and must order differ from 15 days can wait."}
+{"pid": "d63b8b82777e", "verdict": "same", "reason": "Same verdict: neither attempt succeeds."}
+{"pid": "d5b7e1187485", "verdict": "different", "reason": "NaN and not feasible differ from 70 feasible."}
+{"pid": "d5a52475ecd0", "verdict": "different", "reason": "14 differs from 44."}
+{"pid": "d53de4953236", "verdict": "same", "reason": "Same value 9."}
+{"pid": "d50a8d6c22da", "verdict": "different", "reason": "6 differs from 5."}
+{"pid": "d4e5ab045b11", "verdict": "different", "reason": "No specific coalitions listed."}
+{"pid": "d4cea3c6c474", "verdict": "different", "reason": "0.77 differs from 77."}
+{"pid": "d4a2c38c94bf", "verdict": "different", "reason": "28 differs from 24."}
+{"pid": "d4a032a37917", "verdict": "different", "reason": "0 differs from 24."}
+{"pid": "d49f6e3345e6", "verdict": "different", "reason": "10 days differs from 9."}
+{"pid": "d45f841255b1", "verdict": "same", "reason": "Rule One forces the shield, Rule Two the darkness, separate objects."}
+{"pid": "d45f144859e8", "verdict": "different", "reason": "Different reason than avoiding a smaller part."}
+{"pid": "d4558ef75e23", "verdict": "different", "reason": "342 differs from 72."}
+{"pid": "d4398d7c6889", "verdict": "different", "reason": "22 days and no verdict differ from 16 days can wait."}
+{"pid": "d3cd4bbed686", "verdict": "same", "reason": "Same value 1."}
+{"pid": "d38d8201ce3e", "verdict": "different", "reason": "Both verdicts are reversed."}
+{"pid": "d3597309baea", "verdict": "same", "reason": "Same value 96."}
+{"pid": "d34c27944ddc", "verdict": "same", "reason": "Same value 3240."}
+{"pid": "d30993540d91", "verdict": "same", "reason": "Same value 16."}
+{"pid": "d2cb7871149c", "verdict": "different", "reason": "3 differs from 2."}
+{"pid": "d223134d76ee", "verdict": "different", "reason": "43 differs from 46."}
+{"pid": "d1f5b5309f7d", "verdict": "same", "reason": "Same value 3120."}
+{"pid": "d1b0c921d09a", "verdict": "different", "reason": "4 differs from 2 cm/day."}
+{"pid": "d1a3f468b6ed", "verdict": "different", "reason": "No new mean given."}
+{"pid": "d18db7a7252e", "verdict": "different", "reason": "174 differs from 8."}
+{"pid": "d17bc09c2c70", "verdict": "unclear", "reason": "Energy content may or may not match energy at target."}
+{"pid": "d15eebb5a567", "verdict": "same", "reason": "Same value 43."}
+{"pid": "d0d82f1ee097", "verdict": "different", "reason": "No reason given."}
+{"pid": "d0d63d7e12eb", "verdict": "different", "reason": "Adds ABC, which is not in the reference."}
+{"pid": "d0974ef6b03b", "verdict": "different", "reason": "7080 differs from 2340."}
+{"pid": "d04472edd2ac", "verdict": "different", "reason": "38 differs from 24."}
+{"pid": "d02719e032e6", "verdict": "same", "reason": "5.2 rounds to 5."}
+{"pid": "cf7f85c62b22", "verdict": "unclear", "reason": "Terse answer; unclear whether it states Sol wears the shield."}
+{"pid": "cf5aecdf3e72", "verdict": "different", "reason": "Says Monday succeeds; reference says neither."}
+{"pid": "cf475c030cea", "verdict": "different", "reason": "Says Friday succeeds; reference says neither."}
+{"pid": "cf2c4950a9e5", "verdict": "different", "reason": "25 differs from 14."}
+{"pid": "cf0fc4da53ca", "verdict": "different", "reason": "33.4 differs from 5."}
+{"pid": "cf0bedcb9b42", "verdict": "same", "reason": "Same value 27."}
+{"pid": "cef68abba3c8", "verdict": "different", "reason": "1104 differs from 90."}
+{"pid": "cef228db3e86", "verdict": "different", "reason": "Adds ABC, which is not in the reference."}
+{"pid": "ced1b280a85a", "verdict": "different", "reason": "Empty answer."}
+{"pid": "cec1b8aa5b99", "verdict": "different", "reason": "147 differs from 3."}
+{"pid": "ce9127da0f43", "verdict": "different", "reason": "391 differs from 461."}
+{"pid": "ce29159b2133", "verdict": "different", "reason": "NaN and no verdict."}
+{"pid": "ce23e51fa0df", "verdict": "same", "reason": "Same value 10."}
+{"pid": "ce04f3ab0f56", "verdict": "different", "reason": "6.57 differs from 5."}
+{"pid": "cdbc1d1b01a3", "verdict": "same", "reason": "Same value 8."}
+{"pid": "cdb48070255d", "verdict": "same", "reason": "Same value 77."}
+{"pid": "cdb2bb0aaa9d", "verdict": "different", "reason": "1225 differs from 170."}
+{"pid": "cdb0d9be40bb", "verdict": "different", "reason": "12 minutes differs from 58."}
+{"pid": "cda71256a62a", "verdict": "different", "reason": "8 differs from 14."}
+{"pid": "cd6a4ec137df", "verdict": "different", "reason": "Names a different observation."}
+{"pid": "cd610da1e9f3", "verdict": "same", "reason": "Same 53 minutes and feasible."}
+{"pid": "ccd8101e1050", "verdict": "different", "reason": "6 days and must order differ from 7 days can wait."}
+{"pid": "cccaec188375", "verdict": "different", "reason": "5.2 differs from 8.75."}
+{"pid": "cc487e254b52", "verdict": "different", "reason": "43 differs from 93."}
+{"pid": "cc01fe3af5d1", "verdict": "different", "reason": "10800 differs from 1140."}
+{"pid": "cbd65f25eb04", "verdict": "different", "reason": "35 differs from 19."}
+{"pid": "cbc9b3b8236a", "verdict": "same", "reason": "Same value 7."}
+{"pid": "cbc2d0ef2001", "verdict": "different", "reason": "2 days and no verdict differ from 7 days can wait."}
+{"pid": "cb940bd0a73e", "verdict": "same", "reason": "Same value 9."}
+{"pid": "cb90ba9780d6", "verdict": "different", "reason": "6600 differs from 1500."}
+{"pid": "cb0c6c724c7a", "verdict": "different", "reason": "25 differs from 14."}
+{"pid": "caf261556cdc", "verdict": "different", "reason": "45 differs from 24."}
+{"pid": "ca8fa2664284", "verdict": "same", "reason": "Same coalitions AB, AC, BC."}
+{"pid": "ca47a795444c", "verdict": "different", "reason": "Does not name the discriminating observation."}
+{"pid": "ca24ae308c1d", "verdict": "different", "reason": "39 differs from 19."}
+{"pid": "ca14c04fae1b", "verdict": "different", "reason": "28 days and no verdict differ from 20 days can wait."}
+{"pid": "c9f2cfe81f25", "verdict": "different", "reason": "653 differs from 43."}
+{"pid": "c9999118bdd7", "verdict": "same", "reason": "Same value 19."}
+{"pid": "c98e2b9a86b7", "verdict": "different", "reason": "No class selected."}
+{"pid": "c94d32c6835e", "verdict": "different", "reason": "6 differs from 8."}
+{"pid": "c9403561ee7f", "verdict": "different", "reason": "62 minutes differs from 58."}
+{"pid": "c92a4079240d", "verdict": "different", "reason": "Selects A and B rather than AB, AC, BC."}
+{"pid": "c8bdec072c66", "verdict": "same", "reason": "Same value 780."}
+{"pid": "c8aaadb41c79", "verdict": "same", "reason": "Selects coalition A only."}
+{"pid": "c8a593aea250", "verdict": "same", "reason": "Same value 21."}
+{"pid": "c8906f2be734", "verdict": "same", "reason": "Same value 8."}
+{"pid": "c8685b9934c1", "verdict": "different", "reason": "Empty answer."}
+{"pid": "c82e4c3d6584", "verdict": "different", "reason": "3 days and must order differ from 22 days can wait."}
+{"pid": "c7fcc1b8bcfd", "verdict": "same", "reason": "Same value 21."}
+{"pid": "c7eb2e37c3c1", "verdict": "different", "reason": "7 differs from 1."}
+{"pid": "c7b27dd6ce9d", "verdict": "different", "reason": "28 differs from 16."}
+{"pid": "c7a9ccf307e6", "verdict": "same", "reason": "Same 52 minutes and not feasible."}
+{"pid": "c798add41df1", "verdict": "different", "reason": "36 differs from 2."}
+{"pid": "c78f2f698e97", "verdict": "different", "reason": "17 differs from 28."}
+{"pid": "c75796b6d85b", "verdict": "different", "reason": "12.6 does not round to 14."}
+{"pid": "c756735b88ae", "verdict": "different", "reason": "Selects B and C rather than AB, AC, BC."}
+{"pid": "c7339f64a916", "verdict": "different", "reason": "States conflicting yes and no."}
+{"pid": "c70b8f79686c", "verdict": "different", "reason": "Selects B and C rather than AB, AC, BC."}
+{"pid": "c685da6dff2f", "verdict": "same", "reason": "Says a path exists."}
+{"pid": "c684dbcd1d4f", "verdict": "different", "reason": "4980 differs from 1380."}
+{"pid": "c61c40b1e0bf", "verdict": "different", "reason": "132 differs from 222."}
+{"pid": "c6148af1dedc", "verdict": "different", "reason": "15 differs from 42."}
+{"pid": "c5a4b3b30dff", "verdict": "same", "reason": "Harun wears the shield."}
+{"pid": "c55bd28073f1", "verdict": "different", "reason": "Answer 0 gives no observation."}
+{"pid": "c516c827b37d", "verdict": "different", "reason": "Names a different observation."}
+{"pid": "c4cc063ba598", "verdict": "different", "reason": "7 days differs from 6."}
+{"pid": "c3de4add2797", "verdict": "different", "reason": "-9 differs from 11."}
+{"pid": "c3d330603a75", "verdict": "different", "reason": "Lists only BC; misses AB and AC."}
+{"pid": "c3cebe4a5890", "verdict": "different", "reason": "5 days differs from 6."}
+{"pid": "c3aadd56e288", "verdict": "different", "reason": "Does not state that Harun wears the shield."}
+{"pid": "c3aab54a5263", "verdict": "same", "reason": "Sam wears the shield."}
+{"pid": "c3a5ebf4c0e7", "verdict": "same", "reason": "Same value 3120."}
+{"pid": "c3841c8b3a22", "verdict": "different", "reason": "Empty list; reference is A."}
+{"pid": "c371c1675951", "verdict": "different", "reason": "NaN differs from 77."}
+{"pid": "c35e4abf2c2c", "verdict": "different", "reason": "30 differs from 5."}
+{"pid": "c3398033e674", "verdict": "different", "reason": "168 differs from 250."}
+{"pid": "c3396bf424bb", "verdict": "different", "reason": "30 minutes and feasible differ from 52 not feasible."}
+{"pid": "c295b15eedec", "verdict": "different", "reason": "27 differs from 7."}
+{"pid": "c28b47692c53", "verdict": "different", "reason": "148 differs from 4."}
+{"pid": "c2817c700d21", "verdict": "different", "reason": "0 differs from 17."}
+{"pid": "c1cfb8b5f0ed", "verdict": "same", "reason": "Same 53 minutes and not feasible."}
+{"pid": "c1c39a1e5968", "verdict": "different", "reason": "123 differs from 105."}
+{"pid": "c1b1e94c49b2", "verdict": "different", "reason": "7 differs from 44."}
+{"pid": "c14391cc8b83", "verdict": "different", "reason": "408 differs from 6."}
+{"pid": "7962e6cae470", "verdict": "different", "reason": "Selects AB and AC instead of A."}
+{"pid": "3237c5cc4db2", "verdict": "different", "reason": "222 differs from 461."}
+{"pid": "2ec49c431df1", "verdict": "different", "reason": "6 differs from 4."}

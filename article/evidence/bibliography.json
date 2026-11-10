@@ -1174,5 +1174,1050 @@
     "year": 2026,
     "entry": "*SOP Lang research artifact: Audited experiment records and reconstruction scripts*. (2026). Supplementary material accompanying this manuscript; snapshot dated September 28, 2026. Public persistent identifier pending.",
     "metadataVerification": "Local companion artifact inspected; no public DOI or public availability asserted."
+  },
+  "cfq": {
+    "citation": "Keysers et al., 2020",
+    "sort": "Keysers 2020",
+    "year": 2020,
+    "title": "Measuring Compositional Generalization: A Comprehensive Method on Realistic Data",
+    "entry": "Keysers, D., Schärli, N., Scales, N., Buisman, H., Furrer, D., Kashubin, S., Momchev, N., Sinopalnikov, D., Stafiniak, L., Tihon, T., Tsarkov, D., Wang, X., van Zee, M., & Bousquet, O. (2020). Measuring Compositional Generalization: A Comprehensive Method on Realistic Data. *International Conference on Learning Representations*.",
+    "url": "https://openreview.net/forum?id=SygcCnNKwr",
+    "metadataVerification": "ICLR 2020 conference page (iclr.cc virtual poster SygcCnNKwr) and arXiv:1912.09713 metadata (comment: accepted at ICLR 2020), accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "cogs": {
+    "citation": "Kim & Linzen, 2020",
+    "sort": "Kim 2020",
+    "year": 2020,
+    "title": "COGS: A Compositional Generalization Challenge Based on Semantic Interpretation",
+    "entry": "Kim, N., & Linzen, T. (2020). COGS: A Compositional Generalization Challenge Based on Semantic Interpretation. *Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP)*, 9087-9105.",
+    "url": "https://doi.org/10.18653/v1/2020.emnlp-main.731",
+    "doi": "10.18653/v1/2020.emnlp-main.731",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "hupkes": {
+    "citation": "Hupkes et al., 2020",
+    "sort": "Hupkes 2020",
+    "year": 2020,
+    "title": "Compositionality Decomposed: How do Neural Networks Generalise?",
+    "entry": "Hupkes, D., Dankers, V., Mul, M., & Bruni, E. (2020). Compositionality Decomposed: How do Neural Networks Generalise? *Journal of Artificial Intelligence Research*, 67, 757-795.",
+    "url": "https://doi.org/10.1613/jair.1.11674",
+    "doi": "10.1613/jair.1.11674",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "faithfate": {
+    "citation": "Dziri et al., 2023",
+    "sort": "Dziri 2023",
+    "year": 2023,
+    "title": "Faith and Fate: Limits of Transformers on Compositionality",
+    "entry": "Dziri, N., Lu, X., Sclar, M., Li, X. L., Jiang, L., Lin, B. Y., Welleck, S., West, P., Bhagavatula, C., Le Bras, R., Hwang, J. D., Sanyal, S., Ren, X., Ettinger, A., Harchaoui, Z., & Choi, Y. (2023). Faith and Fate: Limits of Transformers on Compositionality. *Advances in Neural Information Processing Systems*, 36, 70293-70332.",
+    "url": "https://doi.org/10.52202/075280-3081",
+    "doi": "10.52202/075280-3081",
+    "metadataVerification": "Crossref DOI record and NeurIPS proceedings page, accessed 2026-09-28; title, authors, venue, volume, pages and year checked."
+  },
+  "herzig": {
+    "citation": "Herzig et al., 2021",
+    "sort": "Herzig 2021",
+    "year": 2021,
+    "title": "Unlocking Compositional Generalization in Pre-trained Models Using Intermediate Representations",
+    "entry": "Herzig, J., Shaw, P., Chang, M.-W., Guu, K., Pasupat, P., & Zhang, Y. (2021). *Unlocking Compositional Generalization in Pre-trained Models Using Intermediate Representations* (arXiv:2104.07478). arXiv.",
+    "url": "https://arxiv.org/abs/2104.07478",
+    "metadataVerification": "arXiv abstract page for arXiv:2104.07478, accessed 2026-09-28; title, authors and year checked; no peer-reviewed venue version found."
+  },
+  "bogin": {
+    "citation": "Bogin et al., 2022",
+    "sort": "Bogin 2022",
+    "year": 2022,
+    "title": "Unobserved Local Structures Make Compositional Generalization Hard",
+    "entry": "Bogin, B., Gupta, S., & Berant, J. (2022). Unobserved Local Structures Make Compositional Generalization Hard. *Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing*, 2731-2747.",
+    "url": "https://doi.org/10.18653/v1/2022.emnlp-main.175",
+    "doi": "10.18653/v1/2022.emnlp-main.175",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "lora": {
+    "citation": "Hu et al., 2022",
+    "sort": "Hu 2022",
+    "year": 2022,
+    "title": "LoRA: Low-Rank Adaptation of Large Language Models",
+    "entry": "Hu, E. J., Shen, Y., Wallis, P., Allen-Zhu, Z., Li, Y., Wang, S., Wang, L., & Chen, W. (2022). LoRA: Low-Rank Adaptation of Large Language Models. *International Conference on Learning Representations*.",
+    "url": "https://openreview.net/forum?id=nZeVKeeFYf9",
+    "metadataVerification": "ICLR 2022 conference page (iclr.cc virtual poster 6319) and arXiv:2106.09685 metadata, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "loraforgets": {
+    "citation": "Biderman et al., 2024",
+    "sort": "Biderman 2024",
+    "year": 2024,
+    "title": "LoRA Learns Less and Forgets Less",
+    "entry": "Biderman, D., Portes, J., Gonzalez Ortiz, J. J., Paul, M., Greengard, P., Jennings, C., King, D., Havens, S., Chiley, V., Frankle, J., Blakeney, C., & Cunningham, J. P. (2024). LoRA Learns Less and Forgets Less. *Transactions on Machine Learning Research*.",
+    "url": "https://openreview.net/forum?id=aloEru2qCG",
+    "metadataVerification": "arXiv:2405.09673 final-version metadata (accepted to TMLR, August 2024, Featured Certification) and TMLR OpenReview forum id aloEru2qCG via the authors' repository, accessed 2026-09-28; the OpenReview page itself was behind a browser challenge."
+  },
+  "specializing": {
+    "citation": "Fu et al., 2023",
+    "sort": "Fu 2023",
+    "year": 2023,
+    "title": "Specializing Smaller Language Models towards Multi-Step Reasoning",
+    "entry": "Fu, Y., Peng, H., Ou, L., Sabharwal, A., & Khot, T. (2023). Specializing Smaller Language Models towards Multi-Step Reasoning. *Proceedings of Machine Learning Research*, 202, 10421-10430.",
+    "url": "https://proceedings.mlr.press/v202/fu23d.html",
+    "metadataVerification": "PMLR volume 202 (ICML 2023) page and abstract, accessed 2026-09-28; title, authors, pages and year checked."
+  },
+  "magister": {
+    "citation": "Magister et al., 2023",
+    "sort": "Magister 2023",
+    "year": 2023,
+    "title": "Teaching Small Language Models to Reason",
+    "entry": "Magister, L. C., Mallinson, J., Adamek, J., Malmi, E., & Severyn, A. (2023). Teaching Small Language Models to Reason. *Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 2: Short Papers)*, 1773-1781.",
+    "url": "https://doi.org/10.18653/v1/2023.acl-short.151",
+    "doi": "10.18653/v1/2023.acl-short.151",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "selfrepair": {
+    "citation": "Olausson et al., 2024",
+    "sort": "Olausson 2024",
+    "year": 2024,
+    "title": "Is Self-Repair a Silver Bullet for Code Generation?",
+    "entry": "Olausson, T. X., Inala, J. P., Wang, C., Gao, J., & Solar-Lezama, A. (2024). Is Self-Repair a Silver Bullet for Code Generation? *International Conference on Learning Representations*.",
+    "url": "https://openreview.net/forum?id=y0GJXRungR",
+    "metadataVerification": "ICLR 2024 conference page (iclr.cc virtual poster 17429) and arXiv:2306.09896 metadata (accepted to ICLR 2024), accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "toolformer": {
+    "citation": "Schick et al., 2023",
+    "sort": "Schick 2023",
+    "year": 2023,
+    "title": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+    "entry": "Schick, T., Dwivedi-Yu, J., Dessì, R., Raileanu, R., Lomeli, M., Hambro, E., Zettlemoyer, L., Cancedda, N., & Scialom, T. (2023). Toolformer: Language Models Can Teach Themselves to Use Tools. *Advances in Neural Information Processing Systems*, 36, 68539-68551.",
+    "url": "https://doi.org/10.52202/075280-2997",
+    "doi": "10.52202/075280-2997",
+    "metadataVerification": "Crossref DOI record and NeurIPS proceedings page, accessed 2026-09-28; title, authors (proceedings version adds E. Hambro), venue, volume, pages and year checked."
+  },
+  "dslsurvey": {
+    "citation": "Mernik et al., 2005",
+    "sort": "Mernik 2005",
+    "year": 2005,
+    "title": "When and how to develop domain-specific languages",
+    "entry": "Mernik, M., Heering, J., & Sloane, A. M. (2005). When and how to develop domain-specific languages. *ACM Computing Surveys*, 37(4), 316-344.",
+    "url": "https://doi.org/10.1145/1118890.1118892",
+    "doi": "10.1145/1118890.1118892",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "dbc": {
+    "citation": "Meyer, 1992",
+    "sort": "Meyer 1992",
+    "year": 1992,
+    "title": "Applying 'design by contract'",
+    "entry": "Meyer, B. (1992). Applying \"design by contract\". *Computer*, 25(10), 40-51.",
+    "url": "https://doi.org/10.1109/2.161279",
+    "doi": "10.1109/2.161279",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked. Author-hosted copy consulted for content."
+  },
+  "sclar": {
+    "citation": "Sclar et al., 2024",
+    "sort": "Sclar 2024",
+    "year": 2024,
+    "title": "Quantifying Language Models' Sensitivity to Spurious Features in Prompt Design or: How I learned to start worrying about prompt formatting",
+    "entry": "Sclar, M., Choi, Y., Tsvetkov, Y., & Suhr, A. (2024). Quantifying Language Models' Sensitivity to Spurious Features in Prompt Design or: How I learned to start worrying about prompt formatting. *International Conference on Learning Representations*.",
+    "url": "https://openreview.net/forum?id=RIu5lyNXjT",
+    "metadataVerification": "ICLR 2024 conference page (iclr.cc virtual poster 18650) and arXiv:2310.11324 metadata (ICLR 2024 camera-ready), accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "llmjudge": {
+    "citation": "Zheng et al., 2023",
+    "sort": "Zheng 2023",
+    "year": 2023,
+    "title": "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena",
+    "entry": "Zheng, L., Chiang, W.-L., Sheng, Y., Zhuang, S., Wu, Z., Zhuang, Y., Lin, Z., Li, Z., Li, D., Xing, E. P., Zhang, H., Gonzalez, J. E., & Stoica, I. (2023). Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena. *Advances in Neural Information Processing Systems*, 36, 46595-46623.",
+    "url": "https://doi.org/10.52202/075280-2020",
+    "doi": "10.52202/075280-2020",
+    "metadataVerification": "Crossref DOI record and NeurIPS 2023 Datasets and Benchmarks proceedings page, accessed 2026-09-28; title, authors, venue, volume, pages and year checked."
+  },
+  "everything": {
+    "citation": "Raji et al., 2021",
+    "sort": "Raji 2021",
+    "year": 2021,
+    "title": "AI and the Everything in the Whole Wide World Benchmark",
+    "entry": "Raji, I. D., Bender, E. M., Paullada, A., Denton, E., & Hanna, A. (2021). AI and the Everything in the Whole Wide World Benchmark. *Proceedings of the Neural Information Processing Systems Track on Datasets and Benchmarks*, 1.",
+    "url": "https://datasets-benchmarks-proceedings.neurips.cc/paper/2021/hash/084b6fbb10729ed4da8c3d3f5a3ae7c9-Abstract-round2.html",
+    "metadataVerification": "NeurIPS Datasets and Benchmarks 2021 proceedings page and PDF, and arXiv:2111.15366, accessed 2026-09-28; title, venue and year checked; author order follows arXiv (the proceedings metadata lists Raji, Denton, Bender, Hanna, Paullada)."
+  },
+  "bowman": {
+    "citation": "Bowman & Dahl, 2021",
+    "sort": "Bowman 2021",
+    "year": 2021,
+    "title": "What Will it Take to Fix Benchmarking in Natural Language Understanding?",
+    "entry": "Bowman, S. R., & Dahl, G. (2021). What Will it Take to Fix Benchmarking in Natural Language Understanding? *Proceedings of the 2021 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies*, 4843-4855.",
+    "url": "https://doi.org/10.18653/v1/2021.naacl-main.385",
+    "doi": "10.18653/v1/2021.naacl-main.385",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "showyourwork": {
+    "citation": "Dodge et al., 2019",
+    "sort": "Dodge 2019",
+    "year": 2019,
+    "title": "Show Your Work: Improved Reporting of Experimental Results",
+    "entry": "Dodge, J., Gururangan, S., Card, D., Schwartz, R., & Smith, N. A. (2019). Show Your Work: Improved Reporting of Experimental Results. *Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)*, 2185-2194.",
+    "url": "https://doi.org/10.18653/v1/D19-1224",
+    "doi": "10.18653/v1/D19-1224",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "gundersen": {
+    "citation": "Gundersen & Kjensmo, 2018",
+    "sort": "Gundersen 2018",
+    "year": 2018,
+    "title": "State of the Art: Reproducibility in Artificial Intelligence",
+    "entry": "Gundersen, O. E., & Kjensmo, S. (2018). State of the Art: Reproducibility in Artificial Intelligence. *Proceedings of the AAAI Conference on Artificial Intelligence*, 32(1).",
+    "url": "https://doi.org/10.1609/aaai.v32i1.11503",
+    "doi": "10.1609/aaai.v32i1.11503",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "aiscientist": {
+    "citation": "Lu et al., 2024",
+    "sort": "Lu 2024",
+    "year": 2024,
+    "title": "The AI Scientist: Towards Fully Automated Open-Ended Scientific Discovery",
+    "entry": "Lu, C., Lu, C., Lange, R. T., Foerster, J., Clune, J., & Ha, D. (2024). *The AI Scientist: Towards Fully Automated Open-Ended Scientific Discovery* (arXiv:2408.06292). arXiv.",
+    "url": "https://arxiv.org/abs/2408.06292",
+    "metadataVerification": "arXiv abstract page for arXiv:2408.06292, accessed 2026-09-28; title, authors and year checked; cited as the arXiv preprint."
+  },
+  "harking": {
+    "citation": "Kerr, 1998",
+    "sort": "Kerr 1998",
+    "year": 1998,
+    "title": "HARKing: Hypothesizing After the Results are Known",
+    "entry": "Kerr, N. L. (1998). HARKing: Hypothesizing After the Results are Known. *Personality and Social Psychology Review*, 2(3), 196-217.",
+    "url": "https://doi.org/10.1207/s15327957pspr0203_4",
+    "doi": "10.1207/s15327957pspr0203_4",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "falsepositive": {
+    "citation": "Simmons et al., 2011",
+    "sort": "Simmons 2011",
+    "year": 2011,
+    "title": "False-Positive Psychology: Undisclosed Flexibility in Data Collection and Analysis Allows Presenting Anything as Significant",
+    "entry": "Simmons, J. P., Nelson, L. D., & Simonsohn, U. (2011). False-Positive Psychology: Undisclosed Flexibility in Data Collection and Analysis Allows Presenting Anything as Significant. *Psychological Science*, 22(11), 1359-1366.",
+    "url": "https://doi.org/10.1177/0956797611417632",
+    "doi": "10.1177/0956797611417632",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked. Crossref lists the main title only; the subtitle is part of the published title."
+  },
+  "prereg": {
+    "citation": "Nosek et al., 2018",
+    "sort": "Nosek 2018",
+    "year": 2018,
+    "title": "The preregistration revolution",
+    "entry": "Nosek, B. A., Ebersole, C. R., DeHaven, A. C., & Mellor, D. T. (2018). The preregistration revolution. *Proceedings of the National Academy of Sciences*, 115(11), 2600-2606.",
+    "url": "https://doi.org/10.1073/pnas.1708274114",
+    "doi": "10.1073/pnas.1708274114",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "strathern": {
+    "citation": "Strathern, 1997",
+    "sort": "Strathern 1997",
+    "year": 1997,
+    "title": "'Improving ratings': audit in the British University system",
+    "entry": "Strathern, M. (1997). 'Improving ratings': audit in the British University system. *European Review*, 5(3), 305-321.",
+    "url": "https://doi.org/10.1002/(SICI)1234-981X(199707)5:3<305::AID-EURO184>3.0.CO;2-4",
+    "doi": "10.1002/(SICI)1234-981X(199707)5:3<305::AID-EURO184>3.0.CO;2-4",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked. DOI resolves to the Cambridge University Press record."
+  },
+  "respgap": {
+    "citation": "Matthias, 2004",
+    "sort": "Matthias 2004",
+    "year": 2004,
+    "title": "The responsibility gap: Ascribing responsibility for the actions of learning automata",
+    "entry": "Matthias, A. (2004). The responsibility gap: Ascribing responsibility for the actions of learning automata. *Ethics and Information Technology*, 6(3), 175-183.",
+    "url": "https://doi.org/10.1007/s10676-004-3422-1",
+    "doi": "10.1007/s10676-004-3422-1",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "fourgaps": {
+    "citation": "Santoni de Sio & Mecacci, 2021",
+    "sort": "Santoni de Sio 2021",
+    "year": 2021,
+    "title": "Four Responsibility Gaps with Artificial Intelligence: Why they Matter and How to Address them",
+    "entry": "Santoni de Sio, F., & Mecacci, G. (2021). Four Responsibility Gaps with Artificial Intelligence: Why they Matter and How to Address them. *Philosophy & Technology*, 34(4), 1057-1084.",
+    "url": "https://doi.org/10.1007/s13347-021-00450-x",
+    "doi": "10.1007/s13347-021-00450-x",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "kirkpatrick": {
+    "citation": "Kirkpatrick et al., 2017",
+    "sort": "Kirkpatrick 2017",
+    "year": 2017,
+    "title": "Overcoming catastrophic forgetting in neural networks",
+    "entry": "Kirkpatrick, J., Pascanu, R., Rabinowitz, N., Veness, J., Desjardins, G., Rusu, A. A., Milan, K., Quan, J., Ramalho, T., Grabska-Barwinska, A., Hassabis, D., Clopath, C., Kumaran, D., & Hadsell, R. (2017). Overcoming catastrophic forgetting in neural networks. *Proceedings of the National Academy of Sciences*, 114(13), 3521-3526.",
+    "url": "https://doi.org/10.1073/pnas.1611835114",
+    "doi": "10.1073/pnas.1611835114",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "techdebt": {
+    "citation": "Sculley et al., 2015",
+    "sort": "Sculley 2015",
+    "year": 2015,
+    "title": "Hidden Technical Debt in Machine Learning Systems",
+    "entry": "Sculley, D., Holt, G., Golovin, D., Davydov, E., Phillips, T., Ebner, D., Chaudhary, V., Young, M., Crespo, J.-F., & Dennison, D. (2015). Hidden Technical Debt in Machine Learning Systems. *Advances in Neural Information Processing Systems*, 28.",
+    "url": "https://proceedings.neurips.cc/paper_files/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html",
+    "metadataVerification": "NeurIPS 2015 proceedings page and BibTeX, accessed 2026-09-28; title, authors, volume and year checked; the proceedings record gives no page range."
+  },
+  "amershi": {
+    "citation": "Amershi et al., 2019",
+    "sort": "Amershi 2019",
+    "year": 2019,
+    "title": "Software Engineering for Machine Learning: A Case Study",
+    "entry": "Amershi, S., Begel, A., Bird, C., DeLine, R., Gall, H., Kamar, E., Nagappan, N., Nushi, B., & Zimmermann, T. (2019). Software Engineering for Machine Learning: A Case Study. *2019 IEEE/ACM 41st International Conference on Software Engineering: Software Engineering in Practice (ICSE-SEIP)*, 291-300.",
+    "url": "https://doi.org/10.1109/ICSE-SEIP.2019.00042",
+    "doi": "10.1109/ICSE-SEIP.2019.00042",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "mltestscore": {
+    "citation": "Breck et al., 2017",
+    "sort": "Breck 2017",
+    "year": 2017,
+    "title": "The ML test score: A rubric for ML production readiness and technical debt reduction",
+    "entry": "Breck, E., Cai, S., Nielsen, E., Salib, M., & Sculley, D. (2017). The ML test score: A rubric for ML production readiness and technical debt reduction. *2017 IEEE International Conference on Big Data (Big Data)*, 1123-1132.",
+    "url": "https://doi.org/10.1109/BigData.2017.8258038",
+    "doi": "10.1109/BigData.2017.8258038",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "templates": {
+    "citation": "Razeghi et al., 2022",
+    "sort": "Razeghi 2022",
+    "year": 2022,
+    "title": "Impact of Pretraining Term Frequencies on Few-Shot Numerical Reasoning",
+    "entry": "Razeghi, Y., Logan IV, R. L., Gardner, M., & Singh, S. (2022). Impact of Pretraining Term Frequencies on Few-Shot Numerical Reasoning. *Findings of the Association for Computational Linguistics: EMNLP 2022*, 840-854.",
+    "url": "https://doi.org/10.18653/v1/2022.findings-emnlp.59",
+    "doi": "10.18653/v1/2022.findings-emnlp.59",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "shicompgen": {
+    "citation": "Shi et al., 2022",
+    "sort": "Shi 2022",
+    "year": 2022,
+    "title": "Compositional Generalization and Decomposition in Neural Program Synthesis",
+    "entry": "Shi, K., Hong, J., Zaheer, M., Yin, P., & Sutton, C. (2022). Compositional Generalization and Decomposition in Neural Program Synthesis. *Deep Learning for Code (DL4C) Workshop at ICLR 2022*. arXiv:2204.03758.",
+    "url": "https://arxiv.org/abs/2204.03758",
+    "metadataVerification": "arXiv:2204.03758 metadata (export API; comment: Published at the Deep Learning for Code (DL4C) Workshop at ICLR 2022), accessed 2026-09-28; title, authors, venue and year checked. No archival proceedings or DOI exists for the workshop paper; the archival successor is ExeDec (ICLR 2024)."
+  },
+  "exedec": {
+    "citation": "Shi et al., 2024",
+    "sort": "Shi 2024",
+    "year": 2024,
+    "title": "ExeDec: Execution Decomposition for Compositional Generalization in Neural Program Synthesis",
+    "entry": "Shi, K., Hong, J., Deng, Y., Yin, P., Zaheer, M., & Sutton, C. (2024). ExeDec: Execution Decomposition for Compositional Generalization in Neural Program Synthesis. *The Twelfth International Conference on Learning Representations (ICLR)*.",
+    "url": "https://openreview.net/forum?id=oTRwljRgiv",
+    "metadataVerification": "ICLR 2024 conference page (iclr.cc virtual poster 17817, also an oral) and arXiv:2307.13883 metadata (comment: ICLR 2024), accessed 2026-09-28; title, authors, venue and year checked."
+  },
+  "grammarprompt": {
+    "citation": "Wang et al., 2023",
+    "sort": "Wang 2023",
+    "year": 2023,
+    "title": "Grammar Prompting for Domain-Specific Language Generation with Large Language Models",
+    "entry": "Wang, B., Wang, Z., Wang, X., Cao, Y., Saurous, R. A., & Kim, Y. (2023). Grammar Prompting for Domain-Specific Language Generation with Large Language Models. *Advances in Neural Information Processing Systems 36 (NeurIPS 2023)*, 65030-65055.",
+    "url": "https://doi.org/10.52202/075280-2837",
+    "doi": "10.52202/075280-2837",
+    "metadataVerification": "Crossref DOI record and NeurIPS 2023 proceedings abstract page, accessed 2026-09-28; title, authors, venue, year and pages checked."
+  },
+  "automationbias": {
+    "citation": "Parasuraman & Manzey, 2010",
+    "sort": "Parasuraman 2010",
+    "year": 2010,
+    "title": "Complacency and Bias in Human Use of Automation: An Attentional Integration",
+    "entry": "Parasuraman, R., & Manzey, D. H. (2010). Complacency and Bias in Human Use of Automation: An Attentional Integration. *Human Factors*, 52(3), 381-410.",
+    "url": "https://doi.org/10.1177/0018720810376055",
+    "doi": "10.1177/0018720810376055",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, authors, journal, volume, issue, pages and year checked."
+  },
+  "manyhands": {
+    "citation": "Thompson, 1980",
+    "sort": "Thompson 1980",
+    "year": 1980,
+    "title": "Moral Responsibility of Public Officials: The Problem of Many Hands",
+    "entry": "Thompson, D. F. (1980). Moral Responsibility of Public Officials: The Problem of Many Hands. *American Political Science Review*, 74(4), 905-916.",
+    "url": "https://doi.org/10.2307/1954312",
+    "doi": "10.2307/1954312",
+    "metadataVerification": "Crossref DOI record and Cambridge Core article page, accessed 2026-09-28; title, author, journal, volume, issue, pages and year checked."
+  },
+  "nissenbaum": {
+    "citation": "Nissenbaum, 1996",
+    "sort": "Nissenbaum 1996",
+    "year": 1996,
+    "title": "Accountability in a computerized society",
+    "entry": "Nissenbaum, H. (1996). Accountability in a computerized society. *Science and Engineering Ethics*, 2(1), 25-42.",
+    "url": "https://doi.org/10.1007/BF02639315",
+    "doi": "10.1007/BF02639315",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-28; title, author, journal, volume, issue, pages and year checked."
+  },
+  "oren2021": {
+    "citation": "Oren et al., 2021",
+    "sort": "Oren 2021",
+    "year": 2021,
+    "title": "Finding needles in a haystack: Sampling Structurally-diverse Training Sets from Synthetic Data for Compositional Generalization",
+    "entry": "Oren, I., Herzig, J., & Berant, J. (2021). Finding needles in a haystack: Sampling Structurally-diverse Training Sets from Synthetic Data for Compositional Generalization. *Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing*, 10793-10809.",
+    "url": "https://doi.org/10.18653/v1/2021.emnlp-main.843",
+    "doi": "10.18653/v1/2021.emnlp-main.843",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-29; title, authors, venue, pages and year checked."
+  },
+  "patel2022": {
+    "citation": "Patel et al., 2022",
+    "sort": "Patel 2022",
+    "year": 2022,
+    "title": "Revisiting the Compositional Generalization Abilities of Neural Sequence Models",
+    "entry": "Patel, A., Bhattamishra, S., Blunsom, P., & Goyal, N. (2022). Revisiting the Compositional Generalization Abilities of Neural Sequence Models. *Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (Volume 2: Short Papers)*, 424-434.",
+    "url": "https://doi.org/10.18653/v1/2022.acl-short.46",
+    "doi": "10.18653/v1/2022.acl-short.46",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-29; title, authors, venue, pages and year checked."
+  },
+  "levy2023": {
+    "citation": "Levy et al., 2023",
+    "sort": "Levy 2023",
+    "year": 2023,
+    "title": "Diverse Demonstrations Improve In-context Compositional Generalization",
+    "entry": "Levy, I., Bogin, B., & Berant, J. (2023). Diverse Demonstrations Improve In-context Compositional Generalization. *Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)*, 1401-1422.",
+    "url": "https://doi.org/10.18653/v1/2023.acl-long.78",
+    "doi": "10.18653/v1/2023.acl-long.78",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-29; title, authors, venue, pages and year checked."
+  },
+  "lima": {
+    "citation": "Zhou et al., 2023",
+    "sort": "Zhou 2023",
+    "year": 2023,
+    "title": "LIMA: Less Is More for Alignment",
+    "entry": "Zhou, C., Liu, P., Xu, P., Iyer, S., Sun, J., Mao, Y., Ma, X., Efrat, A., Yu, P., Yu, L., Zhang, S., Ghosh, G., Lewis, M., Zettlemoyer, L., & Levy, O. (2023). LIMA: Less Is More for Alignment. *Advances in Neural Information Processing Systems*, 36, 55006-55021.",
+    "url": "https://doi.org/10.52202/075280-2400",
+    "doi": "10.52202/075280-2400",
+    "metadataVerification": "Crossref DOI record and NeurIPS 2023 proceedings page, accessed 2026-09-29; title, authors, venue, pages and year checked."
+  },
+  "luoforget": {
+    "citation": "Luo et al., 2025",
+    "sort": "Luo 2025",
+    "year": 2025,
+    "title": "An Empirical Study of Catastrophic Forgetting in Large Language Models During Continual Fine-Tuning",
+    "entry": "Luo, Y., Yang, Z., Meng, F., Li, Y., Zhou, J., & Zhang, Y. (2025). An Empirical Study of Catastrophic Forgetting in Large Language Models During Continual Fine-Tuning. *IEEE Transactions on Audio, Speech and Language Processing*, 33, 3776-3786.",
+    "url": "https://doi.org/10.1109/TASLPRO.2025.3606231",
+    "doi": "10.1109/TASLPRO.2025.3606231",
+    "metadataVerification": "Crossref DOI record (volume 33, pages 3776-3786) and Semantic Scholar record linking the DOI to arXiv:2308.08747, accessed 2026-09-29; title, authors, venue, volume, pages and year checked."
+  },
+  "kotha2024": {
+    "citation": "Kotha et al., 2024",
+    "sort": "Kotha 2024",
+    "year": 2024,
+    "title": "Understanding Catastrophic Forgetting in Language Models via Implicit Inference",
+    "entry": "Kotha, S., Springer, J. M., & Raghunathan, A. (2024). Understanding Catastrophic Forgetting in Language Models via Implicit Inference. *International Conference on Learning Representations*.",
+    "url": "https://openreview.net/forum?id=VrHiF2hsrm",
+    "metadataVerification": "arXiv:2309.10105v2 (PDF header 'Published as a conference paper at ICLR 2024') and OpenReview forum VrHiF2hsrm via search listing, accessed 2026-09-29; title, authors, venue and year checked; no DOI."
+  },
+  "emergent": {
+    "citation": "Wei et al., 2022",
+    "sort": "Wei 2022",
+    "year": 2022,
+    "title": "Emergent Abilities of Large Language Models",
+    "entry": "Wei, J., Tay, Y., Bommasani, R., Raffel, C., Zoph, B., Borgeaud, S., Yogatama, D., Bosma, M., Zhou, D., Metzler, D., Chi, E. H., Hashimoto, T., Vinyals, O., Liang, P., Dean, J., & Fedus, W. (2022). Emergent Abilities of Large Language Models. *Transactions on Machine Learning Research*.",
+    "url": "https://openreview.net/forum?id=yzkSU5zdwD",
+    "metadataVerification": "TMLR BibTeX record (jmlr.org/tmlr/papers/bib/yzkSU5zdwD.bib, ISSN 2835-8856, Survey Certification) and arXiv:2206.07682 journal-ref, accessed 2026-09-29; title, authors, venue and year checked; no DOI."
+  },
+  "symbolicdistill": {
+    "citation": "Li et al., 2023",
+    "sort": "Li 2023",
+    "year": 2023,
+    "title": "Symbolic Chain-of-Thought Distillation: Small Models Can Also “Think” Step-by-Step",
+    "entry": "Li, L. H., Hessel, J., Yu, Y., Ren, X., Chang, K.-W., & Choi, Y. (2023). Symbolic Chain-of-Thought Distillation: Small Models Can Also “Think” Step-by-Step. *Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)*, 2665-2679.",
+    "url": "https://doi.org/10.18653/v1/2023.acl-long.150",
+    "doi": "10.18653/v1/2023.acl-long.150",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-29; title, authors, venue, pages and year checked."
+  },
+  "dataconstrained": {
+    "citation": "Muennighoff et al., 2023",
+    "sort": "Muennighoff 2023",
+    "year": 2023,
+    "title": "Scaling Data-Constrained Language Models",
+    "entry": "Muennighoff, N., Rush, A. M., Barak, B., Le Scao, T., Tazi, N., Piktus, A., Pyysalo, S., Wolf, T., & Raffel, C. (2023). Scaling Data-Constrained Language Models. *Advances in Neural Information Processing Systems*, 36, 50358-50376.",
+    "url": "https://doi.org/10.52202/075280-2191",
+    "doi": "10.52202/075280-2191",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-29; title, authors, venue, pages and year checked."
+  },
+  "svamp": {
+    "citation": "Patel et al., 2021",
+    "sort": "Patel 2021",
+    "year": 2021,
+    "title": "Are NLP Models really able to Solve Simple Math Word Problems?",
+    "entry": "Patel, A., Bhattamishra, S., & Goyal, N. (2021). Are NLP Models really able to Solve Simple Math Word Problems? *Proceedings of the 2021 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies*, 2080-2094.",
+    "url": "https://doi.org/10.18653/v1/2021.naacl-main.168",
+    "doi": "10.18653/v1/2021.naacl-main.168",
+    "metadataVerification": "Crossref DOI record and ACL Anthology BibTeX and paper page, accessed 2026-09-29; title, authors, venue, pages and year checked."
+  },
+  "gsmic": {
+    "citation": "Shi et al., 2023",
+    "sort": "Shi 2023",
+    "year": 2023,
+    "title": "Large Language Models Can Be Easily Distracted by Irrelevant Context",
+    "entry": "Shi, F., Chen, X., Misra, K., Scales, N., Dohan, D., Chi, E. H., Schärli, N., & Zhou, D. (2023). Large Language Models Can Be Easily Distracted by Irrelevant Context. *Proceedings of Machine Learning Research*, 202, 31210-31227.",
+    "url": "https://proceedings.mlr.press/v202/shi23a.html",
+    "metadataVerification": "PMLR volume 202 (Proceedings of the 40th International Conference on Machine Learning) paper page metadata and PDF, accessed 2026-09-29; title, authors, venue, volume, pages and year checked; no DOI."
+  },
+  "gsmsymbolic": {
+    "citation": "Mirzadeh et al., 2025",
+    "sort": "Mirzadeh 2025",
+    "year": 2025,
+    "title": "GSM-Symbolic: Understanding the Limitations of Mathematical Reasoning in Large Language Models",
+    "entry": "Mirzadeh, I., Alizadeh, K., Shahrokhi, H., Tuzel, O., Bengio, S., & Farajtabar, M. (2025). GSM-Symbolic: Understanding the Limitations of Mathematical Reasoning in Large Language Models. *International Conference on Learning Representations*, 94743-94765.",
+    "url": "https://openreview.net/forum?id=AjXkRZIvjB",
+    "metadataVerification": "ICLR 2025 proceedings record and BibTeX (proceedings.iclr.cc, pages 94743-94765), ICLR 2025 conference data (poster 30620, decision Accept (Poster), OpenReview forum AjXkRZIvjB) and arXiv:2410.05229v2 metadata (comment: ICLR camera ready), accessed 2026-09-29; title, authors, venue, pages and year checked; no DOI. The proceedings metadata gives the second author as 'Keivan Alizadeh-Vahid'; the paper byline and arXiv give 'Keivan Alizadeh', which the entry follows. Direct OpenReview access returned a browser challenge."
+  },
+  "shaw2021": {
+    "citation": "Shaw et al., 2021",
+    "sort": "Shaw 2021",
+    "year": 2021,
+    "title": "Compositional Generalization and Natural Language Variation: Can a Semantic Parsing Approach Handle Both?",
+    "entry": "Shaw, P., Chang, M.-W., Pasupat, P., & Toutanova, K. (2021). Compositional Generalization and Natural Language Variation: Can a Semantic Parsing Approach Handle Both? *Proceedings of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Language Processing (Volume 1: Long Papers)*, 922-938.",
+    "url": "https://doi.org/10.18653/v1/2021.acl-long.75",
+    "doi": "10.18653/v1/2021.acl-long.75",
+    "metadataVerification": "Crossref DOI record and ACL Anthology BibTeX and paper page, accessed 2026-09-29; title, authors, venue (ACL-IJCNLP 2021, Volume 1: Long Papers), pages and year checked."
+  },
+  "tinygsm": {
+    "citation": "Liu et al., 2023",
+    "sort": "Liu 2023",
+    "year": 2023,
+    "title": "TinyGSM: achieving >80% on GSM8k with small language models",
+    "entry": "Liu, B., Bubeck, S., Eldan, R., Kulkarni, J., Li, Y., Nguyen, A., Ward, R., & Zhang, Y. (2023). *TinyGSM: achieving >80% on GSM8k with small language models* (arXiv:2312.09241). arXiv.",
+    "url": "https://arxiv.org/abs/2312.09241",
+    "metadataVerification": "arXiv:2312.09241 metadata (export API; single version v1 of 2023-12-14, no journal reference or venue comment) and OpenAlex record W4389821462 (arXiv preprint only), accessed 2026-09-29; title, authors and year checked; no peer-reviewed venue version found."
+  },
+  "tora": {
+    "citation": "Gou et al., 2024",
+    "sort": "Gou 2024",
+    "year": 2024,
+    "title": "ToRA: A Tool-Integrated Reasoning Agent for Mathematical Problem Solving",
+    "entry": "Gou, Z., Shao, Z., Gong, Y., Shen, Y., Yang, Y., Huang, M., Duan, N., & Chen, W. (2024). ToRA: A Tool-Integrated Reasoning Agent for Mathematical Problem Solving. *International Conference on Learning Representations*, 48362-48395.",
+    "url": "https://openreview.net/forum?id=Ep0TtjVoap",
+    "metadataVerification": "ICLR 2024 proceedings record and BibTeX (proceedings.iclr.cc, pages 48362-48395), ICLR 2024 conference data (poster 19091, decision Accept (poster), OpenReview forum Ep0TtjVoap) and arXiv:2309.17452v4 metadata (comment: ICLR 2024), accessed 2026-09-29; title, authors, venue, pages and year checked; no DOI; direct OpenReview access returned a browser challenge."
+  },
+  "mammoth": {
+    "citation": "Yue et al., 2024",
+    "sort": "Yue 2024",
+    "year": 2024,
+    "title": "MAmmoTH: Building Math Generalist Models through Hybrid Instruction Tuning",
+    "entry": "Yue, X., Qu, X., Zhang, G., Fu, Y., Huang, W., Sun, H., Su, Y., & Chen, W. (2024). MAmmoTH: Building Math Generalist Models through Hybrid Instruction Tuning. *International Conference on Learning Representations*, 40320-40341.",
+    "url": "https://openreview.net/forum?id=yLClGs770I",
+    "metadataVerification": "ICLR 2024 proceedings record and BibTeX (proceedings.iclr.cc, pages 40320-40341), ICLR 2024 conference data (poster 17422, decision Accept (spotlight), OpenReview forum yLClGs770I) and arXiv:2309.05653v3 metadata, accessed 2026-09-29; title, authors, venue, pages and year checked; no DOI; direct OpenReview access returned a browser challenge."
+  },
+  "mathcoder": {
+    "citation": "Wang et al., 2024",
+    "sort": "Wang 2024",
+    "year": 2024,
+    "title": "MathCoder: Seamless Code Integration in LLMs for Enhanced Mathematical Reasoning",
+    "entry": "Wang, K., Ren, H., Zhou, A., Lu, Z., Luo, S., Shi, W., Zhang, R., Song, L., Zhan, M., & Li, H. (2024). MathCoder: Seamless Code Integration in LLMs for Enhanced Mathematical Reasoning. *International Conference on Learning Representations*, 5009-5042.",
+    "url": "https://openreview.net/forum?id=z8TW0ttBPp",
+    "metadataVerification": "ICLR 2024 proceedings record and BibTeX (proceedings.iclr.cc, pages 5009-5042), ICLR 2024 conference data (poster 17389, decision Accept (poster), OpenReview forum z8TW0ttBPp) and arXiv:2310.03731v1 metadata, accessed 2026-09-29; title, authors, venue, pages and year checked; no DOI; direct OpenReview access returned a browser challenge."
+  },
+  "kumar2022": {
+    "citation": "Kumar et al., 2022",
+    "sort": "Kumar 2022",
+    "year": 2022,
+    "title": "Fine-Tuning can Distort Pretrained Features and Underperform Out-of-Distribution",
+    "entry": "Kumar, A., Raghunathan, A., Jones, R., Ma, T., & Liang, P. (2022). Fine-Tuning can Distort Pretrained Features and Underperform Out-of-Distribution. *International Conference on Learning Representations*.",
+    "url": "https://openreview.net/forum?id=UYneFzXSJWh",
+    "metadataVerification": "ICLR 2022 conference data (poster 5945 and oral 5946, decision Accept (Oral)), the iclr.cc virtual poster page linking OpenReview forum UYneFzXSJWh, and arXiv:2202.10054v1 metadata (comment: ICLR (Oral) 2022), accessed 2026-09-29; title, authors, venue and year checked; ICLR 2022 has no paginated proceedings and no DOI; direct OpenReview access returned a browser challenge."
+  },
+  "wiseft": {
+    "citation": "Wortsman et al., 2022",
+    "sort": "Wortsman 2022",
+    "year": 2022,
+    "title": "Robust fine-tuning of zero-shot models",
+    "entry": "Wortsman, M., Ilharco, G., Kim, J. W., Li, M., Kornblith, S., Roelofs, R., Gontijo Lopes, R., Hajishirzi, H., Farhadi, A., Namkoong, H., & Schmidt, L. (2022). Robust fine-tuning of zero-shot models. *2022 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)*, 7949-7961.",
+    "url": "https://doi.org/10.1109/CVPR52688.2022.00780",
+    "doi": "10.1109/CVPR52688.2022.00780",
+    "metadataVerification": "Crossref DOI record (IEEE, pages 7949-7961), CVF open-access page and BibTeX (pages 7959-7971 in the CVF version) and arXiv:2109.01903v3 metadata (comment: CVPR 2022), accessed 2026-09-29; title, authors, venue, pages and year checked; the entry uses the pagination of the IEEE DOI version."
+  },
+  "panickssery2024": {
+    "citation": "Panickssery et al., 2024",
+    "sort": "Panickssery 2024",
+    "year": 2024,
+    "title": "LLM Evaluators Recognize and Favor Their Own Generations",
+    "entry": "Panickssery, A., Bowman, S. R., & Feng, S. (2024). LLM Evaluators Recognize and Favor Their Own Generations. *Advances in Neural Information Processing Systems*, 37, 68772-68802.",
+    "url": "https://doi.org/10.52202/079017-2197",
+    "doi": "10.52202/079017-2197",
+    "metadataVerification": "Crossref DOI record and NeurIPS 2024 proceedings page and BibTeX (Main Conference Track), accessed 2026-09-29; title, authors, venue, volume, pages and year checked; Crossref lists the second author without the middle initial that the proceedings page gives (Samuel R. Bowman)."
+  },
+  "faithfulcot": {
+    "citation": "Lyu et al., 2023",
+    "sort": "Lyu 2023",
+    "year": 2023,
+    "title": "Faithful Chain-of-Thought Reasoning",
+    "entry": "Lyu, Q., Havaldar, S., Stein, A., Zhang, L., Rao, D., Wong, E., Apidianaki, M., & Callison-Burch, C. (2023). Faithful Chain-of-Thought Reasoning. *Proceedings of the 13th International Joint Conference on Natural Language Processing and the 3rd Conference of the Asia-Pacific Chapter of the Association for Computational Linguistics (Volume 1: Long Papers)*, 305-329.",
+    "url": "https://doi.org/10.18653/v1/2023.ijcnlp-main.20",
+    "doi": "10.18653/v1/2023.ijcnlp-main.20",
+    "metadataVerification": "Crossref DOI record and ACL Anthology BibTeX (2023.ijcnlp-main.20), accessed 2026-09-29; title, authors, venue, pages and year checked."
+  },
+  "codeact": {
+    "citation": "Wang et al., 2024",
+    "sort": "Wang 2024",
+    "year": 2024,
+    "title": "Executable Code Actions Elicit Better LLM Agents",
+    "entry": "Wang, X., Chen, Y., Yuan, L., Zhang, Y., Li, Y., Peng, H., & Ji, H. (2024). Executable Code Actions Elicit Better LLM Agents. *Proceedings of Machine Learning Research*, 235, 50208-50232.",
+    "url": "https://proceedings.mlr.press/v235/wang24h.html",
+    "metadataVerification": "PMLR volume 235 (ICML 2024) index and abstract page (wang24h) and arXiv:2402.01030v4 metadata (comment: Accepted by ICML 2024), accessed 2026-09-29; title, authors, venue, volume, pages and year checked; no DOI."
+  },
+  "visprog": {
+    "citation": "Gupta & Kembhavi, 2023",
+    "sort": "Gupta 2023",
+    "year": 2023,
+    "title": "Visual Programming: Compositional visual reasoning without training",
+    "entry": "Gupta, T., & Kembhavi, A. (2023). Visual Programming: Compositional visual reasoning without training. *2023 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)*, 14953-14962.",
+    "url": "https://doi.org/10.1109/CVPR52729.2023.01436",
+    "doi": "10.1109/CVPR52729.2023.01436",
+    "metadataVerification": "Crossref DOI record and CVF open-access page and BibTeX (CVPR 2023), accessed 2026-09-29; title, authors, venue, pages and year checked."
+  },
+  "vipergpt": {
+    "citation": "Surís et al., 2023",
+    "sort": "Surís 2023",
+    "year": 2023,
+    "title": "ViperGPT: Visual Inference via Python Execution for Reasoning",
+    "entry": "Surís, D., Menon, S., & Vondrick, C. (2023). ViperGPT: Visual Inference via Python Execution for Reasoning. *2023 IEEE/CVF International Conference on Computer Vision (ICCV)*, 11854-11864.",
+    "url": "https://doi.org/10.1109/ICCV51070.2023.01092",
+    "doi": "10.1109/ICCV51070.2023.01092",
+    "metadataVerification": "Crossref DOI record and CVF open-access page and BibTeX (ICCV 2023), accessed 2026-09-29; title, authors, venue, pages and year checked; pages follow the DOI (IEEE Xplore) record, 11854-11864, while the CVF open-access version gives 11888-11898."
+  },
+  "satlm": {
+    "citation": "Ye et al., 2023",
+    "sort": "Ye 2023",
+    "year": 2023,
+    "title": "SatLM: Satisfiability-Aided Language Models Using Declarative Prompting",
+    "entry": "Ye, X., Chen, Q., Dillig, I., & Durrett, G. (2023). SatLM: Satisfiability-Aided Language Models Using Declarative Prompting. *Advances in Neural Information Processing Systems*, 36, 45548-45580.",
+    "url": "https://doi.org/10.52202/075280-1974",
+    "doi": "10.52202/075280-1974",
+    "metadataVerification": "Crossref DOI record and NeurIPS 2023 proceedings page (Main Conference Track), accessed 2026-09-29; title, authors, venue, volume, pages and year checked."
+  },
+  "logiclm": {
+    "citation": "Pan et al., 2023",
+    "sort": "Pan 2023",
+    "year": 2023,
+    "title": "Logic-LM: Empowering Large Language Models with Symbolic Solvers for Faithful Logical Reasoning",
+    "entry": "Pan, L., Albalak, A., Wang, X., & Wang, W. Y. (2023). Logic-LM: Empowering Large Language Models with Symbolic Solvers for Faithful Logical Reasoning. *Findings of the Association for Computational Linguistics: EMNLP 2023*, 3806-3824.",
+    "url": "https://doi.org/10.18653/v1/2023.findings-emnlp.248",
+    "doi": "10.18653/v1/2023.findings-emnlp.248",
+    "metadataVerification": "Crossref DOI record, ACL Anthology BibTeX and published PDF, accessed 2026-09-29; title, authors, venue, pages and year checked; Crossref and the Anthology list the fourth author as William Wang, the PDF byline as William Yang Wang, whose initials are used here."
+  },
+  "picard": {
+    "citation": "Scholak et al., 2021",
+    "sort": "Scholak 2021",
+    "year": 2021,
+    "title": "PICARD: Parsing Incrementally for Constrained Auto-Regressive Decoding from Language Models",
+    "entry": "Scholak, T., Schucher, N., & Bahdanau, D. (2021). PICARD: Parsing Incrementally for Constrained Auto-Regressive Decoding from Language Models. *Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing*, 9895-9901.",
+    "url": "https://doi.org/10.18653/v1/2021.emnlp-main.779",
+    "doi": "10.18653/v1/2021.emnlp-main.779",
+    "metadataVerification": "Crossref DOI record and ACL Anthology BibTeX, accessed 2026-09-29; title, authors, venue, pages and year checked."
+  },
+  "synchromesh": {
+    "citation": "Poesia et al., 2022",
+    "sort": "Poesia 2022",
+    "year": 2022,
+    "title": "Synchromesh: Reliable Code Generation from Pre-trained Language Models",
+    "entry": "Poesia, G., Polozov, O., Le, V., Tiwari, A., Soares, G., Meek, C., & Gulwani, S. (2022). Synchromesh: Reliable Code Generation from Pre-trained Language Models. *International Conference on Learning Representations*.",
+    "url": "https://openreview.net/forum?id=KmtVD97J43e",
+    "metadataVerification": "ICLR 2022 conference data and poster page (iclr.cc virtual poster 6709, decision Accept (Poster), linking OpenReview forum KmtVD97J43e) and arXiv:2201.11227v1, accessed 2026-09-29; title, authors, venue and year checked; no DOI and no page range (ICLR 2022 is not on proceedings.iclr.cc, and direct OpenReview access returned a browser challenge). The ICLR listing names the second author Alex Polozov; the paper byline on arXiv gives Oleksandr Polozov, whose initial is used here."
+  },
+  "shin2021": {
+    "citation": "Shin et al., 2021",
+    "sort": "Shin 2021",
+    "year": 2021,
+    "title": "Constrained Language Models Yield Few-Shot Semantic Parsers",
+    "entry": "Shin, R., Lin, C. H., Thomson, S., Chen, C., Roy, S., Platanios, E. A., Pauls, A., Klein, D., Eisner, J., & Van Durme, B. (2021). Constrained Language Models Yield Few-Shot Semantic Parsers. *Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing*, 7699-7715.",
+    "url": "https://doi.org/10.18653/v1/2021.emnlp-main.608",
+    "doi": "10.18653/v1/2021.emnlp-main.608",
+    "metadataVerification": "Crossref DOI record, ACL Anthology BibTeX and published PDF, accessed 2026-09-29; title, authors, venue, pages and year checked; Crossref and the Anthology list the second author as Christopher Lin, the PDF byline as Christopher H. Lin, whose initials are used here."
+  },
+  "geng2023": {
+    "citation": "Geng et al., 2023",
+    "sort": "Geng 2023",
+    "year": 2023,
+    "title": "Grammar-Constrained Decoding for Structured NLP Tasks without Finetuning",
+    "entry": "Geng, S., Josifoski, M., Peyrard, M., & West, R. (2023). Grammar-Constrained Decoding for Structured NLP Tasks without Finetuning. *Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing*, 10932-10952.",
+    "url": "https://doi.org/10.18653/v1/2023.emnlp-main.674",
+    "doi": "10.18653/v1/2023.emnlp-main.674",
+    "metadataVerification": "Crossref DOI record and ACL Anthology BibTeX, accessed 2026-09-29; title, authors, venue, pages and year checked."
+  },
+  "dataflowsurvey": {
+    "citation": "Johnston et al., 2004",
+    "sort": "Johnston 2004",
+    "year": 2004,
+    "title": "Advances in dataflow programming languages",
+    "entry": "Johnston, W. M., Hanna, J. R. P., & Millar, R. J. (2004). Advances in dataflow programming languages. *ACM Computing Surveys*, 36(1), 1-34.",
+    "url": "https://doi.org/10.1145/1013208.1013209",
+    "doi": "10.1145/1013208.1013209",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-29; title, authors, venue, volume, issue, pages and year checked."
+  },
+  "stitch": {
+    "citation": "Bowers et al., 2023",
+    "sort": "Bowers 2023",
+    "year": 2023,
+    "title": "Top-Down Synthesis for Library Learning",
+    "entry": "Bowers, M., Olausson, T. X., Wong, L., Grand, G., Tenenbaum, J. B., Ellis, K., & Solar-Lezama, A. (2023). Top-Down Synthesis for Library Learning. *Proceedings of the ACM on Programming Languages*, 7(POPL), 1182-1213.",
+    "url": "https://doi.org/10.1145/3571234",
+    "doi": "10.1145/3571234",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-29; title, authors, venue, volume, issue, pages and year checked."
+  },
+  "lilo": {
+    "citation": "Grand et al., 2024",
+    "sort": "Grand 2024",
+    "year": 2024,
+    "title": "LILO: Learning Interpretable Libraries by Compressing and Documenting Code",
+    "entry": "Grand, G., Wong, L., Bowers, M., Olausson, T. X., Liu, M., Tenenbaum, J. B., & Andreas, J. (2024). LILO: Learning Interpretable Libraries by Compressing and Documenting Code. *International Conference on Learning Representations*, 30399-30446.",
+    "url": "https://openreview.net/forum?id=TqYbAWKMIe",
+    "metadataVerification": "ICLR 2024 proceedings record and BibTeX (proceedings.iclr.cc, pages 30399-30446), ICLR 2024 conference data (poster 18550, decision Accept (poster), OpenReview forum TqYbAWKMIe) and arXiv:2310.19791v4 metadata (comment: ICLR 2024 camera-ready), accessed 2026-09-29; title, authors, venue, pages and year checked; no DOI; direct OpenReview access returned a browser challenge."
+  },
+  "multiple": {
+    "citation": "Cassano et al., 2023",
+    "sort": "Cassano 2023",
+    "year": 2023,
+    "title": "MultiPL-E: A Scalable and Polyglot Approach to Benchmarking Neural Code Generation",
+    "entry": "Cassano, F., Gouwar, J., Nguyen, D., Nguyen, S., Phipps-Costin, L., Pinckney, D., Yee, M.-H., Zi, Y., Anderson, C. J., Feldman, M. Q., Guha, A., Greenberg, M., & Jangda, A. (2023). MultiPL-E: A Scalable and Polyglot Approach to Benchmarking Neural Code Generation. *IEEE Transactions on Software Engineering*, 49(7), 3675-3691.",
+    "url": "https://doi.org/10.1109/TSE.2023.3267446",
+    "doi": "10.1109/TSE.2023.3267446",
+    "metadataVerification": "Crossref DOI record and IEEE Xplore record (document 10103177, open access CC BY), accessed 2026-09-29; title, authors, venue, volume, issue, pages and year checked; the arXiv version (arXiv:2208.08227v4) carries the earlier title 'MultiPL-E: A Scalable and Extensible Approach to Benchmarking Neural Code Generation'."
+  },
+  "mindemos": {
+    "citation": "Min et al., 2022",
+    "sort": "Min 2022",
+    "year": 2022,
+    "title": "Rethinking the Role of Demonstrations: What Makes In-Context Learning Work?",
+    "entry": "Min, S., Lyu, X., Holtzman, A., Artetxe, M., Lewis, M., Hajishirzi, H., & Zettlemoyer, L. (2022). Rethinking the Role of Demonstrations: What Makes In-Context Learning Work? *Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing*, 11048-11064.",
+    "url": "https://doi.org/10.18653/v1/2022.emnlp-main.759",
+    "doi": "10.18653/v1/2022.emnlp-main.759",
+    "metadataVerification": "Crossref DOI record and ACL Anthology BibTeX, accessed 2026-09-29; title, authors, venue, pages and year checked."
+  },
+  "shoemaker": {
+    "citation": "Shoemaker, 2011",
+    "sort": "Shoemaker 2011",
+    "year": 2011,
+    "title": "Attributability, Answerability, and Accountability: Toward a Wider Theory of Moral Responsibility",
+    "entry": "Shoemaker, D. (2011). Attributability, Answerability, and Accountability: Toward a Wider Theory of Moral Responsibility. *Ethics*, 121(3), 602-632.",
+    "url": "https://doi.org/10.1086/659003",
+    "doi": "10.1086/659003",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-29; title, author, journal, volume, issue, pages (602-632) and year checked."
+  },
+  "fischerravizza": {
+    "citation": "Fischer & Ravizza, 1998",
+    "sort": "Fischer 1998",
+    "year": 1998,
+    "title": "Responsibility and Control",
+    "entry": "Fischer, J. M., & Ravizza, M. (1998). *Responsibility and Control*. Cambridge University Press.",
+    "url": "https://doi.org/10.1017/CBO9780511814594",
+    "doi": "10.1017/CBO9780511814594",
+    "metadataVerification": "Crossref DOI record (monograph, Cambridge University Press, print 1998-02-13), accessed 2026-09-29; title, authors, publisher and year checked. Crossref gives the title without the subtitle, and the entry follows Crossref."
+  },
+  "culpableignorance": {
+    "citation": "Smith, 1983",
+    "sort": "Smith 1983",
+    "year": 1983,
+    "title": "Culpable Ignorance",
+    "entry": "Smith, H. (1983). Culpable Ignorance. *The Philosophical Review*, 92(4), 543-571.",
+    "url": "https://doi.org/10.2307/2184880",
+    "doi": "10.2307/2184880",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-29; title, author, journal, volume, issue, first page and year checked. Crossref lists only the first page; the end page 571 is taken from the Philosophy Documentation Center record (phr_1983_0092_0004_0543_0571) and matches the author-hosted copy of the article."
+  },
+  "crumplezone": {
+    "citation": "Elish, 2019",
+    "sort": "Elish 2019",
+    "year": 2019,
+    "title": "Moral Crumple Zones: Cautionary Tales in Human-Robot Interaction",
+    "entry": "Elish, M. C. (2019). Moral Crumple Zones: Cautionary Tales in Human-Robot Interaction. *Engaging Science, Technology, and Society*, 5, 40-60.",
+    "url": "https://doi.org/10.17351/ests2019.260",
+    "doi": "10.17351/ests2019.260",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-29; title, author, journal, volume, pages and year checked."
+  },
+  "goldman": {
+    "citation": "Goldman, 2001",
+    "sort": "Goldman 2001",
+    "year": 2001,
+    "title": "Experts: Which Ones Should You Trust?",
+    "entry": "Goldman, A. I. (2001). Experts: Which Ones Should You Trust? *Philosophy and Phenomenological Research*, 63(1), 85-110.",
+    "url": "https://doi.org/10.1111/j.1933-1592.2001.tb00093.x",
+    "doi": "10.1111/j.1933-1592.2001.tb00093.x",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-29; title, author, journal, volume, issue, pages and year checked."
+  },
+  "nuzzo": {
+    "citation": "Nuzzo, 2015",
+    "sort": "Nuzzo 2015",
+    "year": 2015,
+    "title": "How scientists fool themselves – and how they can stop",
+    "entry": "Nuzzo, R. (2015). How scientists fool themselves – and how they can stop. *Nature*, 526(7572), 182-185.",
+    "url": "https://doi.org/10.1038/526182a",
+    "doi": "10.1038/526182a",
+    "metadataVerification": "Crossref DOI record and the Nature article page, accessed 2026-09-29; title, author, journal, volume, issue, pages and year checked."
+  },
+  "blindanalysis": {
+    "citation": "MacCoun & Perlmutter, 2015",
+    "sort": "MacCoun 2015",
+    "year": 2015,
+    "title": "Blind analysis: Hide results to seek the truth",
+    "entry": "MacCoun, R., & Perlmutter, S. (2015). Blind analysis: Hide results to seek the truth. *Nature*, 526(7572), 187-189.",
+    "url": "https://doi.org/10.1038/526187a",
+    "doi": "10.1038/526187a",
+    "metadataVerification": "Crossref DOI record and the Nature article page, accessed 2026-09-29; title, authors, journal, volume, issue, pages and year checked."
+  },
+  "confirmationbias": {
+    "citation": "Nickerson, 1998",
+    "sort": "Nickerson 1998",
+    "year": 1998,
+    "title": "Confirmation Bias: A Ubiquitous Phenomenon in Many Guises",
+    "entry": "Nickerson, R. S. (1998). Confirmation Bias: A Ubiquitous Phenomenon in Many Guises. *Review of General Psychology*, 2(2), 175-220.",
+    "url": "https://doi.org/10.1037/1089-2680.2.2.175",
+    "doi": "10.1037/1089-2680.2.2.175",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-29; title, author, journal, volume, issue, pages and year checked."
+  },
+  "merton": {
+    "citation": "Merton, 1973",
+    "sort": "Merton 1973",
+    "year": 1973,
+    "title": "The Normative Structure of Science",
+    "entry": "Merton, R. K. (1973). The Normative Structure of Science. In N. W. Storer (Ed.), *The Sociology of Science: Theoretical and Empirical Investigations* (pp. 267-278). University of Chicago Press.",
+    "url": "https://press.uchicago.edu/ucp/books/book/chicago/S/bo28451565.html",
+    "metadataVerification": "University of Chicago Press catalogue page, accessed 2026-09-29: book title, author, editor (Storer) and a table of contents listing chapter 13, 'The Normative Structure of Science', checked. Chapter pages 267-278 and the note of original publication in 1942 (as 'Science and Technology in a Democratic Order', Journal of Legal and Political Sociology 1) checked on a scan of the chapter's first and last pages (sites.temple.edu copy). No DOI."
+  },
+  "capesdavis": {
+    "citation": "Capes-Davis et al., 2010",
+    "sort": "Capes-Davis 2010",
+    "year": 2010,
+    "title": "Check your cultures! A list of cross-contaminated or misidentified cell lines",
+    "entry": "Capes-Davis, A., Theodosopoulos, G., Atkin, I., Drexler, H. G., Kohara, A., MacLeod, R. A. F., Masters, J. R., Nakamura, Y., Reid, Y. A., Reddel, R. R., & Freshney, R. I. (2010). Check your cultures! A list of cross-contaminated or misidentified cell lines. *International Journal of Cancer*, 127(1), 1-8.",
+    "url": "https://doi.org/10.1002/ijc.25242",
+    "doi": "10.1002/ijc.25242",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-29; title, all eleven authors, journal, volume, issue, pages and year checked."
+  },
+  "cope": {
+    "citation": "COPE Council, 2023",
+    "sort": "COPE 2023",
+    "year": 2023,
+    "title": "COPE position: Authorship and AI tools",
+    "entry": "COPE Council (2023). *COPE position: Authorship and AI tools*. Committee on Publication Ethics.",
+    "url": "https://doi.org/10.24318/cCVRZBms",
+    "doi": "10.24318/cCVRZBms",
+    "metadataVerification": "Publisher page, accessed 2026-09-29. The live page refused automated access (HTTP 403); the Wayback Machine capture of 2026-01-01 of publicationethics.org/guidance/cope-position/authorship-and-ai-tools was read instead: title, 'Last reviewed: 13 February 2023', the page's own recommended citation (COPE Council, 'COPE position - Authorship and AI') and the DOI 10.24318/cCVRZBms checked. The DOI resolves (HTTP 302) to the same COPE page."
+  },
+  "icmje": {
+    "citation": "ICMJE, 2026",
+    "sort": "ICMJE 2026",
+    "year": 2026,
+    "title": "Recommendations for the Conduct, Reporting, Editing, and Publication of Scholarly Work in Medical Journals",
+    "entry": "International Committee of Medical Journal Editors (2026). *Recommendations for the Conduct, Reporting, Editing, and Publication of Scholarly Work in Medical Journals* (updated January 2026). ICMJE.",
+    "url": "https://www.icmje.org/icmje-recommendations.pdf",
+    "metadataVerification": "ICMJE PDF of the Recommendations ('Updated January 2026') and the web section II.A.4 'Artificial Intelligence (AI)-Assisted Technology', accessed 2026-09-29; title, issuing body, version date and the AI section wording checked. No DOI."
+  },
+  "springerai": {
+    "citation": "Springer Nature, n.d.",
+    "sort": "Springer Nature",
+    "year": null,
+    "title": "Journal policies: Artificial intelligence (AI)",
+    "entry": "Springer Nature (n.d.). *Journal policies*, section Artificial intelligence (AI). Springer.",
+    "url": "https://link.springer.com/brands/springer/journal-policies",
+    "metadataVerification": "Accessed 2026-09-29. The former policy URL (springer.com/gp/editorial-policies/artificial-intelligence--ai-/25428500) redirects (HTTP 301) to link.springer.com/brands/springer/journal-policies, which returned a sign-in redirect to automated access; the policy text was read on the Wayback Machine capture of 2025-12-24 of that page (section 'Artificial intelligence (AI)', subsection 'AI authorship'). The page is undated, hence n.d.; the current live wording should be rechecked by an author before submission."
+  },
+  "naturellm": {
+    "citation": "Nature, 2023",
+    "sort": "Nature 2023",
+    "year": 2023,
+    "title": "Tools such as ChatGPT threaten transparent science; here are our ground rules for their use",
+    "entry": "Nature (2023). Tools such as ChatGPT threaten transparent science; here are our ground rules for their use [Editorial]. *Nature*, 613(7945), 612.",
+    "url": "https://doi.org/10.1038/d41586-023-00191-1",
+    "doi": "10.1038/d41586-023-00191-1",
+    "metadataVerification": "Crossref DOI record (no personal author) and the Nature article page, accessed 2026-09-29; title, journal, volume, issue, page and year checked."
+  },
+  "ostp": {
+    "citation": "Office of Science and Technology Policy, 2000",
+    "sort": "Office of Science and Technology Policy 2000",
+    "year": 2000,
+    "title": "Federal Policy on Research Misconduct",
+    "entry": "Office of Science and Technology Policy (2000). Executive Office of the President; Federal Policy on Research Misconduct; Preamble for Research Misconduct Policy. *Federal Register*, 65(235), 76260-76264.",
+    "url": "https://www.federalregister.gov/documents/2000/12/06/00-30852/executive-office-of-the-president-federal-policy-on-research-misconduct-preamble-for-research",
+    "metadataVerification": "FederalRegister.gov document page (document 00-30852, citation 65 FR 76260, pages 76260-76264, publication date 2000-12-06, agency Office of Science and Technology Policy) and the govinfo HTML of the same document ('Federal Register Volume 65, Number 235 (Wednesday, December 6, 2000)'), accessed 2026-09-29."
+  },
+  "allea": {
+    "citation": "ALLEA, 2023",
+    "sort": "ALLEA 2023",
+    "year": 2023,
+    "title": "The European Code of Conduct for Research Integrity – Revised Edition 2023",
+    "entry": "ALLEA (2023). *The European Code of Conduct for Research Integrity – Revised Edition 2023*. ALLEA – All European Academies.",
+    "url": "https://doi.org/10.26356/ECOC",
+    "doi": "10.26356/ECOC",
+    "metadataVerification": "The code's PDF (published in Berlin by ALLEA, June 2023; its own citation line gives 'ALLEA (2023) The European Code of Conduct for Research Integrity – Revised Edition 2023. Berlin. DOI 10.26356/ECOC', ISBN 978-3-9823562-3-5), accessed 2026-09-29; the DOI resolves (HTTP 302) to the ALLEA page for the 2023 code."
+  },
+  "resnik": {
+    "citation": "Resnik & Hosseini, 2025",
+    "sort": "Resnik 2025",
+    "year": 2025,
+    "title": "The ethics of using artificial intelligence in scientific research: new guidance needed for a new tool",
+    "entry": "Resnik, D. B., & Hosseini, M. (2025). The ethics of using artificial intelligence in scientific research: new guidance needed for a new tool. *AI and Ethics*, 5(2), 1499-1521.",
+    "url": "https://doi.org/10.1007/s43681-024-00493-8",
+    "doi": "10.1007/s43681-024-00493-8",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-29; title, authors, journal, volume 5, issue 2, pages 1499-1521 checked; published online 2024-05-27 and in print April 2025, so the year of the issue (2025) is used."
+  },
+  "tigard": {
+    "citation": "Tigard, 2021",
+    "sort": "Tigard 2021",
+    "year": 2021,
+    "title": "There Is No Techno-Responsibility Gap",
+    "entry": "Tigard, D. W. (2021). There Is No Techno-Responsibility Gap. *Philosophy & Technology*, 34(3), 589-607.",
+    "url": "https://doi.org/10.1007/s13347-020-00414-7",
+    "doi": "10.1007/s13347-020-00414-7",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-29; title, author, journal, volume, issue, pages checked; published online 2020-07-09 and in print September 2021, so the year of the issue (2021) is used."
+  },
+  "nyholm": {
+    "citation": "Nyholm, 2018",
+    "sort": "Nyholm 2018",
+    "year": 2018,
+    "title": "Attributing Agency to Automated Systems: Reflections on Human–Robot Collaborations and Responsibility-Loci",
+    "entry": "Nyholm, S. (2018). Attributing Agency to Automated Systems: Reflections on Human–Robot Collaborations and Responsibility-Loci. *Science and Engineering Ethics*, 24(4), 1201-1219.",
+    "url": "https://doi.org/10.1007/s11948-017-9943-x",
+    "doi": "10.1007/s11948-017-9943-x",
+    "metadataVerification": "Crossref DOI record, accessed 2026-09-29; title, author, journal, volume, issue, pages checked; published online 2017-07-18 and in print August 2018, so the year of the issue (2018) is used."
+  },
+  "dlbugs": {
+    "citation": "Islam et al., 2019",
+    "sort": "Islam 2019",
+    "year": 2019,
+    "title": "A comprehensive study on deep learning bug characteristics",
+    "entry": "Islam, M. J., Nguyen, G., Pan, R., & Rajan, H. (2019). A comprehensive study on deep learning bug characteristics. *Proceedings of the 2019 27th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering*, 510-520.",
+    "url": "https://doi.org/10.1145/3338906.3338955",
+    "metadataVerification": "Crossref DOI record 10.1145/3338906.3338955, accessed 2026-09-29; title, authors, proceedings, pages (510-520) and year checked."
+  },
+  "dlfaulttaxonomy": {
+    "citation": "Humbatova et al., 2020",
+    "sort": "Humbatova 2020",
+    "year": 2020,
+    "title": "Taxonomy of real faults in deep learning systems",
+    "entry": "Humbatova, N., Jahangirova, G., Bavota, G., Riccio, V., Stocco, A., & Tonella, P. (2020). Taxonomy of real faults in deep learning systems. *Proceedings of the ACM/IEEE 42nd International Conference on Software Engineering*, 1110-1121.",
+    "url": "https://doi.org/10.1145/3377811.3380395",
+    "metadataVerification": "Crossref DOI record 10.1145/3377811.3380395, accessed 2026-09-29; title, authors, proceedings (ICSE 2020), pages (1110-1121) and year checked."
+  },
+  "mlcollaboration": {
+    "citation": "Nahar et al., 2022",
+    "sort": "Nahar 2022",
+    "year": 2022,
+    "title": "Collaboration challenges in building ML-enabled systems: Communication, documentation, engineering, and process",
+    "entry": "Nahar, N., Zhou, S., Lewis, G., & Kästner, C. (2022). Collaboration challenges in building ML-enabled systems: Communication, documentation, engineering, and process. *Proceedings of the 44th International Conference on Software Engineering*, 413-425.",
+    "url": "https://doi.org/10.1145/3510003.3510209",
+    "metadataVerification": "Crossref DOI record 10.1145/3510003.3510209, accessed 2026-09-29; title and subtitle, authors, proceedings (ICSE 2022), pages (413-425) and year checked."
+  },
+  "mltestingsurvey": {
+    "citation": "Zhang et al., 2022",
+    "sort": "Zhang 2022",
+    "year": 2022,
+    "title": "Machine Learning Testing: Survey, Landscapes and Horizons",
+    "entry": "Zhang, J. M., Harman, M., Ma, L., & Liu, Y. (2022). Machine Learning Testing: Survey, Landscapes and Horizons. *IEEE Transactions on Software Engineering*, 48(1), 1-36.",
+    "url": "https://doi.org/10.1109/TSE.2019.2962027",
+    "metadataVerification": "Crossref DOI record 10.1109/TSE.2019.2962027, accessed 2026-09-29; title, authors, journal, volume 48, issue 1, pages 1-36 and issue year 2022 checked (published online 2019)."
+  },
+  "swebench": {
+    "citation": "Jimenez et al., 2024",
+    "sort": "Jimenez 2024",
+    "year": 2024,
+    "title": "SWE-bench: Can Language Models Resolve Real-World GitHub Issues?",
+    "entry": "Jimenez, C. E., Yang, J., Wettig, A., Yao, S., Pei, K., Press, O., & Narasimhan, K. (2024). SWE-bench: Can Language Models Resolve Real-World GitHub Issues? *International Conference on Learning Representations*.",
+    "url": "https://openreview.net/forum?id=VTF8yNQM66",
+    "metadataVerification": "arXiv abstract page for arXiv:2310.06770, accessed 2026-09-29; title and authors checked, and the arXiv comment states ICLR 2024 with the OpenReview forum VTF8yNQM66. The OpenReview page itself could not be fetched (bot challenge), so the venue rests on the authors' arXiv comment."
+  },
+  "sweagent": {
+    "citation": "Yang et al., 2024",
+    "sort": "Yang 2024",
+    "year": 2024,
+    "title": "SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering",
+    "entry": "Yang, J., Jimenez, C. E., Wettig, A., Lieret, K., Yao, S., Narasimhan, K., & Press, O. (2024). SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering. *Advances in Neural Information Processing Systems*, 37, 50528-50652.",
+    "url": "https://doi.org/10.52202/079017-1601",
+    "metadataVerification": "Crossref DOI record 10.52202/079017-1601 (NeurIPS 2024 proceedings, volume 37, pages 50528-50652) and arXiv:2405.15793 abstract page, accessed 2026-09-29; title, authors, venue and year checked."
+  },
+  "agenticprs": {
+    "citation": "Watanabe et al., 2026",
+    "sort": "Watanabe 2026",
+    "year": 2026,
+    "title": "On the Use of Agentic Coding: An Empirical Study of Pull Requests on GitHub",
+    "entry": "Watanabe, M., Li, H., Kashiwa, Y., Reid, B., Iida, H., & Hassan, A. E. (2026). On the Use of Agentic Coding: An Empirical Study of Pull Requests on GitHub. *ACM Transactions on Software Engineering and Methodology*, 35(10), 1-24.",
+    "url": "https://doi.org/10.1145/3798166",
+    "metadataVerification": "Crossref DOI record 10.1145/3798166, accessed 2026-09-29; title, authors, journal, volume 35, issue 10, pages 1-24 and year (2026-09-16) checked; the arXiv version is arXiv:2509.14745."
+  },
+  "dependability": {
+    "citation": "Avizienis et al., 2004",
+    "sort": "Avizienis 2004",
+    "year": 2004,
+    "title": "Basic concepts and taxonomy of dependable and secure computing",
+    "entry": "Avizienis, A., Laprie, J.-C., Randell, B., & Landwehr, C. (2004). Basic concepts and taxonomy of dependable and secure computing. *IEEE Transactions on Dependable and Secure Computing*, 1(1), 11-33.",
+    "url": "https://doi.org/10.1109/TDSC.2004.2",
+    "metadataVerification": "Crossref DOI record 10.1109/TDSC.2004.2 and OpenAlex record with abstract, accessed 2026-09-29; title, authors, journal, volume, issue, pages and year checked."
+  },
+  "scisoftaccuracy": {
+    "citation": "Hatton & Roberts, 1994",
+    "sort": "Hatton 1994",
+    "year": 1994,
+    "title": "How accurate is scientific software?",
+    "entry": "Hatton, L., & Roberts, A. (1994). How accurate is scientific software? *IEEE Transactions on Software Engineering*, 20(10), 785-797.",
+    "url": "https://doi.org/10.1109/32.328993",
+    "metadataVerification": "Crossref DOI record 10.1109/32.328993 and OpenAlex record with abstract, accessed 2026-09-29; title, authors, journal, volume, issue, pages and year checked."
+  },
+  "scisoftchasm": {
+    "citation": "Storer, 2017",
+    "sort": "Storer 2017",
+    "year": 2017,
+    "title": "Bridging the Chasm: A Survey of Software Engineering Practice in Scientific Programming",
+    "entry": "Storer, T. (2017). Bridging the Chasm: A Survey of Software Engineering Practice in Scientific Programming. *ACM Computing Surveys*, 50(4), 1-32.",
+    "url": "https://doi.org/10.1145/3084225",
+    "metadataVerification": "Crossref DOI record 10.1145/3084225 (title with subtitle), accessed 2026-09-29; title, author, journal, volume, issue, pages and year checked."
+  },
+  "testoracle": {
+    "citation": "Barr et al., 2015",
+    "sort": "Barr 2015",
+    "year": 2015,
+    "title": "The Oracle Problem in Software Testing: A Survey",
+    "entry": "Barr, E. T., Harman, M., McMinn, P., Shahbaz, M., & Yoo, S. (2015). The Oracle Problem in Software Testing: A Survey. *IEEE Transactions on Software Engineering*, 41(5), 507-525.",
+    "url": "https://doi.org/10.1109/TSE.2014.2372785",
+    "metadataVerification": "Crossref DOI record 10.1109/TSE.2014.2372785, accessed 2026-09-29; title, authors, journal, volume, issue, pages and year checked."
+  },
+  "metamorphictesting": {
+    "citation": "Chen et al., 2018",
+    "sort": "Chen 2018",
+    "year": 2018,
+    "title": "Metamorphic Testing: A Review of Challenges and Opportunities",
+    "entry": "Chen, T. Y., Kuo, F.-C., Liu, H., Poon, P.-L., Towey, D., Tse, T. H., & Zhou, Z. Q. (2018). Metamorphic Testing: A Review of Challenges and Opportunities. *ACM Computing Surveys*, 51(1), 1-27.",
+    "url": "https://doi.org/10.1145/3143561",
+    "metadataVerification": "Crossref DOI record 10.1145/3143561 (title with subtitle and abstract), accessed 2026-09-29; title, authors, journal, volume, issue, pages and year checked."
+  },
+  "masfailures": {
+    "citation": "Cemri et al., 2025",
+    "sort": "Cemri 2025",
+    "year": 2025,
+    "title": "Why Do Multi-Agent LLM Systems Fail?",
+    "entry": "Cemri, M., Pan, M. Z., Yang, S., Agrawal, L. A., Chopra, B., Tiwari, R., Keutzer, K., Parameswaran, A., Klein, D., Ramchandran, K., Zaharia, M., Gonzalez, J. E., & Stoica, I. (2025). Why Do Multi-Agent LLM Systems Fail? *Advances in Neural Information Processing Systems*, 38, 135676-135729.",
+    "url": "https://doi.org/10.52202/085713-4082",
+    "metadataVerification": "Crossref DOI record 10.52202/085713-4082 (NeurIPS 2025 proceedings, volume 38, pages 135676-135729) and arXiv:2503.13657 abstract page, accessed 2026-09-29; title, authors, venue and year checked."
+  },
+  "llmannotators": {
+    "citation": "Ahmed et al., 2025",
+    "sort": "Ahmed 2025",
+    "year": 2025,
+    "title": "Can LLMs Replace Manual Annotation of Software Engineering Artifacts?",
+    "entry": "Ahmed, T., Devanbu, P., Treude, C., & Pradel, M. (2025). Can LLMs Replace Manual Annotation of Software Engineering Artifacts? *2025 IEEE/ACM 22nd International Conference on Mining Software Repositories (MSR)*, 526-538.",
+    "url": "https://doi.org/10.1109/MSR66628.2025.00086",
+    "metadataVerification": "Crossref DOI record 10.1109/MSR66628.2025.00086 and arXiv:2408.05534 abstract page, accessed 2026-09-29; title, authors, proceedings, pages (526-538) and year checked."
+  },
+  "criticalincident": {
+    "citation": "Flanagan, 1954",
+    "sort": "Flanagan 1954",
+    "year": 1954,
+    "title": "The critical incident technique",
+    "entry": "Flanagan, J. C. (1954). The critical incident technique. *Psychological Bulletin*, 51(4), 327-358.",
+    "url": "https://doi.org/10.1037/h0061470",
+    "metadataVerification": "Crossref DOI record 10.1037/h0061470, accessed 2026-09-29; title, author, journal, volume, issue, pages and year checked."
+  },
+  "empiricalstandards": {
+    "citation": "Ralph et al., 2020",
+    "sort": "Ralph 2020",
+    "year": 2020,
+    "title": "Empirical Standards for Software Engineering Research",
+    "entry": "Ralph, P., bin Ali, N., Baltes, S., Bianculli, D., Diaz, J., Dittrich, Y., Ernst, N., Felderer, M., Feldt, R., Filieri, A., de França, B. B. N., Furia, C. A., Gay, G., Gold, N., Graziotin, D., He, P., Hoda, R., Juristo, N., Kitchenham, B., ... Vegas, S. (2020). *Empirical Standards for Software Engineering Research* (arXiv:2010.03525). arXiv.",
+    "url": "https://arxiv.org/abs/2010.03525",
+    "metadataVerification": "arXiv abstract page for arXiv:2010.03525 (version 2), accessed 2026-09-29; title, author list and year checked; cited as the arXiv report of the ACM SIGSOFT Empirical Standards."
+  },
+  "ironiesautomation": {
+    "citation": "Bainbridge, 1983",
+    "sort": "Bainbridge 1983",
+    "year": 1983,
+    "title": "Ironies of automation",
+    "entry": "Bainbridge, L. (1983). Ironies of automation. *Automatica*, 19(6), 775-779.",
+    "url": "https://doi.org/10.1016/0005-1098(83)90046-8",
+    "metadataVerification": "Crossref DOI record 10.1016/0005-1098(83)90046-8, accessed 2026-09-29; title, author, journal, volume, issue, pages and year checked against the article's first page."
   }
 }

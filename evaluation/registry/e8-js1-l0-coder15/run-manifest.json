@@ -1,0 +1,18 @@
+{
+  "experiment": "e8-js1-l0-coder15",
+  "gguf": "training/checkpoints/base-1.5b-f16.gguf",
+  "ggufBytes": 3093669600,
+  "itemSource": "evaluation/registry/items-e2/L0.jsonl",
+  "itemCount": 75,
+  "mode": "js",
+  "shots": 1,
+  "perGroup": 5,
+  "samples": 1,
+  "temperature": 0,
+  "seed": 20260928,
+  "maxTokens": 1024,
+  "noThink": false,
+  "systemPromptSha256": "05650018d20b2a02ddcfda4389cb41d6ce413935ec0c5093add1522b19e92baf",
+  "resumedWith": 0,
+  "updatedAt": "2026-09-28T22:26:44.378Z"
+}

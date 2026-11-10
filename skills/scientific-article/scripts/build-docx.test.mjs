@@ -37,3 +37,29 @@ test('an unknown reference or unsupported citation style cannot silently reach p
   assert.throws(() => renderCitations('A claim [@missing].\n<!-- REFERENCES -->', {}), /Unknown reference/);
   assert.throws(() => renderCitations('<!-- REFERENCES -->', {}, 'unrecognized'), /Unknown citation style/);
 });
+
+test('a grouped citation resolves every key in both citation styles', () => {
+  const references = {
+    alpha: { citation: 'Alpha, 2020', sort: 'Alpha 2020', entry: 'Alpha (2020). A.' },
+    beta: { citation: 'Beta, 2021', sort: 'Beta 2021', entry: 'Beta (2021). B.' },
+  };
+  const source = 'First [@beta]. Both [@alpha; @beta].\n<!-- REFERENCES -->';
+  assert.match(renderCitations(source, references, 'numbered').markdown, /First \[1\]\. Both \[1, 2\]\./);
+  assert.match(renderCitations(source, references).markdown, /Both \(Alpha, 2020; Beta, 2021\)\./);
+  assert.throws(() => renderCitations('A claim [@alpha; @missing].\n<!-- REFERENCES -->', references), /Unknown reference: missing/);
+});
+
+test('bulleted and numbered lists become separate indented items', async () => {
+  const { parseMarkdown } = await import('./markdown.mjs');
+  const blocks = parseMarkdown('Lead-in sentence:\n- first item\n  continues here\n- second item\n\n1. one\n2. two\n\nAfter.');
+  assert.deepEqual(blocks.map(block => block.type), ['paragraph', 'list', 'list', 'paragraph']);
+  assert.deepEqual(blocks[1].items, ['first item continues here', 'second item']);
+  assert.equal(blocks[2].ordered, true);
+});
+
+test('block quotes keep their paragraphs and stop a running paragraph', async () => {
+  const { parseMarkdown } = await import('./markdown.mjs');
+  const blocks = parseMarkdown('Consider the statement:\n> First quoted\n> paragraph.\n>\n> Second quoted paragraph.\n\nAfter.');
+  assert.deepEqual(blocks.map(block => block.type), ['paragraph', 'quote', 'paragraph']);
+  assert.deepEqual(blocks[1].paragraphs, ['First quoted paragraph.', 'Second quoted paragraph.']);
+});

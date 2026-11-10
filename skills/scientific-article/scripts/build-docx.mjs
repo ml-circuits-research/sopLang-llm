@@ -29,6 +29,7 @@ function makeStyles(job) {
     ${style('Caption', 'Caption', '<w:sz w:val="19"/>', '<w:keepLines/><w:spacing w:before="80" w:after="160"/><w:jc w:val="left"/>')}
     ${style('TableText', 'Table text', `<w:sz w:val="${job.columns === 2 ? 17 : 19}"/>`, '<w:spacing w:before="25" w:after="45" w:line="240" w:lineRule="auto"/><w:jc w:val="left"/>')}
     ${style('Code', 'Code', '<w:rFonts w:ascii="Liberation Mono" w:hAnsi="Liberation Mono"/><w:sz w:val="17"/>', '<w:spacing w:before="0" w:after="0" w:line="230" w:lineRule="auto"/><w:shd w:fill="F4F4F4"/><w:jc w:val="left"/>')}
+    ${style('Quote', 'Quote', `<w:sz w:val="${size - 1}"/>`, '<w:ind w:left="420" w:right="420"/><w:spacing w:before="40" w:after="100"/><w:jc w:val="left"/>')}
     ${style('Reference', 'Reference', `<w:sz w:val="${size - 1}"/>`, '<w:ind w:left="260" w:hanging="260"/><w:keepLines/><w:spacing w:after="80" w:line="240" w:lineRule="auto"/><w:jc w:val="left"/>')}
     ${style('Header', 'Header', '<w:sz w:val="17"/><w:color w:val="555555"/>', '<w:spacing w:after="60"/><w:jc w:val="left"/>')}
     </w:styles>`;
@@ -138,6 +139,14 @@ export async function buildDocx(jobPath) {
         ? (job.styleMap?.Keywords ? 'Keywords' : 'Normal') : inAbstract && job.styleMap?.Abstract ? 'Abstract' : 'Normal';
       body.push(paragraph(block.text, style, isTable || inReferences && job.keepReferencesTogether ? '<w:keepNext/>' : ''));
       if (/^Keywords:/.test(block.text)) afterKeywords = true;
+    } else if (block.type === 'list') {
+      // Lists render as indented paragraphs with a hanging marker, so they survive any imported template.
+      const style = inAbstract && job.styleMap?.Abstract ? 'Abstract' : 'Normal';
+      block.items.forEach((item, index) => body.push(paragraph(`${block.ordered ? `${index + 1}.` : '•'}  ${item}`, style,
+        `<w:ind w:left="360" w:hanging="240"/><w:spacing w:after="${index === block.items.length - 1 ? 120 : 40}"/><w:jc w:val="left"/>`)));
+    } else if (block.type === 'quote') {
+      // Block quotes render as indented paragraphs kept together, one per quoted paragraph.
+      block.paragraphs.forEach((text, index) => body.push(paragraph(text, 'Quote', index < block.paragraphs.length - 1 ? '<w:keepNext/>' : '')));
     } else if (block.type === 'table') body.push(table(block.rows));
     else if (block.type === 'figure') body.push(await figure(block));
     else if (block.type === 'code') {

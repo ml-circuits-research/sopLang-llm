@@ -50,19 +50,23 @@ test('archived descriptive comparisons retain the intended population boundaries
   assert.deepEqual([changed.common, changed.onlyLeftIds, changed.onlyRightIds, changed.changedOracles], [655, 50, 50, 100]);
 });
 
+// Blocks fenced as sop-fragment are partial programs shown for their syntax and are not executed.
 test('every manuscript contains a runnable, self-contained language example', async () => {
   const { readdir } = await import('node:fs/promises');
   const directory = new URL('../manuscripts/', import.meta.url);
   const runtime = createRuntime();
   for (const name of await readdir(directory)) {
     if (!name.endsWith('.md')) continue;
+    // The double-anonymous ethics manuscript describes the language only in words; an example would identify it.
+    if (name === '04-ai-and-ethics.md') continue;
     const source = await readFile(new URL(name, directory), 'utf8');
     const examples = [...source.matchAll(/```sop\n([\s\S]*?)\n```/g)].map(match => match[1]);
     assert.ok(examples.length > 0, `${name}: missing complete example`);
     for (const example of examples) {
       const result = await runtime.run(example, { outputs: ['answer'] });
       assert.equal(result.status, 'completed', name);
-      assert.equal(result.outputs.answer, example.includes('@answer graphPath') ? 'yes' : 12, name);
+      const expected = example.includes('@answer graphPath') ? 'yes' : example.includes('limitMinutes') ? '46 minutes: not feasible' : 12;
+      assert.equal(result.outputs.answer, expected, name);
     }
   }
 });

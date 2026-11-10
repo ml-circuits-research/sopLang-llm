@@ -2,40 +2,40 @@
   "file": "03-empirical-software-engineering.docx",
   "journal": "Empirical Software Engineering",
   "source": "../manuscripts/03-empirical-software-engineering.md",
-  "sha256": "a3f6ebcf34896fa59bebc582014e4b9f9f543a534c6a254c82dd3657d06b4e17",
-  "sourceSha256": "3ced5584660879be7008e01a1a01c05d8b0e8032a148c42c58969fd43d822cf4",
-  "words": 3587,
+  "sha256": "a3a69e5b6f322b7b16fb400b285f560572447d8365d4f59707608d11a9304098",
+  "sourceSha256": "dd95996c58f508e9abe1d6cf4f5062e98c0ca7c9a5f5de74ebc524829c41cda2",
+  "words": 8446,
   "references": [
-    "dwork",
-    "datasheets",
+    "llmannotators",
+    "amershi",
+    "dependability",
+    "ironiesautomation",
+    "testoracle",
+    "mltestscore",
+    "masfailures",
+    "metamorphictesting",
+    "criticalincident",
+    "gundersen",
+    "scisoftaccuracy",
+    "dlfaulttaxonomy",
+    "dlbugs",
+    "swebench",
     "kapoor",
-    "messeri",
-    "modelcards",
-    "raji",
+    "aiscientist",
+    "mlcollaboration",
+    "automationbias",
+    "empiricalstandards",
     "runeson",
-    "sandve"
+    "sclar",
+    "techdebt",
+    "scisoftchasm",
+    "agenticprs",
+    "sweagent",
+    "mltestingsurvey",
+    "llmjudge"
   ],
-  "tables": 2,
-  "figures": [
-    {
-      "source": "../assets/sop-program-anatomy.png",
-      "width": 8250,
-      "height": 3678,
-      "sha256": "61f303e546c5bb3a3122bafd827c0e9781316d5b3e7a0b962c12062eaa718132"
-    },
-    {
-      "source": "../assets/claim-evidence-map.png",
-      "width": 8250,
-      "height": 4468,
-      "sha256": "e2138f99a80b26c8f67342941407229d5620d45f17eb301876402f77031478aa"
-    },
-    {
-      "source": "../assets/shared-assumption-example.png",
-      "width": 8250,
-      "height": 4881,
-      "sha256": "aa06ba8f5789144da2662dbd2dab1ee3b1bbee4c2edbd08282e243ea9521775e"
-    }
-  ],
+  "tables": 6,
+  "figures": [],
   "columns": 1,
-  "zipMembers": 11
+  "zipMembers": 8
 }

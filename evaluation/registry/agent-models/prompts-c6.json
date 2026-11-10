@@ -1,0 +1,358 @@
+{
+ "templates": {
+  "js": [
+   {
+    "role": "system",
+    "content": "You solve problems by writing JavaScript. Write the body of one function that computes the answer to the problem and returns it as a short string that states the answer. Use plain JavaScript only: no imports, no input or output, no external data. Reply with exactly one ```javascript code block that contains the function body and ends with a return statement."
+   },
+   {
+    "role": "user",
+    "content": "The river depot recorded 12, 30, 7, 25 and 41 crates. Please keep only the records above 20, then add the kept records, then add the fixed charge of 5. Report the result in crates."
+   },
+   {
+    "role": "assistant",
+    "content": "```javascript\nconst values = [12, 30, 7, 25, 41];\nconst kept = values.filter((value) => value > 20);\nconst total = kept.reduce((sum, value) => sum + value, 0);\nconst result = total + 5;\nreturn result + \" units.\";\n```"
+   },
+   {
+    "role": "user",
+    "content": "{{STATEMENT}}"
+   }
+  ],
+  "sop": [
+   {
+    "role": "system",
+    "content": "You compile problems into SOP Lang circuits. Read the problem and emit exactly one SOP Lang program, the compiled plan of this instance: a @slots literal wire that carries the values you extracted from the statement, an optional @facts literal wire that carries external knowledge the computation reads, zero or more intermediate wires that publish the named stages of the plan for the later wires to read through $name, and a @answer jsEval wire that computes the answer deterministically from those values. Every jsEval wire computes deterministic work from the values it reads. The runtime asserts the generic input and output contract for you: a dependency is defined, a slots record is a non-empty object, and the result is not empty. The runtime also provides a probe(condition, message) helper inside every jsEval wire: call it for your own domain assertions, and do not define it. The program carries no input wire and no model call. Output only the program. SOP Lang syntax. A program is a list of wires. Each wire starts with a declaration line \"@name command\" at the start of a line, and its body is every following line up to the next declaration. The command \"literal\" takes a JSON body. The command \"jsEval\" takes a JavaScript function body: it reads another wire's value as $name and must end with a return statement whose value is the wire's value. The runtime runs wires in dependency order and returns the value of the wire named answer. Put the program in one ```sop code block."
+   },
+   {
+    "role": "user",
+    "content": "The market depot recorded 11, 7, 34, 29, 7 and 8 crates. Please keep only the records above 14, then add the kept records, then add the fixed charge of 3. Report the result in crates."
+   },
+   {
+    "role": "assistant",
+    "content": "```sop\n@slots literal\n{\"depot\": \"market depot\", \"unit\": \"crates\", \"values\": [11, 7, 34, 29, 7, 8], \"threshold\": 14, \"rate\": 3}\n\n@answer jsEval\nconst kept = $slots.values.filter((value) => value > $slots.threshold);\nconst total = kept.reduce((sum, value) => sum + value, 0);\nreturn (total + $slots.rate) + \" units.\";\n```"
+   },
+   {
+    "role": "user",
+    "content": "A plant produces 246 units of bricks in one shift. Each crate holds 18 units. How many crates are needed, and how many units are in the last crate?"
+   },
+   {
+    "role": "assistant",
+    "content": "```sop\n@slots literal\n{\"totalUnits\": 246, \"unitsPerCrate\": 18}\n\n@crates jsEval\nreturn Math.ceil($slots.totalUnits / $slots.unitsPerCrate);\n\n@answer jsEval\nconst lastCrate = $slots.totalUnits - ($crates - 1) * $slots.unitsPerCrate;\nreturn $crates + \" crates are needed, and the last crate holds \" + lastCrate + \" units.\";\n```"
+   },
+   {
+    "role": "user",
+    "content": "How many times does the letter \"s\" appear in the word \"mechanism\"? Reply with only the number."
+   },
+   {
+    "role": "assistant",
+    "content": "```sop\n@slots literal\n{\"word\": \"mechanism\", \"letter\": \"s\"}\n\n@answer jsEval\nconst count = [...$slots.word.toLowerCase()].filter((character) => character === $slots.letter).length;\nreturn count + \" times.\";\n```"
+   },
+   {
+    "role": "user",
+    "content": "{{STATEMENT}}"
+   }
+  ]
+ },
+ "items": [
+  {
+   "key": "e3-procedural|js|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/1.10.4-dependency-chain-and-join-procedural",
+   "condition": "js",
+   "statement": "A project runs five work packages in a chain. A takes 5 minutes. B (6 min) and C (5 min) can start only after A but may then run in parallel. D (9 min) needs both B and C finished. E (7 min) follows D. A final safety buffer of 5 minutes is mandatory, and the completion limit is 44 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|js|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/1.5.4-dependency-chain-and-join-procedural",
+   "condition": "js",
+   "statement": "A project runs five work packages in a chain. A takes 6 minutes. B (10 min) and C (14 min) can start only after A but may then run in parallel. D (15 min) needs both B and C finished. E (18 min) follows D. A final safety buffer of 9 minutes is mandatory, and the completion limit is 70 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|js|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/10.2.4-dependency-chain-and-join-procedural",
+   "condition": "js",
+   "statement": "A project runs five work packages in a chain. A takes 9 minutes. B (16 min) and C (11 min) can start only after A but may then run in parallel. D (18 min) needs both B and C finished. E (8 min) follows D. A final safety buffer of 8 minutes is mandatory, and the completion limit is 56 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|js|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/10.5.4-dependency-chain-and-join-procedural",
+   "condition": "js",
+   "statement": "A project runs five work packages in a chain. A takes 14 minutes. B (12 min) and C (6 min) can start only after A but may then run in parallel. D (14 min) needs both B and C finished. E (15 min) follows D. A final safety buffer of 9 minutes is mandatory, and the completion limit is 61 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|js|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/2.4.4-dependency-chain-and-join-procedural",
+   "condition": "js",
+   "statement": "A project runs five work packages in a chain. A takes 11 minutes. B (16 min) and C (12 min) can start only after A but may then run in parallel. D (7 min) needs both B and C finished. E (5 min) follows D. A final safety buffer of 9 minutes is mandatory, and the completion limit is 42 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|js|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/4.7.4-dependency-chain-and-join-procedural",
+   "condition": "js",
+   "statement": "A project runs five work packages in a chain. A takes 18 minutes. B (7 min) and C (17 min) can start only after A but may then run in parallel. D (14 min) needs both B and C finished. E (17 min) follows D. A final safety buffer of 4 minutes is mandatory, and the completion limit is 78 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|js|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/5.1.4-dependency-chain-and-join-procedural",
+   "condition": "js",
+   "statement": "A project runs five work packages in a chain. A takes 5 minutes. B (13 min) and C (5 min) can start only after A but may then run in parallel. D (18 min) needs both B and C finished. E (12 min) follows D. A final safety buffer of 4 minutes is mandatory, and the completion limit is 49 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|js|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/5.8.4-dependency-chain-and-join-procedural",
+   "condition": "js",
+   "statement": "A project runs five work packages in a chain. A takes 6 minutes. B (15 min) and C (18 min) can start only after A but may then run in parallel. D (10 min) needs both B and C finished. E (10 min) follows D. A final safety buffer of 6 minutes is mandatory, and the completion limit is 44 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|js|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/6.10.4-dependency-chain-and-join-procedural",
+   "condition": "js",
+   "statement": "A project runs five work packages in a chain. A takes 8 minutes. B (12 min) and C (11 min) can start only after A but may then run in parallel. D (8 min) needs both B and C finished. E (11 min) follows D. A final safety buffer of 10 minutes is mandatory, and the completion limit is 53 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|js|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/6.4.4-dependency-chain-and-join-procedural",
+   "condition": "js",
+   "statement": "A project runs five work packages in a chain. A takes 6 minutes. B (18 min) and C (16 min) can start only after A but may then run in parallel. D (6 min) needs both B and C finished. E (16 min) follows D. A final safety buffer of 6 minutes is mandatory, and the completion limit is 49 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|js|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/6.7.4-dependency-chain-and-join-procedural",
+   "condition": "js",
+   "statement": "A project runs five work packages in a chain. A takes 9 minutes. B (11 min) and C (12 min) can start only after A but may then run in parallel. D (11 min) needs both B and C finished. E (17 min) follows D. A final safety buffer of 8 minutes is mandatory, and the completion limit is 51 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|js|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/6.8.4-dependency-chain-and-join-procedural",
+   "condition": "js",
+   "statement": "A project runs five work packages in a chain. A takes 8 minutes. B (18 min) and C (9 min) can start only after A but may then run in parallel. D (7 min) needs both B and C finished. E (6 min) follows D. A final safety buffer of 5 minutes is mandatory, and the completion limit is 52 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|js|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/7.3.4-dependency-chain-and-join-procedural",
+   "condition": "js",
+   "statement": "A project runs five work packages in a chain. A takes 13 minutes. B (14 min) and C (17 min) can start only after A but may then run in parallel. D (9 min) needs both B and C finished. E (8 min) follows D. A final safety buffer of 6 minutes is mandatory, and the completion limit is 61 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|js|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/7.4.4-dependency-chain-and-join-procedural",
+   "condition": "js",
+   "statement": "A project runs five work packages in a chain. A takes 10 minutes. B (14 min) and C (18 min) can start only after A but may then run in parallel. D (8 min) needs both B and C finished. E (16 min) follows D. A final safety buffer of 6 minutes is mandatory, and the completion limit is 62 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|js|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/9.8.4-dependency-chain-and-join-procedural",
+   "condition": "js",
+   "statement": "A project runs five work packages in a chain. A takes 14 minutes. B (9 min) and C (5 min) can start only after A but may then run in parallel. D (13 min) needs both B and C finished. E (11 min) follows D. A final safety buffer of 5 minutes is mandatory, and the completion limit is 46 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-1/226-coalition-formation-case-1-procedural",
+   "condition": "js",
+   "statement": "A council has three groups: A=5, B=3, C=3. A governing coalition needs at least 6 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-1/228-coalition-formation-case-3-procedural",
+   "condition": "js",
+   "statement": "A council has three groups: A=5, B=5, C=3. A governing coalition needs at least 7 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-1/230-coalition-formation-case-5-procedural",
+   "condition": "js",
+   "statement": "A council has three groups: A=5, B=7, C=3. A governing coalition needs at least 8 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-2/476-coalition-formation-case-1-procedural",
+   "condition": "js",
+   "statement": "A council has three groups: A=6, B=3, C=2. A governing coalition needs at least 6 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-2/477-coalition-formation-case-2-procedural",
+   "condition": "js",
+   "statement": "A council has three groups: A=6, B=4, C=2. A governing coalition needs at least 7 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-2/478-coalition-formation-case-3-procedural",
+   "condition": "js",
+   "statement": "A council has three groups: A=6, B=5, C=2. A governing coalition needs at least 7 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-2/480-coalition-formation-case-5-procedural",
+   "condition": "js",
+   "statement": "A council has three groups: A=6, B=7, C=2. A governing coalition needs at least 8 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-3/727-coalition-formation-case-2-procedural",
+   "condition": "js",
+   "statement": "A council has three groups: A=7, B=4, C=3. A governing coalition needs at least 8 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-3/728-coalition-formation-case-3-procedural",
+   "condition": "js",
+   "statement": "A council has three groups: A=7, B=5, C=3. A governing coalition needs at least 8 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-3/729-coalition-formation-case-4-procedural",
+   "condition": "js",
+   "statement": "A council has three groups: A=7, B=6, C=3. A governing coalition needs at least 9 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-3/730-coalition-formation-case-5-procedural",
+   "condition": "js",
+   "statement": "A council has three groups: A=7, B=7, C=3. A governing coalition needs at least 9 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-4/976-coalition-formation-case-1-procedural",
+   "condition": "js",
+   "statement": "A council has three groups: A=8, B=3, C=2. A governing coalition needs at least 7 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-4/977-coalition-formation-case-2-procedural",
+   "condition": "js",
+   "statement": "A council has three groups: A=8, B=4, C=2. A governing coalition needs at least 8 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-4/979-coalition-formation-case-4-procedural",
+   "condition": "js",
+   "statement": "A council has three groups: A=8, B=6, C=2. A governing coalition needs at least 9 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-4/980-coalition-formation-case-5-procedural",
+   "condition": "js",
+   "statement": "A council has three groups: A=8, B=7, C=2. A governing coalition needs at least 9 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|sop|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/1.10.4-dependency-chain-and-join-procedural",
+   "condition": "sop",
+   "statement": "A project runs five work packages in a chain. A takes 5 minutes. B (6 min) and C (5 min) can start only after A but may then run in parallel. D (9 min) needs both B and C finished. E (7 min) follows D. A final safety buffer of 5 minutes is mandatory, and the completion limit is 44 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|sop|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/1.5.4-dependency-chain-and-join-procedural",
+   "condition": "sop",
+   "statement": "A project runs five work packages in a chain. A takes 6 minutes. B (10 min) and C (14 min) can start only after A but may then run in parallel. D (15 min) needs both B and C finished. E (18 min) follows D. A final safety buffer of 9 minutes is mandatory, and the completion limit is 70 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|sop|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/10.2.4-dependency-chain-and-join-procedural",
+   "condition": "sop",
+   "statement": "A project runs five work packages in a chain. A takes 9 minutes. B (16 min) and C (11 min) can start only after A but may then run in parallel. D (18 min) needs both B and C finished. E (8 min) follows D. A final safety buffer of 8 minutes is mandatory, and the completion limit is 56 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|sop|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/10.5.4-dependency-chain-and-join-procedural",
+   "condition": "sop",
+   "statement": "A project runs five work packages in a chain. A takes 14 minutes. B (12 min) and C (6 min) can start only after A but may then run in parallel. D (14 min) needs both B and C finished. E (15 min) follows D. A final safety buffer of 9 minutes is mandatory, and the completion limit is 61 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|sop|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/2.4.4-dependency-chain-and-join-procedural",
+   "condition": "sop",
+   "statement": "A project runs five work packages in a chain. A takes 11 minutes. B (16 min) and C (12 min) can start only after A but may then run in parallel. D (7 min) needs both B and C finished. E (5 min) follows D. A final safety buffer of 9 minutes is mandatory, and the completion limit is 42 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|sop|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/4.7.4-dependency-chain-and-join-procedural",
+   "condition": "sop",
+   "statement": "A project runs five work packages in a chain. A takes 18 minutes. B (7 min) and C (17 min) can start only after A but may then run in parallel. D (14 min) needs both B and C finished. E (17 min) follows D. A final safety buffer of 4 minutes is mandatory, and the completion limit is 78 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|sop|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/5.1.4-dependency-chain-and-join-procedural",
+   "condition": "sop",
+   "statement": "A project runs five work packages in a chain. A takes 5 minutes. B (13 min) and C (5 min) can start only after A but may then run in parallel. D (18 min) needs both B and C finished. E (12 min) follows D. A final safety buffer of 4 minutes is mandatory, and the completion limit is 49 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|sop|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/5.8.4-dependency-chain-and-join-procedural",
+   "condition": "sop",
+   "statement": "A project runs five work packages in a chain. A takes 6 minutes. B (15 min) and C (18 min) can start only after A but may then run in parallel. D (10 min) needs both B and C finished. E (10 min) follows D. A final safety buffer of 6 minutes is mandatory, and the completion limit is 44 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|sop|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/6.10.4-dependency-chain-and-join-procedural",
+   "condition": "sop",
+   "statement": "A project runs five work packages in a chain. A takes 8 minutes. B (12 min) and C (11 min) can start only after A but may then run in parallel. D (8 min) needs both B and C finished. E (11 min) follows D. A final safety buffer of 10 minutes is mandatory, and the completion limit is 53 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|sop|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/6.4.4-dependency-chain-and-join-procedural",
+   "condition": "sop",
+   "statement": "A project runs five work packages in a chain. A takes 6 minutes. B (18 min) and C (16 min) can start only after A but may then run in parallel. D (6 min) needs both B and C finished. E (16 min) follows D. A final safety buffer of 6 minutes is mandatory, and the completion limit is 49 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|sop|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/6.7.4-dependency-chain-and-join-procedural",
+   "condition": "sop",
+   "statement": "A project runs five work packages in a chain. A takes 9 minutes. B (11 min) and C (12 min) can start only after A but may then run in parallel. D (11 min) needs both B and C finished. E (17 min) follows D. A final safety buffer of 8 minutes is mandatory, and the completion limit is 51 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|sop|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/6.8.4-dependency-chain-and-join-procedural",
+   "condition": "sop",
+   "statement": "A project runs five work packages in a chain. A takes 8 minutes. B (18 min) and C (9 min) can start only after A but may then run in parallel. D (7 min) needs both B and C finished. E (6 min) follows D. A final safety buffer of 5 minutes is mandatory, and the completion limit is 52 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|sop|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/7.3.4-dependency-chain-and-join-procedural",
+   "condition": "sop",
+   "statement": "A project runs five work packages in a chain. A takes 13 minutes. B (14 min) and C (17 min) can start only after A but may then run in parallel. D (9 min) needs both B and C finished. E (8 min) follows D. A final safety buffer of 6 minutes is mandatory, and the completion limit is 61 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|sop|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/7.4.4-dependency-chain-and-join-procedural",
+   "condition": "sop",
+   "statement": "A project runs five work packages in a chain. A takes 10 minutes. B (14 min) and C (18 min) can start only after A but may then run in parallel. D (8 min) needs both B and C finished. E (16 min) follows D. A final safety buffer of 6 minutes is mandatory, and the completion limit is 62 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|sop|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/9.8.4-dependency-chain-and-join-procedural",
+   "condition": "sop",
+   "statement": "A project runs five work packages in a chain. A takes 14 minutes. B (9 min) and C (5 min) can start only after A but may then run in parallel. D (13 min) needs both B and C finished. E (11 min) follows D. A final safety buffer of 5 minutes is mandatory, and the completion limit is 46 minutes. What is the earliest safe completion time, and is the plan feasible?"
+  },
+  {
+   "key": "e3-procedural|sop|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-1/226-coalition-formation-case-1-procedural",
+   "condition": "sop",
+   "statement": "A council has three groups: A=5, B=3, C=3. A governing coalition needs at least 6 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|sop|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-1/228-coalition-formation-case-3-procedural",
+   "condition": "sop",
+   "statement": "A council has three groups: A=5, B=5, C=3. A governing coalition needs at least 7 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|sop|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-1/230-coalition-formation-case-5-procedural",
+   "condition": "sop",
+   "statement": "A council has three groups: A=5, B=7, C=3. A governing coalition needs at least 8 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|sop|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-2/476-coalition-formation-case-1-procedural",
+   "condition": "sop",
+   "statement": "A council has three groups: A=6, B=3, C=2. A governing coalition needs at least 6 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|sop|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-2/477-coalition-formation-case-2-procedural",
+   "condition": "sop",
+   "statement": "A council has three groups: A=6, B=4, C=2. A governing coalition needs at least 7 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|sop|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-2/478-coalition-formation-case-3-procedural",
+   "condition": "sop",
+   "statement": "A council has three groups: A=6, B=5, C=2. A governing coalition needs at least 7 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|sop|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-2/480-coalition-formation-case-5-procedural",
+   "condition": "sop",
+   "statement": "A council has three groups: A=6, B=7, C=2. A governing coalition needs at least 8 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|sop|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-3/727-coalition-formation-case-2-procedural",
+   "condition": "sop",
+   "statement": "A council has three groups: A=7, B=4, C=3. A governing coalition needs at least 8 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|sop|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-3/728-coalition-formation-case-3-procedural",
+   "condition": "sop",
+   "statement": "A council has three groups: A=7, B=5, C=3. A governing coalition needs at least 8 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|sop|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-3/729-coalition-formation-case-4-procedural",
+   "condition": "sop",
+   "statement": "A council has three groups: A=7, B=6, C=3. A governing coalition needs at least 9 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|sop|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-3/730-coalition-formation-case-5-procedural",
+   "condition": "sop",
+   "statement": "A council has three groups: A=7, B=7, C=3. A governing coalition needs at least 9 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|sop|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-4/976-coalition-formation-case-1-procedural",
+   "condition": "sop",
+   "statement": "A council has three groups: A=8, B=3, C=2. A governing coalition needs at least 7 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|sop|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-4/977-coalition-formation-case-2-procedural",
+   "condition": "sop",
+   "statement": "A council has three groups: A=8, B=4, C=2. A governing coalition needs at least 8 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|sop|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-4/979-coalition-formation-case-4-procedural",
+   "condition": "sop",
+   "statement": "A council has three groups: A=8, B=6, C=2. A governing coalition needs at least 9 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  },
+  {
+   "key": "e3-procedural|sop|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-4/980-coalition-formation-case-5-procedural",
+   "condition": "sop",
+   "statement": "A council has three groups: A=8, B=7, C=2. A governing coalition needs at least 9 seats. A coalition is winning when the seats of its members reach the threshold, and a minimal winning coalition is winning but removing any member makes it lose. Which coalitions are minimal winning coalitions?"
+  }
+ ]
+}

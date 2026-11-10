@@ -1,0 +1,22 @@
+{
+  "experiment": "e2-l1-exp021-paired",
+  "items": 45,
+  "records": 45,
+  "complete": true,
+  "groups": {
+    "held-out:L1": {
+      "records": 33,
+      "exact": 13,
+      "value": 18,
+      "executed": 30,
+      "missing": 0
+    },
+    "trained-control:L1": {
+      "records": 12,
+      "exact": 8,
+      "value": 9,
+      "executed": 11,
+      "missing": 0
+    }
+  }
+}

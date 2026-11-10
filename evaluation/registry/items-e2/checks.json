@@ -1,0 +1,111 @@
+{
+  "experiment": "E2",
+  "builtBy": "article/experiments/build-surface-ladder.mjs",
+  "dataVersion": "13",
+  "heldOut": [
+    "below-largest-add-rate",
+    "above-count-double",
+    "below-total-per-unit-subtract-rate",
+    "above-largest-add-rate",
+    "above-total-modulo",
+    "above-total-percent-discount",
+    "above-third-largest-percent",
+    "keep-below-total-ratio",
+    "below-largest-path-exists",
+    "below-total-elapsed",
+    "below-largest-rectangle-area"
+  ],
+  "controls": [
+    "above-total-percent",
+    "below-total-add-rate",
+    "above-largest-per-unit-subtract-rate",
+    "above-total-elapsed"
+  ],
+  "controlSeed": 20260928,
+  "oracleVerification": {
+    "heldOutItems": 440,
+    "familyReferenceEqualsManifestOracle": 440,
+    "independentWalkEqualsOracle": 520,
+    "l0EqualsShippedStatement": 440,
+    "controlsRoundTripThroughParse": 80
+  },
+  "rungs": {
+    "L0": {
+      "items": 520,
+      "numbers": {
+        "passed": 520,
+        "failed": 0
+      },
+      "threshold": {
+        "passed": 520,
+        "failed": 0
+      },
+      "parameters": {
+        "passed": 520,
+        "failed": 0
+      },
+      "numberWords": {
+        "passed": 520,
+        "failed": 0
+      }
+    },
+    "L1": {
+      "items": 520,
+      "numbers": {
+        "passed": 520,
+        "failed": 0
+      },
+      "threshold": {
+        "passed": 520,
+        "failed": 0
+      },
+      "parameters": {
+        "passed": 520,
+        "failed": 0
+      },
+      "numberWords": {
+        "passed": 520,
+        "failed": 0
+      }
+    },
+    "L2": {
+      "items": 520,
+      "numbers": {
+        "passed": 520,
+        "failed": 0
+      },
+      "threshold": {
+        "passed": 520,
+        "failed": 0
+      },
+      "parameters": {
+        "passed": 520,
+        "failed": 0
+      },
+      "numberWords": {
+        "passed": 520,
+        "failed": 0
+      }
+    },
+    "L3": {
+      "items": 520,
+      "numbers": {
+        "passed": 520,
+        "failed": 0
+      },
+      "threshold": {
+        "passed": 520,
+        "failed": 0
+      },
+      "parameters": {
+        "passed": 520,
+        "failed": 0
+      },
+      "numberWords": {
+        "passed": 520,
+        "failed": 0
+      }
+    }
+  },
+  "failures": []
+}

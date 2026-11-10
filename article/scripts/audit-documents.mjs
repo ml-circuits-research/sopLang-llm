@@ -26,8 +26,10 @@ for (const filename of (await readdir(resolve(article, 'manuscripts'))).filter(n
   const source = await readFile(resolve(article, 'manuscripts', filename), 'utf8');
   const blocks = parseMarkdown(source);
   assert.doesNotMatch(source, /\bexp-\d+|\bdv\d+\b|checkpoint-\d+/, `${name}: unexplained archive labels in manuscript`);
-  assert.match(source, /```sop\n/, `${name}: missing complete language example`);
-  assert.ok(source.includes('convention') && source.includes('dependency') && source.includes('command'), `${name}: language conventions missing`);
+  // The double-anonymous ethics paper describes the language in words only: a code example could be
+  // found by code search in the public repository and identify the authors.
+  if (!/^04/.test(name)) assert.match(source, /```sop\n/, `${name}: missing complete language example`);
+  if (!/^04/.test(name)) assert.ok(source.includes('wire') && source.includes('dependency') && source.includes('command'), `${name}: language conventions missing`);
   const abstract = source.split('## Abstract\n\n')[1].split('\n\n')[0];
   const abstractWords = abstract.trim().split(/\s+/).length;
   assert.ok(abstractWords >= 150 && abstractWords <= 250, `${name}: abstract length`);
@@ -45,7 +47,8 @@ for (const filename of (await readdir(resolve(article, 'manuscripts'))).filter(n
     });
   }
   const quantitativeRowsChecked = auditTableValues(name, blocks.filter(block => block.type === 'table'), results, baselines);
-  if (/^(01|02|04)/.test(name)) assert.doesNotMatch(source, /77\.2%|544\/705|66\/100|\b17B\b/);
+  // The size claim is a result only in the ethics paper's case narrative, never in the scientific papers.
+  if (/^(01|02)/.test(name)) assert.doesNotMatch(source, /77\.2%|544\/705|66\/100|\b17B\b/);
   const bytes = await readFile(resolve(article, 'docs', name + '.docx'));
   const zip = unzip(bytes);
   const xml = zip['word/document.xml'].toString();
@@ -74,8 +77,8 @@ for (const filename of (await readdir(resolve(article, 'manuscripts'))).filter(n
   reports.push({ manuscript: name, abstractWords, keywords: keywords.length, references: citations.length, quantitativeRowsChecked,
     tables: manifest.tables, figures: manifest.figures.length, pages, sha256: manifest.sha256 });
 }
-assert.equal(reports.length, 5);
-const report = { auditedOn: '2026-09-28', sourceFilesChecked: allHashes.length,
+assert.equal(reports.length, 4);
+const report = { auditedOn: '2026-09-29', sourceFilesChecked: allHashes.length,
   archivedItemRecords: results.recordCount, reports,
   scope: 'Automated consistency checks. Scientific argument and visual layout also require the recorded manual review.' };
 await writeFile(resolve(article, 'audit/document-checks.json'), JSON.stringify(report, null, 2) + '\n');

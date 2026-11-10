@@ -3,7 +3,7 @@
   "output": "../docs/01-machine-learning.docx",
   "bibliography": "../evidence/bibliography.json",
   "journal": "Machine Learning",
-  "shortTitle": "Executable abstractions for small models",
+  "shortTitle": "What small program-writing models transfer",
   "fontSize": 11,
   "citationStyle": "author-date",
   "lineSpacing": 276,
@@ -13,25 +13,58 @@
   "captionStyle": "springer",
   "keepReferencesTogether": true,
   "tableWeights": {
-    "Experiment|Conditions compared|Base model|Main question": [
-      1.5,
-      2,
-      2,
-      2.4
-    ],
-    "Base model|Base content match|Adapted content match|Base exact match|Adapted exact match": [
-      2.1,
+    "Run|Trained programs correct|Untrained programs correct|Held-out types correct|Held-out programs that executed": [
+      2.4,
       1,
       1,
       1,
       1
     ],
-    "Experiment|Condition|Match|Completed mismatch|Execution failure": [
-      0.7,
-      1.6,
+    "Intervention|Hypothesis|Untrained programs|Held-out correct|Held-out executed": [
+      2.2,
+      2.4,
       1,
-      1.2,
+      1,
+      1
+    ],
+    "Held-out slice|0.5B, first inventory|0.5B, extended inventory|1.5B, extended inventory": [
+      2.6,
+      1,
+      1,
+      1
+    ],
+    "Model|Wording|Held-out compositions|Trained controls": [
+      2,
+      1.3,
+      1.4,
+      1.4
+    ],
+    "Model|Condition|Held-out compositions|Book types": [
+      0.8,
+      2.2,
+      1.4,
+      1.4
+    ],
+    "Label in the text|Model|What the training data added|Used in": [
+      1.5,
+      0.8,
+      3.4,
       1.2
+    ],
+    "Model|Condition|Compositions|Book types|Withheld type|Rewording, original / narrative": [
+      1.4,
+      1.8,
+      1.1,
+      1,
+      1,
+      1.5
+    ],
+    "1.7B run|Scheduling, book wording|Scheduling, template wording|Coalitions, book wording|Coalitions, template wording": [
+      2,
+      1,
+      1,
+      1,
+      1
     ]
   }
 }

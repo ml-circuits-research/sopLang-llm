@@ -1,0 +1,34 @@
+{"pid": "fe20c4070ebc", "verdict": "different", "reason": "Candidate gives 3 days and must order today, reference gives 6 days and the order can wait."}
+{"pid": "fc07e7bd22c9", "verdict": "different", "reason": "Candidate leaves the day count as an unrendered $days placeholder and says an order is needed, reference gives 22 days and can wait."}
+{"pid": "f5d6068ce460", "verdict": "different", "reason": "Verdict matches (must order today) but the day count is missing (unrendered $days placeholder) instead of 7."}
+{"pid": "e6d7a9f96648", "verdict": "different", "reason": "Candidate selects only {A, B, C}, reference selects AB, AC and BC."}
+{"pid": "dd9e10105ba4", "verdict": "different", "reason": "Candidate gives 60 minutes, reference gives 62 minutes; the feasible verdict matches but the value differs."}
+{"pid": "cd548c335161", "verdict": "different", "reason": "Candidate gives 89 minutes and not feasible, reference gives 70 minutes and feasible."}
+{"pid": "c897b20ef9ff", "verdict": "different", "reason": "Verdict matches (must order today) but the day count is missing (unrendered $days placeholder) instead of 5."}
+{"pid": "c0cdc190afed", "verdict": "different", "reason": "Candidate gives 23 days and must order today, reference gives 21 days and the order can wait."}
+{"pid": "c0c1147620d0", "verdict": "different", "reason": "Candidate gives 2.04 minutes and meets the limit, reference gives 50 minutes and not feasible."}
+{"pid": "ae82bf45e76a", "verdict": "different", "reason": "Days match (18) but candidate says the order must be placed today, reference says it can wait."}
+{"pid": "a1ad5ff0280b", "verdict": "different", "reason": "Candidate gives 24 minutes, reference gives 58 minutes; only the feasible verdict matches."}
+{"pid": "9e75a5843a42", "verdict": "different", "reason": "Days match (18) but candidate says the order must be placed today, reference says it can wait."}
+{"pid": "9d8c42ded654", "verdict": "different", "reason": "Verdict matches (must order today) but candidate gives 13 days instead of 6."}
+{"pid": "8eef896275aa", "verdict": "different", "reason": "Time matches (32 minutes) but candidate says the plan does not meet the limit, reference says feasible."}
+{"pid": "7571951c4237", "verdict": "different", "reason": "Days match (20) but candidate gives only a conditional 'must be placed today if...' instead of the verdict that the order can wait."}
+{"pid": "72fdc73a3e27", "verdict": "same", "reason": "Both give 44 minutes and a feasible plan that meets the limit."}
+{"pid": "7220b8c4a9f7", "verdict": "different", "reason": "Verdict matches (must order today) but the day count is missing (unrendered $days placeholder) instead of 6."}
+{"pid": "695bf739366e", "verdict": "different", "reason": "Candidate gives 35 minutes, reference gives 32 minutes; the feasible verdict matches but the value differs."}
+{"pid": "652a676467a7", "verdict": "different", "reason": "Day count missing (unrendered $days placeholder) and candidate says must order today, reference gives 18 days and can wait."}
+{"pid": "5bf8e271b5de", "verdict": "same", "reason": "Both give 62 minutes and a feasible plan that meets the limit."}
+{"pid": "4ed798107fed", "verdict": "different", "reason": "Candidate gives 31 minutes and feasible, reference gives 57 minutes and not feasible."}
+{"pid": "4c4bb4546015", "verdict": "same", "reason": "Both give 48 minutes and a plan that does not meet the limit."}
+{"pid": "4acc8545d6f5", "verdict": "different", "reason": "Candidate gives NaN minutes and exceeds the limit, reference gives 53 minutes and feasible."}
+{"pid": "42fa6e55a2a7", "verdict": "different", "reason": "Verdict matches (order not needed today) but the day count is missing (unrendered $days placeholder) instead of 11."}
+{"pid": "3e9c0a06914b", "verdict": "different", "reason": "Candidate gives 15 days and says an order is needed, reference gives 13 days and can wait."}
+{"pid": "35133f7a76cc", "verdict": "different", "reason": "Verdict matches (must order today) but the day count is missing (unrendered $days placeholder) instead of 8."}
+{"pid": "31f9497a4ea2", "verdict": "different", "reason": "The not-feasible verdict matches but candidate gives 0:55 (55 minutes) instead of 57 minutes."}
+{"pid": "2f23e745fffe", "verdict": "different", "reason": "Candidate lists AB, ABC and BC, reference lists AB, AC and BC; AC is missing and ABC is not minimal."}
+{"pid": "27cddd54b51b", "verdict": "different", "reason": "The can-wait verdict matches but candidate gives 16 days instead of 18."}
+{"pid": "240599a16666", "verdict": "different", "reason": "Day count missing (unrendered $days placeholder) instead of 10, and the verdict mixes 'must be placed today' with '(no)'."}
+{"pid": "1d75146df9be", "verdict": "different", "reason": "Day count missing (unrendered $days placeholder) and candidate says must order today, reference gives 13 days and can wait."}
+{"pid": "1166573c7251", "verdict": "different", "reason": "Day count missing (unrendered $days placeholder) and candidate says must order today, reference gives 8 days and can wait."}
+{"pid": "045d772829f5", "verdict": "same", "reason": "Both give 64 minutes and a plan that does not meet the limit."}
+{"pid": "0120756cd275", "verdict": "different", "reason": "Candidate gives 2.04 minutes and does not meet the limit, reference gives 32 minutes and feasible."}

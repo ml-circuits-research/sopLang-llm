@@ -1,0 +1,2433 @@
+{
+  "sampleSize": 115,
+  "table": [
+    {
+      "label": "0.5B base, direct answer",
+      "directory": "s-prose-coder05",
+      "available": true,
+      "records": 115,
+      "parts": {
+        "book types": {
+          "n": 55,
+          "answered": 55,
+          "exact": 0,
+          "strict": 0,
+          "semantic": 5,
+          "pending": 0
+        },
+        "held-out compositions": {
+          "n": 55,
+          "answered": 55,
+          "exact": 0,
+          "strict": 7,
+          "semantic": 9,
+          "pending": 0
+        },
+        "withheld procedural type": {
+          "n": 5,
+          "answered": 5,
+          "exact": 0,
+          "strict": 0,
+          "semantic": 0,
+          "pending": 0
+        }
+      }
+    },
+    {
+      "label": "1.5B base, direct answer",
+      "directory": "s-prose-coder15",
+      "available": true,
+      "records": 115,
+      "parts": {
+        "book types": {
+          "n": 55,
+          "answered": 55,
+          "exact": 1,
+          "strict": 7,
+          "semantic": 13,
+          "pending": 0
+        },
+        "held-out compositions": {
+          "n": 55,
+          "answered": 55,
+          "exact": 0,
+          "strict": 1,
+          "semantic": 2,
+          "pending": 0
+        },
+        "withheld procedural type": {
+          "n": 5,
+          "answered": 5,
+          "exact": 0,
+          "strict": 0,
+          "semantic": 0,
+          "pending": 0
+        }
+      }
+    },
+    {
+      "label": "1.7B base, direct answer",
+      "directory": "s-prose-qwen3-17",
+      "available": true,
+      "records": 115,
+      "parts": {
+        "book types": {
+          "n": 55,
+          "answered": 55,
+          "exact": 0,
+          "strict": 7,
+          "semantic": 11,
+          "pending": 0
+        },
+        "held-out compositions": {
+          "n": 55,
+          "answered": 55,
+          "exact": 0,
+          "strict": 13,
+          "semantic": 17,
+          "pending": 0
+        },
+        "withheld procedural type": {
+          "n": 5,
+          "answered": 5,
+          "exact": 0,
+          "strict": 3,
+          "semantic": 0,
+          "pending": 0
+        }
+      }
+    },
+    {
+      "label": "0.5B base, JavaScript (1 example)",
+      "directory": "s-js1-coder05",
+      "available": true,
+      "records": 115,
+      "parts": {
+        "book types": {
+          "n": 55,
+          "answered": 7,
+          "exact": 0,
+          "strict": 0,
+          "semantic": 1,
+          "pending": 0
+        },
+        "held-out compositions": {
+          "n": 55,
+          "answered": 50,
+          "exact": 7,
+          "strict": 33,
+          "semantic": 33,
+          "pending": 0
+        },
+        "withheld procedural type": {
+          "n": 5,
+          "answered": 2,
+          "exact": 0,
+          "strict": 0,
+          "semantic": 0,
+          "pending": 0
+        }
+      }
+    },
+    {
+      "label": "1.5B base, JavaScript (1 example)",
+      "directory": "s-js1-coder15",
+      "available": true,
+      "records": 115,
+      "parts": {
+        "book types": {
+          "n": 55,
+          "answered": 44,
+          "exact": 2,
+          "strict": 4,
+          "semantic": 10,
+          "pending": 0
+        },
+        "held-out compositions": {
+          "n": 55,
+          "answered": 55,
+          "exact": 14,
+          "strict": 49,
+          "semantic": 49,
+          "pending": 0
+        },
+        "withheld procedural type": {
+          "n": 5,
+          "answered": 5,
+          "exact": 0,
+          "strict": 2,
+          "semantic": 0,
+          "pending": 0
+        }
+      }
+    },
+    {
+      "label": "1.7B base, JavaScript (1 example)",
+      "directory": "s-js1-qwen3-17",
+      "available": true,
+      "records": 115,
+      "parts": {
+        "book types": {
+          "n": 55,
+          "answered": 43,
+          "exact": 2,
+          "strict": 4,
+          "semantic": 10,
+          "pending": 0
+        },
+        "held-out compositions": {
+          "n": 55,
+          "answered": 54,
+          "exact": 13,
+          "strict": 44,
+          "semantic": 45,
+          "pending": 0
+        },
+        "withheld procedural type": {
+          "n": 5,
+          "answered": 5,
+          "exact": 0,
+          "strict": 4,
+          "semantic": 4,
+          "pending": 0
+        }
+      }
+    },
+    {
+      "label": "0.5B base, SOP Lang in prompt (3 examples)",
+      "directory": "s-sopicl3-coder05",
+      "available": true,
+      "records": 115,
+      "parts": {
+        "book types": {
+          "n": 55,
+          "answered": 34,
+          "exact": 0,
+          "strict": 1,
+          "semantic": 2,
+          "pending": 0
+        },
+        "held-out compositions": {
+          "n": 55,
+          "answered": 47,
+          "exact": 0,
+          "strict": 4,
+          "semantic": 4,
+          "pending": 0
+        },
+        "withheld procedural type": {
+          "n": 5,
+          "answered": 5,
+          "exact": 0,
+          "strict": 4,
+          "semantic": 0,
+          "pending": 0
+        }
+      }
+    },
+    {
+      "label": "1.5B base, SOP Lang in prompt (3 examples)",
+      "directory": "s-sopicl3-coder15",
+      "available": true,
+      "records": 115,
+      "parts": {
+        "book types": {
+          "n": 55,
+          "answered": 28,
+          "exact": 0,
+          "strict": 1,
+          "semantic": 9,
+          "pending": 0
+        },
+        "held-out compositions": {
+          "n": 55,
+          "answered": 30,
+          "exact": 5,
+          "strict": 19,
+          "semantic": 19,
+          "pending": 0
+        },
+        "withheld procedural type": {
+          "n": 5,
+          "answered": 3,
+          "exact": 0,
+          "strict": 0,
+          "semantic": 0,
+          "pending": 0
+        }
+      }
+    },
+    {
+      "label": "1.7B base, SOP Lang in prompt (3 examples)",
+      "directory": "s-sopicl3-qwen3-17",
+      "available": true,
+      "records": 115,
+      "parts": {
+        "book types": {
+          "n": 55,
+          "answered": 17,
+          "exact": 0,
+          "strict": 0,
+          "semantic": 1,
+          "pending": 0
+        },
+        "held-out compositions": {
+          "n": 55,
+          "answered": 46,
+          "exact": 4,
+          "strict": 33,
+          "semantic": 34,
+          "pending": 0
+        },
+        "withheld procedural type": {
+          "n": 5,
+          "answered": 2,
+          "exact": 0,
+          "strict": 0,
+          "semantic": 0,
+          "pending": 0
+        }
+      }
+    },
+    {
+      "label": "0.5B fine-tuned (final data)",
+      "directory": "exp-026-0.5b-qwen2.5coder-dv13",
+      "available": true,
+      "records": 115,
+      "parts": {
+        "book types": {
+          "n": 55,
+          "answered": 17,
+          "exact": 1,
+          "strict": 3,
+          "semantic": 4,
+          "pending": 0
+        },
+        "held-out compositions": {
+          "n": 55,
+          "answered": 47,
+          "exact": 45,
+          "strict": 45,
+          "semantic": 45,
+          "pending": 0
+        },
+        "withheld procedural type": {
+          "n": 5,
+          "answered": 5,
+          "exact": 0,
+          "strict": 0,
+          "semantic": 0,
+          "pending": 0
+        }
+      }
+    },
+    {
+      "label": "1.5B fine-tuned (declarative-command data)",
+      "directory": "s-ft-exp016",
+      "available": true,
+      "records": 115,
+      "parts": {
+        "book types": {
+          "n": 55,
+          "answered": 20,
+          "exact": 5,
+          "strict": 5,
+          "semantic": 6,
+          "pending": 0
+        },
+        "held-out compositions": {
+          "n": 55,
+          "answered": 55,
+          "exact": 55,
+          "strict": 55,
+          "semantic": 55,
+          "pending": 0
+        },
+        "withheld procedural type": {
+          "n": 5,
+          "answered": 4,
+          "exact": 0,
+          "strict": 0,
+          "semantic": 0,
+          "pending": 0
+        }
+      }
+    },
+    {
+      "label": "1.7B fine-tuned (compact targets)",
+      "directory": "s-ft-exp021",
+      "available": true,
+      "records": 115,
+      "parts": {
+        "book types": {
+          "n": 55,
+          "answered": 46,
+          "exact": 27,
+          "strict": 32,
+          "semantic": 32,
+          "pending": 0
+        },
+        "held-out compositions": {
+          "n": 55,
+          "answered": 55,
+          "exact": 55,
+          "strict": 55,
+          "semantic": 55,
+          "pending": 0
+        },
+        "withheld procedural type": {
+          "n": 5,
+          "answered": 4,
+          "exact": 0,
+          "strict": 0,
+          "semantic": 0,
+          "pending": 0
+        }
+      }
+    },
+    {
+      "label": "1.7B fine-tuned (final data)",
+      "directory": "exp-027-1.7b-qwen3-dv13",
+      "available": true,
+      "records": 115,
+      "parts": {
+        "book types": {
+          "n": 55,
+          "answered": 38,
+          "exact": 7,
+          "strict": 22,
+          "semantic": 27,
+          "pending": 0
+        },
+        "held-out compositions": {
+          "n": 55,
+          "answered": 52,
+          "exact": 51,
+          "strict": 51,
+          "semantic": 51,
+          "pending": 0
+        },
+        "withheld procedural type": {
+          "n": 5,
+          "answered": 5,
+          "exact": 0,
+          "strict": 0,
+          "semantic": 0,
+          "pending": 0
+        }
+      }
+    }
+  ],
+  "experiments": {
+    "e2-l0-exp012": {
+      "held-out": {
+        "n": 55,
+        "answered": 45,
+        "exact": 36,
+        "strict": 41,
+        "semantic": 42,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 20,
+        "exact": 15,
+        "strict": 20,
+        "semantic": 20,
+        "pending": 0
+      }
+    },
+    "e2-l0-exp012-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 26,
+        "exact": 21,
+        "strict": 24,
+        "semantic": 24,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 9,
+        "strict": 12,
+        "semantic": 12,
+        "pending": 0
+      }
+    },
+    "e2-l0-exp013": {
+      "held-out": {
+        "n": 55,
+        "answered": 52,
+        "exact": 50,
+        "strict": 50,
+        "semantic": 50,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 20,
+        "exact": 20,
+        "strict": 20,
+        "semantic": 20,
+        "pending": 0
+      }
+    },
+    "e2-l0-exp013-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 32,
+        "exact": 30,
+        "strict": 30,
+        "semantic": 30,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 12,
+        "strict": 12,
+        "semantic": 12,
+        "pending": 0
+      }
+    },
+    "e2-l0-exp021": {
+      "held-out": {
+        "n": 55,
+        "answered": 55,
+        "exact": 55,
+        "strict": 55,
+        "semantic": 55,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 20,
+        "exact": 20,
+        "strict": 20,
+        "semantic": 20,
+        "pending": 0
+      }
+    },
+    "e2-l0-exp021-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 33,
+        "exact": 33,
+        "strict": 33,
+        "semantic": 33,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 12,
+        "strict": 12,
+        "semantic": 12,
+        "pending": 0
+      }
+    },
+    "e2-l1-exp012": {
+      "held-out": {
+        "n": 55,
+        "answered": 40,
+        "exact": 16,
+        "strict": 18,
+        "semantic": 18,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 15,
+        "exact": 6,
+        "strict": 9,
+        "semantic": 9,
+        "pending": 0
+      }
+    },
+    "e2-l1-exp012-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 24,
+        "exact": 5,
+        "strict": 5,
+        "semantic": 5,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 9,
+        "exact": 5,
+        "strict": 5,
+        "semantic": 5,
+        "pending": 0
+      }
+    },
+    "e2-l1-exp013": {
+      "held-out": {
+        "n": 55,
+        "answered": 47,
+        "exact": 12,
+        "strict": 41,
+        "semantic": 42,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 18,
+        "exact": 10,
+        "strict": 18,
+        "semantic": 18,
+        "pending": 0
+      }
+    },
+    "e2-l1-exp013-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 26,
+        "exact": 7,
+        "strict": 22,
+        "semantic": 24,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 10,
+        "exact": 4,
+        "strict": 9,
+        "semantic": 9,
+        "pending": 0
+      }
+    },
+    "e2-l1-exp021": {
+      "held-out": {
+        "n": 55,
+        "answered": 50,
+        "exact": 32,
+        "strict": 42,
+        "semantic": 42,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 19,
+        "exact": 14,
+        "strict": 16,
+        "semantic": 16,
+        "pending": 0
+      }
+    },
+    "e2-l1-exp021-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 30,
+        "exact": 13,
+        "strict": 18,
+        "semantic": 18,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 11,
+        "exact": 8,
+        "strict": 9,
+        "semantic": 9,
+        "pending": 0
+      }
+    },
+    "e2-l2-exp012": {
+      "held-out": {
+        "n": 55,
+        "answered": 34,
+        "exact": 13,
+        "strict": 14,
+        "semantic": 14,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 18,
+        "exact": 8,
+        "strict": 11,
+        "semantic": 11,
+        "pending": 0
+      }
+    },
+    "e2-l2-exp012-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 20,
+        "exact": 6,
+        "strict": 8,
+        "semantic": 8,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 11,
+        "exact": 5,
+        "strict": 8,
+        "semantic": 8,
+        "pending": 0
+      }
+    },
+    "e2-l2-exp013": {
+      "held-out": {
+        "n": 55,
+        "answered": 37,
+        "exact": 8,
+        "strict": 17,
+        "semantic": 17,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 17,
+        "exact": 3,
+        "strict": 7,
+        "semantic": 7,
+        "pending": 0
+      }
+    },
+    "e2-l2-exp013-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 22,
+        "exact": 5,
+        "strict": 10,
+        "semantic": 11,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 11,
+        "exact": 3,
+        "strict": 5,
+        "semantic": 5,
+        "pending": 0
+      }
+    },
+    "e2-l2-exp021": {
+      "held-out": {
+        "n": 55,
+        "answered": 51,
+        "exact": 31,
+        "strict": 37,
+        "semantic": 39,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 19,
+        "exact": 14,
+        "strict": 16,
+        "semantic": 16,
+        "pending": 0
+      }
+    },
+    "e2-l2-exp021-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 29,
+        "exact": 20,
+        "strict": 22,
+        "semantic": 24,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 9,
+        "strict": 11,
+        "semantic": 11,
+        "pending": 0
+      }
+    },
+    "e3-original-exp017": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 4,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 0,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 0,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 0,
+        "pending": 0
+      }
+    },
+    "e3-original-exp017-paired": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 4,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 0,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 0,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 0,
+        "pending": 0
+      }
+    },
+    "e3-original-exp021": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 15,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "e3-original-exp021-paired": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 15,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "e3-original-exp025": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 8,
+        "exact": 0,
+        "strict": 8,
+        "semantic": 8,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 13,
+        "exact": 7,
+        "strict": 7,
+        "semantic": 7,
+        "pending": 0
+      }
+    },
+    "e3-original-exp025-paired": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 8,
+        "exact": 0,
+        "strict": 8,
+        "semantic": 8,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 13,
+        "exact": 7,
+        "strict": 7,
+        "semantic": 7,
+        "pending": 0
+      }
+    },
+    "e3-original-exp027": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 1,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 0,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 3,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "e3-original-exp027-paired": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 1,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 0,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 3,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "e3-procedural-exp017": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 1,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 0,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 1,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 0,
+        "pending": 0
+      }
+    },
+    "e3-procedural-exp017-paired": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 6,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 0,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 1,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 0,
+        "pending": 0
+      }
+    },
+    "e3-procedural-exp021": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 15,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "e3-procedural-exp021-paired": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 15,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "e3-procedural-exp025": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 15,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "e3-procedural-exp025-paired": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 15,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "e3-procedural-exp027": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 15,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "e3-procedural-exp027-paired": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 15,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "e3nl-original-exp017": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 6,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 0,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 0,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 0,
+        "pending": 0
+      }
+    },
+    "e3nl-original-exp021": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 15,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "e3nl-original-exp025": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 8,
+        "exact": 0,
+        "strict": 8,
+        "semantic": 8,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 15,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "e3nl-original-exp027": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 1,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 0,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 3,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "e3nl-procedural-exp017": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 9,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 0,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 1,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 0,
+        "pending": 0
+      }
+    },
+    "e3nl-procedural-exp021": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 15,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "e3nl-procedural-exp025": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 15,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "e3nl-procedural-exp027": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 15,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "e8-js1-l0-coder05": {
+      "held-out": {
+        "n": 55,
+        "answered": 51,
+        "exact": 4,
+        "strict": 36,
+        "semantic": 36,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 20,
+        "exact": 3,
+        "strict": 16,
+        "semantic": 16,
+        "pending": 0
+      }
+    },
+    "e8-js1-l0-coder05-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 30,
+        "exact": 3,
+        "strict": 22,
+        "semantic": 22,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 2,
+        "strict": 10,
+        "semantic": 10,
+        "pending": 0
+      }
+    },
+    "e8-js1-l0-coder15": {
+      "held-out": {
+        "n": 55,
+        "answered": 55,
+        "exact": 18,
+        "strict": 50,
+        "semantic": 50,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 20,
+        "exact": 5,
+        "strict": 20,
+        "semantic": 20,
+        "pending": 0
+      }
+    },
+    "e8-js1-l0-coder15-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 33,
+        "exact": 10,
+        "strict": 30,
+        "semantic": 30,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 2,
+        "strict": 12,
+        "semantic": 12,
+        "pending": 0
+      }
+    },
+    "e8-js1-l0-qwen3-17": {
+      "held-out": {
+        "n": 55,
+        "answered": 51,
+        "exact": 9,
+        "strict": 39,
+        "semantic": 40,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 20,
+        "exact": 8,
+        "strict": 20,
+        "semantic": 20,
+        "pending": 0
+      }
+    },
+    "e8-js1-l0-qwen3-17-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 32,
+        "exact": 6,
+        "strict": 27,
+        "semantic": 26,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 6,
+        "strict": 12,
+        "semantic": 12,
+        "pending": 0
+      }
+    },
+    "e8-js1-l2-coder05": {
+      "held-out": {
+        "n": 55,
+        "answered": 36,
+        "exact": 2,
+        "strict": 20,
+        "semantic": 20,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 13,
+        "exact": 0,
+        "strict": 3,
+        "semantic": 3,
+        "pending": 0
+      }
+    },
+    "e8-js1-l2-coder05-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 21,
+        "exact": 2,
+        "strict": 13,
+        "semantic": 13,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 8,
+        "exact": 0,
+        "strict": 3,
+        "semantic": 3,
+        "pending": 0
+      }
+    },
+    "e8-js1-l2-coder15": {
+      "held-out": {
+        "n": 55,
+        "answered": 55,
+        "exact": 8,
+        "strict": 33,
+        "semantic": 33,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 20,
+        "exact": 4,
+        "strict": 13,
+        "semantic": 13,
+        "pending": 0
+      }
+    },
+    "e8-js1-l2-coder15-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 33,
+        "exact": 7,
+        "strict": 19,
+        "semantic": 19,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 2,
+        "strict": 9,
+        "semantic": 9,
+        "pending": 0
+      }
+    },
+    "e8-js1-l2-qwen3-17": {
+      "held-out": {
+        "n": 55,
+        "answered": 55,
+        "exact": 8,
+        "strict": 47,
+        "semantic": 47,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 20,
+        "exact": 5,
+        "strict": 20,
+        "semantic": 20,
+        "pending": 0
+      }
+    },
+    "e8-js1-l2-qwen3-17-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 33,
+        "exact": 2,
+        "strict": 26,
+        "semantic": 26,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 3,
+        "strict": 12,
+        "semantic": 12,
+        "pending": 0
+      }
+    },
+    "e8-ops3-l0-coder05": {
+      "held-out": {
+        "n": 55,
+        "answered": 29,
+        "exact": 19,
+        "strict": 19,
+        "semantic": 19,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 10,
+        "exact": 5,
+        "strict": 5,
+        "semantic": 5,
+        "pending": 0
+      }
+    },
+    "e8-ops3-l0-coder05-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 17,
+        "exact": 11,
+        "strict": 11,
+        "semantic": 11,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 6,
+        "exact": 3,
+        "strict": 3,
+        "semantic": 3,
+        "pending": 0
+      }
+    },
+    "e8-ops3-l0-coder15": {
+      "held-out": {
+        "n": 55,
+        "answered": 52,
+        "exact": 49,
+        "strict": 50,
+        "semantic": 50,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 20,
+        "exact": 15,
+        "strict": 19,
+        "semantic": 19,
+        "pending": 0
+      }
+    },
+    "e8-ops3-l0-coder15-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 31,
+        "exact": 30,
+        "strict": 30,
+        "semantic": 30,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 9,
+        "strict": 11,
+        "semantic": 11,
+        "pending": 0
+      }
+    },
+    "e8-ops3-l0-qwen3-17": {
+      "held-out": {
+        "n": 55,
+        "answered": 49,
+        "exact": 44,
+        "strict": 49,
+        "semantic": 49,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 20,
+        "exact": 12,
+        "strict": 17,
+        "semantic": 17,
+        "pending": 0
+      }
+    },
+    "e8-ops3-l0-qwen3-17-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 32,
+        "exact": 28,
+        "strict": 31,
+        "semantic": 31,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 7,
+        "strict": 10,
+        "semantic": 10,
+        "pending": 0
+      }
+    },
+    "e8-ops3-l2-coder05": {
+      "held-out": {
+        "n": 55,
+        "answered": 29,
+        "exact": 10,
+        "strict": 11,
+        "semantic": 11,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 15,
+        "exact": 2,
+        "strict": 2,
+        "semantic": 2,
+        "pending": 0
+      }
+    },
+    "e8-ops3-l2-coder05-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 18,
+        "exact": 6,
+        "strict": 6,
+        "semantic": 6,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 9,
+        "exact": 2,
+        "strict": 2,
+        "semantic": 2,
+        "pending": 0
+      }
+    },
+    "e8-ops3-l2-coder15": {
+      "held-out": {
+        "n": 55,
+        "answered": 36,
+        "exact": 12,
+        "strict": 13,
+        "semantic": 13,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 17,
+        "exact": 6,
+        "strict": 8,
+        "semantic": 8,
+        "pending": 0
+      }
+    },
+    "e8-ops3-l2-coder15-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 24,
+        "exact": 9,
+        "strict": 9,
+        "semantic": 9,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 6,
+        "strict": 8,
+        "semantic": 8,
+        "pending": 0
+      }
+    },
+    "e8-ops3-l2-qwen3-17": {
+      "held-out": {
+        "n": 55,
+        "answered": 38,
+        "exact": 25,
+        "strict": 25,
+        "semantic": 25,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 20,
+        "exact": 14,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "e8-ops3-l2-qwen3-17-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 23,
+        "exact": 15,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 10,
+        "strict": 10,
+        "semantic": 10,
+        "pending": 0
+      }
+    },
+    "e8-sopicl3-l0-coder05": {
+      "held-out": {
+        "n": 55,
+        "answered": 46,
+        "exact": 0,
+        "strict": 6,
+        "semantic": 7,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 20,
+        "exact": 1,
+        "strict": 11,
+        "semantic": 11,
+        "pending": 0
+      }
+    },
+    "e8-sopicl3-l0-coder05-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 28,
+        "exact": 0,
+        "strict": 4,
+        "semantic": 5,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 1,
+        "strict": 7,
+        "semantic": 7,
+        "pending": 0
+      }
+    },
+    "e8-sopicl3-l0-coder15": {
+      "held-out": {
+        "n": 55,
+        "answered": 32,
+        "exact": 4,
+        "strict": 19,
+        "semantic": 21,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 12,
+        "exact": 4,
+        "strict": 11,
+        "semantic": 8,
+        "pending": 0
+      }
+    },
+    "e8-sopicl3-l0-coder15-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 21,
+        "exact": 3,
+        "strict": 13,
+        "semantic": 13,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 7,
+        "exact": 3,
+        "strict": 6,
+        "semantic": 4,
+        "pending": 0
+      }
+    },
+    "e8-sopicl3-l0-qwen3-17": {
+      "held-out": {
+        "n": 55,
+        "answered": 47,
+        "exact": 5,
+        "strict": 38,
+        "semantic": 39,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 19,
+        "exact": 7,
+        "strict": 19,
+        "semantic": 19,
+        "pending": 0
+      }
+    },
+    "e8-sopicl3-l0-qwen3-17-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 28,
+        "exact": 3,
+        "strict": 23,
+        "semantic": 23,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 5,
+        "strict": 12,
+        "semantic": 12,
+        "pending": 0
+      }
+    },
+    "e8-sopicl3-l2-coder05": {
+      "held-out": {
+        "n": 55,
+        "answered": 53,
+        "exact": 0,
+        "strict": 17,
+        "semantic": 18,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 19,
+        "exact": 0,
+        "strict": 10,
+        "semantic": 10,
+        "pending": 0
+      }
+    },
+    "e8-sopicl3-l2-coder05-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 30,
+        "exact": 0,
+        "strict": 10,
+        "semantic": 10,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 0,
+        "strict": 7,
+        "semantic": 7,
+        "pending": 0
+      }
+    },
+    "e8-sopicl3-l2-coder15": {
+      "held-out": {
+        "n": 55,
+        "answered": 10,
+        "exact": 0,
+        "strict": 1,
+        "semantic": 1,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 1,
+        "exact": 0,
+        "strict": 1,
+        "semantic": 1,
+        "pending": 0
+      }
+    },
+    "e8-sopicl3-l2-coder15-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 6,
+        "exact": 0,
+        "strict": 1,
+        "semantic": 1,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 1,
+        "exact": 0,
+        "strict": 1,
+        "semantic": 1,
+        "pending": 0
+      }
+    },
+    "e8-sopicl3-l2-qwen3-17": {
+      "held-out": {
+        "n": 55,
+        "answered": 20,
+        "exact": 0,
+        "strict": 8,
+        "semantic": 8,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 20,
+        "answered": 7,
+        "exact": 0,
+        "strict": 6,
+        "semantic": 6,
+        "pending": 0
+      }
+    },
+    "e8-sopicl3-l2-qwen3-17-paired": {
+      "held-out": {
+        "n": 33,
+        "answered": 12,
+        "exact": 0,
+        "strict": 6,
+        "semantic": 6,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 6,
+        "exact": 0,
+        "strict": 5,
+        "semantic": 5,
+        "pending": 0
+      }
+    },
+    "e9-ft-exp021": {
+      "withheld-procedural": {
+        "n": 40,
+        "answered": 30,
+        "exact": 0,
+        "strict": 5,
+        "semantic": 2,
+        "pending": 0
+      }
+    },
+    "e9-ft-exp027": {
+      "withheld-procedural": {
+        "n": 40,
+        "answered": 37,
+        "exact": 0,
+        "strict": 4,
+        "semantic": 0,
+        "pending": 0
+      }
+    },
+    "e9-js1-coder15": {
+      "withheld-procedural": {
+        "n": 40,
+        "answered": 40,
+        "exact": 0,
+        "strict": 9,
+        "semantic": 2,
+        "pending": 0
+      }
+    },
+    "e9-js1-qwen3-17": {
+      "withheld-procedural": {
+        "n": 40,
+        "answered": 40,
+        "exact": 0,
+        "strict": 33,
+        "semantic": 24,
+        "pending": 0
+      }
+    },
+    "e9-sopicl3-qwen3-17": {
+      "withheld-procedural": {
+        "n": 40,
+        "answered": 18,
+        "exact": 0,
+        "strict": 2,
+        "semantic": 0,
+        "pending": 0
+      }
+    },
+    "m-haiku-e3-original-js": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 7,
+        "semantic": 15,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "m-haiku-e3-original-sop": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 7,
+        "semantic": 15,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "m-haiku-e3-procedural-js": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "m-haiku-e3-procedural-sop": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "m-haiku-e8-l0-js": {
+      "held-out": {
+        "n": 33,
+        "answered": 33,
+        "exact": 6,
+        "strict": 33,
+        "semantic": 33,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 3,
+        "strict": 12,
+        "semantic": 12,
+        "pending": 0
+      }
+    },
+    "m-haiku-e8-l0-ops": {
+      "held-out": {
+        "n": 33,
+        "answered": 33,
+        "exact": 33,
+        "strict": 33,
+        "semantic": 33,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 12,
+        "strict": 12,
+        "semantic": 12,
+        "pending": 0
+      }
+    },
+    "m-haiku-e8-l0-sop": {
+      "held-out": {
+        "n": 33,
+        "answered": 33,
+        "exact": 28,
+        "strict": 31,
+        "semantic": 31,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 9,
+        "strict": 12,
+        "semantic": 12,
+        "pending": 0
+      }
+    },
+    "m-haiku-e8-l2-js": {
+      "held-out": {
+        "n": 33,
+        "answered": 33,
+        "exact": 6,
+        "strict": 33,
+        "semantic": 33,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 3,
+        "strict": 12,
+        "semantic": 12,
+        "pending": 0
+      }
+    },
+    "m-haiku-e8-l2-ops": {
+      "held-out": {
+        "n": 33,
+        "answered": 33,
+        "exact": 33,
+        "strict": 33,
+        "semantic": 33,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 12,
+        "strict": 12,
+        "semantic": 12,
+        "pending": 0
+      }
+    },
+    "m-haiku-e8-l2-sop": {
+      "held-out": {
+        "n": 33,
+        "answered": 33,
+        "exact": 6,
+        "strict": 33,
+        "semantic": 33,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 3,
+        "strict": 12,
+        "semantic": 12,
+        "pending": 0
+      }
+    },
+    "m-haiku-e9-js": {
+      "withheld-procedural": {
+        "n": 40,
+        "answered": 40,
+        "exact": 0,
+        "strict": 40,
+        "semantic": 40,
+        "pending": 0
+      }
+    },
+    "m-haiku-e9-sop": {
+      "withheld-procedural": {
+        "n": 40,
+        "answered": 40,
+        "exact": 0,
+        "strict": 40,
+        "semantic": 40,
+        "pending": 0
+      }
+    },
+    "m-haiku-main-direct": {
+      "book types": {
+        "n": 55,
+        "answered": 55,
+        "exact": 0,
+        "strict": 9,
+        "semantic": 41,
+        "pending": 0
+      },
+      "held-out compositions": {
+        "n": 55,
+        "answered": 55,
+        "exact": 0,
+        "strict": 46,
+        "semantic": 48,
+        "pending": 0
+      },
+      "withheld procedural type": {
+        "n": 5,
+        "answered": 5,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 0,
+        "pending": 0
+      }
+    },
+    "m-haiku-main-js": {
+      "book types": {
+        "n": 55,
+        "answered": 55,
+        "exact": 1,
+        "strict": 10,
+        "semantic": 52,
+        "pending": 0
+      },
+      "held-out compositions": {
+        "n": 55,
+        "answered": 55,
+        "exact": 5,
+        "strict": 50,
+        "semantic": 55,
+        "pending": 0
+      },
+      "withheld procedural type": {
+        "n": 5,
+        "answered": 5,
+        "exact": 0,
+        "strict": 5,
+        "semantic": 5,
+        "pending": 0
+      }
+    },
+    "m-haiku-main-sop": {
+      "book types": {
+        "n": 55,
+        "answered": 54,
+        "exact": 1,
+        "strict": 15,
+        "semantic": 47,
+        "pending": 0
+      },
+      "held-out compositions": {
+        "n": 55,
+        "answered": 55,
+        "exact": 5,
+        "strict": 50,
+        "semantic": 55,
+        "pending": 0
+      },
+      "withheld procedural type": {
+        "n": 5,
+        "answered": 5,
+        "exact": 0,
+        "strict": 5,
+        "semantic": 5,
+        "pending": 0
+      }
+    },
+    "m-sonnet-e3-original-js": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 15,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "m-sonnet-e3-original-sop": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 15,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "m-sonnet-e3-procedural-js": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "m-sonnet-e3-procedural-sop": {
+      "held-out-scheduling": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 15,
+        "semantic": 15,
+        "pending": 0
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "answered": 15,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 15,
+        "pending": 0
+      }
+    },
+    "m-sonnet-e8-l0-js": {
+      "held-out": {
+        "n": 33,
+        "answered": 33,
+        "exact": 3,
+        "strict": 30,
+        "semantic": 33,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 3,
+        "strict": 12,
+        "semantic": 12,
+        "pending": 0
+      }
+    },
+    "m-sonnet-e8-l0-ops": {
+      "held-out": {
+        "n": 33,
+        "answered": 33,
+        "exact": 33,
+        "strict": 33,
+        "semantic": 33,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 12,
+        "strict": 12,
+        "semantic": 12,
+        "pending": 0
+      }
+    },
+    "m-sonnet-e8-l0-sop": {
+      "held-out": {
+        "n": 33,
+        "answered": 33,
+        "exact": 3,
+        "strict": 30,
+        "semantic": 33,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 3,
+        "strict": 12,
+        "semantic": 12,
+        "pending": 0
+      }
+    },
+    "m-sonnet-e8-l2-js": {
+      "held-out": {
+        "n": 33,
+        "answered": 33,
+        "exact": 3,
+        "strict": 30,
+        "semantic": 33,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 3,
+        "strict": 12,
+        "semantic": 12,
+        "pending": 0
+      }
+    },
+    "m-sonnet-e8-l2-ops": {
+      "held-out": {
+        "n": 33,
+        "answered": 33,
+        "exact": 33,
+        "strict": 33,
+        "semantic": 33,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 12,
+        "strict": 12,
+        "semantic": 12,
+        "pending": 0
+      }
+    },
+    "m-sonnet-e8-l2-sop": {
+      "held-out": {
+        "n": 33,
+        "answered": 33,
+        "exact": 3,
+        "strict": 30,
+        "semantic": 33,
+        "pending": 0
+      },
+      "trained-control": {
+        "n": 12,
+        "answered": 12,
+        "exact": 3,
+        "strict": 12,
+        "semantic": 12,
+        "pending": 0
+      }
+    },
+    "m-sonnet-e9-js": {
+      "withheld-procedural": {
+        "n": 40,
+        "answered": 40,
+        "exact": 0,
+        "strict": 40,
+        "semantic": 40,
+        "pending": 0
+      }
+    },
+    "m-sonnet-e9-sop": {
+      "withheld-procedural": {
+        "n": 40,
+        "answered": 40,
+        "exact": 0,
+        "strict": 40,
+        "semantic": 40,
+        "pending": 0
+      }
+    },
+    "m-sonnet-main-direct": {
+      "book types": {
+        "n": 55,
+        "answered": 55,
+        "exact": 0,
+        "strict": 12,
+        "semantic": 53,
+        "pending": 0
+      },
+      "held-out compositions": {
+        "n": 55,
+        "answered": 55,
+        "exact": 5,
+        "strict": 50,
+        "semantic": 55,
+        "pending": 0
+      },
+      "withheld procedural type": {
+        "n": 5,
+        "answered": 5,
+        "exact": 0,
+        "strict": 5,
+        "semantic": 5,
+        "pending": 0
+      }
+    },
+    "m-sonnet-main-js": {
+      "book types": {
+        "n": 55,
+        "answered": 55,
+        "exact": 0,
+        "strict": 7,
+        "semantic": 54,
+        "pending": 0
+      },
+      "held-out compositions": {
+        "n": 55,
+        "answered": 55,
+        "exact": 5,
+        "strict": 50,
+        "semantic": 55,
+        "pending": 0
+      },
+      "withheld procedural type": {
+        "n": 5,
+        "answered": 5,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 5,
+        "pending": 0
+      }
+    },
+    "m-sonnet-main-sop": {
+      "book types": {
+        "n": 55,
+        "answered": 55,
+        "exact": 1,
+        "strict": 4,
+        "semantic": 53,
+        "pending": 0
+      },
+      "held-out compositions": {
+        "n": 55,
+        "answered": 55,
+        "exact": 5,
+        "strict": 50,
+        "semantic": 55,
+        "pending": 0
+      },
+      "withheld procedural type": {
+        "n": 5,
+        "answered": 5,
+        "exact": 0,
+        "strict": 0,
+        "semantic": 5,
+        "pending": 0
+      }
+    }
+  }
+}

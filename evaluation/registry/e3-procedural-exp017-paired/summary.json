@@ -1,0 +1,22 @@
+{
+  "experiment": "e3-procedural-exp017-paired",
+  "items": 30,
+  "records": 30,
+  "complete": true,
+  "groups": {
+    "held-out-scheduling:procedural": {
+      "records": 15,
+      "exact": 0,
+      "value": 0,
+      "executed": 6,
+      "missing": 0
+    },
+    "held-out-coalition:procedural": {
+      "records": 15,
+      "exact": 0,
+      "value": 0,
+      "executed": 1,
+      "missing": 0
+    }
+  }
+}

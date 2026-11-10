@@ -1,0 +1,17 @@
+{
+  "experiment": "e1-js-base-coder05-0shot",
+  "gguf": "training/checkpoints/base-f16.gguf",
+  "ggufBytes": 994157088,
+  "itemSource": "slice:holdout",
+  "itemCount": 705,
+  "mode": "js",
+  "shots": 0,
+  "samples": 1,
+  "temperature": 0,
+  "seed": 20260928,
+  "maxTokens": 1024,
+  "noThink": false,
+  "systemPromptSha256": "842382431a38941d3a5e5a1ca103a944b24b1f5eabeebb91e29b01cd4827f558",
+  "resumedWith": 0,
+  "updatedAt": "2026-09-28T20:32:43.324Z"
+}

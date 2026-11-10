@@ -1,0 +1,18 @@
+{
+  "experiment": "e2-l0-exp013-paired",
+  "gguf": "evaluation/registry/exp-013-1.5b/gguf/checkpoint-450.gguf",
+  "ggufBytes": 3093668896,
+  "itemSource": "evaluation/registry/items-e2/paired/L0.jsonl",
+  "itemCount": 45,
+  "mode": "compiled",
+  "shots": 0,
+  "perGroup": null,
+  "samples": 1,
+  "temperature": 0,
+  "seed": 20260928,
+  "maxTokens": 2048,
+  "noThink": false,
+  "systemPromptSha256": "2e9f7cdcb310346e2c7e5339edd77d8e6d8ab9749f8c27ba56d452c51e21a955",
+  "resumedWith": 29,
+  "updatedAt": "2026-09-29T01:10:46.779Z"
+}

@@ -1,0 +1,100 @@
+{"pid": "0112edf3a162", "verdict": "different", "reason": "Candidate result '1584 units.' differs from the reference 960 hours."}
+{"pid": "02990f85a428", "verdict": "same", "reason": "Candidate states the same result as the reference (14 units)."}
+{"pid": "0609f1826b28", "verdict": "different", "reason": "Candidate result '190 units.' differs from the reference 90 units."}
+{"pid": "0993304f7939", "verdict": "same", "reason": "Candidate states the same result as the reference (3888 hours)."}
+{"pid": "09b9d1d30dd8", "verdict": "same", "reason": "Candidate states the same result as the reference (4 units)."}
+{"pid": "0c4bc55da862", "verdict": "same", "reason": "Candidate states the same result as the reference (53 minutes: feasible)."}
+{"pid": "0daad58f155d", "verdict": "different", "reason": "Candidate result '28' differs from the reference 72 units."}
+{"pid": "111a75088183", "verdict": "same", "reason": "Candidate states the same result as the reference (48 minutes: not feasible)."}
+{"pid": "1296415f3941", "verdict": "different", "reason": "Candidate result '16 units.' differs from the reference 41 units."}
+{"pid": "1439c2b1f02c", "verdict": "different", "reason": "Candidate result 'The final figure is 4 crates.' differs from the reference 8 units."}
+{"pid": "1a99b0844be0", "verdict": "different", "reason": "Candidate result '1600 units.' differs from the reference 16 units."}
+{"pid": "1ad4e55c828f", "verdict": "different", "reason": "Candidate result 'The final figure is 46 tickets.' differs from the reference 12 units."}
+{"pid": "1df916d63ecc", "verdict": "different", "reason": "Candidate result 'The earliest safe completion time is 37 minutes, so the plan' differs from the reference 32 minutes: feasible."}
+{"pid": "1e7f683b00f3", "verdict": "different", "reason": "Candidate result '3325 units.' differs from the reference 37 units."}
+{"pid": "1f8315b7e0d4", "verdict": "different", "reason": "Candidate result '36 units.' differs from the reference 72 units."}
+{"pid": "201b788a1721", "verdict": "different", "reason": "Candidate result '133 units.' differs from the reference 2 units."}
+{"pid": "23abcc6ca33e", "verdict": "different", "reason": "Candidate result '0' differs from the reference 16 units."}
+{"pid": "23ac4f8a0ed5", "verdict": "different", "reason": "Candidate result '231 parts.' differs from the reference 9 units."}
+{"pid": "253b4779fc38", "verdict": "different", "reason": "Candidate result '32 tickets.' differs from the reference 41 units."}
+{"pid": "2b008e0d4af7", "verdict": "different", "reason": "Candidate gives '11 -> 11' with no yes/no verdict."}
+{"pid": "2bf4c4d2280d", "verdict": "different", "reason": "Candidate result '0 tickets.' differs from the reference 4 units."}
+{"pid": "2f6baaca47d7", "verdict": "different", "reason": "Candidate result '7080' differs from the reference 2340 minutes."}
+{"pid": "31f8eb27ddde", "verdict": "same", "reason": "Candidate states the same result as the reference (50 minutes: not feasible)."}
+{"pid": "378b41a42f83", "verdict": "different", "reason": "Candidate reports NaN minutes instead of 59 minutes."}
+{"pid": "3b662e51105f", "verdict": "different", "reason": "Candidate result '125 units.' differs from the reference 15 units."}
+{"pid": "3f67bd6fc2bb", "verdict": "different", "reason": "Candidate result 'The critical path has 72 minutes, so the plan is not feasibl' differs from the reference 58 minutes: feasible."}
+{"pid": "43c90de86101", "verdict": "different", "reason": "Candidate result '178 units.' differs from the reference 2340 minutes."}
+{"pid": "454230d82048", "verdict": "same", "reason": "Candidate states the same result as the reference (49 minutes: feasible)."}
+{"pid": "4610ea01da16", "verdict": "different", "reason": "Candidate result 'No, the node 11 is not part of a path.' differs from the reference yes."}
+{"pid": "47d89f04a86d", "verdict": "different", "reason": "Candidate result '125 parts.' differs from the reference 15 units."}
+{"pid": "4a80be975f95", "verdict": "different", "reason": "Candidate result 'After setting aside 16 litres: 60 litres.' differs from the reference 24 units."}
+{"pid": "4f4de5cec0b4", "verdict": "different", "reason": "Candidate result '12 units.' differs from the reference 72 units."}
+{"pid": "52c0be1bd471", "verdict": "different", "reason": "Candidate result '2.1599999999999997 litres.' differs from the reference 24 units."}
+{"pid": "52f47623e902", "verdict": "different", "reason": "Candidate result 'The final figure is 12 crates.' differs from the reference 8 units."}
+{"pid": "546254fd2392", "verdict": "different", "reason": "Candidate result '4 units.' differs from the reference 10 units."}
+{"pid": "57daf64be0ce", "verdict": "different", "reason": "Candidate result '14 tickets.' differs from the reference 47 units."}
+{"pid": "594785148326", "verdict": "same", "reason": "Candidate states the same result as the reference (59 minutes: not feasible)."}
+{"pid": "59dd8b41de74", "verdict": "different", "reason": "Candidate result 'NaN litres.' differs from the reference 15 units."}
+{"pid": "5f10ac509747", "verdict": "different", "reason": "Candidate result '-156800 tickets.' differs from the reference 16 units."}
+{"pid": "604cf976936f", "verdict": "different", "reason": "Candidate result '4 crates.' differs from the reference 8 units."}
+{"pid": "643b8ee65e1e", "verdict": "different", "reason": "Candidate result '6900' differs from the reference 3120 minutes."}
+{"pid": "65280502d6c8", "verdict": "different", "reason": "Candidate result '44 litres.' differs from the reference 11 units."}
+{"pid": "658bdc4cac7a", "verdict": "same", "reason": "Candidate states the same result as the reference (172 units)."}
+{"pid": "662478e836d8", "verdict": "same", "reason": "Candidate states the same result as the reference (9 units)."}
+{"pid": "69d05df66a7c", "verdict": "same", "reason": "Candidate states the same result as the reference (yes)."}
+{"pid": "6a7d53e92188", "verdict": "same", "reason": "Candidate states the same result as the reference (47 units)."}
+{"pid": "6ba322bddc7f", "verdict": "different", "reason": "Candidate result '0.0008114162504649215 crates.' differs from the reference 9 units."}
+{"pid": "6dbe13a1da9c", "verdict": "different", "reason": "Candidate result '46 tickets.' differs from the reference 12 units."}
+{"pid": "702ec489bf16", "verdict": "different", "reason": "Candidate result '32 tickets.' differs from the reference 16 units."}
+{"pid": "7596688d3dc3", "verdict": "different", "reason": "Candidate result '186 units.' differs from the reference 3888 hours."}
+{"pid": "75ecb0d7d349", "verdict": "different", "reason": "Candidate result '165.6 units.' differs from the reference 172 units."}
+{"pid": "7763db49116e", "verdict": "different", "reason": "Candidate result '190 crates.' differs from the reference 90 units."}
+{"pid": "7ac720520da3", "verdict": "same", "reason": "Candidate states the same result as the reference (1500 minutes)."}
+{"pid": "8db225bba76d", "verdict": "different", "reason": "Candidate result '390 litres.' differs from the reference 220 units."}
+{"pid": "91e7c29ede7b", "verdict": "different", "reason": "Candidate result '60 units.' differs from the reference 24 units."}
+{"pid": "94bf48d6faa3", "verdict": "different", "reason": "Candidate result '176 parts.' differs from the reference 22 units."}
+{"pid": "958ba826f861", "verdict": "same", "reason": "Candidate says yes, matching the reference verdict; the extra path text does not change the verdict."}
+{"pid": "983ef51bdbcf", "verdict": "different", "reason": "Candidate result 'undefined tickets.' differs from the reference 16 units."}
+{"pid": "999faec82619", "verdict": "different", "reason": "Candidate result 'The final figure is 115 minutes.' differs from the reference 3120 minutes."}
+{"pid": "99f22613c65a", "verdict": "different", "reason": "Candidate result '175 units.' differs from the reference 3120 minutes."}
+{"pid": "9c72bb229c63", "verdict": "different", "reason": "Candidate result '115 hours.' differs from the reference 3120 minutes."}
+{"pid": "9c80a22d0dde", "verdict": "different", "reason": "Candidate result 'The final figure is 142 tickets.' differs from the reference 12 units."}
+{"pid": "9d4a25298983", "verdict": "different", "reason": "Candidate result 'The earliest safe completion time is 28 minutes, so the plan' differs from the reference 64 minutes: not feasible."}
+{"pid": "a15ac503da04", "verdict": "different", "reason": "Candidate result '6900 units.' differs from the reference 3120 minutes."}
+{"pid": "a3cac18797ab", "verdict": "same", "reason": "Candidate states the same result as the reference (yes)."}
+{"pid": "a774ed72e737", "verdict": "same", "reason": "Candidate states the same result as the reference (72 units)."}
+{"pid": "a92d56f4ccd3", "verdict": "different", "reason": "Candidate result '25 units.' differs from the reference 4 units."}
+{"pid": "ad1ceaf730dc", "verdict": "different", "reason": "Candidate result '23 crates.' differs from the reference 14 units."}
+{"pid": "aef191c09061", "verdict": "different", "reason": "Candidate result '40.00 litres.' differs from the reference 24 units."}
+{"pid": "af268d1caac3", "verdict": "different", "reason": "Candidate gives 35.33 per share instead of 4."}
+{"pid": "b0b38ea13ec3", "verdict": "different", "reason": "Candidate result 'Keeping 8, the final figure is 2.42 days.' differs from the reference 3888 hours."}
+{"pid": "b2b139ddbe55", "verdict": "different", "reason": "Candidate result 'The earliest safe completion time is 23 minutes, so the plan' differs from the reference 44 minutes: feasible."}
+{"pid": "b7ee799331e5", "verdict": "same", "reason": "Candidate states the same result as the reference (37 units)."}
+{"pid": "bb1a6ee60426", "verdict": "different", "reason": "Candidate result 'NaN' differs from the reference 37 units."}
+{"pid": "bc041ea9ac09", "verdict": "same", "reason": "Candidate states the same result as the reference (64 minutes: not feasible)."}
+{"pid": "bded5cd3f58d", "verdict": "different", "reason": "Candidate result '1 tickets.' differs from the reference 4 units."}
+{"pid": "bf2ac2ddd957", "verdict": "different", "reason": "Candidate result '35.800000000000004 units.' differs from the reference 167 units."}
+{"pid": "c0c113e429bf", "verdict": "different", "reason": "Candidate result '-5 crates.' differs from the reference 90 units."}
+{"pid": "c2d854201e33", "verdict": "different", "reason": "Candidate result '112 units.' differs from the reference 172 units."}
+{"pid": "c41189ccdd70", "verdict": "same", "reason": "Candidate states the same result as the reference (32 minutes: feasible)."}
+{"pid": "c837eac3e8c5", "verdict": "different", "reason": "Candidate result '38 parts. The process can be reversed as follows: normalize ' differs from the reference 9 units."}
+{"pid": "ca5c0568d930", "verdict": "different", "reason": "Candidate reports NaN minutes instead of 48 minutes."}
+{"pid": "d0a2cfa649ab", "verdict": "unclear", "reason": "Candidate lists '14 + 14 + 14' without stating a single final figure; could be read as 14 per share or 42."}
+{"pid": "d3361e2574aa", "verdict": "different", "reason": "Candidate result '14 units.' differs from the reference 47 units."}
+{"pid": "d5261f1c9e18", "verdict": "different", "reason": "Candidate result '112 parts.' differs from the reference 172 units."}
+{"pid": "d85e7146ef72", "verdict": "different", "reason": "Candidate result '290 units.' differs from the reference 90 units."}
+{"pid": "d934fde8c202", "verdict": "different", "reason": "Candidate result '290 litres.' differs from the reference 90 units."}
+{"pid": "d98e0e11fdea", "verdict": "different", "reason": "Candidate answers a crate-packing question with a NaN remainder instead of the requested figure."}
+{"pid": "dabfe5aaa237", "verdict": "same", "reason": "Candidate states the same result as the reference (47 units)."}
+{"pid": "dd49629442fb", "verdict": "different", "reason": "Candidate result '23 units.' differs from the reference 14 units."}
+{"pid": "dfe31af8388f", "verdict": "same", "reason": "Candidate states the same result as the reference (70 minutes: feasible)."}
+{"pid": "e26f9d6a0ed5", "verdict": "different", "reason": "Candidate result '2.6400000000000006 units.' differs from the reference 24 units."}
+{"pid": "e95e735b6144", "verdict": "different", "reason": "Candidate result '2.7142857142857144 litres.' differs from the reference 2 units."}
+{"pid": "eebc5ab85854", "verdict": "different", "reason": "Candidate result '0 tickets.' differs from the reference 16 units."}
+{"pid": "f16eeaa5134a", "verdict": "different", "reason": "Candidate result '45 litres.' differs from the reference 15 units."}
+{"pid": "f190d680e94f", "verdict": "different", "reason": "Candidate result '364 units.' differs from the reference 22 units."}
+{"pid": "f330799efd57", "verdict": "different", "reason": "Candidate result '32 units.' differs from the reference 16 units."}
+{"pid": "f36f4c0a9469", "verdict": "same", "reason": "Candidate states the same result as the reference (44 minutes: feasible)."}
+{"pid": "f4e6f39b9b23", "verdict": "different", "reason": "Candidate result '74 units.' differs from the reference 37 units."}
+{"pid": "f630ece39619", "verdict": "same", "reason": "Candidate states the same result as the reference (2 units)."}

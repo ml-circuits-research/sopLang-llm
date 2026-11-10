@@ -1,0 +1,351 @@
+{"pid": "0daf0dc20fb8", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "38badfb52eef", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "3bb11a225189", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "3f52d1d474a5", "verdict": "different", "reason": "Missing coalition BC."}
+{"pid": "3f571f7ac15f", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "3f5764b95360", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "3fa3f07c5fe0", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "3fb0deb1d241", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "401174441c8d", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "401ed4b76ee0", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4050d6d9c591", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4054912c765f", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "40b44863236f", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "40edd23487af", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "40fbd8a3f2a1", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "411a0b97a180", "verdict": "different", "reason": "Names a different discriminating observation."}
+{"pid": "411b94a05b1f", "verdict": "same", "reason": "Same completion time 62 and feasible verdict."}
+{"pid": "4147015c5462", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "41780701c96b", "verdict": "different", "reason": "Does not state the reference verdicts."}
+{"pid": "417e5a4e7d6f", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "41ebc54f4f3c", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "423b4041468b", "verdict": "same", "reason": "Same value 461; extra remark does not change the result."}
+{"pid": "424882422d9f", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4252d71ff36f", "verdict": "different", "reason": "Repeats the question instead of answering."}
+{"pid": "426d652dd517", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4292ea891c27", "verdict": "different", "reason": "Names a different observation than the reference."}
+{"pid": "42a54a9a1e95", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "42c6a773f4cd", "verdict": "same", "reason": "Same value 17."}
+{"pid": "42e769ae3f2c", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "42f407ccb9e8", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "43633aebb79d", "verdict": "same", "reason": "Same value 2208 hours."}
+{"pid": "43656339fd1f", "verdict": "different", "reason": "Says yes where reference says no."}
+{"pid": "43b07fbcfdc8", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "442b7cb1b4d7", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4471602b8e0d", "verdict": "same", "reason": "Same 52 minutes, not feasible."}
+{"pid": "44bb96d7b2e4", "verdict": "same", "reason": "Same value 8."}
+{"pid": "44fbad716bc0", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4508d172b6d9", "verdict": "different", "reason": "Same days but opposite ordering verdict."}
+{"pid": "4563d7d53eb2", "verdict": "same", "reason": "Same value 5."}
+{"pid": "45a929d40320", "verdict": "same", "reason": "Same value 15."}
+{"pid": "4622935cb071", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "464da6c7f71a", "verdict": "same", "reason": "Same value 9."}
+{"pid": "468af5c3709a", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "46a6280ea210", "verdict": "same", "reason": "Same conclusions for B, D and E."}
+{"pid": "46e5204a6503", "verdict": "same", "reason": "Same value 1632."}
+{"pid": "46f161b7824e", "verdict": "same", "reason": "Same 50 minutes, not feasible."}
+{"pid": "475bc2c0673e", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "47a3a747ee1a", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "47bc6c2226e0", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "47ecfa120480", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "48611b0b8d1b", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4894ec36d8d9", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "489bacaaaa0c", "verdict": "unclear", "reason": "Same 6 days but the order verdict is stated only conditionally."}
+{"pid": "48a35f10fe64", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "491ce979a5cc", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4934cf042e36", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "49922d86a224", "verdict": "same", "reason": "Same value 13."}
+{"pid": "499c408843c4", "verdict": "same", "reason": "Same 10 days and order need not be placed today."}
+{"pid": "4a38b5456fac", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4a499c112679", "verdict": "different", "reason": "Does not state that neither attempt succeeds."}
+{"pid": "4a76061e8807", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4a8dc23fa4a1", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4af457d2ab75", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4b15e6ec1dcc", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4b37878b7478", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4b6b4dbb8faa", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4b8355aa423f", "verdict": "different", "reason": "Does not state that Leo wears the shield."}
+{"pid": "4b9df95aaa26", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4bc23fe91282", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "4c26acfc0a04", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4c3570614c7f", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4c90bc460572", "verdict": "different", "reason": "Selects AB instead of A alone."}
+{"pid": "4ca50d45f1f2", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4d021d6494a9", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4d2f0df4d9ed", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4d499c0e90ad", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "4d62deb74225", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4d63158f8d56", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4d7768fdea29", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4d981ee2d53b", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "4e14ddea9557", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4e29db8ded5e", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4e6603ac3c8a", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4e7288219a0d", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4f469181f040", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4f73ee647e8c", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4f7d469fd790", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4f9b98e90a2e", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4fc3cb5e862f", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "4fcef0b6565f", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "505d6714d08d", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "509050adaacb", "verdict": "different", "reason": "Selects AB and AC instead of A alone."}
+{"pid": "509b5dcb31ec", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "50e198d38e91", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "51109bf9e22a", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "511c152c6d39", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "51768c198564", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "51783a4766a4", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "51bd6bea2261", "verdict": "unclear", "reason": "Same 20 days but the order verdict is stated only conditionally."}
+{"pid": "51c0fa30a042", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "51dfd4ab0e8e", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "521d76f3f25f", "verdict": "different", "reason": "Same days but opposite ordering verdict."}
+{"pid": "5224fda4576e", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "5237cfd69aef", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "5238694f026c", "verdict": "different", "reason": "Does not state that Sam wears the shield."}
+{"pid": "525c595a6630", "verdict": "different", "reason": "Restates hypotheses instead of naming the observation."}
+{"pid": "52758740dd8b", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "527bf833793e", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "529f48b23139", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "52c89bd94d91", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "52d99d8294db", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "52e510f95e96", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "534807ac90fe", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "53565c0d802e", "verdict": "different", "reason": "Same days but opposite ordering verdict."}
+{"pid": "53da1131d472", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "547cb058e2c8", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "5494acdc05e1", "verdict": "different", "reason": "Does not state that Harun wears the shield."}
+{"pid": "54c5d3addac5", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "552dd534fb5f", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "55355f848695", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "554d2a635111", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "55a79e29d7b4", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "55a8894900e5", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "55c7bf372099", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "55dc18ccd8a7", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "560654cf8611", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "5624f4abffcf", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "5660066ec12d", "verdict": "different", "reason": "Same days but opposite ordering verdict."}
+{"pid": "5660145ed1bf", "verdict": "unclear", "reason": "Same 8 days but the order verdict is stated only conditionally."}
+{"pid": "5708b1419703", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "576b42b9216b", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "57b099f21803", "verdict": "different", "reason": "Gives a different reason than the reference."}
+{"pid": "57c185f4f217", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "57c882d50538", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "57e25c9ac6e6", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "5800351850c4", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "5858ad065c8a", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "58810244f1eb", "verdict": "different", "reason": "Stops at 29 instead of 16."}
+{"pid": "5909ac06175b", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "5910a53fc625", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "59763b3649cc", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "59e0a366d7fa", "verdict": "different", "reason": "Names the hypotheses instead of the discriminating observation."}
+{"pid": "59fe60466710", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "5a338203335d", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "5aada44f930c", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "5ae94a697eb5", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "5b013e9b008c", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "5b387d2dc715", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "5ba32b2ff12c", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "5bf509c37585", "verdict": "different", "reason": "Does not list the coalitions."}
+{"pid": "5bf6ad0cb6d7", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "5c20a22e9423", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "5c54842b311c", "verdict": "same", "reason": "Same selection: coalition A."}
+{"pid": "5c694afa6a67", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "5c75a7f41303", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "5c830c6e1cd2", "verdict": "different", "reason": "Names a different observation than the reference."}
+{"pid": "5c9ab5fd2543", "verdict": "different", "reason": "Gives a different reason than the reference."}
+{"pid": "5cb197a2b3ea", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "5cbfe936cb0c", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "5cf94ddb1d8c", "verdict": "same", "reason": "Same reason: cutting equal parts guarantees at least half."}
+{"pid": "5d77d92e023b", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "5d79721c83b6", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "5da22eec73cd", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "5da477d7fea7", "verdict": "different", "reason": "Same days but opposite ordering verdict."}
+{"pid": "5db678dc982d", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "5e79f5ae065c", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "5e913389a6d2", "verdict": "different", "reason": "Lists only BC instead of AB, AC and BC."}
+{"pid": "5eb03d439732", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "5ee84b2ad92a", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "5f08239ab43a", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "5f2971fb0a66", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "612b72b08930", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "613d8fd7567b", "verdict": "unclear", "reason": "Same 17 days but the order verdict is stated only conditionally."}
+{"pid": "616e209c1ef6", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "61d0f89d9940", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "6222e46375f9", "verdict": "different", "reason": "Selects attempt 1 instead of neither."}
+{"pid": "6225dab6adc1", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "629c266dbe7e", "verdict": "different", "reason": "Empty list instead of AB and AC."}
+{"pid": "629fb8ad7c5a", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "62a3125b276f", "verdict": "different", "reason": "Contradicts that Sam wears the shield."}
+{"pid": "632088e2fd96", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "63480d96903e", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "63f375b9e1c2", "verdict": "different", "reason": "Empty list instead of AB, AC and BC."}
+{"pid": "643e8309bd24", "verdict": "different", "reason": "Says no path where reference says yes."}
+{"pid": "64694abba18c", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "646cca5bf761", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "657837fcceb9", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "659eddd7c828", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "65b2e636ebbc", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "65eb77d17e95", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "66032fc32d32", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "663fdc65959b", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "6673b6ea0086", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "66c5dc1ed1f7", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "670b1e1a49b5", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "674f583f80ea", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "6780372e24e2", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "678154d3a2da", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "67981a9971ca", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "681fe79f57aa", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "68212cf7c83a", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "685a62f0e202", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "6862f7546b27", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "68a62a957e02", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "68b84e24cab5", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "68d07088eb2e", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "68ef25e3ab79", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "691d37800aca", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "69441d64bc9a", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "69545837075d", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "6956020afaa0", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "69a32ee430f4", "verdict": "different", "reason": "Does not list the coalitions."}
+{"pid": "69a88c08fc1d", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "6a02d0ecd297", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "6a2d7676753c", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "6a328e0cde74", "verdict": "unclear", "reason": "Implies Harun wears the shield but the rest is garbled."}
+{"pid": "6a4b3e802291", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "6a4e45b00cb4", "verdict": "different", "reason": "Lists only AB instead of AB, AC and BC."}
+{"pid": "6aa17f6b8340", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "6ae529b52bcf", "verdict": "same", "reason": "Same verdict: Leo must wear the shield."}
+{"pid": "6b424c0ede55", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "6b5651880def", "verdict": "same", "reason": "5.2 rounds to the reference value 5."}
+{"pid": "6bb12dac9463", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "6bd57c880971", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "6bff81e8eae4", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "6c346d048cc4", "verdict": "unclear", "reason": "Days round to 7 but 'no' conflicts with 'must be placed today'."}
+{"pid": "6c4319e7f561", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "6c586fc98d8e", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "6cc1d7315bcd", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "6cd3cca52fb6", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "6cd839d0466a", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "6d02f1105f0d", "verdict": "different", "reason": "Decodes as undefined instead of green-green-red."}
+{"pid": "6d2992dc46fc", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "6d488e94e975", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "6d4fb5017b74", "verdict": "different", "reason": "Says no where reference says yes."}
+{"pid": "6d7e1f0c247d", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "6df5fafada88", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "6e086aaf32a6", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "6e45906a1bb2", "verdict": "same", "reason": "Same discriminating observation: whether the source vibrates."}
+{"pid": "6e4e209e45c2", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "6e6561654dff", "verdict": "different", "reason": "Says no where reference says yes."}
+{"pid": "6e912fc2b952", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "6ea6af4458a6", "verdict": "different", "reason": "Gives a different reason than the reference."}
+{"pid": "6ed52b3b2445", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "6eec3ae85298", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "6efc7c3f9321", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "6f319530e429", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "6ffca394b1f4", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "7009bea33cfc", "verdict": "same", "reason": "States the apprentice must wear the shield."}
+{"pid": "7026e4adc3e9", "verdict": "different", "reason": "Says no path where reference says yes."}
+{"pid": "704651667e10", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "7066d28d9f4b", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "7076a2392800", "verdict": "different", "reason": "Names a different observation than the reference."}
+{"pid": "7077a58946ef", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "7085c8a629ce", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "70ba0eb06c24", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "70cb64f1a30c", "verdict": "different", "reason": "Same days but opposite ordering verdict."}
+{"pid": "70f1bbaa1d9a", "verdict": "different", "reason": "Same days but opposite ordering verdict."}
+{"pid": "70fa32be7445", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "711d4aeedc30", "verdict": "different", "reason": "Says both attempts succeed instead of neither."}
+{"pid": "7148c828d4a6", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "717788d5e812", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "717d45e855f6", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "71aba0f381e8", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "71cfb005b2fa", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "71d05cd28a78", "verdict": "different", "reason": "Same days but opposite ordering verdict."}
+{"pid": "71f4306923da", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "7297cc296b8e", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "72ce5ccacb5f", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "7309e95de48e", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "730f453bd981", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "73579f43a52f", "verdict": "unclear", "reason": "Same 16 days but the order verdict is stated only conditionally."}
+{"pid": "73a41feed6a7", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "73a98ebcfc50", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "73df9b8d0cb0", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "73fa91ff1a1e", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "7403e7521773", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "740cfb8d01f0", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "742ff7673331", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "748cc691c190", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "74fb195e5bca", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "751d753172cd", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "759bc8cb34d8", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "759bfb70b310", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "75edfeb9a22e", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "75f18f0a30f6", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "7626d82661d5", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "763fb8d93feb", "verdict": "different", "reason": "Empty list instead of the coalitions."}
+{"pid": "764f0030c852", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "76aebf89b824", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "775ce9cd44c8", "verdict": "different", "reason": "Empty list instead of the coalitions."}
+{"pid": "778cf76f7f6a", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "779bb3a42ca9", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "77ad6610af53", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "7802e32cc154", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "782f1c99a6ba", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "78431cd4017d", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "789db60094d0", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "78b7d8ad85c5", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "78dc4b182f5c", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "78e1abda7fdb", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "79421e1def93", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "797848de33af", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "7998136847a9", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "79b891fb1992", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "79f85db8fdf8", "verdict": "different", "reason": "Lists only BC instead of AB, AC and BC."}
+{"pid": "7a2adcb605cf", "verdict": "different", "reason": "Same days but opposite ordering verdict."}
+{"pid": "7a5b02857485", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "7a66943eac72", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "7a9409344cd8", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "7ac152fa5e03", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "7b1514733ffb", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "7b30e48ec2d1", "verdict": "different", "reason": "Says no where reference says yes."}
+{"pid": "7b595dd3b98f", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "7ba6bbc71c80", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "7ba80ca4abc3", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "7bb775b05c55", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "7be7b02524dd", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "7c36c9d430c4", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "7c4e50446d6c", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "7c57b0368bb9", "verdict": "different", "reason": "Names a different observation than the reference."}
+{"pid": "7c5b67270f3b", "verdict": "different", "reason": "Says no where reference says yes."}
+{"pid": "7c67682d0d2f", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "7c6f258f3efe", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "7cb01f6eb383", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "7cda28cc87db", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "7ce324a3d478", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "7d242e71b2a6", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "7dc7be30d89e", "verdict": "different", "reason": "Says the code distinguishes them; reference says no."}
+{"pid": "7e0765497824", "verdict": "different", "reason": "Restates the rules without the verdict."}
+{"pid": "7e6cd5c68cba", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "7e708052fcb4", "verdict": "unclear", "reason": "Bare 'true,true' cannot be mapped to the reference."}
+{"pid": "7e8fe9386a54", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "7ebaf13a6c47", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "7ec49c8d0ae3", "verdict": "same", "reason": "Same final value 6."}
+{"pid": "7f282f48874b", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "7f296981fe57", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "7f333e89e4e5", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "7f88364ac8b8", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "7fc9bfa5d2a8", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "7ffc41192667", "verdict": "different", "reason": "Empty list instead of the coalitions."}
+{"pid": "80151ab1ea18", "verdict": "different", "reason": "Restates hypotheses instead of naming the observation."}
+{"pid": "803405703f60", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "80348576e730", "verdict": "same", "reason": "Same final value or verdict as the reference."}
+{"pid": "804aa36ae94c", "verdict": "same", "reason": "6.67 equals 20/3 at rounding."}
+{"pid": "80a929acd59d", "verdict": "different", "reason": "Says both attempts succeed instead of neither."}
+{"pid": "8120acfe8ff0", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "815df91891ae", "verdict": "unclear", "reason": "Same 18 days but the order verdict is stated only conditionally."}
+{"pid": "818922b3b41e", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "cbb8c5c11c8c", "verdict": "different", "reason": "Final value or verdict differs from the reference."}
+{"pid": "dffef69535a4", "verdict": "different", "reason": "Final value or verdict differs from the reference."}

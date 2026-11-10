@@ -2535,7 +2535,9 @@
       "items": 100,
       "counts": {
         "execution_failure": 62,
-        "outside_grammar": 38
+        "outside_grammar": 19,
+        "restricted_mismatch": 17,
+        "restricted_match": 2
       },
       "file": "exp-024-1.7b-qwen3-dv11-decompose-to-solve-restricted.jsonl"
     },
@@ -2554,7 +2556,9 @@
       "items": 100,
       "counts": {
         "execution_failure": 44,
-        "outside_grammar": 56
+        "restricted_match": 54,
+        "restricted_mismatch": 1,
+        "outside_grammar": 1
       },
       "file": "exp-025-1.7b-qwen3-dv12-decompose-to-solve-restricted.jsonl"
     },
@@ -2573,7 +2577,9 @@
       "items": 100,
       "counts": {
         "execution_failure": 55,
-        "outside_grammar": 45
+        "restricted_mismatch": 33,
+        "outside_grammar": 9,
+        "restricted_match": 3
       },
       "file": "exp-026-0.5b-qwen2.5coder-dv13-decompose-to-solve-restricted.jsonl"
     },

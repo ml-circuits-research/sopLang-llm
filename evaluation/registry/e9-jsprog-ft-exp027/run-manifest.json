@@ -1,0 +1,18 @@
+{
+  "experiment": "e9-jsprog-ft-exp027",
+  "gguf": "evaluation/registry/exp-027-1.7b-qwen3-dv13/gguf/checkpoint-600.gguf",
+  "ggufBytes": 3447348960,
+  "itemSource": "evaluation/registry/items-e9/depletion.jsonl",
+  "itemCount": 40,
+  "mode": "jsprog",
+  "shots": 0,
+  "perGroup": null,
+  "samples": 1,
+  "temperature": 0,
+  "seed": 20260928,
+  "maxTokens": 1536,
+  "noThink": false,
+  "systemPromptSha256": "c05aad3175e0e662fb5d36ee82593ace90de5eaf5d7632e45df222df85080bfc",
+  "resumedWith": 0,
+  "updatedAt": "2026-09-29T06:19:34.757Z"
+}

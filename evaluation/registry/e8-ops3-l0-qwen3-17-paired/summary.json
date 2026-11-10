@@ -1,0 +1,22 @@
+{
+  "experiment": "e8-ops3-l0-qwen3-17-paired",
+  "items": 45,
+  "records": 45,
+  "complete": true,
+  "groups": {
+    "held-out:L0": {
+      "records": 33,
+      "exact": 28,
+      "value": 31,
+      "executed": 32,
+      "missing": 0
+    },
+    "trained-control:L0": {
+      "records": 12,
+      "exact": 7,
+      "value": 10,
+      "executed": 12,
+      "missing": 0
+    }
+  }
+}

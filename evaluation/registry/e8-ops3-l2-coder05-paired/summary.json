@@ -1,0 +1,22 @@
+{
+  "experiment": "e8-ops3-l2-coder05-paired",
+  "items": 45,
+  "records": 45,
+  "complete": true,
+  "groups": {
+    "held-out:L2": {
+      "records": 33,
+      "exact": 6,
+      "value": 6,
+      "executed": 18,
+      "missing": 0
+    },
+    "trained-control:L2": {
+      "records": 12,
+      "exact": 2,
+      "value": 2,
+      "executed": 9,
+      "missing": 0
+    }
+  }
+}

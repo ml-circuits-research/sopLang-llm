@@ -52,5 +52,23 @@
     "width": 1200,
     "height": 590,
     "description": "Declared duration-and-feasibility equivalence and the complete restricted diagnostic partition"
+  },
+  {
+    "name": "coverage-ladder",
+    "width": 1200,
+    "height": 480,
+    "description": "Accuracy falls from trained plans to untrained plans to untrained families"
+  },
+  {
+    "name": "vocabulary-boundary",
+    "width": 1200,
+    "height": 740,
+    "description": "Generalization is complete within the taught operator vocabulary, partial for newly added operators, and absent outside it"
+  },
+  {
+    "name": "rewording-slopes",
+    "width": 1200,
+    "height": 630,
+    "description": "Fine-tuned small models lose held-out compositions when the same problems are reworded; the untuned 1.7B model writing JavaScript and two larger models do not"
   }
 ]

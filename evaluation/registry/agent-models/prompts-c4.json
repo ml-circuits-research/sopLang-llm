@@ -1,0 +1,465 @@
+{
+ "templates": {
+  "sop": [
+   {
+    "role": "system",
+    "content": "You compile problems into SOP Lang circuits. Read the problem and emit exactly one SOP Lang program, the compiled plan of this instance: a @slots literal wire that carries the values you extracted from the statement, an optional @facts literal wire that carries external knowledge the computation reads, zero or more intermediate wires that publish the named stages of the plan for the later wires to read through $name, and a @answer jsEval wire that computes the answer deterministically from those values. Every jsEval wire computes deterministic work from the values it reads. The runtime asserts the generic input and output contract for you: a dependency is defined, a slots record is a non-empty object, and the result is not empty. The runtime also provides a probe(condition, message) helper inside every jsEval wire: call it for your own domain assertions, and do not define it. The program carries no input wire and no model call. Output only the program. SOP Lang syntax. A program is a list of wires. Each wire starts with a declaration line \"@name command\" at the start of a line, and its body is every following line up to the next declaration. The command \"literal\" takes a JSON body. The command \"jsEval\" takes a JavaScript function body: it reads another wire's value as $name and must end with a return statement whose value is the wire's value. The runtime runs wires in dependency order and returns the value of the wire named answer. Put the program in one ```sop code block."
+   },
+   {
+    "role": "user",
+    "content": "The market depot recorded 11, 7, 34, 29, 7 and 8 crates. Please keep only the records above 14, then add the kept records, then add the fixed charge of 3. Report the result in crates."
+   },
+   {
+    "role": "assistant",
+    "content": "```sop\n@slots literal\n{\"depot\": \"market depot\", \"unit\": \"crates\", \"values\": [11, 7, 34, 29, 7, 8], \"threshold\": 14, \"rate\": 3}\n\n@answer jsEval\nconst kept = $slots.values.filter((value) => value > $slots.threshold);\nconst total = kept.reduce((sum, value) => sum + value, 0);\nreturn (total + $slots.rate) + \" units.\";\n```"
+   },
+   {
+    "role": "user",
+    "content": "A plant produces 246 units of bricks in one shift. Each crate holds 18 units. How many crates are needed, and how many units are in the last crate?"
+   },
+   {
+    "role": "assistant",
+    "content": "```sop\n@slots literal\n{\"totalUnits\": 246, \"unitsPerCrate\": 18}\n\n@crates jsEval\nreturn Math.ceil($slots.totalUnits / $slots.unitsPerCrate);\n\n@answer jsEval\nconst lastCrate = $slots.totalUnits - ($crates - 1) * $slots.unitsPerCrate;\nreturn $crates + \" crates are needed, and the last crate holds \" + lastCrate + \" units.\";\n```"
+   },
+   {
+    "role": "user",
+    "content": "How many times does the letter \"s\" appear in the word \"mechanism\"? Reply with only the number."
+   },
+   {
+    "role": "assistant",
+    "content": "```sop\n@slots literal\n{\"word\": \"mechanism\", \"letter\": \"s\"}\n\n@answer jsEval\nconst count = [...$slots.word.toLowerCase()].filter((character) => character === $slots.letter).length;\nreturn count + \" times.\";\n```"
+   },
+   {
+    "role": "user",
+    "content": "{{STATEMENT}}"
+   }
+  ]
+ },
+ "items": [
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/below-largest-add-rate/below-largest-add-rate-instance-001-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the river warehouse, Mara listed readings of 6, 21, 17, 4, 9 and 12 crates. Mara has worked there for 52 months, which does not affect the readings. To begin, Mara keeps only the readings below 13. Next, the keeper picks out the largest remaining reading. Finally, the keeper adds a fixed charge of 2 to it. Question. What is the final figure, in crates?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/below-largest-add-rate/below-largest-add-rate-instance-017-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the harbour stockroom, Ravi listed entries of 15, 11, 39, 5, 3, 29 and 9 tickets. The harbour stockroom also has 98 parking spaces, which play no part in this question. To begin, Ravi sets aside every entry of 8 or more. Next, the keeper picks out the largest remaining entry. Finally, the keeper adds a fixed charge of 7 to it. Question. What is the final figure, in tickets?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/below-largest-add-rate/below-largest-add-rate-instance-021-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the north warehouse, Luca listed entries of 17, 8, 32, 33, 32, 17, 30 and 38 litres. The gate of the north warehouse carries the number 16, which is irrelevant here. To begin, Luca sets aside every entry of 11 or more. Next, the keeper picks out the largest remaining entry. Finally, the keeper adds a fixed charge of 3 to it. Question. What is the final figure, in litres?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/above-count-double/above-count-double-instance-001-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the river warehouse, Luca listed items of 37, 10, 21, 19, 18 and 9 parts. The gate of the river warehouse carries the number 24, which is irrelevant here. To begin, Luca sets aside every item of 18 or less. Next, the keeper counts how many items remain. Finally, the keeper multiplies that figure by 3. Question. What is the final figure, in parts?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/above-count-double/above-count-double-instance-007-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the hill stockroom, Mara listed readings of 34, 13, 5, 3, 15 and 34 crates. The hill stockroom also has 23 parking spaces, which play no part in this question. To begin, Mara sets aside every reading of 8 or less. Next, the keeper counts how many readings remain. Finally, the keeper multiplies that figure by 2. Question. What is the final figure, in crates?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/above-count-double/above-count-double-instance-011-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the river warehouse, Daria listed entries of 5, 38, 21, 29, 33, 18 and 23 litres. The gate of the river warehouse carries the number 41, which is irrelevant here. To begin, Daria keeps only the entries above 19. Next, the keeper counts how many entries remain. Finally, the keeper multiplies that figure by 2. Question. What is the final figure, in litres?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/below-total-per-unit-subtract-rate/below-total-per-unit-subtract-rate-instance-006-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the north stockroom, Tomas listed entries of 9, 35, 27, 40 and 29 parts. The gate of the north stockroom carries the number 73, which is irrelevant here. To begin, Tomas sets aside every entry of 26 or more. Next, the keeper adds up the entries that remain. After that, the keeper multiplies it by the 5 labels each unit needs. Finally, the keeper takes a fixed deduction of 2 off it. Question. What is the final figure, in parts?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/below-total-per-unit-subtract-rate/below-total-per-unit-subtract-rate-instance-009-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the harbour store, Tomas listed entries of 21, 4, 12, 40 and 23 parts. The harbour store also has 53 parking spaces, which play no part in this question. To begin, Tomas keeps only the entries below 25. Next, the keeper adds up the entries that remain. After that, the keeper multiplies it by the 3 labels each unit needs. Finally, the keeper takes a fixed deduction of 8 off it. Question. What is the final figure, in parts?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/below-total-per-unit-subtract-rate/below-total-per-unit-subtract-rate-instance-038-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the hill stockroom, Mara listed items of 42, 23, 27, 6, 38, 42, 10 and 15 parts. Mara has worked there for 46 months, which does not affect the items. To begin, Mara keeps only the items below 14. Next, the keeper adds up the items that remain. After that, the keeper multiplies it by the 2 labels each unit needs. Finally, the keeper takes a fixed deduction of 10 off it. Question. What is the final figure, in parts?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/above-largest-add-rate/above-largest-add-rate-instance-028-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the river store, Ravi listed items of 11, 34, 27, 36 and 10 tickets. The gate of the river store carries the number 15, which is irrelevant here. To begin, Ravi keeps only the items above 27. Next, the keeper picks out the largest remaining item. Finally, the keeper adds a fixed charge of 5 to it. Question. What is the final figure, in tickets?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/above-largest-add-rate/above-largest-add-rate-instance-030-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the river store, Ravi listed items of 24, 17, 39, 6, 27 and 10 tickets. Ravi has worked there for 37 months, which does not affect the items. To begin, Ravi keeps only the items above 8. Next, the keeper picks out the largest remaining item. Finally, the keeper adds a fixed charge of 8 to it. Question. What is the final figure, in tickets?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/above-largest-add-rate/above-largest-add-rate-instance-031-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the harbour store, Luca listed items of 8, 10, 26, 15, 10, 11 and 23 sheets. Luca has worked there for 67 months, which does not affect the items. To begin, Luca keeps only the items above 17. Next, the keeper picks out the largest remaining item. Finally, the keeper adds a fixed charge of 9 to it. Question. What is the final figure, in sheets?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/above-total-modulo/above-total-modulo-instance-005-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the hill stockroom, Luca listed items of 27, 25, 20, 5, 28 and 29 tickets. The gate of the hill stockroom carries the number 40, which is irrelevant here. To begin, Luca sets aside every item of 10 or less. Next, the keeper adds up the items that remain. Finally, the keeper divides it by 5 and keeps only the remainder. Question. What is the final figure, in tickets?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/above-total-modulo/above-total-modulo-instance-015-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the harbour warehouse, Tomas listed entries of 28, 24, 27, 16, 18, 36, 27 and 17 sheets. The gate of the harbour warehouse carries the number 52, which is irrelevant here. To begin, Tomas sets aside every entry of 19 or less. Next, the keeper adds up the entries that remain. Finally, the keeper divides it by 8 and keeps only the remainder. Question. What is the final figure, in sheets?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/above-total-modulo/above-total-modulo-instance-033-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the market store, Ravi listed readings of 42, 15, 7, 12, 25 and 18 litres. The market store also has 38 parking spaces, which play no part in this question. To begin, Ravi sets aside every reading of 14 or less. Next, the keeper adds up the readings that remain. Finally, the keeper divides it by 7 and keeps only the remainder. Question. What is the final figure, in litres?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/above-total-percent-discount/above-total-percent-discount-instance-003-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the harbour store, Ines listed readings of 6, 10, 25, 25, 20, 27, 36 and 15 crates. The gate of the harbour store carries the number 3, which is irrelevant here. To begin, Ines sets aside every reading of 10 or less. Next, the keeper adds up the readings that remain. After that, the keeper takes 50 percent of that figure. Finally, the keeper applies a 50 percent discount to it. Question. What is the final figure, in crates?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/above-total-percent-discount/above-total-percent-discount-instance-007-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the north warehouse, Daria listed entries of 40, 19, 23, 17 and 24 tickets. The gate of the north warehouse carries the number 30, which is irrelevant here. To begin, Daria sets aside every entry of 23 or less. Next, the keeper adds up the entries that remain. After that, the keeper takes 50 percent of that figure. Finally, the keeper applies a 50 percent discount to it. Question. What is the final figure, in tickets?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/above-total-percent-discount/above-total-percent-discount-instance-024-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the river warehouse, Mara listed readings of 23, 11, 30, 20 and 27 litres. The river warehouse also has 88 parking spaces, which play no part in this question. To begin, Mara sets aside every reading of 16 or less. Next, the keeper adds up the readings that remain. After that, the keeper takes 40 percent of that figure. Finally, the keeper applies a 40 percent discount to it. Question. What is the final figure, in litres?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/above-third-largest-percent/above-third-largest-percent-instance-005-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the harbour warehouse, Tomas listed items of 30, 33, 5, 19, 6, 36 and 23 crates. The harbour warehouse also has 29 parking spaces, which play no part in this question. To begin, Tomas keeps only the items above 21. Next, the keeper ranks the remaining items from largest to smallest and picks the third item in that order. Finally, the keeper takes 30 percent of that figure. Question. What is the final figure, in crates?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/above-third-largest-percent/above-third-largest-percent-instance-010-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the north warehouse, Luca listed items of 5, 35, 30, 23, 20, 38, 10 and 24 parts. Luca has worked there for 85 months, which does not affect the items. To begin, Luca keeps only the items above 10. Next, the keeper ranks the remaining items from largest to smallest and picks the third item in that order. Finally, the keeper takes 30 percent of that figure. Question. What is the final figure, in parts?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/above-third-largest-percent/above-third-largest-percent-instance-028-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the harbour warehouse, Ravi listed readings of 21, 10, 5, 36, 10, 30 and 33 litres. The harbour warehouse also has 19 parking spaces, which play no part in this question. To begin, Ravi sets aside every reading of 13 or less. Next, the keeper ranks the remaining readings from largest to smallest and picks the third reading in that order. Finally, the keeper takes 50 percent of that figure. Question. What is the final figure, in litres?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/keep-below-total-ratio/keep-below-total-ratio-instance-002-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the market warehouse, Nadia listed items of 15, 4, 11, 12 and 24 litres. The market warehouse also has 42 parking spaces, which play no part in this question. To begin, Nadia sets aside every item of 19 or more. Next, the keeper adds up the items that remain. Finally, the keeper splits it into 3 equal parts and looks at the size of each part. Question. What is the final figure, in litres?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/keep-below-total-ratio/keep-below-total-ratio-instance-003-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the harbour store, Ines listed items of 9, 11, 31, 3, 34 and 18 parts. Ines has worked there for 78 months, which does not affect the items. To begin, Ines sets aside every item of 10 or more. Next, the keeper adds up the items that remain. Finally, the keeper splits it into 3 equal parts and looks at the size of each part. Question. What is the final figure, in parts?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/keep-below-total-ratio/keep-below-total-ratio-instance-026-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the market stockroom, Priya listed entries of 12, 12, 11, 18 and 25 crates. Priya has worked there for 2 months, which does not affect the entries. To begin, Priya sets aside every entry of 16 or more. Next, the keeper adds up the entries that remain. Finally, the keeper splits it into 7 equal parts and looks at the size of each part. Question. What is the final figure, in crates?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/below-largest-path-exists/below-largest-path-exists-instance-003-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the river stockroom, Tomas listed items of 41, 4, 13, 13 and 4 crates. The gate of the river stockroom carries the number 60, which is irrelevant here. To begin, Tomas sets aside every item of 24 or more. Next, the keeper picks out the largest remaining item. Finally, the keeper treats it as a node and checks whether a path connects it to node 41 through the undirected links 4-13, 13-41. Question. Is there such a path?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/below-largest-path-exists/below-largest-path-exists-instance-009-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the north stockroom, Luca listed readings of 3, 12, 3, 10, 5 and 29 sheets. The north stockroom also has 67 parking spaces, which play no part in this question. To begin, Luca keeps only the readings below 24. Next, the keeper picks out the largest remaining reading. Finally, the keeper treats it as a node and checks whether a path connects it to node 10 through the undirected links 10-12. Question. Is there such a path?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/below-largest-path-exists/below-largest-path-exists-instance-029-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the hill warehouse, Luca listed readings of 3, 11, 39, 29, 4, 16, 5 and 24 crates. The gate of the hill warehouse carries the number 32, which is irrelevant here. To begin, Luca keeps only the readings below 16. Next, the keeper picks out the largest remaining reading. Finally, the keeper treats it as a node and checks whether a path connects it to node 3 through the undirected links 3-4, 4-5, 5-11, 16-24, 24-29, 29-39. Question. Is there such a path?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/below-total-elapsed/below-total-elapsed-instance-003-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the river stockroom, Ines listed entries of 12, 20, 38, 35, 20 and 42 hours. The gate of the river stockroom carries the number 95, which is irrelevant here. To begin, Ines sets aside every entry of 21 or more. Next, the keeper adds up the entries that remain. Finally, the keeper converts it into minutes with a conversion factor of 60. Question. What is the final figure, in minutes?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/below-total-elapsed/below-total-elapsed-instance-010-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the hill warehouse, Tomas listed readings of 16, 21, 23, 9, 26 and 40 hours. The gate of the hill warehouse carries the number 30, which is irrelevant here. To begin, Tomas sets aside every reading of 17 or more. Next, the keeper adds up the readings that remain. Finally, the keeper converts it into minutes with a conversion factor of 60. Question. What is the final figure, in minutes?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/below-total-elapsed/below-total-elapsed-instance-039-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the north warehouse, Ravi listed readings of 35, 26, 15, 9, 32, 25 and 15 hours. The gate of the north warehouse carries the number 97, which is irrelevant here. To begin, Ravi sets aside every reading of 22 or more. Next, the keeper adds up the readings that remain. Finally, the keeper converts it into minutes with a conversion factor of 60. Question. What is the final figure, in minutes?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/below-largest-rectangle-area/below-largest-rectangle-area-instance-014-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the north store, Luca listed items of 28, 7, 4, 31, 38 and 18 crates. The gate of the north store carries the number 79, which is irrelevant here. To begin, Luca keeps only the items below 25. Next, the keeper picks out the largest remaining item. Finally, the keeper treats it as the length of a rectangle that is 5 wide and works out its area. Question. What is the final figure, in crates?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/below-largest-rectangle-area/below-largest-rectangle-area-instance-032-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the river warehouse, Daria listed items of 5, 38, 21, 22, 9, 28, 15 and 39 litres. The gate of the river warehouse carries the number 34, which is irrelevant here. To begin, Daria keeps only the items below 26. Next, the keeper picks out the largest remaining item. Finally, the keeper treats it as the length of a rectangle that is 10 wide and works out its area. Question. What is the final figure, in litres?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/eval/no-knowledge/below-largest-rectangle-area/below-largest-rectangle-area-instance-039-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the market store, Mara listed entries of 29, 11, 5, 6 and 9 litres. The market store also has 28 parking spaces, which play no part in this question. To begin, Mara keeps only the entries below 11. Next, the keeper picks out the largest remaining entry. Finally, the keeper treats it as the length of a rectangle that is 10 wide and works out its area. Question. What is the final figure, in litres?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/control/above-total-percent/003-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the north store, Luca listed items of 31, 34, 9, 30 and 18 litres. The north store also has 3 parking spaces, which play no part in this question. To begin, Luca keeps only the items above 18. Next, the keeper adds up the items that remain. Finally, the keeper takes 20 percent of that figure. Question. What is the final figure, in litres?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/control/above-total-percent/008-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the north stockroom, Ines listed items of 22, 35, 37, 6, 19 and 41 parts. The gate of the north stockroom carries the number 59, which is irrelevant here. To begin, Ines keeps only the items above 17. Next, the keeper adds up the items that remain. Finally, the keeper takes 50 percent of that figure. Question. What is the final figure, in parts?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/control/above-total-percent/018-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the north warehouse, Mara listed items of 28, 33, 28, 22, 29, 35, 37 and 22 sheets. The north warehouse also has 69 parking spaces, which play no part in this question. To begin, Mara keeps only the items above 22. Next, the keeper adds up the items that remain. Finally, the keeper takes 60 percent of that figure. Question. What is the final figure, in sheets?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/control/below-total-add-rate/011-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the market store, Priya listed entries of 41, 10, 15, 20, 14, 23 and 15 sheets. The gate of the market store carries the number 56, which is irrelevant here. To begin, Priya keeps only the entries below 16. Next, the keeper adds up the entries that remain. Finally, the keeper adds a fixed charge of 2 to it. Question. What is the final figure, in sheets?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/control/below-total-add-rate/013-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the market store, Tomas listed items of 25, 11, 3, 22 and 21 crates. The market store also has 71 parking spaces, which play no part in this question. To begin, Tomas sets aside every item of 10 or more. Next, the keeper adds up the items that remain. Finally, the keeper adds a fixed charge of 2 to it. Question. What is the final figure, in crates?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/control/below-total-add-rate/019-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the river store, Mara listed entries of 6, 14, 5, 27, 40 and 40 parts. Mara has worked there for 66 months, which does not affect the entries. To begin, Mara keeps only the entries below 11. Next, the keeper adds up the entries that remain. Finally, the keeper adds a fixed charge of 4 to it. Question. What is the final figure, in parts?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/control/above-largest-per-unit-subtract-rate/009-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the market warehouse, Mara listed readings of 10, 34, 40, 14 and 36 sheets. The market warehouse also has 3 parking spaces, which play no part in this question. To begin, Mara sets aside every reading of 11 or less. Next, the keeper picks out the largest remaining reading. After that, the keeper multiplies it by the 2 labels each unit needs. Finally, the keeper takes a fixed deduction of 8 off it. Question. What is the final figure, in sheets?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/control/above-largest-per-unit-subtract-rate/012-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the north stockroom, Priya listed readings of 29, 31, 19, 22, 18, 34, 21 and 9 tickets. Priya has worked there for 71 months, which does not affect the readings. To begin, Priya sets aside every reading of 23 or less. Next, the keeper picks out the largest remaining reading. After that, the keeper multiplies it by the 5 labels each unit needs. Finally, the keeper takes a fixed deduction of 3 off it. Question. What is the final figure, in tickets?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/control/above-largest-per-unit-subtract-rate/014-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the hill stockroom, Luca listed readings of 40, 31, 10, 11, 23 and 26 litres. Luca has worked there for 69 months, which does not affect the readings. To begin, Luca sets aside every reading of 20 or less. Next, the keeper picks out the largest remaining reading. After that, the keeper multiplies it by the 2 labels each unit needs. Finally, the keeper takes a fixed deduction of 2 off it. Question. What is the final figure, in litres?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/control/above-total-elapsed/002-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the market warehouse, Daria listed entries of 31, 25, 24, 18 and 7 hours. The gate of the market warehouse carries the number 98, which is irrelevant here. To begin, Daria keeps only the entries above 26. Next, the keeper adds up the entries that remain. Finally, the keeper converts it into minutes with a conversion factor of 60. Question. What is the final figure, in minutes?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/control/above-total-elapsed/006-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the hill store, Luca listed readings of 8, 30, 39, 29, 38 and 26 days. Luca has worked there for 62 months, which does not affect the readings. To begin, Luca keeps only the readings above 8. Next, the keeper adds up the readings that remain. Finally, the keeper converts it into hours with a conversion factor of 24. Question. What is the final figure, in hours?"
+  },
+  {
+   "key": "e8-l2|sop|procedural-arithmetic/control/above-total-elapsed/019-L2",
+   "condition": "sop",
+   "statement": "Scenario. During the weekly audit at the north store, Tomas listed items of 21, 6, 40, 24, 3 and 12 days. The north store also has 43 parking spaces, which play no part in this question. To begin, Tomas keeps only the items above 25. Next, the keeper adds up the items that remain. Finally, the keeper converts it into hours with a conversion factor of 24. Question. What is the final figure, in hours?"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-001",
+   "condition": "sop",
+   "statement": "A yard holds 56 units of pipe. The workshop consumes 11 units every day, and a delivery takes 2 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-002",
+   "condition": "sop",
+   "statement": "A warehouse holds 261 units of cable. The workshop consumes 14 units every day, and a delivery takes 7 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-003",
+   "condition": "sop",
+   "statement": "A warehouse holds 260 units of cable. The workshop consumes 14 units every day, and a delivery takes 9 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-004",
+   "condition": "sop",
+   "statement": "A warehouse holds 116 units of sheet metal. The workshop consumes 19 units every day, and a delivery takes 2 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-005",
+   "condition": "sop",
+   "statement": "A depot holds 229 units of pipe. The workshop consumes 13 units every day, and a delivery takes 4 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-006",
+   "condition": "sop",
+   "statement": "A warehouse holds 214 units of pipe. The workshop consumes 16 units every day, and a delivery takes 3 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-007",
+   "condition": "sop",
+   "statement": "A yard holds 143 units of ballast. The workshop consumes 13 units every day, and a delivery takes 5 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-008",
+   "condition": "sop",
+   "statement": "A yard holds 69 units of timber. The workshop consumes 9 units every day, and a delivery takes 4 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-009",
+   "condition": "sop",
+   "statement": "A depot holds 109 units of sheet metal. The workshop consumes 7 units every day, and a delivery takes 5 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-010",
+   "condition": "sop",
+   "statement": "A warehouse holds 35 units of pipe. The workshop consumes 2 units every day, and a delivery takes 4 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-011",
+   "condition": "sop",
+   "statement": "A depot holds 31 units of sheet metal. The workshop consumes 4 units every day, and a delivery takes 6 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-012",
+   "condition": "sop",
+   "statement": "A warehouse holds 70 units of cable. The workshop consumes 11 units every day, and a delivery takes 9 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-013",
+   "condition": "sop",
+   "statement": "A depot holds 212 units of pipe. The workshop consumes 11 units every day, and a delivery takes 3 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-014",
+   "condition": "sop",
+   "statement": "A depot holds 61 units of pipe. The workshop consumes 5 units every day, and a delivery takes 6 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-015",
+   "condition": "sop",
+   "statement": "A yard holds 32 units of pipe. The workshop consumes 4 units every day, and a delivery takes 5 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-016",
+   "condition": "sop",
+   "statement": "A storeroom holds 143 units of timber. The workshop consumes 7 units every day, and a delivery takes 1 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-017",
+   "condition": "sop",
+   "statement": "A depot holds 241 units of pipe. The workshop consumes 15 units every day, and a delivery takes 6 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-018",
+   "condition": "sop",
+   "statement": "A yard holds 122 units of pipe. The workshop consumes 9 units every day, and a delivery takes 2 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-019",
+   "condition": "sop",
+   "statement": "A warehouse holds 81 units of timber. The workshop consumes 10 units every day, and a delivery takes 9 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-020",
+   "condition": "sop",
+   "statement": "A warehouse holds 196 units of sheet metal. The workshop consumes 12 units every day, and a delivery takes 5 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-021",
+   "condition": "sop",
+   "statement": "A warehouse holds 303 units of ballast. The workshop consumes 15 units every day, and a delivery takes 8 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-022",
+   "condition": "sop",
+   "statement": "A yard holds 29 units of ballast. The workshop consumes 4 units every day, and a delivery takes 9 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-023",
+   "condition": "sop",
+   "statement": "A yard holds 70 units of pipe. The workshop consumes 12 units every day, and a delivery takes 5 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-024",
+   "condition": "sop",
+   "statement": "A storeroom holds 79 units of pipe. The workshop consumes 6 units every day, and a delivery takes 2 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-025",
+   "condition": "sop",
+   "statement": "A depot holds 345 units of ballast. The workshop consumes 16 units every day, and a delivery takes 2 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-026",
+   "condition": "sop",
+   "statement": "A storeroom holds 61 units of timber. The workshop consumes 10 units every day, and a delivery takes 3 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-027",
+   "condition": "sop",
+   "statement": "A storeroom holds 57 units of timber. The workshop consumes 8 units every day, and a delivery takes 5 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-028",
+   "condition": "sop",
+   "statement": "A warehouse holds 250 units of sheet metal. The workshop consumes 16 units every day, and a delivery takes 6 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-029",
+   "condition": "sop",
+   "statement": "A warehouse holds 202 units of sheet metal. The workshop consumes 19 units every day, and a delivery takes 3 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-030",
+   "condition": "sop",
+   "statement": "A storeroom holds 123 units of ballast. The workshop consumes 17 units every day, and a delivery takes 1 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-031",
+   "condition": "sop",
+   "statement": "A depot holds 42 units of timber. The workshop consumes 4 units every day, and a delivery takes 2 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-032",
+   "condition": "sop",
+   "statement": "A warehouse holds 67 units of timber. The workshop consumes 19 units every day, and a delivery takes 6 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-033",
+   "condition": "sop",
+   "statement": "A yard holds 128 units of timber. The workshop consumes 7 units every day, and a delivery takes 9 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-034",
+   "condition": "sop",
+   "statement": "A storeroom holds 94 units of sheet metal. The workshop consumes 9 units every day, and a delivery takes 4 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-035",
+   "condition": "sop",
+   "statement": "A warehouse holds 46 units of sheet metal. The workshop consumes 3 units every day, and a delivery takes 8 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-036",
+   "condition": "sop",
+   "statement": "A storeroom holds 114 units of timber. The workshop consumes 5 units every day, and a delivery takes 8 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-037",
+   "condition": "sop",
+   "statement": "A yard holds 58 units of timber. The workshop consumes 6 units every day, and a delivery takes 5 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-038",
+   "condition": "sop",
+   "statement": "A storeroom holds 69 units of ballast. The workshop consumes 11 units every day, and a delivery takes 7 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-039",
+   "condition": "sop",
+   "statement": "A storeroom holds 320 units of ballast. The workshop consumes 16 units every day, and a delivery takes 8 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "e9|sop|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-040",
+   "condition": "sop",
+   "statement": "A yard holds 193 units of sheet metal. The workshop consumes 9 units every day, and a delivery takes 1 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  }
+ ]
+}

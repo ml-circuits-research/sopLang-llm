@@ -1,0 +1,22 @@
+{
+  "experiment": "e8-sopicl3-l2-coder15-paired",
+  "items": 45,
+  "records": 45,
+  "complete": true,
+  "groups": {
+    "held-out:L2": {
+      "records": 33,
+      "exact": 0,
+      "value": 1,
+      "executed": 6,
+      "missing": 0
+    },
+    "trained-control:L2": {
+      "records": 12,
+      "exact": 0,
+      "value": 1,
+      "executed": 1,
+      "missing": 0
+    }
+  }
+}

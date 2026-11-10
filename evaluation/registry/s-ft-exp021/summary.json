@@ -1,0 +1,64 @@
+{
+  "experiment": "s-ft-exp021",
+  "items": 115,
+  "records": 115,
+  "complete": true,
+  "groups": {
+    "adult-reasoning": {
+      "records": 5,
+      "exact": 0,
+      "value": 0,
+      "executed": 2,
+      "missing": 0
+    },
+    "common-sense": {
+      "records": 5,
+      "exact": 5,
+      "value": 5,
+      "executed": 5,
+      "missing": 0
+    },
+    "decompose-to-solve": {
+      "records": 5,
+      "exact": 0,
+      "value": 5,
+      "executed": 5,
+      "missing": 0
+    },
+    "logical-reasoning": {
+      "records": 5,
+      "exact": 0,
+      "value": 0,
+      "executed": 1,
+      "missing": 0
+    },
+    "mathematical-thinking": {
+      "records": 10,
+      "exact": 2,
+      "value": 2,
+      "executed": 9,
+      "missing": 0
+    },
+    "procedural-arithmetic": {
+      "records": 60,
+      "exact": 55,
+      "value": 55,
+      "executed": 59,
+      "missing": 0
+    },
+    "scientific-reasoning": {
+      "records": 5,
+      "exact": 0,
+      "value": 0,
+      "executed": 4,
+      "missing": 0
+    },
+    "world-as-a-system": {
+      "records": 20,
+      "exact": 20,
+      "value": 20,
+      "executed": 20,
+      "missing": 0
+    }
+  }
+}

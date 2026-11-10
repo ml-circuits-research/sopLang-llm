@@ -1,0 +1,352 @@
+{"pid":"cbb8c5c11c8c","verdict":"different","reason":"Candidate gives 5, reference 4."}
+{"pid":"bff65d3fcc28","verdict":"different","reason":"Candidate selects A alone, reference AB, AC, BC."}
+{"pid":"8267c71ee454","verdict":"different","reason":"Candidate gives 912 hours, reference 3240 minutes."}
+{"pid":"69ba0c1d919a","verdict":"same","reason":"Both give 8."}
+{"pid":"4e88c4f48812","verdict":"different","reason":"Candidate gives 14, reference 5."}
+{"pid":"4b3d5254137a","verdict":"different","reason":"Candidate gives 222, reference 105."}
+{"pid":"3f0d2c8da8bc","verdict":"different","reason":"Candidate lists numbers, not the coalitions AB, AC, BC."}
+{"pid":"3ee511ac8ec5","verdict":"different","reason":"Candidate gives 40, reference 44."}
+{"pid":"3ec415b9c4aa","verdict":"different","reason":"Candidate gives 676, reference 130."}
+{"pid":"3e8973a0844a","verdict":"same","reason":"Both give 2."}
+{"pid":"3e4e8b48e782","verdict":"different","reason":"Candidate reports a record, not the path verdict no."}
+{"pid":"3e2ff7b31016","verdict":"different","reason":"Candidate gives 30, reference 912 hours."}
+{"pid":"3e2e215aeac9","verdict":"different","reason":"Candidate gives 350, reference 170."}
+{"pid":"3e20f14f3fb6","verdict":"different","reason":"Candidate gives 11 days and order today, reference 10 days and wait."}
+{"pid":"3e119f5094e4","verdict":"different","reason":"Candidate gives 6600 minutes, reference 1500."}
+{"pid":"3d928dd93831","verdict":"different","reason":"Candidate gives NaN, reference 5."}
+{"pid":"3d7c8e4fedd4","verdict":"same","reason":"Both give 3."}
+{"pid":"3d767a1b286e","verdict":"different","reason":"Candidate names food transmission, not the hands/covering observation."}
+{"pid":"3d71f12759ce","verdict":"different","reason":"Candidate gives no concrete coalitions."}
+{"pid":"3d71a8d7bfbc","verdict":"different","reason":"Candidate gives a list of arrays, reference 25."}
+{"pid":"3ce018c3484c","verdict":"different","reason":"Candidate gives 41, reference 11."}
+{"pid":"3cd6d62f9f58","verdict":"same","reason":"Both give 42."}
+{"pid":"3cd3b1896c5e","verdict":"different","reason":"Candidate gives 3, reference 4."}
+{"pid":"3cb42d6f7e7d","verdict":"same","reason":"Both conclude Omar must wear the shield."}
+{"pid":"3ca92e42aa96","verdict":"different","reason":"Candidate says Friday succeeds, reference neither."}
+{"pid":"3c89676cb9d7","verdict":"same","reason":"Both give 44."}
+{"pid":"3c75a919e0d6","verdict":"different","reason":"Candidate gives 233, reference 217."}
+{"pid":"3c5ad69b3c59","verdict":"same","reason":"Both give 172."}
+{"pid":"3c075e5d0f63","verdict":"different","reason":"Candidate gives no concrete coalitions."}
+{"pid":"3bf5041fa812","verdict":"different","reason":"Candidate lists numbers, not coalition A."}
+{"pid":"3bf382a94466","verdict":"different","reason":"Candidate selects only BC, reference AB, AC, BC."}
+{"pid":"3bf05f3ad534","verdict":"different","reason":"Candidate gives 6600, reference 1500."}
+{"pid":"3bd7684e8511","verdict":"different","reason":"Candidate gives empty list, reference AB, AC, BC."}
+{"pid":"3b6a0760acb4","verdict":"different","reason":"Candidate gives 4.4 days and order today, reference 17 days and wait."}
+{"pid":"3b62f2b464c4","verdict":"different","reason":"Candidate gives 53, reference 19."}
+{"pid":"3b583639e682","verdict":"different","reason":"Candidate lists numbers, not coalition A."}
+{"pid":"3acc21ddf667","verdict":"same","reason":"Both give 51 minutes, not feasible."}
+{"pid":"3ac32497fdbb","verdict":"different","reason":"Candidate names no concrete discriminating observation."}
+{"pid":"3aba20d4e9f0","verdict":"different","reason":"Candidate gives NaN, reference 22."}
+{"pid":"3ab9917dc9bf","verdict":"same","reason":"Both give 2."}
+{"pid":"3aa03a338bb0","verdict":"different","reason":"Candidate gives 102, reference 2448 hours."}
+{"pid":"3a86bd3dd719","verdict":"different","reason":"Candidate gives 484, reference 220."}
+{"pid":"3a30f7b340f3","verdict":"different","reason":"Candidate gives 46 feasible, reference 52 not feasible."}
+{"pid":"398656ea169f","verdict":"different","reason":"Candidate says both succeed, reference neither."}
+{"pid":"394ed8a7cc61","verdict":"different","reason":"Candidate gives 23, reference 81."}
+{"pid":"39390ab669ce","verdict":"different","reason":"Candidate gives NaN, reference 70 feasible."}
+{"pid":"39326c5e403b","verdict":"same","reason":"Both give 21 days and no need to order today."}
+{"pid":"390ed03e516a","verdict":"different","reason":"Candidate gives 3, reference 6."}
+{"pid":"39021351d697","verdict":"different","reason":"Candidate gives 22 days and order today, reference 10 days and wait."}
+{"pid":"38d1c271ad36","verdict":"same","reason":"Both give 24."}
+{"pid":"38b6ff523747","verdict":"same","reason":"Both give 61."}
+{"pid":"388dc7c0e3a4","verdict":"different","reason":"Candidate gives 45, reference 14."}
+{"pid":"3876764bb042","verdict":"same","reason":"Both say neither attempt succeeds."}
+{"pid":"3873cc7c7172","verdict":"different","reason":"Candidate gives 10, reference 1."}
+{"pid":"3862b1a71550","verdict":"different","reason":"Candidate says order today, reference can wait."}
+{"pid":"38499e002b78","verdict":"different","reason":"Candidate gives 64, reference 72."}
+{"pid":"37f7ff9ba6e8","verdict":"different","reason":"Candidate gives 41, reference 56."}
+{"pid":"37e36c640eb4","verdict":"same","reason":"Both conclude Sol must wear the shield."}
+{"pid":"37c9c1656607","verdict":"same","reason":"Both give 93."}
+{"pid":"378a5cae0c30","verdict":"different","reason":"Candidate answers a crate-count question with a NaN remainder."}
+{"pid":"3789fe0fe4f2","verdict":"different","reason":"Candidate gives 19, reference green-green-red."}
+{"pid":"377c31833da9","verdict":"same","reason":"Both give 960."}
+{"pid":"374717b7a499","verdict":"different","reason":"Candidate gives 22 days with no verdict, reference 15 days and wait."}
+{"pid":"371faa8da98b","verdict":"different","reason":"Candidate gives 57.71, reference 29."}
+{"pid":"36e550547f1e","verdict":"different","reason":"Candidate gives 162, reference 3888 hours."}
+{"pid":"36d4f4c5ffe4","verdict":"different","reason":"Candidate selects AB and AC, reference A alone."}
+{"pid":"360456abc857","verdict":"different","reason":"Candidate gives 641.9, reference 43."}
+{"pid":"35c5f8a60944","verdict":"different","reason":"Candidate selects AB only, reference AB, AC, BC."}
+{"pid":"35b4967c4b3e","verdict":"different","reason":"Candidate gives 6 days, reference 5."}
+{"pid":"358aea56b7e2","verdict":"different","reason":"Candidate says order today then answers No, conflicting."}
+{"pid":"350ce254c222","verdict":"different","reason":"Candidate gives 40, reference 960 hours."}
+{"pid":"34abb43285eb","verdict":"different","reason":"Candidate gives 16, reference 25."}
+{"pid":"34aa1d893369","verdict":"different","reason":"Candidate gives 13 with no verdict, reference 7 days and wait."}
+{"pid":"34a1c871cf45","verdict":"same","reason":"Both give 6660."}
+{"pid":"3485a8d6034b","verdict":"different","reason":"Candidate selects BC only, reference AB, AC, BC."}
+{"pid":"346bc156569c","verdict":"different","reason":"Candidate says yes, reference no."}
+{"pid":"343020326d8c","verdict":"same","reason":"Both give 780."}
+{"pid":"342e23c3aab2","verdict":"same","reason":"Both give 250."}
+{"pid":"340efafb6f25","verdict":"same","reason":"Both say no, the codes cannot distinguish."}
+{"pid":"33c40ed7390f","verdict":"different","reason":"Candidate gives 55, reference 47."}
+{"pid":"33c36c84c38c","verdict":"different","reason":"Candidate gives a number, not a discriminating observation."}
+{"pid":"338efee8ea96","verdict":"different","reason":"Candidate describes a different path, not the asked one."}
+{"pid":"331b3b0195ca","verdict":"different","reason":"Candidate says order today, reference can wait."}
+{"pid":"33005822eb43","verdict":"different","reason":"Candidate gives 9, reference 624 hours."}
+{"pid":"32e17dbbfdfa","verdict":"different","reason":"Candidate says no, reference yes."}
+{"pid":"32d624997434","verdict":"same","reason":"Both give 42."}
+{"pid":"32a99820dd8d","verdict":"same","reason":"Both give 45."}
+{"pid":"3254e7e52a29","verdict":"same","reason":"Both give 6."}
+{"pid":"322a68997fb1","verdict":"different","reason":"Candidate selects BC only, reference AB, AC, BC."}
+{"pid":"31ce2272db8c","verdict":"different","reason":"Candidate gives 16, reference 2."}
+{"pid":"31c2957d0b30","verdict":"different","reason":"Candidate gives 43, reference 48."}
+{"pid":"31af618f6390","verdict":"different","reason":"Candidate gives 95, reference 216 hours."}
+{"pid":"31a6f156392b","verdict":"same","reason":"Both give 2280."}
+{"pid":"317ac659baa2","verdict":"different","reason":"Candidate gives 1.67 hours, reference 960."}
+{"pid":"316fa7515ece","verdict":"same","reason":"Both give 41."}
+{"pid":"316766391e9c","verdict":"different","reason":"Candidate gives 14 with no verdict, reference 7 days and wait."}
+{"pid":"310d2d8f6591","verdict":"different","reason":"Candidate gives 7, reference 3."}
+{"pid":"307e17939f6b","verdict":"unclear","reason":"Candidate names a hand-cleaning check, loosely related to microbes on hands."}
+{"pid":"3049c0e9d260","verdict":"different","reason":"Candidate gives no concrete coalitions."}
+{"pid":"2ff5ca3abe8b","verdict":"different","reason":"Candidate says Sol may skip the shield, reference Sol wears it."}
+{"pid":"2fe13dee55eb","verdict":"same","reason":"Both give 105."}
+{"pid":"2fbc5ae97aff","verdict":"same","reason":"Both conclude Harun must wear the shield."}
+{"pid":"2fae67e8971f","verdict":"different","reason":"Candidate says blue is guaranteed, contradicting blue cannot be VIP."}
+{"pid":"2f62294a5975","verdict":"different","reason":"Candidate names no concrete observation."}
+{"pid":"2f3d294888f4","verdict":"different","reason":"Candidate gives 4.69 hours, reference 912."}
+{"pid":"2f3ad42cf5cd","verdict":"different","reason":"Candidate gives 19 days and order today, reference 18 and wait."}
+{"pid":"2f0c075588cd","verdict":"same","reason":"Both select A."}
+{"pid":"2eea5c3c59de","verdict":"different","reason":"Candidate selects BC, reference AB and AC."}
+{"pid":"2e485d9e0e10","verdict":"same","reason":"Both give 72."}
+{"pid":"2e3c1fea41f6","verdict":"different","reason":"Candidate gives 4, reference 8."}
+{"pid":"2e2af0dd0c5b","verdict":"different","reason":"Candidate gives 86, reference 56."}
+{"pid":"2de403df1f00","verdict":"different","reason":"Candidate gives 152, reference 44."}
+{"pid":"2dc8936cbb4e","verdict":"different","reason":"Candidate gives 68, reference 34."}
+{"pid":"2dc64c1f539b","verdict":"different","reason":"Candidate says order today, reference can wait."}
+{"pid":"2daf0f44dbd3","verdict":"same","reason":"Both give 27."}
+{"pid":"2daa1200fa76","verdict":"different","reason":"Candidate gives 21 days, reference 20."}
+{"pid":"2da33dd87ad4","verdict":"different","reason":"Candidate gives 4, reference 16."}
+{"pid":"2d4537bf991f","verdict":"same","reason":"Both give 15."}
+{"pid":"2d201ddca686","verdict":"different","reason":"Candidate lists numbers, not coalitions AB, AC, BC."}
+{"pid":"2d0464ca696b","verdict":"different","reason":"Candidate gives 3 days, reference 10 and wait."}
+{"pid":"2ceabb2a4d5b","verdict":"different","reason":"Candidate says order today, reference can wait."}
+{"pid":"2cc0c87c5dbf","verdict":"different","reason":"Candidate gives parts 28, 28, 29, reference 25."}
+{"pid":"2cb35628d8f9","verdict":"different","reason":"Candidate gives 20.40, reference 21."}
+{"pid":"2cb15d68ee6e","verdict":"different","reason":"Candidate gives 42, reference 4."}
+{"pid":"2bcabd4645cb","verdict":"different","reason":"Candidate gives 96, reference 4."}
+{"pid":"2b9cedf36532","verdict":"different","reason":"Candidate gives a malformed percentage, reference 9."}
+{"pid":"2b8cf03f8679","verdict":"same","reason":"Both give 14."}
+{"pid":"2b8ac3022c55","verdict":"different","reason":"Candidate lists numbers, not coalitions AB, AC, BC."}
+{"pid":"2b5471e37f84","verdict":"different","reason":"Candidate selects BC, reference AB and AC."}
+{"pid":"2b4235cc62e9","verdict":"different","reason":"Candidate says order need not be placed today, reference must order today."}
+{"pid":"2ae96891325a","verdict":"different","reason":"Candidate says gold is certain, reference cannot know."}
+{"pid":"2ac7e7f9f652","verdict":"different","reason":"Candidate gives 31, reference 14."}
+{"pid":"2a5454170a5d","verdict":"unclear","reason":"Candidate restates the rules without explicitly concluding Leo wears the shield."}
+{"pid":"2a4dfd3941cd","verdict":"different","reason":"Candidate reports a record, not the path verdict yes."}
+{"pid":"29dbed91f7ac","verdict":"same","reason":"Both give 21."}
+{"pid":"29d1738a3981","verdict":"different","reason":"Candidate gives 36, reference 31."}
+{"pid":"29869dc7ebd7","verdict":"different","reason":"Candidate output is malformed, reference A."}
+{"pid":"296fbd7aed17","verdict":"same","reason":"Both give 1200."}
+{"pid":"292d72de6f82","verdict":"different","reason":"Candidate gives 12 days and order today, reference 7 and wait."}
+{"pid":"28fcb948fec8","verdict":"different","reason":"Candidate gives 290, reference 10."}
+{"pid":"28e7d1f7f141","verdict":"different","reason":"Candidate gives 31.33, reference 4."}
+{"pid":"288a114c7d66","verdict":"same","reason":"Both give 48."}
+{"pid":"28847db23157","verdict":"different","reason":"Candidate says the store must be light and does not conclude Sam specifically wears the shield."}
+{"pid":"28835204d0d9","verdict":"different","reason":"Candidate gives 7, reference 17."}
+{"pid":"2869e6278d0c","verdict":"different","reason":"Candidate gives 190, reference 8."}
+{"pid":"2867192e7b74","verdict":"same","reason":"Both conclude Omar must wear the shield."}
+{"pid":"2840228f9eb1","verdict":"different","reason":"Candidate gives 489, reference 48."}
+{"pid":"27bfe01b38dc","verdict":"different","reason":"Candidate gives 22, reference 78."}
+{"pid":"27bd937e40ba","verdict":"different","reason":"Candidate names a measurement, not the instrument check."}
+{"pid":"278f7496e39d","verdict":"different","reason":"Candidate gives 50, reference 8."}
+{"pid":"2787b870173a","verdict":"different","reason":"Candidate says yes, reference no."}
+{"pid":"27582d51b465","verdict":"same","reason":"Both give 3888."}
+{"pid":"274c97e14285","verdict":"same","reason":"Both give 42."}
+{"pid":"2749927e436b","verdict":"same","reason":"Both give 9."}
+{"pid":"27174996a642","verdict":"same","reason":"Both give 104."}
+{"pid":"270a1afa52fc","verdict":"different","reason":"Candidate gives mean 7, reference 8.75."}
+{"pid":"26f210d47506","verdict":"different","reason":"Candidate gives 1.21, reference 48."}
+{"pid":"26eca8dd617c","verdict":"different","reason":"Candidate gives NaN, reference green-green-red."}
+{"pid":"267727e24675","verdict":"different","reason":"Candidate gives 7 days and order today, reference 6 and wait."}
+{"pid":"260bc9527151","verdict":"different","reason":"Candidate gives 5.33, reference 6.67."}
+{"pid":"25e985b4d9cf","verdict":"different","reason":"Candidate gives 7 days and order today, reference 13 and wait."}
+{"pid":"25e5e21faee9","verdict":"different","reason":"Candidate gives 5, reference 15."}
+{"pid":"25a7e5fe2c7b","verdict":"different","reason":"Candidate gives 40, reference 8."}
+{"pid":"25a130af47df","verdict":"different","reason":"Candidate says the store must be light and does not conclude Leo specifically wears the shield."}
+{"pid":"24a750798a01","verdict":"same","reason":"Both give 14."}
+{"pid":"24a5b2cb1348","verdict":"different","reason":"Candidate gives 23 minutes feasible, reference 52 not feasible."}
+{"pid":"24390b954544","verdict":"same","reason":"Both give 6660."}
+{"pid":"240277118d92","verdict":"different","reason":"Candidate names no concrete observation."}
+{"pid":"23b192ac4fc3","verdict":"different","reason":"Candidate gives NaN, reference 8."}
+{"pid":"23a1810d0c67","verdict":"different","reason":"Candidate gives 16 days with no verdict, reference 7 and order today."}
+{"pid":"23966cc2dac6","verdict":"different","reason":"Candidate gives 1392, reference 2568 hours."}
+{"pid":"2385232ecfc3","verdict":"different","reason":"Candidate gives 6 days and order today, reference 10 and wait."}
+{"pid":"237cff2bae5d","verdict":"different","reason":"Candidate gives 3 days and order today, reference 16 and wait."}
+{"pid":"23616543cda0","verdict":"same","reason":"Both give 33."}
+{"pid":"234c8dd1c826","verdict":"different","reason":"Candidate states both that a path exists and that none exists."}
+{"pid":"231be3d827fa","verdict":"different","reason":"Candidate says yes, reference no."}
+{"pid":"230b5f7663a2","verdict":"same","reason":"Both conclude Leo must wear the shield."}
+{"pid":"22d1c96513f3","verdict":"different","reason":"Candidate gives 11.67, reference 8.75."}
+{"pid":"22cec77f9acd","verdict":"different","reason":"Candidate selects ABC, reference AB, AC, BC."}
+{"pid":"22c50eb4c87d","verdict":"same","reason":"Both say neither attempt succeeds."}
+{"pid":"2297f59082fa","verdict":"same","reason":"Both give 6 days and order today."}
+{"pid":"225a461124a1","verdict":"same","reason":"Both say a path exists."}
+{"pid":"2218d05d3b19","verdict":"same","reason":"Both give 77."}
+{"pid":"221054a79bc2","verdict":"same","reason":"Both give 58 minutes, feasible."}
+{"pid":"21e98a1625d4","verdict":"different","reason":"Candidate gives 8100, reference 960 minutes."}
+{"pid":"21da2718139a","verdict":"different","reason":"Candidate gives 6, reference 10."}
+{"pid":"219d20fa2aa2","verdict":"unclear","reason":"Candidate says only Failure without naming which attempts fail."}
+{"pid":"219519e4a140","verdict":"same","reason":"Both give 44."}
+{"pid":"2164d6b90d0a","verdict":"different","reason":"Candidate says no coalitions, reference AB and AC."}
+{"pid":"213d00976427","verdict":"same","reason":"Both give 12."}
+{"pid":"211256b0b8c7","verdict":"different","reason":"Candidate gives 8, reference 66."}
+{"pid":"20b79c27f637","verdict":"different","reason":"Candidate gives 262, reference 250."}
+{"pid":"20a52101e4f8","verdict":"different","reason":"Candidate gives 4, reference 77."}
+{"pid":"20940343c7c4","verdict":"same","reason":"Both conclude Sol must wear the shield."}
+{"pid":"206351bc6a00","verdict":"different","reason":"Candidate gives 32, reference 22."}
+{"pid":"20604e7b94b6","verdict":"different","reason":"Candidate gives 13.86, reference 2."}
+{"pid":"204781c1f121","verdict":"different","reason":"Candidate gives a contradictory rationale, not the risk of a smaller part."}
+{"pid":"20191903b89f","verdict":"different","reason":"Candidate gives 15, reference 14."}
+{"pid":"1fd724b04850","verdict":"same","reason":"Both select AB and AC."}
+{"pid":"1fb8c83b04fe","verdict":"same","reason":"Candidate 9.3 rounds to the reference 9."}
+{"pid":"1fa69734ac05","verdict":"different","reason":"Candidate calls the minimum information a shared observation, conflicting with the reference."}
+{"pid":"1f9d0ab7a3dc","verdict":"same","reason":"Both give 7."}
+{"pid":"1f4f309740e1","verdict":"same","reason":"Both give 55 minutes, not feasible."}
+{"pid":"1f03e1fecb4c","verdict":"different","reason":"Candidate says no, reference yes."}
+{"pid":"1eab5a45350c","verdict":"different","reason":"Candidate addresses only Friday, missing Monday."}
+{"pid":"1e8aaab3c6fa","verdict":"different","reason":"Candidate gives 24, reference 74."}
+{"pid":"1e5134a58705","verdict":"different","reason":"Candidate gives 22 with no verdict, reference 17 and wait."}
+{"pid":"1e374ca21aa4","verdict":"different","reason":"Candidate gives 49, reference 16."}
+{"pid":"1e19c345a976","verdict":"same","reason":"Both give 11 days and order can wait."}
+{"pid":"1db7ed002e4b","verdict":"different","reason":"Candidate says order must be placed today conditionally, reference can wait."}
+{"pid":"1db659a4dee7","verdict":"different","reason":"Candidate gives 10, reference 6."}
+{"pid":"1da4750fc740","verdict":"different","reason":"Candidate selects AC only, reference AB, AC, BC."}
+{"pid":"1da42ea6c390","verdict":"different","reason":"Candidate omits the completion time of 52 minutes."}
+{"pid":"1d869db82ac6","verdict":"different","reason":"Candidate gives NaN, reference 60."}
+{"pid":"1d5a169b1162","verdict":"same","reason":"Both give 70 minutes, feasible."}
+{"pid":"1d415fbbfbbe","verdict":"different","reason":"Candidate gives 32 minutes feasible, reference 50 not feasible."}
+{"pid":"1ca1ee8a74f3","verdict":"different","reason":"Candidate gives 40, reference 24."}
+{"pid":"1c94e9cc0582","verdict":"same","reason":"Both say neither attempt succeeds."}
+{"pid":"1c148b8f7a1d","verdict":"different","reason":"Candidate says both succeed, reference neither."}
+{"pid":"1c08f6c074bd","verdict":"different","reason":"Candidate gives 18, reference 19."}
+{"pid":"1c051834957d","verdict":"different","reason":"Candidate gives 8 days and order today, reference 7 and wait."}
+{"pid":"1bf252f7f3e0","verdict":"different","reason":"Candidate selects BC, reference A."}
+{"pid":"1bc81caff3b6","verdict":"different","reason":"Candidate gives 24, reference 35."}
+{"pid":"1b9b5a9c51a8","verdict":"different","reason":"Candidate gives 150, reference 138."}
+{"pid":"1b2ae318c085","verdict":"different","reason":"Candidate gives no concrete coalitions."}
+{"pid":"1b2a32467cd8","verdict":"different","reason":"Candidate gives 528, reference 35."}
+{"pid":"1b1bdd359697","verdict":"different","reason":"Candidate gives 48, reference 16."}
+{"pid":"1afe09ecf409","verdict":"different","reason":"Candidate gives 68, reference 216 hours."}
+{"pid":"1ad4f95bf733","verdict":"same","reason":"Both give 17."}
+{"pid":"19fb8dffefc9","verdict":"different","reason":"Candidate gives 78, reference 3."}
+{"pid":"198e0fbe620a","verdict":"different","reason":"Candidate selects AB only, reference AB, AC, BC."}
+{"pid":"1985278b8d43","verdict":"different","reason":"Candidate says both succeed, reference neither."}
+{"pid":"18ff5c9e786e","verdict":"same","reason":"Same coalitions AB, AC, BC with the same seats."}
+{"pid":"1827dcfc3dc8","verdict":"same","reason":"Both give 14."}
+{"pid":"17ecf53d4b59","verdict":"different","reason":"Candidate gives 81, reference 5."}
+{"pid":"17e4945bb814","verdict":"different","reason":"Candidate gives 15.33, reference 14."}
+{"pid":"1771c3023314","verdict":"same","reason":"Both give 2."}
+{"pid":"176a0d157e95","verdict":"different","reason":"Candidate gives 194, reference 8."}
+{"pid":"170125dd782e","verdict":"different","reason":"Candidate selects ABC or none, reference A."}
+{"pid":"16e43d18a195","verdict":"different","reason":"Candidate gives 81, reference 90."}
+{"pid":"16dee5a30d6e","verdict":"same","reason":"Same coalitions AB, AC, BC with the same seats."}
+{"pid":"16a7abd44945","verdict":"unclear","reason":"Candidate restates the rules without explicitly concluding Sam wears the shield."}
+{"pid":"167a88749870","verdict":"different","reason":"Candidate gives 130, reference 4."}
+{"pid":"16041ccbd258","verdict":"same","reason":"Both give 40."}
+{"pid":"15ca866c1bf5","verdict":"same","reason":"Same coalitions AB, AC, BC with the same seats."}
+{"pid":"157e71fb246e","verdict":"different","reason":"Candidate gives 33, reference 27."}
+{"pid":"1568294e800f","verdict":"different","reason":"Candidate gives 85 days and order today, reference 16 and wait."}
+{"pid":"1566820e7263","verdict":"same","reason":"Both give 130."}
+{"pid":"1550be3417ab","verdict":"different","reason":"Candidate gives 483, reference 18."}
+{"pid":"152f3929e181","verdict":"different","reason":"Candidate gives 2, reference 4."}
+{"pid":"1528c03b9bd8","verdict":"different","reason":"Candidate gives 1392, reference 2568."}
+{"pid":"150bf3abc831","verdict":"different","reason":"Candidate selects BC only, reference AB, AC, BC."}
+{"pid":"14ac2149dfe5","verdict":"same","reason":"Both give 5 days and the order need not be placed today."}
+{"pid":"14963a233a86","verdict":"different","reason":"Candidate gives 48, reference 105."}
+{"pid":"148461918112","verdict":"different","reason":"Candidate gives 1281, reference 1."}
+{"pid":"146a3b12a97d","verdict":"different","reason":"Candidate gives 10, reference 8."}
+{"pid":"13ddea3c4417","verdict":"different","reason":"Candidate gives 36, reference 27."}
+{"pid":"13cfbfde80b2","verdict":"different","reason":"Candidate answer is empty."}
+{"pid":"13ce43d0c2b1","verdict":"different","reason":"Candidate gives 6, reference 2."}
+{"pid":"1375bc83fd1f","verdict":"same","reason":"Both give 8."}
+{"pid":"13362f699bfa","verdict":"same","reason":"Both conclude Leo must wear the shield."}
+{"pid":"133592289bb0","verdict":"different","reason":"Candidate says order today, reference can wait."}
+{"pid":"13147fb0b052","verdict":"different","reason":"Candidate gives 2.08, reference 1200 hours."}
+{"pid":"13082abdf203","verdict":"same","reason":"Both give 24."}
+{"pid":"1307b93dfda0","verdict":"same","reason":"Both give 40 minutes, not feasible."}
+{"pid":"128a2e4ba69c","verdict":"different","reason":"Candidate gives 16 days and order today, reference 15 and wait."}
+{"pid":"1241a3ae9788","verdict":"different","reason":"Candidate names no discriminating observation."}
+{"pid":"121ba74d9f53","verdict":"unclear","reason":"Candidate restates the rules without explicitly concluding Omar wears the shield."}
+{"pid":"121b9706a450","verdict":"different","reason":"Candidate omits the values of B, D and E."}
+{"pid":"112555d3ed97","verdict":"same","reason":"Both give 7 per part."}
+{"pid":"10f942201514","verdict":"different","reason":"Candidate does not decode 5-5-2."}
+{"pid":"107f942543f2","verdict":"unclear","reason":"Candidate states a conclusion loosely matching the no-vibration check."}
+{"pid":"1040b4327e7c","verdict":"different","reason":"Candidate says order today, reference can wait."}
+{"pid":"0feed79f60de","verdict":"different","reason":"Candidate gives 60 minutes, reference 70."}
+{"pid":"0fdfa354fe10","verdict":"different","reason":"Candidate gives 20, reference 6.67."}
+{"pid":"0fccbe550687","verdict":"different","reason":"Candidate says attempt 1 succeeds, reference neither."}
+{"pid":"0f7dd73c9684","verdict":"same","reason":"Same coalitions AB and AC with the same seats."}
+{"pid":"0f2bad8222fe","verdict":"different","reason":"Candidate gives 24, reference 12."}
+{"pid":"0f18833bcd4a","verdict":"different","reason":"Candidate gives 4, reference 5."}
+{"pid":"0efd7c1f5497","verdict":"different","reason":"Candidate gives 29.5, reference 16."}
+{"pid":"0eb8e57b5be9","verdict":"different","reason":"Candidate gives no concrete coalitions."}
+{"pid":"0e99044a968d","verdict":"different","reason":"Candidate gives NaN, reference 5."}
+{"pid":"0e673309ae16","verdict":"different","reason":"Candidate answers a crate-count question with a NaN remainder."}
+{"pid":"0e5a28089a9f","verdict":"different","reason":"Candidate gives 19 days and order today, reference 18 and wait."}
+{"pid":"0e2b34e04991","verdict":"unclear","reason":"Candidate says the apprentice wears shields without naming Sol."}
+{"pid":"0d7926cd342a","verdict":"same","reason":"Both give 48."}
+{"pid":"0d3cad506a4f","verdict":"different","reason":"Candidate gives 11, reference 46."}
+{"pid":"0ccba11d7957","verdict":"different","reason":"Candidate gives NaN, reference 164."}
+{"pid":"0c7289e3e450","verdict":"different","reason":"Candidate gives 28.5, reference 17."}
+{"pid":"0c629d464f1a","verdict":"different","reason":"Candidate selects BC only, reference AB, AC, BC."}
+{"pid":"0c5a2e1bb048","verdict":"same","reason":"Both give 77."}
+{"pid":"0c43edbd14fe","verdict":"different","reason":"Candidate gives 0.50, reference 288 hours."}
+{"pid":"0c21beeded72","verdict":"different","reason":"Candidate gives 8 days and order today, reference 7 and wait."}
+{"pid":"0c10545a6ae1","verdict":"different","reason":"Candidate gives 192, reference 8."}
+{"pid":"0be575d5e252","verdict":"different","reason":"Candidate gives 26.14, reference 1."}
+{"pid":"0bd022a5f683","verdict":"different","reason":"Candidate gives 171 days and order today, reference 18 and wait."}
+{"pid":"0bc68e82f5bb","verdict":"same","reason":"Both give 186."}
+{"pid":"0bb0974e6dc3","verdict":"different","reason":"Candidate gives 144, reference 624 hours."}
+{"pid":"0baa28efeb9c","verdict":"same","reason":"Both give 17."}
+{"pid":"0b8403c0af12","verdict":"same","reason":"Both conclude Harun must wear the shield."}
+{"pid":"0b78377452bb","verdict":"different","reason":"Candidate gives 76, reference 186."}
+{"pid":"0b53edd78801","verdict":"same","reason":"Same coalitions AB, AC, BC with the same seats."}
+{"pid":"0b5309dfaf6a","verdict":"different","reason":"Candidate gives mean 25, reference 8.75."}
+{"pid":"0af42e8f469d","verdict":"different","reason":"Candidate gives 350, reference 170."}
+{"pid":"0aeb1c40259b","verdict":"same","reason":"Both conclude Leo wears the shield."}
+{"pid":"0ad190d301a6","verdict":"different","reason":"Candidate names no concrete observation."}
+{"pid":"0ab4fd57fef9","verdict":"same","reason":"Both give 34."}
+{"pid":"0a1bec852d23","verdict":"different","reason":"Candidate says Leo may skip the shield, reference Leo wears it."}
+{"pid":"09d62e932010","verdict":"different","reason":"Candidate says gold is certainly VIP, reference cannot know."}
+{"pid":"09953e8fae3f","verdict":"different","reason":"Candidate gives 21, reference 45."}
+{"pid":"098313dc0317","verdict":"same","reason":"Both give 22."}
+{"pid":"095c064e4986","verdict":"different","reason":"Candidate says no, reference yes."}
+{"pid":"095ad99f91bc","verdict":"different","reason":"Candidate says order today, reference can wait."}
+{"pid":"091cc07a6a66","verdict":"different","reason":"Candidate gives 56, reference 44."}
+{"pid":"09190409be76","verdict":"different","reason":"Candidate gives 40 minutes, reference 58."}
+{"pid":"08cbbd5d3fc5","verdict":"different","reason":"Candidate gives 7080, reference 2340 minutes."}
+{"pid":"08aac9d585c7","verdict":"same","reason":"Both conclude Leo must wear the shield."}
+{"pid":"08a5fab85f29","verdict":"same","reason":"Both give 90."}
+{"pid":"085fd72661ad","verdict":"same","reason":"Both give 18."}
+{"pid":"085d2929560f","verdict":"different","reason":"Candidate adds ABC to AB and AC."}
+{"pid":"083e0da796b9","verdict":"different","reason":"Candidate gives 39 minutes feasible, reference 52 not feasible."}
+{"pid":"07df5a0b7b67","verdict":"same","reason":"Both conclude Sam must wear the shield."}
+{"pid":"07c3ac1631bd","verdict":"different","reason":"Candidate selects AB only, reference AB, AC, BC."}
+{"pid":"079e85b5ec74","verdict":"different","reason":"Candidate gives 22 days and order today, reference 21 and wait."}
+{"pid":"0763993abd8e","verdict":"different","reason":"Candidate gives 2-5-7, reference green-green-red."}
+{"pid":"075f4fd9b950","verdict":"same","reason":"Both give 7."}
+{"pid":"06d295b149ec","verdict":"different","reason":"Candidate leaves D and E null and omits the Rule 4 verdict."}
+{"pid":"06c910cf90dd","verdict":"different","reason":"Candidate gives 34, reference 17."}
+{"pid":"063ca5ba4a84","verdict":"different","reason":"Candidate gives 43, reference 93."}
+{"pid":"061c98541bb6","verdict":"different","reason":"Candidate gives 23.5, reference 34."}
+{"pid":"05e49401640a","verdict":"unclear","reason":"Candidate says No tickets, unclear whether it means no path."}
+{"pid":"0513720c9e77","verdict":"same","reason":"Both give 15 days and no order needed today."}
+{"pid":"050f1bf6b411","verdict":"same","reason":"Both select A."}
+{"pid":"0481b427b447","verdict":"different","reason":"Candidate gives 56 feasible, reference 59 not feasible."}
+{"pid":"04479bc90dd5","verdict":"same","reason":"Both give 2208."}
+{"pid":"03d7d4f9dc79","verdict":"different","reason":"Candidate gives 7, reference 2."}
+{"pid":"03be8bfb85c1","verdict":"same","reason":"Same coalitions AB, AC, BC with the same seats."}
+{"pid":"0352c8623c2e","verdict":"different","reason":"Candidate gives 2 days with no verdict, reference 5 and order today."}
+{"pid":"0344b19cb681","verdict":"different","reason":"Candidate gives 176, reference 6."}
+{"pid":"032699d96d8c","verdict":"same","reason":"Both give 56."}
+{"pid":"02a55899512c","verdict":"same","reason":"Both give 16."}
+{"pid":"02a50ad34b6e","verdict":"different","reason":"Candidate gives 0.29, reference 2."}
+{"pid":"02536261ccc5","verdict":"different","reason":"Candidate gives 440, reference 2."}
+{"pid":"020fd3fe6cfd","verdict":"different","reason":"Candidate gives 38, reference 29."}
+{"pid":"01defd7a0ee4","verdict":"different","reason":"Candidate selects AB only, reference AB and AC."}
+{"pid":"01c70a7f7fa1","verdict":"same","reason":"Both give 11."}
+{"pid":"0198b2b38e95","verdict":"different","reason":"Candidate gives 17200, reference 8."}
+{"pid":"017ebd4c2d98","verdict":"different","reason":"Candidate gives 12, reference 24."}
+{"pid":"0125561aede9","verdict":"different","reason":"Candidate gives 30, reference 19."}
+{"pid":"00ad0fd09c7c","verdict":"same","reason":"Both give 4."}
+{"pid":"00987117367d","verdict":"different","reason":"Candidate gives 60, reference 12."}
+{"pid":"00921ea895e3","verdict":"different","reason":"Candidate gives 43, reference 93."}

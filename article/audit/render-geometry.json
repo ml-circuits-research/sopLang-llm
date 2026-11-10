@@ -1,32 +1,26 @@
 [
   {
     "manuscript": "01-machine-learning",
-    "pages": 11,
-    "extractedWords": 4104,
+    "pages": 20,
+    "extractedWords": 9532,
     "clippedTextDetected": false
   },
   {
     "manuscript": "02-informatica",
-    "pages": 5,
-    "extractedWords": 3005,
+    "pages": 8,
+    "extractedWords": 5915,
     "clippedTextDetected": false
   },
   {
     "manuscript": "03-empirical-software-engineering",
-    "pages": 9,
-    "extractedWords": 3486,
+    "pages": 11,
+    "extractedWords": 5751,
     "clippedTextDetected": false
   },
   {
-    "manuscript": "04-open-research-europe",
+    "manuscript": "04-ai-and-ethics",
     "pages": 9,
-    "extractedWords": 3184,
-    "clippedTextDetected": false
-  },
-  {
-    "manuscript": "05-ai-and-ethics",
-    "pages": 8,
-    "extractedWords": 3457,
+    "extractedWords": 5077,
     "clippedTextDetected": false
   }
 ]

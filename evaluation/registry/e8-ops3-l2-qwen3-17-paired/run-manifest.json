@@ -1,0 +1,18 @@
+{
+  "experiment": "e8-ops3-l2-qwen3-17-paired",
+  "gguf": "training/checkpoints/base-qwen3-17b-f16.gguf",
+  "ggufBytes": 4069679360,
+  "itemSource": "evaluation/registry/items-e2/paired/L2.jsonl",
+  "itemCount": 45,
+  "mode": "ops",
+  "shots": 3,
+  "perGroup": null,
+  "samples": 1,
+  "temperature": 0,
+  "seed": 20260928,
+  "maxTokens": 768,
+  "noThink": true,
+  "systemPromptSha256": "bd4eecf6d9791315e7e7f9471f447f1c3cb3e3b1383301fbc77675ccbaccd1d1",
+  "resumedWith": 28,
+  "updatedAt": "2026-09-29T01:02:46.630Z"
+}

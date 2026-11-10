@@ -1,0 +1,22 @@
+{
+  "experiment": "e8-js1-l0-coder05",
+  "items": 75,
+  "records": 75,
+  "complete": true,
+  "groups": {
+    "held-out:L0": {
+      "records": 55,
+      "exact": 4,
+      "value": 36,
+      "executed": 51,
+      "missing": 0
+    },
+    "trained-control:L0": {
+      "records": 20,
+      "exact": 3,
+      "value": 16,
+      "executed": 20,
+      "missing": 0
+    }
+  }
+}

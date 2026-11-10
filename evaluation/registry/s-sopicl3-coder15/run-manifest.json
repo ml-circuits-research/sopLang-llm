@@ -1,0 +1,18 @@
+{
+  "experiment": "s-sopicl3-coder15",
+  "gguf": "training/checkpoints/base-1.5b-f16.gguf",
+  "ggufBytes": 3093669600,
+  "itemSource": "slice:holdout",
+  "itemCount": 115,
+  "mode": "sop-icl",
+  "shots": 3,
+  "perGroup": 5,
+  "samples": 1,
+  "temperature": 0,
+  "seed": 20260928,
+  "maxTokens": 1536,
+  "noThink": false,
+  "systemPromptSha256": "bef332e1699b7955cac95335924e671a6e24dcdaac41e421a96c3d0bded95646",
+  "resumedWith": 0,
+  "updatedAt": "2026-09-28T21:12:43.522Z"
+}

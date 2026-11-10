@@ -1,0 +1,22 @@
+{
+  "source": "../manuscripts/04-ai-and-ethics.md",
+  "output": "../docs/04-ai-and-ethics.docx",
+  "bibliography": "../evidence/bibliography.json",
+  "journal": "AI and Ethics",
+  "shortTitle": "Wanted results and author responsibility in automated research",
+  "fontSize": 10,
+  "citationStyle": "springer-numbered",
+  "lineSpacing": 276,
+  "maxFigureHeight": 7800,
+  "keepTablesTogether": true,
+  "headerRight": "Review manuscript",
+  "captionStyle": "springer",
+  "keepReferencesTogether": true,
+  "tableWeights": {
+    "When|Record|What it said or did": [
+      1.4,
+      1.3,
+      3.0
+    ]
+  }
+}

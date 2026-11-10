@@ -1,0 +1,532 @@
+{
+  "e2": {
+    "e2-l0-exp012": {
+      "held-out": {
+        "n": 55,
+        "exact": 36,
+        "strict": 41,
+        "executed": 45
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 15,
+        "strict": 20,
+        "executed": 20
+      }
+    },
+    "e2-l0-exp013": {
+      "held-out": {
+        "n": 55,
+        "exact": 50,
+        "strict": 50,
+        "executed": 52
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 20,
+        "strict": 20,
+        "executed": 20
+      }
+    },
+    "e2-l0-exp021": {
+      "held-out": {
+        "n": 55,
+        "exact": 55,
+        "strict": 55,
+        "executed": 55
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 20,
+        "strict": 20,
+        "executed": 20
+      }
+    },
+    "e2-l1-exp012": {
+      "held-out": {
+        "n": 55,
+        "exact": 16,
+        "strict": 18,
+        "executed": 40
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 6,
+        "strict": 9,
+        "executed": 15
+      }
+    },
+    "e2-l1-exp013": {
+      "held-out": {
+        "n": 55,
+        "exact": 12,
+        "strict": 41,
+        "executed": 47
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 10,
+        "strict": 18,
+        "executed": 18
+      }
+    },
+    "e2-l1-exp021": {
+      "held-out": {
+        "n": 55,
+        "exact": 32,
+        "strict": 42,
+        "executed": 50
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 14,
+        "strict": 16,
+        "executed": 19
+      }
+    },
+    "e2-l2-exp012": {
+      "held-out": {
+        "n": 55,
+        "exact": 13,
+        "strict": 14,
+        "executed": 34
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 8,
+        "strict": 11,
+        "executed": 18
+      }
+    },
+    "e2-l2-exp013": {
+      "held-out": {
+        "n": 55,
+        "exact": 8,
+        "strict": 17,
+        "executed": 37
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 3,
+        "strict": 7,
+        "executed": 17
+      }
+    },
+    "e2-l2-exp021": {
+      "held-out": {
+        "n": 55,
+        "exact": 31,
+        "strict": 37,
+        "executed": 51
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 14,
+        "strict": 16,
+        "executed": 19
+      }
+    }
+  },
+  "e3": {
+    "e3-original-exp017": {
+      "held-out-scheduling": {
+        "n": 15,
+        "exact": 0,
+        "strict": 0,
+        "executed": 4
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "exact": 0,
+        "strict": 0,
+        "executed": 0
+      }
+    },
+    "e3-original-exp021": {
+      "held-out-scheduling": {
+        "n": 15,
+        "exact": 0,
+        "strict": 15,
+        "executed": 15
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "exact": 15,
+        "strict": 15,
+        "executed": 15
+      }
+    },
+    "e3-original-exp025": {
+      "held-out-scheduling": {
+        "n": 15,
+        "exact": 0,
+        "strict": 8,
+        "executed": 8
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "exact": 7,
+        "strict": 7,
+        "executed": 13
+      }
+    },
+    "e3-original-exp027": {
+      "held-out-scheduling": {
+        "n": 15,
+        "exact": 0,
+        "strict": 0,
+        "executed": 1
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "exact": 3,
+        "strict": 15,
+        "executed": 15
+      }
+    },
+    "e3-procedural-exp017": {
+      "held-out-scheduling": {
+        "n": 15,
+        "exact": 0,
+        "strict": 0,
+        "executed": 1
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "exact": 0,
+        "strict": 0,
+        "executed": 1
+      }
+    },
+    "e3-procedural-exp021": {
+      "held-out-scheduling": {
+        "n": 15,
+        "exact": 0,
+        "strict": 15,
+        "executed": 15
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "exact": 15,
+        "strict": 15,
+        "executed": 15
+      }
+    },
+    "e3-procedural-exp025": {
+      "held-out-scheduling": {
+        "n": 15,
+        "exact": 0,
+        "strict": 15,
+        "executed": 15
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "exact": 15,
+        "strict": 15,
+        "executed": 15
+      }
+    },
+    "e3-procedural-exp027": {
+      "held-out-scheduling": {
+        "n": 15,
+        "exact": 0,
+        "strict": 15,
+        "executed": 15
+      },
+      "held-out-coalition": {
+        "n": 15,
+        "exact": 15,
+        "strict": 15,
+        "executed": 15
+      }
+    }
+  },
+  "e8": {
+    "e8-js1-l0-coder05": {
+      "held-out": {
+        "n": 55,
+        "exact": 4,
+        "strict": 36,
+        "executed": 51
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 3,
+        "strict": 16,
+        "executed": 20
+      }
+    },
+    "e8-js1-l0-coder15": {
+      "held-out": {
+        "n": 55,
+        "exact": 18,
+        "strict": 50,
+        "executed": 55
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 5,
+        "strict": 20,
+        "executed": 20
+      }
+    },
+    "e8-js1-l0-qwen3-17": {
+      "held-out": {
+        "n": 55,
+        "exact": 9,
+        "strict": 39,
+        "executed": 51
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 8,
+        "strict": 20,
+        "executed": 20
+      }
+    },
+    "e8-js1-l2-coder05": {
+      "held-out": {
+        "n": 55,
+        "exact": 2,
+        "strict": 20,
+        "executed": 36
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 0,
+        "strict": 3,
+        "executed": 13
+      }
+    },
+    "e8-js1-l2-coder15": {
+      "held-out": {
+        "n": 55,
+        "exact": 8,
+        "strict": 33,
+        "executed": 55
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 4,
+        "strict": 13,
+        "executed": 20
+      }
+    },
+    "e8-js1-l2-qwen3-17": {
+      "held-out": {
+        "n": 55,
+        "exact": 8,
+        "strict": 47,
+        "executed": 55
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 5,
+        "strict": 20,
+        "executed": 20
+      }
+    },
+    "e8-ops3-l0-coder05": {
+      "held-out": {
+        "n": 55,
+        "exact": 19,
+        "strict": 19,
+        "executed": 29
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 5,
+        "strict": 5,
+        "executed": 10
+      }
+    },
+    "e8-ops3-l0-coder15": {
+      "held-out": {
+        "n": 55,
+        "exact": 49,
+        "strict": 50,
+        "executed": 52
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 15,
+        "strict": 19,
+        "executed": 20
+      }
+    },
+    "e8-ops3-l0-qwen3-17": {
+      "held-out": {
+        "n": 55,
+        "exact": 44,
+        "strict": 49,
+        "executed": 49
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 12,
+        "strict": 17,
+        "executed": 20
+      }
+    },
+    "e8-ops3-l2-coder05": {
+      "held-out": {
+        "n": 55,
+        "exact": 10,
+        "strict": 11,
+        "executed": 29
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 2,
+        "strict": 2,
+        "executed": 15
+      }
+    },
+    "e8-ops3-l2-coder15": {
+      "held-out": {
+        "n": 55,
+        "exact": 12,
+        "strict": 13,
+        "executed": 36
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 6,
+        "strict": 8,
+        "executed": 17
+      }
+    },
+    "e8-ops3-l2-qwen3-17": {
+      "held-out": {
+        "n": 55,
+        "exact": 25,
+        "strict": 25,
+        "executed": 38
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 14,
+        "strict": 15,
+        "executed": 20
+      }
+    },
+    "e8-sopicl3-l0-coder05": {
+      "held-out": {
+        "n": 55,
+        "exact": 0,
+        "strict": 6,
+        "executed": 46
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 1,
+        "strict": 11,
+        "executed": 20
+      }
+    },
+    "e8-sopicl3-l0-coder15": {
+      "held-out": {
+        "n": 55,
+        "exact": 4,
+        "strict": 19,
+        "executed": 32
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 4,
+        "strict": 11,
+        "executed": 12
+      }
+    },
+    "e8-sopicl3-l0-qwen3-17": {
+      "held-out": {
+        "n": 55,
+        "exact": 5,
+        "strict": 38,
+        "executed": 47
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 7,
+        "strict": 19,
+        "executed": 19
+      }
+    },
+    "e8-sopicl3-l2-coder05": {
+      "held-out": {
+        "n": 55,
+        "exact": 0,
+        "strict": 17,
+        "executed": 53
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 0,
+        "strict": 10,
+        "executed": 19
+      }
+    },
+    "e8-sopicl3-l2-coder15": {
+      "held-out": {
+        "n": 55,
+        "exact": 0,
+        "strict": 1,
+        "executed": 10
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 0,
+        "strict": 1,
+        "executed": 1
+      }
+    },
+    "e8-sopicl3-l2-qwen3-17": {
+      "held-out": {
+        "n": 55,
+        "exact": 0,
+        "strict": 8,
+        "executed": 20
+      },
+      "trained-control": {
+        "n": 20,
+        "exact": 0,
+        "strict": 6,
+        "executed": 7
+      }
+    }
+  },
+  "e9": {
+    "e9-ft-exp021": {
+      "withheld type": {
+        "n": 40,
+        "exact": 0,
+        "strict": 5,
+        "executed": 30
+      }
+    },
+    "e9-ft-exp027": {
+      "withheld type": {
+        "n": 40,
+        "exact": 0,
+        "strict": 4,
+        "executed": 37
+      }
+    },
+    "e9-js1-coder15": {
+      "withheld type": {
+        "n": 40,
+        "exact": 0,
+        "strict": 9,
+        "executed": 40
+      }
+    },
+    "e9-js1-qwen3-17": {
+      "withheld type": {
+        "n": 40,
+        "exact": 0,
+        "strict": 33,
+        "executed": 40
+      }
+    }
+  }
+}

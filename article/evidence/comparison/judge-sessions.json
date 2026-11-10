@@ -1,0 +1,103 @@
+{
+  "note": "Judge sessions of the evaluation-only comparisons, extracted on 2026-09-29 from the workflow run records of the session that ran them. Each label names the judge (A or B) and the chunk of judge-pairs-<n>.jsonl it judged.",
+  "sessions": [
+    {
+      "workflowRun": "wwogdg4zj",
+      "label": "judge-A-0",
+      "agentId": "aced6d99b062fa851",
+      "model": "claude-opus-5-5",
+      "startedAtMs": 1790640790362
+    },
+    {
+      "workflowRun": "wwogdg4zj",
+      "label": "judge-A-1",
+      "agentId": "acf7873da66c4c593",
+      "model": "claude-opus-5-5",
+      "startedAtMs": 1790640790363
+    },
+    {
+      "workflowRun": "wwogdg4zj",
+      "label": "judge-A-2",
+      "agentId": "ab501f43c9ddbb122",
+      "model": "claude-opus-5-5",
+      "startedAtMs": 1790640790364
+    },
+    {
+      "workflowRun": "wwogdg4zj",
+      "label": "judge-A-3",
+      "agentId": "af847d7cf552b1764",
+      "model": "claude-opus-5-5",
+      "startedAtMs": 1790640790365
+    },
+    {
+      "workflowRun": null,
+      "label": "judge-A-4",
+      "agentId": "a0546dc42e034370f",
+      "model": "claude-opus-5-5",
+      "startedAtMs": null
+    },
+    {
+      "workflowRun": "wb3iy1wxf",
+      "label": "judge-A-5",
+      "agentId": "abb98cdf1b9fd4024",
+      "model": "claude-opus-5-5",
+      "startedAtMs": 1790654694530
+    },
+    {
+      "workflowRun": "wb3iy1wxf",
+      "label": "judge-A-6",
+      "agentId": "a15e7ced45f133352",
+      "model": "claude-opus-5-5",
+      "startedAtMs": 1790654694531
+    },
+    {
+      "workflowRun": "wwogdg4zj",
+      "label": "judge-B-0",
+      "agentId": "aef6dd64989c65c4f",
+      "model": "claude-opus-5-5",
+      "startedAtMs": 1790640790363
+    },
+    {
+      "workflowRun": "wwogdg4zj",
+      "label": "judge-B-1",
+      "agentId": "ad99543b171b88982",
+      "model": "claude-opus-5-5",
+      "startedAtMs": 1790640790364
+    },
+    {
+      "workflowRun": "wwogdg4zj",
+      "label": "judge-B-2",
+      "agentId": "ac54cd7fa3106841b",
+      "model": "claude-opus-5-5",
+      "startedAtMs": 1790640790364
+    },
+    {
+      "workflowRun": "wwogdg4zj",
+      "label": "judge-B-3",
+      "agentId": "ad1b3fcceb10f6d52",
+      "model": "claude-opus-5-5",
+      "startedAtMs": 1790640790365
+    },
+    {
+      "workflowRun": null,
+      "label": "judge-B-4",
+      "agentId": "aea90f48b06e99467",
+      "model": "claude-opus-5-5",
+      "startedAtMs": null
+    },
+    {
+      "workflowRun": "wb3iy1wxf",
+      "label": "judge-B-5",
+      "agentId": "ad61ecbd5e1a67589",
+      "model": "claude-opus-5-5",
+      "startedAtMs": 1790654694531
+    },
+    {
+      "workflowRun": "wb3iy1wxf",
+      "label": "judge-B-6",
+      "agentId": "abd4594a5f0ed591a",
+      "model": "claude-opus-5-5",
+      "startedAtMs": 1790654694531
+    }
+  ]
+}

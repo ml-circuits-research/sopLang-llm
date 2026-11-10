@@ -1,0 +1,599 @@
+{
+ "templates": {
+  "js": [
+   {
+    "role": "system",
+    "content": "You solve problems by writing JavaScript. Write the body of one function that computes the answer to the problem and returns it as a short string that states the answer. Use plain JavaScript only: no imports, no input or output, no external data. Reply with exactly one ```javascript code block that contains the function body and ends with a return statement."
+   },
+   {
+    "role": "user",
+    "content": "The river depot recorded 12, 30, 7, 25 and 41 crates. Please keep only the records above 20, then add the kept records, then add the fixed charge of 5. Report the result in crates."
+   },
+   {
+    "role": "assistant",
+    "content": "```javascript\nconst values = [12, 30, 7, 25, 41];\nconst kept = values.filter((value) => value > 20);\nconst total = kept.reduce((sum, value) => sum + value, 0);\nconst result = total + 5;\nreturn result + \" units.\";\n```"
+   },
+   {
+    "role": "user",
+    "content": "{{STATEMENT}}"
+   }
+  ]
+ },
+ "items": [
+  {
+   "key": "main|js|adult-reasoning/eval/no-knowledge/a-public-counters-opening-hours/492-the-last-ticket-variant-2",
+   "condition": "js",
+   "statement": "Counter hours, Harbour Town: Mon–Thu 09:00–15:00, Friday 09:00–12:00. Last ticket 30 min before closing. Break 11:00–11:20, no tickets.\n\nTess wants a ticket Friday 11:50 and Monday 14:40.\n\nQuestion. Which attempt succeeds?\n"
+  },
+  {
+   "key": "main|js|adult-reasoning/eval/no-knowledge/a-public-counters-opening-hours/493-the-last-ticket-variant-3",
+   "condition": "js",
+   "statement": "Counter hours, Station Quarter: Mon–Thu 09:00–15:00, Friday 09:00–12:00. Last ticket 30 min before closing. Break 11:00–11:20, no tickets.\n\nCara wants a ticket Friday 11:50 and Monday 14:40.\n\nQuestion. Which attempt succeeds?\n"
+  },
+  {
+   "key": "main|js|adult-reasoning/eval/no-knowledge/a-public-counters-opening-hours/496-the-last-ticket-variant-6",
+   "condition": "js",
+   "statement": "Counter hours, Bridge City: Mon–Thu 09:00–15:00, Friday 09:00–12:00. Last ticket 30 min before closing. Break 11:00–11:20, no tickets.\n\nOlga wants a ticket Friday 11:50 and Monday 14:40.\n\nQuestion. Which attempt succeeds?\n"
+  },
+  {
+   "key": "main|js|adult-reasoning/eval/no-knowledge/a-public-counters-opening-hours/498-the-last-ticket-variant-8",
+   "condition": "js",
+   "statement": "Counter hours, Station Quarter: Mon–Thu 09:00–15:00, Friday 09:00–12:00. Last ticket 30 min before closing. Break 11:00–11:20, no tickets.\n\nCara wants a ticket Friday 11:50 and Monday 14:40.\n\nQuestion. Which attempt succeeds?\n"
+  },
+  {
+   "key": "main|js|adult-reasoning/eval/no-knowledge/a-public-counters-opening-hours/500-the-last-ticket-variant-10",
+   "condition": "js",
+   "statement": "Counter hours, Maple Ward: Mon–Thu 09:00–15:00, Friday 09:00–12:00. Last ticket 30 min before closing. Break 11:00–11:20, no tickets.\n\nKara wants a ticket Friday 11:50 and Monday 14:40.\n\nQuestion. Which attempt succeeds?\n"
+  },
+  {
+   "key": "main|js|common-sense/eval/no-knowledge/logical-implications/10.1.9-logical-implications",
+   "condition": "js",
+   "statement": "The model contains exactly these rules: 1. If indicator A is active, B must also be active. 2. If B is active and C is inactive, D must be active. 3. If D is active, E cannot be active. 4. If E is active, A is inactive. In the observed case, A is known to be active and C is known to be inactive.\n\nQuestion. Which values of B, D, and E follow necessarily? Is Rule 4 needed to derive those values in this case, or is it merely compatible with them? Justify each inference by naming the rule used.\n"
+  },
+  {
+   "key": "main|js|common-sense/eval/no-knowledge/logical-implications/2.8.4-logical-implications",
+   "condition": "js",
+   "statement": "The model contains exactly these rules: 1. If indicator A is active, B must also be active. 2. If B is active and C is inactive, D must be active. 3. If D is active, E cannot be active. 4. If E is active, A is inactive. In the observed case, A is known to be active and C is known to be inactive.\n\nQuestion. Which values of B, D, and E follow necessarily? Is Rule 4 needed to derive those values in this case, or is it merely compatible with them? Justify each inference by naming the rule used.\n"
+  },
+  {
+   "key": "main|js|common-sense/eval/no-knowledge/logical-implications/6.10.10-logical-implications",
+   "condition": "js",
+   "statement": "The model contains exactly these rules: 1. If indicator A is active, B must also be active. 2. If B is active and C is inactive, D must be active. 3. If D is active, E cannot be active. 4. If E is active, A is inactive. In the observed case, A is known to be active and C is known to be inactive.\n\nQuestion. Which values of B, D, and E follow necessarily? Is Rule 4 needed to derive those values in this case, or is it merely compatible with them? Justify each inference by naming the rule used.\n"
+  },
+  {
+   "key": "main|js|common-sense/eval/no-knowledge/logical-implications/7.3.9-logical-implications",
+   "condition": "js",
+   "statement": "The model contains exactly these rules: 1. If indicator A is active, B must also be active. 2. If B is active and C is inactive, D must be active. 3. If D is active, E cannot be active. 4. If E is active, A is inactive. In the observed case, A is known to be active and C is known to be inactive.\n\nQuestion. Which values of B, D, and E follow necessarily? Is Rule 4 needed to derive those values in this case, or is it merely compatible with them? Justify each inference by naming the rule used.\n"
+  },
+  {
+   "key": "main|js|common-sense/eval/no-knowledge/logical-implications/9.9.7-logical-implications",
+   "condition": "js",
+   "statement": "The model contains exactly these rules: 1. If indicator A is active, B must also be active. 2. If B is active and C is inactive, D must be active. 3. If D is active, E cannot be active. 4. If E is active, A is inactive. In the observed case, A is known to be active and C is known to be inactive.\n\nQuestion. Which values of B, D, and E follow necessarily? Is Rule 4 needed to derive those values in this case, or is it merely compatible with them? Justify each inference by naming the rule used.\n"
+  },
+  {
+   "key": "main|js|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/10.2.4-dependency-chain-and-join",
+   "condition": "js",
+   "statement": "Five work packages A–E must be completed. A takes 9 minutes. B (16 min) and C (11 min) can start only after A but may then run in parallel. D (18 min) needs both B and C finished. E (8 min) follows D. A final safety or review buffer of 8 minutes is mandatory, and the completion limit is 56 minutes.\n\nQuestion. What is the earliest safe completion time, and does the plan meet the limit?\n"
+  },
+  {
+   "key": "main|js|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/4.7.4-dependency-chain-and-join",
+   "condition": "js",
+   "statement": "Five work packages A–E must be completed. A takes 18 minutes. B (7 min) and C (17 min) can start only after A but may then run in parallel. D (14 min) needs both B and C finished. E (17 min) follows D. A final safety or review buffer of 4 minutes is mandatory, and the completion limit is 78 minutes.\n\nQuestion. What is the earliest safe completion time, and does the plan meet the limit?\n"
+  },
+  {
+   "key": "main|js|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/6.4.4-dependency-chain-and-join",
+   "condition": "js",
+   "statement": "Five work packages A–E must be completed. A takes 6 minutes. B (18 min) and C (16 min) can start only after A but may then run in parallel. D (6 min) needs both B and C finished. E (16 min) follows D. A final safety or review buffer of 6 minutes is mandatory, and the completion limit is 49 minutes.\n\nQuestion. What is the earliest safe completion time, and does the plan meet the limit?\n"
+  },
+  {
+   "key": "main|js|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/7.4.4-dependency-chain-and-join",
+   "condition": "js",
+   "statement": "Five work packages A–E must be completed. A takes 10 minutes. B (14 min) and C (18 min) can start only after A but may then run in parallel. D (8 min) needs both B and C finished. E (16 min) follows D. A final safety or review buffer of 6 minutes is mandatory, and the completion limit is 62 minutes.\n\nQuestion. What is the earliest safe completion time, and does the plan meet the limit?\n"
+  },
+  {
+   "key": "main|js|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/9.8.4-dependency-chain-and-join",
+   "condition": "js",
+   "statement": "Five work packages A–E must be completed. A takes 14 minutes. B (9 min) and C (5 min) can start only after A but may then run in parallel. D (13 min) needs both B and C finished. E (11 min) follows D. A final safety or review buffer of 5 minutes is mandatory, and the completion limit is 46 minutes.\n\nQuestion. What is the earliest safe completion time, and does the plan meet the limit?\n"
+  },
+  {
+   "key": "main|js|logical-reasoning/eval/no-knowledge/two-written-rules-together/100-two-written-rules-together-kalmford-workshop-case-10",
+   "condition": "js",
+   "statement": "Workshop board in Kalmford: Rule One — “Every apprentice wears eye-shields at the grinder.” Rule Two — “The inner store is dark unless the yellow lamp is on.” Sol is an apprentice at the grinder; the yellow lamp is off. Una says Sol may skip the shield because the store is dark. Wes applies each rule to its own object.\n\nQuestion. What do the two rules force?\n"
+  },
+  {
+   "key": "main|js|logical-reasoning/eval/no-knowledge/two-written-rules-together/91-two-written-rules-together-dunwick-workshop-case-1",
+   "condition": "js",
+   "statement": "Workshop board in Dunwick: Rule One — “Every apprentice wears eye-shields at the grinder.” Rule Two — “The inner store is dark unless the yellow lamp is on.” Sam is an apprentice at the grinder; the yellow lamp is off. Tess says Sam may skip the shield because the store is dark. Owen applies each rule to its own object.\n\nQuestion. What do the two rules force?\n"
+  },
+  {
+   "key": "main|js|logical-reasoning/eval/no-knowledge/two-written-rules-together/94-two-written-rules-together-wells-village-workshop-case-4",
+   "condition": "js",
+   "statement": "Workshop board in Wells Village: Rule One — “Every apprentice wears eye-shields at the grinder.” Rule Two — “The inner store is dark unless the yellow lamp is on.” Harun is an apprentice at the grinder; the yellow lamp is off. Iona says Harun may skip the shield because the store is dark. Ruth applies each rule to its own object.\n\nQuestion. What do the two rules force?\n"
+  },
+  {
+   "key": "main|js|logical-reasoning/eval/no-knowledge/two-written-rules-together/95-two-written-rules-together-long-hill-workshop-case-5",
+   "condition": "js",
+   "statement": "Workshop board in Long Hill: Rule One — “Every apprentice wears eye-shields at the grinder.” Rule Two — “The inner store is dark unless the yellow lamp is on.” Leo is an apprentice at the grinder; the yellow lamp is off. Mira says Leo may skip the shield because the store is dark. Quinn applies each rule to its own object.\n\nQuestion. What do the two rules force?\n"
+  },
+  {
+   "key": "main|js|logical-reasoning/eval/no-knowledge/two-written-rules-together/99-two-written-rules-together-east-wharf-workshop-case-9",
+   "condition": "js",
+   "statement": "Workshop board in East Wharf: Rule One — “Every apprentice wears eye-shields at the grinder.” Rule Two — “The inner store is dark unless the yellow lamp is on.” Omar is an apprentice at the grinder; the yellow lamp is off. Pia says Omar may skip the shield because the store is dark. Rafi applies each rule to its own object.\n\nQuestion. What do the two rules force?\n"
+  },
+  {
+   "key": "main|js|mathematical-thinking/eval/knowledge/decoding-with-a-one-to-one-dictionary/38.19-decoding-with-a-one-to-one-dictionary",
+   "condition": "js",
+   "statement": "Using the same dictionary, decode 5-5-2.\n\nReferenced context: The previous problem defines the dictionary red→2, green→5, blue→7.\n"
+  },
+  {
+   "key": "main|js|mathematical-thinking/eval/knowledge/effect-of-an-outlier-on-the-mean/37.12-effect-of-an-outlier-on-the-mean",
+   "condition": "js",
+   "statement": "The data are 4,5,6 with mean 5. We add 20. What is the new mean, and in which direction does it change?\n"
+  },
+  {
+   "key": "main|js|mathematical-thinking/eval/knowledge/missing-value-from-a-mean/37.3-missing-value-from-a-mean",
+   "condition": "js",
+   "statement": "The mean of three numbers is 7. Two of them are 5 and 8. What is the third?\n"
+  },
+  {
+   "key": "main|js|mathematical-thinking/eval/knowledge/the-mean-changes-when-a-value-is-added/37.4-the-mean-changes-when-a-value-is-added",
+   "condition": "js",
+   "statement": "The values 4 and 6 have mean 5. We add the value 10. What is the new mean?\n"
+  },
+  {
+   "key": "main|js|mathematical-thinking/eval/knowledge/two-objects-with-the-same-code/23.11-two-objects-with-the-same-code",
+   "condition": "js",
+   "statement": "We use the code from the previous problem, based only on “large?” and “red?”. We have A=a small red cube and B=a small red sphere. Can this code distinguish them?\n\nReferenced context: The previous problem agrees to write \"yes\" as 1 and \"no\" as 0, asking whether an object is large and whether it is red.\n"
+  },
+  {
+   "key": "main|js|mathematical-thinking/eval/no-knowledge/a-necessary-but-not-sufficient-property/21.17-a-necessary-but-not-sufficient-property",
+   "condition": "js",
+   "statement": "All VIP tickets are gold, but there are also ordinary gold tickets. Thus, being gold is required for a ticket to be VIP, but the gold color does not guarantee that the ticket is VIP. If you see a blue ticket, can it be VIP? If you see a gold ticket, do you know for certain that it is VIP?\n"
+  },
+  {
+   "key": "main|js|mathematical-thinking/eval/no-knowledge/a-required-intermediate-landmark/22.17-a-required-intermediate-landmark",
+   "condition": "js",
+   "statement": "On a grid, the start is (1,1), the library is (1,4), and the target is (3,4). Movement is only horizontal or vertical. A route must pass through the library. What is the minimum number of unit steps?\n"
+  },
+  {
+   "key": "main|js|mathematical-thinking/eval/no-knowledge/compare-two-groups-by-percentage-not-absolute-count/37.22-compare-two-groups-by-percentage-not-absolute-count",
+   "condition": "js",
+   "statement": "Class A has 8 correct answers out of 10. Class B has 15 out of 20. Which has the larger proportion?\n"
+  },
+  {
+   "key": "main|js|mathematical-thinking/eval/no-knowledge/defined-cut-and-choose-division/40.9-defined-cut-and-choose-division",
+   "condition": "js",
+   "statement": "Two people divide a cake. The rule is: the first person cuts it into two pieces, and the second person chooses first. Why does the first person have an incentive to cut two parts that they consider equal?\n"
+  },
+  {
+   "key": "main|js|mathematical-thinking/eval/no-knowledge/plant-growth-rate-as-change-per-day/35.11-plant-growth-rate-as-change-per-day",
+   "condition": "js",
+   "statement": "A plant is 10 cm tall on Monday and 16 cm tall after 3 days. If we assume equal growth each day, how many centimeters per day did it grow?\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-count-double/above-count-double-instance-003",
+   "condition": "js",
+   "statement": "The market depot recorded 5, 4, 41, 13, 5, 18, 40 and 4 sheets. Please keep only the records above 14, then count the kept records, then double it by the factor of 2. Report the result in sheets.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-count-double/above-count-double-instance-004",
+   "condition": "js",
+   "statement": "The market depot recorded 27, 21, 21, 26, 5 and 8 sheets. Please keep only the records above 12, then count the kept records, then double it by the factor of 2. Report the result in sheets.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-count-double/above-count-double-instance-008",
+   "condition": "js",
+   "statement": "The harbour depot recorded 6, 3, 25, 31 and 12 crates. Please keep only the records above 26, then count the kept records, then double it by the factor of 3. Report the result in crates.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-count-double/above-count-double-instance-016",
+   "condition": "js",
+   "statement": "The river depot recorded 30, 28, 11, 39, 13, 32 and 14 tickets. Please keep only the records above 11, then count the kept records, then double it by the factor of 2. Report the result in tickets.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-count-double/above-count-double-instance-021",
+   "condition": "js",
+   "statement": "The hill depot recorded 24, 18, 37, 6, 25, 7, 18 and 39 tickets. Please keep only the records above 12, then count the kept records, then double it by the factor of 3. Report the result in tickets.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-largest-add-rate/above-largest-add-rate-instance-002",
+   "condition": "js",
+   "statement": "The hill depot recorded 13, 19, 34, 16, 24 and 39 sheets. Please keep only the records above 15, then take the largest kept record, then add the fixed charge of 2. Report the result in sheets.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-largest-add-rate/above-largest-add-rate-instance-006",
+   "condition": "js",
+   "statement": "The harbour depot recorded 40, 35, 34, 21 and 11 parts. Please keep only the records above 20, then take the largest kept record, then add the fixed charge of 8. Report the result in parts.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-largest-add-rate/above-largest-add-rate-instance-010",
+   "condition": "js",
+   "statement": "The river depot recorded 41, 11, 12, 30, 17, 23 and 16 tickets. Please keep only the records above 13, then take the largest kept record, then add the fixed charge of 4. Report the result in tickets.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-largest-add-rate/above-largest-add-rate-instance-022",
+   "condition": "js",
+   "statement": "The river depot recorded 32, 5, 40, 27 and 39 litres. Please keep only the records above 27, then take the largest kept record, then add the fixed charge of 6. Report the result in litres.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-largest-add-rate/above-largest-add-rate-instance-034",
+   "condition": "js",
+   "statement": "The harbour depot recorded 6, 7, 33, 3, 20, 5, 4 and 37 crates. Please keep only the records above 11, then take the largest kept record, then add the fixed charge of 7. Report the result in crates.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-third-largest-percent/above-third-largest-percent-instance-006",
+   "condition": "js",
+   "statement": "The north depot recorded 20, 15, 6, 39 and 3 litres. Please keep only the records above 10, then take the third largest kept record, then take 20 percent of it. Report the result in litres.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-third-largest-percent/above-third-largest-percent-instance-011",
+   "condition": "js",
+   "statement": "The river depot recorded 20, 26, 25, 16, 9 and 42 sheets. Please keep only the records above 23, then take the third largest kept record, then take 20 percent of it. Report the result in sheets.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-third-largest-percent/above-third-largest-percent-instance-026",
+   "condition": "js",
+   "statement": "The market depot recorded 15, 15, 16, 37, 9, 18, 31 and 20 sheets. Please keep only the records above 13, then take the third largest kept record, then take 70 percent of it. Report the result in sheets.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-third-largest-percent/above-third-largest-percent-instance-030",
+   "condition": "js",
+   "statement": "The north depot recorded 32, 7, 14, 29, 10, 40, 33 and 14 parts. Please keep only the records above 25, then take the third largest kept record, then take 50 percent of it. Report the result in parts.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-third-largest-percent/above-third-largest-percent-instance-034",
+   "condition": "js",
+   "statement": "The harbour depot recorded 16, 11, 11, 24, 20, 41 and 13 tickets. Please keep only the records above 11, then take the third largest kept record, then take 40 percent of it. Report the result in tickets.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-total-modulo/above-total-modulo-instance-002",
+   "condition": "js",
+   "statement": "The harbour depot recorded 11, 22, 29, 8 and 26 sheets. Please keep only the records above 21, then add the kept records, then take the remainder of it divided by 8. Report the result in sheets.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-total-modulo/above-total-modulo-instance-009",
+   "condition": "js",
+   "statement": "The hill depot recorded 10, 19, 40, 39 and 36 tickets. Please keep only the records above 15, then add the kept records, then take the remainder of it divided by 5. Report the result in tickets.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-total-modulo/above-total-modulo-instance-018",
+   "condition": "js",
+   "statement": "The market depot recorded 4, 10, 12, 12, 4, 4, 31 and 24 tickets. Please keep only the records above 23, then add the kept records, then take the remainder of it divided by 4. Report the result in tickets.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-total-modulo/above-total-modulo-instance-022",
+   "condition": "js",
+   "statement": "The hill depot recorded 6, 18, 8, 40 and 20 litres. Please keep only the records above 25, then add the kept records, then take the remainder of it divided by 6. Report the result in litres.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-total-modulo/above-total-modulo-instance-027",
+   "condition": "js",
+   "statement": "The north depot recorded 8, 13, 10, 14, 31 and 3 litres. Please keep only the records above 24, then add the kept records, then take the remainder of it divided by 5. Report the result in litres.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-total-percent-discount/above-total-percent-discount-instance-002",
+   "condition": "js",
+   "statement": "The hill depot recorded 22, 9, 26, 28 and 24 sheets. Please keep only the records above 17, then add the kept records, then take 60 percent of it, then reduce it by the discount of 60 percent. Report the result in sheets.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-total-percent-discount/above-total-percent-discount-instance-019",
+   "condition": "js",
+   "statement": "The hill depot recorded 34, 22, 39, 11, 15, 6, 41 and 17 litres. Please keep only the records above 19, then add the kept records, then take 50 percent of it, then reduce it by the discount of 50 percent. Report the result in litres.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-total-percent-discount/above-total-percent-discount-instance-024",
+   "condition": "js",
+   "statement": "The river depot recorded 23, 11, 30, 20 and 27 litres. Please keep only the records above 16, then add the kept records, then take 40 percent of it, then reduce it by the discount of 40 percent. Report the result in litres.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-total-percent-discount/above-total-percent-discount-instance-030",
+   "condition": "js",
+   "statement": "The hill depot recorded 15, 12, 20, 38, 38, 40, 7 and 18 parts. Please keep only the records above 26, then add the kept records, then take 50 percent of it, then reduce it by the discount of 50 percent. Report the result in parts.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/above-total-percent-discount/above-total-percent-discount-instance-031",
+   "condition": "js",
+   "statement": "The harbour depot recorded 23, 26, 3, 8, 27, 34, 6 and 22 sheets. Please keep only the records above 9, then add the kept records, then take 50 percent of it, then reduce it by the discount of 50 percent. Report the result in sheets.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-largest-add-rate/below-largest-add-rate-instance-001",
+   "condition": "js",
+   "statement": "The river depot recorded 6, 21, 17, 4, 9 and 12 crates. Please keep only the records below 13, then take the largest kept record, then add the fixed charge of 2. Report the result in crates.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-largest-add-rate/below-largest-add-rate-instance-019",
+   "condition": "js",
+   "statement": "The river depot recorded 23, 18, 38, 29, 19, 6 and 29 litres. Please keep only the records below 24, then take the largest kept record, then add the fixed charge of 4. Report the result in litres.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-largest-add-rate/below-largest-add-rate-instance-028",
+   "condition": "js",
+   "statement": "The hill depot recorded 23, 19, 15, 31, 24 and 14 tickets. Please keep only the records below 16, then take the largest kept record, then add the fixed charge of 4. Report the result in tickets.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-largest-add-rate/below-largest-add-rate-instance-033",
+   "condition": "js",
+   "statement": "The river depot recorded 25, 27, 6, 18 and 10 parts. Please keep only the records below 20, then take the largest kept record, then add the fixed charge of 9. Report the result in parts.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-largest-add-rate/below-largest-add-rate-instance-037",
+   "condition": "js",
+   "statement": "The north depot recorded 39, 15, 11, 13 and 23 crates. Please keep only the records below 13, then take the largest kept record, then add the fixed charge of 5. Report the result in crates.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-largest-path-exists/below-largest-path-exists-instance-009",
+   "condition": "js",
+   "statement": "The north depot recorded 3, 12, 3, 10, 5 and 29 sheets. Please keep only the records below 24, then take the largest kept record, then check whether a path exists from that node to node 10 in the edges 10-12. Report whether a path exists.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-largest-path-exists/below-largest-path-exists-instance-013",
+   "condition": "js",
+   "statement": "The market depot recorded 40, 20, 32, 15 and 42 parts. Please keep only the records below 23, then take the largest kept record, then check whether a path exists from that node to node 15 in the edges 15-20, 40-42. Report whether a path exists.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-largest-path-exists/below-largest-path-exists-instance-023",
+   "condition": "js",
+   "statement": "The hill depot recorded 4, 42, 38, 12 and 36 crates. Please keep only the records below 27, then take the largest kept record, then check whether a path exists from that node to node 4 in the edges 4-12, 36-38. Report whether a path exists.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-largest-path-exists/below-largest-path-exists-instance-036",
+   "condition": "js",
+   "statement": "The hill depot recorded 28, 34, 10, 20 and 11 tickets. Please keep only the records below 26, then take the largest kept record, then check whether a path exists from that node to node 11 in the edges 11-20, 20-28. Report whether a path exists.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-largest-path-exists/below-largest-path-exists-instance-039",
+   "condition": "js",
+   "statement": "The harbour depot recorded 16, 35, 10, 25, 5, 4 and 15 parts. Please keep only the records below 21, then take the largest kept record, then check whether a path exists from that node to node 10 in the edges 4-5, 5-10, 15-16, 16-25, 25-35. Report whether a path exists.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-largest-rectangle-area/below-largest-rectangle-area-instance-006",
+   "condition": "js",
+   "statement": "The river depot recorded 22, 11, 18, 32, 20 and 20 sheets. Please keep only the records below 16, then take the largest kept record, then take the area of a rectangle that is 7 wide. Report the result in sheets.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-largest-rectangle-area/below-largest-rectangle-area-instance-007",
+   "condition": "js",
+   "statement": "The harbour depot recorded 14, 17, 20, 35, 36 and 4 tickets. Please keep only the records below 14, then take the largest kept record, then take the area of a rectangle that is 5 wide. Report the result in tickets.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-largest-rectangle-area/below-largest-rectangle-area-instance-008",
+   "condition": "js",
+   "statement": "The north depot recorded 7, 17, 38, 7, 26, 8 and 3 tickets. Please keep only the records below 16, then take the largest kept record, then take the area of a rectangle that is 9 wide. Report the result in tickets.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-largest-rectangle-area/below-largest-rectangle-area-instance-029",
+   "condition": "js",
+   "statement": "The north depot recorded 13, 32, 15, 7, 36 and 8 tickets. Please keep only the records below 14, then take the largest kept record, then take the area of a rectangle that is 9 wide. Report the result in tickets.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-largest-rectangle-area/below-largest-rectangle-area-instance-038",
+   "condition": "js",
+   "statement": "The hill depot recorded 38, 32, 14, 26, 11 and 8 parts. Please keep only the records below 12, then take the largest kept record, then take the area of a rectangle that is 4 wide. Report the result in parts.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-total-elapsed/below-total-elapsed-instance-026",
+   "condition": "js",
+   "statement": "The north depot recorded 16, 19, 33, 29, 29, 29 and 3 days. Please keep only the records below 22, then add the kept records, then convert it into hours by the factor of 24. Report the result in hours.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-total-elapsed/below-total-elapsed-instance-030",
+   "condition": "js",
+   "statement": "The north depot recorded 32, 42, 10, 6, 10, 41 and 29 days. Please keep only the records below 13, then add the kept records, then convert it into hours by the factor of 24. Report the result in hours.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-total-elapsed/below-total-elapsed-instance-034",
+   "condition": "js",
+   "statement": "The river depot recorded 33, 32, 22, 12, 20 and 30 hours. Please keep only the records below 27, then add the kept records, then convert it into minutes by the factor of 60. Report the result in minutes.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-total-elapsed/below-total-elapsed-instance-035",
+   "condition": "js",
+   "statement": "The river depot recorded 19, 22, 34, 9 and 20 days. Please keep only the records below 11, then add the kept records, then convert it into hours by the factor of 24. Report the result in hours.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-total-elapsed/below-total-elapsed-instance-040",
+   "condition": "js",
+   "statement": "The hill depot recorded 10, 31, 20, 36, 9 and 41 hours. Please keep only the records below 14, then add the kept records, then convert it into minutes by the factor of 60. Report the result in minutes.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-total-per-unit-subtract-rate/below-total-per-unit-subtract-rate-instance-003",
+   "condition": "js",
+   "statement": "The north depot recorded 3, 11, 34, 11, 14, 19, 40 and 17 crates. Please keep only the records below 27, then add the kept records, then multiply it by the 3 labels per record, then subtract the fixed deduction of 3. Report the result in crates.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-total-per-unit-subtract-rate/below-total-per-unit-subtract-rate-instance-004",
+   "condition": "js",
+   "statement": "The hill depot recorded 41, 4, 16, 39, 20, 23, 23 and 39 litres. Please keep only the records below 24, then add the kept records, then multiply it by the 3 labels per record, then subtract the fixed deduction of 8. Report the result in litres.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-total-per-unit-subtract-rate/below-total-per-unit-subtract-rate-instance-023",
+   "condition": "js",
+   "statement": "The river depot recorded 18, 22, 15, 21 and 27 parts. Please keep only the records below 22, then add the kept records, then multiply it by the 2 labels per record, then subtract the fixed deduction of 3. Report the result in parts.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-total-per-unit-subtract-rate/below-total-per-unit-subtract-rate-instance-035",
+   "condition": "js",
+   "statement": "The hill depot recorded 24, 12, 9, 8, 32, 14, 41 and 24 litres. Please keep only the records below 18, then add the kept records, then multiply it by the 4 labels per record, then subtract the fixed deduction of 8. Report the result in litres.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/below-total-per-unit-subtract-rate/below-total-per-unit-subtract-rate-instance-040",
+   "condition": "js",
+   "statement": "The north depot recorded 4, 29, 28, 33, 24, 34, 20 and 18 crates. Please keep only the records below 13, then add the kept records, then multiply it by the 5 labels per record, then subtract the fixed deduction of 9. Report the result in crates.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-003",
+   "condition": "js",
+   "statement": "A warehouse holds 260 units of cable. The workshop consumes 14 units every day, and a delivery takes 9 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-006",
+   "condition": "js",
+   "statement": "A warehouse holds 214 units of pipe. The workshop consumes 16 units every day, and a delivery takes 3 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-020",
+   "condition": "js",
+   "statement": "A warehouse holds 196 units of sheet metal. The workshop consumes 12 units every day, and a delivery takes 5 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-030",
+   "condition": "js",
+   "statement": "A storeroom holds 123 units of ballast. The workshop consumes 17 units every day, and a delivery takes 1 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-031",
+   "condition": "js",
+   "statement": "A depot holds 42 units of timber. The workshop consumes 4 units every day, and a delivery takes 2 days to arrive. How many whole days does the stock cover, and must the order be placed today?\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/keep-below-total-ratio/keep-below-total-ratio-instance-002",
+   "condition": "js",
+   "statement": "The market depot recorded 15, 4, 11, 12 and 24 litres. Please keep only the records below 19, then add the kept records, then split it into 3 equal parts. Report the result in litres.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/keep-below-total-ratio/keep-below-total-ratio-instance-009",
+   "condition": "js",
+   "statement": "The harbour depot recorded 18, 24, 22, 30, 9 and 5 sheets. Please keep only the records below 13, then add the kept records, then split it into 7 equal parts. Report the result in sheets.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/keep-below-total-ratio/keep-below-total-ratio-instance-013",
+   "condition": "js",
+   "statement": "The hill depot recorded 10, 17, 35, 20, 12, 16 and 40 sheets. Please keep only the records below 23, then add the kept records, then split it into 3 equal parts. Report the result in sheets.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/keep-below-total-ratio/keep-below-total-ratio-instance-024",
+   "condition": "js",
+   "statement": "The river depot recorded 12, 28, 9, 25, 24, 42, 7 and 29 parts. Please keep only the records below 16, then add the kept records, then split it into 4 equal parts. Report the result in parts.\n"
+  },
+  {
+   "key": "main|js|procedural-arithmetic/eval/no-knowledge/keep-below-total-ratio/keep-below-total-ratio-instance-026",
+   "condition": "js",
+   "statement": "The market depot recorded 12, 12, 11, 18 and 25 crates. Please keep only the records below 16, then add the kept records, then split it into 7 equal parts. Report the result in crates.\n"
+  },
+  {
+   "key": "main|js|scientific-reasoning/eval/knowledge/minimum-information-needed/419-minimum-information-needed",
+   "condition": "js",
+   "statement": "Problem world. In the model, microbes can transfer from a surface to the hands and then from the hands to the mouth if the hands are not cleaned. Correct washing with soap and water greatly reduces the number of microbes on the hands, without meaning that every microbe in the world disappears. To reduce risk, we can break the transmission chain at several points.\n\nCase data. after the observation “the observed problem exists, but its cause has not yet been located”, both hypotheses remain possible: H1: transmission is through hands and H2: transmission is direct through food. We can make one additional observation.\n\nQuestion. What is the minimum information that would separate the hypotheses? Explain why a shared observation does not help, while a discriminating one does.\n"
+  },
+  {
+   "key": "main|js|scientific-reasoning/eval/knowledge/minimum-information-needed/449-minimum-information-needed",
+   "condition": "js",
+   "statement": "Problem world. In this model, a source produces sound when it vibrates. The vibration sets the surrounding medium in motion, and the variations reach a receiver. A larger vibration can produce a louder sound under comparable conditions; distance and obstacles can reduce what reaches the receiver. We do not confuse the sound source with the receiver that detects it.\n\nCase data. after the observation “the observed problem exists, but its cause has not yet been located”, both hypotheses remain possible: H1: the source does not vibrate and H2: the receiver is defect. We can make one additional observation.\n\nQuestion. What is the minimum information that would separate the hypotheses? Explain why a shared observation does not help, while a discriminating one does.\n"
+  },
+  {
+   "key": "main|js|scientific-reasoning/eval/knowledge/minimum-information-needed/459-minimum-information-needed",
+   "condition": "js",
+   "statement": "Problem world. In the model, a magnet can attract certain magnetic materials without direct contact. Two magnet ends can attract or repel depending on orientation. We do not assume that all metals are magnetic; the result of the test is stated explicitly for every object. A thin nonmagnetic barrier does not necessarily stop the magnet’s effect in our model.\n\nCase data. after the observation “the observed problem exists, but its cause has not yet been located”, both hypotheses remain possible: H1: the object is not magnetic and H2: the magnet is too far. We can make one additional observation.\n\nQuestion. What is the minimum information that would separate the hypotheses? Explain why a shared observation does not help, while a discriminating one does.\n"
+  },
+  {
+   "key": "main|js|scientific-reasoning/eval/knowledge/minimum-information-needed/494-minimum-information-needed",
+   "condition": "js",
+   "statement": "Problem world. In the teaching model, foods can provide energy and substances needed to build and operate the body. A balanced meal is not decided by a single food but by the combination and amount. For this problem, each option has explicitly stated properties; no real food values need to be memorized. We track three requirements at the same time: enough energy, a source of protein, and a source of fiber.\n\nCase data. after the observation “the observed problem exists, but its cause has not yet been located”, both hypotheses remain possible: H1: the lack of satiety comes from a portion with too little energy and H2: the lack comes from unsuitable composition. We can make one additional observation.\n\nQuestion. What is the minimum information that would separate the hypotheses? Explain why a shared observation does not help, while a discriminating one does.\n"
+  },
+  {
+   "key": "main|js|scientific-reasoning/eval/knowledge/minimum-information-needed/499-minimum-information-needed",
+   "condition": "js",
+   "statement": "Problem world. A measurement is useful only if we know what quantity was measured and in which unit. For comparisons, values must be expressed in the same unit and obtained by the same method. Repeating a measurement can show whether an unusual result is stable or only an accidental error. No conversions need to be memorized in this problem; every required conversion is stated explicitly.\n\nCase data. After the observation “the unusual value exists, but its cause has not yet been identified,” both hypotheses remain possible: H1: the unusual value is a random error; H2: the instrument is misadjusted. We can make one additional observation.\n\nQuestion. What is the minimum information that would separate the hypotheses? Explain why a shared observation does not help, while a discriminating one does.\n"
+  },
+  {
+   "key": "main|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-1/226-coalition-formation-case-1",
+   "condition": "js",
+   "statement": "Knowledge context. In representative bodies, groups may need to cooperate to reach a decision threshold.\n\nGiven facts. Three groups have seats A=5, B=3, C=3. A governing coalition needs at least 6 seats. Any two groups may cooperate.\n\nRules. A coalition is winning if the sum of its members’ seats reaches the threshold. Minimal winning means it is winning but removing any member makes it lose.\n\nTask. Which coalitions are minimal winning coalitions?\n"
+  },
+  {
+   "key": "main|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-1/227-coalition-formation-case-2",
+   "condition": "js",
+   "statement": "Knowledge context. In representative bodies, groups may need to cooperate to reach a decision threshold.\n\nGiven facts. Three groups have seats A=5, B=4, C=3. A governing coalition needs at least 7 seats. Any two groups may cooperate.\n\nRules. A coalition is winning if the sum of its members’ seats reaches the threshold. Minimal winning means it is winning but removing any member makes it lose.\n\nTask. Which coalitions are minimal winning coalitions?\n"
+  },
+  {
+   "key": "main|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-1/228-coalition-formation-case-3",
+   "condition": "js",
+   "statement": "Knowledge context. In representative bodies, groups may need to cooperate to reach a decision threshold.\n\nGiven facts. Three groups have seats A=5, B=5, C=3. A governing coalition needs at least 7 seats. Any two groups may cooperate.\n\nRules. A coalition is winning if the sum of its members’ seats reaches the threshold. Minimal winning means it is winning but removing any member makes it lose.\n\nTask. Which coalitions are minimal winning coalitions?\n"
+  },
+  {
+   "key": "main|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-1/229-coalition-formation-case-4",
+   "condition": "js",
+   "statement": "Knowledge context. In representative bodies, groups may need to cooperate to reach a decision threshold.\n\nGiven facts. Three groups have seats A=5, B=6, C=3. A governing coalition needs at least 8 seats. Any two groups may cooperate.\n\nRules. A coalition is winning if the sum of its members’ seats reaches the threshold. Minimal winning means it is winning but removing any member makes it lose.\n\nTask. Which coalitions are minimal winning coalitions?\n"
+  },
+  {
+   "key": "main|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-1/230-coalition-formation-case-5",
+   "condition": "js",
+   "statement": "Knowledge context. In representative bodies, groups may need to cooperate to reach a decision threshold.\n\nGiven facts. Three groups have seats A=5, B=7, C=3. A governing coalition needs at least 8 seats. Any two groups may cooperate.\n\nRules. A coalition is winning if the sum of its members’ seats reaches the threshold. Minimal winning means it is winning but removing any member makes it lose.\n\nTask. Which coalitions are minimal winning coalitions?\n"
+  },
+  {
+   "key": "main|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-2/476-coalition-formation-case-1",
+   "condition": "js",
+   "statement": "Knowledge context. In representative bodies, groups may need to cooperate to reach a decision threshold.\n\nGiven facts. Three groups have seats A=6, B=3, C=2. A governing coalition needs at least 6 seats. Any two groups may cooperate.\n\nRules. A coalition is winning if the sum of its members’ seats reaches the threshold. Minimal winning means it is winning but removing any member makes it lose.\n\nTask. Which coalitions are minimal winning coalitions?\n"
+  },
+  {
+   "key": "main|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-2/477-coalition-formation-case-2",
+   "condition": "js",
+   "statement": "Knowledge context. In representative bodies, groups may need to cooperate to reach a decision threshold.\n\nGiven facts. Three groups have seats A=6, B=4, C=2. A governing coalition needs at least 7 seats. Any two groups may cooperate.\n\nRules. A coalition is winning if the sum of its members’ seats reaches the threshold. Minimal winning means it is winning but removing any member makes it lose.\n\nTask. Which coalitions are minimal winning coalitions?\n"
+  },
+  {
+   "key": "main|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-2/478-coalition-formation-case-3",
+   "condition": "js",
+   "statement": "Knowledge context. In representative bodies, groups may need to cooperate to reach a decision threshold.\n\nGiven facts. Three groups have seats A=6, B=5, C=2. A governing coalition needs at least 7 seats. Any two groups may cooperate.\n\nRules. A coalition is winning if the sum of its members’ seats reaches the threshold. Minimal winning means it is winning but removing any member makes it lose.\n\nTask. Which coalitions are minimal winning coalitions?\n"
+  },
+  {
+   "key": "main|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-2/479-coalition-formation-case-4",
+   "condition": "js",
+   "statement": "Knowledge context. In representative bodies, groups may need to cooperate to reach a decision threshold.\n\nGiven facts. Three groups have seats A=6, B=6, C=2. A governing coalition needs at least 8 seats. Any two groups may cooperate.\n\nRules. A coalition is winning if the sum of its members’ seats reaches the threshold. Minimal winning means it is winning but removing any member makes it lose.\n\nTask. Which coalitions are minimal winning coalitions?\n"
+  },
+  {
+   "key": "main|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-2/480-coalition-formation-case-5",
+   "condition": "js",
+   "statement": "Knowledge context. In representative bodies, groups may need to cooperate to reach a decision threshold.\n\nGiven facts. Three groups have seats A=6, B=7, C=2. A governing coalition needs at least 8 seats. Any two groups may cooperate.\n\nRules. A coalition is winning if the sum of its members’ seats reaches the threshold. Minimal winning means it is winning but removing any member makes it lose.\n\nTask. Which coalitions are minimal winning coalitions?\n"
+  },
+  {
+   "key": "main|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-3/726-coalition-formation-case-1",
+   "condition": "js",
+   "statement": "Knowledge context. In representative bodies, groups may need to cooperate to reach a decision threshold.\n\nGiven facts. Three groups have seats A=7, B=3, C=3. A governing coalition needs at least 7 seats. Any two groups may cooperate.\n\nRules. A coalition is winning if the sum of its members’ seats reaches the threshold. Minimal winning means it is winning but removing any member makes it lose.\n\nTask. Which coalitions are minimal winning coalitions?\n"
+  },
+  {
+   "key": "main|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-3/727-coalition-formation-case-2",
+   "condition": "js",
+   "statement": "Knowledge context. In representative bodies, groups may need to cooperate to reach a decision threshold.\n\nGiven facts. Three groups have seats A=7, B=4, C=3. A governing coalition needs at least 8 seats. Any two groups may cooperate.\n\nRules. A coalition is winning if the sum of its members’ seats reaches the threshold. Minimal winning means it is winning but removing any member makes it lose.\n\nTask. Which coalitions are minimal winning coalitions?\n"
+  },
+  {
+   "key": "main|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-3/728-coalition-formation-case-3",
+   "condition": "js",
+   "statement": "Knowledge context. In representative bodies, groups may need to cooperate to reach a decision threshold.\n\nGiven facts. Three groups have seats A=7, B=5, C=3. A governing coalition needs at least 8 seats. Any two groups may cooperate.\n\nRules. A coalition is winning if the sum of its members’ seats reaches the threshold. Minimal winning means it is winning but removing any member makes it lose.\n\nTask. Which coalitions are minimal winning coalitions?\n"
+  },
+  {
+   "key": "main|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-3/729-coalition-formation-case-4",
+   "condition": "js",
+   "statement": "Knowledge context. In representative bodies, groups may need to cooperate to reach a decision threshold.\n\nGiven facts. Three groups have seats A=7, B=6, C=3. A governing coalition needs at least 9 seats. Any two groups may cooperate.\n\nRules. A coalition is winning if the sum of its members’ seats reaches the threshold. Minimal winning means it is winning but removing any member makes it lose.\n\nTask. Which coalitions are minimal winning coalitions?\n"
+  },
+  {
+   "key": "main|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-3/730-coalition-formation-case-5",
+   "condition": "js",
+   "statement": "Knowledge context. In representative bodies, groups may need to cooperate to reach a decision threshold.\n\nGiven facts. Three groups have seats A=7, B=7, C=3. A governing coalition needs at least 9 seats. Any two groups may cooperate.\n\nRules. A coalition is winning if the sum of its members’ seats reaches the threshold. Minimal winning means it is winning but removing any member makes it lose.\n\nTask. Which coalitions are minimal winning coalitions?\n"
+  },
+  {
+   "key": "main|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-4/976-coalition-formation-case-1",
+   "condition": "js",
+   "statement": "Knowledge context. In representative bodies, groups may need to cooperate to reach a decision threshold.\n\nGiven facts. Three groups have seats A=8, B=3, C=2. A governing coalition needs at least 7 seats. Any two groups may cooperate.\n\nRules. A coalition is winning if the sum of its members’ seats reaches the threshold. Minimal winning means it is winning but removing any member makes it lose.\n\nTask. Which coalitions are minimal winning coalitions?\n"
+  },
+  {
+   "key": "main|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-4/977-coalition-formation-case-2",
+   "condition": "js",
+   "statement": "Knowledge context. In representative bodies, groups may need to cooperate to reach a decision threshold.\n\nGiven facts. Three groups have seats A=8, B=4, C=2. A governing coalition needs at least 8 seats. Any two groups may cooperate.\n\nRules. A coalition is winning if the sum of its members’ seats reaches the threshold. Minimal winning means it is winning but removing any member makes it lose.\n\nTask. Which coalitions are minimal winning coalitions?\n"
+  },
+  {
+   "key": "main|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-4/978-coalition-formation-case-3",
+   "condition": "js",
+   "statement": "Knowledge context. In representative bodies, groups may need to cooperate to reach a decision threshold.\n\nGiven facts. Three groups have seats A=8, B=5, C=2. A governing coalition needs at least 8 seats. Any two groups may cooperate.\n\nRules. A coalition is winning if the sum of its members’ seats reaches the threshold. Minimal winning means it is winning but removing any member makes it lose.\n\nTask. Which coalitions are minimal winning coalitions?\n"
+  },
+  {
+   "key": "main|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-4/979-coalition-formation-case-4",
+   "condition": "js",
+   "statement": "Knowledge context. In representative bodies, groups may need to cooperate to reach a decision threshold.\n\nGiven facts. Three groups have seats A=8, B=6, C=2. A governing coalition needs at least 9 seats. Any two groups may cooperate.\n\nRules. A coalition is winning if the sum of its members’ seats reaches the threshold. Minimal winning means it is winning but removing any member makes it lose.\n\nTask. Which coalitions are minimal winning coalitions?\n"
+  },
+  {
+   "key": "main|js|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-4/980-coalition-formation-case-5",
+   "condition": "js",
+   "statement": "Knowledge context. In representative bodies, groups may need to cooperate to reach a decision threshold.\n\nGiven facts. Three groups have seats A=8, B=7, C=2. A governing coalition needs at least 9 seats. Any two groups may cooperate.\n\nRules. A coalition is winning if the sum of its members’ seats reaches the threshold. Minimal winning means it is winning but removing any member makes it lose.\n\nTask. Which coalitions are minimal winning coalitions?\n"
+  }
+ ]
+}

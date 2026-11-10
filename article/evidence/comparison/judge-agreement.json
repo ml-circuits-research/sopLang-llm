@@ -1,0 +1,18 @@
+{
+  "pairs": 2073,
+  "answerPairs": 2048,
+  "injectedPairs": 25,
+  "missing": 0,
+  "observedAgreement": 0.9826338639652678,
+  "kappa": 0.9653437851192082,
+  "bothSame": 891,
+  "disputed": 36,
+  "calibration": {
+    "knownWrong": 24,
+    "acceptedByA": 0,
+    "acceptedByB": 0,
+    "parserEquivalent": 50,
+    "notAcceptedByA": 0,
+    "notAcceptedByB": 0
+  }
+}

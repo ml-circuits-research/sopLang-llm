@@ -1,0 +1,15 @@
+{
+  "experiment": "e9-js1-coder15",
+  "items": 40,
+  "records": 40,
+  "complete": true,
+  "groups": {
+    "withheld-procedural": {
+      "records": 40,
+      "exact": 0,
+      "value": 9,
+      "executed": 40,
+      "missing": 0
+    }
+  }
+}

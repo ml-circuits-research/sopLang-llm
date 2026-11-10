@@ -28,7 +28,7 @@ The canonical documentation lives under `docs/`.
 
 The design specifications are the source of truth for documented behavior. `AGENTS.md` tells a coding agent how to work in this repository.
 
-The [research manuscript portfolio](article/README.md) contains five journal-specific English manuscripts in Markdown and DOCX, their evidence reconstruction, figures, bibliography verification, and submission requirements. These audited manuscripts supersede the historical article drafts under `docs/article/` for publication claims.
+The [research manuscript portfolio](article/README.md) contains four journal-specific English manuscripts in Markdown and DOCX, each reporting a distinct lesson of the fine-tuning programme, with their evidence recomputed from item records, data-derived figures, bibliography verification, and submission requirements. These manuscripts supersede the historical article drafts under `docs/article/` for publication claims.
 
 ## Implementation status
 

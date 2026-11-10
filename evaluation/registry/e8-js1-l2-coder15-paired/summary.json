@@ -1,0 +1,22 @@
+{
+  "experiment": "e8-js1-l2-coder15-paired",
+  "items": 45,
+  "records": 45,
+  "complete": true,
+  "groups": {
+    "held-out:L2": {
+      "records": 33,
+      "exact": 7,
+      "value": 19,
+      "executed": 33,
+      "missing": 0
+    },
+    "trained-control:L2": {
+      "records": 12,
+      "exact": 2,
+      "value": 9,
+      "executed": 12,
+      "missing": 0
+    }
+  }
+}

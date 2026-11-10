@@ -1,0 +1,115 @@
+{"key": "main|direct|adult-reasoning/eval/no-knowledge/a-public-counters-opening-hours/492-the-last-ticket-variant-2", "reply": "Neither attempt succeeds: the Friday request at 11:50 comes after the 11:30 last-ticket cutoff, and the Monday request at 14:40 comes after the 14:30 last-ticket cutoff."}
+{"key": "main|direct|adult-reasoning/eval/no-knowledge/a-public-counters-opening-hours/493-the-last-ticket-variant-3", "reply": "Neither attempt succeeds: the Friday request at 11:50 comes after the 11:30 last-ticket cutoff, and the Monday request at 14:40 comes after the 14:30 last-ticket cutoff."}
+{"key": "main|direct|adult-reasoning/eval/no-knowledge/a-public-counters-opening-hours/496-the-last-ticket-variant-6", "reply": "Neither attempt succeeds: the Friday request at 11:50 comes after the 11:30 last-ticket cutoff, and the Monday request at 14:40 comes after the 14:30 last-ticket cutoff."}
+{"key": "main|direct|adult-reasoning/eval/no-knowledge/a-public-counters-opening-hours/498-the-last-ticket-variant-8", "reply": "Neither attempt succeeds: the Friday request at 11:50 comes after the 11:30 last-ticket cutoff, and the Monday request at 14:40 comes after the 14:30 last-ticket cutoff."}
+{"key": "main|direct|adult-reasoning/eval/no-knowledge/a-public-counters-opening-hours/500-the-last-ticket-variant-10", "reply": "Neither attempt succeeds: the Friday request at 11:50 comes after the 11:30 last-ticket cutoff, and the Monday request at 14:40 comes after the 14:30 last-ticket cutoff."}
+{"key": "main|direct|common-sense/eval/no-knowledge/logical-implications/10.1.9-logical-implications", "reply": "B is active and D is active while E is inactive (via Rules 1, 2, and 3), and Rule 4 is merely compatible with these values rather than needed to derive them."}
+{"key": "main|direct|common-sense/eval/no-knowledge/logical-implications/2.8.4-logical-implications", "reply": "B is active and D is active while E is inactive (via Rules 1, 2, and 3), and Rule 4 is merely compatible with these values rather than needed to derive them."}
+{"key": "main|direct|common-sense/eval/no-knowledge/logical-implications/6.10.10-logical-implications", "reply": "B is active and D is active while E is inactive (via Rules 1, 2, and 3), and Rule 4 is merely compatible with these values rather than needed to derive them."}
+{"key": "main|direct|common-sense/eval/no-knowledge/logical-implications/7.3.9-logical-implications", "reply": "B is active and D is active while E is inactive (via Rules 1, 2, and 3), and Rule 4 is merely compatible with these values rather than needed to derive them."}
+{"key": "main|direct|common-sense/eval/no-knowledge/logical-implications/9.9.7-logical-implications", "reply": "B is active and D is active while E is inactive (via Rules 1, 2, and 3), and Rule 4 is merely compatible with these values rather than needed to derive them."}
+{"key": "main|direct|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/10.2.4-dependency-chain-and-join", "reply": "The earliest safe completion time is 59 minutes, which exceeds the 56-minute limit."}
+{"key": "main|direct|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/4.7.4-dependency-chain-and-join", "reply": "The earliest safe completion time is 70 minutes, which meets the 78-minute limit."}
+{"key": "main|direct|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/6.4.4-dependency-chain-and-join", "reply": "The earliest safe completion time is 52 minutes, which exceeds the 49-minute limit."}
+{"key": "main|direct|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/7.4.4-dependency-chain-and-join", "reply": "The earliest safe completion time is 58 minutes, which meets the 62-minute limit."}
+{"key": "main|direct|decompose-to-solve/eval/no-knowledge/dependency-chain-and-join/9.8.4-dependency-chain-and-join", "reply": "The earliest safe completion time is 52 minutes, which exceeds the 46-minute limit."}
+{"key": "main|direct|logical-reasoning/eval/no-knowledge/two-written-rules-together/100-two-written-rules-together-kalmford-workshop-case-10", "reply": "Rule One and Rule Two govern separate objects, so Sol must still wear eye-shields at the grinder regardless of the store's darkness, making Una's claim wrong."}
+{"key": "main|direct|logical-reasoning/eval/no-knowledge/two-written-rules-together/91-two-written-rules-together-dunwick-workshop-case-1", "reply": "Rule One and Rule Two govern separate objects, so Sam must still wear eye-shields at the grinder regardless of the store's darkness, making Tess's claim wrong."}
+{"key": "main|direct|logical-reasoning/eval/no-knowledge/two-written-rules-together/94-two-written-rules-together-wells-village-workshop-case-4", "reply": "Rule One and Rule Two govern separate objects, so Harun must still wear eye-shields at the grinder regardless of the store's darkness, making Iona's claim wrong."}
+{"key": "main|direct|logical-reasoning/eval/no-knowledge/two-written-rules-together/95-two-written-rules-together-long-hill-workshop-case-5", "reply": "Rule One and Rule Two govern separate objects, so Leo must still wear eye-shields at the grinder regardless of the store's darkness, making Mira's claim wrong."}
+{"key": "main|direct|logical-reasoning/eval/no-knowledge/two-written-rules-together/99-two-written-rules-together-east-wharf-workshop-case-9", "reply": "Rule One and Rule Two govern separate objects, so Omar must still wear eye-shields at the grinder regardless of the store's darkness, making Pia's claim wrong."}
+{"key": "main|direct|mathematical-thinking/eval/knowledge/decoding-with-a-one-to-one-dictionary/38.19-decoding-with-a-one-to-one-dictionary", "reply": "5-5-2 decodes to green-green-red."}
+{"key": "main|direct|mathematical-thinking/eval/knowledge/effect-of-an-outlier-on-the-mean/37.12-effect-of-an-outlier-on-the-mean", "reply": "The new mean is 8.75, an increase from 5."}
+{"key": "main|direct|mathematical-thinking/eval/knowledge/missing-value-from-a-mean/37.3-missing-value-from-a-mean", "reply": "The third number is 8."}
+{"key": "main|direct|mathematical-thinking/eval/knowledge/the-mean-changes-when-a-value-is-added/37.4-the-mean-changes-when-a-value-is-added", "reply": "The new mean is approximately 6.67."}
+{"key": "main|direct|mathematical-thinking/eval/knowledge/two-objects-with-the-same-code/23.11-two-objects-with-the-same-code", "reply": "No, the code cannot distinguish them, since both are small and red and the code ignores shape."}
+{"key": "main|direct|mathematical-thinking/eval/no-knowledge/a-necessary-but-not-sufficient-property/21.17-a-necessary-but-not-sufficient-property", "reply": "A blue ticket cannot be VIP, and a gold ticket is not necessarily VIP."}
+{"key": "main|direct|mathematical-thinking/eval/no-knowledge/a-required-intermediate-landmark/22.17-a-required-intermediate-landmark", "reply": "The minimum number of unit steps is 5."}
+{"key": "main|direct|mathematical-thinking/eval/no-knowledge/compare-two-groups-by-percentage-not-absolute-count/37.22-compare-two-groups-by-percentage-not-absolute-count", "reply": "Class A has the larger proportion, 80 percent versus Class B's 75 percent."}
+{"key": "main|direct|mathematical-thinking/eval/no-knowledge/defined-cut-and-choose-division/40.9-defined-cut-and-choose-division", "reply": "The first person cuts as equally as possible because the second person will take whichever piece is larger, leaving the cutter the other."}
+{"key": "main|direct|mathematical-thinking/eval/no-knowledge/plant-growth-rate-as-change-per-day/35.11-plant-growth-rate-as-change-per-day", "reply": "The plant grew 2 centimeters per day."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-count-double/above-count-double-instance-003", "reply": "6 sheets."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-count-double/above-count-double-instance-004", "reply": "8 sheets."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-count-double/above-count-double-instance-008", "reply": "3 crates."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-count-double/above-count-double-instance-016", "reply": "12 tickets."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-count-double/above-count-double-instance-021", "reply": "18 tickets."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-largest-add-rate/above-largest-add-rate-instance-002", "reply": "41 sheets."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-largest-add-rate/above-largest-add-rate-instance-006", "reply": "48 parts."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-largest-add-rate/above-largest-add-rate-instance-010", "reply": "45 tickets."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-largest-add-rate/above-largest-add-rate-instance-022", "reply": "46 litres."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-largest-add-rate/above-largest-add-rate-instance-034", "reply": "44 crates."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-third-largest-percent/above-third-largest-percent-instance-006", "reply": "3 litres."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-third-largest-percent/above-third-largest-percent-instance-011", "reply": "5 sheets."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-third-largest-percent/above-third-largest-percent-instance-026", "reply": "14 sheets."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-third-largest-percent/above-third-largest-percent-instance-030", "reply": "16 parts."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-third-largest-percent/above-third-largest-percent-instance-034", "reply": "8 tickets."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-total-modulo/above-total-modulo-instance-002", "reply": "5 sheets."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-total-modulo/above-total-modulo-instance-009", "reply": "4 tickets."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-total-modulo/above-total-modulo-instance-018", "reply": "3 tickets."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-total-modulo/above-total-modulo-instance-022", "reply": "4 litres."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-total-modulo/above-total-modulo-instance-027", "reply": "1 litre."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-total-percent-discount/above-total-percent-discount-instance-002", "reply": "24 sheets."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-total-percent-discount/above-total-percent-discount-instance-019", "reply": "34 litres."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-total-percent-discount/above-total-percent-discount-instance-024", "reply": "24 litres."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-total-percent-discount/above-total-percent-discount-instance-030", "reply": "29 parts."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/above-total-percent-discount/above-total-percent-discount-instance-031", "reply": "33 sheets."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-largest-add-rate/below-largest-add-rate-instance-001", "reply": "14 crates."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-largest-add-rate/below-largest-add-rate-instance-019", "reply": "27 litres."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-largest-add-rate/below-largest-add-rate-instance-028", "reply": "19 tickets."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-largest-add-rate/below-largest-add-rate-instance-033", "reply": "27 parts."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-largest-add-rate/below-largest-add-rate-instance-037", "reply": "16 crates."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-largest-path-exists/below-largest-path-exists-instance-009", "reply": "Yes, a path exists."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-largest-path-exists/below-largest-path-exists-instance-013", "reply": "Yes, a path exists."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-largest-path-exists/below-largest-path-exists-instance-023", "reply": "Yes, a path exists."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-largest-path-exists/below-largest-path-exists-instance-036", "reply": "Yes, a path exists."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-largest-path-exists/below-largest-path-exists-instance-039", "reply": "No, a path does not exist."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-largest-rectangle-area/below-largest-rectangle-area-instance-006", "reply": "77 sheets."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-largest-rectangle-area/below-largest-rectangle-area-instance-007", "reply": "20 tickets."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-largest-rectangle-area/below-largest-rectangle-area-instance-008", "reply": "72 tickets."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-largest-rectangle-area/below-largest-rectangle-area-instance-029", "reply": "117 tickets."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-largest-rectangle-area/below-largest-rectangle-area-instance-038", "reply": "44 parts."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-total-elapsed/below-total-elapsed-instance-026", "reply": "912 hours."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-total-elapsed/below-total-elapsed-instance-030", "reply": "624 hours."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-total-elapsed/below-total-elapsed-instance-034", "reply": "3240 minutes."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-total-elapsed/below-total-elapsed-instance-035", "reply": "216 hours."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-total-elapsed/below-total-elapsed-instance-040", "reply": "1140 minutes."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-total-per-unit-subtract-rate/below-total-per-unit-subtract-rate-instance-003", "reply": "222 crates."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-total-per-unit-subtract-rate/below-total-per-unit-subtract-rate-instance-004", "reply": "250 litres."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-total-per-unit-subtract-rate/below-total-per-unit-subtract-rate-instance-023", "reply": "105 parts."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-total-per-unit-subtract-rate/below-total-per-unit-subtract-rate-instance-035", "reply": "164 litres."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/below-total-per-unit-subtract-rate/below-total-per-unit-subtract-rate-instance-040", "reply": "11 crates."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-003", "reply": "The stock covers 18 whole days, so the order does not need to be placed today."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-006", "reply": "The stock covers 13 whole days, so the order does not need to be placed today."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-020", "reply": "The stock covers 16 whole days, so the order does not need to be placed today."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-030", "reply": "The stock covers 7 whole days, so the order does not need to be placed today."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/depletion-days-and-lead-time/depletion-days-and-lead-time-instance-031", "reply": "The stock covers 10 whole days, so the order does not need to be placed today."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/keep-below-total-ratio/keep-below-total-ratio-instance-002", "reply": "14 litres."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/keep-below-total-ratio/keep-below-total-ratio-instance-009", "reply": "2 sheets."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/keep-below-total-ratio/keep-below-total-ratio-instance-013", "reply": "25 sheets."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/keep-below-total-ratio/keep-below-total-ratio-instance-024", "reply": "7 parts."}
+{"key": "main|direct|procedural-arithmetic/eval/no-knowledge/keep-below-total-ratio/keep-below-total-ratio-instance-026", "reply": "5 crates."}
+{"key": "main|direct|scientific-reasoning/eval/knowledge/minimum-information-needed/419-minimum-information-needed", "reply": "The minimum information needed is whether the food itself is contaminated when hands are clean, since only that observation distinguishes hand-borne transmission (H1) from direct food transmission (H2)."}
+{"key": "main|direct|scientific-reasoning/eval/knowledge/minimum-information-needed/449-minimum-information-needed", "reply": "The minimum information needed is a direct check of whether the source is vibrating, since that single fact confirms H1 or points instead to H2."}
+{"key": "main|direct|scientific-reasoning/eval/knowledge/minimum-information-needed/459-minimum-information-needed", "reply": "The minimum information needed is whether the object is attracted once the magnet is brought very close, since that distinguishes a non-magnetic object from one merely too far away."}
+{"key": "main|direct|scientific-reasoning/eval/knowledge/minimum-information-needed/494-minimum-information-needed", "reply": "The minimum information needed is the portion's stated energy value compared with the target requirement, since that alone separates an energy shortfall (H1) from unsuitable composition (H2)."}
+{"key": "main|direct|scientific-reasoning/eval/knowledge/minimum-information-needed/499-minimum-information-needed", "reply": "The minimum information needed is the result of repeating the measurement, since a random error will not recur while a misadjusted instrument will reproduce the same unusual value."}
+{"key": "main|direct|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-1/226-coalition-formation-case-1", "reply": "The minimal winning coalitions are AB, AC, and BC."}
+{"key": "main|direct|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-1/227-coalition-formation-case-2", "reply": "The minimal winning coalitions are AB, AC, and BC."}
+{"key": "main|direct|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-1/228-coalition-formation-case-3", "reply": "The minimal winning coalitions are AB, AC, and BC."}
+{"key": "main|direct|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-1/229-coalition-formation-case-4", "reply": "The minimal winning coalitions are AB, AC, and BC."}
+{"key": "main|direct|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-1/230-coalition-formation-case-5", "reply": "The minimal winning coalitions are AB, AC, and BC."}
+{"key": "main|direct|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-2/476-coalition-formation-case-1", "reply": "The only minimal winning coalition is A alone, since A already reaches the 6-seat threshold by itself."}
+{"key": "main|direct|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-2/477-coalition-formation-case-2", "reply": "The minimal winning coalitions are AB and AC."}
+{"key": "main|direct|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-2/478-coalition-formation-case-3", "reply": "The minimal winning coalitions are AB, AC, and BC."}
+{"key": "main|direct|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-2/479-coalition-formation-case-4", "reply": "The minimal winning coalitions are AB, AC, and BC."}
+{"key": "main|direct|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-2/480-coalition-formation-case-5", "reply": "The minimal winning coalitions are AB, AC, and BC."}
+{"key": "main|direct|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-3/726-coalition-formation-case-1", "reply": "The only minimal winning coalition is A alone, since A already reaches the 7-seat threshold by itself."}
+{"key": "main|direct|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-3/727-coalition-formation-case-2", "reply": "The minimal winning coalitions are AB and AC."}
+{"key": "main|direct|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-3/728-coalition-formation-case-3", "reply": "The minimal winning coalitions are AB, AC, and BC."}
+{"key": "main|direct|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-3/729-coalition-formation-case-4", "reply": "The minimal winning coalitions are AB, AC, and BC."}
+{"key": "main|direct|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-3/730-coalition-formation-case-5", "reply": "The minimal winning coalitions are AB, AC, and BC."}
+{"key": "main|direct|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-4/976-coalition-formation-case-1", "reply": "The only minimal winning coalition is A alone, since A already reaches the 7-seat threshold by itself."}
+{"key": "main|direct|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-4/977-coalition-formation-case-2", "reply": "The only minimal winning coalition is A alone, since A already reaches the 8-seat threshold by itself."}
+{"key": "main|direct|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-4/978-coalition-formation-case-3", "reply": "The only minimal winning coalition is A alone, since A already reaches the 8-seat threshold by itself."}
+{"key": "main|direct|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-4/979-coalition-formation-case-4", "reply": "The minimal winning coalitions are AB and AC."}
+{"key": "main|direct|world-as-a-system/eval/no-knowledge/negotiation-coalitions-and-agreement-grade-4/980-coalition-formation-case-5", "reply": "The minimal winning coalitions are AB, AC, and BC."}

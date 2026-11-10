@@ -2,43 +2,66 @@
   "file": "01-machine-learning.docx",
   "journal": "Machine Learning",
   "source": "../manuscripts/01-machine-learning.md",
-  "sha256": "e8bbb73b3e5665d95d82c6c8599d51d090f941fd04ed45d1d95c44f5949eeb0b",
-  "sourceSha256": "e2ceb98635642abe3d8729d27fcffdf1a54b0e3bfa01d8ff956253b9d13f5da1",
-  "words": 4203,
+  "sha256": "0b2f0967ee9e78e03e6498a616c21749454bcc850e0d4335f35ba84815f323e0",
+  "sourceSha256": "c205044dbae319144a3c5060ee3c838e2a757b41c13f25197a4b7ee4dcff5d54",
+  "words": 12977,
   "references": [
+    "loraforgets",
+    "bogin",
     "pot",
-    "z3",
     "dwork",
-    "dreamcoder",
+    "faithfate",
+    "specializing",
     "pal",
-    "synthesis",
+    "tora",
+    "lora",
+    "hupkes",
+    "cfq",
+    "cogs",
+    "kirkpatrick",
+    "kotha2024",
+    "kumar2022",
     "scan",
+    "levy2023",
+    "symbolicdistill",
+    "tinygsm",
+    "luoforget",
+    "magister",
+    "gsmsymbolic",
+    "selfrepair",
+    "oren2021",
+    "panickssery2024",
+    "svamp",
+    "patel2022",
     "qwen05",
     "qwen15",
     "qwen3",
-    "sandve"
+    "sclar",
+    "shaw2021",
+    "shicompgen",
+    "gsmic",
+    "exedec",
+    "mathcoder",
+    "emergent",
+    "wiseft",
+    "mammoth",
+    "lima"
   ],
-  "tables": 3,
+  "tables": 8,
   "figures": [
     {
-      "source": "../assets/sop-program-anatomy.png",
+      "source": "../assets/coverage-ladder.png",
       "width": 8250,
-      "height": 3678,
-      "sha256": "61f303e546c5bb3a3122bafd827c0e9781316d5b3e7a0b962c12062eaa718132"
+      "height": 3300,
+      "sha256": "8e1fd2b2a0ae813cb48a494e311b434a5ab9ed93789ac06383225c6ad4c2a61e"
     },
     {
-      "source": "../assets/abstraction-comparison.png",
+      "source": "../assets/rewording-slopes.png",
       "width": 8250,
-      "height": 4571,
-      "sha256": "69eec813edcaeed7d066695549ef26fb4e38f3e4b5da0d13ec5ba15e6b2d67a1"
-    },
-    {
-      "source": "../assets/wire-discovery-design.png",
-      "width": 8250,
-      "height": 4296,
-      "sha256": "023d8bf6963fe79e1f77e01bacf8507bbaca195b6ae5c4f796847a34a34bf3f4"
+      "height": 4331,
+      "sha256": "14693f2d205b3ce85ec4c1d266bf771fc1ecc9d501f03270e4ed62b4d574a002"
     }
   ],
   "columns": 1,
-  "zipMembers": 11
+  "zipMembers": 10
 }

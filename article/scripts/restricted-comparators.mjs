@@ -1,4 +1,5 @@
-// These parsers accept complete, restricted utterances, not bags of numbers.
+// These parsers accept complete, restricted utterances, not bags of numbers. They were written
+// after the outputs had been seen, so their counts are retrospective diagnostics.
 // Rejection means unclassified by this audit, not semantically incorrect.
 export function coalitionValue(text) {
   if (typeof text !== 'string') return null;
@@ -17,7 +18,10 @@ export function joinValue(text) {
   const stripped = text.trim().replace(
     / The critical insight is that B and C are parallel branches whose maximum duration controls the join\.$/, '');
   const match = /^The earliest safe completion time is (\d+) minutes, so the plan (is feasible|is not feasible|meets the limit|does not meet the limit)\.$/.exec(stripped);
-  if (!match || !Number.isSafeInteger(Number(match[1]))) return null;
-  return JSON.stringify({ minutes: Number(match[1]),
+  if (match && Number.isSafeInteger(Number(match[1]))) return JSON.stringify({ minutes: Number(match[1]),
     feasible: ['is feasible', 'meets the limit'].includes(match[2]) });
+  // The compressed reference form introduced with data version 11: "46 minutes: not feasible."
+  const compact = /^(\d+) minutes: (not )?feasible\.$/.exec(stripped);
+  if (!compact || !Number.isSafeInteger(Number(compact[1]))) return null;
+  return JSON.stringify({ minutes: Number(compact[1]), feasible: !compact[2] });
 }

@@ -1,0 +1,18 @@
+{
+  "experiment": "s-prose-qwen3-17",
+  "gguf": "training/checkpoints/base-qwen3-17b-f16.gguf",
+  "ggufBytes": 4069679360,
+  "itemSource": "slice:holdout",
+  "itemCount": 115,
+  "mode": "prose",
+  "shots": 0,
+  "perGroup": 5,
+  "samples": 1,
+  "temperature": 0,
+  "seed": 20260928,
+  "maxTokens": 1024,
+  "noThink": true,
+  "systemPromptSha256": "6164c61383c892ad5b8494b7761f9f9dda0b486a719ccd1aa2f6d185b4ee4db0",
+  "resumedWith": 0,
+  "updatedAt": "2026-09-28T20:55:43.303Z"
+}

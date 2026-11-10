@@ -1,0 +1,28 @@
+{
+  "experiment": "E3",
+  "builtBy": "article/experiments/build-procedural-rewrites.mjs",
+  "dataVersion": "13",
+  "counts": {
+    "scheduling": 100,
+    "coalition": 20
+  },
+  "checks": {
+    "referenceEqualsOracle": {
+      "passed": 120,
+      "failed": 0
+    },
+    "familyParseRecoversValues": {
+      "passed": 120,
+      "failed": 0
+    },
+    "sameNumbersAsSource": {
+      "passed": 120,
+      "failed": 0
+    }
+  },
+  "verdicts": {
+    "schedulingFeasible": 54,
+    "schedulingNotFeasible": 46
+  },
+  "failures": []
+}

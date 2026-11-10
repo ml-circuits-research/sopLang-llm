@@ -1,0 +1,64 @@
+{
+  "experiment": "e1-js-base-coder05-0shot",
+  "items": 705,
+  "records": 705,
+  "complete": true,
+  "groups": {
+    "adult-reasoning": {
+      "records": 10,
+      "exact": 0,
+      "value": 0,
+      "executed": 10,
+      "missing": 0
+    },
+    "common-sense": {
+      "records": 50,
+      "exact": 0,
+      "value": 0,
+      "executed": 0,
+      "missing": 0
+    },
+    "decompose-to-solve": {
+      "records": 100,
+      "exact": 0,
+      "value": 0,
+      "executed": 91,
+      "missing": 0
+    },
+    "logical-reasoning": {
+      "records": 10,
+      "exact": 0,
+      "value": 0,
+      "executed": 6,
+      "missing": 0
+    },
+    "mathematical-thinking": {
+      "records": 10,
+      "exact": 0,
+      "value": 0,
+      "executed": 4,
+      "missing": 0
+    },
+    "procedural-arithmetic": {
+      "records": 480,
+      "exact": 7,
+      "value": 187,
+      "executed": 419,
+      "missing": 0
+    },
+    "scientific-reasoning": {
+      "records": 25,
+      "exact": 0,
+      "value": 0,
+      "executed": 14,
+      "missing": 0
+    },
+    "world-as-a-system": {
+      "records": 20,
+      "exact": 0,
+      "value": 0,
+      "executed": 1,
+      "missing": 0
+    }
+  }
+}

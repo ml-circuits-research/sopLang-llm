@@ -1,0 +1,46 @@
+{
+  "category": {
+    "observed": 0.96875,
+    "kappa": 0.9561643835616438,
+    "agreements": 31,
+    "n": 32
+  },
+  "categoryAndSeam": {
+    "observed": 0.9375,
+    "kappa": 0.9231692677070829,
+    "agreements": 30,
+    "n": 32
+  },
+  "disagreements": [
+    {
+      "id": "I03",
+      "A": [
+        "R",
+        "record-state",
+        "medium",
+        "Reports and manifests were taken as recording the checkpoint's training inputs but reflected the working tree at scoring or resume time."
+      ],
+      "B": [
+        "C",
+        null,
+        "medium",
+        "Evaluation and resume read current working-tree inputs instead of the experiment's recorded training inputs, contrary to evident intent."
+      ]
+    },
+    {
+      "id": "I07",
+      "A": [
+        "R",
+        "population-population",
+        "medium",
+        "A validation slice dominated by trained plans and a repeatedly consulted holdout were treated as held-out evidence."
+      ],
+      "B": [
+        "R",
+        "score-construct",
+        "medium",
+        "A selection score dominated by seen plans and a repeatedly consulted holdout were taken as held-out generalization evidence."
+      ]
+    }
+  ]
+}

@@ -1,50 +1,73 @@
 ---
 name: scientific-article
-description: Write, adapt, and audit scientific manuscripts from research artifacts, with verified bibliography, journal-specific positioning, evidence-derived figures and tables, and editable Markdown and DOCX deliverables. Use for substantive scientific article preparation, not routine documentation or a literature summary alone.
+description: Write, adapt, and audit scientific manuscripts from research artifacts, with a finding-driven narrative, verified bibliography, journal-specific positioning, evidence-derived figures and tables, and editable Markdown and DOCX deliverables. Use for substantive scientific article preparation, not routine documentation or a literature summary alone.
 ---
 
 # Scientific article
 
-Produce a coherent argument that a reviewer can trace to evidence. Treat an existing draft as a set of candidate claims, not as a trusted record. Keep the workflow and its resources within this folder. Project-specific evidence, manuscripts, and journal policies belong in the article workspace supplied by the user.
+A publishable paper teaches its reader something they can reuse outside the authors' project, and every claim it makes can be traced to evidence. Both halves are mandatory. A paper that is fully traceable but teaches nothing is an audit report; a paper that tells a good story the records do not support is fiction. Most failed drafts fail the first half: they are accurate, hedged, crowded with numbers and internal labels, and give the reader no reason to care. Keep the evidence discipline below, but spend at least as much effort on finding the lesson and telling it well.
 
-## Establish the evidence before the story
+Read [references/storytelling.md](references/storytelling.md) before outlining and before writing any abstract. Read [references/audit-protocol.md](references/audit-protocol.md) before calling a draft finished.
 
-Read project guidance, the research question, methods, source records, and existing variants. Make a source inventory with paths, hashes, record counts, model identities, data versions, timestamps, and missing artifacts. Read nested training manifests before interpreting experiment names. Distinguish a model's marketed size from an independently verified parameter count.
+## 1. Mine the whole research history, not the convenient part
 
-Recompute every headline result from item records. Check denominators, duplicate identifiers, outcome partitions, dataset composition, train/test boundaries, checkpoint selection, changed prompts or oracles, and whether comparisons use the same items. Inspect informative successes and failures. A deterministic runtime guarantees only its implemented execution contract; neither execution nor tests prove that the emitted program represents the question correctly.
+Read project guidance, the research question, methods, run reports, analysis logs, decision records, and negative results from the first experiment to the last. Build a chronological table of every experimental arm: what was changed, what was hypothesised, what was measured, and what the authors concluded at the time. The most informative results are often early, ugly, or negative (a 0% that refused to move under six interventions says more than a 3-point gain). Do not restrict the paper to the arms that are easiest to reconstruct.
 
-Label evidence as reproduced, corroborated, historical-only, proposed, or unresolved. A missing judge decision, log, baseline, seed, funding fact, or public archive must remain missing. Never replace it with a plausible reconstruction. New retrospective checks must preserve their code and item decisions, state their restricted scope, and stay distinct from the original evaluation.
+Rank findings by informativeness, not by recency or cleanliness:
 
-## Position the contribution
+- Size of the contrast relative to noise. 0 of 225 against 160 of 160 needs no statistics; 65.2% against 63.5% on one seed is barely a result.
+- Whether it changes what a reader would do (choose data, design a language, build an evaluator, trust a number).
+- Whether several independent measurements point the same way (a ladder, a dose series, a failure that survives every lever).
+- Whether it surprised the authors. Recorded surprises, corrected diagnoses, and falsified hypotheses are research content.
 
-Write one sentence containing the problem, supported finding, and boundary. Build an argument outline in which each section resolves the question raised by the previous section. Establish what prior work already does before identifying the contribution. Name real researchers where their results matter; names must explain intellectual relationships, not decorate the introduction.
+Then write, for each candidate finding, one sentence of the form: *When X, Y happens, because (probably) Z; this matters because W.* Findings for which no such sentence can be written are details, not contributions.
 
-Write for a reader outside the repository. Introduce every project-specific language or system before using it in the argument. When syntax matters, provide a complete short example and explain declaration boundaries, names versus commands, body formats, references, execution order, and output conventions. A glossary alone is insufficient. Name the few comparisons needed by the paper, for example Experiment A with general-code and specialized-command conditions. Keep directory identifiers, data-version codes, and checkpoint names in a supplementary crosswalk rather than the main narrative. State what changed before giving the result. Lead with percentages when requested, identify denominators in captions or population definitions, and retain counts in the evidence package.
+## 2. Establish the evidence for the findings you will use
 
-Separate observation, proposed explanation, and practical consequence in the discussion. State the interpretation directly, then identify the control needed to distinguish it from alternatives. Check whether valid base-model comparisons exist; align populations and scoring rules, and separate missing responses from observed task failures. For multiple papers, vary the substantive evidence selected for each research question rather than reproducing the same comparison table in every version.
+Make a source inventory with paths, hashes, record counts, model identities, data versions, and timestamps. Read nested training manifests before interpreting experiment names; distinguish a model's marketed size from its verified identity (a directory called `17b` may hold a 1.7B model).
 
-For multiple journals, define a different central question, audience, article type, evidential emphasis, and discussion for each manuscript. Each paper must explain why its question matters and how its results answer it. Select results for that question; variants need not share the same tables or narrative. Keep unsupported historical claims out of scientific-result sections. A corrected error may appear as a documented case example in a paper whose subject is research practice, without implying that human-only work would avoid it. Shared data do not become independent studies by changing the title. Prepare overlapping manuscripts as alternative submission routes unless substantive independence is established and overlap is disclosed. Do not submit, contact editors, or make declarations for authors without authorization.
+Recompute every number the paper will print from item records. Check denominators, duplicate identifiers, outcome partitions, train/test boundaries, checkpoint selection, changed prompts or oracles, and whether compared conditions share items. Inspect informative successes and failures, and quote one or two real items; a concrete failing program is more persuasive than a paragraph of rates. A deterministic runtime guarantees only its execution contract; neither execution nor tests prove that a program represents the question.
 
-## Verify journal and bibliography facts
+Label each finding reproduced, corroborated, historical-only, or unresolved in a claim ledger that lives in the evidence package. Only reproduced or corroborated findings may carry a paper. Missing records stay missing; never reconstruct a plausible value. The ledger, hashes, and audit narrative are for the authors and reviewers: they go in the supplement, not in the paper's argument (except in a paper whose subject is research practice).
 
-Consult current official publisher pages for scope, accepted article types, word/page limits, review anonymity, file format, figures, reference style, declarations, charges, and eligibility. Record URLs and access dates. Distinguish a free subscription route, diamond open access, optional paid services, and conditional funded publication. A geographic location or project name does not establish funding eligibility. Use a provided official template when required; otherwise format an editable review manuscript, not invented publisher proofs.
+## 3. Position each paper around one question and one lesson
 
-For each reference, verify title, authors, year, venue, identifier, and the exact proposition used. Read the relevant primary-source passage, not just a search snippet. Keep a bibliography ledger with a locator, a short support paraphrase, what the source does not establish, and metadata/claim-verification status. DOI resolution alone is not claim verification. Prefer the published version over a preprint and do not invent DOIs. Keep every citation local to the supported proposition and ensure bibliography and in-text citations agree in both directions.
+Before drafting, write the paper's one-sentence contribution: problem, finding, boundary. Then write the abstract (see storytelling reference) before the body, as a contract that the body must fulfil; revise it last.
 
-## Draft and illustrate
+Establish what prior work already knows, then say precisely what this study adds. Name real researchers where their results matter to the argument. Cite for propositions, not decoration.
 
-Write the methods and results before finalizing the abstract and introduction. Define terms before using them. Give enough detail to reconstruct sampling, exclusions, execution, comparisons, and analysis. Report counts beside percentages and preserve unsuccessful variants. Account for repeated families, repeated benchmark use, single seeds, confounding, and missing baselines. Use uncertainty estimates only when their sampling assumptions fit the data; a finite descriptive census need not carry a misleading inferential interval.
+For several journals from one body of work, each paper needs a different question, audience, lesson, and evidential core. Assign findings to papers explicitly in a portfolio table. A finding may appear in more than one paper, but no two papers may share their headline result or their conclusion. If the evidence supports only two or three genuinely distinct papers, write two or three; a forced fifth paper that restates the others damages all of them. Record the overlap and use sequential rather than concurrent submission where journals forbid overlap.
 
-Each table must answer an explicit question and each diagram must explain a mechanism, comparison, or boundary. Generate numerical graphics from audited data. Use vector originals, readable grayscale distinctions, descriptive alternative text, numbered captions, and nearby prose explaining the implication. Illustrative examples must be labeled and executed where feasible. Never render generated scientific figures with an image model when exact code or vector construction can represent the content.
+## 4. Calibrate once, precisely, and then write with confidence
 
-Prefer annotated programs, actual dependency graphs, explicit counterexamples, and directly labeled quantitative comparisons over generic sequences of boxes. Show the mechanism or relationship the reader needs to understand, with readable type at the final column width. Distinguish constructed examples from observed outputs and prospective experiment designs from completed experiments.
+Plausibility comes from calibrated claims, not from hedging every sentence. State each claim at the strength the evidence supports, in its own wording ("in two model sizes and one model family", "on 225 problems from seven families"), and then stop qualifying it. Put threats to validity in one dedicated section, ordered by how much each could change the conclusion, each with what would test it. Avoid both failure modes:
 
-Write connected paragraphs with concrete subjects and qualified conclusions. Remove unsupported causal verbs, claims of primacy, benchmark superlatives, speculative savings, repeated conclusions, and rhetorical contrasts. Keep implementation paths in an artifact appendix rather than interrupting the argument.
+- Naive claims: universal laws from one project ("abstraction helps small models"), headline contests ("our 1.7B beats a 17B"), causal verbs for uncontrolled comparisons, savings nobody measured, primacy claims.
+- Defensive noise: the same caveat in every paragraph, "we interpret", "this does not establish", "one run per condition" repeated six times, limitations in the abstract that crowd out the finding.
 
-## Audit, revise, and deliver
+An exploratory single-seed programme can publish strong qualitative findings (a boundary that held across nine arms, a mechanism visible in failing programs) when it presents them as such. It cannot publish small aggregate differences as effects.
 
-Follow [references/audit-protocol.md](references/audit-protocol.md). Perform separate evidence, adversarial argument, bibliography, journal-fit, and layout passes. A script can detect missing citations or broken images; it cannot certify scientific validity. Record what was inspected and changed, and do not describe self-review as independent peer review.
+## 5. Write for a reader outside the repository
 
-Use [scripts/build-docx.mjs](scripts/build-docx.mjs) to render supported Markdown into editable OOXML, with native tables and embedded figures. The script takes a JSON job path; see [references/artifact-format.md](references/artifact-format.md). Its ZIP and Markdown helpers are bundled. Optional local rendering tools and their limits are recorded in [dependencies.md](dependencies.md). The builder does not fetch references, submit manuscripts, or establish journal compliance by itself.
+Introduce every project-specific language, system, and term before using it; give a complete short example when syntax matters. Refer to conditions by what they change ("the composition-inventory curriculum", "the declarative-command targets"), never by run identifiers, data-version codes, or letters such as "Experiment A/B/C" that the reader must decode. Keep identifiers in a supplementary crosswalk.
 
-Render the DOCX to PDF when a local office suite is available, inspect every page for clipping, missing glyphs, figure legibility, broken tables, and stranded captions, and inspect extracted text for omissions. Correct and rebuild until evidence and presentation defects are resolved. Ship Markdown, five DOCX files when five are requested, figure sources, evidence tables, bibliography audit, journal-selection rationale, and an honest audit report. Missing author identity, affiliation, funding, competing-interest declaration, archive DOI, or journal eligibility is an explicit administrative dependency, not permission to invent facts or abandon completed manuscripts.
+Tell the research as it happened when the sequence is the argument: hypothesis, measurement, surprise, revised hypothesis. A series of interventions that each failed for a diagnosable reason is a compelling structure; a static table of ten conditions is not.
+
+Each table must answer a question stated in the preceding sentence; each figure must show a mechanism, a boundary, or a contrast that prose cannot. Generate numerical graphics from audited data. Prefer real programs, failure excerpts, and ladders over boxes-and-arrows. Distinguish constructed examples from observed outputs.
+
+Numbers have two jobs, and each gets its own form:
+- **Design numbers are counts.** How many problems, families, runs, instances per composition: the reader needs them to understand what was done.
+- **Results are percentages, with the denominator visible.** Put n in the table header or caption and percentages in the cells, so conditions with different denominators can be compared at a glance. In prose give the percentage and, where the count helps, the count ("91% (30 of 33)"); for floors and ceilings plain words work best ("none of the 225", "all 160"). A census rather than a sample, such as an incident register of one case, stays in counts, and the paper says why: percentages would invite a population estimate the design cannot support.
+- **Justify every sample size where it is introduced.** Say why it was chosen (a budget, a whole population, a follow-up of a surprising sample) and what it can resolve: at n = 55 a proportion carries a 95% interval of about ±13 points, at n = 33 about ±17, at n = 15 about ±25. Items that share a program or template are not independent, so the real resolution is coarser. Then read only differences larger than that, describe smaller ones as no detectable difference, and do not rank conditions inside the noise. A qualitative study says so once, in the method, and then writes with confidence about the contrasts it can resolve.
+
+Do not put more than two numbers in an abstract, and none unless the magnitude itself is the finding.
+
+## 6. Verify journal and bibliography facts
+
+Consult current official publisher pages for scope, article types, limits, anonymity, format, references, declarations, and charges; record URLs and access dates. For each reference, verify identity and the exact proposition it supports from the primary text, and keep a bibliography ledger (locator, support paraphrase, what the source does not establish, status). DOI resolution is not claim verification. Never invent DOIs, affiliations, grants, or declarations.
+
+## 7. Audit, build, and deliver
+
+Run the passes in [references/audit-protocol.md](references/audit-protocol.md), including the reader pass, which is where most drafts fail, and the adversarial verification pass, which is where confident drafts fail. Expect the adversarial pass to overturn some of your own interpretations; revise the claim to what the records show rather than defending the story, and record each correction in the claim ledger. Use [scripts/build-docx.mjs](scripts/build-docx.mjs) to render Markdown into editable DOCX with native tables and embedded figures (job format in [references/artifact-format.md](references/artifact-format.md); optional tools in [dependencies.md](dependencies.md)). Render to PDF when an office suite is available and inspect every page.
+
+Ship the Markdown, the DOCX files, figure sources, evidence tables, claim ledger, bibliography audit, a portfolio table explaining what each paper claims and why it is distinct, and an honest audit report. Missing author identity, affiliation, funding, or archive DOI is an administrative dependency to list, not a fact to invent. Do not submit, contact editors, or make declarations for authors.

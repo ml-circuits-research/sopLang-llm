@@ -1,0 +1,18 @@
+{
+  "experiment": "e9-jsprog-qwen3-17",
+  "gguf": "training/checkpoints/base-qwen3-17b-f16.gguf",
+  "ggufBytes": 4069679360,
+  "itemSource": "evaluation/registry/items-e9/depletion.jsonl",
+  "itemCount": 40,
+  "mode": "jsprog",
+  "shots": 0,
+  "perGroup": null,
+  "samples": 1,
+  "temperature": 0,
+  "seed": 20260928,
+  "maxTokens": 1536,
+  "noThink": true,
+  "systemPromptSha256": "c05aad3175e0e662fb5d36ee82593ace90de5eaf5d7632e45df222df85080bfc",
+  "resumedWith": 0,
+  "updatedAt": "2026-09-29T06:22:34.810Z"
+}
